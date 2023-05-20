@@ -1,4 +1,5 @@
 Fri 19 May 2023 : removed the dubbling of layers in complexadd_jobs.cpp.
+  Extended dbl8_polynomials_host with a function on complex numbers.
 
 Thu 18 May 2023 : in dbl4_polynomials_kernels, corrected the flipping of
   the signs of the second real operand using the increment job indices.

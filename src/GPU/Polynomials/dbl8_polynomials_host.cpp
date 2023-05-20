@@ -12,30 +12,30 @@
 
 void CPU_dbl8_poly_speel
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
-   double **cffhihihi, double **cffhilohi,
-   double **cffhihilo, double **cffhilolo,
-   double **cfflohihi, double **cfflolohi,
-   double **cfflohilo, double **cfflololo,
-   double **inputhihihi, double **inputhilohi,
-   double **inputhihilo, double **inputhilolo,
-   double **inputlohihi, double **inputlolohi,
-   double **inputlohilo, double **inputlololo,
-   double **outputhihihi, double **outputhilohi,
-   double **outputhihilo, double **outputhilolo,
-   double **outputlohihi, double **outputlolohi,
-   double **outputlohilo, double **outputlololo,
-   double **forwardhihihi, double **forwardhilohi,
-   double **forwardhihilo, double **forwardhilolo,
-   double **forwardlohihi, double **forwardlolohi,
-   double **forwardlohilo, double **forwardlololo,
-   double **backwardhihihi, double **backwardhilohi,
-   double **backwardhihilo, double **backwardhilolo,
-   double **backwardlohihi, double **backwardlolohi,
-   double **backwardlohilo, double **backwardlololo,
-   double **crosshihihi, double **crosshilohi,
-   double **crosshihilo, double **crosshilolo,
-   double **crosslohihi, double **crosslolohi,
-   double **crosslohilo, double **crosslololo, bool verbose )
+   double **cffhihihi, double **cfflohihi,
+   double **cffhilohi, double **cfflolohi,
+   double **cffhihilo, double **cfflohilo,
+   double **cffhilolo, double **cfflololo,
+   double **inputhihihi, double **inputlohihi,
+   double **inputhilohi, double **inputlolohi,
+   double **inputhihilo, double **inputlohilo,
+   double **inputhilolo, double **inputlololo,
+   double **outputhihihi, double **outputlohihi,
+   double **outputhilohi, double **outputlolohi,
+   double **outputhihilo, double **outputlohilo,
+   double **outputhilolo, double **outputlololo,
+   double **forwardhihihi, double **forwardlohihi,
+   double **forwardhilohi, double **forwardlolohi,
+   double **forwardhihilo, double **forwardlohilo,
+   double **forwardhilolo, double **forwardlololo,
+   double **backwardhihihi, double **backwardlohihi,
+   double **backwardhilohi, double **backwardlolohi,
+   double **backwardhihilo, double **backwardlohilo,
+   double **backwardhilolo, double **backwardlololo,
+   double **crosshihihi, double **crosslohihi,
+   double **crosshilohi, double **crosslolohi,
+   double **crosshihilo, double **crosslohilo,
+   double **crosshilolo, double **crosslololo, bool verbose )
 {
    int ix1,ix2;
 
@@ -44,185 +44,587 @@ void CPU_dbl8_poly_speel
       if(nvr[i] == 1)
       {
          ix1 = idx[i][0];
-         CPU_dbl8_product(deg,inputhihihi[ix1],inputhilohi[ix1],
-                              inputhihilo[ix1],inputhilolo[ix1],
-                              inputlohihi[ix1],inputlolohi[ix1],
-                              inputlohilo[ix1],inputlololo[ix1],
-                                cffhihihi[i],    cffhilohi[i],
-                                cffhihilo[i],    cffhilolo[i],
-                                cfflohihi[i],    cfflolohi[i],
-                                cfflohilo[i],    cfflololo[i],
-                              forwardhihihi[0],forwardhilohi[0],
-                              forwardhihilo[0],forwardhilolo[0],
-                              forwardlohihi[0],forwardlolohi[0],
-                              forwardlohilo[0],forwardlololo[0]);
+         CPU_dbl8_product(deg,inputhihihi[ix1],inputlohihi[ix1],
+                              inputhilohi[ix1],inputlolohi[ix1],
+                              inputhihilo[ix1],inputlohilo[ix1],
+                              inputhilolo[ix1],inputlololo[ix1],
+                                cffhihihi[i],    cfflohihi[i],
+                                cffhilohi[i],    cfflolohi[i],
+                                cffhihilo[i],    cfflohilo[i],
+                                cffhilolo[i],    cfflololo[i],
+                              forwardhihihi[0],forwardlohihi[0],
+                              forwardhilohi[0],forwardlolohi[0],
+                              forwardhihilo[0],forwardlohilo[0],
+                              forwardhilolo[0],forwardlololo[0]);
          if(verbose) cout << "monomial " << i << " : ";
          if(verbose) cout << "input[" << ix1 << "] * cff to f[0]" << endl;
          for(int j=0; j<=deg; j++)
          {
             // output[dim][j] += forward[0][j];
-            odf_inc(&outputhihihi[dim][j],&outputhilohi[dim][j],
-                    &outputhihilo[dim][j],&outputhilolo[dim][j],
-                    &outputlohihi[dim][j],&outputlolohi[dim][j],
-                    &outputlohilo[dim][j],&outputlololo[dim][j],
-                    forwardhihihi[0][j],  forwardhilohi[0][j],
-                    forwardhihilo[0][j],  forwardhilolo[0][j],
-                    forwardlohihi[0][j],  forwardlolohi[0][j],
-                    forwardlohilo[0][j],  forwardlololo[0][j]);
+            odf_inc(&outputhihihi[dim][j],&outputlohihi[dim][j],
+                    &outputhilohi[dim][j],&outputlolohi[dim][j],
+                    &outputhihilo[dim][j],&outputlohilo[dim][j],
+                    &outputhilolo[dim][j],&outputlololo[dim][j],
+                    forwardhihihi[0][j],  forwardlohihi[0][j],
+                    forwardhilohi[0][j],  forwardlolohi[0][j],
+                    forwardhihilo[0][j],  forwardlohilo[0][j],
+                    forwardhilolo[0][j],  forwardlololo[0][j]);
             // output[ix1][j] += cff[i][j];
-            odf_inc(&outputhihihi[ix1][j],&outputhilohi[ix1][j],
-                    &outputhihilo[ix1][j],&outputhilolo[ix1][j],
-                    &outputlohihi[ix1][j],&outputlolohi[ix1][j],
-                    &outputlohilo[ix1][j],&outputlololo[ix1][j],
-                        cffhihihi[i][j],      cffhilohi[i][j],
-                        cffhihilo[i][j],      cffhilolo[i][j],
-                        cfflohihi[i][j],      cfflolohi[i][j],
-                        cfflohilo[i][j],      cfflololo[i][j]);
+            odf_inc(&outputhihihi[ix1][j],&outputlohihi[ix1][j],
+                    &outputhilohi[ix1][j],&outputlolohi[ix1][j],
+                    &outputhihilo[ix1][j],&outputlohilo[ix1][j],
+                    &outputhilolo[ix1][j],&outputlololo[ix1][j],
+                        cffhihihi[i][j],      cfflohihi[i][j],
+                        cffhilohi[i][j],      cfflolohi[i][j],
+                        cffhihilo[i][j],      cfflohilo[i][j],
+                        cffhilolo[i][j],      cfflololo[i][j]);
          }
       }
       else if(nvr[i] == 2)
       {
          ix1 = idx[i][0]; ix2 = idx[i][1];
 
-         CPU_dbl8_product(deg, cffhihihi[i],    cffhilohi[i],
-                               cffhihilo[i],    cffhilolo[i],
-                               cfflohihi[i],    cfflolohi[i],
-                               cfflohilo[i],    cfflololo[i],
-                             inputhihihi[ix1],inputhilohi[ix1],
-                             inputhihilo[ix1],inputhilolo[ix1],
-                             inputlohihi[ix1],inputlolohi[ix1],
-                             inputlohilo[ix1],inputlololo[ix1],
-                           forwardhihihi[0],forwardhilohi[0],
-                           forwardhihilo[0],forwardhilolo[0],
-                           forwardlohihi[0],forwardlolohi[0],
-                           forwardlohilo[0],forwardlololo[0]);
+         CPU_dbl8_product(deg, cffhihihi[i],    cfflohihi[i],
+                               cffhilohi[i],    cfflolohi[i],
+                               cffhihilo[i],    cfflohilo[i],
+                               cffhilolo[i],    cfflololo[i],
+                             inputhihihi[ix1],inputlohihi[ix1],
+                             inputhilohi[ix1],inputlolohi[ix1],
+                             inputhihilo[ix1],inputlohilo[ix1],
+                             inputhilolo[ix1],inputlololo[ix1],
+                           forwardhihihi[0],forwardlohihi[0],
+                           forwardhilohi[0],forwardlolohi[0],
+                           forwardhihilo[0],forwardlohilo[0],
+                           forwardhilolo[0],forwardlololo[0]);
          for(int j=0; j<=deg; j++) // output[ix2][j] += forward[0][j];
-            odf_inc(&outputhihihi[ix2][j],&outputhilohi[ix2][j],
-                    &outputhihilo[ix2][j],&outputhilolo[ix2][j],
-                    &outputlohihi[ix2][j],&outputlolohi[ix2][j],
-                    &outputlohilo[ix2][j],&outputlololo[ix2][j],
-                    forwardhihihi[0][j],   forwardhilohi[0][j],
-                    forwardhihilo[0][j],   forwardhilolo[0][j],
-                    forwardlohihi[0][j],   forwardlolohi[0][j],
-                    forwardlohilo[0][j],   forwardlololo[0][j]);
+            odf_inc(&outputhihihi[ix2][j],&outputlohihi[ix2][j],
+                    &outputhilohi[ix2][j],&outputlolohi[ix2][j],
+                    &outputhihilo[ix2][j],&outputlohilo[ix2][j],
+                    &outputhilolo[ix2][j],&outputlololo[ix2][j],
+                    forwardhihihi[0][j],   forwardlohihi[0][j],
+                    forwardhilolo[0][j],   forwardlolohi[0][j],
+                    forwardhihilo[0][j],   forwardlohilo[0][j],
+                    forwardhilolo[0][j],   forwardlololo[0][j]);
          if(verbose) cout << "monomial " << i << " : ";
          if(verbose) cout << "cff * "
                           << "input[" << ix1 << "] to f[0]" << endl;
 
-         CPU_dbl8_product(deg, cffhihihi[i],     cffhilohi[i],
-                               cffhihilo[i],     cffhilolo[i],
+         CPU_dbl8_product(deg, cffhihihi[i],     cfflohihi[i],
                                cfflohihi[i],     cfflolohi[i],
-                               cfflohilo[i],     cfflololo[i],
-                             inputhihihi[ix2], inputhilohi[ix2],
-                             inputhihilo[ix2], inputhilolo[ix2],
-                             inputlohihi[ix2], inputlolohi[ix2],
-                             inputlohilo[ix2], inputlololo[ix2],
-                          backwardhihihi[0],backwardhilohi[0],
-                          backwardhihilo[0],backwardhilolo[0],
-                          backwardlohihi[0],backwardlolohi[0],
-                          backwardlohilo[0],backwardlololo[0]);
+                               cffhihilo[i],     cfflohilo[i],
+                               cffhilolo[i],     cfflololo[i],
+                             inputhihihi[ix2], inputlohihi[ix2],
+                             inputhilohi[ix2], inputlolohi[ix2],
+                             inputhihilo[ix2], inputlohilo[ix2],
+                             inputhilolo[ix2], inputlololo[ix2],
+                          backwardhihihi[0],backwardlohihi[0],
+                          backwardhilohi[0],backwardlolohi[0],
+                          backwardhihilo[0],backwardlohilo[0],
+                          backwardhilolo[0],backwardlololo[0]);
          if(verbose) cout << "monomial " << i << " : ";
          if(verbose) cout << "cff * "
                           << "input[" << ix2 << "] to b[0]" << endl;
          for(int j=0; j<=deg; j++) // output[ix1][j] += backward[0][j];
-            odf_inc( &outputhihihi[ix1][j],&outputhilohi[ix1][j],
-                     &outputhihilo[ix1][j],&outputhilolo[ix1][j],
-                     &outputlohihi[ix1][j],&outputlolohi[ix1][j],
-                     &outputlohilo[ix1][j],&outputlololo[ix1][j],
-                    backwardhihihi[0][j], backwardhilohi[0][j],
-                    backwardhihilo[0][j], backwardhilolo[0][j],
-                    backwardlohihi[0][j], backwardlolohi[0][j],
-                    backwardlohilo[0][j], backwardlololo[0][j]);
+            odf_inc( &outputhihihi[ix1][j],&outputlohihi[ix1][j],
+                     &outputhilohi[ix1][j],&outputlolohi[ix1][j],
+                     &outputhihilo[ix1][j],&outputlohilo[ix1][j],
+                     &outputhilolo[ix1][j],&outputlololo[ix1][j],
+                    backwardhihihi[0][j], backwardlohihi[0][j],
+                    backwardhilohi[0][j], backwardlolohi[0][j],
+                    backwardhihilo[0][j], backwardlohilo[0][j],
+                    backwardhilolo[0][j], backwardlololo[0][j]);
 
-         CPU_dbl8_product(deg,forwardhihihi[0],forwardhilohi[0],
-                              forwardhihilo[0],forwardhilolo[0],
-                              forwardlohihi[0],forwardlolohi[0],
-                              forwardlohilo[0],forwardlololo[0],
-                                inputhihihi[ix2],inputhilohi[ix2],
-                                inputhihilo[ix2],inputhilolo[ix2],
-                                inputlohihi[ix2],inputlolohi[ix2],
-                                inputlohilo[ix2],inputlololo[ix2],
-                              forwardhihihi[1],forwardhilohi[1],
-                              forwardhihilo[1],forwardhilolo[1],
-                              forwardlohihi[1],forwardlolohi[1],
-                              forwardlohilo[1],forwardlololo[1]);
+         CPU_dbl8_product(deg,forwardhihihi[0],forwardlohihi[0],
+                              forwardhilohi[0],forwardlolohi[0],
+                              forwardhihilo[0],forwardlohilo[0],
+                              forwardhilolo[0],forwardlololo[0],
+                                inputhihihi[ix2],inputlohihi[ix2],
+                                inputhilohi[ix2],inputlolohi[ix2],
+                                inputhihilo[ix2],inputlohilo[ix2],
+                                inputhilolo[ix2],inputlololo[ix2],
+                              forwardhihihi[1],forwardlohihi[1],
+                              forwardhilohi[1],forwardlolohi[1],
+                              forwardhihilo[1],forwardlohilo[1],
+                              forwardhilolo[1],forwardlololo[1]);
          if(verbose) cout << "monomial " << i << " : ";
          if(verbose) cout << "f[0] * "
                           << "input[" << ix2 << "] to f[1]" << endl;
          for(int j=0; j<=deg; j++) // output[dim][j] += forward[1][j];
-            odf_inc(&outputhihihi[dim][j],&outputhilohi[dim][j],
-                    &outputhihilo[dim][j],&outputhilolo[dim][j],
-                    &outputlohihi[dim][j],&outputlolohi[dim][j],
-                    &outputlohilo[dim][j],&outputlololo[dim][j],
-                    forwardhihihi[1][j],  forwardhilohi[1][j],
-                    forwardhihilo[1][j],  forwardhilolo[1][j],
-                    forwardlohihi[1][j],  forwardlolohi[1][j],
-                    forwardlohilo[1][j],  forwardlololo[1][j]);
+            odf_inc(&outputhihihi[dim][j],&outputlohihi[dim][j],
+                    &outputhilohi[dim][j],&outputlolohi[dim][j],
+                    &outputhihilo[dim][j],&outputlohilo[dim][j],
+                    &outputhilolo[dim][j],&outputlololo[dim][j],
+                    forwardhihihi[1][j],  forwardlohihi[1][j],
+                    forwardhilohi[1][j],  forwardlolohi[1][j],
+                    forwardhihilo[1][j],  forwardlohilo[1][j],
+                    forwardhilolo[1][j],  forwardlololo[1][j]);
       }
       else if(nvr[i] > 2)
       {
          CPU_dbl8_speel(nvr[i],deg,idx[i],
-                 cffhihihi[i],  cffhilohi[i],  cffhihilo[i],  cffhilolo[i],
-                 cfflohihi[i],  cfflolohi[i],  cfflohilo[i],  cfflololo[i],
-               inputhihihi,   inputhilohi,   inputhihilo,   inputhilolo,
-               inputlohihi,   inputlolohi,   inputlohilo,   inputlololo,
-             forwardhihihi, forwardhilohi, forwardhihilo, forwardhilolo,
-             forwardlohihi, forwardlolohi, forwardlohilo, forwardlololo,
-            backwardhihihi,backwardhilohi,backwardhihilo,backwardhilolo,
-            backwardlohihi,backwardlolohi,backwardlohilo,backwardlololo,
-               crosshihihi,   crosshilohi,   crosshihilo,   crosshilolo,
-               crosslohihi,   crosslolohi,   crosslohilo,   crosslololo);
+                 cffhihihi[i],  cfflohihi[i],  cffhilohi[i],  cfflolohi[i],
+                 cffhihilo[i],  cfflohilo[i],  cffhilolo[i],  cfflololo[i],
+               inputhihihi,   inputlohihi,   inputhilohi,   inputlolohi,
+               inputhihilo,   inputlohilo,   inputhilolo,   inputlololo,
+             forwardhihihi, forwardlohihi, forwardhilohi, forwardlolohi,
+             forwardhihilo, forwardlohilo, forwardhilolo, forwardlololo,
+            backwardhihihi,backwardlohihi,backwardhilohi,backwardlolohi,
+            backwardhihilo,backwardlohilo,backwardhilolo,backwardlololo,
+               crosshihihi,   crosslohihi,   crosshilohi,   crosslolohi,
+               crosshihilo,   crosslohilo,   crosshilolo,   crosslololo);
 
          ix1 = nvr[i]-1;               // update the value of the polynomial
          for(int j=0; j<=deg; j++) // output[dim][j] += forward[ix1][j];
-            odf_inc(&outputhihihi[dim][j],&outputhilohi[dim][j],
-                    &outputhihilo[dim][j],&outputhilolo[dim][j],
-                    &outputlohihi[dim][j],&outputlolohi[dim][j],
-                    &outputlohilo[dim][j],&outputlololo[dim][j],
-                    forwardhihihi[ix1][j],forwardhilohi[ix1][j],
-                    forwardhihilo[ix1][j],forwardhilolo[ix1][j],
-                    forwardlohihi[ix1][j],forwardlolohi[ix1][j],
-                    forwardlohilo[ix1][j],forwardlololo[ix1][j]);
+            odf_inc(&outputhihihi[dim][j],&outputlohihi[dim][j],
+                    &outputhilohi[dim][j],&outputlolohi[dim][j],
+                    &outputhihilo[dim][j],&outputlohilo[dim][j],
+                    &outputhilolo[dim][j],&outputlololo[dim][j],
+                    forwardhihihi[ix1][j],forwardlohihi[ix1][j],
+                    forwardhilohi[ix1][j],forwardlolohi[ix1][j],
+                    forwardhihilo[ix1][j],forwardlohilo[ix1][j],
+                    forwardhilolo[ix1][j],forwardlololo[ix1][j]);
 
          ix2 = idx[i][ix1];             // derivative with respect to x[n-1]
          ix1 = nvr[i]-2;
 
          for(int j=0; j<=deg; j++) // output[ix2][j] += forward[ix1][j];
-            odf_inc(&outputhihihi[ix2][j],&outputhilohi[ix2][j],
-                    &outputhihilo[ix2][j],&outputhilolo[ix2][j],
-                    &outputlohihi[ix2][j],&outputlolohi[ix2][j],
-                    &outputlohilo[ix2][j],&outputlololo[ix2][j],
-                    forwardhihihi[ix1][j],forwardhilohi[ix1][j],
-                    forwardhihilo[ix1][j],forwardhilolo[ix1][j],
-                    forwardlohihi[ix1][j],forwardlolohi[ix1][j],
-                    forwardlohilo[ix1][j],forwardlololo[ix1][j]);
+            odf_inc(&outputhihihi[ix2][j],&outputlohihi[ix2][j],
+                    &outputhilohi[ix2][j],&outputlolohi[ix2][j],
+                    &outputhihilo[ix2][j],&outputlohilo[ix2][j],
+                    &outputhilolo[ix2][j],&outputlololo[ix2][j],
+                    forwardhihihi[ix1][j],forwardlohihi[ix1][j],
+                    forwardhilohi[ix1][j],forwardlolohi[ix1][j],
+                    forwardhihilo[ix1][j],forwardlohilo[ix1][j],
+                    forwardhilolo[ix1][j],forwardlololo[ix1][j]);
 
          ix2 = idx[i][0];                 // derivative with respect to x[0]
          ix1 = nvr[i]-3;
 
          for(int j=0; j<=deg; j++) // output[ix2][j] += backward[ix1][j];
-            odf_inc( &outputhihihi[ix2][j], &outputhilohi[ix2][j],
-                     &outputhihilo[ix2][j], &outputhilolo[ix2][j],
-                     &outputlohihi[ix2][j], &outputlolohi[ix2][j],
-                     &outputlohilo[ix2][j], &outputlololo[ix2][j],
-                    backwardhihihi[ix1][j],backwardhilohi[ix1][j],
-                    backwardhihilo[ix1][j],backwardhilolo[ix1][j],
-                    backwardlohihi[ix1][j],backwardlolohi[ix1][j],
-                    backwardlohilo[ix1][j],backwardlololo[ix1][j]);
+            odf_inc( &outputhihihi[ix2][j], &outputlohihi[ix2][j],
+                     &outputhilohi[ix2][j], &outputlolohi[ix2][j],
+                     &outputhihilo[ix2][j], &outputlohilo[ix2][j],
+                     &outputhilolo[ix2][j], &outputlololo[ix2][j],
+                    backwardhihihi[ix1][j],backwardlohihi[ix1][j],
+                    backwardhilohi[ix1][j],backwardlolohi[ix1][j],
+                    backwardhihilo[ix1][j],backwardlohilo[ix1][j],
+                    backwardhilolo[ix1][j],backwardlololo[ix1][j]);
 
          ix1 = nvr[i]-1;                  // derivative with respect to x[k]
          for(int k=1; k<ix1; k++)
          { 
             ix2 = idx[i][k];
             for(int j=0; j<=deg; j++) // output[ix2][j] += cross[k-1][j];
-               odf_inc(&outputhihihi[ix2][j],&outputhilohi[ix2][j],
-                       &outputhihilo[ix2][j],&outputhilolo[ix2][j],
-                       &outputlohihi[ix2][j],&outputlolohi[ix2][j],
-                       &outputlohilo[ix2][j],&outputlololo[ix2][j],
-                         crosshihihi[k-1][j],  crosshilohi[k-1][j],
-                         crosshihilo[k-1][j],  crosshilolo[k-1][j],
-                         crosslohihi[k-1][j],  crosslolohi[k-1][j],
-                         crosslohilo[k-1][j],  crosslololo[k-1][j]);
+               odf_inc(&outputhihihi[ix2][j],&outputlohihi[ix2][j],
+                       &outputhilohi[ix2][j],&outputlolohi[ix2][j],
+                       &outputhihilo[ix2][j],&outputlohilo[ix2][j],
+                       &outputhilolo[ix2][j],&outputlololo[ix2][j],
+                         crosshihihi[k-1][j],  crosslohihi[k-1][j],
+                         crosshilohi[k-1][j],  crosslolohi[k-1][j],
+                         crosshihilo[k-1][j],  crosslohilo[k-1][j],
+                         crosshilolo[k-1][j],  crosslololo[k-1][j]);
+         }
+      }
+   }
+}
+
+void CPU_cmplx8_poly_speel
+ ( int dim, int nbr, int deg, int *nvr, int **idx, 
+   double **cffrehihihi, double **cffrelohihi,
+   double **cffrehilohi, double **cffrelolohi,
+   double **cffrehihilo, double **cffrelohilo,
+   double **cffrehilolo, double **cffrelololo,
+   double **cffimhihihi, double **cffimlohihi,
+   double **cffimhilohi, double **cffimlolohi,
+   double **cffimhihilo, double **cffimlohilo,
+   double **cffimhilolo, double **cffimlololo,
+   double **inputrehihihi, double **inputrelohihi,
+   double **inputrehilohi, double **inputrelolohi,
+   double **inputrehihilo, double **inputrelohilo,
+   double **inputrehilolo, double **inputrelololo,
+   double **inputimhihihi, double **inputimlohihi,
+   double **inputimhilohi, double **inputimlolohi,
+   double **inputimhihilo, double **inputimlohilo,
+   double **inputimhilolo, double **inputimlololo,
+   double **outputrehihihi, double **outputrelohihi,
+   double **outputrehilohi, double **outputrelolohi,
+   double **outputrehihilo, double **outputrelohilo,
+   double **outputrehilolo, double **outputrelololo,
+   double **outputimhihihi, double **outputimlohihi,
+   double **outputimhilohi, double **outputimlolohi,
+   double **outputimhihilo, double **outputimlohilo,
+   double **outputimhilolo, double **outputimlololo,
+   double **forwardrehihihi, double **forwardrelohihi,
+   double **forwardrehilohi, double **forwardrelolohi,
+   double **forwardrehihilo, double **forwardrelohilo,
+   double **forwardrehilolo, double **forwardrelololo,
+   double **forwardimhihihi, double **forwardimlohihi,
+   double **forwardimhilohi, double **forwardimlolohi,
+   double **forwardimhihilo, double **forwardimlohilo,
+   double **forwardimhilolo, double **forwardimlololo,
+   double **backwardrehihihi, double **backwardrelohihi,
+   double **backwardrehilohi, double **backwardrelolohi,
+   double **backwardrehihilo, double **backwardrelohilo,
+   double **backwardrehilolo, double **backwardrelololo,
+   double **backwardimhihihi, double **backwardimlohihi,
+   double **backwardimhilohi, double **backwardimlolohi,
+   double **backwardimhihilo, double **backwardimlohilo,
+   double **backwardimhilolo, double **backwardimlololo,
+   double **crossrehihihi, double **crossrelohihi,
+   double **crossrehilohi, double **crossrelolohi,
+   double **crossrehihilo, double **crossrelohilo,
+   double **crossrehilolo, double **crossrelololo,
+   double **crossimhihihi, double **crossimlohihi,
+   double **crossimhilohi, double **crossimlolohi,
+   double **crossimhihilo, double **crossimlohilo,
+   double **crossimhilolo, double **crossimlololo,
+   bool verbose )
+{
+   int ix1,ix2;
+
+   for(int i=0; i<nbr; i++)
+   {
+      if(nvr[i] == 1)
+      {
+         ix1 = idx[i][0];
+         CPU_cmplx8_product(deg,
+            inputrehihihi[ix1],inputrelohihi[ix1],
+            inputrehilohi[ix1],inputrelolohi[ix1],
+            inputrehihilo[ix1],inputrelohilo[ix1],
+            inputrehilolo[ix1],inputrelololo[ix1],
+            inputimhihihi[ix1],inputimlohihi[ix1],
+            inputimhilohi[ix1],inputimlolohi[ix1],
+            inputimhihilo[ix1],inputimlohilo[ix1],
+            inputimhilolo[ix1],inputimlololo[ix1],
+            cffrehihihi[i],cffrelohihi[i],cffrehilohi[i],cffrelolohi[i],
+            cffrehihilo[i],cffrelohilo[i],cffrehilolo[i],cffrelololo[i],
+            cffimhihihi[i],cffimlohihi[i],cffimhilohi[i],cffimlolohi[i],
+            cffimhihilo[i],cffimlohilo[i],cffimhilolo[i],cffimlololo[i],
+            forwardrehihihi[0],forwardrelohihi[0],
+            forwardrehilohi[0],forwardrelolohi[0],
+            forwardrehihilo[0],forwardrelohilo[0],
+            forwardrehilolo[0],forwardrelololo[0],
+            forwardimhihihi[0],forwardimlohihi[0],
+            forwardimhilohi[0],forwardimlolohi[0],
+            forwardimhihilo[0],forwardimlohilo[0],
+            forwardimhilolo[0],forwardimlololo[0]);
+
+         if(verbose) cout << "monomial " << i << " : ";
+         if(verbose) cout << "input[" << ix1 << "] * cff to f[0]" << endl;
+         for(int j=0; j<=deg; j++)
+         {
+            // output[dim][j] += forward[0][j];
+            odf_inc
+               (&outputrehihihi[dim][j],&outputrelohihi[dim][j],
+                &outputrehilohi[dim][j],&outputrelolohi[dim][j],
+                &outputrehihilo[dim][j],&outputrelohilo[dim][j],
+                &outputrehilolo[dim][j],&outputrelololo[dim][j],
+                forwardrehihihi[0][j],forwardrelohihi[0][j],
+                forwardrehilohi[0][j],forwardrelolohi[0][j],
+                forwardrehihilo[0][j],forwardrelohilo[0][j],
+                forwardrehilolo[0][j],forwardrelololo[0][j]);
+            odf_inc
+               (&outputimhihihi[dim][j],&outputimlohihi[dim][j],
+                &outputimhilohi[dim][j],&outputimlolohi[dim][j],
+                &outputimhihilo[dim][j],&outputimlohilo[dim][j],
+                &outputimhilolo[dim][j],&outputimlololo[dim][j],
+                forwardimhihihi[0][j],forwardimlohihi[0][j],
+                forwardimhilohi[0][j],forwardimlolohi[0][j],
+                forwardimhihilo[0][j],forwardimlohilo[0][j],
+                forwardimhilolo[0][j],forwardimlololo[0][j]);
+            // output[ix1][j] += cff[i][j];
+            odf_inc
+               (&outputrehihihi[ix1][j],&outputrelohihi[ix1][j],
+                &outputrehilohi[ix1][j],&outputrelolohi[ix1][j],
+                &outputrehihilo[ix1][j],&outputrelohilo[ix1][j],
+                &outputrehilolo[ix1][j],&outputrelololo[ix1][j],
+                cffrehihihi[i][j],cffrelohihi[i][j],
+                cffrehilohi[i][j],cffrelolohi[i][j],
+                cffrehihilo[i][j],cffrelohilo[i][j],
+                cffrehilolo[i][j],cffrelololo[i][j]);
+            odf_inc
+               (&outputimhihihi[ix1][j],&outputimlohihi[ix1][j],
+                &outputimhilohi[ix1][j],&outputimlolohi[ix1][j],
+                &outputimhihilo[ix1][j],&outputimlohilo[ix1][j],
+                &outputimhilolo[ix1][j],&outputimlololo[ix1][j],
+                cffimhihihi[i][j],cffimlohihi[i][j],
+                cffimhilohi[i][j],cffimlolohi[i][j],
+                cffimhihilo[i][j],cffimlohilo[i][j],
+                cffimhilolo[i][j],cffimlololo[i][j]);
+         }
+      }
+      else if(nvr[i] == 2)
+      {
+         ix1 = idx[i][0]; ix2 = idx[i][1];
+
+         CPU_cmplx8_product(deg,
+            cffrehihihi[i],cffrelohihi[i],cffrehilohi[i],cffrelolohi[i],
+            cffrehihilo[i],cffrelohilo[i],cffrehilolo[i],cffrelololo[i],
+            cffimhihihi[i],cffimlohihi[i],cffimhilohi[i],cffimlolohi[i],
+            cffimhihilo[i],cffimlohilo[i],cffimhilolo[i],cffimlololo[i],
+            inputrehihihi[ix1],inputrelohihi[ix1],
+            inputrehilohi[ix1],inputrelolohi[ix1],
+            inputrehihilo[ix1],inputrelohilo[ix1],
+            inputrehilolo[ix1],inputrelololo[ix1],
+            inputimhihihi[ix1],inputimlohihi[ix1],
+            inputimhilohi[ix1],inputimlolohi[ix1],
+            inputimhihilo[ix1],inputimlohilo[ix1],
+            inputimhilolo[ix1],inputimlololo[ix1],
+            forwardrehihihi[0],forwardrelohihi[0],
+            forwardrehilohi[0],forwardrelolohi[0],
+            forwardrehihilo[0],forwardrelohilo[0],
+            forwardrehilolo[0],forwardrelololo[0],
+            forwardimhihihi[0],forwardimlohihi[0],
+            forwardimhilohi[0],forwardimlolohi[0],
+            forwardimhihilo[0],forwardimlohilo[0],
+            forwardimhilolo[0],forwardimlololo[0]);
+
+         for(int j=0; j<=deg; j++) // output[ix2][j] += forward[0][j];
+         {
+            odf_inc
+               (&outputrehihihi[ix2][j],&outputrelohihi[ix2][j],
+                &outputrehilohi[ix2][j],&outputrelolohi[ix2][j],
+                &outputrehihilo[ix2][j],&outputrelohilo[ix2][j],
+                &outputrehilolo[ix2][j],&outputrelololo[ix2][j],
+                forwardrehihihi[0][j],forwardrelohihi[0][j],
+                forwardrehilohi[0][j],forwardrelolohi[0][j],
+                forwardrehihilo[0][j],forwardrelohilo[0][j],
+                forwardrehilolo[0][j],forwardrelololo[0][j]);
+            odf_inc
+               (&outputimhihihi[ix2][j],&outputimlohihi[ix2][j],
+                &outputimhilohi[ix2][j],&outputimlolohi[ix2][j],
+                &outputimhihilo[ix2][j],&outputimlohilo[ix2][j],
+                &outputimhilolo[ix2][j],&outputimlololo[ix2][j],
+                forwardimhihihi[0][j],forwardimlohihi[0][j],
+                forwardimhilohi[0][j],forwardimlolohi[0][j],
+                forwardimhihilo[0][j],forwardimlohilo[0][j],
+                forwardimhilolo[0][j],forwardimlololo[0][j]);
+         }
+         if(verbose) cout << "monomial " << i << " : ";
+         if(verbose) cout << "cff * "
+                          << "input[" << ix1 << "] to f[0]" << endl;
+
+         CPU_cmplx8_product(deg,
+            cffrehihihi[i],cffrelohihi[i],cffrehilohi[i],cffrelolohi[i],
+            cffrehihilo[i],cffrelohilo[i],cffrehilolo[i],cffrelololo[i],
+            cffimhihihi[i],cffimlohihi[i],cffimhilohi[i],cffimlolohi[i],
+            cffimhihilo[i],cffimlohilo[i],cffimhilolo[i],cffimlololo[i],
+            inputrehihihi[ix2],inputrelohihi[ix2],
+            inputrehilohi[ix2],inputrelolohi[ix2],
+            inputrehihilo[ix2],inputrelohilo[ix2],
+            inputrehilolo[ix2],inputrelololo[ix2],
+            inputimhihihi[ix2],inputimlohihi[ix2],
+            inputimhilohi[ix2],inputimlolohi[ix2],
+            inputimhihilo[ix2],inputimlohilo[ix2],
+            inputimhilolo[ix2],inputimlololo[ix2],
+            backwardrehihihi[0],backwardrelohihi[0],
+            backwardrehilohi[0],backwardrelolohi[0],
+            backwardrehihilo[0],backwardrelohilo[0],
+            backwardrehilolo[0],backwardrelololo[0],
+            backwardimhihihi[0],backwardimlohihi[0],
+            backwardimhilohi[0],backwardimlolohi[0],
+            backwardimhihilo[0],backwardimlohilo[0],
+            backwardimhilolo[0],backwardimlololo[0]);
+
+         if(verbose) cout << "monomial " << i << " : ";
+         if(verbose) cout << "cff * "
+                          << "input[" << ix2 << "] to b[0]" << endl;
+         for(int j=0; j<=deg; j++) // output[ix1][j] += backward[0][j];
+         {
+            odf_inc
+               (&outputrehihihi[ix1][j],&outputrelohihi[ix1][j],
+                &outputrehilohi[ix1][j],&outputrelolohi[ix1][j],
+                &outputrehihilo[ix1][j],&outputrelohilo[ix1][j],
+                &outputrehilolo[ix1][j],&outputrelololo[ix1][j],
+                backwardrehihihi[0][j],backwardrelohihi[0][j],
+                backwardrehilohi[0][j],backwardrelolohi[0][j],
+                backwardrehihilo[0][j],backwardrelohilo[0][j],
+                backwardrehilolo[0][j],backwardrelololo[0][j]);
+            odf_inc
+               (&outputimhihihi[ix1][j],&outputimlohihi[ix1][j],
+                &outputimhilohi[ix1][j],&outputimlolohi[ix1][j],
+                &outputimhihilo[ix1][j],&outputimlohilo[ix1][j],
+                &outputimhilolo[ix1][j],&outputimlololo[ix1][j],
+                backwardimhihihi[0][j],backwardimlohihi[0][j],
+                backwardimhilohi[0][j],backwardimlolohi[0][j],
+                backwardimhihilo[0][j],backwardimlohilo[0][j],
+                backwardimhilolo[0][j],backwardimlololo[0][j]);
+         }
+         CPU_cmplx8_product(deg,
+            forwardrehihihi[0],forwardrelohihi[0],
+            forwardrehilohi[0],forwardrelolohi[0],
+            forwardrehihilo[0],forwardrelohilo[0],
+            forwardrehilolo[0],forwardrelololo[0],
+            forwardimhihihi[0],forwardimlohihi[0],
+            forwardimhilohi[0],forwardimlolohi[0],
+            forwardimhihilo[0],forwardimlohilo[0],
+            forwardimhilolo[0],forwardimlololo[0],
+            inputrehihihi[ix2],inputrelohihi[ix2],
+            inputrehilohi[ix2],inputrelolohi[ix2],
+            inputrehihilo[ix2],inputrelohilo[ix2],
+            inputrehilolo[ix2],inputrelololo[ix2],
+            inputimhihihi[ix2],inputimlohihi[ix2],
+            inputimhilohi[ix2],inputimlolohi[ix2],
+            inputimhihilo[ix2],inputimlohilo[ix2],
+            inputimhilolo[ix2],inputimlololo[ix2],
+            forwardrehihihi[1],forwardrelohihi[1],
+            forwardrehilohi[1],forwardrelolohi[1],
+            forwardrehihilo[1],forwardrelohilo[1],
+            forwardrehilolo[1],forwardrelololo[1],
+            forwardimhihihi[1],forwardimlohihi[1],
+            forwardimhilohi[1],forwardimlolohi[1],
+            forwardimhihilo[1],forwardimlohilo[1],
+            forwardimhilolo[1],forwardimlololo[1]);
+
+         if(verbose) cout << "monomial " << i << " : ";
+         if(verbose) cout << "f[0] * "
+                          << "input[" << ix2 << "] to f[1]" << endl;
+         for(int j=0; j<=deg; j++) // output[dim][j] += forward[1][j];
+         {
+            odf_inc
+               (&outputrehihihi[dim][j],&outputrelohihi[dim][j],
+                &outputrehilohi[dim][j],&outputrelolohi[dim][j],
+                &outputrehihilo[dim][j],&outputrelohilo[dim][j],
+                &outputrehilolo[dim][j],&outputrelololo[dim][j],
+                forwardrehihihi[1][j],forwardrelohihi[1][j],
+                forwardrehilohi[1][j],forwardrelolohi[1][j],
+                forwardrehihilo[1][j],forwardrelohilo[1][j],
+                forwardrehilolo[1][j],forwardrelololo[1][j]);
+            odf_inc
+               (&outputimhihihi[dim][j],&outputimlohihi[dim][j],
+                &outputimhilohi[dim][j],&outputimlolohi[dim][j],
+                &outputimhihilo[dim][j],&outputimlohilo[dim][j],
+                &outputimhilolo[dim][j],&outputimlololo[dim][j],
+                forwardimhihihi[1][j],forwardimlohihi[1][j],
+                forwardimhilohi[1][j],forwardimlolohi[1][j],
+                forwardimhihilo[1][j],forwardimlohilo[1][j],
+                forwardimhilolo[1][j],forwardimlololo[1][j]);
+         }
+      }
+      else if(nvr[i] > 2)
+      {
+         CPU_cmplx8_speel
+            (nvr[i],deg,idx[i],
+             cffrehihihi[i],cffrelohihi[i],cffrehilohi[i],cffrelolohi[i],
+             cffrehihilo[i],cffrelohilo[i],cffrehilolo[i],cffrelololo[i],
+             cffimhihihi[i],cffimlohihi[i],cffimhilohi[i],cffimlolohi[i],
+             cffimhihilo[i],cffimlohilo[i],cffimhilolo[i],cffimlololo[i],
+             inputrehihihi,inputrelohihi,inputrehilohi,inputrelolohi,
+             inputrehihilo,inputrelohilo,inputrehilolo,inputrelololo,
+             inputimhihihi,inputimlohihi,inputimhilohi,inputimlolohi,
+             inputimhihilo,inputimlohilo,inputimhilolo,inputimlololo,
+             forwardrehihihi,forwardrelohihi,forwardrehilohi,forwardrelolohi,
+             forwardrehihilo,forwardrelohilo,forwardrehilolo,forwardrelololo,
+             forwardimhihihi,forwardimlohihi,forwardimhilohi,forwardimlolohi,
+             forwardimhihilo,forwardimlohilo,forwardimhilolo,forwardimlololo,
+             backwardrehihihi,backwardrelohihi,
+             backwardrehilohi,backwardrelolohi,
+             backwardrehihilo,backwardrelohilo,
+             backwardrehilolo,backwardrelololo,
+             backwardimhihihi,backwardimlohihi,
+             backwardimhilohi,backwardimlolohi,
+             backwardimhihilo,backwardimlohilo,
+             backwardimhilolo,backwardimlololo,
+             crossrehihihi,crossrelohihi,crossrehilohi,crossrelolohi,
+             crossrehihilo,crossrelohilo,crossrehilolo,crossrelololo,
+             crossimhihihi,crossimlohihi,crossimhilohi,crossimlolohi,
+             crossimhihilo,crossimlohilo,crossimhilolo,crossimlololo);
+
+         ix1 = nvr[i]-1;               // update the value of the polynomial
+         for(int j=0; j<=deg; j++) // output[dim][j] += forward[ix1][j];
+         {
+            odf_inc
+               (&outputrehihihi[dim][j],&outputrelohihi[dim][j],
+                &outputrehilohi[dim][j],&outputrelolohi[dim][j],
+                &outputrehihilo[dim][j],&outputrelohilo[dim][j],
+                &outputrehilolo[dim][j],&outputrelololo[dim][j],
+                forwardrehihihi[ix1][j],forwardrelohihi[ix1][j],
+                forwardrehilohi[ix1][j],forwardrelolohi[ix1][j],
+                forwardrehihilo[ix1][j],forwardrelohilo[ix1][j],
+                forwardrehilolo[ix1][j],forwardrelololo[ix1][j]);
+            odf_inc
+               (&outputimhihihi[dim][j],&outputimlohihi[dim][j],
+                &outputimhilohi[dim][j],&outputimlolohi[dim][j],
+                &outputimhihilo[dim][j],&outputimlohilo[dim][j],
+                &outputimhilolo[dim][j],&outputimlololo[dim][j],
+                forwardimhihihi[ix1][j],forwardimlohihi[ix1][j],
+                forwardimhilohi[ix1][j],forwardimlolohi[ix1][j],
+                forwardimhihilo[ix1][j],forwardimlohilo[ix1][j],
+                forwardimhilolo[ix1][j],forwardimlololo[ix1][j]);
+         }
+         ix2 = idx[i][ix1];             // derivative with respect to x[n-1]
+         ix1 = nvr[i]-2;
+
+         for(int j=0; j<=deg; j++) // output[ix2][j] += forward[ix1][j];
+         {
+            odf_inc
+               (&outputrehihihi[ix2][j],&outputrelohihi[ix2][j],
+                &outputrehilohi[ix2][j],&outputrelolohi[ix2][j],
+                &outputrehihilo[ix2][j],&outputrelohilo[ix2][j],
+                &outputrehilolo[ix2][j],&outputrelololo[ix2][j],
+                forwardrehihihi[ix1][j],forwardrelohihi[ix1][j],
+                forwardrehilohi[ix1][j],forwardrelolohi[ix1][j],
+                forwardrehihilo[ix1][j],forwardrelohilo[ix1][j],
+                forwardrehilolo[ix1][j],forwardrelololo[ix1][j]);
+            odf_inc
+               (&outputimhihihi[ix2][j],&outputimlohihi[ix2][j],
+                &outputimhilohi[ix2][j],&outputimlolohi[ix2][j],
+                &outputimhihilo[ix2][j],&outputimlohilo[ix2][j],
+                &outputimhilolo[ix2][j],&outputimlololo[ix2][j],
+                forwardimhihihi[ix1][j],forwardimlohihi[ix1][j],
+                forwardimhilohi[ix1][j],forwardimlolohi[ix1][j],
+                forwardimhihilo[ix1][j],forwardimlohilo[ix1][j],
+                forwardimhilolo[ix1][j],forwardimlololo[ix1][j]);
+         }
+         ix2 = idx[i][0];                 // derivative with respect to x[0]
+         ix1 = nvr[i]-3;
+
+         for(int j=0; j<=deg; j++) // output[ix2][j] += backward[ix1][j];
+         {
+            odf_inc
+               (&outputrehihihi[ix2][j],&outputrelohihi[ix2][j],
+                &outputrehilohi[ix2][j],&outputrelolohi[ix2][j],
+                &outputrehihilo[ix2][j],&outputrelohilo[ix2][j],
+                &outputrehilolo[ix2][j],&outputrelololo[ix2][j],
+                backwardrehihihi[ix1][j],backwardrelohihi[ix1][j],
+                backwardrehilohi[ix1][j],backwardrelolohi[ix1][j],
+                backwardrehihilo[ix1][j],backwardrelohilo[ix1][j],
+                backwardrehilolo[ix1][j],backwardrelololo[ix1][j]);
+            odf_inc
+               (&outputimhihihi[ix2][j],&outputimlohihi[ix2][j],
+                &outputimhilohi[ix2][j],&outputimlolohi[ix2][j],
+                &outputimhihilo[ix2][j],&outputimlohilo[ix2][j],
+                &outputimhilolo[ix2][j],&outputimlololo[ix2][j],
+                backwardimhihihi[ix1][j],backwardimlohihi[ix1][j],
+                backwardimhilohi[ix1][j],backwardimlolohi[ix1][j],
+                backwardimhihilo[ix1][j],backwardimlohilo[ix1][j],
+                backwardimhilolo[ix1][j],backwardimlololo[ix1][j]);
+         }
+         ix1 = nvr[i]-1;                  // derivative with respect to x[k]
+         for(int k=1; k<ix1; k++)
+         { 
+            ix2 = idx[i][k];
+            for(int j=0; j<=deg; j++) // output[ix2][j] += cross[k-1][j];
+            {
+               odf_inc
+                  (&outputrehihihi[ix2][j],&outputrelohihi[ix2][j],
+                   &outputrehilohi[ix2][j],&outputrelolohi[ix2][j],
+                   &outputrehihilo[ix2][j],&outputrelohilo[ix2][j],
+                   &outputrehilolo[ix2][j],&outputrelololo[ix2][j],
+                   crossrehihihi[k-1][j],crossrelohihi[k-1][j],
+                   crossrehilohi[k-1][j],crossrelolohi[k-1][j],
+                   crossrehihilo[k-1][j],crossrelohilo[k-1][j],
+                   crossrehilolo[k-1][j],crossrelololo[k-1][j]);
+               odf_inc
+                  (&outputimhihihi[ix2][j],&outputimlohihi[ix2][j],
+                   &outputimhilohi[ix2][j],&outputimlolohi[ix2][j],
+                   &outputimhihilo[ix2][j],&outputimlohilo[ix2][j],
+                   &outputimhilolo[ix2][j],&outputimlololo[ix2][j],
+                   crossimhihihi[k-1][j],crossimlohihi[k-1][j],
+                   crossimhilohi[k-1][j],crossimlolohi[k-1][j],
+                   crossimhihilo[k-1][j],crossimlohilo[k-1][j],
+                   crossimhilolo[k-1][j],crossimlololo[k-1][j]);
+            }
          }
       }
    }
