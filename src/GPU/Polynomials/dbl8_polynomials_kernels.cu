@@ -27,10 +27,10 @@
 using namespace std;
 
 __global__ void dbl8_padded_convjobs
- ( double *datahihihi, double *datahilohi,
-   double *datahihilo, double *datahilolo,
-   double *datalohihi, double *datalolohi,
-   double *datalohilo, double *datalololo,
+ ( double *datahihihi, double *datalohihi,
+   double *datahilohi, double *datalolohi,
+   double *datahihilo, double *datalohilo,
+   double *datahilolo, double *datalololo,
    int *in1idx, int *in2idx, int *outidx, int dim )
 {
    const int bdx = blockIdx.x;           // index to the convolution job
@@ -40,97 +40,97 @@ __global__ void dbl8_padded_convjobs
    const int idx3 = outidx[bdx] + tdx;
 
    __shared__ double xvhihihi[od_shmemsize];
-   __shared__ double xvhilohi[od_shmemsize];
-   __shared__ double xvhihilo[od_shmemsize];
-   __shared__ double xvhilolo[od_shmemsize];
    __shared__ double xvlohihi[od_shmemsize];
+   __shared__ double xvhilohi[od_shmemsize];
    __shared__ double xvlolohi[od_shmemsize];
+   __shared__ double xvhihilo[od_shmemsize];
    __shared__ double xvlohilo[od_shmemsize];
+   __shared__ double xvhilolo[od_shmemsize];
    __shared__ double xvlololo[od_shmemsize];
    __shared__ double yvhihihi[2*od_shmemsize];
-   __shared__ double yvhilohi[2*od_shmemsize];
-   __shared__ double yvhihilo[2*od_shmemsize];
-   __shared__ double yvhilolo[2*od_shmemsize];
    __shared__ double yvlohihi[2*od_shmemsize];
+   __shared__ double yvhilohi[2*od_shmemsize];
    __shared__ double yvlolohi[2*od_shmemsize];
+   __shared__ double yvhihilo[2*od_shmemsize];
    __shared__ double yvlohilo[2*od_shmemsize];
+   __shared__ double yvhilolo[2*od_shmemsize];
    __shared__ double yvlololo[2*od_shmemsize];
    __shared__ double zvhihihi[od_shmemsize];
-   __shared__ double zvhilohi[od_shmemsize];
-   __shared__ double zvhihilo[od_shmemsize];
-   __shared__ double zvhilolo[od_shmemsize];
    __shared__ double zvlohihi[od_shmemsize];
+   __shared__ double zvhilohi[od_shmemsize];
    __shared__ double zvlolohi[od_shmemsize];
+   __shared__ double zvhihilo[od_shmemsize];
    __shared__ double zvlohilo[od_shmemsize];
+   __shared__ double zvhilolo[od_shmemsize];
    __shared__ double zvlololo[od_shmemsize];
 
-   double prdhihihi,prdhilohi,prdhihilo,prdhilolo;
-   double prdlohihi,prdlolohi,prdlohilo,prdlololo;
+   double prdhihihi,prdlohihi,prdhilohi,prdlolohi;
+   double prdhihilo,prdlohilo,prdhilolo,prdlololo;
    int ydx = dim + tdx;
 
    xvhihihi[tdx] = datahihihi[idx1];  // loading first input
+   xvlohihi[tdx] = datalohihi[idx1]; 
    xvhilohi[tdx] = datahilohi[idx1]; 
-   xvhihilo[tdx] = datahihilo[idx1]; 
-   xvhilolo[tdx] = datahilolo[idx1]; 
-   xvlohihi[tdx] = datalohihi[idx1];
    xvlolohi[tdx] = datalolohi[idx1]; 
+   xvhihilo[tdx] = datahihilo[idx1];
    xvlohilo[tdx] = datalohilo[idx1]; 
+   xvhilolo[tdx] = datahilolo[idx1]; 
    xvlololo[tdx] = datalololo[idx1]; 
    yvhihihi[tdx] = 0.0;             // padded with zeros
-   yvhilohi[tdx] = 0.0;
-   yvhihilo[tdx] = 0.0;
-   yvhilolo[tdx] = 0.0;
    yvlohihi[tdx] = 0.0;
+   yvhilohi[tdx] = 0.0;
    yvlolohi[tdx] = 0.0;
+   yvhihilo[tdx] = 0.0;
    yvlohilo[tdx] = 0.0;
+   yvhilolo[tdx] = 0.0;
    yvlololo[tdx] = 0.0;
    yvhihihi[ydx] = datahihihi[idx2];  // loading second input
-   yvhilohi[ydx] = datahilohi[idx2];
-   yvhihilo[ydx] = datahihilo[idx2];
-   yvhilolo[ydx] = datahilolo[idx2];
    yvlohihi[ydx] = datalohihi[idx2];
+   yvhilohi[ydx] = datahilohi[idx2];
    yvlolohi[ydx] = datalolohi[idx2];
+   yvhihilo[ydx] = datahihilo[idx2];
    yvlohilo[ydx] = datalohilo[idx2];
+   yvhilolo[ydx] = datahilolo[idx2];
    yvlololo[ydx] = datalololo[idx2];
 
    __syncthreads();
 
    // zv[tdx] = xv[0]*yv[tdx];
-   odg_mul( xvhihihi[0],   xvhilohi[0],   xvhihilo[0],   xvhilolo[0],
-            xvlohihi[0],   xvlolohi[0],   xvlohilo[0],   xvlololo[0],
-            yvhihihi[ydx], yvhilohi[ydx], yvhihilo[ydx], yvhilolo[ydx],
-            yvlohihi[ydx], yvlolohi[ydx], yvlohilo[ydx], yvlololo[ydx],
-           &zvhihihi[tdx],&zvhilohi[tdx],&zvhihilo[tdx],&zvhilolo[tdx],
-           &zvlohihi[tdx],&zvlolohi[tdx],&zvlohilo[tdx],&zvlololo[tdx]);
+   odg_mul( xvhihihi[0],   xvlohihi[0],   xvhilohi[0],   xvlolohi[0],
+            xvhihilo[0],   xvlohilo[0],   xvhilolo[0],   xvlololo[0],
+            yvhihihi[ydx], yvlohihi[ydx], yvhilohi[ydx], yvlolohi[ydx],
+            yvhihilo[ydx], yvlohilo[ydx], yvhilolo[ydx], yvlololo[ydx],
+           &zvhihihi[tdx],&zvlohihi[tdx],&zvhilohi[tdx],&zvlolohi[tdx],
+           &zvhihilo[tdx],&zvlohilo[tdx],&zvhilolo[tdx],&zvlololo[tdx]);
    __syncthreads();
 
    for(int i=1; i<dim; i++) // zv[tdx] = zv[tdx] + xv[i]*yv[dim+tdx-i];
    {
       ydx = dim + tdx - i;
 
-      odg_mul( xvhihihi[i],  xvhilohi[i],  xvhihilo[i],  xvhilolo[i],
-               xvlohihi[i],  xvlolohi[i],  xvlohilo[i],  xvlololo[i],
-               yvhihihi[ydx],yvhilohi[ydx],yvhihilo[ydx],yvhilolo[ydx],
-               yvlohihi[ydx],yvlolohi[ydx],yvlohilo[ydx],yvlololo[ydx],
-              &prdhihihi,  &prdhilohi,   &prdhihilo,   &prdhilolo,
-              &prdlohihi,  &prdlolohi,   &prdlohilo,   &prdlololo);
+      odg_mul( xvhihihi[i],  xvlohihi[i],  xvhilohi[i],  xvlolohi[i],
+               xvhihilo[i],  xvlohilo[i],  xvhilolo[i],  xvlololo[i],
+               yvhihihi[ydx],yvlohihi[ydx],yvhilohi[ydx],yvlolohi[ydx],
+               yvhihilo[ydx],yvlohilo[ydx],yvhilolo[ydx],yvlololo[ydx],
+             &prdhihihi,   &prdlohihi,   &prdhilohi,   &prdlolohi,
+             &prdhihilo,   &prdlohilo,   &prdhilolo,   &prdlololo);
       __syncthreads();
 
-      odg_inc(&zvhihihi[tdx],&zvhilohi[tdx],&zvhihilo[tdx],&zvhilolo[tdx],
-              &zvlohihi[tdx],&zvlolohi[tdx],&zvlohilo[tdx],&zvlololo[tdx],
-              prdhihihi,     prdhilohi,     prdhihilo,     prdhilolo,
-              prdlohihi,     prdlolohi,     prdlohilo,     prdlololo);
+      odg_inc(&zvhihihi[tdx],&zvlohihi[tdx],&zvhilohi[tdx],&zvlolohi[tdx],
+              &zvhihilo[tdx],&zvlohilo[tdx],&zvhilolo[tdx],&zvlololo[tdx],
+              prdhihihi,     prdlohihi,     prdhilohi,     prdlolohi,
+              prdhihilo,     prdlohilo,     prdhilolo,     prdlololo);
       __syncthreads();
    }
    __syncthreads();
 
    datahihihi[idx3] = zvhihihi[tdx]; // storing the output
-   datahilohi[idx3] = zvhilohi[tdx];
-   datahihilo[idx3] = zvhihilo[tdx];
-   datahilolo[idx3] = zvhilolo[tdx];
    datalohihi[idx3] = zvlohihi[tdx];
+   datahilohi[idx3] = zvhilohi[tdx];
    datalolohi[idx3] = zvlolohi[tdx];
+   datahihilo[idx3] = zvhihilo[tdx];
    datalohilo[idx3] = zvlohilo[tdx];
+   datahilolo[idx3] = zvhilolo[tdx];
    datalololo[idx3] = zvlololo[tdx];
 }
 
@@ -200,6 +200,7 @@ __global__ void dbl8_increment_jobs
    datalololo[idx3] = zvlololo[tdx];
 }
 
+/*
 __global__ void cmplx8_padded_convjobs
  ( double *datarehihihi, double *datarelohihi,
    double *datarehilohi, double *datarelolohi,
@@ -449,6 +450,7 @@ __global__ void cmplx8_padded_convjobs
    dataimhilolo[idx3] = zvimhilolo[tdx];
    dataimlololo[idx3] = zvimlololo[tdx];
 }
+*/
 
 __global__ void cmplx8vectorized_flipsigns
  ( double *datarihihihi, double *datarilohihi,
@@ -473,10 +475,10 @@ __global__ void cmplx8vectorized_flipsigns
 }
 
 __global__ void dbl8_update_addjobs
- ( double *datahihihi, double *datahilohi,
-   double *datahihilo, double *datahilolo,
-   double *datalohihi, double *datalolohi,
-   double *datalohilo, double *datalololo,
+ ( double *datahihihi, double *datalohihi,
+   double *datahilohi, double *datalolohi,
+   double *datahihilo, double *datalohilo,
+   double *datahilolo, double *datalololo,
    int *in1idx, int *in2idx, int *outidx, int dim )
 {
    const int bdx = blockIdx.x;           // index to the convolution job
@@ -486,79 +488,79 @@ __global__ void dbl8_update_addjobs
    const int idx3 = outidx[bdx] + tdx;
 
    __shared__ double xvhihihi[od_shmemsize];
-   __shared__ double xvhilohi[od_shmemsize];
-   __shared__ double xvhihilo[od_shmemsize];
-   __shared__ double xvhilolo[od_shmemsize];
    __shared__ double xvlohihi[od_shmemsize];
+   __shared__ double xvhilohi[od_shmemsize];
    __shared__ double xvlolohi[od_shmemsize];
+   __shared__ double xvhihilo[od_shmemsize];
    __shared__ double xvlohilo[od_shmemsize];
+   __shared__ double xvhilolo[od_shmemsize];
    __shared__ double xvlololo[od_shmemsize];
    __shared__ double yvhihihi[od_shmemsize];
-   __shared__ double yvhilohi[od_shmemsize];
-   __shared__ double yvhihilo[od_shmemsize];
-   __shared__ double yvhilolo[od_shmemsize];
    __shared__ double yvlohihi[od_shmemsize];
+   __shared__ double yvhilohi[od_shmemsize];
    __shared__ double yvlolohi[od_shmemsize];
+   __shared__ double yvhihilo[od_shmemsize];
    __shared__ double yvlohilo[od_shmemsize];
+   __shared__ double yvhilolo[od_shmemsize];
    __shared__ double yvlololo[od_shmemsize];
    __shared__ double zvhihihi[od_shmemsize];
-   __shared__ double zvhilohi[od_shmemsize];
-   __shared__ double zvhihilo[od_shmemsize];
-   __shared__ double zvhilolo[od_shmemsize];
    __shared__ double zvlohihi[od_shmemsize];
+   __shared__ double zvhilohi[od_shmemsize];
    __shared__ double zvlolohi[od_shmemsize];
+   __shared__ double zvhihilo[od_shmemsize];
    __shared__ double zvlohilo[od_shmemsize];
+   __shared__ double zvhilolo[od_shmemsize];
    __shared__ double zvlololo[od_shmemsize];
 
    xvhihihi[tdx] = datahihihi[idx1];  // loading first input
-   xvhilohi[tdx] = datahilohi[idx1];
-   xvhihilo[tdx] = datahihilo[idx1];
-   xvhilolo[tdx] = datahilolo[idx1];
    xvlohihi[tdx] = datalohihi[idx1];
+   xvhilohi[tdx] = datahilohi[idx1];
    xvlolohi[tdx] = datalolohi[idx1];
+   xvhihilo[tdx] = datahihilo[idx1];
    xvlohilo[tdx] = datalohilo[idx1];
+   xvhilolo[tdx] = datahilolo[idx1];
    xvlololo[tdx] = datalololo[idx1];
    yvhihihi[tdx] = datahihihi[idx2];  // loading second input
-   yvhilohi[tdx] = datahilohi[idx2];
-   yvhihilo[tdx] = datahihilo[idx2];
-   yvhilolo[tdx] = datahilolo[idx2];
    yvlohihi[tdx] = datalohihi[idx2];
+   yvhilohi[tdx] = datahilohi[idx2];
    yvlolohi[tdx] = datalolohi[idx2];
+   yvhihilo[tdx] = datahihilo[idx2];
    yvlohilo[tdx] = datalohilo[idx2];
+   yvhilolo[tdx] = datahilolo[idx2];
    yvlololo[tdx] = datalololo[idx2];
 
    // zv[tdx] = xv[tdx] + yv[tdx];
 
    __syncthreads();
 
-   odg_add( xvhihihi[tdx], xvhilohi[tdx], xvhihilo[tdx], xvhilolo[tdx],
-            xvlohihi[tdx], xvlolohi[tdx], xvlohilo[tdx], xvlololo[tdx],
-            yvhihihi[tdx], yvhilohi[tdx], yvhihilo[tdx], yvhilolo[tdx],
-            yvlohihi[tdx], yvlolohi[tdx], yvlohilo[tdx], yvlololo[tdx],
-           &zvhihihi[tdx],&zvhilohi[tdx],&zvhihilo[tdx],&zvhilolo[tdx],
-           &zvlohihi[tdx],&zvlolohi[tdx],&zvlohilo[tdx],&zvlololo[tdx]);
+   odg_add( xvhihihi[tdx], xvlohihi[tdx], xvhilohi[tdx], xvlolohi[tdx],
+            xvhihilo[tdx], xvlohilo[tdx], xvhilolo[tdx], xvlololo[tdx],
+            yvhihihi[tdx], yvlohihi[tdx], yvhilohi[tdx], yvlolohi[tdx],
+            yvhihilo[tdx], yvlohilo[tdx], yvhilolo[tdx], yvlololo[tdx],
+           &zvhihihi[tdx],&zvlohihi[tdx],&zvhilohi[tdx],&zvlolohi[tdx],
+           &zvhihilo[tdx],&zvlohilo[tdx],&zvhilolo[tdx],&zvlololo[tdx]);
 
    __syncthreads();
 
    datahihihi[idx3] = zvhihihi[tdx]; // storing the output
-   datahilohi[idx3] = zvhilohi[tdx];
-   datahihilo[idx3] = zvhihilo[tdx];
-   datahilolo[idx3] = zvhilolo[tdx];
    datalohihi[idx3] = zvlohihi[tdx];
+   datahilohi[idx3] = zvhilohi[tdx];
    datalolohi[idx3] = zvlolohi[tdx];
+   datahihilo[idx3] = zvhihilo[tdx];
    datalohilo[idx3] = zvlohilo[tdx];
+   datahilolo[idx3] = zvhilolo[tdx];
    datalololo[idx3] = zvlololo[tdx];
 }
 
 void dbl_convoluted_data8_to_output
- ( double *datahihihi, double *datahilohi,
-   double *datahihilo, double *datahilolo,
-   double *datalohihi, double *datalolohi,
-   double *datalohilo, double *datalololo,
-   double **outputhihihi, double **outputhilohi,
-   double **outputhihilo, double **outputhilolo,
-   double **outputlohihi, double **outputlolohi,
-   double **outputlohilo, double **outputlololo,
+ ( double *datahihihi, double *datalohihi,
+   double *datahilohi, double *datalolohi,
+   double *datahihilo, double *datalohilo,
+   double *datahilolo, double *datalololo,
+   double **outputhihihi, double **outputlohihi,
+   double **outputhilohi, double **outputlolohi,
+   double **outputhihilo, double **outputlohilo,
+   double **outputhilolo, double **outputlololo,
    int dim, int nbr, int deg, int *nvr,
    int **idx, int *fstart, int *bstart, int *cstart, bool verbose )
 {
@@ -568,24 +570,24 @@ void dbl_convoluted_data8_to_output
    for(int i=0; i<=deg; i++) // output[dim][i] = data[i];
    {
       outputhihihi[dim][i] = datahihihi[i];
-      outputhilohi[dim][i] = datahilohi[i];
-      outputhihilo[dim][i] = datahihilo[i];
-      outputhilolo[dim][i] = datahilolo[i];
       outputlohihi[dim][i] = datalohihi[i];
+      outputhilohi[dim][i] = datahilohi[i];
       outputlolohi[dim][i] = datalolohi[i];
+      outputhihilo[dim][i] = datahihilo[i];
       outputlohilo[dim][i] = datalohilo[i];
+      outputhilolo[dim][i] = datahilolo[i];
       outputlololo[dim][i] = datalololo[i];
    }
    for(int i=0; i<dim; i++)
       for(int j=0; j<=deg; j++) // output[i][j] = 0.0;
       {
          outputhihihi[i][j] = 0.0;
-         outputhilohi[i][j] = 0.0;
-         outputhihilo[i][j] = 0.0;
-         outputhilolo[i][j] = 0.0;
          outputlohihi[i][j] = 0.0;
+         outputhilohi[i][j] = 0.0;
          outputlolohi[i][j] = 0.0;
+         outputhihilo[i][j] = 0.0;
          outputlohilo[i][j] = 0.0;
+         outputhilolo[i][j] = 0.0;
          outputlololo[i][j] = 0.0;
       }
 
@@ -597,14 +599,14 @@ void dbl_convoluted_data8_to_output
          cout << "monomial " << k << " update starts at " << ix1 << endl;
 
       for(int i=0; i<=deg; i++) // output[dim][i] += data[ix1++];
-         odf_inc(&outputhihihi[dim][i],&outputhilohi[dim][i],
-                 &outputhihilo[dim][i],&outputhilolo[dim][i],
-                 &outputlohihi[dim][i],&outputlolohi[dim][i],
-                 &outputlohilo[dim][i],&outputlololo[dim][i],
-                    datahihihi[ix1],      datahilohi[ix1],
-                    datahihilo[ix1],      datahilolo[ix1],
-                    datalohihi[ix1],      datalolohi[ix1],
-                    datalohilo[ix1],      datalololo[ix1++]);
+         odf_inc(&outputhihihi[dim][i],&outputlohihi[dim][i],
+                 &outputhilohi[dim][i],&outputlolohi[dim][i],
+                 &outputhihilo[dim][i],&outputlohilo[dim][i],
+                 &outputhilolo[dim][i],&outputlololo[dim][i],
+                    datahihihi[ix1],      datalohihi[ix1],
+                    datahilohi[ix1],      datalolohi[ix1],
+                    datahihilo[ix1],      datalohilo[ix1],
+                    datahilolo[ix1],      datalololo[ix1++]);
      
       ix0 = idx[k][0];
       if(nvr[k] == 1)
@@ -612,14 +614,14 @@ void dbl_convoluted_data8_to_output
          ix1 = (1 + k)*deg1;
             
          for(int i=0; i<=deg; i++) // output[ix0][i] += data[ix1++];
-            odf_inc(&outputhihihi[ix0][i],&outputhilohi[ix0][i],
-                    &outputhihilo[ix0][i],&outputhilolo[ix0][i],
-                    &outputlohihi[ix0][i],&outputlolohi[ix0][i],
-                    &outputlohilo[ix0][i],&outputlololo[ix0][i],
-                       datahihihi[ix1],      datahilohi[ix1],
-                       datahihilo[ix1],      datahilolo[ix1],
-                       datalohihi[ix1],      datalolohi[ix1],
-                       datalohilo[ix1],      datalololo[ix1++]);
+            odf_inc(&outputhihihi[ix0][i],&outputlohihi[ix0][i],
+                    &outputhilohi[ix0][i],&outputlolohi[ix0][i],
+                    &outputhihilo[ix0][i],&outputlohilo[ix0][i],
+                    &outputhilolo[ix0][i],&outputlololo[ix0][i],
+                       datahihihi[ix1],      datalohihi[ix1],
+                       datahilohi[ix1],      datalolohi[ix1],
+                       datahihilo[ix1],      datalohilo[ix1],
+                       datahilolo[ix1],      datalololo[ix1++]);
       }
       else
       {                               // update first and last derivative
@@ -628,28 +630,28 @@ void dbl_convoluted_data8_to_output
          ix1 = bstart[k] + ix2*deg1;
 
          for(int i=0; i<=deg; i++) // output[ix0][i] += data[ix1++];
-            odf_inc(&outputhihihi[ix0][i],&outputhilohi[ix0][i],
-                    &outputhihilo[ix0][i],&outputhilolo[ix0][i],
-                    &outputlohihi[ix0][i],&outputlolohi[ix0][i],
-                    &outputlohilo[ix0][i],&outputlololo[ix0][i],
-                       datahihihi[ix1],      datahilohi[ix1],
-                       datahihilo[ix1],      datahilolo[ix1],
-                       datalohihi[ix1],      datalolohi[ix1],
-                       datalohilo[ix1],      datalololo[ix1++]);
+            odf_inc(&outputhihihi[ix0][i],&outputlohihi[ix0][i],
+                    &outputhilohi[ix0][i],&outputlolohi[ix0][i],
+                    &outputhihilo[ix0][i],&outputlohilo[ix0][i],
+                    &outputhilolo[ix0][i],&outputlololo[ix0][i],
+                       datahihihi[ix1],      datalohihi[ix1],
+                       datahilohi[ix1],      datalolohi[ix1],
+                       datahihilo[ix1],      datalohilo[ix1],
+                       datahilolo[ix1],      datalololo[ix1++]);
 
          ix2 = nvr[k]-2;
          ix1 = fstart[k] + ix2*deg1;
          ix0 = idx[k][ix2+1];
 
          for(int i=0; i<=deg; i++) // output[ix0][i] += data[ix1++];
-            odf_inc(&outputhihihi[ix0][i],&outputhilohi[ix0][i],
-                    &outputhihilo[ix0][i],&outputhilolo[ix0][i],
-                    &outputlohihi[ix0][i],&outputlolohi[ix0][i],
-                    &outputlohilo[ix0][i],&outputlololo[ix0][i],
-                       datahihihi[ix1],      datahilohi[ix1],
-                       datahihilo[ix1],      datahilolo[ix1],
-                       datalohihi[ix1],      datalolohi[ix1],
-                       datalohilo[ix1],      datalololo[ix1++]);
+            odf_inc(&outputhihihi[ix0][i],&outputlohihi[ix0][i],
+                    &outputhilohi[ix0][i],&outputlolohi[ix0][i],
+                    &outputhihilo[ix0][i],&outputlohilo[ix0][i],
+                    &outputhilolo[ix0][i],&outputlololo[ix0][i],
+                       datahihihi[ix1],      datalohihi[ix1],
+                       datahilolo[ix1],      datalolohi[ix1],
+                       datahihilo[ix1],      datalohilo[ix1],
+                       datahilolo[ix1],      datalololo[ix1++]);
  
          if(nvr[k] > 2)                   // update all other derivatives
          {
@@ -663,14 +665,14 @@ void dbl_convoluted_data8_to_output
                        << " update starts at " << ix1 << endl;
 
                for(int i=0; i<=deg; i++) // output[ix0][i] += data[ix1++];
-                  odf_inc(&outputhihihi[ix0][i],&outputhilohi[ix0][i],
-                          &outputhihilo[ix0][i],&outputhilolo[ix0][i],
-                          &outputlohihi[ix0][i],&outputlolohi[ix0][i],
-                          &outputlohilo[ix0][i],&outputlololo[ix0][i],
-                             datahihihi[ix1],      datahilohi[ix1],
-                             datahihilo[ix1],      datahilolo[ix1],
-                             datalohihi[ix1],      datalolohi[ix1],
-                             datalohilo[ix1],      datalololo[ix1++]);
+                  odf_inc(&outputhihihi[ix0][i],&outputlohihi[ix0][i],
+                          &outputhilohi[ix0][i],&outputlolohi[ix0][i],
+                          &outputhihilo[ix0][i],&outputlohilo[ix0][i],
+                          &outputhilolo[ix0][i],&outputlololo[ix0][i],
+                             datahihihi[ix1],      datalohihi[ix1],
+                             datahilohi[ix1],      datalolohi[ix1],
+                             datahihilo[ix1],      datalohilo[ix1],
+                             datahilolo[ix1],      datalololo[ix1++]);
             }
          }
       }
@@ -899,6 +901,304 @@ void dbl_added_data8_to_output
                outputlolohi[k][i] = datalolohi[ix];
                outputlohilo[k][i] = datalohilo[ix];
                outputlololo[k][i] = datalololo[ix++];
+            }
+         }
+      }
+   }
+}
+
+void cmplx_added_data8vectorized_to_output
+ ( double *datarihihihi, double *datarilohihi,
+   double *datarihilohi, double *datarilolohi,
+   double *datarihihilo, double *datarilohilo,
+   double *datarihilolo, double *datarilololo,
+   double **outputrehihihi, double **outputrelohihi,
+   double **outputrehilohi, double **outputrelolohi,
+   double **outputrehihilo, double **outputrelohilo,
+   double **outputrehilolo, double **outputrelololo,
+   double **outputimhihihi, double **outputimlohihi,
+   double **outputimhilohi, double **outputimlolohi,
+   double **outputimhihilo, double **outputimlohilo,
+   double **outputimhilolo, double **outputimlololo,
+   int dim, int nbr, int deg, int *nvr,
+   int **idx, int *fstart, int *bstart, int *cstart,
+   int totcff, int offsetri, ComplexAdditionJobs jobs, bool verbose )
+{
+   const int deg1 = deg + 1;
+   const int lastmon = nbr-1;
+   const int lastidx = nvr[lastmon]-1;
+   const int totcffoffset = totcff + offsetri;
+   int ix1re,ix2im;
+
+   ix1re = fstart[lastmon] + lastidx*deg1;
+   ix2im = fstart[lastmon] + lastidx*deg1 + totcffoffset;
+
+   if(verbose)
+      cout << "Updating value starting at " << ix1re << " in data." << endl;
+
+   for(int i=0; i<=deg; i++) // output[dim][i] = data[ix++];
+   {
+      outputrehihihi[dim][i] = datarihihihi[ix1re];
+      outputrelohihi[dim][i] = datarilohihi[ix1re];
+      outputrehilohi[dim][i] = datarihilohi[ix1re];
+      outputrelolohi[dim][i] = datarilolohi[ix1re];
+      outputrehihilo[dim][i] = datarihihilo[ix1re];
+      outputrelohilo[dim][i] = datarilohilo[ix1re];
+      outputrehilolo[dim][i] = datarihilolo[ix1re];
+      outputrelololo[dim][i] = datarilololo[ix1re++];
+      outputimhihihi[dim][i] = datarihihihi[ix2im];
+      outputimlohihi[dim][i] = datarilohihi[ix2im];
+      outputimhilohi[dim][i] = datarihilohi[ix2im];
+      outputimlolohi[dim][i] = datarilolohi[ix2im];
+      outputimhihilo[dim][i] = datarihihilo[ix2im];
+      outputimlohilo[dim][i] = datarilohilo[ix2im];
+      outputimhilolo[dim][i] = datarihilolo[ix2im];
+      outputimlololo[dim][i] = datarilololo[ix2im++];
+   }
+   int cnt = jobs.get_differential_count(0);
+
+   if(verbose)
+      cout << "Differential count for variable 0 : " << cnt << endl;
+
+   if(cnt == 0) // it could be there is no first variable anywhere ...
+   {
+      const int difidx = jobs.get_differential_index(0,0);
+
+      if(verbose)
+         cout << "Differential index for variable 0 : " << difidx << endl;
+
+      if(difidx < 0)
+      {
+         for(int i=0; i<=deg; i++) // output[0][i] = 0.0;
+         {
+            outputrehihihi[0][i] = 0.0; outputrelohihi[0][i] = 0.0;
+            outputrehilohi[0][i] = 0.0; outputrelolohi[0][i] = 0.0;
+            outputrehihilo[0][i] = 0.0; outputrelohilo[0][i] = 0.0;
+            outputrehilolo[0][i] = 0.0; outputrelololo[0][i] = 0.0;
+            outputimhihihi[0][i] = 0.0; outputimlohihi[0][i] = 0.0; 
+            outputimhilohi[0][i] = 0.0; outputimlolohi[0][i] = 0.0;
+            outputimhihilo[0][i] = 0.0; outputimlohilo[0][i] = 0.0; 
+            outputimhilolo[0][i] = 0.0; outputimlololo[0][i] = 0.0;
+         }
+      }
+      else
+      {
+         ix1re = (1 + difidx)*deg1;
+         ix2im = (1 + difidx)*deg1 + totcffoffset;
+
+         if(verbose)
+            cout << "updating derivative with coefficient ..." << endl;
+
+         for(int i=0; i<=deg; i++)
+         {
+            outputrehihihi[0][i] = datarihihihi[ix1re];
+            outputrelohihi[0][i] = datarilohihi[ix1re];
+            outputrehilohi[0][i] = datarihilohi[ix1re];
+            outputrelolohi[0][i] = datarilolohi[ix1re];
+            outputrehihilo[0][i] = datarihihilo[ix1re];
+            outputrelohilo[0][i] = datarilohilo[ix1re];
+            outputrehilolo[0][i] = datarihilolo[ix1re];
+            outputrelololo[0][i] = datarilololo[ix1re++];
+            outputimhihihi[0][i] = datarihihihi[ix2im];
+            outputimlohihi[0][i] = datarilohihi[ix2im];
+            outputimhilohi[0][i] = datarihilohi[ix2im];
+            outputimlolohi[0][i] = datarilolohi[ix2im];
+            outputimhihilo[0][i] = datarihihilo[ix2im];
+            outputimlohilo[0][i] = datarilohilo[ix2im];
+            outputimhilolo[0][i] = datarihilolo[ix2im];
+            outputimlololo[0][i] = datarilololo[ix2im++];
+         }
+      }
+   }
+   else
+   {
+      int ix0 = jobs.get_differential_index(0,cnt);
+      // int ix2 = nvr[ix0]-3;
+      // if(ix2 < 0) ix2 = 0; // on GPU, one backward item less
+      int ix2 = nvr[ix0]-2; // no longer the case for vectorized
+
+      ix1re = bstart[ix0] + ix2*deg1;
+      ix2im = bstart[ix0] + ix2*deg1 + totcffoffset;
+      
+      if(verbose)
+         cout << "Updating derivative 0 at " << ix1re << " in data." << endl;
+
+      for(int i=0; i<=deg; i++) // output[0][i] = data[ix++];
+      {
+         outputrehihihi[0][i] = datarihihihi[ix1re];
+         outputrelohihi[0][i] = datarilohihi[ix1re];
+         outputrehilohi[0][i] = datarihilohi[ix1re];
+         outputrelolohi[0][i] = datarilolohi[ix1re];
+         outputrehihilo[0][i] = datarihihilo[ix1re];
+         outputrelohilo[0][i] = datarilohilo[ix1re];
+         outputrehilolo[0][i] = datarihilolo[ix1re];
+         outputrelololo[0][i] = datarilololo[ix1re++];
+         outputimhihihi[0][i] = datarihihihi[ix2im];
+         outputimlohihi[0][i] = datarilohihi[ix2im];
+         outputimhilohi[0][i] = datarihilohi[ix2im];
+         outputimlolohi[0][i] = datarilolohi[ix2im];
+         outputimhihilo[0][i] = datarihihilo[ix2im];
+         outputimlohilo[0][i] = datarilohilo[ix2im];
+         outputimhilolo[0][i] = datarihilolo[ix2im];
+         outputimlololo[0][i] = datarilololo[ix2im++];
+      }
+   }
+   for(int k=1; k<dim; k++) // updating all other derivatives
+   {
+      int cnt = jobs.get_differential_count(k);
+
+      if(verbose)
+         cout << "Differential count for variable " << k
+              << " : " << cnt << endl;
+
+      if(cnt == 0) // it could be there is no variable k anywhere ...
+      {
+         const int difidx = jobs.get_differential_index(k,0);
+
+         if(verbose)
+            cout << "Differential index for variable " << k 
+                 << " : " << difidx << endl;
+
+         if(difidx < 0)
+         {
+            for(int i=0; i<=deg; i++) // output[k][i] = 0.0;
+            {
+               outputrehihihi[k][i] = 0.0; outputrelohihi[k][i] = 0.0;
+               outputrehilohi[k][i] = 0.0; outputrelolohi[k][i] = 0.0;
+               outputrehihilo[k][i] = 0.0; outputrelohilo[k][i] = 0.0;
+               outputrehilolo[k][i] = 0.0; outputrelololo[k][i] = 0.0;
+               outputimhihihi[k][i] = 0.0; outputimlohihi[k][i] = 0.0;
+               outputimhilohi[k][i] = 0.0; outputimlolohi[k][i] = 0.0;
+               outputimhihilo[k][i] = 0.0; outputimlohilo[k][i] = 0.0;
+               outputimhilolo[k][i] = 0.0; outputimlololo[k][i] = 0.0;
+            }
+         }
+         else
+         {
+            ix1re = (1 + difidx)*deg1;
+            ix2im = (1 + difidx)*deg1 + totcffoffset;
+
+            if(verbose)
+               cout << "updating derivative with coefficient ..." << endl;
+
+            for(int i=0; i<=deg; i++)
+            {
+               outputrehihihi[k][i] = datarihihihi[ix1re];
+               outputrelohihi[k][i] = datarilohihi[ix1re];
+               outputrehilohi[k][i] = datarihilohi[ix1re];
+               outputrelolohi[k][i] = datarilolohi[ix1re];
+               outputrehihilo[k][i] = datarihihilo[ix1re];
+               outputrelohilo[k][i] = datarilohilo[ix1re];
+               outputrehilolo[k][i] = datarihilolo[ix1re];
+               outputrelololo[k][i] = datarilololo[ix1re++];
+               outputimhihihi[k][i] = datarihihihi[ix2im];
+               outputimlohihi[k][i] = datarilohihi[ix2im];
+               outputimhilohi[k][i] = datarihilohi[ix2im];
+               outputimlolohi[k][i] = datarilolohi[ix2im];
+               outputimhihilo[k][i] = datarihihilo[ix2im];
+               outputimlohilo[k][i] = datarilohilo[ix2im];
+               outputimhilolo[k][i] = datarihilolo[ix2im];
+               outputimlololo[k][i] = datarilololo[ix2im++];
+            }
+         }
+      }
+      else
+      {
+         int ix0 = jobs.get_differential_index(k,cnt);
+
+         if(idx[ix0][0] == k) // k is first variable of monomial
+         {
+            // int ix2 = nvr[ix0]-3;
+            // if(ix2 < 0) ix2 = 0;
+            int ix2 = nvr[ix0] - 2;
+
+            ix1re = bstart[ix0] + ix2*deg1;
+            ix2im = bstart[ix0] + ix2*deg1 + totcffoffset;
+
+            if(verbose)
+               cout << "Updating derivative " << k 
+                    << " at " << ix1re << " in data." << endl;
+
+            for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
+            {
+               outputrehihihi[k][i] = datarihihihi[ix1re];
+               outputrelohihi[k][i] = datarilohihi[ix1re];
+               outputrehilohi[k][i] = datarihilohi[ix1re];
+               outputrelolohi[k][i] = datarilolohi[ix1re];
+               outputrehihilo[k][i] = datarihihilo[ix1re];
+               outputrelohilo[k][i] = datarilohilo[ix1re];
+               outputrehilolo[k][i] = datarihilolo[ix1re];
+               outputrelololo[k][i] = datarilololo[ix1re++];
+               outputimhihihi[k][i] = datarihihihi[ix2im];
+               outputimlohihi[k][i] = datarilohihi[ix2im];
+               outputimhilohi[k][i] = datarihilohi[ix2im];
+               outputimlolohi[k][i] = datarilolohi[ix2im];
+               outputimhihilo[k][i] = datarihihilo[ix2im];
+               outputimlohilo[k][i] = datarilohilo[ix2im];
+               outputimhilolo[k][i] = datarihilolo[ix2im];
+               outputimlololo[k][i] = datarilololo[ix2im++];
+            }
+         }
+         else if(idx[ix0][nvr[ix0]-1] == k) // k is last variable
+         {
+            int ix2 = nvr[ix0]-2;
+
+            ix1re = fstart[ix0] + ix2*deg1;
+            ix2im = fstart[ix0] + ix2*deg1 + totcffoffset;
+ 
+            if(verbose)
+               cout << "Updating derivative " << k 
+                    << " at " << ix1re << " in data." << endl;
+
+            for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
+            {
+               outputrehihihi[k][i] = datarihihihi[ix1re];
+               outputrelohihi[k][i] = datarilohihi[ix1re];
+               outputrehilohi[k][i] = datarihilohi[ix1re];
+               outputrelolohi[k][i] = datarilolohi[ix1re];
+               outputrehihilo[k][i] = datarihihilo[ix1re];
+               outputrelohilo[k][i] = datarilohilo[ix1re];
+               outputrehilolo[k][i] = datarihilolo[ix1re];
+               outputrelololo[k][i] = datarilololo[ix1re++];
+               outputimhihihi[k][i] = datarihihihi[ix2im];
+               outputimlohihi[k][i] = datarilohihi[ix2im];
+               outputimhilohi[k][i] = datarihilohi[ix2im];
+               outputimlolohi[k][i] = datarilolohi[ix2im];
+               outputimhihilo[k][i] = datarihihilo[ix2im];
+               outputimlohilo[k][i] = datarilohilo[ix2im];
+               outputimhilolo[k][i] = datarihilolo[ix2im];
+               outputimlololo[k][i] = datarilololo[ix2im++];
+            }
+         }
+         else // derivative is in some cross product
+         {
+            int ix2 = jobs.position(nvr[ix0],idx[ix0],k) - 1;
+
+            if(verbose)
+               cout << "Updating derivative " << k 
+                    << " at " << ix1re << " in data." << endl;
+
+            ix1re = cstart[ix0] + ix2*deg1;
+            ix2im = cstart[ix0] + ix2*deg1 + totcffoffset;
+
+            for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
+            {
+               outputrehihihi[k][i] = datarihihihi[ix1re];
+               outputrelohihi[k][i] = datarilohihi[ix1re];
+               outputrehilohi[k][i] = datarihilohi[ix1re];
+               outputrelolohi[k][i] = datarilolohi[ix1re];
+               outputrehihilo[k][i] = datarihihilo[ix1re];
+               outputrelohilo[k][i] = datarilohilo[ix1re];
+               outputrehilolo[k][i] = datarihilolo[ix1re];
+               outputrelololo[k][i] = datarilololo[ix1re++];
+               outputimhihihi[k][i] = datarihihihi[ix2im];
+               outputimlohihi[k][i] = datarilohihi[ix2im];
+               outputimhilohi[k][i] = datarihilohi[ix2im];
+               outputimlolohi[k][i] = datarilolohi[ix2im];
+               outputimhihilo[k][i] = datarihihilo[ix2im];
+               outputimlohilo[k][i] = datarilohilo[ix2im];
+               outputimhilolo[k][i] = datarihilolo[ix2im];
+               outputimlololo[k][i] = datarilololo[ix2im++];
             }
          }
       }

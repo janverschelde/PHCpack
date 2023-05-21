@@ -7,12 +7,15 @@
 
 #include "convolution_jobs.h"
 #include "addition_jobs.h"
+#include "complexconv_jobs.h"
+#include "complexinc_jobs.h"
+#include "complexadd_jobs.h"
 
 __global__ void dbl8_padded_convjobs
- ( double *datahihihi, double *datahilohi,
-   double *datahihilo, double *datahilolo,
-   double *datalohihi, double *datalolohi,
-   double *datalohilo, double *datalololo,
+ ( double *datahihihi, double *datalohihi,
+   double *datahilohi, double *datalolohi,
+   double *datahihilo, double *datalohilo,
+   double *datahilolo, double *datalololo,
    int *in1idx, int *in2idx, int *outidx, int dim );
 /*
  * DESCRIPTION :
@@ -26,17 +29,17 @@ __global__ void dbl8_padded_convjobs
  * ON ENTRY :
  *   datahihihi  highest parts of coefficients of monomials and input series, 
  *               space for forward, backward, and cross products;
- *   datahilohi  second highest parts of coefficients of monomials and input, 
+ *   datalohihi  second highest parts of coefficients of monomials and input, 
  *               space for forward, backward, and cross products;
- *   datahihilo  third highest parts of coefficients of monomials and input, 
+ *   datahilohi  third highest parts of coefficients of monomials and input, 
  *               space for forward, backward, and cross products;
- *   datahilolo  fourth highest parts of coefficients of monomials and input, 
+ *   datalolohi  fourth highest parts of coefficients of monomials and input, 
  *               space for forward, backward, and cross products;
- *   datalohihi  fourth lowest parts of coefficients of monomials and input, 
+ *   datahihilo  fourth lowest parts of coefficients of monomials and input, 
  *               space for forward, backward, and cross products;
- *   datalolohi  third lowest parts of coefficients of monomials and input, 
+ *   datalohilo  third lowest parts of coefficients of monomials and input, 
  *               space for forward, backward, and cross products;
- *   datalohilo  second lowest parts of coefficients of monomials and input, 
+ *   datahilolo  second lowest parts of coefficients of monomials and input, 
  *               space for forward, backward, and cross products;
  *   datalololo  lowest parts of coefficients of monomials and input series, 
  *               space for forward, backward, and cross products;
@@ -48,12 +51,12 @@ __global__ void dbl8_padded_convjobs
  *
  * ON RETURN :
  *   datahihihi  updated highest forward, backward, and cross products;
- *   datahilohi  updated second highest forward, backward, and cross products;
- *   datahihilo  updated third highest forward, backward, and cross products;
- *   datahilolo  updated fourth highest forward, backward, and cross products;
- *   datalohihi  updated fourth lowest forward, backward, and cross products;
- *   datalolohi  updated third lowest forward, backward, and cross products;
- *   datalohilo  updated second lowest forward, backward, and cross products;
+ *   datalohihi  updated second highest forward, backward, and cross products;
+ *   datahilohi  updated third highest forward, backward, and cross products;
+ *   datalolohi  updated fourth highest forward, backward, and cross products;
+ *   datahihilo  updated fourth lowest forward, backward, and cross products;
+ *   datalohilo  updated third lowest forward, backward, and cross products;
+ *   datahilolo  updated second lowest forward, backward, and cross products;
  *   datalololo  updated lowest forward, backward, and cross products. */
 
 __global__ void dbl8_increment_jobs
@@ -104,6 +107,7 @@ __global__ void dbl8_increment_jobs
  *   datahilolo has the incremented second lowest doubles;
  *   datalololo has the incremented lowest doubles. */
 
+/*
 __global__ void cmplx8_padded_convjobs
  ( double *datarehihihi, double *datarelohihi,
    double *datarehilohi, double *datarelolohi,
@@ -113,7 +117,7 @@ __global__ void cmplx8_padded_convjobs
    double *dataimhilohi, double *dataimlolohi,
    double *dataimhihilo, double *dataimlohilo,
    double *dataimhilolo, double *dataimlololo,
-   int *in1idx, int *in2idx, int *outidx, int dim );
+   int *in1idx, int *in2idx, int *outidx, int dim ); */
 /*
  * DESCRIPTION :
  *   Executes all convolution jobs at the same layer, on complex data.
@@ -246,10 +250,10 @@ __global__ void cmplx8vectorized_flipsigns
  *   datarilololo are the lowest doubles of the computed data. */
 
 __global__ void dbl8_update_addjobs
- ( double *datahihihi, double *datahilohi,
-   double *datahihilo, double *datahilolo,
-   double *datalohihi, double *datalolohi,
-   double *datalohilo, double *datalololo,
+ ( double *datahihihi, double *datalohihi,
+   double *datahilohi, double *datalolohi,
+   double *datahihilo, double *datalohilo,
+   double *datahilolo, double *datalololo,
    int *in1idx, int *in2idx, int *outidx, int dim );
 /*
  * DESCRIPTION :
@@ -263,17 +267,17 @@ __global__ void dbl8_update_addjobs
  * ON ENTRY :
  *   datahihihi  highest parts of coefficients of monomials and input series, 
  *               space for forward, backward, and cross products;
- *   datahilohi  second highest parts of coefficients of monomials and input, 
+ *   datalohihi  second highest parts of coefficients of monomials and input, 
  *               space for forward, backward, and cross products;
- *   datahihilo  third highest parts of coefficients of monomials and input, 
+ *   datahilohi  third highest parts of coefficients of monomials and input, 
  *               space for forward, backward, and cross products;
- *   datahilolo  fourth highest parts of coefficients of monomials and input, 
+ *   datalolohi  fourth highest parts of coefficients of monomials and input, 
  *               space for forward, backward, and cross products;
- *   datalohihi  fourth lowest parts of coefficients of monomials and input, 
+ *   datahihilo  fourth lowest parts of coefficients of monomials and input, 
  *               space for forward, backward, and cross products;
- *   datalolohi  third lowest parts of coefficients of monomials and input, 
+ *   datalohilo  third lowest parts of coefficients of monomials and input, 
  *               space for forward, backward, and cross products;
- *   datalohilo  second lowest parts of coefficients of monomials and input, 
+ *   datahilolo  second lowest parts of coefficients of monomials and input, 
  *               space for forward, backward, and cross products;
  *   datalololo  lowest parts of coefficients of monomials and input series, 
  *               space for forward, backward, and cross products;
@@ -285,23 +289,23 @@ __global__ void dbl8_update_addjobs
  *
  * ON RETURN :
  *   datahihihi  updated highest forward, backward, and cross products;
- *   datahilohi  updated second highest forward, backward, and cross products;
- *   datahihilo  updated third highest forward, backward, and cross products;
- *   datahilolo  updated fourth highest forward, backward, and cross products;
- *   datalohihi  updated fourth lowest forward, backward, and cross products;
- *   datalolohi  updated third lowest forward, backward, and cross products;
- *   datalohilo  updated second lowest forward, backward, and cross products;
+ *   datalohihi  updated second highest forward, backward, and cross products;
+ *   datahilohi  updated third highest forward, backward, and cross products;
+ *   datalolohi  updated fourth highest forward, backward, and cross products;
+ *   datahihilo  updated fourth lowest forward, backward, and cross products;
+ *   datalohilo  updated third lowest forward, backward, and cross products;
+ *   datahilolo  updated second lowest forward, backward, and cross products;
  *   datalololo  updated lowest forward, backward, and cross products. */
 
 void dbl_convoluted_data8_to_output
- ( double *datahihihi, double *datahilohi,
-   double *datahihilo, double *datahilolo,
-   double *datalohihi, double *datalolohi,
-   double *datalohilo, double *datalololo,
-   double **outputhihihi, double **outputhilohi,
-   double **outputhihilo, double **outputhilolo,
-   double **outputlohihi, double **outputlolohi,
-   double **outputlohilo, double **outputlololo,
+ ( double *datahihihi, double *datalohihi,
+   double *datahilohi, double *datalolohi,
+   double *datahihilo, double *datalohilo,
+   double *datahilolo, double *datalololo,
+   double **outputhihihi, double **outputlohihi,
+   double **outputhilohi, double **outputlolohi,
+   double **outputhihilo, double **outputlohilo,
+   double **outputhilolo, double **outputlololo,
    int dim, int nbr, int deg, int *nvr,
    int **idx, int *fstart, int *bstart, int *cstart, bool verbose=true );
 /*
@@ -313,27 +317,28 @@ void dbl_convoluted_data8_to_output
  * ON ENTRY :
  *   datahihihi   highest parts of coefficients of monomials and input series, 
  *                space for forward, backward, and cross products;
- *   datahilohi   second highest parts of coefficients of monomials and input, 
+ *   datalohihi   second highest parts of coefficients of monomials and input, 
  *                space for forward, backward, and cross products;
- *   datahihilo   third highest parts of coefficients of monomials and input, 
+ *   datahilohi   third highest parts of coefficients of monomials and input, 
  *                space for forward, backward, and cross products;
- *   datahilolo   fourth highest parts of coefficients of monomials and input, 
+ *   datalolohi   fourth highest parts of coefficients of monomials and input, 
  *                space for forward, backward, and cross products;
- *   datalohihi   fourth lowest parts of coefficients of monomials and input, 
+ *   datahihilo   fourth lowest parts of coefficients of monomials and input, 
  *                space for forward, backward, and cross products;
- *   datalolohi   third lowest parts of coefficients of monomials and input, 
+ *   datalohilo   third lowest parts of coefficients of monomials and input, 
  *                space for forward, backward, and cross products;
- *   datalohilo   second lowest parts of coefficients of monomials and input, 
+ *   datahilolo   second lowest parts of coefficients of monomials and input, 
  *                space for forward, backward, and cross products;
  *   datalololo   lowest parts of coefficients of monomials and input series, 
  *                space for forward, backward, and cross products;
  *   outputhihihi has space allocated for dim+1 series of degree deg;
- *   outputhilohi has space allocated for dim+1 series of degree deg;
- *   outputhihilo has space allocated for dim+1 series of degree deg;
- *   outputhilolo has space allocated for dim+1 series of degree deg;
  *   outputlohihi has space allocated for dim+1 series of degree deg;
+ *   outputhilohi has space allocated for dim+1 series of degree deg;
  *   outputlolohi has space allocated for dim+1 series of degree deg;
+ *   outputhihilo has space allocated for dim+1 series of degree deg;
  *   outputlohilo has space allocated for dim+1 series of degree deg;
+ *   outputhilolo has space allocated for dim+1 series of degree deg;
+ *   outputlololo has space allocated for dim+1 series of degree deg;
  *   dim          total number of variables;
  *   nbr          number of monomials, excluding the constant term;
  *   deg          truncation degree of the series;
@@ -354,30 +359,30 @@ void dbl_convoluted_data8_to_output
  *                outputhihihi[k], for k from 0 to dim-1, contains the
  *                derivative with respect to the variable k;
  *                outputhihihi[dim] contains the value of the polynomial;
- *   outputhilohi has the second highest parts of derivatives and the value,
- *                outputhilohi[k], for k from 0 to dim-1, contains the
- *                derivative with respect to the variable k;
- *                outputhilohi[dim] contains the value of the polynomial;
- *   outputhihilo has the third highest parts of derivatives and the value,
- *                outputhihilo[k], for k from 0 to dim-1, contains the
- *                derivative with respect to the variable k;
- *                outputhihilo[dim] contains the value of the polynomial;
- *   outputhilolo has the fourth highest parts of derivatives and the value,
- *                outputhilolo[k], for k from 0 to dim-1, contains the
- *                derivative with respect to the variable k;
- *                outputhilolo[dim] contains the value of the polynomial;
- *   outputlohihi has the fourth lowest parts of derivatives and the value,
+ *   outputlohihi has the second highest parts of derivatives and the value,
  *                outputlohihi[k], for k from 0 to dim-1, contains the
  *                derivative with respect to the variable k;
  *                outputlohihi[dim] contains the value of the polynomial;
- *   outputlolohi has the third lowest parts of derivatives and the value,
+ *   outputhilohi has the third highest parts of derivatives and the value,
+ *                outputhilohi[k], for k from 0 to dim-1, contains the
+ *                derivative with respect to the variable k;
+ *                outputhilohi[dim] contains the value of the polynomial;
+ *   outputlolohi has the fourth highest parts of derivatives and the value,
  *                outputlolohi[k], for k from 0 to dim-1, contains the
  *                derivative with respect to the variable k;
  *                outputlolohi[dim] contains the value of the polynomial;
- *   outputlohilo has the second lowest parts of derivatives and the value,
+ *   outputhihilo has the fourth lowest parts of derivatives and the value,
+ *                outputhihilo[k], for k from 0 to dim-1, contains the
+ *                derivative with respect to the variable k;
+ *                outputhihilo[dim] contains the value of the polynomial;
+ *   outputlohilo has the third lowest parts of derivatives and the value,
  *                outputlohilo[k], for k from 0 to dim-1, contains the
  *                derivative with respect to the variable k;
  *                outputlohilo[dim] contains the value of the polynomial;
+ *   outputhilolo has the second lowest parts of derivatives and the value,
+ *                outputhilolo[k], for k from 0 to dim-1, contains the
+ *                derivative with respect to the variable k;
+ *                outputhilolo[dim] contains the value of the polynomial;
  *   outputlololo has the lowest parts of derivatives and the value,
  *                outputlololo[k], for k from 0 to dim-1, contains the
  *                derivative with respect to the variable k;
@@ -481,6 +486,120 @@ void dbl_added_data8_to_output
  *                outputlololo[k], for k from 0 to dim-1, contains the
  *                derivative with respect to the variable k;
  *                outputlololo[dim] contains the value of the polynomial. */
+
+void cmplx_added_data8vectorized_to_output
+ ( double *datarihihihi, double *datarilohihi,
+   double *datarihilohi, double *datarilolohi,
+   double *datarihihilo, double *datarilohilo,
+   double *datarihilolo, double *datarilololo,
+   double **outputrehihihi, double **outputrelohihi,
+   double **outputrehilohi, double **outputrelolohi,
+   double **outputrehihilo, double **outputrelohilo,
+   double **outputrehilolo, double **outputrelololo,
+   double **outputimhihihi, double **outputimlohihi,
+   double **outputimhilohi, double **outputimlolohi,
+   double **outputimhihilo, double **outputimlohilo,
+   double **outputimhilolo, double **outputimlololo,
+   int dim, int nbr, int deg, int *nvr,
+   int **idx, int *fstart, int *bstart, int *cstart,
+   int totcff, int offsetri, ComplexAdditionJobs jobs, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Extracts the complex data computed on the device to the output.
+ *   All convolutions and all additions have been computed.
+ *
+ * ON ENTRY :
+ *   datarihihihi has the highest doubles of the computed data;
+ *   datarilohihi has the second highest doubles of the computed data;
+ *   datarihilohi has the third highest doubles of the computed data;
+ *   datarilolohi has the fourth highest doubles of the computed data;
+ *   datarihihilo has the fourth lowest doubles of the computed data;
+ *   datarilohilo has the third lowest doubles of the computed data;
+ *   datarihilolo has the second lowest doubles of the computed data;
+ *   datarilololo has the lowest doubles of the computed data;
+ *   outputrehihihi has space for all highest doubles of the real parts
+ *                of value and all derivatives;
+ *   outputrelohihi has space for all second highest doubles of the real parts
+ *                of value and all derivatives;
+ *   outputrehilohi has space for all third highest doubles of the real parts
+ *                of value and all derivatives;
+ *   outputrelolohi has space for all fourth highest doubles of the real parts
+ *                of value and all derivatives;
+ *   outputrehihilo has space for all fourth lowest doubles of the real parts
+ *                of value and all derivatives;
+ *   outputrelohilo has space for all third lowest doubles of the real parts
+ *                of value and all derivatives;
+ *   outputrehilolo has space for all second lowest doubles of the real parts
+ *                of value and all derivatives;
+ *   outputrelololo has space for all lowest doubles of the real parts
+ *                of value and all derivatives;
+ *   outputimhihihi has space for all highest doubles of the imaginary parts
+ *                of value and all derivatives;
+ *   outputimlohihi has space for all second highest doubles of the 
+ *                imaginary parts of value and all derivatives;
+ *   outputimhilohi has space for all third highest doubles of the 
+ *                imaginary parts of value and all derivatives;
+ *   outputimlolohi has space for all fourth highest doubles of the 
+ *                imaginary parts of value and all derivatives;
+ *   outputimhihilo has space for all fourth lowest doubles of the 
+ *                imaginary parts of value and all derivatives;
+ *   outputimlohilo has space for all third lowest doubles of the 
+ *                imaginary parts of value and all derivatives;
+ *   outputimhilolo has space for all second lowest doubles of the
+ *                imaginary parts of value and all derivatives;
+ *   outputimlololo has space for all lowest doubles of the imaginary parts
+ *                of value and all derivatives;
+ *   dim          total number of variables;
+ *   nbr          number of monomials, excluding the constant term;
+ *   deg          truncation degree of the series;
+ *   nvr          nvr[k] is the number of variables for monomial k;
+ *   idx          idx[k] has as many indices as the value of nvr[k],
+ *                idx[k][i] defines the place of the i-th variable,
+ *                with input values in input[idx[k][i]];
+ *   fstart       fstart[k] has the start position of the forward products
+ *                for the k-th monomial;
+ *   bstart       fstart[k] has the start position of the backward products
+ *                for the k-th monomial;
+ *   cstart       fstart[k] has the start position of the cross products
+ *                for the k-th monomial;
+ *   totcff       total number of coefficients without vectorization;
+ *   offsetri     size of the second operand;
+ *   jobs         defines all addition jobs;
+ *   verbose      if true, writes extra information.
+ *
+ * ON RETURN :
+ *   outputrehihihi has the highest doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputrelohihi has the second highest doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputrehilohi has the third highest doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputrelolohi has the fourth highest doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputrehihilo has the fourth lowest doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputrelohilo has the third lowest doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputrehilolo has the second lowest doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputrelololo has the lowest doubles of the real parts
+ *                of the value and all derivatives;
+ *   outputimhihihi has the highest doubles of the imaginary parts
+ *                of the value and all derivatives;
+ *   outputimlohihi has the second highest doubles of the imaginary parts
+ *                of the value and all derivatives;
+ *   outputimhilohi has the third highest doubles of the imaginary parts
+ *                of the value and all derivatives;
+ *   outputimhihihi has the fourth highest doubles of the imaginary parts
+ *                of the value and all derivatives;
+ *   outputimhihilo has the fourth lowest doubles of the imaginary parts
+ *                of the value and all derivatives;
+ *   outputimlohilo has the third lowest doubles of the imaginary parts
+ *                of the value and all derivatives;
+ *   outputimhilolo has the second lowest doubles of the imaginary parts
+ *                of the value and all derivatives;
+ *   outputimlololo has the lowest doubles of the imaginary parts
+ *                of the value and all derivatives. */
 
 void GPU_dbl8_poly_evaldiff
  ( int BS, int dim, int nbr, int deg, int *nvr, int **idx,

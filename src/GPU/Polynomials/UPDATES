@@ -1,3 +1,6 @@
+Sun 21 May 2023 : more code formatting in dbl8_polynomials_kernels
+  and the addition of kernels for complex numbers.
+
 Sat 20 May 2023 : extended dbl8_polynomials_host with a function for
   complex numbers.  Completed dbl8_polynomials_host with all functions.
   Extended dbl8_polynomials_kernels with functions on complex data.
