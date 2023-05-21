@@ -56,6 +56,54 @@ __global__ void dbl8_padded_convjobs
  *   datalohilo  updated second lowest forward, backward, and cross products;
  *   datalololo  updated lowest forward, backward, and cross products. */
 
+__global__ void dbl8_increment_jobs
+ ( double *datahihihi, double *datalohihi,
+   double *datahilohi, double *datalolohi,
+   double *datahihilo, double *datalohilo,
+   double *datahilolo, double *datalololo,
+   int *in1idx, int *in2idx, int *outidx, int dim );
+/*
+ * DESCRIPTION :
+ *   Executes all increment jobs at the same layer.
+ *   The block index defines the increment job.
+ *
+ * REQUIRED : 
+ *   The number of blocks equals the size of  in1idx, in2idx, outidx,
+ *   and dim equals the number of threads in each block.
+ *
+ * ON ENTRY :
+ *   datahihihi are the highest parts of constant, coefficients,
+ *             and input, space for forward, backward, and cross products;
+ *   datalohihi are the 2nd highest parts of constant, coefficients,
+ *             and input, space for forward, backward, and cross products;
+ *   datahilohi are the 3rd highest parts of constant, coefficients,
+ *             and input, space for forward, backward, and cross products;
+ *   datalolohi are the 4th highest parts of constant, coefficients,
+ *             and input, space for forward, backward, and cross products;
+ *   dataihhilo are the 4th lowest parts of constant, coefficients,
+ *             and input, space for forward, backward, and cross products;
+ *   datalohilo are the 3rd lowest parts of constant, coefficients,
+ *             and input, space for forward, backward, and cross products;
+ *   datahilolo are the 2nd lowest parts of constant, coefficients,
+ *             and input, space for forward, backward, and cross products;
+ *   datalololo are the lowest parts of constant, coefficients,
+ *             and input, space for forward, backward, and cross products;
+ *   in1idx    indices of the first input of the increment jobs;
+ *   in2idx    indices of the second input of the increment jobs;
+ *   outidx    indices of the output of the increment jobs;
+ *   dim       the number of coefficients in each series
+ *             equals the number of threads in each block.
+ *
+ * ON RETURN :
+ *   datahihihi has the incremented highest doubles;
+ *   datalohihi has the incremented second highest doubles;
+ *   datahilohi has the incremented third highest doubles;
+ *   datalolohi has the incremented fourth highest doubles;
+ *   datahihilo has the incremented fourth lowest doubles;
+ *   datalohilo has the incremented third lowest doubles;
+ *   datahilolo has the incremented second lowest doubles;
+ *   datalololo has the incremented lowest doubles. */
+
 __global__ void cmplx8_padded_convjobs
  ( double *datarehihihi, double *datarelohihi,
    double *datarehilohi, double *datarelolohi,
@@ -164,6 +212,39 @@ __global__ void cmplx8_padded_convjobs
  *   dataimlololo are the updated lowest fdoubles of the imaginary parts
  *                of the forward, backward, and cross products. */
 
+__global__ void cmplx8vectorized_flipsigns
+ ( double *datarihihihi, double *datarilohihi,
+   double *datarihilohi, double *datarilolohi,
+   double *datarihihilo, double *datarilohilo,
+   double *datarihilolo, double *datarilololo, int *flpidx, int dim );
+/*
+ * DESCRIPTION :
+ *   Kernel to flip the signs of the second real operand
+ *   on the data arrays used for the complex vectorized arithmetic.
+ *
+ * ON ENTRY :
+ *   datarihihihi are the highest doubles of the convolutions;
+ *   datarilohihi are the second highest doubles of the convolutions;
+ *   datarihilohi are the third highest doubles of the convolutions;
+ *   datarilolohi are the fourth highest doubles of the convolutions;
+ *   datarihihilo are the fourth lowest doubles of the convolutions;
+ *   datarilohilo are the third lowest doubles of the convolutions;
+ *   datarihilolo are the second lowest doubles of the convolutions;
+ *   datarilololo are the lowest doubles of the convolutions;
+ *   flpidx       start indices of series to flip;
+ *   dim          equals the size of each block, or deg+1,
+ *                where deg is the degree of truncation.
+ *
+ * ON RETURN :
+ *   datarihihihi are the highest doubles of the computed data;
+ *   datarilohihi are the second highest doubles of the computed data;
+ *   datarihilohi are the third highest doubles of the computed data;
+ *   datarilolohi are the fourth highest doubles of the computed data;
+ *   datarihihilo are the fourth lowest doubles of the computed data;
+ *   datarilohilo are the third lowest doubles of the computed data;
+ *   datarihilolo are the second lowest doubles of the computed data;
+ *   datarilololo are the lowest doubles of the computed data. */
+
 __global__ void dbl8_update_addjobs
  ( double *datahihihi, double *datahilohi,
    double *datahihilo, double *datahilolo,
@@ -212,7 +293,7 @@ __global__ void dbl8_update_addjobs
  *   datalohilo  updated second lowest forward, backward, and cross products;
  *   datalololo  updated lowest forward, backward, and cross products. */
 
-void convoluted_data8_to_output
+void dbl_convoluted_data8_to_output
  ( double *datahihihi, double *datahilohi,
    double *datahihilo, double *datahilolo,
    double *datalohihi, double *datalolohi,
@@ -302,7 +383,7 @@ void convoluted_data8_to_output
  *                derivative with respect to the variable k;
  *                outputlololo[dim] contains the value of the polynomial. */
 
-void added_data8_to_output
+void dbl_added_data8_to_output
  ( double *datahihihi, double *datahilohi,
    double *datahihilo, double *datahilolo,
    double *datalohihi, double *datalolohi,

@@ -134,6 +134,72 @@ __global__ void dbl8_padded_convjobs
    datalololo[idx3] = zvlololo[tdx];
 }
 
+__global__ void dbl8_increment_jobs
+ ( double *datahihihi, double *datalohihi,
+   double *datahilohi, double *datalolohi,
+   double *datahihilo, double *datalohilo,
+   double *datahilolo, double *datalololo,
+   int *in1idx, int *in2idx, int *outidx, int dim )
+{
+   const int bdx = blockIdx.x;           // index to the increment job
+   const int tdx = threadIdx.x;          // index to the output of the job
+   const int idx1 = in1idx[bdx] + tdx;
+   const int idx2 = in2idx[bdx] + tdx;
+   const int idx3 = outidx[bdx] + tdx;
+
+   __shared__ double yvhihihi[od_shmemsize];
+   __shared__ double yvlohihi[od_shmemsize];
+   __shared__ double yvhilohi[od_shmemsize];
+   __shared__ double yvlolohi[od_shmemsize];
+   __shared__ double yvhihilo[od_shmemsize];
+   __shared__ double yvlohilo[od_shmemsize];
+   __shared__ double yvhilolo[od_shmemsize];
+   __shared__ double yvlololo[od_shmemsize];
+   __shared__ double zvhihihi[od_shmemsize];
+   __shared__ double zvlohihi[od_shmemsize];
+   __shared__ double zvhilohi[od_shmemsize];
+   __shared__ double zvlolohi[od_shmemsize];
+   __shared__ double zvhihilo[od_shmemsize];
+   __shared__ double zvlohilo[od_shmemsize];
+   __shared__ double zvhilolo[od_shmemsize];
+   __shared__ double zvlololo[od_shmemsize];
+
+   zvhihihi[tdx] = datahihihi[idx1];  // loading first input
+   zvlohihi[tdx] = datalohihi[idx1]; 
+   zvhilohi[tdx] = datahilohi[idx1]; 
+   zvlolohi[tdx] = datalolohi[idx1]; 
+   zvhihilo[tdx] = datahihilo[idx1];
+   zvlohilo[tdx] = datalohilo[idx1]; 
+   zvhilolo[tdx] = datahilolo[idx1]; 
+   zvlololo[tdx] = datalololo[idx1]; 
+   yvhihihi[tdx] = datahihihi[idx2];  // loading second input
+   yvlohihi[tdx] = datalohihi[idx2];
+   yvhilohi[tdx] = datahilohi[idx2];
+   yvlolohi[tdx] = datalolohi[idx2];
+   yvhihilo[tdx] = datahihilo[idx2];
+   yvlohilo[tdx] = datalohilo[idx2];
+   yvhilolo[tdx] = datahilolo[idx2];
+   yvlololo[tdx] = datalololo[idx2];
+
+   __syncthreads();
+
+   odg_inc(&zvhihihi[tdx],&zvlohihi[tdx],&zvhilohi[tdx],&zvlolohi[tdx],
+           &zvhihilo[tdx],&zvlohilo[tdx],&zvhilolo[tdx],&zvlololo[tdx],
+            yvhihihi[tdx], yvlohihi[tdx], yvhilohi[tdx], yvlolohi[tdx],
+            yvhihilo[tdx], yvlohilo[tdx], yvhilolo[tdx], yvlololo[tdx]);
+
+   __syncthreads();
+
+   datahihihi[idx3] = zvhihihi[tdx]; // storing the output
+   datalohihi[idx3] = zvlohihi[tdx];
+   datahilohi[idx3] = zvhilohi[tdx];
+   datalolohi[idx3] = zvlolohi[tdx];
+   datahihilo[idx3] = zvhihilo[tdx];
+   datalohilo[idx3] = zvlohilo[tdx];
+   datahilolo[idx3] = zvhilolo[tdx];
+   datalololo[idx3] = zvlololo[tdx];
+}
+
 __global__ void cmplx8_padded_convjobs
  ( double *datarehihihi, double *datarelohihi,
    double *datarehilohi, double *datarelolohi,
@@ -384,6 +450,28 @@ __global__ void cmplx8_padded_convjobs
    dataimlololo[idx3] = zvimlololo[tdx];
 }
 
+__global__ void cmplx8vectorized_flipsigns
+ ( double *datarihihihi, double *datarilohihi,
+   double *datarihilohi, double *datarilolohi,
+   double *datarihihilo, double *datarilohilo,
+   double *datarihilolo, double *datarilololo, int *flpidx, int dim )
+{
+   const int bdx = blockIdx.x;    // index to the series to flip
+   const int tdx = threadIdx.x;
+   const int idx = flpidx[bdx] + tdx; // which number to flip
+
+   double x; // register to load data from global memory
+
+   x = datarihihihi[idx]; x = -x; datarihihihi[idx] = x;
+   x = datarilohihi[idx]; x = -x; datarilohihi[idx] = x;
+   x = datarihilohi[idx]; x = -x; datarihilohi[idx] = x;
+   x = datarilolohi[idx]; x = -x; datarilolohi[idx] = x;
+   x = datarihihilo[idx]; x = -x; datarihihilo[idx] = x;
+   x = datarilohilo[idx]; x = -x; datarilohilo[idx] = x;
+   x = datarihilolo[idx]; x = -x; datarihilolo[idx] = x;
+   x = datarilololo[idx]; x = -x; datarilololo[idx] = x;
+}
+
 __global__ void dbl8_update_addjobs
  ( double *datahihihi, double *datahilohi,
    double *datahihilo, double *datahilolo,
@@ -462,7 +550,7 @@ __global__ void dbl8_update_addjobs
    datalololo[idx3] = zvlololo[tdx];
 }
 
-void convoluted_data8_to_output
+void dbl_convoluted_data8_to_output
  ( double *datahihihi, double *datahilohi,
    double *datahihilo, double *datahilolo,
    double *datalohihi, double *datalolohi,
@@ -589,7 +677,7 @@ void convoluted_data8_to_output
    }
 }
 
-void added_data8_to_output
+void dbl_added_data8_to_output
  ( double *datahihihi, double *datahilohi,
    double *datahihilo, double *datahilolo,
    double *datalohihi, double *datalolohi,
@@ -1046,7 +1134,7 @@ void GPU_dbl8_poly_evaldiff
 
    // convoluted_data2_to_output
    //    (data_h,output,dim,nbr,deg,nvr,idx,fstart,bstart,cstart,verbose);
-   added_data8_to_output
+   dbl_added_data8_to_output
       (datahihihi_h,datahilohi_h,datahihilo_h,datahilolo_h,
        datalohihi_h,datalolohi_h,datalohilo_h,datalololo_h,
        outputhihihi,outputhilohi,outputhihilo,outputhilolo,
