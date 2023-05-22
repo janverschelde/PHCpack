@@ -1,5 +1,7 @@
 Sun 21 May 2023 : more code formatting in dbl8_polynomials_kernels
   and the addition of kernels for complex numbers.
+  Completed dbl8_polynomials_kernels.cu, updated makefile_unix
+  and makefile_windows.
 
 Sat 20 May 2023 : extended dbl8_polynomials_host with a function for
   complex numbers.  Completed dbl8_polynomials_host with all functions.

@@ -16,6 +16,7 @@
 #include "octo_double_gpufun.cu"
 #endif
 #include "dbl8_polynomials_kernels.h"
+#include "write_gpu_timings.h"
 
 // The constant od_shmemsize is the bound on the shared memory size.
 
@@ -474,6 +475,53 @@ __global__ void cmplx8vectorized_flipsigns
    x = datarilololo[idx]; x = -x; datarilololo[idx] = x;
 }
 
+void GPU_cmplx8vectorized_flipsigns
+ ( int deg, int nbrflips, int *flipidx,
+   double *datarihihihi, double *datarilohihi,
+   double *datarihilohi, double *datarilolohi,
+   double *datarihihilo, double *datarilohilo,
+   double *datarihilolo, double *datarilololo,
+   double *elapsedms, bool verbose )
+{
+   const int deg1 = deg+1;
+
+   int *flipidx_d;                   // flip indices on device
+   const size_t szjobidx = nbrflips*sizeof(int);
+   cudaMalloc((void**)&flipidx_d,szjobidx);
+   cudaMemcpy(flipidx_d,flipidx,szjobidx,cudaMemcpyHostToDevice);
+
+   cudaEvent_t start,stop;           // to measure time spent by kernels
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+
+   if(verbose)
+   {
+      cout << "flip indices :";
+      for(int i=0; i<nbrflips; i++) cout << " " << flipidx[i];
+      cout << endl;
+      cout << "launching " << nbrflips << " flip signs blocks of "
+                           << deg1 << " threads ..." << endl;
+   }
+   cudaEventRecord(start);
+   cmplx8vectorized_flipsigns<<<nbrflips,deg1>>>
+      (datarihihihi,datarilohihi,datarihilohi,datarilolohi,
+       datarihihilo,datarilohilo,datarihilolo,datarilololo,flipidx_d,deg1);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+
+   *elapsedms = (double) milliseconds;
+
+   if(verbose)
+   {
+       cout << fixed << setprecision(2);
+       cout << "Time spent by flip sign kernels : ";
+       cout << *elapsedms << " milliseconds." << endl;
+       cout << scientific << setprecision(16);
+   }
+}
+
 __global__ void dbl8_update_addjobs
  ( double *datahihihi, double *datalohihi,
    double *datahilohi, double *datalolohi,
@@ -680,14 +728,14 @@ void dbl_convoluted_data8_to_output
 }
 
 void dbl_added_data8_to_output
- ( double *datahihihi, double *datahilohi,
-   double *datahihilo, double *datahilolo,
-   double *datalohihi, double *datalolohi,
-   double *datalohilo, double *datalololo,
-   double **outputhihihi, double **outputhilohi,
-   double **outputhihilo, double **outputhilolo,
-   double **outputlohihi, double **outputlolohi,
-   double **outputlohilo, double **outputlololo,
+ ( double *datahihihi, double *datalohihi,
+   double *datahilohi, double *datalolohi,
+   double *datahihilo, double *datalohilo,
+   double *datahilolo, double *datalololo,
+   double **outputhihihi, double **outputlohihi,
+   double **outputhilohi, double **outputlolohi,
+   double **outputhihilo, double **outputlohilo,
+   double **outputhilolo, double **outputlololo,
    int dim, int nbr, int deg, int *nvr,
    int **idx, int *fstart, int *bstart, int *cstart,
    AdditionJobs jobs, bool verbose )
@@ -705,12 +753,12 @@ void dbl_added_data8_to_output
    for(int i=0; i<=deg; i++) // output[dim][i] = data[ix++];
    {
       outputhihihi[dim][i] = datahihihi[ix];
-      outputhilohi[dim][i] = datahilohi[ix];
-      outputhihilo[dim][i] = datahihilo[ix];
-      outputhilolo[dim][i] = datahilolo[ix];
       outputlohihi[dim][i] = datalohihi[ix];
+      outputhilohi[dim][i] = datahilohi[ix];
       outputlolohi[dim][i] = datalolohi[ix];
+      outputhihilo[dim][i] = datahihilo[ix];
       outputlohilo[dim][i] = datalohilo[ix];
+      outputhilolo[dim][i] = datahilolo[ix];
       outputlololo[dim][i] = datalololo[ix++];
    }
    int cnt = jobs.get_differential_count(0);
@@ -730,12 +778,12 @@ void dbl_added_data8_to_output
          for(int i=0; i<=deg; i++) // output[0][i] = 0.0;
          {
             outputhihihi[0][i] = 0.0;
-            outputhilohi[0][i] = 0.0;
-            outputhihilo[0][i] = 0.0;
-            outputhilolo[0][i] = 0.0;
             outputlohihi[0][i] = 0.0;
+            outputhilohi[0][i] = 0.0;
             outputlolohi[0][i] = 0.0;
+            outputhihilo[0][i] = 0.0;
             outputlohilo[0][i] = 0.0;
+            outputhilolo[0][i] = 0.0;
             outputlololo[0][i] = 0.0;
          }
       }
@@ -749,12 +797,12 @@ void dbl_added_data8_to_output
          for(int i=0; i<=deg; i++)
          {
             outputhihihi[0][i] = datahihihi[cffidx];
-            outputhilohi[0][i] = datahilohi[cffidx];
-            outputhihilo[0][i] = datahihilo[cffidx];
-            outputhilolo[0][i] = datahilolo[cffidx];
             outputlohihi[0][i] = datalohihi[cffidx];
+            outputhilohi[0][i] = datahilohi[cffidx];
             outputlolohi[0][i] = datalolohi[cffidx];
+            outputhihilo[0][i] = datahihilo[cffidx];
             outputlohilo[0][i] = datalohilo[cffidx];
+            outputhilolo[0][i] = datahilolo[cffidx];
             outputlololo[0][i] = datalololo[cffidx++];
          }
       }
@@ -773,12 +821,12 @@ void dbl_added_data8_to_output
       for(int i=0; i<=deg; i++) // output[0][i] = data[ix++];
       {
          outputhihihi[0][i] = datahihihi[ix];
-         outputhilohi[0][i] = datahilohi[ix];
-         outputhihilo[0][i] = datahihilo[ix];
-         outputhilolo[0][i] = datahilolo[ix];
          outputlohihi[0][i] = datalohihi[ix];
+         outputhilohi[0][i] = datahilohi[ix];
          outputlolohi[0][i] = datalolohi[ix];
+         outputhihilo[0][i] = datahihilo[ix];
          outputlohilo[0][i] = datalohilo[ix];
+         outputhilolo[0][i] = datahilolo[ix];
          outputlololo[0][i] = datalololo[ix++];
       }
    }
@@ -803,12 +851,12 @@ void dbl_added_data8_to_output
             for(int i=0; i<=deg; i++) // output[k][i] = 0.0;
             {
                outputhihihi[k][i] = 0.0;
-               outputhilohi[k][i] = 0.0;
-               outputhihilo[k][i] = 0.0;
-               outputhilolo[k][i] = 0.0;
                outputlohihi[k][i] = 0.0;
+               outputhilohi[k][i] = 0.0;
                outputlolohi[k][i] = 0.0;
+               outputhihilo[k][i] = 0.0;
                outputlohilo[k][i] = 0.0;
+               outputhilolo[k][i] = 0.0;
                outputlololo[k][i] = 0.0;
             }
          }
@@ -822,12 +870,12 @@ void dbl_added_data8_to_output
             for(int i=0; i<=deg; i++)
             {
                outputhihihi[k][i] = datahihihi[cffidx];
-               outputhilohi[k][i] = datahilohi[cffidx];
-               outputhihilo[k][i] = datahihilo[cffidx];
-               outputhilolo[k][i] = datahilolo[cffidx];
                outputlohihi[k][i] = datalohihi[cffidx];
+               outputhilohi[k][i] = datahilohi[cffidx];
                outputlolohi[k][i] = datalolohi[cffidx];
+               outputhihilo[k][i] = datahihilo[cffidx];
                outputlohilo[k][i] = datalohilo[cffidx];
+               outputhilolo[k][i] = datahilolo[cffidx];
                outputlololo[k][i] = datalololo[cffidx++];
             }
          }
@@ -850,12 +898,12 @@ void dbl_added_data8_to_output
             for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
             {
                outputhihihi[k][i] = datahihihi[ix];
-               outputhilohi[k][i] = datahilohi[ix];
-               outputhihilo[k][i] = datahihilo[ix];
-               outputhilolo[k][i] = datahilolo[ix];
                outputlohihi[k][i] = datalohihi[ix];
+               outputhilohi[k][i] = datahilohi[ix];
                outputlolohi[k][i] = datalolohi[ix];
+               outputhihilo[k][i] = datahihilo[ix];
                outputlohilo[k][i] = datalohilo[ix];
+               outputhilolo[k][i] = datahilolo[ix];
                outputlololo[k][i] = datalololo[ix++];
             }
          }
@@ -872,12 +920,12 @@ void dbl_added_data8_to_output
             for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
             {
                outputhihihi[k][i] = datahihihi[ix];
-               outputhilohi[k][i] = datahilohi[ix];
-               outputhihilo[k][i] = datahihilo[ix];
-               outputhilolo[k][i] = datahilolo[ix];
                outputlohihi[k][i] = datalohihi[ix];
+               outputhilohi[k][i] = datahilohi[ix];
                outputlolohi[k][i] = datalolohi[ix];
+               outputhihilo[k][i] = datahihilo[ix];
                outputlohilo[k][i] = datalohilo[ix];
+               outputhilolo[k][i] = datahilolo[ix];
                outputlololo[k][i] = datalololo[ix++];
             }
          }
@@ -894,12 +942,12 @@ void dbl_added_data8_to_output
             for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
             {
                outputhihihi[k][i] = datahihihi[ix];
-               outputhilohi[k][i] = datahilohi[ix];
-               outputhihilo[k][i] = datahihilo[ix];
-               outputhilolo[k][i] = datahilolo[ix];
                outputlohihi[k][i] = datalohihi[ix];
+               outputhilohi[k][i] = datahilohi[ix];
                outputlolohi[k][i] = datalolohi[ix];
+               outputhihilo[k][i] = datahihilo[ix];
                outputlohilo[k][i] = datalohilo[ix];
+               outputhilolo[k][i] = datahilolo[ix];
                outputlololo[k][i] = datalololo[ix++];
             }
          }
@@ -1205,29 +1253,504 @@ void cmplx_added_data8vectorized_to_output
    }
 }
 
+void dbl8_data_setup
+ ( int dim, int nbr, int deg, int totcff,
+   double *datahihihi, double *datalohihi,
+   double *datahilohi, double *datalolohi,
+   double *datahihilo, double *datalohilo,
+   double *datahilolo, double *datalololo,
+   double *csthihihi, double *cstlohihi,
+   double *csthilohi, double *cstlolohi,
+   double *csthihilo, double *cstlohilo,
+   double *csthilolo, double *cstlololo,
+   double **cffhihihi, double **cfflohihi,
+   double **cffhilohi, double **cfflolohi,
+   double **cffhihilo, double **cfflohilo,
+   double **cffhilolo, double **cfflololo,
+   double **inputhihihi, double **inputlohihi,
+   double **inputhilohi, double **inputlolohi,
+   double **inputhihilo, double **inputlohilo,
+   double **inputhilolo, double **inputlololo )
+{
+   const int deg1 = deg+1;
+   int ix = 0;
+
+   for(int i=0; i<deg1; i++)
+   {
+      datahihihi[ix]   = csthihihi[i];
+      datalohihi[ix]   = cstlohihi[i];
+      datahilohi[ix]   = csthilohi[i];
+      datalolohi[ix]   = cstlolohi[i];
+      datahihilo[ix]   = csthihilo[i];
+      datalohilo[ix]   = cstlohilo[i];
+      datahilolo[ix]   = csthilolo[i];
+      datalololo[ix++] = cstlololo[i];
+   }
+   for(int i=0; i<nbr; i++)
+      for(int j=0; j<deg1; j++)
+      {
+         datahihihi[ix]   = cffhihihi[i][j];
+         datalohihi[ix]   = cfflohihi[i][j];
+         datahilohi[ix]   = cffhilohi[i][j];
+         datalolohi[ix]   = cfflolohi[i][j];
+         datahihilo[ix]   = cffhihilo[i][j];
+         datalohilo[ix]   = cfflohilo[i][j];
+         datahilolo[ix]   = cffhilolo[i][j];
+         datalololo[ix++] = cfflololo[i][j];
+      }
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<deg1; j++)
+      {
+         datahihihi[ix]   = inputhihihi[i][j];
+         datalohihi[ix]   = inputlohihi[i][j];
+         datahilohi[ix]   = inputhilohi[i][j];
+         datalolohi[ix]   = inputlolohi[i][j];
+         datahihilo[ix]   = inputhihilo[i][j];
+         datalohilo[ix]   = inputlohilo[i][j];
+         datahilolo[ix]   = inputhilolo[i][j];
+         datalololo[ix++] = inputlololo[i][j];
+      }
+
+   for(int i=ix; i<totcff; i++)
+   {
+      datahihihi[i] = 0.0; datalohihi[i] = 0.0;
+      datahilohi[i] = 0.0; datalolohi[i] = 0.0;
+      datahihilo[i] = 0.0; datalohilo[i] = 0.0;
+      datahilolo[i] = 0.0; datalololo[i] = 0.0;
+   }
+}
+
+void cmplx8vectorized_data_setup
+ ( int dim, int nbr, int deg, int totcff, int offsetri,
+   double *datarihihihi, double *datarilohihi,
+   double *datarihilohi, double *datarilolohi,
+   double *datarihihilo, double *datarilohilo,
+   double *datarihilolo, double *datarilololo,
+   double *cstrehihihi, double *cstrelohihi,
+   double *cstrehilohi, double *cstrelolohi,
+   double *cstrehihilo, double *cstrelohilo,
+   double *cstrehilolo, double *cstrelololo,
+   double *cstimhihihi, double *cstimlohihi,
+   double *cstimhilohi, double *cstimlolohi,
+   double *cstimhihilo, double *cstimlohilo,
+   double *cstimhilolo, double *cstimlololo,
+   double **cffrehihihi, double **cffrelohihi,
+   double **cffrehilohi, double **cffrelolohi,
+   double **cffrehihilo, double **cffrelohilo,
+   double **cffrehilolo, double **cffrelololo,
+   double **cffimhihihi, double **cffimlohihi,
+   double **cffimhilohi, double **cffimlolohi,
+   double **cffimhihilo, double **cffimlohilo,
+   double **cffimhilolo, double **cffimlololo,
+   double **inputrehihihi, double **inputrelohihi,
+   double **inputrehilohi, double **inputrelolohi,
+   double **inputrehihilo, double **inputrelohilo,
+   double **inputrehilolo, double **inputrelololo,
+   double **inputimhihihi, double **inputimlohihi,
+   double **inputimhilohi, double **inputimlolohi,
+   double **inputimhihilo, double **inputimlohilo,
+   double **inputimhilolo, double **inputimlololo )
+{
+   const int deg1 = deg+1;
+
+   int ix1 = 0;
+   int ix2 = totcff + offsetri;
+
+   for(int i=0; i<deg1; i++)
+   {
+      datarihihihi[ix1]   = cstrehihihi[i];
+      datarilohihi[ix1]   = cstrelohihi[i];
+      datarihilohi[ix1]   = cstrehilohi[i];
+      datarilolohi[ix1]   = cstrelolohi[i];
+      datarihihilo[ix1]   = cstrehihilo[i];
+      datarilohilo[ix1]   = cstrelohilo[i];
+      datarihilolo[ix1]   = cstrehilolo[i];
+      datarilololo[ix1++] = cstrelololo[i];
+      datarihihihi[ix2]   = cstimhihihi[i];
+      datarilohihi[ix2]   = cstimlohihi[i];
+      datarihilohi[ix2]   = cstimhilohi[i];
+      datarilolohi[ix2]   = cstimlolohi[i];
+      datarihihilo[ix2]   = cstimhihilo[i];
+      datarilohilo[ix2]   = cstimlohilo[i];
+      datarihilolo[ix2]   = cstimhilolo[i];
+      datarilololo[ix2++] = cstimlololo[i];
+   }
+   for(int i=0; i<nbr; i++)
+      for(int j=0; j<deg1; j++)
+      {
+         datarihihihi[ix1]   = cffrehihihi[i][j];
+         datarilohihi[ix1]   = cffrelohihi[i][j];
+         datarihilohi[ix1]   = cffrehilohi[i][j];
+         datarilolohi[ix1]   = cffrelolohi[i][j];
+         datarihihilo[ix1]   = cffrehihilo[i][j];
+         datarilohilo[ix1]   = cffrelohilo[i][j];
+         datarihilolo[ix1]   = cffrehilolo[i][j];
+         datarilololo[ix1++] = cffrelololo[i][j];
+         datarihihihi[ix2]   = cffimhihihi[i][j];
+         datarilohihi[ix2]   = cffimlohihi[i][j];
+         datarihilohi[ix2]   = cffimhilohi[i][j];
+         datarilolohi[ix2]   = cffimlolohi[i][j];
+         datarihihilo[ix2]   = cffimhihilo[i][j];
+         datarilohilo[ix2]   = cffimlohilo[i][j];
+         datarihilolo[ix2]   = cffimhilolo[i][j];
+         datarilololo[ix2++] = cffimlololo[i][j];
+      }
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<deg1; j++)
+      {
+         datarihihihi[ix1]   = inputrehihihi[i][j];
+         datarilohihi[ix1]   = inputrelohihi[i][j];
+         datarihilohi[ix1]   = inputrehilohi[i][j];
+         datarilolohi[ix1]   = inputrelolohi[i][j];
+         datarihihilo[ix1]   = inputrehihilo[i][j];
+         datarilohilo[ix1]   = inputrelohilo[i][j];
+         datarihilolo[ix1]   = inputrehilolo[i][j];
+         datarilololo[ix1++] = inputrelololo[i][j];
+         datarihihihi[ix2]   = inputimhihihi[i][j];
+         datarilohihi[ix2]   = inputimlohihi[i][j];
+         datarihilohi[ix2]   = inputimhilohi[i][j];
+         datarilolohi[ix2]   = inputimlolohi[i][j];
+         datarihihilo[ix2]   = inputimhihilo[i][j];
+         datarilohilo[ix2]   = inputimlohilo[i][j];
+         datarihilolo[ix2]   = inputimhilolo[i][j];
+         datarilololo[ix2++] = inputimlololo[i][j];
+      }
+
+   for(int i=0; i<offsetri; i++)
+   {
+      datarihihihi[ix1] = 0.0;
+      datarilohihi[ix1] = 0.0;
+      datarihilohi[ix1] = 0.0;
+      datarilolohi[ix1] = 0.0;
+      datarihihilo[ix2] = 0.0;
+      datarihihilo[ix1] = 0.0;
+      datarilohilo[ix1] = 0.0;
+      datarihilolo[ix1] = 0.0; datarilololo[ix1++] = 0.0;
+      datarihihihi[ix2] = 0.0;
+      datarilohihi[ix2] = 0.0;
+      datarihilohi[ix2] = 0.0;
+      datarilolohi[ix2] = 0.0;
+      datarihihilo[ix2] = 0.0;
+      datarilohilo[ix2] = 0.0;
+      datarihilolo[ix2] = 0.0; datarilololo[ix2++] = 0.0;
+   }
+}
+
+void dbl8_convolution_jobs
+ ( int dim, int nbr, int deg, int *nvr, ConvolutionJobs cnvjobs,
+   int *fstart, int *bstart, int *cstart,
+   double *datahihihi, double *datalohihi,
+   double *datahilohi, double *datalolohi,
+   double *datahihilo, double *datalohilo,
+   double *datahilolo, double *datalololo,
+   double *cnvlapms, bool verbose )
+{
+   const int deg1 = deg+1;
+
+   cudaEvent_t start,stop;           // to measure time spent by kernels
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   *cnvlapms = 0.0;
+   float milliseconds;
+
+   for(int k=0; k<cnvjobs.get_depth(); k++)
+   {
+      const int jobnbr = cnvjobs.get_layer_count(k);
+      int *in1ix_h = new int[jobnbr];
+      int *in2ix_h = new int[jobnbr];
+      int *outix_h = new int[jobnbr];
+
+      if(verbose) cout << "preparing convolution jobs at layer "
+                       << k << " ..." << endl;
+
+      convjobs_coordinates(cnvjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
+                           fstart,bstart,cstart,verbose);
+      // if(deg1 == BS)
+      {
+         int *in1ix_d; // first input on device
+         int *in2ix_d; // second input on device
+         int *outix_d; // output indices on device
+         const size_t szjobidx = jobnbr*sizeof(int);
+         cudaMalloc((void**)&in1ix_d,szjobidx);
+         cudaMalloc((void**)&in2ix_d,szjobidx);
+         cudaMalloc((void**)&outix_d,szjobidx);
+         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+
+         if(verbose)
+            cout << "launching " << jobnbr << " blocks of " << deg1
+                 << " threads for convolutions ..." << endl;
+
+         cudaEventRecord(start);
+         dbl8_padded_convjobs<<<jobnbr,deg1>>>
+            (datahihihi,datalohihi,datahilohi,datalolohi,
+             datahihilo,datalohilo,datahilolo,datalololo,
+             in1ix_d,in2ix_d,outix_d,deg1);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *cnvlapms += milliseconds;
+      }
+      free(in1ix_h); free(in2ix_h); free(outix_h);
+   }
+}
+
+void cmplx8vectorized_convolution_jobs
+ ( int dim, int nbr, int deg, int *nvr, int totcff, int offsetri,
+   ComplexConvolutionJobs cnvjobs, ComplexIncrementJobs incjobs,
+   int *fstart, int *bstart, int *cstart,
+   double *datarihihihi, double *datarilohihi,
+   double *datarihilohi, double *datarilolohi,
+   double *datarihihilo, double *datarilohilo,
+   double *datarihilolo, double *datarilololo,
+   double *cnvlapms, bool verbose )
+{
+   const int deg1 = deg+1;
+
+   cudaEvent_t start,stop;           // to measure time spent by kernels
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   *cnvlapms = 0.0;
+   float milliseconds;
+   double fliplapms;
+
+   for(int k=0; k<cnvjobs.get_depth(); k++)
+   {
+      int jobnbr = cnvjobs.get_layer_count(k);
+      int *in1ix_h = new int[jobnbr];
+      int *in2ix_h = new int[jobnbr];
+      int *outix_h = new int[jobnbr];
+
+      if(verbose) cout << "preparing convolution jobs at layer "
+                       << k << " ..." << endl;
+
+      complex_convjobs_coordinates
+         (cnvjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,totcff,offsetri,
+          fstart,bstart,cstart,verbose);
+
+      // if(deg1 == BS)
+      {
+         int *in1ix_d; // first input on device
+         int *in2ix_d; // second input on device
+         int *outix_d; // output indices on device
+         const size_t szjobidx = jobnbr*sizeof(int);
+         cudaMalloc((void**)&in1ix_d,szjobidx);
+         cudaMalloc((void**)&in2ix_d,szjobidx);
+         cudaMalloc((void**)&outix_d,szjobidx);
+         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+
+         if(verbose)
+            cout << "launching " << jobnbr << " blocks of " << deg1
+                 << " threads for convolutions ..." << endl;
+
+         cudaEventRecord(start);
+         dbl8_padded_convjobs<<<jobnbr,deg1>>>
+            (datarihihihi,datarilohihi,datarihilohi,datarilolohi,
+             datarihihilo,datarilohilo,datarihilolo,datarilololo,
+             in1ix_d,in2ix_d,outix_d,deg1);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *cnvlapms += milliseconds;
+      }
+      jobnbr = incjobs.get_layer_count(k);
+      // note: only half the number of increment jobs
+
+      if(verbose) cout << "preparing increment jobs at layer "
+                       << k << " ..." << endl;
+
+      complex_incjobs_coordinates
+         (incjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,totcff,offsetri,
+          fstart,bstart,cstart,verbose);
+
+      const int nbrflips = jobnbr/2;
+      int *rebidx = new int[nbrflips];
+      for(int i=0, j=0; i<jobnbr; i=i+2, j++) rebidx[j] = in2ix_h[i];
+
+      GPU_cmplx8vectorized_flipsigns
+        (deg,nbrflips,rebidx,
+         datarihihihi,datarilohihi,datarihilohi,datarilolohi,
+         datarihihilo,datarilohilo,datarihilolo,datarilololo,
+         &fliplapms,verbose);
+      *cnvlapms += fliplapms;
+
+      // if(BS == deg1)
+      {
+         int *in1ix_d; // first input on device
+         int *in2ix_d; // second input on device
+         int *outix_d; // output indices on device
+         const size_t szjobidx = jobnbr*sizeof(int);
+         cudaMalloc((void**)&in1ix_d,szjobidx);
+         cudaMalloc((void**)&in2ix_d,szjobidx);
+         cudaMalloc((void**)&outix_d,szjobidx);
+         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+
+         if(verbose)
+            cout << "launching " << jobnbr << " blocks of " << deg1
+                 << " threads for increments ..." << endl;
+
+         cudaEventRecord(start);
+         dbl8_increment_jobs<<<jobnbr,deg1>>>
+            (datarihihihi,datarilohihi,datarihilohi,datarilolohi,
+             datarihihilo,datarilohilo,datarihilolo,datarilololo,
+             in1ix_d,in2ix_d,outix_d,deg1);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *cnvlapms += milliseconds;
+      }
+      free(in1ix_h); free(in2ix_h); free(outix_h);
+   }
+}
+
+void dbl8_addition_jobs
+ ( int dim, int nbr, int deg, int *nvr, AdditionJobs addjobs,
+   int *fstart, int *bstart, int *cstart,
+   double *datahihihi, double *datalohihi,
+   double *datahilohi, double *datalolohi,
+   double *datahihilo, double *datalohilo,
+   double *datahilolo, double *datalololo, double *addlapms, bool verbose )
+{
+   const int deg1 = deg+1;
+
+   cudaEvent_t start,stop;           // to measure time spent by kernels
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+
+   for(int k=0; k<addjobs.get_depth(); k++)
+   {
+      const int jobnbr = addjobs.get_layer_count(k);
+      int *in1ix_h = new int[jobnbr];
+      int *in2ix_h = new int[jobnbr];
+      int *outix_h = new int[jobnbr];
+
+      if(verbose) cout << "preparing addition jobs at layer "
+                       << k << " ..." << endl;
+
+      addjobs_coordinates(addjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
+                          fstart,bstart,cstart,verbose);
+      // if(deg1 == BS)
+      {
+         int *in1ix_d; // first input on device
+         int *in2ix_d; // second input on device
+         int *outix_d; // output indices on device
+         const size_t szjobidx = jobnbr*sizeof(int);
+         cudaMalloc((void**)&in1ix_d,szjobidx);
+         cudaMalloc((void**)&in2ix_d,szjobidx);
+         cudaMalloc((void**)&outix_d,szjobidx);
+         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+
+         if(verbose)
+            cout << "launching " << jobnbr << " blocks of " << deg1
+                 << " threads ..." << endl;
+
+         cudaEventRecord(start);
+         dbl8_update_addjobs<<<jobnbr,deg1>>>
+            (datahihihi,datalohihi,datahilohi,datalolohi,
+             datahihilo,datalohilo,datahilolo,datalololo,
+             in1ix_d,in2ix_d,outix_d,deg1);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *addlapms += milliseconds;
+      }
+      free(in1ix_h); free(in2ix_h); free(outix_h);
+   }
+}
+
+void cmplx8vectorized_addition_jobs
+ ( int dim, int nbr, int deg, int *nvr, int totcff, int offsetri,
+   ComplexAdditionJobs addjobs,
+   int *fstart, int *bstart, int *cstart,
+   double *datarihihihi, double *datarilohihi,
+   double *datarihilohi, double *datarilolohi,
+   double *datarihihilo, double *datarilohilo,
+   double *datarihilolo, double *datarilololo,
+   double *addlapms, bool verbose )
+{
+   const int deg1 = deg+1;
+
+   cudaEvent_t start,stop;           // to measure time spent by kernels
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   *addlapms = 0.0;
+   float milliseconds;
+
+   for(int k=0; k<addjobs.get_depth(); k++)
+   {
+      const int jobnbr = addjobs.get_layer_count(k);
+      int *in1ix_h = new int[jobnbr];
+      int *in2ix_h = new int[jobnbr];
+      int *outix_h = new int[jobnbr];
+
+      if(verbose) cout << "preparing addition jobs at layer "
+                       << k << " ..." << endl;
+
+      complex_addjobs_coordinates
+         (addjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
+          totcff,offsetri,fstart,bstart,cstart,verbose);
+
+      // if(deg1 == BS)
+      {
+         int *in1ix_d; // first input on device
+         int *in2ix_d; // second input on device
+         int *outix_d; // output indices on device
+         const size_t szjobidx = jobnbr*sizeof(int);
+         cudaMalloc((void**)&in1ix_d,szjobidx);
+         cudaMalloc((void**)&in2ix_d,szjobidx);
+         cudaMalloc((void**)&outix_d,szjobidx);
+         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+
+         if(verbose)
+            cout << "launching " << jobnbr << " blocks of " << deg1
+                 << " threads for additions ..." << endl;
+
+         cudaEventRecord(start);
+         dbl8_update_addjobs<<<jobnbr,deg1>>>
+            (datarihihihi,datarilohihi,datarihilohi,datarilolohi,
+             datarihihilo,datarilohilo,datarihilolo,datarilololo,
+             in1ix_d,in2ix_d,outix_d,deg1);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *addlapms += milliseconds;
+      }
+      free(in1ix_h); free(in2ix_h); free(outix_h);
+   }
+}
+
 void GPU_dbl8_poly_evaldiff
  ( int BS, int dim, int nbr, int deg, int *nvr, int **idx,
-   double *csthihihi, double *csthilohi,
-   double *csthihilo, double *csthilolo,
-   double *cstlohihi, double *cstlolohi,
-   double *cstlohilo, double *cstlololo,
-   double **cffhihihi, double **cffhilohi,
-   double **cffhihilo, double **cffhilolo,
-   double **cfflohihi, double **cfflolohi,
-   double **cfflohilo, double **cfflololo,
-   double **inputhihihi, double **inputhilohi,
-   double **inputhihilo, double **inputhilolo,
-   double **inputlohihi, double **inputlolohi,
-   double **inputlohilo, double **inputlololo,
-   double **outputhihihi, double **outputhilohi,
-   double **outputhihilo, double **outputhilolo,
-   double **outputlohihi, double **outputlolohi,
-   double **outputlohilo, double **outputlololo,
+   double *csthihihi, double *cstlohihi,
+   double *csthilohi, double *cstlolohi,
+   double *csthihilo, double *cstlohilo,
+   double *csthilolo, double *cstlololo,
+   double **cffhihihi, double **cfflohihi,
+   double **cffhilohi, double **cfflolohi,
+   double **cffhihilo, double **cfflohilo,
+   double **cffhilolo, double **cfflololo,
+   double **inputhihihi, double **inputlohihi,
+   double **inputhilohi, double **inputlolohi,
+   double **inputhihilo, double **inputlohilo,
+   double **inputhilolo, double **inputlololo,
+   double **outputhihihi, double **outputlohihi,
+   double **outputhilohi, double **outputlolohi,
+   double **outputhihilo, double **outputlohilo,
+   double **outputhilolo, double **outputlololo,
    ConvolutionJobs cnvjobs, AdditionJobs addjobs,
    double *cnvlapms, double *addlapms, double *elapsedms,
    double *walltimesec, bool verbose )
 {
-   const int deg1 = deg+1;
    const int totalcff = coefficient_count(dim,nbr,deg,nvr);
 
    int *fstart = new int[nbr];
@@ -1257,175 +1780,75 @@ void GPU_dbl8_poly_evaldiff
       for(int i=0; i<nbr; i++) cout << " " << cstart[i]; cout << endl;
    }
    double *datahihihi_h = new double[totalcff];        // data on host
-   double *datahilohi_h = new double[totalcff];
-   double *datahihilo_h = new double[totalcff];
-   double *datahilolo_h = new double[totalcff];
    double *datalohihi_h = new double[totalcff];
+   double *datahilohi_h = new double[totalcff];
    double *datalolohi_h = new double[totalcff];
+   double *datahihilo_h = new double[totalcff];
    double *datalohilo_h = new double[totalcff];
+   double *datahilolo_h = new double[totalcff];
    double *datalololo_h = new double[totalcff];
-   int ix = 0;
-   for(int i=0; i<deg1; i++)
-   {
-      datahihihi_h[ix] = csthihihi[i];
-      datahilohi_h[ix] = csthilohi[i];
-      datahihilo_h[ix] = csthihilo[i];
-      datahilolo_h[ix] = csthilolo[i];
-      datalohihi_h[ix] = cstlohihi[i];
-      datalolohi_h[ix] = cstlolohi[i];
-      datalohilo_h[ix] = cstlohilo[i];
-      datalololo_h[ix++] = cstlololo[i];
-   }
-   for(int i=0; i<nbr; i++)
-      for(int j=0; j<deg1; j++)
-      {
-         datahihihi_h[ix] = cffhihihi[i][j];
-         datahilohi_h[ix] = cffhilohi[i][j];
-         datahihilo_h[ix] = cffhihilo[i][j];
-         datahilolo_h[ix] = cffhilolo[i][j];
-         datalohihi_h[ix] = cfflohihi[i][j];
-         datalolohi_h[ix] = cfflolohi[i][j];
-         datalohilo_h[ix] = cfflohilo[i][j];
-         datalololo_h[ix++] = cfflololo[i][j];
-      }
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<deg1; j++)
-      {
-         datahihihi_h[ix] = inputhihihi[i][j];
-         datahilohi_h[ix] = inputhilohi[i][j];
-         datahihilo_h[ix] = inputhihilo[i][j];
-         datahilolo_h[ix] = inputhilolo[i][j];
-         datalohihi_h[ix] = inputlohihi[i][j];
-         datalolohi_h[ix] = inputlolohi[i][j];
-         datalohilo_h[ix] = inputlohilo[i][j];
-         datalololo_h[ix++] = inputlololo[i][j];
-      }
+
+   dbl8_data_setup
+      (dim,nbr,deg,totalcff,
+       datahihihi_h,datalohihi_h,datahilohi_h,datalolohi_h,
+       datahihilo_h,datalohilo_h,datahilolo_h,datalololo_h,
+       csthihihi,cstlohihi,csthilohi,cstlolohi,
+       csthihilo,cstlohilo,csthilolo,cstlololo,
+       cffhihihi,cfflohihi,cffhilohi,cfflolohi,
+       cffhihilo,cfflohilo,cffhilolo,cfflololo,
+       inputhihihi,inputlohihi,inputhilohi,inputlolohi,
+       inputhihilo,inputlohilo,inputhilolo,inputlololo);
 
    double *datahihihi_d;                               // device data
-   double *datahilohi_d;
-   double *datahihilo_d;
-   double *datahilolo_d;
    double *datalohihi_d;
+   double *datahilohi_d;
    double *datalolohi_d;
+   double *datahihilo_d;
    double *datalohilo_d;
+   double *datahilolo_d;
    double *datalololo_d;
    const size_t szdata = totalcff*sizeof(double);
    cudaMalloc((void**)&datahihihi_d,szdata);
-   cudaMalloc((void**)&datahilohi_d,szdata);
-   cudaMalloc((void**)&datahihilo_d,szdata);
-   cudaMalloc((void**)&datahilolo_d,szdata);
    cudaMalloc((void**)&datalohihi_d,szdata);
+   cudaMalloc((void**)&datahilohi_d,szdata);
    cudaMalloc((void**)&datalolohi_d,szdata);
+   cudaMalloc((void**)&datahihilo_d,szdata);
    cudaMalloc((void**)&datalohilo_d,szdata);
+   cudaMalloc((void**)&datahilolo_d,szdata);
    cudaMalloc((void**)&datalololo_d,szdata);
    cudaMemcpy(datahihihi_d,datahihihi_h,szdata,cudaMemcpyHostToDevice);
-   cudaMemcpy(datahilohi_d,datahilohi_h,szdata,cudaMemcpyHostToDevice);
-   cudaMemcpy(datahihilo_d,datahihilo_h,szdata,cudaMemcpyHostToDevice);
-   cudaMemcpy(datahilolo_d,datahilolo_h,szdata,cudaMemcpyHostToDevice);
    cudaMemcpy(datalohihi_d,datalohihi_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datahilohi_d,datahilohi_h,szdata,cudaMemcpyHostToDevice);
    cudaMemcpy(datalolohi_d,datalolohi_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datahihilo_d,datahihilo_h,szdata,cudaMemcpyHostToDevice);
    cudaMemcpy(datalohilo_d,datalohilo_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datahilolo_d,datahilolo_h,szdata,cudaMemcpyHostToDevice);
    cudaMemcpy(datalololo_d,datalololo_h,szdata,cudaMemcpyHostToDevice);
 
-   cudaEvent_t start,stop;           // to measure time spent by kernels
-   cudaEventCreate(&start);
-   cudaEventCreate(&stop);
-   *cnvlapms = 0.0;
-   *addlapms = 0.0;
-   float milliseconds;
    struct timeval begintime,endtime; // wall clock time of computations
 
    gettimeofday(&begintime,0);
-   for(int k=0; k<cnvjobs.get_depth(); k++)
-   {
-      const int jobnbr = cnvjobs.get_layer_count(k);
-      int *in1ix_h = new int[jobnbr];
-      int *in2ix_h = new int[jobnbr];
-      int *outix_h = new int[jobnbr];
 
-      if(verbose) cout << "preparing convolution jobs at layer "
-                       << k << " ..." << endl;
+   dbl8_convolution_jobs
+      (dim,nbr,deg,nvr,cnvjobs,fstart,bstart,cstart,
+       datahihihi_d,datalohihi_d,datahilohi_d,datalolohi_d,
+       datahihilo_d,datalohilo_d,datahilolo_d,datalololo_d,
+       cnvlapms,verbose);
 
-      convjobs_coordinates(cnvjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
-                           fstart,bstart,cstart,verbose);
-      if(deg1 == BS)
-      {
-         int *in1ix_d; // first input on device
-         int *in2ix_d; // second input on device
-         int *outix_d; // output indices on device
-         const size_t szjobidx = jobnbr*sizeof(int);
-         cudaMalloc((void**)&in1ix_d,szjobidx);
-         cudaMalloc((void**)&in2ix_d,szjobidx);
-         cudaMalloc((void**)&outix_d,szjobidx);
-         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
-         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
-         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+   dbl8_addition_jobs
+      (dim,nbr,deg,nvr,addjobs,fstart,bstart,cstart,
+       datahihihi_d,datalohihi_d,datahilohi_d,datalolohi_d,
+       datahihilo_d,datalohilo_d,datahilolo_d,datalololo_d,
+       addlapms,verbose);
 
-         if(verbose)
-            cout << "launching " << jobnbr << " blocks of " << BS
-                 << " threads ..." << endl;
-
-         cudaEventRecord(start);
-         dbl8_padded_convjobs<<<jobnbr,BS>>>
-            (datahihihi_d,datahilohi_d,datahihilo_d,datahilolo_d,
-             datalohihi_d,datalolohi_d,datalohilo_d,datalololo_d,
-             in1ix_d,in2ix_d,outix_d,deg1);
-         cudaEventRecord(stop);
-         cudaEventSynchronize(stop);
-         cudaEventElapsedTime(&milliseconds,start,stop);
-         *cnvlapms += milliseconds;
-      }
-      free(in1ix_h); free(in2ix_h); free(outix_h);
-   }
-   for(int k=0; k<addjobs.get_depth(); k++)
-   {
-      const int jobnbr = addjobs.get_layer_count(k);
-      int *in1ix_h = new int[jobnbr];
-      int *in2ix_h = new int[jobnbr];
-      int *outix_h = new int[jobnbr];
-
-      if(verbose) cout << "preparing addition jobs at layer "
-                       << k << " ..." << endl;
-
-      addjobs_coordinates(addjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
-                          fstart,bstart,cstart,verbose);
-      if(deg1 == BS)
-      {
-         int *in1ix_d; // first input on device
-         int *in2ix_d; // second input on device
-         int *outix_d; // output indices on device
-         const size_t szjobidx = jobnbr*sizeof(int);
-         cudaMalloc((void**)&in1ix_d,szjobidx);
-         cudaMalloc((void**)&in2ix_d,szjobidx);
-         cudaMalloc((void**)&outix_d,szjobidx);
-         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
-         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
-         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
-
-         if(verbose)
-            cout << "launching " << jobnbr << " blocks of " << BS
-                 << " threads ..." << endl;
-
-         cudaEventRecord(start);
-         dbl8_update_addjobs<<<jobnbr,BS>>>
-            (datahihihi_d,datahilohi_d,datahihilo_d,datahilolo_d,
-             datalohihi_d,datalolohi_d,datalohilo_d,datalololo_d,
-             in1ix_d,in2ix_d,outix_d,deg1);
-         cudaEventRecord(stop);
-         cudaEventSynchronize(stop);
-         cudaEventElapsedTime(&milliseconds,start,stop);
-         *addlapms += milliseconds;
-      }
-      free(in1ix_h); free(in2ix_h); free(outix_h);
-   }
    gettimeofday(&endtime,0);
    cudaMemcpy(datahihihi_h,datahihihi_d,szdata,cudaMemcpyDeviceToHost);
-   cudaMemcpy(datahilohi_h,datahilohi_d,szdata,cudaMemcpyDeviceToHost);
-   cudaMemcpy(datahihilo_h,datahihilo_d,szdata,cudaMemcpyDeviceToHost);
-   cudaMemcpy(datahilolo_h,datahilolo_d,szdata,cudaMemcpyDeviceToHost);
    cudaMemcpy(datalohihi_h,datalohihi_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datahilohi_h,datahilohi_d,szdata,cudaMemcpyDeviceToHost);
    cudaMemcpy(datalolohi_h,datalolohi_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datahihilo_h,datahihilo_d,szdata,cudaMemcpyDeviceToHost);
    cudaMemcpy(datalohilo_h,datalohilo_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datahilolo_h,datahilolo_d,szdata,cudaMemcpyDeviceToHost);
    cudaMemcpy(datalololo_h,datalololo_d,szdata,cudaMemcpyDeviceToHost);
    *elapsedms = *cnvlapms + *addlapms;
    long seconds = endtime.tv_sec - begintime.tv_sec;
@@ -1435,23 +1858,167 @@ void GPU_dbl8_poly_evaldiff
    // convoluted_data2_to_output
    //    (data_h,output,dim,nbr,deg,nvr,idx,fstart,bstart,cstart,verbose);
    dbl_added_data8_to_output
-      (datahihihi_h,datahilohi_h,datahihilo_h,datahilolo_h,
-       datalohihi_h,datalolohi_h,datalohilo_h,datalololo_h,
-       outputhihihi,outputhilohi,outputhihilo,outputhilolo,
-       outputlohihi,outputlolohi,outputlohilo,outputlololo,
+      (datahihihi_h,datalohihi_h,datahilohi_h,datalolohi_h,
+       datahihilo_h,datalohilo_h,datahilolo_h,datalololo_h,
+       outputhihihi,outputlohihi,outputhilohi,outputlolohi,
+       outputhihilo,outputlohilo,outputhilolo,outputlololo,
        dim,nbr,deg,nvr,idx,fstart,bstart,cstart,addjobs,verbose);
+
+   if(verbose) write_GPU_timings(*cnvlapms,*addlapms,*elapsedms,*walltimesec);
+}
+
+void GPU_cmplx8vectorized_poly_evaldiff
+ ( int BS, int dim, int nbr, int deg, int *nvr, int **idx,
+   double *cstrehihihi, double *cstrelohihi,
+   double *cstrehilohi, double *cstrelolohi,
+   double *cstrehihilo, double *cstrelohilo,
+   double *cstrehilolo, double *cstrelololo,
+   double *cstimhihihi, double *cstimlohihi,
+   double *cstimhilohi, double *cstimlolohi,
+   double *cstimhihilo, double *cstimlohilo,
+   double *cstimhilolo, double *cstimlololo,
+   double **cffrehihihi, double **cffrelohihi,
+   double **cffrehilohi, double **cffrelolohi,
+   double **cffrehihilo, double **cffrelohilo,
+   double **cffrehilolo, double **cffrelololo,
+   double **cffimhihihi, double **cffimlohihi,
+   double **cffimhilohi, double **cffimlolohi,
+   double **cffimhihilo, double **cffimlohilo,
+   double **cffimhilolo, double **cffimlololo,
+   double **inputrehihihi, double **inputrelohihi,
+   double **inputrehilohi, double **inputrelolohi,
+   double **inputrehihilo, double **inputrelohilo,
+   double **inputrehilolo, double **inputrelololo,
+   double **inputimhihihi, double **inputimlohihi,
+   double **inputimhilohi, double **inputimlolohi,
+   double **inputimhihilo, double **inputimlohilo,
+   double **inputimhilolo, double **inputimlololo,
+   double **outputrehihihi, double **outputrelohihi,
+   double **outputrehilohi, double **outputrelolohi,
+   double **outputrehihilo, double **outputrelohilo,
+   double **outputrehilolo, double **outputrelololo,
+   double **outputimhihihi, double **outputimlohihi,
+   double **outputimhilohi, double **outputimlolohi,
+   double **outputimhihilo, double **outputimlohilo,
+   double **outputimhilolo, double **outputimlololo,
+   ComplexConvolutionJobs cnvjobs, ComplexIncrementJobs incjobs,
+   ComplexAdditionJobs addjobs,
+   double *cnvlapms, double *addlapms, double *elapsedms,
+   double *walltimesec, bool verbose )
+{
+   const int totalcff = complex_coefficient_count(dim,nbr,deg,nvr);
+   const int diminput = (1 + nbr + dim)*(deg + 1); // dimension of input
+   const int offsetri = totalcff - diminput; // offset for re/im operands
+   const int cmplxtotcff = 2*(totalcff + offsetri);
+
+   int *fstart = new int[nbr];
+   int *bstart = new int[nbr];
+   int *cstart = new int[nbr];
+   int *fsums = new int[nbr];
+   int *bsums = new int[nbr];
+   int *csums = new int[nbr];
+
+   complex_coefficient_indices
+      (dim,nbr,deg,nvr,fsums,bsums,csums,fstart,bstart,cstart);
    if(verbose)
    {
-      cout << fixed << setprecision(2);
-      cout << "Time spent by convolution kernels : ";
-      cout << *cnvlapms << " milliseconds." << endl;
-      cout << "Time spent by addition kernels    : ";
-      cout << *addlapms << " milliseconds." << endl;
-      cout << "Time spent by all kernels         : ";
-      cout << *elapsedms << " milliseconds." << endl;
-      cout << "Total wall clock computation time : ";
-      cout << fixed << setprecision(3) << *walltimesec
-           << " seconds." << endl;
-      cout << scientific << setprecision(16);
+      cout << "        total count : " << totalcff << endl;
+      cout << "offset for operands : " << offsetri << endl;
+      cout << "complex total count : " << cmplxtotcff << endl;
+      write_coefficient_indices
+         (totalcff,nbr,fsums,fstart,bsums,bstart,csums,cstart);
    }
+   double *datarihihihi_h = new double[cmplxtotcff];      // data on host
+   double *datarilohihi_h = new double[cmplxtotcff];
+   double *datarihilohi_h = new double[cmplxtotcff];
+   double *datarilolohi_h = new double[cmplxtotcff];
+   double *datarihihilo_h = new double[cmplxtotcff];
+   double *datarilohilo_h = new double[cmplxtotcff];
+   double *datarihilolo_h = new double[cmplxtotcff];
+   double *datarilololo_h = new double[cmplxtotcff];
+
+   cmplx8vectorized_data_setup
+      (dim,nbr,deg,totalcff,offsetri,
+       datarihihihi_h,datarilohihi_h,datarihilohi_h,datarilolohi_h,
+       datarihihilo_h,datarilohilo_h,datarihilolo_h,datarilololo_h,
+       cstrehihihi,cstrelohihi,cstrehilohi,cstrelolohi,
+       cstrehihilo,cstrelohilo,cstrehilolo,cstrelololo,
+       cstimhihihi,cstimlohihi,cstimhilohi,cstimlolohi,
+       cstimhihilo,cstimlohilo,cstimhilolo,cstimlololo,
+       cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+       cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+       cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+       cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
+       inputrehihihi,inputrelohihi,inputrehilohi,inputrelolohi,
+       inputrehihilo,inputrelohilo,inputrehilolo,inputrelololo,
+       inputimhihihi,inputimlohihi,inputimhilohi,inputimlolohi,
+       inputimhihilo,inputimlohilo,inputimhilolo,inputimlololo);
+
+   double *datarihihihi_d;                               // device data
+   double *datarilohihi_d;
+   double *datarihilohi_d;
+   double *datarilolohi_d;
+   double *datarihihilo_d;
+   double *datarilohilo_d;
+   double *datarihilolo_d;
+   double *datarilololo_d;
+   const size_t szdata = cmplxtotcff*sizeof(double);
+   cudaMalloc((void**)&datarihihihi_d,szdata);
+   cudaMalloc((void**)&datarilohihi_d,szdata);
+   cudaMalloc((void**)&datarihilohi_d,szdata);
+   cudaMalloc((void**)&datarilolohi_d,szdata);
+   cudaMalloc((void**)&datarihihilo_d,szdata);
+   cudaMalloc((void**)&datarilohilo_d,szdata);
+   cudaMalloc((void**)&datarihilolo_d,szdata);
+   cudaMalloc((void**)&datarilololo_d,szdata);
+   cudaMemcpy(datarihihihi_d,datarihihihi_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datarilohihi_d,datarilohihi_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datarihilohi_d,datarihilohi_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datarilolohi_d,datarilolohi_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datarihihilo_d,datarihihilo_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datarilohilo_d,datarilohilo_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datarihilolo_d,datarihilolo_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datarilololo_d,datarilololo_h,szdata,cudaMemcpyHostToDevice);
+
+   struct timeval begintime,endtime; // wall clock time of computations
+
+   gettimeofday(&begintime,0);
+
+   cmplx8vectorized_convolution_jobs
+      (dim,nbr,deg,nvr,totalcff,offsetri,cnvjobs,incjobs,fstart,bstart,cstart,
+       datarihihihi_d,datarilohihi_d,datarihilohi_d,datarilolohi_d,
+       datarihihilo_d,datarilohilo_d,datarihilolo_d,datarilololo_d,
+       cnvlapms,verbose);
+
+   cmplx8vectorized_addition_jobs
+      (dim,nbr,deg,nvr,totalcff,offsetri,addjobs,fstart,bstart,cstart,
+       datarihihihi_d,datarilohihi_d,datarihilohi_d,datarilolohi_d,
+       datarihihilo_d,datarilohilo_d,datarihilolo_d,datarilololo_d,
+       addlapms,verbose);
+
+   gettimeofday(&endtime,0);
+   cudaMemcpy(datarihihihi_h,datarihihihi_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datarilohihi_h,datarilohihi_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datarihilohi_h,datarihilohi_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datarilolohi_h,datarilolohi_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datarihihilo_h,datarihihilo_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datarilohilo_h,datarilohilo_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datarihilolo_h,datarihilolo_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datarilololo_h,datarilololo_d,szdata,cudaMemcpyDeviceToHost);
+   *elapsedms = *cnvlapms + *addlapms;
+   long seconds = endtime.tv_sec - begintime.tv_sec;
+   long microseconds = endtime.tv_usec - begintime.tv_usec;
+   *walltimesec = seconds + microseconds*1.0e-6;
+
+   cmplx_added_data8vectorized_to_output
+      (datarihihihi_h,datarilohihi_h,datarihilohi_h,datarilolohi_h,
+       datarihihilo_h,datarilohilo_h,datarihilolo_h,datarilololo_h,
+       outputrehihihi,outputrelohihi,outputrehilohi,outputrelolohi,
+       outputrehihilo,outputrelohilo,outputrehilolo,outputrelololo,
+       outputimhihihi,outputimlohihi,outputimhilohi,outputimlolohi,
+       outputimhihilo,outputimlohilo,outputimhilolo,outputimlololo,
+       dim,nbr,deg,nvr,idx,fstart,bstart,cstart,
+       totalcff,offsetri,addjobs,verbose);
+
+   if(verbose) write_GPU_timings(*cnvlapms,*addlapms,*elapsedms,*walltimesec);
 }

@@ -940,7 +940,7 @@ test_dbl8_polynomials: random_numbers.obj random_series.obj \
                        dbl8_convolutions_host.obj dbl8_monomials_host.obj \
                        dbl8_polynomials_host.obj dbl8_polynomials_kernels.obj \
 		       test_dbl8_polynomials.obj dbl8_polynomials_testers.obj \
-		       gettimeofday4win.obj
+		       write_gpu_timings.obj gettimeofday4win.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl8_polynomials.exe \
               random_numbers.obj random_series.obj random_monomials.obj \
@@ -957,7 +957,7 @@ test_dbl8_polynomials: random_numbers.obj random_series.obj \
               dbl8_convolutions_host.obj dbl8_monomials_host.obj \
               dbl8_polynomials_host.obj dbl8_polynomials_kernels.obj \
               test_dbl8_polynomials.obj dbl8_polynomials_testers.obj \
-              gettimeofday4win.obj
+              write_gpu_timings.obj gettimeofday4win.obj
 
 test_dbl10_polynomials: random_numbers.obj random_series.obj \
 	                random_monomials.obj random_polynomials.obj \

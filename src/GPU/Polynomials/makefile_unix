@@ -671,6 +671,7 @@ test_dbl8_polynomials: random_numbers.o random_series.o random_monomials.o \
                        job_coordinates.o write_job_counts.o \
                        dbl8_convolutions_host.o dbl8_monomials_host.o \
                        dbl8_polynomials_host.o dbl8_polynomials_kernels.o \
+                       write_gpu_timings.o \
                        prompt_for_setup.o dbl8_polynomials_testers.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl8_polynomials test_dbl8_polynomials.o \
@@ -687,6 +688,7 @@ test_dbl8_polynomials: random_numbers.o random_series.o random_monomials.o \
                   job_coordinates.o write_job_counts.o \
                   dbl8_convolutions_host.o dbl8_monomials_host.o \
                   dbl8_polynomials_host.o dbl8_polynomials_kernels.o \
+                  write_gpu_timings.o \
                   prompt_for_setup.o dbl8_polynomials_testers.o \
                -lcuda -lcudart -L$(CUDALIB)
 
