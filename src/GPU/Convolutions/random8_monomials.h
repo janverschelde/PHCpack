@@ -45,6 +45,33 @@ bool make_real8_monomial
  *   cffhilolo stores the deg+1 second lowest coefficient doubles;
  *   cfflololo stores the deg+1 lowest coefficient doubles. */
 
+void random_octo_complex
+ ( double *rehihihi, double *relohihi, double *rehilohi, double *relolohi,
+   double *rehihilo, double *relohilo, double *rehilolo, double *relololo,
+   double *imhihihi, double *imlohihi, double *imhilohi, double *imlolohi,
+   double *imhihilo, double *imlohilo, double *imhilolo, double *imlololo );
+/*
+ * DESCRIPTION :
+ *   Generates a random complex number on the unit circle.
+ *
+ * ON RETURN :
+ *   rehihihi   the highest double of the real part;
+ *   relohihi   the second highest double of the real part;
+ *   rehilohi   the third highest double of the real part;
+ *   relolohi   the fourth highest double of the real part;
+ *   rehihilo   the fourth lowest double of the real part;
+ *   relohilo   the third lowest double of the real part;
+ *   rehilolo   the second lowest double of the real part;
+ *   relololo   the lowest double of the real part;
+ *   imhihihi   the highest double of the imag part;
+ *   imlohihi   the second highest double of the imag part;
+ *   imhilohi   the third highest double of the imag part;
+ *   imlolohi   the fourth highest double of the imag part;
+ *   imhihilo   the fourth lowest double of the imag part;
+ *   imlohilo   the third lowest double of the imag part;
+ *   imhilolo   the second lowest double of the imag part;
+ *   imlololo   the lowest double of the imag part. */
+
 bool make_complex8_monomial
  ( int dim, int nvr, int pwr, int deg, int *idx, int *exp,
    double *cffrehihihi, double *cffrelohihi,

@@ -47,6 +47,35 @@ bool make_real8_monomial
    }
 }
 
+void random_octo_complex
+ ( double *rehihihi, double *relohihi, double *rehilohi, double *relolohi,
+   double *rehihilo, double *relohilo, double *rehilolo, double *relololo,
+   double *imhihihi, double *imlohihi, double *imhilohi, double *imlolohi,
+   double *imhihilo, double *imlohilo, double *imhilolo, double *imlololo )
+{
+   double sinhihihi,sinlohihi,sinhilohi,sinlolohi;
+   double sinhihilo,sinlohilo,sinhilolo,sinlololo;
+
+   random_octo_double                                           // random cos
+      (rehihihi,relohihi,rehilohi,relolohi,
+       rehihilo,relohilo,rehilolo,relololo);
+                                                                // cos(angle)
+   odf_sqrt(*rehihihi,*relohihi,*rehilohi,*relolohi,
+            *rehihilo,*relohilo,*rehilolo,*relololo,
+            &sinhihihi,&sinlohihi,&sinhilohi,&sinlolohi,
+            &sinhihilo,&sinlohilo,&sinhilolo,&sinlololo);      // cos^(angle)
+   odf_minus(&sinhihihi,&sinlohihi,&sinhilohi,&sinlolohi,
+             &sinhihilo,&sinlohilo,&sinhilolo,&sinlololo);
+                                                              // -cos^(angle)
+   odf_inc_d(&sinhihihi,&sinlohihi,&sinhilohi,&sinlolohi,
+             &sinhihilo,&sinlohilo,&sinhilolo,&sinlololo,1.0);
+                                                            // 1-cos^2(angle)
+   odf_sqrt(sinhihihi,sinlohihi,sinhilohi,sinlolohi,
+            sinhihilo,sinlohilo,sinhilolo,sinlololo,
+            imhihihi,imlohihi,imhilohi,imlolohi,
+            imhihilo,imlohilo,imhilolo,imlololo);              // sin is sqrt
+}
+
 bool make_complex8_monomial
  ( int dim, int nvr, int pwr, int deg, int *idx, int *exp,
    double *cffrehihihi, double *cffrelohihi,
