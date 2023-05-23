@@ -102,7 +102,7 @@ void CPU_dbl8_poly_speel
                     &outputhihilo[ix2][j],&outputlohilo[ix2][j],
                     &outputhilolo[ix2][j],&outputlololo[ix2][j],
                     forwardhihihi[0][j],   forwardlohihi[0][j],
-                    forwardhilolo[0][j],   forwardlolohi[0][j],
+                    forwardhilohi[0][j],   forwardlolohi[0][j],
                     forwardhihilo[0][j],   forwardlohilo[0][j],
                     forwardhilolo[0][j],   forwardlololo[0][j]);
          if(verbose) cout << "monomial " << i << " : ";

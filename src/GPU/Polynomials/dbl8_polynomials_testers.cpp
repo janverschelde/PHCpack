@@ -306,9 +306,9 @@ void cmplx8_make_input
                       cstrehihilo,cstrelohilo,cstrehilolo,cstrelololo,
                       cstimhihihi,cstimlohihi,cstimhilohi,cstimlolohi,
                       cstimhihilo,cstimlohilo,cstimhilolo,cstimlololo,
-                      cffrehihihi,cffrelohihi,cffrehilohi,cffrehilolo,
+                      cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
                       cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
-                      cffimhihihi,cffimlohihi,cffimhilohi,cffimhilolo,
+                      cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
                       cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo);
    }
    if(verbose)
@@ -1049,18 +1049,18 @@ double test_cmplx8_polynomial
 
       cmplx8_make_input
          (dim,nbr,nva,pwr,deg,nvr,idx,exp,
-          inputrehihihi,inputrehilohi,inputrehihilo,inputrehilolo,
-          inputrelohihi,inputrelolohi,inputrelohilo,inputrelololo,
-          inputimhihihi,inputimhilohi,inputimhihilo,inputimhilolo,
-          inputimlohihi,inputimlolohi,inputimlohilo,inputimlololo,
-          cstrehihihi,cstrehilohi,cstrehihilo,cstrehilolo,
-          cstrelohihi,cstrelolohi,cstrelohilo,cstrelololo,
-          cstimhihihi,cstimhilohi,cstimhihilo,cstimhilolo,
-          cstimlohihi,cstimlolohi,cstimlohilo,cstimlololo,
-          cffrehihihi,cffrehilohi,cffrehihilo,cffrehilolo,
-          cffrelohihi,cffrelolohi,cffrelohilo,cffrelololo,
-          cffimhihihi,cffimhilohi,cffimhihilo,cffimhilolo,
-          cffimlohihi,cffimlolohi,cffimlohilo,cffimlololo,vrb);
+          inputrehihihi,inputrelohihi,inputrehilohi,inputrelolohi,
+          inputrehihilo,inputrelohilo,inputrehilolo,inputrelololo,
+          inputimhihihi,inputimlohihi,inputimhilohi,inputimlolohi,
+          inputimlohilo,inputimlohilo,inputimhilolo,inputimlololo,
+          cstrehihihi,cstrelohihi,cstrehilohi,cstrelolohi,
+          cstrehihilo,cstrelohilo,cstrehilolo,cstrelololo,
+          cstimhihihi,cstimlohihi,cstimhilohi,cstimlolohi,
+          cstimhihilo,cstimlohilo,cstimhilolo,cstimlololo,
+          cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+          cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+          cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+          cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,vrb);
 
 
       ComplexConvolutionJobs cnvjobs(dim);
