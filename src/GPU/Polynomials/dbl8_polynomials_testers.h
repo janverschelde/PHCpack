@@ -378,12 +378,36 @@ double cmplx8_error_sum
  *   imsultsimlololo_d aim the lowest imag doubles on the device;
  *   verbose  if true, then all results and intermediate errors are shown. */
 
-double test_dbl8_real_polynomial
+double test_dbl8_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose,
    bool jobrep=true, int mode=2 );
 /*
  * DESCRIPTION :
  *   Tests the evaluation and differentiation for random real data.
+ *   Returns the sum of all errors.
+ * 
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   nbr      number of terms in the polynomial;
+ *   nva      number of variables per monomial (for products and cyclic);
+ *   pwr      highest power of each variable;
+ *   deg      truncation degree of the series;
+ *   verbose  if zero, then no output is written,
+ *            otherwise, the higher the value, the more output;
+ *   jobrep   if verbose is nonzero and jobrep is true,
+ *            then the jobs report is written,
+ *            otherwise no jobs report is written.
+ *            When running the same problems in many precisions,
+ *            the jobs reports needs to be written only once;
+ *   mode     the mode of execution, either 0, 1, or 2, as follows:
+ *            0 : GPU only; 1 : CPU only; 2 : GPU and CPU. */
+
+double test_cmplx8_polynomial
+ ( int dim, int nbr, int nva, int pwr, int deg, int verbose,
+   bool jobrep=true, int mode=2 );
+/*
+ * DESCRIPTION :
+ *   Tests the evaluation and differentiation for random complex data.
  *   Returns the sum of all errors.
  * 
  * ON ENTRY :

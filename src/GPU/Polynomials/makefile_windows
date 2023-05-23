@@ -932,7 +932,7 @@ test_dbl8_polynomials: random_numbers.obj random_series.obj \
                        random8_vectors.obj random8_series.obj \
                        random8_monomials.obj random8_polynomials.obj \
                        convolution_job.obj convolution_jobs.obj \
-                       addition_job.obj addition_jobs.obj \
+                       addition_job.obj addition_jobs.obj job_makers.obj \
                        complexconv_job.obj complexconv_jobs.obj \
                        complexinc_job.obj complexinc_jobs.obj \
                        complexadd_job.obj complexadd_jobs.obj \
@@ -950,7 +950,7 @@ test_dbl8_polynomials: random_numbers.obj random_series.obj \
               random8_monomials.obj random8_polynomials.obj \
               convolution_job.obj convolution_jobs.obj \
               addition_job.obj addition_jobs.obj prompt_for_setup.obj \
-              job_coordinates.obj write_job_counts.obj \
+              job_coordinates.obj write_job_counts.obj job_makers.obj \
               complexconv_job.obj complexconv_jobs.obj \
               complexinc_job.obj complexinc_jobs.obj \
               complexadd_job.obj complexadd_jobs.obj \

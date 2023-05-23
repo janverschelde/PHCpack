@@ -12,9 +12,13 @@
 #include "random8_polynomials.h"
 #include "convolution_jobs.h"
 #include "addition_jobs.h"
+#include "complexconv_jobs.h"
+#include "complexinc_jobs.h"
+#include "complexadd_jobs.h"
 #include "write_job_counts.h"
 #include "dbl8_polynomials_host.h"
 #include "dbl8_polynomials_kernels.h"
+#include "job_makers.h"
 #include "dbl8_polynomials_testers.h"
 
 using namespace std;
@@ -38,10 +42,12 @@ int main_dbl8_test_polynomial
    }
    if(vrblvl > 0) cout << "  Seed used : " << seedused << endl;
 
-   double realsum = test_dbl8_real_polynomial
+   double realsum = test_dbl8_polynomial
+                       (dim,nbr,nva,pwr,deg,vrblvl-1,jobrep,mode);
+   double compsum = test_cmplx8_polynomial
                        (dim,nbr,nva,pwr,deg,vrblvl-1,jobrep,mode);
 
-   int fail = int(realsum > tol);
+   int fail = int(realsum > tol) + int(compsum > tol);
 
    if(vrblvl > 0)
    {
@@ -51,6 +57,14 @@ int main_dbl8_test_polynomial
          cout << "Sum of all errors in octo double precision :" << endl;
          cout << "  on real data : " << realsum;
          if(realsum < tol)
+            cout << "  pass." << endl;
+         else
+         {
+            cout << " > " << tol;
+            cout << "  fail!" << endl;
+         }
+         cout << "  on complex data : " << compsum;
+         if(compsum < tol)
             cout << "  pass." << endl;
          else
          {
@@ -615,7 +629,7 @@ double cmplx8_error_sum
    return sumerr;
 }
 
-double test_dbl8_real_polynomial
+double test_dbl8_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
    int mode )
 {
@@ -851,6 +865,308 @@ double test_dbl8_real_polynomial
             cout << "  (1) without jobs : " << timelapsec1_h << " seconds,"
                  << endl;
             cout << "  (2) cnv/add jobs : " << timelapsec2_h << " seconds."
+                 << endl;
+         }
+         if((mode == 0) || (mode == 2))
+         {
+            cout << fixed << setprecision(2);
+            cout << "Time spent by convolution kernels : "
+                 << cnvlapms << " milliseconds." << endl;
+            cout << "Time spent by addition kernels    : "
+                 << addlapms << " milliseconds." << endl;
+            cout << "Time spent by all kernels         : "
+                 << timelapms_d << " milliseconds." << endl;
+            cout << "Total wall clock computation time : ";
+            cout << fixed << setprecision(3) << walltimes_d
+                 << " seconds." << endl;
+            cout << scientific << setprecision(16);
+         }
+      }
+      return sumerr;
+   }
+}
+
+double test_cmplx8_polynomial
+ ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
+   int mode )
+{
+   if(nbr < 1)
+      return 0.0;
+   else                                        // dim series of degree deg
+   {
+      double **inputrehihihi = new double*[dim];
+      for(int i=0; i<dim; i++) inputrehihihi[i] = new double[deg+1];
+      double **inputrelohihi = new double*[dim];
+      for(int i=0; i<dim; i++) inputrelohihi[i] = new double[deg+1];
+      double **inputrehilohi = new double*[dim];
+      for(int i=0; i<dim; i++) inputrehilohi[i] = new double[deg+1];
+      double **inputrelolohi = new double*[dim];
+      for(int i=0; i<dim; i++) inputrelolohi[i] = new double[deg+1];
+      double **inputrehihilo = new double*[dim];
+      for(int i=0; i<dim; i++) inputrehihilo[i] = new double[deg+1];
+      double **inputrelohilo = new double*[dim];
+      for(int i=0; i<dim; i++) inputrelohilo[i] = new double[deg+1];
+      double **inputrehilolo = new double*[dim];
+      for(int i=0; i<dim; i++) inputrehilolo[i] = new double[deg+1];
+      double **inputrelololo = new double*[dim];
+      for(int i=0; i<dim; i++) inputrelololo[i] = new double[deg+1];
+      double **inputimhihihi = new double*[dim];
+      for(int i=0; i<dim; i++) inputimhihihi[i] = new double[deg+1];
+      double **inputimlohihi = new double*[dim];
+      for(int i=0; i<dim; i++) inputimlohihi[i] = new double[deg+1];
+      double **inputimhilohi = new double*[dim];
+      for(int i=0; i<dim; i++) inputimhilohi[i] = new double[deg+1];
+      double **inputimlolohi = new double*[dim];
+      for(int i=0; i<dim; i++) inputimlolohi[i] = new double[deg+1];
+      double **inputimhihilo = new double*[dim];
+      for(int i=0; i<dim; i++) inputimhihilo[i] = new double[deg+1];
+      double **inputimlohilo = new double*[dim];
+      for(int i=0; i<dim; i++) inputimlohilo[i] = new double[deg+1];
+      double **inputimhilolo = new double*[dim];
+      for(int i=0; i<dim; i++) inputimhilolo[i] = new double[deg+1];
+      double **inputimlololo = new double*[dim];
+      for(int i=0; i<dim; i++) inputimlololo[i] = new double[deg+1];
+      // The output are dim+1 power series of degree deg
+      // for the evaluated and differentiated polynomial.
+      double **outputrehihihi_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputrehihihi_h[i] = new double[deg+1];
+      double **outputrelohihi_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputrelohihi_h[i] = new double[deg+1];
+      double **outputrehilohi_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputrehilohi_h[i] = new double[deg+1];
+      double **outputrelolohi_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputrelolohi_h[i] = new double[deg+1];
+      double **outputrehihilo_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputrehihilo_h[i] = new double[deg+1];
+      double **outputrelohilo_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputrelohilo_h[i] = new double[deg+1];
+      double **outputrehilolo_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputrehilolo_h[i] = new double[deg+1];
+      double **outputrelololo_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputrelololo_h[i] = new double[deg+1];
+      double **outputimhihihi_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputimhihihi_h[i] = new double[deg+1];
+      double **outputimlohihi_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputimlohihi_h[i] = new double[deg+1];
+      double **outputimhilohi_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputimhilohi_h[i] = new double[deg+1];
+      double **outputimlolohi_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputimlolohi_h[i] = new double[deg+1];
+      double **outputimhihilo_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputimhihilo_h[i] = new double[deg+1];
+      double **outputimlohilo_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputimlohilo_h[i] = new double[deg+1];
+      double **outputimhilolo_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputimhilolo_h[i] = new double[deg+1];
+      double **outputimlololo_h = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputimlololo_h[i] = new double[deg+1];
+      double **outputrehihihi_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputrehihihi_d[i] = new double[deg+1];
+      double **outputrelohihi_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputrelohihi_d[i] = new double[deg+1];
+      double **outputrehilohi_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputrehilohi_d[i] = new double[deg+1];
+      double **outputrelolohi_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputrelolohi_d[i] = new double[deg+1];
+      double **outputrehihilo_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputrehihilo_d[i] = new double[deg+1];
+      double **outputrelohilo_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputrelohilo_d[i] = new double[deg+1];
+      double **outputrehilolo_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputrehilolo_d[i] = new double[deg+1];
+      double **outputrelololo_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputrelololo_d[i] = new double[deg+1];
+      double **outputimhihihi_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputimhihihi_d[i] = new double[deg+1];
+      double **outputimlohihi_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputimlohihi_d[i] = new double[deg+1];
+      double **outputimhilohi_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputimhilohi_d[i] = new double[deg+1];
+      double **outputimlolohi_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputimlolohi_d[i] = new double[deg+1];
+      double **outputimhihilo_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputimhihilo_d[i] = new double[deg+1];
+      double **outputimlohilo_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputimlohilo_d[i] = new double[deg+1];
+      double **outputimhilolo_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputimhilolo_d[i] = new double[deg+1];
+      double **outputimlololo_d = new double*[dim+1];
+      for(int i=0; i<=dim; i++) outputimlololo_d[i] = new double[deg+1];
+
+      double *cstrehihihi = new double[deg+1]; // constant coefficients
+      double *cstrelohihi = new double[deg+1];
+      double *cstrehilohi = new double[deg+1];
+      double *cstrelolohi = new double[deg+1];
+      double *cstrehihilo = new double[deg+1]; 
+      double *cstrelohilo = new double[deg+1];
+      double *cstrehilolo = new double[deg+1];
+      double *cstrelololo = new double[deg+1];
+      double *cstimhihihi = new double[deg+1];
+      double *cstimlohihi = new double[deg+1];
+      double *cstimhilohi = new double[deg+1];
+      double *cstimlolohi = new double[deg+1];
+      double *cstimhihilo = new double[deg+1]; 
+      double *cstimlohilo = new double[deg+1];
+      double *cstimhilolo = new double[deg+1];
+      double *cstimlololo = new double[deg+1];
+      double **cffrehihihi = new double*[nbr]; // coefficients of terms
+      for(int i=0; i<nbr; i++) cffrehihihi[i] = new double[deg+1];
+      double **cffrelohihi = new double*[nbr];
+      for(int i=0; i<nbr; i++) cffrelohihi[i] = new double[deg+1];
+      double **cffrehilohi = new double*[nbr];
+      for(int i=0; i<nbr; i++) cffrehilohi[i] = new double[deg+1];
+      double **cffrelolohi = new double*[nbr];
+      for(int i=0; i<nbr; i++) cffrelolohi[i] = new double[deg+1];
+      double **cffrehihilo = new double*[nbr];
+      for(int i=0; i<nbr; i++) cffrehihilo[i] = new double[deg+1];
+      double **cffrelohilo = new double*[nbr];
+      for(int i=0; i<nbr; i++) cffrelohilo[i] = new double[deg+1];
+      double **cffrehilolo = new double*[nbr];
+      for(int i=0; i<nbr; i++) cffrehilolo[i] = new double[deg+1];
+      double **cffrelololo = new double*[nbr];
+      for(int i=0; i<nbr; i++) cffrelololo[i] = new double[deg+1];
+      double **cffimhihihi = new double*[nbr];
+      for(int i=0; i<nbr; i++) cffimhihihi[i] = new double[deg+1];
+      double **cffimlohihi = new double*[nbr];
+      for(int i=0; i<nbr; i++) cffimlohihi[i] = new double[deg+1];
+      double **cffimhilohi = new double*[nbr];
+      for(int i=0; i<nbr; i++) cffimhilohi[i] = new double[deg+1];
+      double **cffimlolohi = new double*[nbr];
+      for(int i=0; i<nbr; i++) cffimlolohi[i] = new double[deg+1];
+      double **cffimhihilo = new double*[nbr];
+      for(int i=0; i<nbr; i++) cffimhihilo[i] = new double[deg+1];
+      double **cffimlohilo = new double*[nbr];
+      for(int i=0; i<nbr; i++) cffimlohilo[i] = new double[deg+1];
+      double **cffimhilolo = new double*[nbr];
+      for(int i=0; i<nbr; i++) cffimhilolo[i] = new double[deg+1];
+      double **cffimlololo = new double*[nbr];
+      for(int i=0; i<nbr; i++) cffimlololo[i] = new double[deg+1];
+      int *nvr = new int[nbr]; // number of variables in each monomial
+      int **idx = new int*[nbr];  // indices of variables in monomials
+      int **exp = new int*[nbr];  // exponents of the variables
+
+      bool vrb = (verbose > 1);
+
+      cmplx8_make_input
+         (dim,nbr,nva,pwr,deg,nvr,idx,exp,
+          inputrehihihi,inputrehilohi,inputrehihilo,inputrehilolo,
+          inputrelohihi,inputrelolohi,inputrelohilo,inputrelololo,
+          inputimhihihi,inputimhilohi,inputimhihilo,inputimhilolo,
+          inputimlohihi,inputimlolohi,inputimlohilo,inputimlololo,
+          cstrehihihi,cstrehilohi,cstrehihilo,cstrehilolo,
+          cstrelohihi,cstrelolohi,cstrelohilo,cstrelololo,
+          cstimhihihi,cstimhilohi,cstimhihilo,cstimhilolo,
+          cstimlohihi,cstimlolohi,cstimlohilo,cstimlololo,
+          cffrehihihi,cffrehilohi,cffrehihilo,cffrehilolo,
+          cffrelohihi,cffrelolohi,cffrelohilo,cffrelololo,
+          cffimhihihi,cffimhilohi,cffimhihilo,cffimhilolo,
+          cffimlohihi,cffimlolohi,cffimlohilo,cffimlololo,vrb);
+
+
+      ComplexConvolutionJobs cnvjobs(dim);
+      ComplexIncrementJobs incjobs(cnvjobs,vrb);
+      ComplexAdditionJobs addjobs(dim,nbr);
+
+      make_all_complex_jobs
+         (dim,nbr,nvr,idx,&cnvjobs,&incjobs,&addjobs,vrb);
+
+      double timelapsec_h;
+      double cnvlapms,addlapms,timelapms_d,walltimes_d;
+
+      if((mode == 1) || (mode == 2))
+      {
+         if(vrb) cout << "computing on the host ..." << endl;
+         CPU_cmplx8_poly_evaldiff
+            (dim,nbr,deg,nvr,idx,
+             cstrehihihi,cstrelohihi,cstrehilohi,cstrelolohi,
+             cstrehihilo,cstrelohilo,cstrehilolo,cstrelololo,
+             cstimhihihi,cstimhihihi,cstimhilohi,cstimlolohi,
+             cstimhihilo,cstimlohilo,cstimhilolo,cstimlololo,
+             cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+             cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+             cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+             cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
+             inputrehihihi,inputrelohihi,inputrehilohi,inputrelolohi,
+             inputrehihilo,inputrelohilo,inputrehilolo,inputrelololo,
+             inputimhihihi,inputimlohihi,inputimhilohi,inputimlolohi,
+             inputimhihilo,inputimlohilo,inputimhilolo,inputimlololo,
+             outputrehihihi_h,outputrelohihi_h,
+             outputrehilohi_h,outputrelolohi_h,
+             outputrehihilo_h,outputrelohilo_h,
+             outputrehilolo_h,outputrelololo_h,
+             outputimhihihi_h,outputimlohihi_h,
+             outputimhilohi_h,outputimlolohi_h,
+             outputimhihilo_h,outputimlohilo_h,
+             outputimhilolo_h,outputimlololo_h,&timelapsec_h,vrb);
+      }
+      if((mode == 0) || (mode == 2))
+      {
+         if(vrb) cout << "Computing on the device ..." << endl;
+         GPU_cmplx8vectorized_poly_evaldiff
+            (deg+1,dim,nbr,deg,nvr,idx,
+             cstrehihihi,cstrelohihi,cstrehilohi,cstrelolohi,
+             cstrehihilo,cstrelohilo,cstrehilolo,cstrelololo,
+             cstimhihihi,cstimlohihi,cstimhilohi,cstimlolohi,
+             cstimhihilo,cstimlohilo,cstimhilolo,cstimlololo,
+             cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+             cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+             cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+             cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
+             inputrehihihi,inputrelohihi,inputrehilohi,inputrelolohi,
+             inputrehihilo,inputrelohilo,inputrehilolo,inputrelololo,
+             inputimhihihi,inputimlohihi,inputimhilohi,inputimlolohi,
+             inputimhihilo,inputimlohilo,inputimhilolo,inputimlololo,
+             outputrehihihi_d,outputrelohihi_d,
+             outputrehilohi_d,outputrelolohi_d,
+             outputrehihilo_d,outputrelohilo_d,
+             outputrehilolo_d,outputrelololo_d,
+             outputimhihihi_d,outputimlohihi_d,
+             outputimhilohi_d,outputimlolohi_d,
+             outputimhihilo_d,outputimlohilo_d,
+             outputimhilolo_d,outputimlololo_d,
+             cnvjobs,incjobs,addjobs,&cnvlapms,&addlapms,&timelapms_d,
+             &walltimes_d,vrb);
+      }
+      double sumerr = 0.0;
+      if(mode == 2)
+         sumerr = cmplx8_error_sum(dim,deg,
+                     outputrehihihi_h,outputrelohihi_h,
+                     outputrehilohi_h,outputrelolohi_h,
+                     outputrehihilo_h,outputrelohilo_h,
+                     outputrehilolo_h,outputrelololo_h,
+                     outputimhihihi_h,outputimlohihi_h,
+                     outputimhilohi_h,outputimlolohi_h,
+                     outputimhihilo_h,outputimlohilo_h,
+                     outputimhilolo_h,outputimlololo_h,
+                     outputrehihihi_d,outputrelohihi_d,
+                     outputrehilohi_d,outputrelolohi_d,
+                     outputrehihilo_d,outputrelohilo_d,
+                     outputrehilolo_d,outputrelololo_d,
+                     outputimhihihi_d,outputimlohihi_d,
+                     outputimhilohi_d,outputimlolohi_d,
+                     outputimhihilo_d,outputimlohilo_d,
+                     outputimhilolo_d,outputimlololo_d,vrb);
+ 
+      if(verbose > 0)
+      {
+         if(jobrep)
+         {
+            cout << "dimension : " << dim << endl;
+            if(nva > 0)
+            {
+               cout << "number of variables per monomial : " << nva << endl;
+            }
+            cout << "number of monomials : " << nbr << endl;
+            write_complexconv_counts(cnvjobs);
+            write_complexadd_counts(addjobs);
+            write_complexop_counts(deg,cnvjobs,addjobs);
+         }
+         if((mode == 1) || (mode == 2))
+         {
+            cout << fixed << setprecision(3);
+            cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
+                 << endl;
+            cout << "  on the host : " << timelapsec_h << " seconds"
                  << endl;
          }
          if((mode == 0) || (mode == 2))
