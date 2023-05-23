@@ -1,4 +1,5 @@
 Mon 22 May 2023 : reformatted code in random8_polynomials and added
+  functions for complex data.  Extended dbl8_polynomials_testers with
   functions for complex data.
 
 Sun 21 May 2023 : more code formatting in dbl8_polynomials_kernels

@@ -7,21 +7,21 @@
 void dbl8_make_input
  ( int dim, int nbr, int nva, int pwr, int deg,
    int *nvr, int **idx, int **exp,
-   double **inputhihihi, double **inputhilohi,
-   double **inputhihilo, double **inputhilolo,
-   double **inputlohihi, double **inputlolohi,
-   double **inputlohilo, double **inputlololo,
-   double *csthihihi, double *csthilohi,
-   double *csthihilo, double *csthilolo,
-   double *cstlohihi, double *cstlolohi,
-   double *cstlohilo, double *cstlololo,
-   double **cffhihihi, double **cffhilohi,
-   double **cffhihilo, double **cffhilolo,
-   double **cfflohihi, double **cfflolohi,
-   double **cfflohilo, double **cfflololo, bool verbose );
+   double **inputhihihi, double **inputlohihi,
+   double **inputhilohi, double **inputlolohi,
+   double **inputhihilo, double **inputlohilo,
+   double **inputhilolo, double **inputlololo,
+   double *csthihihi, double *cstlohihi,
+   double *csthilohi, double *cstlolohi,
+   double *csthihilo, double *cstlohilo,
+   double *csthilolo, double *cstlololo,
+   double **cffhihihi, double **cfflohihi,
+   double **cffhilohi, double **cfflolohi,
+   double **cffhihilo, double **cfflohilo,
+   double **cffhilolo, double **cfflololo, bool verbose );
 /*
  * DESCRIPTION :
- *   Generates random polynomials and input series.
+ *   Generates random polynomials and input series for real data.
  *
  * ON ENTRY :
  *   dim         dimension, total number of variables;
@@ -33,28 +33,28 @@ void dbl8_make_input
  *   idx         space for nbr pointers to integers;
  *   exp         space for nbr pointers to integers;
  *   inputhihihi has space for dim arrays of deg+1 doubles;
- *   inputhilohi has space for dim arrays of deg+1 doubles;
- *   inputhihilo has space for dim arrays of deg+1 doubles;
- *   inputhilolo has space for dim arrays of deg+1 doubles;
  *   inputlohihi has space for dim arrays of deg+1 doubles;
+ *   inputhilohi has space for dim arrays of deg+1 doubles;
  *   inputlolohi has space for dim arrays of deg+1 doubles;
+ *   inputhihilo has space for dim arrays of deg+1 doubles;
  *   inputlohilo has space for dim arrays of deg+1 doubles;
+ *   inputhilolo has space for dim arrays of deg+1 doubles;
  *   inputlololo has space for dim arrays of deg+1 doubles;
  *   csthihihi   space for deg+1 doubles;
- *   csthilohi   space for deg+1 doubles;
- *   csthihilo   space for deg+1 doubles;
- *   csthilolo   space for deg+1 doubles;
  *   cstlohihi   space for deg+1 doubles;
+ *   csthilohi   space for deg+1 doubles;
  *   cstlolohi   space for deg+1 doubles;
+ *   csthihilo   space for deg+1 doubles;
  *   cstlohilo   space for deg+1 doubles;
+ *   csthilolo   space for deg+1 doubles;
  *   cstlololo   space for deg+1 doubles;
  *   cffhihihi   space for nbr arrays of deg+1 doubles;
- *   cffhilohi   space for nbr arrays of deg+1 doubles;
- *   cffhihilo   space for nbr arrays of deg+1 doubles;
- *   cffhilolo   space for nbr arrays of deg+1 doubles;
  *   cfflohihi   space for nbr arrays of deg+1 doubles;
+ *   cffhilohi   space for nbr arrays of deg+1 doubles;
  *   cfflolohi   space for nbr arrays of deg+1 doubles;
+ *   cffhihilo   space for nbr arrays of deg+1 doubles;
  *   cfflohilo   space for nbr arrays of deg+1 doubles;
+ *   cffhilolo   space for nbr arrays of deg+1 doubles;
  *   cfflololo   space for nbr arrays of deg+1 doubles;
  *   verbose     if true, then output is written.
  *
@@ -63,37 +63,196 @@ void dbl8_make_input
  *   idx       idx[k] holds nvr[k] indices to variables in monomial k;
  *   exp       exp[k] holds nvr[k] exponents of variables in monomial k;
  *   inputhihihi has the highest doubles of dim input series of degree deg;
- *   inputhilohi has the second highest doubles of dim input series;
- *   inputhihilo has the third highest doubles of dim input series;
- *   inputhilolo has the fourth highest doubles of dim input series;
- *   inputlohihi has the fourth lowest doubles of dim input series;
- *   inputlolohi has the third lowest doubles of dim input series;
- *   inputlohilo has the second lowest doubles of dim input series;
+ *   inputlohihi has the second highest doubles of dim input series;
+ *   inputhilohi has the third highest doubles of dim input series;
+ *   inputlolohi has the fourth highest doubles of dim input series;
+ *   inputhihilo has the fourth lowest doubles of dim input series;
+ *   inputlohilo has the third lowest doubles of dim input series;
+ *   inputhilolo has the second lowest doubles of dim input series;
  *   inputlololo has the lowest doubles of dim input series of degree deg;
  *   csthihihi   has the highest doubles of the constant series;
- *   csthilohi   has the second highest doubles of the constant series;
- *   csthihilo   has the third highest doubles of the constant series;
- *   csthilolo   has the fourth highest doubles of the constant series;
- *   cstlohihi   has the fourth lowest doubles of the constant series;
- *   cstlolohi   has the third lowest doubles of the constant series;
- *   cstlohilo   has the second lowest doubles of the constant series;
+ *   cstlohihi   has the second highest doubles of the constant series;
+ *   csthilohi   has the third highest doubles of the constant series;
+ *   cstlolohi   has the fourth highest doubles of the constant series;
+ *   csthihilo   has the fourth lowest doubles of the constant series;
+ *   cstlohilo   has the third lowest doubles of the constant series;
+ *   csthilolo   has the second lowest doubles of the constant series;
  *   cstlololo   has the lowest doubles of the constant series;
  *   cffhihihi   cffhihihi[k] has the highest doubles of the coefficient
  *               series of monomial k;
- *   cffhilohi   cffhilohi[k] has the second highest doubles of the
+ *   cfflohihi   cfflohihi[k] has the second highest doubles of the
  *               coefficient series of monomial k;
- *   cffhihilo   cffhihilo[k] has the third highest doubles of the coefficient
- *               series of monomial k;
- *   cffhilolo   cffhilolo[k] has the fourth highest doubles of the coefficient
- *               series of monomial k;
- *   cfflohihi   cfflohihi[k] has the fourth lowest doubles of the coefficient
- *               series of monomial k;
- *   cfflolohi   cfflolohi[k] has the third lowest doubles of the coefficient
- *               series of monomial k;
- *   cfflohilo   cfflohilo[k] has the second lowest doubles of the coefficient
- *               series of monomial k;
- *   cfflololo   cfflololo[k] has the lowest doubles of the coefficient series
+ *   cffhilohi   cffhilohi[k] has the third highest doubles of the
+ *               coefficient series of monomial k;
+ *   cfflolohi   cfflolohi[k] has the fourth highest doubles of the
+ *               coefficient series of monomial k;
+ *   cffhihilo   cffhihilo[k] has the fourth lowest doubles of the
+ *               coefficient series of monomial k;
+ *   cfflohilo   cfflohilo[k] has the third lowest doubles of the
+ *               coefficient series of monomial k;
+ *   cffhilolo   cffhilolo[k] has the second lowest doubles of the
+ *               coefficient series of monomial k;
+ *   cfflololo   cfflololo[k] has the lowest doubles of the coefficient
  *               series of monomial k. */
+
+void cmplx8_make_input
+ ( int dim, int nbr, int nva, int pwr, int deg,
+   int *nvr, int **idx, int **exp,
+   double **inputrehihihi, double **inputrelohihi,
+   double **inputrehilohi, double **inputrelolohi,
+   double **inputrehihilo, double **inputrelohilo,
+   double **inputrehilolo, double **inputrelololo,
+   double **inputimhihihi, double **inputimlohihi,
+   double **inputimhilohi, double **inputimlolohi,
+   double **inputimhihilo, double **inputimlohilo,
+   double **inputimhilolo, double **inputimlololo,
+   double *cstrehihihi, double *cstrelohihi,
+   double *cstrehilohi, double *cstrelolohi,
+   double *cstrehihilo, double *cstrelohilo,
+   double *cstrehilolo, double *cstrelololo,
+   double *cstimhihihi, double *cstimlohihi,
+   double *cstimhilohi, double *cstimlolohi,
+   double *cstimhihilo, double *cstimlohilo,
+   double *cstimhilolo, double *cstimlololo,
+   double **cffrehihihi, double **cffrelohihi,
+   double **cffrehilohi, double **cffrelolohi,
+   double **cffrehihilo, double **cffrelohilo,
+   double **cffrehilolo, double **cffrelololo,
+   double **cffimhihihi, double **cffimlohihi,
+   double **cffimhilohi, double **cffimlolohi,
+   double **cffimhihilo, double **cffimlohilo,
+   double **cffimhilolo, double **cffimlololo, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Generates random polynomials and input series for complex data.
+ *
+ * ON ENTRY :
+ *   dim         dimension, total number of variables;
+ *   nbr         number of terms in the polynomial;
+ *   nva         number of variables in each monomial (for products, cyclic);
+ *   pwr         highest power of each variable;
+ *   deg         truncation degree of the series;
+ *   nvr         space for nbr integers;
+ *   idx         space for nbr pointers to integers;
+ *   exp         space for nbr pointers to integers;
+ *   inputrehihihi has space for dim arrays of deg+1 doubles;
+ *   inputrelohihi has space for dim arrays of deg+1 doubles;
+ *   inputrehilohi has space for dim arrays of deg+1 doubles;
+ *   inputrelolohi has space for dim arrays of deg+1 doubles;
+ *   inputrehihilo has space for dim arrays of deg+1 doubles;
+ *   inputrelohilo has space for dim arrays of deg+1 doubles;
+ *   inputrehilolo has space for dim arrays of deg+1 doubles;
+ *   inputrelololo has space for dim arrays of deg+1 doubles;
+ *   inputimhihihi has space for dim arrays of deg+1 doubles;
+ *   inputimlohihi has space for dim arrays of deg+1 doubles;
+ *   inputimhilohi has space for dim arrays of deg+1 doubles;
+ *   inputimlolohi has space for dim arrays of deg+1 doubles;
+ *   inputimhihilo has space for dim arrays of deg+1 doubles;
+ *   inputimlohilo has space for dim arrays of deg+1 doubles;
+ *   inputimhilolo has space for dim arrays of deg+1 doubles;
+ *   inputimlololo has space for dim arrays of deg+1 doubles;
+ *   cstrehihihi has space for deg+1 doubles;
+ *   cstrelohihi has space for deg+1 doubles;
+ *   cstrehilohi has space for deg+1 doubles;
+ *   cstrelolohi has space for deg+1 doubles;
+ *   cstrehihilo has space for deg+1 doubles;
+ *   cstrelohilo has space for deg+1 doubles;
+ *   cstrehilolo has space for deg+1 doubles;
+ *   cstrelololo has space for deg+1 doubles;
+ *   cstimhihihi has space for deg+1 doubles;
+ *   cstimlohihi has space for deg+1 doubles;
+ *   cstimhilohi has space for deg+1 doubles;
+ *   cstimlolohi has space for deg+1 doubles;
+ *   cstimhihilo has space for deg+1 doubles;
+ *   cstimlohilo has space for deg+1 doubles;
+ *   cstimhilolo has space for deg+1 doubles;
+ *   cstimlololo has space for deg+1 doubles;
+ *   cffrehihihi has space for nbr arrays of deg+1 doubles;
+ *   cffrelohihi has space for nbr arrays of deg+1 doubles;
+ *   cffrehilohi has space for nbr arrays of deg+1 doubles;
+ *   cffrelolohi has space for nbr arrays of deg+1 doubles;
+ *   cffrehihilo has space for nbr arrays of deg+1 doubles;
+ *   cffrelohilo has space for nbr arrays of deg+1 doubles;
+ *   cffrehilolo has space for nbr arrays of deg+1 doubles;
+ *   cffrelololo has space for nbr arrays of deg+1 doubles;
+ *   cffimhihihi has space for nbr arrays of deg+1 doubles;
+ *   cffimlohihi has space for nbr arrays of deg+1 doubles;
+ *   cffimhilohi has space for nbr arrays of deg+1 doubles;
+ *   cffimlolohi has space for nbr arrays of deg+1 doubles;
+ *   cffimhihilo has space for nbr arrays of deg+1 doubles;
+ *   cffimlohilo has space for nbr arrays of deg+1 doubles;
+ *   cffimhilolo has space for nbr arrays of deg+1 doubles;
+ *   cffimlololo has space for nbr arrays of deg+1 doubles;
+ *   verbose     if true, then output is written.
+ *
+ * ON RETURN :
+ *   nvr       nvr[k] has the number of variables in monomial k;
+ *   idx       idx[k] holds nvr[k] indices to variables in monomial k;
+ *   exp       exp[k] holds nvr[k] exponents of variables in monomial k;
+ *   inputrehihihi has the highest doubles of dim real series of degree deg;
+ *   inputrelohihi has the second highest doubles of dim real input series;
+ *   inputrehilohi has the third highest doubles of dim real input series;
+ *   inputrelolohi has the fourth highest doubles of dim real input series;
+ *   inputrehihilo has the fourth lowest doubles of dim real input series;
+ *   inputrelohilo has the third lowest doubles of dim real input series;
+ *   inputrehilolo has the second lowest doubles of dim real input series;
+ *   inputrelololo has the lowest doubles of dim real series of degree deg;
+ *   inputimhihihi has the highest doubles of dim imag series of degree deg;
+ *   inputimlohihi has the second highest doubles of dim imag input series;
+ *   inputimhilohi has the third highest doubles of dim imag input series;
+ *   inputimlolohi has the fourth highest doubles of dim imag input series;
+ *   inputimhihilo has the fourth lowest doubles of dim imag input series;
+ *   inputimlohilo has the third lowest doubles of dim imag input series;
+ *   inputimhilolo has the second lowest doubles of dim imag input series;
+ *   inputimlololo has the lowest doubles of dim series of degree deg;
+ *   cstrehihihi has the real highest doubles of the constant series;
+ *   cstrelohihi has the real second highest doubles of the constant series;
+ *   cstrehilohi has the real third highest doubles of the constant series;
+ *   cstrelolohi has the real fourth highest doubles of the constant series;
+ *   cstrehihilo has the real fourth lowest doubles of the constant series;
+ *   cstrelohilo has the real third lowest doubles of the constant series;
+ *   cstrehilolo has the real second lowest doubles of the constant series;
+ *   cstrelololo has the real lowest doubles of the constant series;
+ *   cstimhihihi has the imag highest doubles of the constant series;
+ *   cstimlohihi has the imag second highest doubles of the constant series;
+ *   cstimhilohi has the imag third highest doubles of the constant series;
+ *   cstimlolohi has the imag fourth highest doubles of the constant series;
+ *   cstimhihilo has the imag fourth lowest doubles of the constant series;
+ *   cstimlohilo has the imag third lowest doubles of the constant series;
+ *   cstimhilolo has the imag second lowest doubles of the constant series;
+ *   cstimlololo has the imag lowest doubles of the constant series;
+ *   cffrehihihi has the highest real doubles of the coefficient
+ *               series of monomials;
+ *   cffrelohihi has the second real highest doubles of the
+ *               coefficient series of monomials;
+ *   cffrehilohi has the third real highest doubles of the
+ *               coefficient series of monomials;
+ *   cffrelolohi has the fourth real highest doubles of the
+ *               coefficient series of monomials;
+ *   cffrehihilo has the fourth real lowest doubles of the
+ *               coefficient series of monomials;
+ *   cffrelohilo has the third real lowest doubles of the
+ *               coefficient series of monomials;
+ *   cffrehilolo has the second real lowest doubles of the
+ *               coefficient series of monomials;
+ *   cffrelololo has the lowest real doubles of the coefficient
+ *               series of monomials.
+ *   cffimhihihi has the highest imag doubles of the coefficient
+ *               series of monomials;
+ *   cffimlohihi has the second imag highest doubles of the
+ *               coefficient series of monomials;
+ *   cffimhilohi has the third imag highest doubles of the
+ *               coefficient series of monomials;
+ *   cffimlolohi has the fourth imag highest doubles of the
+ *               coefficient series of monomials;
+ *   cffimhihilo has the fourth imag lowest doubles of the
+ *               coefficient series of monomials;
+ *   cffimlohilo has the third imag lowest doubles of the
+ *               coefficient series of monomials;
+ *   cffimhilolo has the second imag lowest doubles of the
+ *               coefficient series of monomials;
+ *   cffimlololo has the lowest imag doubles of the coefficient
+ *               series of monomials. */
 
 double dbl8_error_sum
  ( int dim, int deg,
@@ -112,7 +271,7 @@ double dbl8_error_sum
 /*
  * DESCRIPTION :
  *   Returns the sum of all errors, comparing results computed on the host
- *   with results computed on the device.
+ *   with results computed on the device, on real data.
  *
  * ON ENTRY :
  *   dim      dimension, total number of variables;
@@ -157,6 +316,66 @@ double dbl8_error_sum
  *   resultslolohi_d are the third lowest doubles computed on the device;
  *   resultslohilo_d are the second lowest doubles computed on the device;
  *   resultslololo_d are the lowest doubles computed on the device;
+ *   verbose  if true, then all results and intermediate errors are shown. */
+
+double cmplx8_error_sum
+ ( int dim, int deg,
+   double **resultsrehihihi_h, double **resultsrelohihi_h, 
+   double **resultsrehilohi_h, double **resultsrelolohi_h,
+   double **resultsrehihilo_h, double **resultsrelohilo_h, 
+   double **resultsrehilolo_h, double **resultsrelololo_h,
+   double **resultsimhihihi_h, double **resultsimlohihi_h, 
+   double **resultsimhilohi_h, double **resultsimlolohi_h,
+   double **resultsimhihilo_h, double **resultsimlohilo_h, 
+   double **resultsimhilolo_h, double **resultsimlololo_h,
+   double **resultsrehihihi_d, double **resultsrelohihi_d,
+   double **resultsrehilohi_d, double **resultsrelolohi_d,
+   double **resultsrehihilo_d, double **resultsrelohilo_d,
+   double **resultsrehilolo_d, double **resultsrelololo_d,
+   double **resultsimhihihi_d, double **resultsimlohihi_d,
+   double **resultsimhilohi_d, double **resultsimlolohi_d,
+   double **resultsimhihilo_d, double **resultsimlohilo_d,
+   double **resultsimhilolo_d, double **resultsimlololo_d, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of all errors, comparing results computed on the host
+ *   with results computed on the device, on complex data.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   deg      truncation degree of the series;
+ *   resultsrehihihi_h are the highest real doubles computed on the host;
+ *   resultsrelohihi_h are the 2nd highest real doubles computed on the host;
+ *   resultsrehilohi_h are the 3rd highest real doubles computed on the host;
+ *   resultsrelolohi_h are the 4th highest real doubles computed on the host;
+ *   resultsrehihilo_h are the 4th lowest real doubles computed on the host;
+ *   resultsrelohilo_h are the 3rd lowest real doubles computed on the host;
+ *   resultsrehilolo_h are the 2nd lowest real doubles computed on the host;
+ *   resultsrelololo_h are the lowest real doubles computed on the host;
+ *   imsultsimhihihi_h aim the highest imag doubles computed on the host;
+ *   imsultsimlohihi_h aim the 2nd highest imag doubles computed on the host;
+ *   imsultsimhilohi_h aim the 3rd highest imag doubles computed on the host;
+ *   imsultsimlolohi_h aim the 4th highest imag doubles computed on the host;
+ *   imsultsimhihilo_h aim the 4th lowest imag doubles computed on the host;
+ *   imsultsimlohilo_h aim the 3rd lowest imag doubles computed on the host;
+ *   imsultsimhilolo_h aim the 2nd lowest imag doubles computed on the host;
+ *   imsultsimlololo_h aim the lowest imag doubles computed on the host;
+ *   resultsrehihihi_d are the highest real doubles computed on the device;
+ *   resultsrelohihi_d are the 2nd highest real doubles on the device;
+ *   resultsrehilohi_d are the 3rd highest real doubles on the device;
+ *   resultsrelolohi_d are the 4th highest real doubles on the device;
+ *   resultsrehihilo_d are the 4th lowest real doubles on the device;
+ *   resultsrelohilo_d are the 3rd lowest real doubles on the device;
+ *   resultsrehilolo_d are the 2nd lowest real doubles on the device;
+ *   resultsrelololo_d are the lowest real doubles on the device;
+ *   imsultsimhihihi_d aim the highest imag doubles computed on the device;
+ *   imsultsimlohihi_d aim the 2nd highest imag doubles on the device;
+ *   imsultsimhilohi_d aim the 3rd highest imag doubles on the device;
+ *   imsultsimlolohi_d aim the 4th highest imag doubles on the device;
+ *   imsultsimhihilo_d aim the 4th lowest imag doubles on the device;
+ *   imsultsimlohilo_d aim the 3rd lowest imag doubles on the device;
+ *   imsultsimhilolo_d aim the 2nd lowest imag doubles on the device;
+ *   imsultsimlololo_d aim the lowest imag doubles on the device;
  *   verbose  if true, then all results and intermediate errors are shown. */
 
 double test_dbl8_real_polynomial
