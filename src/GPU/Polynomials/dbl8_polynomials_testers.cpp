@@ -310,29 +310,6 @@ void cmplx8_make_input
                       cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
                       cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
                       cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo);
-
-      for(int i=0; i<deg+1; i++) // set some parts of constant to zero
-      {
-       /*
-         cstrehihihi[i] = 0.0;
-         cstrelohihi[i] = 0.0;
-         cstrehilohi[i] = 0.0;
-         cstrelolohi[i] = 0.0;
-         cstrehihilo[i] = 0.0;
-         cstrelohilo[i] = 0.0;
-         cstrehilolo[i] = 0.0;
-         cstrelololo[i] = 0.0; */
-
-         cstimhihihi[i] = 1.0;
-
-         cstimlohihi[i] = 0.0;
-         cstimhilohi[i] = 0.0;
-         cstimlolohi[i] = 0.0;
-         cstimhihilo[i] = 0.0;
-         cstimlohilo[i] = 0.0;
-         cstimhilolo[i] = 0.0;
-         cstimlololo[i] = 0.0;
-      }
    }
    if(verbose)
    {
@@ -1114,7 +1091,7 @@ double test_cmplx8_polynomial
             (dim,nbr,deg,nvr,idx,
              cstrehihihi,cstrelohihi,cstrehilohi,cstrelolohi,
              cstrehihilo,cstrelohilo,cstrehilolo,cstrelololo,
-             cstimhihihi,cstimhihihi,cstimhilohi,cstimlolohi,
+             cstimhihihi,cstimlohihi,cstimhilohi,cstimlolohi,
              cstimhihilo,cstimlohilo,cstimhilolo,cstimlololo,
              cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
              cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,

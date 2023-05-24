@@ -2,6 +2,8 @@ Wed 24 May 2023 : more output in verbose mode in dbl8_polynomials_kernels.cu.
   Fixed output error in dbl8_polynomials_testers.cpp.
   In {dbl4, dbl8}_polynomials_kernels.cu, extended the initialization of
   the output to cover the second operands as well.
+  Fixed bug in dbl8_polynomials_testers.cpp and commented out extra output
+  in dbl8_polynomials_kernels.cu.
 
 Tue 23 May 2023 : completed dbl8_polynomials_testers with functions for
   complex data.  Updated makefile_unix and makefile_windows.
