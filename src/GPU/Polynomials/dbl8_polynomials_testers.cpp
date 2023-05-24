@@ -311,9 +311,9 @@ void cmplx8_make_input
                       cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
                       cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo);
 
-      for(int i=0; i<deg+1; i++) // set imag part of constant to zero
+      for(int i=0; i<deg+1; i++) // set some parts of constant to zero
       {
-       /* 
+       /*
          cstrehihihi[i] = 0.0;
          cstrelohihi[i] = 0.0;
          cstrehilohi[i] = 0.0;
@@ -321,9 +321,10 @@ void cmplx8_make_input
          cstrehihilo[i] = 0.0;
          cstrelohilo[i] = 0.0;
          cstrehilolo[i] = 0.0;
-         cstrelololo[i] = 0.0;
-       */
-         cstimhihihi[i] = 0.0;
+         cstrelololo[i] = 0.0; */
+
+         cstimhihihi[i] = 1.0;
+
          cstimlohihi[i] = 0.0;
          cstimhilohi[i] = 0.0;
          cstimlolohi[i] = 0.0;
@@ -536,7 +537,7 @@ double cmplx8_error_sum
          cout << resultsrehihihi_h[dim][i] << "  "
               << resultsrelohihi_h[dim][i] << endl
               << resultsrehilohi_h[dim][i] << "  "
-              << resultsrehihilo_h[dim][i] << endl;
+              << resultsrelolohi_h[dim][i] << endl;
          cout << resultsrehihilo_h[dim][i] << "  "
               << resultsrelohilo_h[dim][i] << endl
               << resultsrehilolo_h[dim][i] << "  "
