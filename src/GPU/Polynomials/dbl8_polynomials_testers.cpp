@@ -310,6 +310,28 @@ void cmplx8_make_input
                       cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
                       cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
                       cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo);
+
+      for(int i=0; i<deg+1; i++) // set imag part of constant to zero
+      {
+       /* 
+         cstrehihihi[i] = 0.0;
+         cstrelohihi[i] = 0.0;
+         cstrehilohi[i] = 0.0;
+         cstrelolohi[i] = 0.0;
+         cstrehihilo[i] = 0.0;
+         cstrelohilo[i] = 0.0;
+         cstrehilolo[i] = 0.0;
+         cstrelololo[i] = 0.0;
+       */
+         cstimhihihi[i] = 0.0;
+         cstimlohihi[i] = 0.0;
+         cstimhilohi[i] = 0.0;
+         cstimlolohi[i] = 0.0;
+         cstimhihilo[i] = 0.0;
+         cstimlohilo[i] = 0.0;
+         cstimhilolo[i] = 0.0;
+         cstimlololo[i] = 0.0;
+      }
    }
    if(verbose)
    {
@@ -1062,6 +1084,17 @@ double test_cmplx8_polynomial
           cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
           cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,vrb);
 
+      // ConvolutionJobs cnvjobs(dim);
+      // AdditionJobs addjobs(dim,nbr);
+
+      // make_all_jobs(dim,nbr,nvr,idx,&cnvjobs,&addjobs,vrb);
+
+      // ComplexConvolutionJobs cmplxcnvjobs(dim);
+      // ComplexIncrementJobs cmplxincjobs(cmplxcnvjobs,vrb);
+      // ComplexAdditionJobs cmplxaddjobs(dim,nbr);
+
+      // make_all_complex_jobs
+      //    (dim,nbr,nvr,idx,&cmplxcnvjobs,&cmplxincjobs,&cmplxaddjobs,vrb);
 
       ComplexConvolutionJobs cnvjobs(dim);
       ComplexIncrementJobs incjobs(cnvjobs,vrb);

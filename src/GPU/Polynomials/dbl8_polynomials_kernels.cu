@@ -1418,21 +1418,22 @@ void cmplx8vectorized_data_setup
 
    for(int i=0; i<offsetri; i++)
    {
-      datarihihihi[ix1] = 0.0;
-      datarilohihi[ix1] = 0.0;
-      datarihilohi[ix1] = 0.0;
-      datarilolohi[ix1] = 0.0;
-      datarihihilo[ix2] = 0.0;
-      datarihihilo[ix1] = 0.0;
-      datarilohilo[ix1] = 0.0;
-      datarihilolo[ix1] = 0.0; datarilololo[ix1++] = 0.0;
-      datarihihihi[ix2] = 0.0;
-      datarilohihi[ix2] = 0.0;
-      datarihilohi[ix2] = 0.0;
-      datarilolohi[ix2] = 0.0;
-      datarihihilo[ix2] = 0.0;
-      datarilohilo[ix2] = 0.0;
-      datarihilolo[ix2] = 0.0; datarilololo[ix2++] = 0.0;
+      datarihihihi[ix1]   = 0.0;
+      datarilohihi[ix1]   = 0.0;
+      datarihilohi[ix1]   = 0.0;
+      datarilolohi[ix1]   = 0.0;
+      datarihihilo[ix1]   = 0.0;
+      datarilohilo[ix1]   = 0.0;
+      datarihilolo[ix1]   = 0.0;
+      datarilololo[ix1++] = 0.0;
+      datarihihihi[ix2]   = 0.0;
+      datarilohihi[ix2]   = 0.0;
+      datarihilohi[ix2]   = 0.0;
+      datarilolohi[ix2]   = 0.0;
+      datarihihilo[ix2]   = 0.0;
+      datarilohilo[ix2]   = 0.0;
+      datarihilolo[ix2]   = 0.0;
+      datarilololo[ix2++] = 0.0;
    }
 }
 

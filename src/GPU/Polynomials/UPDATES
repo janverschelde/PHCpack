@@ -1,6 +1,9 @@
 Tue 23 May 2023 : completed dbl8_polynomials_testers with functions for
   complex data.  Updated makefile_unix and makefile_windows.
   Fixed bugs in dbl8_polynomials_{host, testers}.cpp.
+  Index error in dbl8_polynomials_kernels.cu fixed.
+  Set imaginary part of constant in dbl8_polynomials_testers.cpp to zero,
+  so it works for one monomial.
 
 Mon 22 May 2023 : reformatted code in random8_polynomials and added
   functions for complex data.  Extended dbl8_polynomials_testers with
