@@ -982,7 +982,8 @@ void cmplx_added_data8vectorized_to_output
    ix2im = fstart[lastmon] + lastidx*deg1 + totcffoffset;
 
    if(verbose)
-      cout << "Updating value starting at " << ix1re << " in data." << endl;
+      cout << "Updating value starting at "
+           << ix1re << ", " << ix2im  << " in data." << endl;
 
    for(int i=0; i<=deg; i++) // output[dim][i] = data[ix++];
    {
@@ -1069,7 +1070,8 @@ void cmplx_added_data8vectorized_to_output
       ix2im = bstart[ix0] + ix2*deg1 + totcffoffset;
       
       if(verbose)
-         cout << "Updating derivative 0 at " << ix1re << " in data." << endl;
+         cout << "Updating derivative 0 at "
+              << ix1re << ", " << ix2im << " in data." << endl;
 
       for(int i=0; i<=deg; i++) // output[0][i] = data[ix++];
       {
@@ -1164,8 +1166,8 @@ void cmplx_added_data8vectorized_to_output
             ix2im = bstart[ix0] + ix2*deg1 + totcffoffset;
 
             if(verbose)
-               cout << "Updating derivative " << k 
-                    << " at " << ix1re << " in data." << endl;
+               cout << "Updating derivative " << k << " at "
+                    << ix1re << ", " << ix2im << " in data." << endl;
 
             for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
             {
@@ -1195,8 +1197,8 @@ void cmplx_added_data8vectorized_to_output
             ix2im = fstart[ix0] + ix2*deg1 + totcffoffset;
  
             if(verbose)
-               cout << "Updating derivative " << k 
-                    << " at " << ix1re << " in data." << endl;
+               cout << "Updating derivative " << k << " at "
+                    << ix1re << ", " << ix2im << " in data." << endl;
 
             for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
             {
@@ -1222,12 +1224,12 @@ void cmplx_added_data8vectorized_to_output
          {
             int ix2 = jobs.position(nvr[ix0],idx[ix0],k) - 1;
 
-            if(verbose)
-               cout << "Updating derivative " << k 
-                    << " at " << ix1re << " in data." << endl;
-
             ix1re = cstart[ix0] + ix2*deg1;
             ix2im = cstart[ix0] + ix2*deg1 + totcffoffset;
+
+            if(verbose)
+               cout << "Updating derivative " << k << " at "
+                    << ix1re << ", " << ix2im << " in data." << endl;
 
             for(int i=0; i<=deg; i++) // output[k][i] = data[ix++];
             {
