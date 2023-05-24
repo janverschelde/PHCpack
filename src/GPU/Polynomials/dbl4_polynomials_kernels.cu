@@ -1630,14 +1630,16 @@ void cmplx4vectorized_data_setup
          datarilolo[ix2++] = inputimlolo[i][j];
       }
 
-   for(int i=0; i<offsetri; i++)
+   for(int i=0; i<2*offsetri; i++)
    {
-      datarihihi[ix1] = 0.0;
-      datarilohi[ix1] = 0.0;
-      datarihilo[ix1] = 0.0; datarilolo[ix1++] = 0.0;
-      datarihihi[ix2] = 0.0;
-      datarilohi[ix2] = 0.0;
-      datarihilo[ix2] = 0.0; datarilolo[ix2++] = 0.0;
+      datarihihi[ix1]   = 0.0;
+      datarilohi[ix1]   = 0.0;
+      datarihilo[ix1]   = 0.0;
+      datarilolo[ix1++] = 0.0;
+      datarihihi[ix2]   = 0.0;
+      datarilohi[ix2]   = 0.0;
+      datarihilo[ix2]   = 0.0;
+      datarilolo[ix2++] = 0.0;
    }
 }
 
@@ -1682,7 +1684,7 @@ void dbl4_convolution_jobs
 
          if(verbose)
             cout << "launching " << jobnbr << " blocks of " << deg1
-                 << " threads ..." << endl;
+                 << " threads for convolutions ..." << endl;
 
          cudaEventRecord(start);
          dbl4_padded_convjobs<<<jobnbr,deg1>>>
@@ -1741,7 +1743,7 @@ void cmplx4_convolution_jobs
 
          if(verbose)
             cout << "launching " << jobnbr << " blocks of " << deg1
-                 << " threads ..." << endl;
+                 << " threads for convolutions ..." << endl;
 
          cudaEventRecord(start);
          cmplx4_padded_convjobs<<<jobnbr,deg1>>>
@@ -1803,7 +1805,7 @@ void cmplx4vectorized_convolution_jobs
 
          if(verbose)
             cout << "launching " << jobnbr << " blocks of " << deg1
-                 << " threads ..." << endl;
+                 << " threads for convolutions ..." << endl;
 
          cudaEventRecord(start);
          dbl4_padded_convjobs<<<jobnbr,deg1>>>
@@ -1848,7 +1850,7 @@ void cmplx4vectorized_convolution_jobs
 
          if(verbose)
             cout << "launching " << jobnbr << " blocks of " << deg1
-                 << " threads ..." << endl;
+                 << " threads for increments ..." << endl;
 
          cudaEventRecord(start);
          dbl4_increment_jobs<<<jobnbr,deg1>>>
@@ -1904,7 +1906,7 @@ void dbl4_addition_jobs
 
          if(verbose)
             cout << "launching " << jobnbr << " blocks of " << deg1
-                 << " threads ..." << endl;
+                 << " threads for additions ..." << endl;
 
          cudaEventRecord(start);
          dbl4_update_addjobs<<<jobnbr,deg1>>>
@@ -1963,7 +1965,7 @@ void cmplx4_addition_jobs
 
          if(verbose)
             cout << "launching " << jobnbr << " blocks of " << deg1
-                 << " threads ..." << endl;
+                 << " threads for additions ..." << endl;
 
          cudaEventRecord(start);
          cmplx4_update_addjobs<<<jobnbr,deg1>>>
@@ -2024,7 +2026,7 @@ void cmplx4vectorized_addition_jobs
 
          if(verbose)
             cout << "launching " << jobnbr << " blocks of " << deg1
-                 << " threads ..." << endl;
+                 << " threads for additions ..." << endl;
 
          cudaEventRecord(start);
          dbl4_update_addjobs<<<jobnbr,deg1>>>
@@ -2352,7 +2354,6 @@ void GPU_cmplx4vectorized_poly_evaldiff
       cout << "complex total count : " << cmplxtotcff << endl;
       write_coefficient_indices
          (totalcff,nbr,fsums,fstart,bsums,bstart,csums,cstart);
-      
    }
    double *datarihihi_h = new double[cmplxtotcff];      // data on host
    double *datarilohi_h = new double[cmplxtotcff];
@@ -2391,12 +2392,12 @@ void GPU_cmplx4vectorized_poly_evaldiff
       (dim,nbr,deg,nvr,totalcff,offsetri,cnvjobs,incjobs,fstart,bstart,cstart,
        datarihihi_d,datarilohi_d,datarihilo_d,datarilolo_d,
        cnvlapms,verbose);
-/*
+
    cmplx4vectorized_addition_jobs
       (dim,nbr,deg,nvr,totalcff,offsetri,addjobs,fstart,bstart,cstart,
        datarihihi_d,datarilohi_d,datarihilo_d,datarilolo_d,
        addlapms,verbose);
- */
+
    gettimeofday(&endtime,0);
    cudaMemcpy(datarihihi_h,datarihihi_d,szdata,cudaMemcpyDeviceToHost);
    cudaMemcpy(datarilohi_h,datarilohi_d,szdata,cudaMemcpyDeviceToHost);

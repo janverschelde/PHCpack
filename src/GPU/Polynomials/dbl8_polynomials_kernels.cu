@@ -1418,7 +1418,11 @@ void cmplx8vectorized_data_setup
          datarilololo[ix2++] = inputimlololo[i][j];
       }
 
-   for(int i=0; i<offsetri; i++)
+   // cout << "Initializing data with offsetri = " << offsetri
+   //      << ", ix1 = " << ix1 
+   //      << ", ix2 = " << ix2 << endl;
+
+   for(int i=0; i<2*offsetri; i++)  // 2*offsetri because of 2nd operands
    {
       datarihihihi[ix1]   = 0.0;
       datarilohihi[ix1]   = 0.0;
@@ -1437,6 +1441,9 @@ void cmplx8vectorized_data_setup
       datarihilolo[ix2]   = 0.0;
       datarilololo[ix2++] = 0.0;
    }
+
+   // cout << "After initializing, ix1 = " << ix1
+   //      << ", ix2 = " << ix2 << endl;
 }
 
 void dbl8_convolution_jobs
