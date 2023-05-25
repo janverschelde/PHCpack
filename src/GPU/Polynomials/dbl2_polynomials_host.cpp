@@ -1499,12 +1499,35 @@ void CPU_cmplx2_poly_addjobs
       outputimlo[dim][i] = forwardimlo[lastmon][lastidx][i];
    }
    int cnt = jobs.get_differential_count(0);
+
    if(cnt == 0) // it could be there is no first variable anywhere ...
    {
-      for(int i=0; i<=deg; i++)
+      const int difidx = jobs.get_differential_index(0,0);
+
+      if(verbose)
+         cout << "Differential index for variable 0 : " << difidx << endl;
+
+      if(difidx < 0)
       {
-         outputrehi[0][i] = 0.0; outputrelo[0][i] = 0.0;
-         outputimhi[0][i] = 0.0; outputimlo[0][i] = 0.0;
+         for(int i=0; i<=deg; i++)
+         {
+            outputrehi[0][i] = 0.0; outputrelo[0][i] = 0.0;
+            outputimhi[0][i] = 0.0; outputimlo[0][i] = 0.0;
+         }
+      }
+      else
+      {
+         if(verbose)
+            cout << "updating derivative 0 with coefficient "
+                 << difidx << endl;
+
+         for(int i=0; i<=deg; i++)
+         {
+            outputrehi[0][i] = cffrehi[difidx][i];
+            outputrelo[0][i] = cffrelo[difidx][i];
+            outputimhi[0][i] = cffimhi[difidx][i];
+            outputimlo[0][i] = cffimlo[difidx][i];
+         }
       }
    }
    else
@@ -1528,12 +1551,36 @@ void CPU_cmplx2_poly_addjobs
    for(int k=1; k<dim; k++) // updating all other derivatives
    {
       int cnt = jobs.get_differential_count(k);
+
       if(cnt == 0) // it could be there is no variable k anywhere ...
       {
-         for(int i=0; i<=deg; i++) 
+         const int difidx = jobs.get_differential_index(k,0);
+
+         if(verbose)
+            cout << "Differential index for variable " << k 
+                 << " : " << difidx << endl;
+
+         if(difidx < 0)
          {
-            outputrehi[k][i] = 0.0; outputrelo[k][i] = 0.0;
-            outputimhi[k][i] = 0.0; outputimlo[k][i] = 0.0;
+            for(int i=0; i<=deg; i++) 
+            {
+               outputrehi[k][i] = 0.0; outputrelo[k][i] = 0.0;
+               outputimhi[k][i] = 0.0; outputimlo[k][i] = 0.0;
+            }
+         }
+         else
+         {
+            if(verbose)
+               cout << "updating derivative " << k 
+                    << " with coefficient " << difidx << endl;
+
+            for(int i=0; i<=deg; i++)
+            {
+               outputrehi[k][i] = cffrehi[difidx][i];
+               outputrelo[k][i] = cffrelo[difidx][i];
+               outputimhi[k][i] = cffimhi[difidx][i];
+               outputimlo[k][i] = cffimlo[difidx][i];
+            }
          }
       }
       else
