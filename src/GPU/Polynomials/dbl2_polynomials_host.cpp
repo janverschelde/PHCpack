@@ -1367,12 +1367,33 @@ void CPU_dbl2_poly_addjobs
       outputlo[dim][i] = forwardlo[lastmon][lastidx][i];
    }
    int cnt = jobs.get_differential_count(0);
+
    if(cnt == 0) // it could be there is no first variable anywhere ...
    {
-      for(int i=0; i<=deg; i++)
+      const int difidx = jobs.get_differential_index(0,0);
+
+      if(verbose)
+         cout << "Differential index for variable 0 : " << difidx << endl;
+
+      if(difidx < 0)
       {
-         outputhi[0][i] = 0.0;
-         outputlo[0][i] = 0.0;
+         for(int i=0; i<=deg; i++)
+         {
+            outputhi[0][i] = 0.0;
+            outputlo[0][i] = 0.0;
+         }
+      }
+      else
+      {
+         if(verbose)
+            cout << "updating derivative 0 with coefficient "
+                 << difidx << endl;
+
+         for(int i=0; i<=deg; i++)
+         {
+            outputhi[0][i] = cffhi[difidx][i];
+            outputlo[0][i] = cfflo[difidx][i];
+         }
       }
    }
    else
@@ -1394,12 +1415,34 @@ void CPU_dbl2_poly_addjobs
    for(int k=1; k<dim; k++) // updating all other derivatives
    {
       int cnt = jobs.get_differential_count(k);
+
       if(cnt == 0) // it could be there is no variable k anywhere ...
       {
-         for(int i=0; i<=deg; i++) 
+         const int difidx = jobs.get_differential_index(k,0);
+
+         if(verbose)
+            cout << "Differential index for variable " << k 
+                 << " : " << difidx << endl;
+
+         if(difidx < 0)
          {
-            outputhi[k][i] = 0.0;
-            outputlo[k][i] = 0.0;
+            for(int i=0; i<=deg; i++) 
+            {
+               outputhi[k][i] = 0.0;
+               outputlo[k][i] = 0.0;
+            }
+         }
+         else
+         {
+            if(verbose)
+               cout << "updating derivative " << k 
+                    << " with coefficient " << difidx << endl;
+
+            for(int i=0; i<=deg; i++)
+            {
+               outputhi[k][i] = cffhi[difidx][i];
+               outputlo[k][i] = cfflo[difidx][i];
+            }
          }
       }
       else
