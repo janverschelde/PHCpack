@@ -210,11 +210,11 @@ void make_cmplx8_cyclic
    for(int k=0; k<dim; k++)
       for(int i=0; i<=deg; i++)
          random_octo_complex(&cffrehihihi[k][i],&cffrelohihi[k][i],
-                             &cffrehilolo[k][i],&cffrelolohi[k][i],
+                             &cffrehilohi[k][i],&cffrelolohi[k][i],
                              &cffrehihilo[k][i],&cffrelohilo[k][i],
                              &cffrehilolo[k][i],&cffrelololo[k][i],
                              &cffimhihihi[k][i],&cffimlohihi[k][i],
-                             &cffimhilolo[k][i],&cffimlolohi[k][i],
+                             &cffimhilohi[k][i],&cffimlolohi[k][i],
                              &cffimhihilo[k][i],&cffimlohilo[k][i],
                              &cffimhilolo[k][i],&cffimlololo[k][i]);
 

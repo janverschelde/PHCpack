@@ -1,7 +1,8 @@
 Thu 25 May 2023 : fixed special case in dbl2_polynomials_host.cpp.
   In dbl_polynomials_host.cpp, applied the same fix for special cases.
   In {dbl, dbl2, dbl4, dbl8}_polynomials_host.cpp, fixed all real versions
-  of the special case of a linear form.
+  of the special case of a linear form.  Bug fix in random8_polynomials.cpp,
+  to generate coefficients of cyclic n-roots polynomials.
 
 Wed 24 May 2023 : more output in verbose mode in dbl8_polynomials_kernels.cu.
   Fixed output error in dbl8_polynomials_testers.cpp.
