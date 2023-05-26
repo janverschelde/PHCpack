@@ -459,6 +459,13 @@ double test_dbl_complex_polynomial
 
       make_all_jobs(dim,nbr,nvr,idx,&cnvjobs,&addjobs,vrb);
 
+      ComplexConvolutionJobs cmplxcnvjobs(dim);
+      ComplexIncrementJobs cmplxincjobs(cmplxcnvjobs,vrb);
+      ComplexAdditionJobs cmplxaddjobs(dim,nbr);
+
+      make_all_complex_jobs
+         (dim,nbr,nvr,idx,&cmplxcnvjobs,&cmplxincjobs,&cmplxaddjobs,vrb);
+
       double timelapsec1_h,timelapsec2_h;
       double cnvlapms,addlapms,timelapms_d,walltimes_d;
 
@@ -476,9 +483,16 @@ double test_dbl_complex_polynomial
       if((mode == 0) || (mode == 2))
       {
          if(vrb) cout << "Computing on the device ..." << endl;
+/*
          GPU_cmplx_poly_evaldiff
             (deg+1,dim,nbr,deg,nvr,idx,cstre,cstim,cffre,cffim,
              inputre,inputim,outputre_d,outputim_d,cnvjobs,addjobs,
+             &cnvlapms,&addlapms,&timelapms_d,&walltimes_d,vrb);
+ */
+         GPU_cmplxvectorized_poly_evaldiff
+            (deg+1,dim,nbr,deg,nvr,idx,cstre,cstim,cffre,cffim,
+             inputre,inputim,outputre_d,outputim_d,
+             cmplxcnvjobs,cmplxincjobs,cmplxaddjobs,
              &cnvlapms,&addlapms,&timelapms_d,&walltimes_d,vrb);
       }
       double sumerr = 0.0;
