@@ -640,7 +640,7 @@ void cmplx_added_data8vectorized_to_output
  *                of the value and all derivatives. */
 
 void dbl8_data_setup
- ( int dim, int nbr, int deg,
+ ( int dim, int nbr, int deg, int totcff,
    double *datahihihi, double *datalohihi,
    double *datahilohi, double *datalolohi,
    double *datahihilo, double *datalohilo,
@@ -666,6 +666,7 @@ void dbl8_data_setup
  *   dim          total number of variables;
  *   nbr          number of monomials, excluding the constant term;
  *   deg          truncation degree of the series;
+ *   totcff       total number of coefficients;
  *   datahihihi   space for highest doubles of the data;
  *   datalohihi   space for the second highest doubles of the data;
  *   datahilohi   space for the third highest doubles of the data;

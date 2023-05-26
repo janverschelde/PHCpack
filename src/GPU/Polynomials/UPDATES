@@ -1,3 +1,7 @@
+Fri 26 May 2023 : extended dbl2_polynomials_kernels with vectorized complex
+  arithmetic and adjusted dbl2_polynomials_testers.cpp.
+  Edited dbl4_polynomials_kernels and dbl8_polynomials_kernels.h.
+
 Thu 25 May 2023 : fixed special case in dbl2_polynomials_host.cpp.
   In dbl_polynomials_host.cpp, applied the same fix for special cases.
   In {dbl, dbl2, dbl4, dbl8}_polynomials_host.cpp, fixed all real versions

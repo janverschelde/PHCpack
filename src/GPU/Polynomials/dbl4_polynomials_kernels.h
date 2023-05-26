@@ -164,6 +164,33 @@ __global__ void cmplx4vectorized_flipsigns
  *   datarihilo   second lowest doubles of the computed data;
  *   datarilolo   lowest doubles of the computed data. */
 
+void GPU_cmplx4vectorized_flipsigns
+ ( int deg, int nbrflips, int *flipidx,
+   double *datarihihi, double *datarilohi,
+   double *datarihilo, double *datarilolo,
+   double *elapsedms, bool verbose=true );
+/*
+ * DESCRIPTION :
+ *   Flips the signs in the second operand of the real convolutions
+ *   in the data arrays used in the vectorized complex arithmetic.
+ *
+ * ON ENTRY :
+ *   deg          degree of truncation of the series;
+ *   nbrflips     number of series to flip signs, number of blocks;
+ *   flipidx      start index of every series to flip;
+ *   datarihihi   highest doubles of the convolutions;
+ *   datarilohi   second highest doubles of the convolutions;
+ *   datarihilo   second lowest doubles of the convolutions;
+ *   datarilolo   lowest doubles of the convolutions;
+ *   verbose      is the verbose flag.
+ *
+ * ON RETURN :
+ *   datarihihi   highest doubles of the computed data;
+ *   datarilohi   second highest doubles of the computed data;
+ *   datarihilo   second lowest doubles of the computed data;
+ *   datarilolo   lowest doubles of the computed data;
+ *   elapsedms    elapsed time expressed in milliseconds. */
+
 __global__ void dbl4_update_addjobs
  ( double *datahihi, double *datalohi, double *datahilo, double *datalolo,
    int *in1idx, int *in2idx, int *outidx, int dim );
@@ -638,9 +665,8 @@ void cmplx_added_data4vectorized_to_output
  *   outputimlolo contains the lowest doubles of the imaginary parts
  *                of the value and all derivatives. */
 
-
 void dbl4_data_setup
- ( int dim, int nbr, int deg,
+ ( int dim, int nbr, int deg, int totcff,
    double *datahihi, double *datalohi, double *datahilo, double *datalolo,
    double *csthihi, double *cstlohi, double *csthilo, double *cstlolo,
    double **cffhihi, double **cfflohi, double **cffhilo, double **cfflolo,
@@ -655,6 +681,7 @@ void dbl4_data_setup
  *   dim          total number of variables;
  *   nbr          number of monomials, excluding the constant term;
  *   deg          truncation degree of the series;
+ *   totcff       total number of coefficients;
  *   datahihi     space for highest doubles of the data;
  *   datalohi     space for the second highest doubles of the data;
  *   datahilo     space for the second lowest doubles of the data;
@@ -687,7 +714,7 @@ void dbl4_data_setup
  *   datalolo     lowest doubles of the initialized data. */
 
 void cmplx4_data_setup
- ( int dim, int nbr, int deg,
+ ( int dim, int nbr, int deg, int totcff,
    double *datarehihi, double *datarelohi,
    double *datarehilo, double *datarelolo,
    double *dataimhihi, double *dataimlohi,
@@ -713,6 +740,7 @@ void cmplx4_data_setup
  *   dim          total number of variables;
  *   nbr          number of monomials, excluding the constant term;
  *   deg          truncation degree of the series;
+ *   totcff       total number of coefficients;
  *   datarehihi   space for highest doubles of the real data;
  *   datarelohi   space for the second highest doubles of the real data;
  *   datarehilo   space for the second lowest doubles of the real data;
@@ -1371,33 +1399,6 @@ void GPU_cmplx4_poly_evaldiff
  *                  expressed in milliseconds;
  *   walltimesec    is the elapsed wall clock time for all computations
  *                  (excluding memory copies) in seconds. */
-
-void GPU_cmplx4vectorized_flipsigns
- ( int deg, int nbrflips, int *flipidx,
-   double *datarihihi, double *datarilohi,
-   double *datarihilo, double *datarilolo,
-   double *elapsedms, bool verbose=true );
-/*
- * DESCRIPTION :
- *   Flips the signs in the second operand of the real convolutions
- *   in the data arrays used in the vectorized complex arithmetic.
- *
- * ON ENTRY :
- *   deg          degree of truncation of the series;
- *   nbrflips     number of series to flip signs, number of blocks;
- *   flipidx      start index of every series to flip;
- *   datarihihi   highest doubles of the convolutions;
- *   datarilohi   second highest doubles of the convolutions;
- *   datarihilo   second lowest doubles of the convolutions;
- *   datarilolo   lowest doubles of the convolutions;
- *   verbose      is the verbose flag.
- *
- * ON RETURN :
- *   datarihihi   highest doubles of the computed data;
- *   datarilohi   second highest doubles of the computed data;
- *   datarihilo   second lowest doubles of the computed data;
- *   datarilolo   lowest doubles of the computed data;
- *   elapsedms    elapsed time expressed in milliseconds. */
 
 void GPU_cmplx4vectorized_poly_evaldiff
  ( int BS, int dim, int nbr, int deg, int *nvr, int **idx,

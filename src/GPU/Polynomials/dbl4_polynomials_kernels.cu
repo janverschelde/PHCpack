@@ -463,6 +463,50 @@ __global__ void cmplx4vectorized_flipsigns
    x = datarilolo[idx]; x = -x; datarilolo[idx] = x;
 }
 
+void GPU_cmplx4vectorized_flipsigns
+ ( int deg, int nbrflips, int *flipidx,
+   double *datarihihi, double *datarilohi,
+   double *datarihilo, double *datarilolo,
+   double *elapsedms, bool verbose )
+{
+   const int deg1 = deg+1;
+
+   int *flipidx_d;                   // flip indices on device
+   const size_t szjobidx = nbrflips*sizeof(int);
+   cudaMalloc((void**)&flipidx_d,szjobidx);
+   cudaMemcpy(flipidx_d,flipidx,szjobidx,cudaMemcpyHostToDevice);
+
+   cudaEvent_t start,stop;           // to measure time spent by kernels
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   float milliseconds;
+
+   if(verbose)
+   {
+      cout << "flip indices :";
+      for(int i=0; i<nbrflips; i++) cout << " " << flipidx[i];
+      cout << endl;
+      cout << "launching " << nbrflips << " flip signs blocks of "
+                           << deg1 << " threads ..." << endl;
+   }
+   cudaEventRecord(start);
+   cmplx4vectorized_flipsigns<<<nbrflips,deg1>>>
+      (datarihihi,datarilohi,datarihilo,datarilolo,flipidx_d,deg1);
+   cudaEventRecord(stop);
+   cudaEventSynchronize(stop);
+   cudaEventElapsedTime(&milliseconds,start,stop);
+
+   *elapsedms = (double) milliseconds;
+
+   if(verbose)
+   {
+       cout << fixed << setprecision(2);
+       cout << "Time spent by flip sign kernels : ";
+       cout << *elapsedms << " milliseconds." << endl;
+       cout << scientific << setprecision(16);
+   }
+}
+
 __global__ void dbl4_update_addjobs
  ( double *datahihi, double *datalohi, double *datahilo, double *datalolo,
    int *in1idx, int *in2idx, int *outidx, int dim )
@@ -2264,50 +2308,6 @@ void GPU_cmplx4_poly_evaldiff
        dim,nbr,deg,nvr,idx,fstart,bstart,cstart,addjobs,verbose);
 
    if(verbose) write_GPU_timings(*cnvlapms,*addlapms,*elapsedms,*walltimesec);
-}
-
-void GPU_cmplx4vectorized_flipsigns
- ( int deg, int nbrflips, int *flipidx,
-   double *datarihihi, double *datarilohi,
-   double *datarihilo, double *datarilolo,
-   double *elapsedms, bool verbose )
-{
-   const int deg1 = deg+1;
-
-   int *flipidx_d;                   // flip indices on device
-   const size_t szjobidx = nbrflips*sizeof(int);
-   cudaMalloc((void**)&flipidx_d,szjobidx);
-   cudaMemcpy(flipidx_d,flipidx,szjobidx,cudaMemcpyHostToDevice);
-
-   cudaEvent_t start,stop;           // to measure time spent by kernels
-   cudaEventCreate(&start);
-   cudaEventCreate(&stop);
-   float milliseconds;
-
-   if(verbose)
-   {
-      cout << "flip indices :";
-      for(int i=0; i<nbrflips; i++) cout << " " << flipidx[i];
-      cout << endl;
-      cout << "launching " << nbrflips << " flip signs blocks of "
-                           << deg1 << " threads ..." << endl;
-   }
-   cudaEventRecord(start);
-   cmplx4vectorized_flipsigns<<<nbrflips,deg1>>>
-      (datarihihi,datarilohi,datarihilo,datarilolo,flipidx_d,deg1);
-   cudaEventRecord(stop);
-   cudaEventSynchronize(stop);
-   cudaEventElapsedTime(&milliseconds,start,stop);
-
-   *elapsedms = (double) milliseconds;
-
-   if(verbose)
-   {
-       cout << fixed << setprecision(2);
-       cout << "Time spent by flip sign kernels : ";
-       cout << *elapsedms << " milliseconds." << endl;
-       cout << scientific << setprecision(16);
-   }
 }
 
 void GPU_cmplx4vectorized_poly_evaldiff
