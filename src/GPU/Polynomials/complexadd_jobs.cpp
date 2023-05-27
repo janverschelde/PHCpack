@@ -348,8 +348,8 @@ void ComplexAdditionJobs::recursive_other_make
             jobs[level].push_back(job1);
             jobcount = jobcount + 1;
             freqlaycnt[level] = freqlaycnt[level] + 1;
-            // imaginary operand
-            ComplexAdditionJob job2(5,0,ix1,-1,nvr[ix1]-2,ix2);
+            // imaginary operand : must use -2
+            ComplexAdditionJob job2(5,0,ix1,-2,nvr[ix1]-2,ix2);
             if(verbose) cout << "adding " << job2
                              << " to layer " << level << endl;
             jobs[level].push_back(job2);
@@ -365,8 +365,8 @@ void ComplexAdditionJobs::recursive_other_make
             jobs[level].push_back(job1);
             jobcount = jobcount + 1;
             freqlaycnt[level] = freqlaycnt[level] + 1;
-            // imaginary operand
-            ComplexAdditionJob job2(4,0,ix1,-1,nvr[ix1]-2,ix2);
+            // imaginary operand : must use -2
+            ComplexAdditionJob job2(4,0,ix1,-2,nvr[ix1]-2,ix2);
             if(verbose) cout << "adding " << job2
                              << " to layer " << level << endl;
             jobs[level].push_back(job2);
@@ -383,8 +383,8 @@ void ComplexAdditionJobs::recursive_other_make
             jobs[level].push_back(job1);
             jobcount = jobcount + 1;
             freqlaycnt[level] = freqlaycnt[level] + 1;
-            // imaginary operand
-            ComplexAdditionJob job2(6,0,ix1,-1,crossidx,ix2);
+            // imaginary operand : must use -2
+            ComplexAdditionJob job2(6,0,ix1,-2,crossidx,ix2);
             if(verbose) cout << "adding " << job2
                              << " to layer " << level << endl;
             jobs[level].push_back(job2);
