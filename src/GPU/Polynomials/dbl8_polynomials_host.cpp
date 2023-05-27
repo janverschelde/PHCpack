@@ -110,7 +110,7 @@ void CPU_dbl8_poly_speel
                           << "input[" << ix1 << "] to f[0]" << endl;
 
          CPU_dbl8_product(deg, cffhihihi[i],     cfflohihi[i],
-                               cfflohihi[i],     cfflolohi[i],
+                               cffhilohi[i],     cfflolohi[i],
                                cffhihilo[i],     cfflohilo[i],
                                cffhilolo[i],     cfflololo[i],
                              inputhihihi[ix2], inputlohihi[ix2],

@@ -1,6 +1,7 @@
 Sat 27 May 2023 : in {dbl, dbl2, dbl4, dbl8}_polynomials_kernels.cu added
   systematically a deallocation statement for each memory allocation.
-  Bug fixed in complexadd_jobs.cpp.
+  Bug fixed in complexadd_jobs.cpp.  Formatted dbl8_polynomials_testers
+  and bug fixed in dbl8_polynomials_host.cpp.
 
 Fri 26 May 2023 : extended dbl2_polynomials_kernels with vectorized complex
   arithmetic and adjusted dbl2_polynomials_testers.cpp.
