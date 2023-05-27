@@ -243,6 +243,7 @@ void GPU_cmplx2vectorized_flipsigns
        cout << *elapsedms << " milliseconds." << endl;
        cout << scientific << setprecision(16);
    }
+   cudaFree(flipidx_d);
 }
 
 __global__ void dbl2_update_addjobs
@@ -1230,6 +1231,7 @@ void dbl2_convolution_jobs
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
          *cnvlapms += milliseconds;
+         cudaFree(in1ix_d); cudaFree(in2ix_d); cudaFree(outix_d);
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
@@ -1286,6 +1288,7 @@ void cmplx2_convolution_jobs
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
          *cnvlapms += milliseconds;
+         cudaFree(in1ix_d); cudaFree(in2ix_d); cudaFree(outix_d);
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
@@ -1344,6 +1347,7 @@ void cmplx2vectorized_convolution_jobs
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
          *cnvlapms += milliseconds;
+         cudaFree(in1ix_d); cudaFree(in2ix_d); cudaFree(outix_d);
       }
       jobnbr = incjobs.get_layer_count(k);
       // note: only half the number of increment jobs
@@ -1387,8 +1391,10 @@ void cmplx2vectorized_convolution_jobs
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
          *cnvlapms += milliseconds;
+         cudaFree(in1ix_d); cudaFree(in2ix_d); cudaFree(outix_d);
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
+      free(rebidx);
    }
 }
 
@@ -1441,6 +1447,7 @@ void dbl2_addition_jobs
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
          *addlapms += milliseconds;
+         cudaFree(in1ix_d); cudaFree(in2ix_d); cudaFree(outix_d);
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
@@ -1497,6 +1504,7 @@ void cmplx2_addition_jobs
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
          *addlapms += milliseconds;
+         cudaFree(in1ix_d); cudaFree(in2ix_d); cudaFree(outix_d);
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
@@ -1554,6 +1562,7 @@ void cmplx2vectorized_addition_jobs
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
          *addlapms += milliseconds;
+         cudaFree(in1ix_d); cudaFree(in2ix_d); cudaFree(outix_d);
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
    }
@@ -1627,6 +1636,13 @@ void GPU_dbl2_poly_evaldiff
        dim,nbr,deg,nvr,idx,fstart,bstart,cstart,addjobs,verbose);
 
    if(verbose) write_GPU_timings(*cnvlapms,*addlapms,*elapsedms,*walltimesec);
+
+   cudaFree(datahi_d); cudaFree(datalo_d);
+
+   free(datahi_h); free(datalo_h);
+
+   free(fstart); free(bstart); free(cstart);
+   free(fsums); free(bsums); free(csums);
 }
 
 void GPU_cmplx2_poly_evaldiff
@@ -1718,6 +1734,15 @@ void GPU_cmplx2_poly_evaldiff
        dim,nbr,deg,nvr,idx,fstart,bstart,cstart,addjobs,verbose);
 
    if(verbose) write_GPU_timings(*cnvlapms,*addlapms,*elapsedms,*walltimesec);
+
+   cudaFree(datarehi_d); cudaFree(datarelo_d);
+   cudaFree(dataimhi_d); cudaFree(dataimlo_d);
+
+   free(datarehi_h); free(datarelo_h);
+   free(dataimhi_h); free(dataimlo_h);
+
+   free(fstart); free(bstart); free(cstart);
+   free(fsums); free(bsums); free(csums);
 }
 
 void GPU_cmplx2vectorized_poly_evaldiff
@@ -1797,4 +1822,11 @@ void GPU_cmplx2vectorized_poly_evaldiff
        totalcff,offsetri,addjobs,verbose);
 
    if(verbose) write_GPU_timings(*cnvlapms,*addlapms,*elapsedms,*walltimesec);
+
+   cudaFree(datarihi_d); cudaFree(datarilo_d);
+
+   free(datarihi_h); free(datarilo_h);
+
+   free(fstart); free(bstart); free(cstart);
+   free(fsums); free(bsums); free(csums);
 }
