@@ -4,13 +4,14 @@
 #ifndef __dbl_polynomials_testers_h__
 #define __dbl_polynomials_testers_h__
 
-void dbl_make_input
+int dbl_make_input
  ( int dim, int nbr, int nva, int pwr, int deg,
    int *nvr, int **idx, int **exp,
    double **input, double *cst, double **cff, bool verbose );
 /*
  * DESCRIPTION :
  *   Generates random real polynomials and real input series.
+ *   Returns 1 if there are duplicates in the support.
  *
  * ON ENTRY :
  *   dim      dimension, total number of variables;
@@ -34,7 +35,7 @@ void dbl_make_input
  *   cst      has the coefficients of the constant series;
  *   cff      cff[k] has the coefficient series of monomial k. */
 
-void cmplx_make_input
+int cmplx_make_input
  ( int dim, int nbr, int nva, int pwr, int deg,
    int *nvr, int **idx, int **exp,
    double **inputre, double **inputim, double *cstre, double *cstim,
@@ -42,6 +43,7 @@ void cmplx_make_input
 /*
  * DESCRIPTION :
  *   Generates random complex polynomials and complex input series.
+ *   Returns 1 if there are duplicates in the support.
  *
  * ON ENTRY :
  *   dim      dimension, total number of variables;

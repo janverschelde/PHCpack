@@ -75,7 +75,7 @@ int main_dbl2_test_polynomial
    return fail;
 }
 
-void dbl2_make_input
+int dbl2_make_input
  ( int dim, int nbr, int nva, int pwr, int deg,
    int *nvr, int **idx, int **exp,
    double **inputhi, double **inputlo,
@@ -149,13 +149,17 @@ void dbl2_make_input
    {
       bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
       if(dup)
-         cout << "Duplicate supports found." << endl;
+      {
+         cout << "Duplicates in support found." << endl;
+         return 1;
+      }
       else if(verbose)
-         cout << "No duplicate supports found." << endl;
+         cout << "No duplicates in support found." << endl;
    }
+   return 0;
 }
 
-void cmplx2_make_input
+int cmplx2_make_input
  ( int dim, int nbr, int nva, int pwr, int deg,
    int *nvr, int **idx, int **exp,
    double **inputrehi, double **inputrelo,
@@ -241,10 +245,14 @@ void cmplx2_make_input
    {
       bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
       if(dup)
-         cout << "Duplicate supports found." << endl;
+      {
+         cout << "Duplicates in support found." << endl;
+         return 1;
+      }
       else if(verbose)
-         cout << "No duplicate supports found." << endl;
+         cout << "No duplicates in support found." << endl;
    }
+   return 0;
 }
 
 double dbl2_error_sum
@@ -419,10 +427,13 @@ double test_dbl2_real_polynomial
 
       bool vrb = (verbose > 1);
 
-      dbl2_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
-                      inputhi,inputlo,csthi,cstlo,cffhi,cfflo,vrb);
-
-
+      int fail = dbl2_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,inputhi,
+                                 inputlo,csthi,cstlo,cffhi,cfflo,vrb);
+      if(fail == 1)
+      {
+          cout << "Duplicates in support, returning 0 as error." << endl;
+          return 0.0;
+      }
       ConvolutionJobs cnvjobs(dim);
       AdditionJobs addjobs(dim,nbr);
 
@@ -538,11 +549,15 @@ double test_dbl2_complex_polynomial
 
       bool vrb = (verbose > 1);
 
-      cmplx2_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
-                        inputrehi,inputrelo,inputimhi,inputimlo,
-                        cstrehi,cstrelo,cstimhi,cstimlo,
-                        cffrehi,cffrelo,cffimhi,cffimlo,vrb);
-
+      int fail = cmplx2_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
+                                   inputrehi,inputrelo,inputimhi,inputimlo,
+                                   cstrehi,cstrelo,cstimhi,cstimlo,
+                                   cffrehi,cffrelo,cffimhi,cffimlo,vrb);
+      if(fail == 1)
+      {
+          cout << "Duplicates in support, returning 0 as error." << endl;
+          return 0.0;
+      }
       ConvolutionJobs cnvjobs(dim);
       AdditionJobs addjobs(dim,nbr);
 

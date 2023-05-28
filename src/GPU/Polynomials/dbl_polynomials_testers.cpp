@@ -75,7 +75,7 @@ int main_dbl_test_polynomial
    return fail;
 }
 
-void dbl_make_input
+int dbl_make_input
  ( int dim, int nbr, int nva, int pwr, int deg,
    int *nvr, int **idx, int **exp,
    double **input, double *cst, double **cff, bool verbose )
@@ -143,13 +143,17 @@ void dbl_make_input
    {
       bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
       if(dup)
-         cout << "Duplicate supports found." << endl;
+      {
+         cout << "Duplicates in support found." << endl;
+         return 1;
+      }
       else if(verbose)
-         cout << "No duplicate supports found." << endl;
+         cout << "No duplicates in support found." << endl;
    }
+   return 0;
 }
 
-void cmplx_make_input
+int cmplx_make_input
  ( int dim, int nbr, int nva, int pwr, int deg,
    int *nvr, int **idx, int **exp,
    double **inputre, double **inputim, double *cstre, double *cstim,
@@ -222,10 +226,14 @@ void cmplx_make_input
    {
       bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
       if(dup)
-         cout << "Duplicate supports found." << endl;
+      {
+         cout << "Duplicates in support found." << endl;
+         return 1;
+      }
       else if(verbose)
-         cout << "No duplicate supports found." << endl;
+         cout << "No duplicates in support found." << endl;
    }
+   return 0;
 }
 
 double dbl_error_sum
@@ -354,8 +362,13 @@ double test_dbl_real_polynomial
 
       const bool vrb = (verbose > 1);
 
-      dbl_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,input,cst,cff,vrb);
-
+      int fail = dbl_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
+                                input,cst,cff,vrb);
+      if(fail == 1)
+      {
+          cout << "Duplicates in support, returning 0 as error." << endl;
+          return 0.0;
+      }
       ConvolutionJobs cnvjobs(dim);
       AdditionJobs addjobs(dim,nbr);
 
@@ -451,9 +464,13 @@ double test_dbl_complex_polynomial
 
       const bool vrb = (verbose > 1);
 
-      cmplx_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,inputre,inputim,
-                       cstre,cstim,cffre,cffim,vrb);
-
+      int fail = cmplx_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,inputre,
+                                  inputim,cstre,cstim,cffre,cffim,vrb);
+      if(fail == 1)
+      {
+          cout << "Duplicates in support, returning 0 as error." << endl;
+          return 0.0;
+      }
       ConvolutionJobs cnvjobs(dim);
       AdditionJobs addjobs(dim,nbr);
 

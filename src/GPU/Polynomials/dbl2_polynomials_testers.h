@@ -4,7 +4,7 @@
 #ifndef __dbl2_polynomials_testers_h__
 #define __dbl2_polynomials_testers_h__
 
-void dbl2_make_input
+int dbl2_make_input
  ( int dim, int nbr, int nva, int pwr, int deg,
    int *nvr, int **idx, int **exp,
    double **inputhi, double **inputlo,
@@ -13,6 +13,7 @@ void dbl2_make_input
 /*
  * DESCRIPTION :
  *   Generates random real polynomials and real input series.
+ *   Returns 1 if there are duplicates in the support.
  *
  * ON ENTRY :
  *   dim      dimension, total number of variables;
@@ -44,7 +45,7 @@ void dbl2_make_input
  *   cfflo    cfflo[k] has the low doubles of the coefficient series
  *            of monomial k. */
 
-void cmplx2_make_input
+int cmplx2_make_input
  ( int dim, int nbr, int nva, int pwr, int deg,
    int *nvr, int **idx, int **exp,
    double **inputrehi, double **inputrelo,
@@ -55,6 +56,7 @@ void cmplx2_make_input
 /*
  * DESCRIPTION :
  *   Generates random complex polynomials and complex input series.
+ *   Returns 1 if there are duplicates in the support.
  *
  * ON ENTRY :
  *   dim        dimension, total number of variables;

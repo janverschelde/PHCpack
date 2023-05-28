@@ -77,7 +77,7 @@ int main_dbl8_test_polynomial
    return fail;
 }
 
-void dbl8_make_input
+int dbl8_make_input
  ( int dim, int nbr, int nva, int pwr, int deg,
    int *nvr, int **idx, int **exp,
    double **inputhihihi, double **inputlohihi,
@@ -190,13 +190,17 @@ void dbl8_make_input
    {
       bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
       if(dup)
-         cout << "Duplicate supports found." << endl;
+      {
+         cout << "Duplicates in support found." << endl;
+         return 1;
+      }
       else if(verbose)
-         cout << "No duplicate supports found." << endl;
+         cout << "No duplicates in support found." << endl;
    }
+   return 0;
 }
 
-void cmplx8_make_input
+int cmplx8_make_input
  ( int dim, int nbr, int nva, int pwr, int deg,
    int *nvr, int **idx, int **exp,
    double **inputrehihihi, double **inputrelohihi,
@@ -355,10 +359,14 @@ void cmplx8_make_input
    {
       bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
       if(dup)
-         cout << "Duplicate supports found." << endl;
+      {
+         cout << "Duplicates in support found." << endl;
+         return 1;
+      }
       else if(verbose)
-         cout << "No duplicate supports found." << endl;
+         cout << "No duplicates in support found." << endl;
    }
+   return 0;
 }
 
 double dbl8_error_sum
@@ -734,14 +742,18 @@ double test_dbl8_polynomial
 
       bool vrb = (verbose > 1);
 
-      dbl8_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
-                      inputhihihi,inputlohihi,inputhilohi,inputlolohi,
-                      inputhihilo,inputlohilo,inputhilolo,inputlololo,
-                      csthihihi,cstlohihi,csthilohi,cstlolohi,
-                      csthihilo,cstlohilo,csthilolo,cstlololo,
-                      cffhihihi,cfflohihi,cffhilohi,cfflolohi,
-                      cffhihilo,cfflohilo,cffhilolo,cfflololo,vrb);
-
+      int fail = dbl8_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
+                    inputhihihi,inputlohihi,inputhilohi,inputlolohi,
+                    inputhihilo,inputlohilo,inputhilolo,inputlololo,
+                    csthihihi,cstlohihi,csthilohi,cstlolohi,
+                    csthihilo,cstlohilo,csthilolo,cstlololo,
+                    cffhihihi,cfflohihi,cffhilohi,cfflolohi,
+                    cffhihilo,cfflohilo,cffhilolo,cfflololo,vrb);
+      if(fail == 1)
+      {
+          cout << "Duplicates in support, returning 0 as error." << endl;
+          return 0.0;
+      }
       ConvolutionJobs cnvjobs(dim);
 
       cnvjobs.make(nbr,nvr,idx,vrb);
@@ -1047,20 +1059,24 @@ double test_cmplx8_polynomial
 
       bool vrb = (verbose > 1);
 
-      cmplx8_make_input
-         (dim,nbr,nva,pwr,deg,nvr,idx,exp,
-          inputrehihihi,inputrelohihi,inputrehilohi,inputrelolohi,
-          inputrehihilo,inputrelohilo,inputrehilolo,inputrelololo,
-          inputimhihihi,inputimlohihi,inputimhilohi,inputimlolohi,
-          inputimlohilo,inputimlohilo,inputimhilolo,inputimlololo,
-          cstrehihihi,cstrelohihi,cstrehilohi,cstrelolohi,
-          cstrehihilo,cstrelohilo,cstrehilolo,cstrelololo,
-          cstimhihihi,cstimlohihi,cstimhilohi,cstimlolohi,
-          cstimhihilo,cstimlohilo,cstimhilolo,cstimlololo,
-          cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
-          cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
-          cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
-          cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,vrb);
+      int fail = cmplx8_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
+                    inputrehihihi,inputrelohihi,inputrehilohi,inputrelolohi,
+                    inputrehihilo,inputrelohilo,inputrehilolo,inputrelololo,
+                    inputimhihihi,inputimlohihi,inputimhilohi,inputimlolohi,
+                    inputimlohilo,inputimlohilo,inputimhilolo,inputimlololo,
+                    cstrehihihi,cstrelohihi,cstrehilohi,cstrelolohi,
+                    cstrehihilo,cstrelohilo,cstrehilolo,cstrelololo,
+                    cstimhihihi,cstimlohihi,cstimhilohi,cstimlolohi,
+                    cstimhihilo,cstimlohilo,cstimhilolo,cstimlololo,
+                    cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+                    cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+                    cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+                    cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,vrb);
+      if(fail == 1)
+      {
+          cout << "Duplicates in support, returning 0 as error." << endl;
+          return 0.0;
+      }
 
       // ConvolutionJobs cnvjobs(dim);
       // AdditionJobs addjobs(dim,nbr);

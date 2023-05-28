@@ -4,7 +4,7 @@
 #ifndef __dbl8_polynomials_testers_h__
 #define __dbl8_polynomials_testers_h__
 
-void dbl8_make_input
+int dbl8_make_input
  ( int dim, int nbr, int nva, int pwr, int deg,
    int *nvr, int **idx, int **exp,
    double **inputhihihi, double **inputlohihi,
@@ -22,6 +22,7 @@ void dbl8_make_input
 /*
  * DESCRIPTION :
  *   Generates random polynomials and input series for real data.
+ *   Returns 1 if there are duplicates in the support.
  *
  * ON ENTRY :
  *   dim         dimension, total number of variables;
@@ -95,7 +96,7 @@ void dbl8_make_input
  *   cfflololo   cfflololo[k] has the lowest doubles of the coefficient
  *               series of monomial k. */
 
-void cmplx8_make_input
+int cmplx8_make_input
  ( int dim, int nbr, int nva, int pwr, int deg,
    int *nvr, int **idx, int **exp,
    double **inputrehihihi, double **inputrelohihi,
@@ -125,6 +126,7 @@ void cmplx8_make_input
 /*
  * DESCRIPTION :
  *   Generates random polynomials and input series for complex data.
+ *   Returns 1 if there are duplicates in the support.
  *
  * ON ENTRY :
  *   dim         dimension, total number of variables;

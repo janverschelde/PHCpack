@@ -75,7 +75,7 @@ int main_dbl4_test_polynomial
    return fail;
 }
 
-void dbl4_make_input
+int dbl4_make_input
  ( int dim, int nbr, int nva, int pwr, int deg,
    int *nvr, int **idx, int **exp,
    double **inputhihi, double **inputlohi,
@@ -160,13 +160,17 @@ void dbl4_make_input
    {
       bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
       if(dup)
-         cout << "Duplicate supports found." << endl;
+      {
+         cout << "Duplicates in support found." << endl;
+         return 1;
+      }
       else if(verbose)
-         cout << "No duplicate supports found." << endl;
+         cout << "No duplicates in support found." << endl;
    }
+   return 0;
 }
 
-void cmplx4_make_input
+int cmplx4_make_input
  ( int dim, int nbr, int nva, int pwr, int deg,
    int *nvr, int **idx, int **exp,
    double **inputrehihi, double **inputrelohi,
@@ -243,6 +247,7 @@ void cmplx4_make_input
                       cffrehihi,cffrelohi,cffrehilo,cffrelolo,
                       cffimhihi,cffimlohi,cffimhilo,cffimlolo);
    }
+/*
    cout << "setting the constant term to zero ..." << endl;
    for(int j=0; j<=deg; j++)
    {
@@ -251,6 +256,7 @@ void cmplx4_make_input
       cstimhihi[j] = 0.0; cstimlohi[j] = 0.0;
       cstimhilo[j] = 0.0; cstimlolo[j] = 0.0;
    }
+ */
    if(verbose)
    {
       cout << "Coefficient series of the constant term :" << endl;
@@ -287,10 +293,14 @@ void cmplx4_make_input
     {
        bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
        if(dup)
-          cout << "Duplicate supports found." << endl;
+       {
+          cout << "Duplicates in support found." << endl;
+          return 1;
+       }
        else if(verbose)
-          cout << "No duplicate supports found." << endl;
+          cout << "No duplicates in support found." << endl;
     }
+    return 0;
 }
 
 double dbl4_error_sum
@@ -556,11 +566,15 @@ double test_dbl4_polynomial
 
       bool vrb = (verbose > 1);
 
-      dbl4_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
-                      inputhihi,inputlohi,inputhilo,inputlolo,
-                      csthihi,cstlohi,csthilo,cstlolo,
-                      cffhihi,cfflohi,cffhilo,cfflolo,vrb);
-
+      int fail = dbl4_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
+                                 inputhihi,inputlohi,inputhilo,inputlolo,
+                                 csthihi,cstlohi,csthilo,cstlolo,
+                                 cffhihi,cfflohi,cffhilo,cfflolo,vrb);
+      if(fail == 1)
+      {
+          cout << "Duplicates in support, returning 0 as error." << endl;
+          return 0.0;
+      }
       ConvolutionJobs cnvjobs(dim);
 
       cnvjobs.make(nbr,nvr,idx,vrb);
@@ -803,14 +817,18 @@ double test_cmplx4_polynomial
 
       bool vrb = (verbose > 1);
 
-      cmplx4_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
-         inputrehihi,inputrelohi,inputrehilo,inputrelolo,
-         inputimhihi,inputimlohi,inputimhilo,inputimlolo,
-         cstrehihi,cstrelohi,cstrehilo,cstrelolo,
-         cstimhihi,cstimlohi,cstimhilo,cstimlolo,
-         cffrehihi,cffrelohi,cffrehilo,cffrelolo,
-         cffimhihi,cffimlohi,cffimhilo,cffimlolo,vrb);
-
+      int fail = cmplx4_make_input(dim,nbr,nva,pwr,deg,nvr,idx,exp,
+                    inputrehihi,inputrelohi,inputrehilo,inputrelolo,
+                    inputimhihi,inputimlohi,inputimhilo,inputimlolo,
+                    cstrehihi,cstrelohi,cstrehilo,cstrelolo,
+                    cstimhihi,cstimlohi,cstimhilo,cstimlolo,
+                    cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+                    cffimhihi,cffimlohi,cffimhilo,cffimlolo,vrb);
+      if(fail == 1)
+      {
+          cout << "Duplicates in support, returning 0 as error." << endl;
+          return 0.0;
+      }
       ConvolutionJobs cnvjobs(dim);
       AdditionJobs addjobs(dim,nbr);
 

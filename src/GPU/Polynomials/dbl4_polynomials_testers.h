@@ -4,7 +4,7 @@
 #ifndef __dbl4_polynomials_testers_h__
 #define __dbl4_polynomials_testers_h__
 
-void dbl4_make_input
+int dbl4_make_input
  ( int dim, int nbr, int nva, int pwr, int deg,
    int *nvr, int **idx, int **exp,
    double **inputhihi, double **inputlohi,
@@ -15,6 +15,7 @@ void dbl4_make_input
 /*
  * DESCRIPTION :
  *   Generates random polynomials and input series.
+ *   Returns 1 if there are duplicates in the support.
  *
  * ON ENTRY :
  *   dim       dimension, total number of variables;
@@ -60,7 +61,7 @@ void dbl4_make_input
  *   cfflolo   cfflolo[k] has the lowest doubles of the coefficient series
  *             of monomial k. */
 
-void cmplx4_make_input
+int cmplx4_make_input
  ( int dim, int nbr, int nva, int pwr, int deg,
    int *nvr, int **idx, int **exp,
    double **inputrehihi, double **inputrelohi,
@@ -78,6 +79,7 @@ void cmplx4_make_input
 /*
  * DESCRIPTION :
  *   Generates random complex polynomials and complex input series.
+ *   Returns 1 if there are duplicates in the support.
  *
  * ON ENTRY :
  *   dim          dimension, total number of variables;
