@@ -1079,7 +1079,7 @@ double test_cmplx8_polynomial
                     inputrehihihi,inputrelohihi,inputrehilohi,inputrelolohi,
                     inputrehihilo,inputrelohilo,inputrehilolo,inputrelololo,
                     inputimhihihi,inputimlohihi,inputimhilohi,inputimlolohi,
-                    inputimlohilo,inputimlohilo,inputimhilolo,inputimlololo,
+                    inputimhihilo,inputimlohilo,inputimhilolo,inputimlololo,
                     cstrehihihi,cstrelohihi,cstrehilohi,cstrelolohi,
                     cstrehihilo,cstrelohilo,cstrehilolo,cstrelololo,
                     cstimhihihi,cstimlohihi,cstimhilohi,cstimlolohi,

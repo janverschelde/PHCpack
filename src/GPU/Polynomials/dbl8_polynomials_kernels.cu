@@ -503,6 +503,41 @@ void GPU_cmplx8vectorized_flipsigns
       cout << "launching " << nbrflips << " flip signs blocks of "
                            << deg1 << " threads ..." << endl;
    }
+/*
+   for(int i=0; i<nbrflips; i++)
+   {
+      int in1idx = flipidx[i];
+
+      cout << "Flip of job " << i
+           << " at index " << in1idx << " :" << endl;
+
+      double rihihihi,rilohihi,rihilohi,rilolohi;
+      double rihihilo,rilohilo,rihilolo,rilololo;
+
+      cudaMemcpy(&rihihihi,&datarihihihi[in1idx],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&rilohihi,&datarilohihi[in1idx],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&rihilohi,&datarihilohi[in1idx],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&rilolohi,&datarilolohi[in1idx],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&rihihilo,&datarihihilo[in1idx],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&rilohilo,&datarilohilo[in1idx],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&rihilolo,&datarihilolo[in1idx],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+      cudaMemcpy(&rilololo,&datarilololo[in1idx],sizeof(double),
+                 cudaMemcpyDeviceToHost);
+
+      cout << scientific << setprecision(16);
+      cout << rihihihi << "  " << rilohihi << endl;
+      cout << rihilohi << "  " << rilolohi << endl;
+      cout << rihihilo << "  " << rilohilo << endl;
+      cout << rihilolo << "  " << rilololo << endl;
+   }
+ */
    cudaEventRecord(start);
    cmplx8vectorized_flipsigns<<<nbrflips,deg1>>>
       (datarihihihi,datarilohihi,datarihilohi,datarilolohi,
@@ -1358,6 +1393,9 @@ void cmplx8vectorized_data_setup
 
    int ix1 = 0;
    int ix2 = totcff + offsetri;
+ 
+   // cout << "before copying the constant ";
+   // cout << "ix1 : " << ix1 << ", ix2 : " << ix2 << endl;
 
    for(int i=0; i<deg1; i++)
    {
@@ -1378,6 +1416,10 @@ void cmplx8vectorized_data_setup
       datarihilolo[ix2]   = cstimhilolo[i];
       datarilololo[ix2++] = cstimlololo[i];
    }
+
+   // cout << "before copying the coefficients ";
+   // cout << "ix1 : " << ix1 << ", ix2 : " << ix2 << endl;
+
    for(int i=0; i<nbr; i++)
       for(int j=0; j<deg1; j++)
       {
@@ -1398,7 +1440,12 @@ void cmplx8vectorized_data_setup
          datarihilolo[ix2]   = cffimhilolo[i][j];
          datarilololo[ix2++] = cffimlololo[i][j];
       }
+
+   // cout << "before copying the input series ";
+   // cout << "ix1 : " << ix1 << ", ix2 : " << ix2 << endl;
+
    for(int i=0; i<dim; i++)
+   {
       for(int j=0; j<deg1; j++)
       {
          datarihihihi[ix1]   = inputrehihihi[i][j];
@@ -1418,10 +1465,9 @@ void cmplx8vectorized_data_setup
          datarihilolo[ix2]   = inputimhilolo[i][j];
          datarilololo[ix2++] = inputimlololo[i][j];
       }
-
+   }
    // cout << "Initializing data with offsetri = " << offsetri
-   //      << ", ix1 = " << ix1 
-   //      << ", ix2 = " << ix2 << endl;
+   //      << ", ix1 = " << ix1 << ", ix2 = " << ix2 << endl;
 
    for(int i=0; i<2*offsetri; i++)  // 2*offsetri because of 2nd operands
    {
@@ -1442,9 +1488,7 @@ void cmplx8vectorized_data_setup
       datarihilolo[ix2]   = 0.0;
       datarilololo[ix2++] = 0.0;
    }
-
-   // cout << "After initializing, ix1 = " << ix1
-   //      << ", ix2 = " << ix2 << endl;
+   // cout << "After initializing, ix1 = " << ix1 << ", ix2 = " << ix2 << endl;
 }
 
 void dbl8_convolution_jobs
@@ -1557,7 +1601,69 @@ void cmplx8vectorized_convolution_jobs
          if(verbose)
             cout << "launching " << jobnbr << " blocks of " << deg1
                  << " threads for convolutions ..." << endl;
+/*
+         for(int i=0; i<jobnbr; i++)
+         {
+            int in1idx = in1ix_h[i];
 
+            cout << "First input of job " << i
+                 << " at index " << in1idx << " :" << endl;
+
+            double rihihihi,rilohihi,rihilohi,rilolohi;
+            double rihihilo,rilohilo,rihilolo,rilololo;
+
+            cudaMemcpy(&rihihihi,&datarihihihi[in1idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilohihi,&datarilohihi[in1idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rihilohi,&datarihilohi[in1idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilolohi,&datarilolohi[in1idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rihihilo,&datarihihilo[in1idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilohilo,&datarilohilo[in1idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rihilolo,&datarihilolo[in1idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilololo,&datarilololo[in1idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+
+            cout << scientific << setprecision(16);
+            cout << rihihihi << "  " << rilohihi << endl;
+            cout << rihilohi << "  " << rilolohi << endl;
+            cout << rihihilo << "  " << rilohilo << endl;
+            cout << rihilolo << "  " << rilololo << endl;
+
+            int in2idx = in2ix_h[i];
+
+            cout << "Second input of job " << i
+                 << " at index " << in2idx << " :" << endl;
+
+            cudaMemcpy(&rihihihi,&datarihihihi[in2idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilohihi,&datarilohihi[in2idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rihilohi,&datarihilohi[in2idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilolohi,&datarilolohi[in2idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rihihilo,&datarihihilo[in2idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilohilo,&datarilohilo[in2idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rihilolo,&datarihilolo[in2idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilololo,&datarilololo[in2idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+
+            cout << scientific << setprecision(16);
+            cout << rihihihi << "  " << rilohihi << endl;
+            cout << rihilohi << "  " << rilolohi << endl;
+            cout << rihihilo << "  " << rilohilo << endl;
+            cout << rihilolo << "  " << rilololo << endl;
+         }
+ */
          cudaEventRecord(start);
          dbl8_padded_convjobs<<<jobnbr,deg1>>>
             (datarihihihi,datarilohihi,datarihilohi,datarilolohi,
@@ -1567,6 +1673,40 @@ void cmplx8vectorized_convolution_jobs
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
          *cnvlapms += milliseconds;
+/*
+         for(int i=0; i<jobnbr; i++)
+         {
+            int outidx = outix_h[i];
+
+            cout << "Output of job " << i
+                 << " at index " << outidx << " :" << endl;
+
+            double rihihihi,rilohihi,rihilohi,rilolohi;
+            double rihihilo,rilohilo,rihilolo,rilololo;
+
+            cudaMemcpy(&rihihihi,&datarihihihi[outidx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilohihi,&datarilohihi[outidx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rihilohi,&datarihilohi[outidx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilolohi,&datarilolohi[outidx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rihihilo,&datarihihilo[outidx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilohilo,&datarilohilo[outidx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rihilolo,&datarihilolo[outidx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilololo,&datarilololo[outidx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+
+            cout << rihihihi << "  " << rilohihi << endl;
+            cout << rihilohi << "  " << rilolohi << endl;
+            cout << rihihilo << "  " << rilohilo << endl;
+            cout << rihilolo << "  " << rilololo << endl;
+         }
+ */
          cudaFree(in1ix_d); cudaFree(in2ix_d); cudaFree(outix_d);
       }
       jobnbr = incjobs.get_layer_count(k);
@@ -1606,7 +1746,69 @@ void cmplx8vectorized_convolution_jobs
          if(verbose)
             cout << "launching " << jobnbr << " blocks of " << deg1
                  << " threads for increments ..." << endl;
+/*
+         for(int i=0; i<jobnbr; i++)
+         {
+            int in1idx = in1ix_h[i];
 
+            cout << "First input of job " << i
+                 << " at index " << in1idx << " :" << endl;
+
+            double rihihihi,rilohihi,rihilohi,rilolohi;
+            double rihihilo,rilohilo,rihilolo,rilololo;
+
+            cudaMemcpy(&rihihihi,&datarihihihi[in1idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilohihi,&datarilohihi[in1idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rihilohi,&datarihilohi[in1idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilolohi,&datarilolohi[in1idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rihihilo,&datarihihilo[in1idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilohilo,&datarilohilo[in1idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rihilolo,&datarihilolo[in1idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilololo,&datarilololo[in1idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+
+            cout << scientific << setprecision(16);
+            cout << rihihihi << "  " << rilohihi << endl;
+            cout << rihilohi << "  " << rilolohi << endl;
+            cout << rihihilo << "  " << rilohilo << endl;
+            cout << rihilolo << "  " << rilololo << endl;
+
+            int in2idx = in2ix_h[i];
+
+            cout << "Second input of job " << i
+                 << " at index " << in2idx << " :" << endl;
+
+            cudaMemcpy(&rihihihi,&datarihihihi[in2idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilohihi,&datarilohihi[in2idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rihilohi,&datarihilohi[in2idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilolohi,&datarilolohi[in2idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rihihilo,&datarihihilo[in2idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilohilo,&datarilohilo[in2idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rihilolo,&datarihilolo[in2idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilololo,&datarilololo[in2idx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+
+            cout << scientific << setprecision(16);
+            cout << rihihihi << "  " << rilohihi << endl;
+            cout << rihilohi << "  " << rilolohi << endl;
+            cout << rihihilo << "  " << rilohilo << endl;
+            cout << rihilolo << "  " << rilololo << endl;
+         }
+ */
          cudaEventRecord(start);
          dbl8_increment_jobs<<<jobnbr,deg1>>>
             (datarihihihi,datarilohihi,datarihilohi,datarilolohi,
@@ -1616,6 +1818,41 @@ void cmplx8vectorized_convolution_jobs
          cudaEventSynchronize(stop);
          cudaEventElapsedTime(&milliseconds,start,stop);
          *cnvlapms += milliseconds;
+/*
+         for(int i=0; i<jobnbr; i++)
+         {
+            int outidx = outix_h[i];
+
+            cout << "Output of job " << i
+                 << " at index " << outidx << " :" << endl;
+
+            double rihihihi,rilohihi,rihilohi,rilolohi;
+            double rihihilo,rilohilo,rihilolo,rilololo;
+
+            cudaMemcpy(&rihihihi,&datarihihihi[outidx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilohihi,&datarilohihi[outidx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rihilohi,&datarihilohi[outidx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilolohi,&datarilolohi[outidx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rihihilo,&datarihihilo[outidx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilohilo,&datarilohilo[outidx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rihilolo,&datarihilolo[outidx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+            cudaMemcpy(&rilololo,&datarilololo[outidx],sizeof(double),
+                       cudaMemcpyDeviceToHost);
+
+            cout << scientific << setprecision(16);
+            cout << rihihihi << "  " << rilohihi << endl;
+            cout << rihilohi << "  " << rilolohi << endl;
+            cout << rihihilo << "  " << rilohilo << endl;
+            cout << rihilolo << "  " << rilololo << endl;
+         }
+ */
          cudaFree(in1ix_d); cudaFree(in2ix_d); cudaFree(outix_d);
       }
       free(in1ix_h); free(in2ix_h); free(outix_h);
@@ -1758,6 +1995,7 @@ void cmplx8vectorized_addition_jobs
             cudaMemcpy(&rilololo,&datarilololo[in1idx],sizeof(double),
                        cudaMemcpyDeviceToHost);
 
+            cout << scientific << setprecision(16);
             cout << rihihihi << "  " << rilohihi << endl;
             cout << rihilohi << "  " << rilolohi << endl;
             cout << rihihilo << "  " << rilohilo << endl;
@@ -1785,6 +2023,7 @@ void cmplx8vectorized_addition_jobs
             cudaMemcpy(&rilololo,&datarilololo[in2idx],sizeof(double),
                        cudaMemcpyDeviceToHost);
 
+            cout << scientific << setprecision(16);
             cout << rihihihi << "  " << rilohihi << endl;
             cout << rihilohi << "  " << rilolohi << endl;
             cout << rihihilo << "  " << rilohilo << endl;
@@ -1828,6 +2067,7 @@ void cmplx8vectorized_addition_jobs
             cudaMemcpy(&rilololo,&datarilololo[outidx],sizeof(double),
                        cudaMemcpyDeviceToHost);
 
+            cout << scientific << setprecision(16);
             cout << rihihihi << "  " << rilohihi << endl;
             cout << rihilohi << "  " << rilolohi << endl;
             cout << rihihilo << "  " << rilohilo << endl;
