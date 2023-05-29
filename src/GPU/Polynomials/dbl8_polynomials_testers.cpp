@@ -113,7 +113,12 @@ int dbl8_make_input
          }
       }
    }
-   if(nva == 0) // random supports
+   if(nva < 0) // read supports
+   {
+      read_supports(dim,nbr,nvr);
+      for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+   }
+   else if(nva == 0) // random supports
    {
       make_supports(dim,nbr,nvr);
       for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
@@ -186,7 +191,7 @@ int dbl8_make_input
          }
       }
    }
-   if(nva == 0)
+   if(nva <= 0)
    {
       bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
       if(dup)
@@ -262,7 +267,12 @@ int cmplx8_make_input
          }
       }
    }
-   if(nva == 0) // random supports
+   if(nva < 0) // read supports
+   {
+      read_supports(dim,nbr,nvr);
+      for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+   }
+   else if(nva == 0) // random supports
    {
       make_supports(dim,nbr,nvr);
       for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
@@ -355,7 +365,7 @@ int cmplx8_make_input
          }
       }
    }
-   if(nva == 0)
+   if(nva <= 0)
    {
       bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
       if(dup)
@@ -641,6 +651,8 @@ double test_dbl8_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
    int mode )
 {
+   cout << "*** testing the real arithmetic on real data ***" << endl;
+
    if(nbr < 1)
       return 0.0;
    else
@@ -841,6 +853,7 @@ double test_dbl8_polynomial
       }
       double sumerr = 0.0;
       if(mode == 2)
+      {
          sumerr = dbl8_error_sum(dim,deg,
                      output1hihihi_h,output1lohihi_h,
                      output1hilohi_h,output1lolohi_h,
@@ -854,7 +867,8 @@ double test_dbl8_polynomial
                      outputhilohi_d,outputlolohi_d,
                      outputhihilo_d,outputlohilo_d,
                      outputhilolo_d,outputlololo_d,vrb);
- 
+         cout << "sum of all errors " << sumerr << endl;
+      }
       if(verbose > 0)
       {
          if(jobrep)
@@ -902,6 +916,8 @@ double test_cmplx8_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
    int mode )
 {
+   cout << "*** testing the complex arithmetic on complex data ***" << endl;
+
    if(nbr < 1)
       return 0.0;
    else                                        // dim series of degree deg
@@ -1156,6 +1172,7 @@ double test_cmplx8_polynomial
       }
       double sumerr = 0.0;
       if(mode == 2)
+      {
          sumerr = cmplx8_error_sum(dim,deg,
                      outputrehihihi_h,outputrelohihi_h,
                      outputrehilohi_h,outputrelolohi_h,
@@ -1173,7 +1190,8 @@ double test_cmplx8_polynomial
                      outputimhilohi_d,outputimlolohi_d,
                      outputimhihilo_d,outputimlohilo_d,
                      outputimhilolo_d,outputimlololo_d,vrb);
- 
+         cout << "sum of all errors " << sumerr << endl;
+      }
       if(verbose > 0)
       {
          if(jobrep)

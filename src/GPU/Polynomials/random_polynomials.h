@@ -18,6 +18,20 @@ void make_supports ( int dim, int nbr, int *nvr );
  *   nvr     nvr[k] has the number of variables in monomial k,
  *           nvr[k] ranges between 1 and dim. */
 
+void read_supports ( int dim, int nbr, int *nvr );
+/*
+ * DESCRIPTION :
+ *   Prompts for nbr number of variables in each monomial.
+ *
+ * ON ENTRY :
+ *   dim     total number of variables;
+ *   nbr     number of monomials;
+ *   nvr     space allocated for nbr integers.
+ *
+ * ON RETURN :
+ *   nvr     nvr[k] has the number of variables in monomial k,
+ *           nvr[k] ranges between 1 and dim. */
+
 int duplicate_index ( int dim, int nbr, int *nvr, int **idx, int monidx );
 /*
  * DESCRIPTION :

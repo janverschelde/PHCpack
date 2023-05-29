@@ -40,9 +40,9 @@ int main_dbl_test_polynomial
    }
    if(vrblvl > 0) cout << "  Seed used : " << seedused << endl;
 
-   double realsum = test_dbl_real_polynomial
+   double realsum = test_dbl_polynomial
                        (dim,nbr,nva,pwr,deg,vrblvl-1,jobrep,mode);
-   double compsum = test_dbl_complex_polynomial
+   double compsum = test_cmplx_polynomial
                        (dim,nbr,nva,pwr,deg,vrblvl-1,jobrep,mode);
 
    int fail = int(realsum > tol) + int(compsum > tol);
@@ -92,7 +92,12 @@ int dbl_make_input
          for(int j=0; j<=deg; j++) cout << input[i][j] << endl;
       }
    }
-   if(nva == 0) // random supports
+   if(nva < 0) // read supports
+   {
+      read_supports(dim,nbr,nvr);
+      for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+   }
+   else if(nva == 0) // random supports
    {
       make_supports(dim,nbr,nvr);
       for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
@@ -139,7 +144,7 @@ int dbl_make_input
          for(int j=0; j<=deg; j++) cout << " " << cff[i][j] << endl;
       }
    }
-   if(nva == 0)
+   if(nva <= 0)
    {
       bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
       if(dup)
@@ -172,7 +177,12 @@ int cmplx_make_input
             cout << inputre[i][j] << "  " << inputim[i][j] << endl;
       }
    }
-   if(nva == 0) // random supports
+   if(nva < 0) // read supports
+   {
+      read_supports(dim,nbr,nvr);
+      for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+   }
+   else if(nva == 0) // random supports
    {
       make_supports(dim,nbr,nvr);
       for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
@@ -222,7 +232,7 @@ int cmplx_make_input
             cout << cffre[i][j] << "  " << cffim[i][j] << endl;
       }
    }
-   if(nva == 0)
+   if(nva <= 0)
    {
       bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
       if(dup)
@@ -334,10 +344,12 @@ double cmplx_error_sum
    return sumerr;
 }
 
-double test_dbl_real_polynomial
+double test_dbl_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
    int mode )
 {
+   cout << "*** testing the real arithmetic on real data ***" << endl;
+
    if(nbr < 1)
       return 0.0;
    else
@@ -397,8 +409,10 @@ double test_dbl_real_polynomial
       }
       double sumerr = 0.0;
       if(mode == 2)
+      {
          sumerr = dbl_error_sum(dim,deg,output1_h,output2_h,output_d,vrb);
-
+         cout << "sum of all errors " << sumerr << endl;
+      }
       if(verbose > 0)
       {
          if(jobrep) write_jobs_report(dim,nva,nbr,deg,cnvjobs,addjobs);
@@ -411,10 +425,12 @@ double test_dbl_real_polynomial
    }
 }
 
-double test_dbl_complex_polynomial
+double test_cmplx_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
    int mode )
 {
+   cout << "*** testing the complex arithmetic on complex data ***" << endl;
+
    if(nbr < 1)
       return 0.0;
    else
@@ -514,9 +530,11 @@ double test_dbl_complex_polynomial
       }
       double sumerr = 0.0;
       if(mode == 2)
+      {
          sumerr = cmplx_error_sum(dim,deg,output1re_h,output1im_h,
                      output2re_h,output2im_h,outputre_d,outputim_d,vrb);
-
+         cout << "sum of all errors " << sumerr << endl;
+      }
       if(verbose > 0)
       {
          if(jobrep) write_jobs_report(dim,nva,nbr,deg,cnvjobs,addjobs);

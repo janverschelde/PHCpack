@@ -175,7 +175,7 @@ double cmplx2_error_sum
  *            computed on the device;
  *   verbose  if true, then all results and intermediate errors are shown. */
 
-double test_dbl2_real_polynomial
+double test_dbl2_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose,
    bool jobrep=true, int mode=2 );
 /*
@@ -199,7 +199,7 @@ double test_dbl2_real_polynomial
  *   mode     the mode of execution, either 0, 1, or 2, as follows:
  *            0 : GPU only; 1 : CPU only; 2 : GPU and CPU. */
 
-double test_dbl2_complex_polynomial
+double test_cmplx2_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose,
    bool jobrep=true, int mode=2 );
 /*

@@ -7,6 +7,8 @@
 #include "random_numbers.h"
 #include "random_monomials.h"
 
+using namespace std;
+
 void make_supports ( int dim, int nbr, int *nvr )
 {
    int rnd;
@@ -15,6 +17,27 @@ void make_supports ( int dim, int nbr, int *nvr )
    {
       rnd = rand() % dim;  // in range 0..dim-1
       nvr[i] = 1 + rnd;    // in range 1..dim
+   }
+}
+
+void read_supports ( int dim, int nbr, int *nvr )
+{
+   int inpnvr;
+
+   for(int i=0; i<nbr; i++)
+   {
+      do
+      {
+         cout << "Give number of variables in monomial " << i << " : ";
+         cin >> inpnvr;
+         if(inpnvr < 1)
+            cout << "-> entered " << inpnvr << " < 1, retry" << endl; 
+         else if (inpnvr > dim)
+            cout << "-> entered " << inpnvr << " > " << dim
+                 << ", retry" << endl; 
+      }
+      while((inpnvr < 1) || (inpnvr > dim));
+      nvr[i] = inpnvr;    // in range 1..dim
    }
 }
 

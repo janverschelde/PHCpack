@@ -11,9 +11,10 @@ void prompt_for_setup
 {
    cout << "Give the seed (0 for time) : "; cin >> *seed;
 
-   cout << "Give the dimension : "; cin >> *dim;
+   cout << "Give the dimension (total number of variables) : "; cin >> *dim;
 
-   cout << "Give the variables per monomial (0 for random polynomial) : ";
+   cout << "Enter the number of variables per monomial, or " << endl;
+   cout << "  -1 for user input, 0 for random polynomial : ";
    cin >> *nva;
 
    if(*nva > 0)
@@ -28,7 +29,7 @@ void prompt_for_setup
 
       cout << "-> number of monomials : " << *nbr << endl;
    }
-   else
+   else // in case nva is -1 or 0
    {
       cout << "Give the number of terms : "; cin >> *nbr;
    }

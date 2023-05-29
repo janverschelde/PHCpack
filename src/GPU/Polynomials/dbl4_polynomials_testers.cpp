@@ -98,7 +98,12 @@ int dbl4_make_input
                  << inputhilo[i][j] << "  " << inputlolo[i][j] << endl;
       }
    }
-   if(nva == 0) // random supports
+   if(nva < 0) // read supports
+   {
+      read_supports(dim,nbr,nvr);
+      for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+   }
+   else if(nva == 0) // random supports
    {
       make_supports(dim,nbr,nvr); // random supports
       for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
@@ -156,7 +161,7 @@ int dbl4_make_input
                  << cffhilo[i][j] << "  " << cfflolo[i][j] << endl;
       }
    }
-   if(nva == 0)
+   if(nva <= 0)
    {
       bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
       if(dup)
@@ -206,7 +211,12 @@ int cmplx4_make_input
          }
       }
    }
-   if(nva == 0) // random supports
+   if(nva < 0) // read supports
+   {
+      read_supports(dim,nbr,nvr);
+      for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
+   }
+   else if(nva == 0) // random supports
    {
       make_supports(dim,nbr,nvr);
       for(int i=0; i<nbr; i++) idx[i] = new int[nvr[i]];
@@ -289,7 +299,7 @@ int cmplx4_make_input
          }
       }
     }
-    if(nva == 0)
+    if(nva <= 0)
     {
        bool dup = duplicate_supports(dim,nbr,nvr,idx,verbose);
        if(dup)
@@ -509,6 +519,8 @@ double test_dbl4_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
    int mode )
 {
+   cout << "*** testing the real arithmetic on real data ***" << endl;
+
    if(nbr < 1)
       return 0.0;
    else
@@ -647,6 +659,7 @@ double test_dbl4_polynomial
       }
       double sumerr = 0.0;
       if(mode == 2)
+      {
          sumerr = dbl4_error_sum(dim,deg,
                      output1hihi_h,output1lohi_h,
                      output1hilo_h,output1lolo_h,
@@ -654,7 +667,8 @@ double test_dbl4_polynomial
                      output2hilo_h,output2lolo_h,
                      outputhihi_d,outputlohi_d,
                      outputhilo_d,outputlolo_d,vrb);
- 
+         cout << "sum of all errors " << sumerr << endl;
+      }
       if(verbose > 0)
       {
          if(jobrep)
@@ -702,6 +716,8 @@ double test_cmplx4_polynomial
  ( int dim, int nbr, int nva, int pwr, int deg, int verbose, bool jobrep,
    int mode )
 {
+   cout << "*** testing the complex arithmetic on complex data ***" << endl;
+
    if(nbr < 1)
       return 0.0;
    else
@@ -903,6 +919,7 @@ double test_cmplx4_polynomial
       }
       double sumerr = 0.0;
       if(mode == 2)
+      {
          sumerr = cmplx4_error_sum(dim,deg,
                      output1rehihi_h,output1relohi_h,
                      output1rehilo_h,output1relolo_h,
@@ -920,7 +937,8 @@ double test_cmplx4_polynomial
                      outputrehilo_d,outputrelolo_d,
                      outputimhihi_d,outputimlohi_d,
                      outputimhilo_d,outputimlolo_d,vrb);
-
+         cout << "sum of all errors " << sumerr << endl;
+      }
       if(verbose > 0)
       {
          if(jobrep) write_jobs_report(dim,nva,nbr,deg,cnvjobs,addjobs);
