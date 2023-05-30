@@ -719,6 +719,16 @@ prompt_for_setup.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /Fo: prompt_for_setup.obj /EHsc
 
+test_dbl_cycsys.obj:
+	@-echo ">>> compiling test_dbl_cycsys ..."
+	$(CL)\cl /c test_dbl_cycsys.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: test_dbl_cycsys.obj /EHsc
+
+test_dbl_cycsys: test_dbl_cycsys.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl_cycsys.exe test_dbl_cycsys.obj
+
 test_convolution_jobs: random_numbers.obj random_series.obj \
 	               random_monomials.obj random_polynomials.obj \
                        convolution_job.obj convolution_jobs.obj \
@@ -1438,6 +1448,8 @@ clean:
 	del test_complexadd_jobs.exe test_complexadd_jobs.lib
 	del test_complexadd_jobs.exp test_complexadd_jobs.obj
 	del job_coordinates.obj write_job_counts.obj
+	del test_dbl_cycsys.exe test_dbl_cycsys.lib
+	del test_dbl_cycsys.exp test_dbl_cycsys.obj
 
 cleanall: clean
 	del *exe *obj *exp *lib

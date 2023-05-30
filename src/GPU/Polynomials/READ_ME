@@ -4,6 +4,12 @@ The code in this folder concerns the evaluation and differentiation
 of polynomials in several variables, with coefficients power series
 truncated to the same degree.
 
+The main multiple double precisions are double double, quad double,
+and octo double.  The complex multiplication arithmetic is vectorized:
+the convolution of two complex vectors is executed by four convolutions
+on real vectors, followed by the two additions of the vectors of the 
+second operands for the real and imaginary part of the multiplication.
+
 -----------------------------------------------------------------------------
 file name                 : short description
 -----------------------------------------------------------------------------
@@ -77,4 +83,6 @@ run_dbl5_polynomials      : run specific tests in penta double precision
 run_dbl8_polynomials      : run specific tests in octo double precision
 run_dbl10_polynomials     : run specific tests in deca double precision
 run_polynomials           : run specific tests in all precisions
+-----------------------------------------------------------------------------
+test_dbl_cycsys           : tests cyclic n-roots in double precision
 -----------------------------------------------------------------------------

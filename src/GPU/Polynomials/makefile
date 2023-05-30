@@ -66,6 +66,9 @@ run_dbl10_polynomials:
 run_polynomials:
 	make -f $(MAKEFILE) run_polynomials
 
+test_dbl_cycsys:
+	make -f $(MAKEFILE) test_dbl_cycsys
+
 clean:
 	make -f $(MAKEFILE) clean
 

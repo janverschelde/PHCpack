@@ -453,6 +453,14 @@ prompt_for_setup.o:
 	@-echo ">>> compiling prompt_for_setup ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) prompt_for_setup.cpp
 
+test_dbl_cycsys.o:
+	@-echo ">>> compiling test_dbl_cycsys ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) test_dbl_cycsys.cpp
+
+test_dbl_cycsys: test_dbl_cycsys.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl_cycsys test_dbl_cycsys.o
+
 test_convolution_jobs: random_numbers.o random_series.o random_monomials.o \
                        random_polynomials.o convolution_job.o \
                        convolution_jobs.o test_convolution_jobs.o \
@@ -1144,6 +1152,7 @@ clean:
 	/bin/rm -f -r test_complexadd_jobs test_complexadd_jobs.o
 	/bin/rm -f -r job_coordinates.o write_job_counts.o prompt_for_setup.o
 	/bin/rm -f -r write_gpu_timings.o job_makers.o
+	/bin/rm -f -r test_dbl_cycsys.o test_dbl_cycsys
 
 cleanall: clean
 	/bin/rm -f -r random_numbers.o random_series.o random_monomials.o
