@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <cstdlib>
 #include <vector_types.h>
+#include "random4_vectors.h"
 #include "random4_monomials.h"
 #include "random4_series.h"
 #include "random4_polynomials.h"
@@ -92,7 +93,7 @@ int main ( void )
    int fail = int(realsum > tol) + int(compsum > tol);
 
    cout << scientific << setprecision(2);
-   cout << "Sum of all errors in double precision :" << endl;
+   cout << "Sum of all errors in quad double precision :" << endl;
    cout << "  on real data : " << realsum;
    if(realsum < tol)
       cout << "  pass." << endl;
@@ -271,13 +272,14 @@ double test_dbl4_sysevaldiff
    if(vrblvl > 0) cout << "computing on the device ..." << endl;
 
    double timelapsed_d = 0.0;
+   const bool vrb = (vrblvl > 1);
 
    for(int i=0; i<dim; i++)
    {
       ConvolutionJobs cnvjobs(dim);
       AdditionJobs addjobs(dim,nbr[i]);
 
-      make_all_jobs(dim,nbr[i],nvr[i],idx[i],&cnvjobs,&addjobs,vrblvl);
+      make_all_jobs(dim,nbr[i],nvr[i],idx[i],&cnvjobs,&addjobs,vrb);
 
       double cnvlapms,addlapms,timelapms_d,walltimes_d;
 
@@ -302,9 +304,10 @@ double test_dbl4_sysevaldiff
                    outputhihi_h[i],outputlohi_h[i],
                    outputhilo_h[i],outputlolo_h[i],
                    outputhihi_d[i],outputlohi_d[i],
-                   outputhilo_d[i],outputlolo_d[i],vrblvl);
+                   outputhilo_d[i],outputlolo_d[i],vrb);
    }
-   cout << "sum of all errors " << sumerr << endl;
+   cout << scientific << setprecision(2)
+        << "sum of all errors " << sumerr << endl;
 
    return sumerr;
 }
@@ -337,12 +340,19 @@ double test_cmplx4_sysevaldiff
       cstimlohi[i] = new double[degp1];
       cstimhilo[i] = new double[degp1];
       cstimlolo[i] = new double[degp1];
-
+/*
       random_cmplx4_exponential
          (deg,&rndrehihi,&rndrelohi,&rndrehilo,&rndrelolo,
               &rndimhihi,&rndimlohi,&rndimhilo,&rndimlolo,
           cstrehihi[i],cstrelohi[i],cstrehilo[i],cstrelolo[i],
           cstimhihi[i],cstimlohi[i],cstimhilo[i],cstimlolo[i]);
+ */
+      for(int k=0; k<=deg; k++)
+         random_quad_double_complex
+            (&cstrehihi[i][k],&cstrelohi[i][k],
+             &cstrehilo[i][k],&cstrelolo[i][k],
+             &cstimhihi[i][k],&cstimlohi[i][k],
+             &cstimhilo[i][k],&cstimlolo[i][k]);
    }
    if(vrblvl > 1)
    {
@@ -388,12 +398,19 @@ double test_cmplx4_sysevaldiff
          cffimlohi[i][j] = new double[degp1];
          cffimhilo[i][j] = new double[degp1];
          cffimlolo[i][j] = new double[degp1];
-
+/*
          random_cmplx4_exponential
             (deg,&rndrehihi,&rndrelohi,&rndrehilo,&rndrelolo,
                  &rndimhihi,&rndimlohi,&rndimhilo,&rndimlolo,
              cffrehihi[i][j],cffrelohi[i][j],cffrehilo[i][j],cffrelolo[i][j],
              cffimhihi[i][j],cffimlohi[i][j],cffimhilo[i][j],cffimlolo[i][j]);
+ */
+         for(int k=0; k<=deg; k++)
+            random_quad_double_complex
+               (&cffrehihi[i][j][k],&cffrelohi[i][j][k],
+                &cffrehilo[i][j][k],&cffrelolo[i][j][k],
+                &cffimhihi[i][j][k],&cffimlohi[i][j][k],
+                &cffimhilo[i][j][k],&cffimlolo[i][j][k]);
       }
    }
    if(vrblvl > 1)
@@ -540,15 +557,16 @@ double test_cmplx4_sysevaldiff
    if(vrblvl > 0) cout << "computing on the device ..." << endl;
 
    double timelapsed_d = 0.0;
+   const bool vrb = (vrblvl > 1);
 
    for(int i=0; i<dim; i++)
    {
       ComplexConvolutionJobs cnvjobs(dim);
-      ComplexIncrementJobs incjobs(cnvjobs,vrblvl);
+      ComplexIncrementJobs incjobs(cnvjobs,vrb);
       ComplexAdditionJobs addjobs(dim,nbr[i]);
 
       make_all_complex_jobs
-         (dim,nbr[i],nvr[i],idx[i],&cnvjobs,&incjobs,&addjobs,vrblvl);
+         (dim,nbr[i],nvr[i],idx[i],&cnvjobs,&incjobs,&addjobs,vrb);
 
       double cnvlapms,addlapms,timelapms_d,walltimes_d;
 
@@ -575,7 +593,7 @@ double test_cmplx4_sysevaldiff
 
    for(int i=0; i<dim; i++)
    {
-      sumerr += cmplx4_error_sum1(dim,deg,
+      double err = cmplx4_error_sum1(dim,deg,
                    outputrehihi_h[i],outputrelohi_h[i],
                    outputrehilo_h[i],outputrelolo_h[i],
                    outputimhihi_h[i],outputimlohi_h[i],
@@ -583,9 +601,13 @@ double test_cmplx4_sysevaldiff
                    outputrehihi_d[i],outputrelohi_d[i],
                    outputrehilo_d[i],outputrelolo_d[i],
                    outputimhihi_d[i],outputimlohi_d[i],
-                   outputimhilo_d[i],outputimlolo_d[i],vrblvl);
+                   outputimhilo_d[i],outputimlolo_d[i],vrb);
+      sumerr += err;
+      if(err > 1.0e-48) cout << "large error at i = " << i << endl;
    }
-   cout << "sum of all errors " << sumerr << endl;
+
+   cout << scientific << setprecision(2)
+        << "sum of all errors " << sumerr << endl;
 
    return sumerr;
 }

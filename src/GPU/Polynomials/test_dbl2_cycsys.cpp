@@ -92,7 +92,7 @@ int main ( void )
    int fail = int(realsum > tol) + int(compsum > tol);
 
    cout << scientific << setprecision(2);
-   cout << "Sum of all errors in double precision :" << endl;
+   cout << "Sum of all errors in double double precision :" << endl;
    cout << "  on real data : " << realsum;
    if(realsum < tol)
       cout << "  pass." << endl;
@@ -225,13 +225,14 @@ double test_dbl2_sysevaldiff
    if(vrblvl > 0) cout << "computing on the device ..." << endl;
 
    double timelapsed_d = 0.0;
+   bool vrb = (vrblvl > 1);
 
    for(int i=0; i<dim; i++)
    {
       ConvolutionJobs cnvjobs(dim);
       AdditionJobs addjobs(dim,nbr[i]);
 
-      make_all_jobs(dim,nbr[i],nvr[i],idx[i],&cnvjobs,&addjobs,vrblvl);
+      make_all_jobs(dim,nbr[i],nvr[i],idx[i],&cnvjobs,&addjobs,vrb);
 
       double cnvlapms,addlapms,timelapms_d,walltimes_d;
 
@@ -250,9 +251,10 @@ double test_dbl2_sysevaldiff
    for(int i=0; i<dim; i++)
    {
       sumerr += dbl2_error_sum1(dim,deg,outputhi_h[i],outputlo_h[i],
-                                        outputhi_d[i],outputlo_d[i],vrblvl);
+                                        outputhi_d[i],outputlo_d[i],vrb);
    }
-   cout << "sum of all errors " << sumerr << endl;
+   cout << scientific << setprecision(2)
+        << "sum of all errors " << sumerr << endl;
 
    return sumerr;
 }
@@ -273,9 +275,14 @@ double test_cmplx2_sysevaldiff
       cstrelo[i] = new double[degp1];
       cstimhi[i] = new double[degp1];
       cstimlo[i] = new double[degp1];
+/*
       random_cmplx2_exponential
          (deg,&rndrehi,&rndrelo,&rndimhi,&rndimlo,
           cstrehi[i],cstrelo[i],cstimhi[i],cstimlo[i]);
+ */
+      for(int k=0; k<=deg; k++)
+         random_double_double_complex
+            (&cstrehi[i][k],&cstrelo[i][k],&cstimhi[i][k],&cstimlo[i][k]);
    }
    if(vrblvl > 1)
    {
@@ -305,9 +312,15 @@ double test_cmplx2_sysevaldiff
          cffrelo[i][j] = new double[degp1];
          cffimhi[i][j] = new double[degp1];
          cffimlo[i][j] = new double[degp1];
+ /*
          random_cmplx2_exponential
             (deg,&rndrehi,&rndrelo,&rndimhi,&rndimlo,
              cffrehi[i][j],cffrelo[i][j],cffimhi[i][j],cffimlo[i][j]);
+  */
+         for(int k=0; k<=deg; k++)
+            random_double_double_complex
+               (&cffrehi[i][j][k],&cffrelo[i][j][k],
+                &cffimhi[i][j][k],&cffimlo[i][j][k]);
       }
    }
    if(vrblvl > 1)
@@ -404,15 +417,16 @@ double test_cmplx2_sysevaldiff
    if(vrblvl > 0) cout << "computing on the device ..." << endl;
 
    double timelapsed_d = 0.0;
+   bool vrb = (vrblvl > 1);
 
    for(int i=0; i<dim; i++)
    {
       ComplexConvolutionJobs cnvjobs(dim);
-      ComplexIncrementJobs incjobs(cnvjobs,vrblvl);
+      ComplexIncrementJobs incjobs(cnvjobs,vrb);
       ComplexAdditionJobs addjobs(dim,nbr[i]);
 
       make_all_complex_jobs
-         (dim,nbr[i],nvr[i],idx[i],&cnvjobs,&incjobs,&addjobs,vrblvl);
+         (dim,nbr[i],nvr[i],idx[i],&cnvjobs,&incjobs,&addjobs,vrb);
 
       double cnvlapms,addlapms,timelapms_d,walltimes_d;
 
@@ -437,9 +451,10 @@ double test_cmplx2_sysevaldiff
                    outputrehi_h[i],outputrelo_h[i],
                    outputimhi_h[i],outputimlo_h[i],
                    outputrehi_d[i],outputrelo_d[i],
-                   outputimhi_d[i],outputimlo_d[i],vrblvl);
+                   outputimhi_d[i],outputimlo_d[i],vrb);
    }
-   cout << "sum of all errors " << sumerr << endl;
+   cout << scientific << setprecision(2)
+        << "sum of all errors " << sumerr << endl;
 
    return sumerr;
 }

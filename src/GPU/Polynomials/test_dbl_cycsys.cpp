@@ -4,7 +4,9 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
+#include <cmath>
 #include <vector_types.h>
+#include "random_numbers.h"
 #include "random_monomials.h"
 #include "random_series.h"
 #include "random_polynomials.h"
@@ -205,13 +207,14 @@ double test_dbl_sysevaldiff
    if(vrblvl > 0) cout << "computing on the device ..." << endl;
 
    double timelapsed_d = 0.0;
+   bool vrb = (vrblvl > 1);
 
    for(int i=0; i<dim; i++)
    {
       ConvolutionJobs cnvjobs(dim);
       AdditionJobs addjobs(dim,nbr[i]);
 
-      make_all_jobs(dim,nbr[i],nvr[i],idx[i],&cnvjobs,&addjobs,vrblvl);
+      make_all_jobs(dim,nbr[i],nvr[i],idx[i],&cnvjobs,&addjobs,vrb);
 
       double cnvlapms,addlapms,timelapms_d,walltimes_d;
 
@@ -228,9 +231,10 @@ double test_dbl_sysevaldiff
 
    for(int i=0; i<dim; i++)
    {
-      sumerr += dbl_error_sum1(dim,deg,output_h[i],output_d[i],vrblvl);
+      sumerr += dbl_error_sum1(dim,deg,output_h[i],output_d[i],vrb);
    }
-   cout << "sum of all errors " << sumerr << endl;
+   cout << scientific << setprecision(2)
+        << "sum of all errors " << sumerr << endl;
 
    return sumerr;
 }
@@ -247,7 +251,15 @@ double test_cmplx_sysevaldiff
    {
       cstre[i] = new double[degp1];
       cstim[i] = new double[degp1];
-      random_cmplx_exponential(deg,&rndre,&rndim,cstre[i],cstim[i]);
+
+      // random_cmplx_exponential(deg,&rndre,&rndim,cstre[i],cstim[i]);
+
+      for(int k=0; k<=deg; k++)
+      {
+         rndre = random_angle();        
+         cstre[i][k] = cos(rndre);
+         cstim[i][k] = sin(rndre);
+      }
    }
    if(vrblvl > 1)
    {
@@ -270,7 +282,15 @@ double test_cmplx_sysevaldiff
       {
          cffre[i][j] = new double[degp1];
          cffim[i][j] = new double[degp1];
-         random_cmplx_exponential(deg,&rndre,&rndim,cffre[i][j],cffim[i][j]);
+
+         // random_cmplx_exponential(deg,&rndre,&rndim,cffre[i][j],cffim[i][j]);
+
+         for(int k=0; k<=deg; k++)
+         {
+            rndre = random_angle();
+            cffre[i][j][k] = cos(rndre);
+            cffim[i][j][k] = sin(rndre);
+         }
       }
    }
    if(vrblvl > 1)
@@ -345,15 +365,16 @@ double test_cmplx_sysevaldiff
    if(vrblvl > 0) cout << "computing on the device ..." << endl;
 
    double timelapsed_d = 0.0;
+   bool vrb = (vrblvl > 1);
 
    for(int i=0; i<dim; i++)
    {
       ComplexConvolutionJobs cnvjobs(dim);
-      ComplexIncrementJobs incjobs(cnvjobs,vrblvl);
+      ComplexIncrementJobs incjobs(cnvjobs,vrb);
       ComplexAdditionJobs addjobs(dim,nbr[i]);
 
       make_all_complex_jobs
-         (dim,nbr[i],nvr[i],idx[i],&cnvjobs,&incjobs,&addjobs,vrblvl);
+         (dim,nbr[i],nvr[i],idx[i],&cnvjobs,&incjobs,&addjobs,vrb);
 
       double cnvlapms,addlapms,timelapms_d,walltimes_d;
 
@@ -373,9 +394,10 @@ double test_cmplx_sysevaldiff
    {
       sumerr += cmplx_error_sum1
                    (dim,deg,outputre_h[i],outputim_h[i],
-                            outputre_d[i],outputim_d[i],vrblvl);
+                            outputre_d[i],outputim_d[i],vrb);
    }
-   cout << "sum of all errors " << sumerr << endl;
+   cout << scientific << setprecision(2)
+        << "sum of all errors " << sumerr << endl;
 
    return sumerr;
 }

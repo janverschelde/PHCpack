@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <cstdlib>
 #include <vector_types.h>
+#include "random8_vectors.h"
 #include "random8_monomials.h"
 #include "random8_series.h"
 #include "random8_polynomials.h"
@@ -92,7 +93,7 @@ int main ( void )
    int fail = int(realsum > tol) + int(compsum > tol);
 
    cout << scientific << setprecision(2);
-   cout << "Sum of all errors in double precision :" << endl;
+   cout << "Sum of all errors in octo double precision :" << endl;
    cout << "  on real data : " << realsum;
    if(realsum < tol)
       cout << "  pass." << endl;
@@ -344,6 +345,7 @@ double test_dbl8_sysevaldiff
    if(vrblvl > 0) cout << "computing on the device ..." << endl;
 
    double timelapsed_d = 0.0;
+   const bool vrb = (vrblvl > 1);
 
    for(int i=0; i<dim; i++)
    {
@@ -385,9 +387,10 @@ double test_dbl8_sysevaldiff
                    outputhihihi_d[i],outputlohihi_d[i],
                    outputhilohi_d[i],outputlolohi_d[i],
                    outputhihilo_d[i],outputlohilo_d[i],
-                   outputhilolo_d[i],outputlololo_d[i],vrblvl);
+                   outputhilolo_d[i],outputlololo_d[i],vrb);
    }
-   cout << "sum of all errors " << sumerr << endl;
+   cout << scientific << setprecision(2)
+        << "sum of all errors " << sumerr << endl;
 
    return sumerr;
 }
@@ -438,7 +441,7 @@ double test_cmplx8_sysevaldiff
       cstimlohilo[i] = new double[degp1];
       cstimhilolo[i] = new double[degp1];
       cstimlololo[i] = new double[degp1];
-
+/*
       random_cmplx8_exponential
          (deg,&rndrehihihi,&rndrelohihi,&rndrehilohi,&rndrelolohi,
               &rndrehihilo,&rndrelohilo,&rndrehilolo,&rndrelololo,
@@ -448,6 +451,17 @@ double test_cmplx8_sysevaldiff
           cstrehihilo[i],cstrelohilo[i],cstrehilolo[i],cstrelololo[i],
           cstimhihihi[i],cstimlohihi[i],cstimhilohi[i],cstimlolohi[i],
           cstimhihilo[i],cstimlohilo[i],cstimhilolo[i],cstimlololo[i]);
+ */
+      for(int k=0; k<=deg; k++)
+         random_octo_complex
+            (&cstrehihihi[i][k],&cstrelohihi[i][k],
+             &cstrehilohi[i][k],&cstrelolohi[i][k],
+             &cstrehihilo[i][k],&cstrelohilo[i][k],
+             &cstrehilolo[i][k],&cstrelololo[i][k],
+             &cstimhihihi[i][k],&cstimlohihi[i][k],
+             &cstimhilohi[i][k],&cstimlolohi[i][k],
+             &cstimhihilo[i][k],&cstimlohilo[i][k],
+             &cstimhilolo[i][k],&cstimlololo[i][k]);
    }
    if(vrblvl > 1)
    {
@@ -521,7 +535,7 @@ double test_cmplx8_sysevaldiff
          cffimlohilo[i][j] = new double[degp1];
          cffimhilolo[i][j] = new double[degp1];
          cffimlololo[i][j] = new double[degp1];
-
+/*
          random_cmplx8_exponential
             (deg,&rndrehihihi,&rndrelohihi,&rndrehilohi,&rndrelolohi,
                  &rndrehihilo,&rndrelohilo,&rndrehilolo,&rndrelololo,
@@ -535,6 +549,17 @@ double test_cmplx8_sysevaldiff
              cffimhilohi[i][j],cffimlolohi[i][j],
              cffimhihilo[i][j],cffimlohilo[i][j],
              cffimhilolo[i][j],cffimlololo[i][j]);
+ */
+         for(int k=0; k<=deg; k++)
+            random_octo_complex
+               (&cffrehihihi[i][j][k],&cffrelohihi[i][j][k],
+                &cffrehilohi[i][j][k],&cffrelolohi[i][j][k],
+                &cffrehihilo[i][j][k],&cffrelohilo[i][j][k],
+                &cffrehilolo[i][j][k],&cffrelololo[i][j][k],
+                &cffimhihihi[i][j][k],&cffimlohihi[i][j][k],
+                &cffimhilohi[i][j][k],&cffimlolohi[i][j][k],
+                &cffimhihilo[i][j][k],&cffimlohilo[i][j][k],
+                &cffimhilolo[i][j][k],&cffimlololo[i][j][k]);
       }
    }
    if(vrblvl > 1)
@@ -769,15 +794,16 @@ double test_cmplx8_sysevaldiff
    if(vrblvl > 0) cout << "computing on the device ..." << endl;
 
    double timelapsed_d = 0.0;
+   const bool vrb = (vrblvl > 1);
 
    for(int i=0; i<dim; i++)
    {
       ComplexConvolutionJobs cnvjobs(dim);
-      ComplexIncrementJobs incjobs(cnvjobs,vrblvl);
+      ComplexIncrementJobs incjobs(cnvjobs,vrb);
       ComplexAdditionJobs addjobs(dim,nbr[i]);
 
       make_all_complex_jobs
-         (dim,nbr[i],nvr[i],idx[i],&cnvjobs,&incjobs,&addjobs,vrblvl);
+         (dim,nbr[i],nvr[i],idx[i],&cnvjobs,&incjobs,&addjobs,vrb);
 
       double cnvlapms,addlapms,timelapms_d,walltimes_d;
 
@@ -830,9 +856,10 @@ double test_cmplx8_sysevaldiff
                    outputimhihihi_d[i],outputimlohihi_d[i],
                    outputimhilohi_d[i],outputimlolohi_d[i],
                    outputimhihilo_d[i],outputimlohilo_d[i],
-                   outputimhilolo_d[i],outputimlololo_d[i],vrblvl);
+                   outputimhilolo_d[i],outputimlololo_d[i],vrb);
    }
-   cout << "sum of all errors " << sumerr << endl;
+   cout << scientific << setprecision(2)
+        << "sum of all errors " << sumerr << endl;
 
    return sumerr;
 }
