@@ -110,6 +110,24 @@ int cmplx2_make_input
  *   cffimlo    cffrelo[k] has the low doubles of the imaginary parts
  *              of the coefficient series of monomial k. */
 
+double dbl2_error_sum1
+ ( int dim, int deg,
+   double **resultshi_h, double **resultslo_h,
+   double **resultshi_d, double **resultslo_d, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of all errors, comparing results computed on the host
+ *   with results computed on the device, on real data.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   deg      truncation degree of the series;
+ *   resultshi_h are the high doubles computed on the host without jobs;
+ *   resultslo_h are the low doubles computed on the host without jobs;
+ *   resultshi_d are the high doubles computed on the device;
+ *   resultslo_d are the low doubles computed on the device;
+ *   verbose  if true, then all results and intermediate errors are shown. */
+
 double dbl2_error_sum
  ( int dim, int deg,
    double **results1hi_h, double **results1lo_h,
@@ -131,6 +149,38 @@ double dbl2_error_sum
  *            with convolution and addition jobs;
  *   resultshi_d are the high doubles computed on the device;
  *   resultslo_d are the low doubles computed on the device;
+ *   verbose  if true, then all results and intermediate errors are shown. */
+
+double cmplx2_error_sum1
+ ( int dim, int deg,
+   double **resultsrehi_h, double **resultsrelo_h,
+   double **resultsimhi_h, double **resultsimlo_h,
+   double **resultsrehi_d, double **resultsrelo_d,
+   double **resultsimhi_d, double **resultsimlo_d, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of all errors, comparing results computed on the host
+ *   with results computed on the device, on complex data.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   deg      truncation degree of the series;
+ *   resultsrehi_h are the high doubles of the real parts
+ *            computed on the host without jobs;
+ *   resultsrelo_h are the low doubles of the real parts
+ *            computed on the host without jobs;
+ *   resultsimhi_h are the high doubles of the imaginary parts
+ *            computed on the host without jobs;
+ *   resultsimlo_h are the low doubles of the imaginary parts
+ *            computed on the host without jobs;
+ *   resultsrehi_d are the high doubles of the real parts
+ *            computed on the device;
+ *   resultsrelo_d are the low doubles of the real parts
+ *            computed on the device;
+ *   resultsimhi_d are the high doubles of the imaginary parts
+ *            computed on the device;
+ *   resultsimlo_d are the low doubles of the imaginary parts
+ *            computed on the device;
  *   verbose  if true, then all results and intermediate errors are shown. */
 
 double cmplx2_error_sum

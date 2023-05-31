@@ -1,22 +1,22 @@
 /* Tests evaluation and differentiation of the cyclic n-roots system 
- * in double precision with the polynomial system data structure. */
+ * in double double precision with the polynomial system data structure. */
 
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
 #include <vector_types.h>
-#include "random_monomials.h"
-#include "random_series.h"
-#include "random_polynomials.h"
+#include "random2_monomials.h"
+#include "random2_series.h"
+#include "random2_polynomials.h"
 #include "job_makers.h"
-#include "dbl_polynomials_host.h"
-#include "dbl_polynomials_kernels.h"
-#include "dbl_polynomials_testers.h"
+#include "dbl2_polynomials_host.h"
+#include "dbl2_polynomials_kernels.h"
+#include "dbl2_polynomials_testers.h"
 #include "cyclic_indices.h"
 
 using namespace std;
 
-double test_dbl_sysevaldiff
+double test_dbl2_sysevaldiff
  ( int dim, int deg, int *nbr, int **nvr, int ***idx, int vrblvl );
 /*
  * DESCRIPTION :
@@ -33,7 +33,7 @@ double test_dbl_sysevaldiff
  *            in the j-th monomial of the i-th polynomial;
  *   vrblvl   is the  verbose level. */
 
-double test_cmplx_sysevaldiff
+double test_cmplx2_sysevaldiff
  ( int dim, int deg, int *nbr, int **nvr, int ***idx, int vrblvl );
 /*
  * DESCRIPTION :
@@ -80,14 +80,14 @@ int main ( void )
 
    int *nbr = new int[dim];     // number of monomials in each polynomial
    int **nvr = new int*[dim];   // number of variables in dim polynomials
-   int ***idx = new int**[dim]; // we have dim polynomials
+   int ***idx = new int**[dim]; // we have dim polynomials 
 
    make_polynomial_indices(dim,nbr,nvr,idx);
    write_polynomial_indices(dim,nbr,nvr,idx);
 
-   const double tol = 1.0e-10;
-   double realsum = test_dbl_sysevaldiff(dim,deg,nbr,nvr,idx,vrblvl);
-   double compsum = test_cmplx_sysevaldiff(dim,deg,nbr,nvr,idx,vrblvl);
+   const double tol = 1.0e-24;
+   double realsum = test_dbl2_sysevaldiff(dim,deg,nbr,nvr,idx,vrblvl);
+   double compsum = test_cmplx2_sysevaldiff(dim,deg,nbr,nvr,idx,vrblvl);
 
    int fail = int(realsum > tol) + int(compsum > tol);
 
@@ -114,17 +114,19 @@ int main ( void )
    return fail;
 }
 
-double test_dbl_sysevaldiff
+double test_dbl2_sysevaldiff
  ( int dim, int deg, int *nbr, int **nvr, int ***idx, int vrblvl )
 {
    const int degp1 = deg+1;
 /* generate constant and coefficients */
-   double rnd;
-   double **cst = new double*[dim];
+   double rndhi,rndlo;
+   double **csthi = new double*[dim];
+   double **cstlo = new double*[dim];
    for(int i=0; i<dim; i++)
    {
-      cst[i] = new double[deg+1];
-      random_dbl_exponential(deg,&rnd,cst[i]);
+      csthi[i] = new double[deg+1];
+      cstlo[i] = new double[deg+1];
+      random_dbl2_exponential(deg,&rndhi,&rndlo,csthi[i],cstlo[i]);
    }
    if(vrblvl > 1)
    {
@@ -133,17 +135,21 @@ double test_dbl_sysevaldiff
       for(int i=0; i<dim; i++)
       {
          cout << "-> coefficients of series " << i << " :" << endl;
-         for(int j=0; j<=deg; j++) cout << cst[i][j] << endl;
+         for(int j=0; j<=deg; j++)
+            cout << csthi[i][j] << "  " << cstlo[i][j] << endl;
       }
    }
-   double ***cff = new double**[dim];
+   double ***cffhi = new double**[dim];
+   double ***cfflo = new double**[dim];
    for(int i=0; i<dim; i++)
    {
-      cff[i] = new double*[nbr[i]];
+      cffhi[i] = new double*[nbr[i]];
+      cfflo[i] = new double*[nbr[i]];
       for(int j=0; j<nbr[i]; j++)
       {
-         cff[i][j] = new double[deg+1];
-         random_dbl_exponential(deg,&rnd,cff[i][j]);
+         cffhi[i][j] = new double[deg+1];
+         cfflo[i][j] = new double[deg+1];
+         random_dbl2_exponential(deg,&rndhi,&rndlo,cffhi[i][j],cfflo[i][j]);
       }
    }
    if(vrblvl > 1)
@@ -155,14 +161,20 @@ double test_dbl_sysevaldiff
          {
             cout << "-> coefficients of monomial " << j
                  << " of polynomial " << i << " :" << endl;
-            for(int k=0; k<=deg; k++) cout << cff[i][j][k] << endl;
+            for(int k=0; k<=deg; k++)
+               cout << cffhi[i][j][k] << "  " << cfflo[i][j][k] << endl;
          }
       }
    }
 /* define the input and allocate the output */
-   double **input = new double*[dim]; // dim series of degree deg
-   for(int i=0; i<dim; i++) input[i] = new double[deg+1];
-   make_real_input(dim,deg,input);
+   double **inputhi = new double*[dim]; // dim series of degree deg
+   double **inputlo = new double*[dim]; // dim series of degree deg
+   for(int i=0; i<dim; i++)
+   {
+      inputhi[i] = new double[deg+1];
+      inputlo[i] = new double[deg+1];
+   }
+   make_real2_input(dim,deg,inputhi,inputlo);
 
    if(vrblvl > 1)
    {
@@ -171,21 +183,28 @@ double test_dbl_sysevaldiff
       for(int i=0; i<dim; i++)
       {
          cout << "-> coefficients of series " << i << " :" << endl;
-         for(int j=0; j<=deg; j++) cout << input[i][j] << endl;
+         for(int j=0; j<=deg; j++)
+            cout << inputhi[i][j] << "  " << inputlo[i][j] << endl;
       }
    }
-   double ***output_h = new double**[dim];
-   double ***output_d = new double**[dim];
+   double ***outputhi_h = new double**[dim];
+   double ***outputlo_h = new double**[dim];
+   double ***outputhi_d = new double**[dim];
+   double ***outputlo_d = new double**[dim];
 
    for(int i=0; i<dim; i++)
    {
-      output_h[i] = new double*[dim+1];
-      output_d[i] = new double*[dim+1];
+      outputhi_h[i] = new double*[dim+1];
+      outputlo_h[i] = new double*[dim+1];
+      outputhi_d[i] = new double*[dim+1];
+      outputlo_d[i] = new double*[dim+1];
 
       for(int j=0; j<=dim; j++)
       {
-         output_h[i][j] = new double[degp1];
-         output_d[i][j] = new double[degp1];
+         outputhi_h[i][j] = new double[degp1];
+         outputlo_h[i][j] = new double[degp1];
+         outputhi_d[i][j] = new double[degp1];
+         outputlo_d[i][j] = new double[degp1];
       }
    }
    if(vrblvl > 0) cout << "computing on the host ..." << endl;
@@ -196,9 +215,10 @@ double test_dbl_sysevaldiff
    {
       double lapsed;
 
-      CPU_dbl_poly_evaldiff
-        (dim,nbr[i],deg,nvr[i],idx[i],cst[i],cff[i],input,
-         output_h[i],&lapsed,vrblvl);
+      CPU_dbl2_poly_evaldiff
+        (dim,nbr[i],deg,nvr[i],idx[i],csthi[i],cstlo[i],
+         cffhi[i],cfflo[i],inputhi,inputlo,outputhi_h[i],outputlo_h[i],
+         &lapsed,vrblvl);
 
       timelapsed_h += lapsed;
    }
@@ -215,9 +235,10 @@ double test_dbl_sysevaldiff
 
       double cnvlapms,addlapms,timelapms_d,walltimes_d;
 
-      GPU_dbl_poly_evaldiff
-         (degp1,dim,nbr[i],deg,nvr[i],idx[i],cst[i],cff[i],input,
-          output_d[i],cnvjobs,addjobs,&cnvlapms,&addlapms,&timelapms_d,
+      GPU_dbl2_poly_evaldiff
+         (degp1,dim,nbr[i],deg,nvr[i],idx[i],csthi[i],cstlo[i],
+          cffhi[i],cfflo[i],inputhi,inputlo,outputhi_d[i],outputlo_d[i],
+          cnvjobs,addjobs,&cnvlapms,&addlapms,&timelapms_d,
           &walltimes_d,vrblvl);
 
       timelapsed_d += walltimes_d;
@@ -228,26 +249,33 @@ double test_dbl_sysevaldiff
 
    for(int i=0; i<dim; i++)
    {
-      sumerr += dbl_error_sum1(dim,deg,output_h[i],output_d[i],vrblvl);
+      sumerr += dbl2_error_sum1(dim,deg,outputhi_h[i],outputlo_h[i],
+                                        outputhi_d[i],outputlo_d[i],vrblvl);
    }
    cout << "sum of all errors " << sumerr << endl;
 
    return sumerr;
 }
 
-double test_cmplx_sysevaldiff
+double test_cmplx2_sysevaldiff
  ( int dim, int deg, int *nbr, int **nvr, int ***idx, int vrblvl )
 {
    const int degp1 = deg+1;
 /* generate constant and coefficients */
-   double rndre,rndim;
-   double **cstre = new double*[dim];
-   double **cstim = new double*[dim];
+   double rndrehi,rndrelo,rndimhi,rndimlo;
+   double **cstrehi = new double*[dim];
+   double **cstrelo = new double*[dim];
+   double **cstimhi = new double*[dim];
+   double **cstimlo = new double*[dim];
    for(int i=0; i<dim; i++)
    {
-      cstre[i] = new double[degp1];
-      cstim[i] = new double[degp1];
-      random_cmplx_exponential(deg,&rndre,&rndim,cstre[i],cstim[i]);
+      cstrehi[i] = new double[degp1];
+      cstrelo[i] = new double[degp1];
+      cstimhi[i] = new double[degp1];
+      cstimlo[i] = new double[degp1];
+      random_cmplx2_exponential
+         (deg,&rndrehi,&rndrelo,&rndimhi,&rndimlo,
+          cstrehi[i],cstrelo[i],cstimhi[i],cstimlo[i]);
    }
    if(vrblvl > 1)
    {
@@ -257,20 +285,29 @@ double test_cmplx_sysevaldiff
       {
          cout << "-> coefficients of series " << i << " :" << endl;
          for(int j=0; j<=deg; j++)
-            cout << cstre[i][j] << "  " << cstim[i][j] << endl;
+            cout << cstrehi[i][j] << "  " << cstrelo[i][j] << endl
+                 << cstimhi[i][j] << "  " << cstimlo[i][j] << endl;
       }
    }
-   double ***cffre = new double**[dim];
-   double ***cffim = new double**[dim];
+   double ***cffrehi = new double**[dim];
+   double ***cffrelo = new double**[dim];
+   double ***cffimhi = new double**[dim];
+   double ***cffimlo = new double**[dim];
    for(int i=0; i<dim; i++)
    {
-      cffre[i] = new double*[nbr[i]];
-      cffim[i] = new double*[nbr[i]];
+      cffrehi[i] = new double*[nbr[i]];
+      cffrelo[i] = new double*[nbr[i]];
+      cffimhi[i] = new double*[nbr[i]];
+      cffimlo[i] = new double*[nbr[i]];
       for(int j=0; j<nbr[i]; j++)
       {
-         cffre[i][j] = new double[degp1];
-         cffim[i][j] = new double[degp1];
-         random_cmplx_exponential(deg,&rndre,&rndim,cffre[i][j],cffim[i][j]);
+         cffrehi[i][j] = new double[degp1];
+         cffrelo[i][j] = new double[degp1];
+         cffimhi[i][j] = new double[degp1];
+         cffimlo[i][j] = new double[degp1];
+         random_cmplx2_exponential
+            (deg,&rndrehi,&rndrelo,&rndimhi,&rndimlo,
+             cffrehi[i][j],cffrelo[i][j],cffimhi[i][j],cffimlo[i][j]);
       }
    }
    if(vrblvl > 1)
@@ -283,19 +320,24 @@ double test_cmplx_sysevaldiff
             cout << "-> coefficients of monomial " << j
                  << " of polynomial " << i << " :" << endl;
             for(int k=0; k<=deg; k++)
-               cout << cffre[i][j][k] << "  " << cffim[i][j][k] << endl;
+               cout << cffrehi[i][j][k] << "  " << cffrelo[i][j][k] << endl
+                    << cffimhi[i][j][k] << "  " << cffimlo[i][j][k] << endl;
          }
       }
    }
 /* generate input series and allocate the output */
-   double **inputre = new double*[dim]; // dim series of degree deg
-   double **inputim = new double*[dim]; // dim series of degree deg
+   double **inputrehi = new double*[dim]; // dim series of degree deg
+   double **inputrelo = new double*[dim];
+   double **inputimhi = new double*[dim];
+   double **inputimlo = new double*[dim];
    for(int i=0; i<dim; i++)
    {
-      inputre[i] = new double[degp1];
-      inputim[i] = new double[degp1];
+      inputrehi[i] = new double[degp1];
+      inputrelo[i] = new double[degp1];
+      inputimhi[i] = new double[degp1];
+      inputimlo[i] = new double[degp1];
    }
-   make_complex_input(dim,deg,inputre,inputim);
+   make_complex2_input(dim,deg,inputrehi,inputrelo,inputimhi,inputimlo);
 
    if(vrblvl > 1)
    {
@@ -305,27 +347,40 @@ double test_cmplx_sysevaldiff
       {
          cout << "-> coefficients of series " << i << " :" << endl;
          for(int j=0; j<=deg; j++)
-            cout << inputre[i][j] << "  " << inputim[i][j] << endl;
+            cout << inputrehi[i][j] << "  " << inputrelo[i][j] << endl
+                 << inputimhi[i][j] << "  " << inputimlo[i][j] << endl;
       }
    }
-   double ***outputre_h = new double**[dim];
-   double ***outputim_h = new double**[dim];
-   double ***outputre_d = new double**[dim];
-   double ***outputim_d = new double**[dim];
+   double ***outputrehi_h = new double**[dim];
+   double ***outputrelo_h = new double**[dim];
+   double ***outputimhi_h = new double**[dim];
+   double ***outputimlo_h = new double**[dim];
+   double ***outputrehi_d = new double**[dim];
+   double ***outputrelo_d = new double**[dim];
+   double ***outputimhi_d = new double**[dim];
+   double ***outputimlo_d = new double**[dim];
 
    for(int i=0; i<dim; i++)
    {
-      outputre_h[i] = new double*[dim+1];
-      outputim_h[i] = new double*[dim+1];
-      outputre_d[i] = new double*[dim+1];
-      outputim_d[i] = new double*[dim+1];
+      outputrehi_h[i] = new double*[dim+1];
+      outputrelo_h[i] = new double*[dim+1];
+      outputimhi_h[i] = new double*[dim+1];
+      outputimlo_h[i] = new double*[dim+1];
+      outputrehi_d[i] = new double*[dim+1];
+      outputrelo_d[i] = new double*[dim+1];
+      outputimhi_d[i] = new double*[dim+1];
+      outputimlo_d[i] = new double*[dim+1];
 
       for(int j=0; j<=dim; j++)
       {
-         outputre_h[i][j] = new double[degp1];
-         outputim_h[i][j] = new double[degp1];
-         outputre_d[i][j] = new double[degp1];
-         outputim_d[i][j] = new double[degp1];
+         outputrehi_h[i][j] = new double[degp1];
+         outputrelo_h[i][j] = new double[degp1];
+         outputimhi_h[i][j] = new double[degp1];
+         outputimlo_h[i][j] = new double[degp1];
+         outputrehi_d[i][j] = new double[degp1];
+         outputrelo_d[i][j] = new double[degp1];
+         outputimhi_d[i][j] = new double[degp1];
+         outputimlo_d[i][j] = new double[degp1];
       }
    }
    if(vrblvl > 0) cout << "evaluating on the host ..." << endl;
@@ -336,9 +391,13 @@ double test_cmplx_sysevaldiff
    {
       double lapsed;
 
-      CPU_cmplx_poly_evaldiff
-        (dim,nbr[i],deg,nvr[i],idx[i],cstre[i],cstim[i],cffre[i],cffim[i],
-         inputre,inputim,outputre_h[i],outputim_h[i],&lapsed,vrblvl);
+      CPU_cmplx2_poly_evaldiff
+        (dim,nbr[i],deg,nvr[i],idx[i],
+         cstrehi[i],cstrelo[i],cstimhi[i],cstimlo[i],
+         cffrehi[i],cffrelo[i],cffimhi[i],cffimlo[i],
+         inputrehi,inputrelo,inputimhi,inputimlo,
+         outputrehi_h[i],outputrelo_h[i],outputimhi_h[i],outputimlo_h[i],
+         &lapsed,vrblvl);
 
       timelapsed_h += lapsed;
    }
@@ -357,9 +416,12 @@ double test_cmplx_sysevaldiff
 
       double cnvlapms,addlapms,timelapms_d,walltimes_d;
 
-      GPU_cmplxvectorized_poly_evaldiff
-         (degp1,dim,nbr[i],deg,nvr[i],idx[i],cstre[i],cstim[i],
-          cffre[i],cffim[i],inputre,inputim,outputre_d[i],outputim_d[i],
+      GPU_cmplx2vectorized_poly_evaldiff
+         (degp1,dim,nbr[i],deg,nvr[i],idx[i],
+          cstrehi[i],cstrelo[i],cstimhi[i],cstimlo[i],
+          cffrehi[i],cffrelo[i],cffimhi[i],cffimlo[i],
+          inputrehi,inputrelo,inputimhi,inputimlo,
+          outputrehi_d[i],outputrelo_d[i],outputimhi_d[i],outputimlo_d[i],
           cnvjobs,incjobs,addjobs,&cnvlapms,&addlapms,&timelapms_d,
           &walltimes_d,vrblvl);
 
@@ -371,9 +433,11 @@ double test_cmplx_sysevaldiff
 
    for(int i=0; i<dim; i++)
    {
-      sumerr += cmplx_error_sum1
-                   (dim,deg,outputre_h[i],outputim_h[i],
-                            outputre_d[i],outputim_d[i],vrblvl);
+      sumerr += cmplx2_error_sum1(dim,deg,
+                   outputrehi_h[i],outputrelo_h[i],
+                   outputimhi_h[i],outputimlo_h[i],
+                   outputrehi_d[i],outputrelo_d[i],
+                   outputimhi_d[i],outputimlo_d[i],vrblvl);
    }
    cout << "sum of all errors " << sumerr << endl;
 

@@ -453,9 +453,17 @@ prompt_for_setup.o:
 	@-echo ">>> compiling prompt_for_setup ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) prompt_for_setup.cpp
 
+cyclic_indices.o:
+	@-echo ">>> compiling cyclic_indices ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) cyclic_indices.cpp
+
 test_dbl_cycsys.o:
 	@-echo ">>> compiling test_dbl_cycsys ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) test_dbl_cycsys.cpp
+
+test_dbl2_cycsys.o:
+	@-echo ">>> compiling test_dbl2_cycsys ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) test_dbl2_cycsys.cpp
 
 test_dbl_cycsys: random_numbers.o random_series.o random_monomials.o \
                  random_polynomials.o convolution_job.o convolution_jobs.o \
@@ -466,9 +474,9 @@ test_dbl_cycsys: random_numbers.o random_series.o random_monomials.o \
                  job_coordinates.o write_job_counts.o write_gpu_timings.o \
                  dbl_convolutions_host.o dbl_monomials_host.o \
                  dbl_polynomials_host.o dbl_polynomials_kernels.o \
-                 dbl_polynomials_testers.o test_dbl_cycsys.o
+                 dbl_polynomials_testers.o cyclic_indices.o test_dbl_cycsys.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_dbl_cycsys test_dbl_cycsys.o \
+	$(gpp) -o test_dbl_cycsys test_dbl_cycsys.o cyclic_indices.o \
                   random_numbers.o random_series.o random_monomials.o \
                   random_polynomials.o convolution_job.o convolution_jobs.o \
                   addition_job.o addition_jobs.o job_makers.o \
@@ -479,6 +487,37 @@ test_dbl_cycsys: random_numbers.o random_series.o random_monomials.o \
                   dbl_convolutions_host.o dbl_monomials_host.o \
                   dbl_polynomials_host.o dbl_polynomials_kernels.o \
                   dbl_polynomials_testers.o \
+               -lcuda -lcudart -L$(CUDALIB)
+
+test_dbl2_cycsys: random_numbers.o random_series.o random_monomials.o \
+                  random_polynomials.o \
+                  double_double_functions.o random2_vectors.o \
+                  random2_series.o random2_monomials.o random2_polynomials.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o job_makers.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
+                  job_coordinates.o write_job_counts.o write_gpu_timings.o \
+                  dbl2_convolutions_host.o dbl2_monomials_host.o \
+                  dbl2_polynomials_host.o dbl2_polynomials_kernels.o \
+                  dbl2_polynomials_testers.o cyclic_indices.o \
+                  test_dbl2_cycsys.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl2_cycsys test_dbl2_cycsys.o cyclic_indices.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  random_polynomials.o \
+                  double_double_functions.o random2_vectors.o \
+                  random2_series.o random2_monomials.o random2_polynomials.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o job_makers.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
+                  job_coordinates.o write_job_counts.o write_gpu_timings.o \
+                  dbl2_convolutions_host.o dbl2_monomials_host.o \
+                  dbl2_polynomials_host.o dbl2_polynomials_kernels.o \
+                  dbl2_polynomials_testers.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 test_convolution_jobs: random_numbers.o random_series.o random_monomials.o \
@@ -1172,7 +1211,8 @@ clean:
 	/bin/rm -f -r test_complexadd_jobs test_complexadd_jobs.o
 	/bin/rm -f -r job_coordinates.o write_job_counts.o prompt_for_setup.o
 	/bin/rm -f -r write_gpu_timings.o job_makers.o
-	/bin/rm -f -r test_dbl_cycsys.o test_dbl_cycsys
+	/bin/rm -f -r cyclic_indices.o test_dbl_cycsys.o test_dbl_cycsys
+	/bin/rm -f -r test_dbl2_cycsys.o test_dbl2_cycsys
 
 cleanall: clean
 	/bin/rm -f -r random_numbers.o random_series.o random_monomials.o

@@ -719,12 +719,26 @@ prompt_for_setup.obj:
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /Fo: prompt_for_setup.obj /EHsc
 
+cyclic_indices.obj:
+	@-echo ">>> compiling cyclic_indices ..."
+	$(CL)\cl /c cyclic_indices.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: cyclic_indices.obj /EHsc
+
 test_dbl_cycsys.obj:
 	@-echo ">>> compiling test_dbl_cycsys ..."
 	$(CL)\cl /c test_dbl_cycsys.cpp \
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /I$(CUDASDK)/include \
                  /Fo: test_dbl_cycsys.obj /EHsc
+
+test_dbl2_cycsys.obj:
+	@-echo ">>> compiling test_dbl2_cycsys ..."
+	$(CL)\cl /c test_dbl2_cycsys.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl2_cycsys.obj /EHsc
 
 test_dbl_cycsys: random_numbers.obj random_series.obj \
 	         random_monomials.obj random_polynomials.obj \
@@ -737,7 +751,8 @@ test_dbl_cycsys: random_numbers.obj random_series.obj \
                  dbl_convolutions_host.obj dbl_monomials_host.obj \
                  dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
                  dbl_polynomials_testers.obj write_gpu_timings.obj \
-                 gettimeofday4win.obj test_dbl_cycsys.obj
+                 gettimeofday4win.obj test_dbl_cycsys.obj \
+                 cyclic_indices.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_cycsys.exe test_dbl_cycsys.obj \
                  random_numbers.obj random_series.obj \
@@ -751,7 +766,41 @@ test_dbl_cycsys: random_numbers.obj random_series.obj \
                  dbl_convolutions_host.obj dbl_monomials_host.obj \
                  dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
                  dbl_polynomials_testers.obj write_gpu_timings.obj \
-                 gettimeofday4win.obj
+                 gettimeofday4win.obj cyclic_indices.obj
+
+test_dbl2_cycsys: random_numbers.obj random_series.obj \
+                  random_monomials.obj random_polynomials.obj \
+                  double_double_functions.obj \
+                  random2_vectors.obj random2_series.obj \
+                  random2_monomials.obj random2_polynomials.obj \
+                  convolution_job.obj convolution_jobs.obj \
+                  addition_job.obj addition_jobs.obj job_makers.obj \
+                  complexconv_job.obj complexconv_jobs.obj \
+                  complexinc_job.obj complexinc_jobs.obj \
+                  complexadd_job.obj complexadd_jobs.obj \
+                  job_coordinates.obj write_job_counts.obj \
+                  dbl2_convolutions_host.obj dbl2_monomials_host.obj \
+                  dbl2_polynomials_host.obj dbl2_polynomials_kernels.obj \
+                  dbl2_polynomials_testers.obj write_gpu_timings.obj \
+                  gettimeofday4win.obj test_dbl2_cycsys.obj \
+	          cyclic_indices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl2_cycsys.exe test_dbl2_cycsys.obj \
+                 random_numbers.obj random_series.obj \
+	         random_monomials.obj random_polynomials.obj \
+                 double_double_functions.obj \
+                 random2_vectors.obj random2_series.obj \
+                 random2_monomials.obj random2_polynomials.obj \
+                 convolution_job.obj convolution_jobs.obj \
+                 addition_job.obj addition_jobs.obj job_makers.obj \
+                 complexconv_job.obj complexconv_jobs.obj \
+                 complexinc_job.obj complexinc_jobs.obj \
+                 complexadd_job.obj complexadd_jobs.obj \
+                 job_coordinates.obj write_job_counts.obj \
+                 dbl2_convolutions_host.obj dbl2_monomials_host.obj \
+                 dbl2_polynomials_host.obj dbl2_polynomials_kernels.obj \
+                 dbl2_polynomials_testers.obj write_gpu_timings.obj \
+                 gettimeofday4win.obj cyclic_indices.obj
 
 test_convolution_jobs: random_numbers.obj random_series.obj \
 	               random_monomials.obj random_polynomials.obj \
@@ -1472,8 +1521,11 @@ clean:
 	del test_complexadd_jobs.exe test_complexadd_jobs.lib
 	del test_complexadd_jobs.exp test_complexadd_jobs.obj
 	del job_coordinates.obj write_job_counts.obj
+	del cyclic_indices.obj
 	del test_dbl_cycsys.exe test_dbl_cycsys.lib
 	del test_dbl_cycsys.exp test_dbl_cycsys.obj
+	del test_dbl2_cycsys.exe test_dbl2_cycsys.lib
+	del test_dbl2_cycsys.exp test_dbl2_cycsys.obj
 
 cleanall: clean
 	del *exe *obj *exp *lib
