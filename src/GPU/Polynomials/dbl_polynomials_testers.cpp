@@ -246,6 +246,44 @@ int cmplx_make_input
    return 0;
 }
 
+double dbl_error_sum1
+ ( int dim, int deg, double **results_h, double **results_d, bool verbose )
+{
+   double err = 0.0;
+
+   if(verbose) cout << "The value of the polynomial :" << endl;
+   for(int i=0; i<=deg; i++)
+   {
+      if(verbose)
+      {
+         cout << results_h[dim][i] << endl;
+         cout << results_d[dim][i] << endl;
+      }
+      err = err + abs(results_h[dim][i] - results_d[dim][i]);
+   }
+   if(verbose) cout << "error : " << err << endl;
+
+   double sumerr = err;
+
+   for(int k=0; k<dim; k++)
+   {
+      if(verbose) cout << "Derivative " << k << " :" << endl;
+      err = 0.0;
+      for(int i=0; i<=deg; i++)
+      {
+         if(verbose)
+         {
+            cout << results_h[k][i] << endl;
+            cout << results_d[k][i] << endl;
+         }
+         err = err + abs(results_h[k][i] - results_d[k][i]);
+      }
+      if(verbose) cout << "error : " << err << endl;
+      sumerr = sumerr + err;
+   }
+   return sumerr;
+}
+
 double dbl_error_sum
  ( int dim, int deg, double **results1_h, double **results2_h,
    double **results_d, bool verbose )
@@ -282,6 +320,52 @@ double dbl_error_sum
          }
          err = err + abs(results1_h[k][i] - results2_h[k][i])
                    + abs(results1_h[k][i] - results_d[k][i]);
+      }
+      if(verbose) cout << "error : " << err << endl;
+      sumerr = sumerr + err;
+   }
+   return sumerr;
+}
+
+double cmplx_error_sum1
+ ( int dim, int deg,
+   double **resultsre_h, double **resultsim_h,
+   double **resultsre_d, double **resultsim_d, bool verbose )
+{
+   double err = 0.0;
+
+   if(verbose) cout << "The value of the polynomial :" << endl;
+   for(int i=0; i<=deg; i++)
+   {
+      if(verbose)
+      {
+         cout << resultsre_h[dim][i] << "  "
+              << resultsim_h[dim][i] << endl;
+         cout << resultsre_d[dim][i] <<  "  "
+              << resultsim_d[dim][i] << endl;
+      }
+      err = err + abs(resultsre_h[dim][i] - resultsre_d[dim][i])
+                + abs(resultsim_h[dim][i] - resultsim_d[dim][i]);
+   }
+   if(verbose) cout << "error : " << err << endl;
+
+   double sumerr = err;
+
+   for(int k=0; k<dim; k++)
+   {
+      if(verbose) cout << "Derivative " << k << " :" << endl;
+      err = 0.0;
+      for(int i=0; i<=deg; i++)
+      {
+         if(verbose)
+         {
+            cout << resultsre_h[k][i] << "  "
+                 << resultsim_h[k][i] << endl;
+            cout << resultsre_d[k][i] << "  "
+                 << resultsim_d[k][i] << endl;
+         }
+         err = err + abs(resultsre_h[k][i] - resultsre_d[k][i])
+                   + abs(resultsim_h[k][i] - resultsim_d[k][i]);
       }
       if(verbose) cout << "error : " << err << endl;
       sumerr = sumerr + err;

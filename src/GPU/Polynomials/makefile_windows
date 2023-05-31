@@ -723,11 +723,35 @@ test_dbl_cycsys.obj:
 	@-echo ">>> compiling test_dbl_cycsys ..."
 	$(CL)\cl /c test_dbl_cycsys.cpp \
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
                  /Fo: test_dbl_cycsys.obj /EHsc
 
-test_dbl_cycsys: test_dbl_cycsys.obj
+test_dbl_cycsys: random_numbers.obj random_series.obj \
+	         random_monomials.obj random_polynomials.obj \
+                 convolution_job.obj convolution_jobs.obj \
+                 addition_job.obj addition_jobs.obj job_makers.obj \
+                 complexconv_job.obj complexconv_jobs.obj \
+                 complexinc_job.obj complexinc_jobs.obj \
+                 complexadd_job.obj complexadd_jobs.obj \
+                 job_coordinates.obj write_job_counts.obj \
+                 dbl_convolutions_host.obj dbl_monomials_host.obj \
+                 dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
+                 dbl_polynomials_testers.obj write_gpu_timings.obj \
+                 gettimeofday4win.obj test_dbl_cycsys.obj
 	@-echo ">>> linking ..."
-	nvcc -ccbin=$(CL) -o test_dbl_cycsys.exe test_dbl_cycsys.obj
+	nvcc -ccbin=$(CL) -o test_dbl_cycsys.exe test_dbl_cycsys.obj \
+                 random_numbers.obj random_series.obj \
+	         random_monomials.obj random_polynomials.obj \
+                 convolution_job.obj convolution_jobs.obj \
+                 addition_job.obj addition_jobs.obj job_makers.obj \
+                 complexconv_job.obj complexconv_jobs.obj \
+                 complexinc_job.obj complexinc_jobs.obj \
+                 complexadd_job.obj complexadd_jobs.obj \
+                 job_coordinates.obj write_job_counts.obj \
+                 dbl_convolutions_host.obj dbl_monomials_host.obj \
+                 dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
+                 dbl_polynomials_testers.obj write_gpu_timings.obj \
+                 gettimeofday4win.obj
 
 test_convolution_jobs: random_numbers.obj random_series.obj \
 	               random_monomials.obj random_polynomials.obj \

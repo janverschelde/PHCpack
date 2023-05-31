@@ -74,6 +74,21 @@ int cmplx_make_input
  *   cffim    cffim[k] has the imaginary parts of the coefficient series
  *            of monomial k. */
 
+double dbl_error_sum1
+ ( int dim, int deg, double **results_h, double **results_d, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of all errors, comparing results computed on the host
+ *   with results computed on the device, for real data.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   deg      truncation degree of the series;
+ *   results_h are the results on the host computed without jobs;
+ *            computed on the host;
+ *   results_d are the results computed on the device;
+ *   verbose  if true, then all results and intermediate errors are shown. */
+
 double dbl_error_sum
  ( int dim, int deg, double **results1_h, double **results2_h,
    double **results_d, bool verbose );
@@ -110,6 +125,24 @@ double cmplx_error_sum
  *            with convolution and addition jobs;
  *   results2im_h are the imaginary parts computed on the host,
  *            with convolution and addition jobs;
+ *   resultsre_d are the real parts computed on the device;
+ *   resultsim_d are the imaginary parts computed on the device;
+ *   verbose  if true, then all results and intermediate errors are shown. */
+
+double cmplx_error_sum1
+ ( int dim, int deg,
+   double **resultsre_h, double **resultsim_h,
+   double **resultsre_d, double **resultsim_d, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of all errors, comparing results computed on the host
+ *   with results computed on the device, for complex data.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   deg      truncation degree of the series;
+ *   resultsre_h are the real parts computed on the host without jobs;
+ *   resultsim_h are the imaginary parts computed on the host without jobs;
  *   resultsre_d are the real parts computed on the device;
  *   resultsim_d are the imaginary parts computed on the device;
  *   verbose  if true, then all results and intermediate errors are shown. */
