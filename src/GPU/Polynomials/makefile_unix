@@ -465,6 +465,10 @@ test_dbl2_cycsys.o:
 	@-echo ">>> compiling test_dbl2_cycsys ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) test_dbl2_cycsys.cpp
 
+test_dbl4_cycsys.o:
+	@-echo ">>> compiling test_dbl4_cycsys ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) test_dbl4_cycsys.cpp
+
 test_dbl_cycsys: random_numbers.o random_series.o random_monomials.o \
                  random_polynomials.o convolution_job.o convolution_jobs.o \
                  addition_job.o addition_jobs.o job_makers.o \
@@ -518,6 +522,37 @@ test_dbl2_cycsys: random_numbers.o random_series.o random_monomials.o \
                   dbl2_convolutions_host.o dbl2_monomials_host.o \
                   dbl2_polynomials_host.o dbl2_polynomials_kernels.o \
                   dbl2_polynomials_testers.o \
+               -lcuda -lcudart -L$(CUDALIB)
+
+test_dbl4_cycsys: random_numbers.o random_series.o random_monomials.o \
+                  random_polynomials.o double_double_functions.o \
+                  quad_double_functions.o random4_vectors.o \
+                  random4_series.o random4_monomials.o random4_polynomials.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o job_makers.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
+                  job_coordinates.o write_job_counts.o write_gpu_timings.o \
+                  dbl4_convolutions_host.o dbl4_monomials_host.o \
+                  dbl4_polynomials_host.o dbl4_polynomials_kernels.o \
+                  dbl4_polynomials_testers.o cyclic_indices.o \
+                  test_dbl4_cycsys.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl4_cycsys test_dbl4_cycsys.o cyclic_indices.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  random_polynomials.o double_double_functions.o \
+                  quad_double_functions.o random4_vectors.o \
+                  random4_series.o random4_monomials.o random4_polynomials.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o job_makers.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
+                  job_coordinates.o write_job_counts.o write_gpu_timings.o \
+                  dbl4_convolutions_host.o dbl4_monomials_host.o \
+                  dbl4_polynomials_host.o dbl4_polynomials_kernels.o \
+                  dbl4_polynomials_testers.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 test_convolution_jobs: random_numbers.o random_series.o random_monomials.o \
@@ -1211,8 +1246,10 @@ clean:
 	/bin/rm -f -r test_complexadd_jobs test_complexadd_jobs.o
 	/bin/rm -f -r job_coordinates.o write_job_counts.o prompt_for_setup.o
 	/bin/rm -f -r write_gpu_timings.o job_makers.o
-	/bin/rm -f -r cyclic_indices.o test_dbl_cycsys.o test_dbl_cycsys
+	/bin/rm -f -r cyclic_indices.o
+	/bin/rm -f -r test_dbl_cycsys.o test_dbl_cycsys
 	/bin/rm -f -r test_dbl2_cycsys.o test_dbl2_cycsys
+	/bin/rm -f -r test_dbl4_cycsys.o test_dbl4_cycsys
 
 cleanall: clean
 	/bin/rm -f -r random_numbers.o random_series.o random_monomials.o

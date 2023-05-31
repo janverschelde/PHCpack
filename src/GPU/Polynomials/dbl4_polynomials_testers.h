@@ -169,6 +169,32 @@ int cmplx4_make_input
  *   cffimlolo    cffimlo[k] has the lowest doubles of the imaginary parts
  *                of the coefficient series of monomial k. */
 
+double dbl4_error_sum1
+ ( int dim, int deg,
+   double **resultshihi_h, double **resultslohi_h, 
+   double **resultshilo_h, double **resultslolo_h,
+   double **resultshihi_d, double **resultslohi_d,
+   double **resultshilo_d, double **resultslolo_d, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of all errors, comparing results computed on the host
+ *   with results computed on the device, on real data.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   deg      truncation degree of the series;
+ *   resultshihi_h are the highest doubles computed on the host without jobs;
+ *   resultslohi_h are the second highest doubles computed on the host
+ *            without jobs;
+ *   resultshilo_h are the second lowest doubles computed on the host
+ *            without jobs;
+ *   resultslolo_h are the lowest doubles computed on the host without jobs;
+ *   resultshihi_d are the highest doubles computed on the device;
+ *   resultslohi_d are the second highest doubles computed on the device;
+ *   resultshilo_d are the second lowest doubles computed on the device;
+ *   resultslolo_d are the lowest doubles computed on the device;
+ *   verbose  if true, then all results and intermediate errors are shown. */
+
 double dbl4_error_sum
  ( int dim, int deg,
    double **results1hihi_h, double **results1lohi_h, 
@@ -203,6 +229,58 @@ double dbl4_error_sum
  *   resultslohi_d are the second highest doubles computed on the device;
  *   resultshilo_d are the second lowest doubles computed on the device;
  *   resultslolo_d are the lowest doubles computed on the device;
+ *   verbose  if true, then all results and intermediate errors are shown. */
+
+double cmplx4_error_sum1
+ ( int dim, int deg,
+   double **resultsrehihi_h, double **resultsrelohi_h,
+   double **resultsrehilo_h, double **resultsrelolo_h,
+   double **resultsimhihi_h, double **resultsimlohi_h,
+   double **resultsimhilo_h, double **resultsimlolo_h,
+   double **resultsrehihi_d, double **resultsrelohi_d,
+   double **resultsrehilo_d, double **resultsrelolo_d,
+   double **resultsimhihi_d, double **resultsimlohi_d,
+   double **resultsimhilo_d, double **resultsimlolo_d, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of all errors, comparing results computed on the host
+ *   with results computed on the device, on complex data.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   deg      truncation degree of the series;
+ *   resultsrehihi_h are the highest doubles of the real parts
+ *            computed on the host without jobs;
+ *   resultsrelohi_h are the second highest doubles of the real parts
+ *            computed on the host without jobs;
+ *   resultsrehilo_h are the second lowest doubles of the real parts
+ *            computed on the host without jobs;
+ *   resultsrelolo_h are the lowest doubles of the real parts
+ *            computed on the host without jobs;
+ *   resultsimhihi_h are the highest doubles of the imaginary parts
+ *            computed on the host without jobs;
+ *   resultsimlohi_h are the second highest doubles of the imaginary parts
+ *            computed on the host without jobs;
+ *   resultsimhilo_h are the second lowest doubles of the imaginary parts
+ *            computed on the host without jobs;
+ *   resultsimlolo_h are the lowest doubles of the imaginary parts
+ *            computed on the host without jobs;
+ *   resultsrehihi_d are the highest doubles of the real parts
+ *            computed on the device;
+ *   resultsrelohi_d are the second highest doubles of the real parts
+ *            computed on the device;
+ *   resultsrehilo_d are the second lowest doubles of the real parts
+ *            computed on the device;
+ *   resultsrelolo_d are the lowest doubles of the real parts
+ *            computed on the device;
+ *   resultsimhihi_d are the highest doubles of the imaginary parts
+ *            computed on the device;
+ *   resultsimlohi_d are the second highest doubles of the imaginary parts
+ *            computed on the device;
+ *   resultsimhilo_d are the second lowest doubles of the imaginary parts
+ *            computed on the device;
+ *   resultsimlolo_d are the lowest doubles of the imaginary parts
+ *            computed on the device;
  *   verbose  if true, then all results and intermediate errors are shown. */
 
 double cmplx4_error_sum
