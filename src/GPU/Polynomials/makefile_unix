@@ -469,6 +469,10 @@ test_dbl4_cycsys.o:
 	@-echo ">>> compiling test_dbl4_cycsys ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) test_dbl4_cycsys.cpp
 
+test_dbl8_cycsys.o:
+	@-echo ">>> compiling test_dbl8_cycsys ..."
+	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) test_dbl8_cycsys.cpp
+
 test_dbl_cycsys: random_numbers.o random_series.o random_monomials.o \
                  random_polynomials.o convolution_job.o convolution_jobs.o \
                  addition_job.o addition_jobs.o job_makers.o \
@@ -553,6 +557,39 @@ test_dbl4_cycsys: random_numbers.o random_series.o random_monomials.o \
                   dbl4_convolutions_host.o dbl4_monomials_host.o \
                   dbl4_polynomials_host.o dbl4_polynomials_kernels.o \
                   dbl4_polynomials_testers.o \
+               -lcuda -lcudart -L$(CUDALIB)
+
+test_dbl8_cycsys: random_numbers.o random_series.o random_monomials.o \
+                  random_polynomials.o double_double_functions.o \
+                  quad_double_functions.o octo_double_functions.o \
+                  random8_vectors.o random8_series.o \
+                  random8_monomials.o random8_polynomials.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o job_makers.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
+                  job_coordinates.o write_job_counts.o write_gpu_timings.o \
+                  dbl8_convolutions_host.o dbl8_monomials_host.o \
+                  dbl8_polynomials_host.o dbl8_polynomials_kernels.o \
+                  dbl8_polynomials_testers.o cyclic_indices.o \
+                  test_dbl8_cycsys.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dbl8_cycsys test_dbl8_cycsys.o cyclic_indices.o \
+                  random_numbers.o random_series.o random_monomials.o \
+                  random_polynomials.o double_double_functions.o \
+                  quad_double_functions.o octo_double_functions.o \
+                  random8_vectors.o random8_series.o \
+                  random8_monomials.o random8_polynomials.o \
+                  convolution_job.o convolution_jobs.o \
+                  addition_job.o addition_jobs.o job_makers.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
+                  job_coordinates.o write_job_counts.o write_gpu_timings.o \
+                  dbl8_convolutions_host.o dbl8_monomials_host.o \
+                  dbl8_polynomials_host.o dbl8_polynomials_kernels.o \
+                  dbl8_polynomials_testers.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 test_convolution_jobs: random_numbers.o random_series.o random_monomials.o \
@@ -1250,6 +1287,7 @@ clean:
 	/bin/rm -f -r test_dbl_cycsys.o test_dbl_cycsys
 	/bin/rm -f -r test_dbl2_cycsys.o test_dbl2_cycsys
 	/bin/rm -f -r test_dbl4_cycsys.o test_dbl4_cycsys
+	/bin/rm -f -r test_dbl8_cycsys.o test_dbl8_cycsys
 
 cleanall: clean
 	/bin/rm -f -r random_numbers.o random_series.o random_monomials.o

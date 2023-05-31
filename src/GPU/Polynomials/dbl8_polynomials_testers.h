@@ -256,6 +256,50 @@ int cmplx8_make_input
  *   cffimlololo has the lowest imag doubles of the coefficient
  *               series of monomials. */
 
+double dbl8_error_sum1
+ ( int dim, int deg,
+   double **resultshihihi_h, double **resultslohihi_h, 
+   double **resultshilohi_h, double **resultslolohi_h,
+   double **resultshihilo_h, double **resultslohilo_h, 
+   double **resultshilolo_h, double **resultslololo_h,
+   double **resultshihihi_d, double **resultslohihi_d,
+   double **resultshilohi_d, double **resultslolohi_d,
+   double **resultshihilo_d, double **resultslohilo_d,
+   double **resultshilolo_d, double **resultslololo_d, bool verbose );
+/*
+ * DESCRIPTION :
+ *   Returns the sum of all errors, comparing results computed on the host
+ *   with results computed on the device, on real data.
+ *
+ * ON ENTRY :
+ *   dim      dimension, total number of variables;
+ *   deg      truncation degree of the series;
+ *   resultshihihi_h are the highest doubles computed on the host
+ *            without jobs;
+ *   resultslohihi_h are the second highest doubles computed on the host
+ *            without jobs;
+ *   resultshilohi_h are the third highest doubles computed on the host
+ *            without jobs;
+ *   resultslolohi_h are the fourth highest doubles computed on the host
+ *            without jobs;
+ *   resultshihilo_h are the fourth lowest doubles computed on the host
+ *            without jobs;
+ *   resultslohilo_h are the third lowest doubles computed on the host
+ *            without jobs;
+ *   resultshilolo_h are the second lowest doubles computed on the host
+ *            without jobs;
+ *   resultslololo_h are the lowest doubles computed on the host
+ *            without jobs;
+ *   resultshihihi_d are the highest doubles computed on the device;
+ *   resultslohihi_d are the second highest doubles computed on the device;
+ *   resultshilohi_d are the third highest doubles computed on the device;
+ *   resultslolohi_d are the fourth highest doubles computed on the device;
+ *   resultshihilo_d are the fourth lowest doubles computed on the device;
+ *   resultslohilo_d are the third lowest doubles computed on the device;
+ *   resultshilolo_d are the second lowest doubles computed on the device;
+ *   resultslololo_d are the lowest doubles computed on the device;
+ *   verbose  if true, then all results and intermediate errors are shown. */
+
 double dbl8_error_sum
  ( int dim, int deg,
    double **results1hihihi_h, double **results1lohihi_h, 

@@ -88,4 +88,5 @@ cyclic_indices            : defines the indices of cyclic n-roots
 test_dbl_cycsys           : tests cyclic n-roots in double precision
 test_dbl2_cycsys          : tests cyclic n-roots in double double precision
 test_dbl4_cycsys          : tests cyclic n-roots in quad double precision
+test_dbl8_cycsys          : tests cyclic n-roots in octo double precision
 -----------------------------------------------------------------------------

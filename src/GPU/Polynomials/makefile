@@ -75,6 +75,9 @@ test_dbl2_cycsys:
 test_dbl4_cycsys:
 	make -f $(MAKEFILE) test_dbl4_cycsys
 
+test_dbl8_cycsys:
+	make -f $(MAKEFILE) test_dbl8_cycsys
+
 clean:
 	make -f $(MAKEFILE) clean
 

@@ -1,5 +1,6 @@
 Wed 31 May 2023 : new test_dbl4_cycsys.cpp, extended dbl4_polynomial_testers
-  and all makefiles.
+  and all makefiles.  Added test_dbl8_cycsys.cpp, dbl8_polynomial_testers
+  was extended, updated all makefiles.
 
 Tue 30 May 2023 : new test_dbl_cycsys.cpp for cyclic n-roots systems.
   Updated the makefiles.  Extended dbl_polynomials_testers, makefile_unix,
