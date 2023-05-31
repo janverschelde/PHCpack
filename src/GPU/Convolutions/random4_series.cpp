@@ -61,6 +61,16 @@ void dbl4_exponentials
    }
 }
 
+void random_dbl4_exponential
+ ( int deg, double *xhihi, double *xlohi, double *xhilo, double *xlolo,
+   double *shihi, double *slohi, double *shilo, double *slolo )
+{
+   random_quad_double(xhihi,xlohi,xhilo,xlolo);
+
+   dbl4_exponential
+      (deg,*xhihi,*xlohi,*xhilo,*xlolo,shihi,slohi,shilo,slolo);
+}
+
 void random_dbl4_exponentials
  ( int deg, double *xhihi, double *xlohi, double *xhilo, double *xlolo,
    double *pluxhihi, double *pluxlohi, double *pluxhilo, double *pluxlolo,
@@ -209,6 +219,30 @@ void cmplx4_exponentials
               tmphihi,tmplohi,tmphilo,tmplolo,
               &minximhihi[k],&minximlohi[k],&minximhilo[k],&minximlolo[k]);
    }
+}
+
+void random_cmplx4_exponential
+ ( int deg,
+   double *xrehihi, double *xrelohi, double *xrehilo, double *xrelolo,
+   double *ximhihi, double *ximlohi, double *ximhilo, double *ximlolo,
+   double *srehihi, double *srelohi, double *srehilo, double *srelolo,
+   double *simhihi, double *simlohi, double *simhilo, double *simlolo )
+{
+   double tmphihi,tmplohi,tmphilo,tmplolo;
+
+   random_quad_double(xrehihi,xrelohi,xrehilo,xrelolo);    // cos(a)
+
+   qdf_sqr(*xrehihi,*xrelohi,*xrehilo,*xrelolo,
+           &tmphihi,&tmplohi,&tmphilo,&tmplolo);           // cos^2(a)
+   qdf_minus(&tmphihi,&tmplohi,&tmphilo,&tmplolo);         // -cos^2(a)
+   qdf_inc_d(&tmphihi,&tmplohi,&tmphilo,&tmplolo,1.0);     // 1-cos^2(a)
+   qdf_sqrt(tmphihi,tmplohi,tmphilo,tmplolo,
+            ximhihi,ximlohi,ximhilo,ximlolo);              // sin is sqrt
+
+   cmplx4_exponential
+      (deg,*xrehihi,*xrelohi,*xrehilo,*xrelolo,
+           *ximhihi,*ximlohi,*ximhilo,*ximlolo,
+       srehihi,srelohi,srehilo,srelolo,simhihi,simlohi,simhilo,simlolo);
 }
 
 void random_cmplx4_exponentials

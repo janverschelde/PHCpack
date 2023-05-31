@@ -126,6 +126,18 @@ void dbl8_exponentials
  *   minxhilolo   second lowest doubles of the series of exp(-x);
  *   minxlololo   lowest doubles of the series of exp(-x). */
 
+void random_dbl8_exponential
+ ( int deg,
+   double *xhihihi, double *xlohihi, double *xhilohi, double *xlolohi,
+   double *xhihilo, double *xlohilo, double *xhilolo, double *xlololo,
+   double *shihihi, double *slohihi, double *shilohi, double *slolohi,
+   double *shihilo, double *slohilo, double *shilolo, double *slololo );
+/*
+ * DESCRIPTION :
+ *   Returns a power series truncated at degree deg
+ *   for a randomly generated octo double x,
+ *   following the expansion of exp(x). */
+
 void random_dbl8_exponentials
  ( int deg,
    double *xhihihi, double *xlohihi, double *xhilohi, double *xlolohi,
@@ -409,6 +421,22 @@ void cmplx8_exponentials
  *                 series truncated to degree deg;
  *   minximlololo  lowest doubles of the imaginary parts of the exp(-x) series
  *                 truncated to degree deg. */
+
+void random_cmplx8_exponential
+ ( int deg,
+   double *xrehihihi, double *xrelohihi, double *xrehilohi, double *xrelolohi,
+   double *xrehihilo, double *xrelohilo, double *xrehilolo, double *xrelololo,
+   double *ximhihihi, double *ximlohihi, double *ximhilohi, double *ximlolohi,
+   double *ximhihilo, double *ximlohilo, double *ximhilolo, double *ximlololo,
+   double *srehihihi, double *srelohihi, double *srehilohi, double *srelolohi,
+   double *srehihilo, double *srelohilo, double *srehilolo, double *srelololo,
+   double *simhihihi, double *simlohihi, double *simhilohi, double *simlolohi,
+   double *simhihilo, double *simlohilo, double *simhilolo, double *simlololo );
+/*
+ * DESCRIPTION :
+ *   Returns power series following the expansion of exp(x),
+ *   for a complex x, with randomly generated real and imaginary parts
+ *   returned in xre and xim, truncated at degree deg. */
 
 void random_cmplx8_exponentials
  ( int deg, 

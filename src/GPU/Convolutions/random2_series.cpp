@@ -43,6 +43,13 @@ void dbl2_exponentials
    }
 }
 
+void random_dbl2_exponential
+ ( int deg, double *xhi, double *xlo, double *shi, double *slo )
+{
+   random_double_double(xhi,xlo);
+   dbl2_exponential(deg,*xhi,*xlo,shi,slo);
+}
+
 void random_dbl2_exponentials
  ( int deg, double *xhi, double *xlo,
    double *pluxhi, double *pluxlo, double *minxhi, double *minxlo )
@@ -129,6 +136,23 @@ void cmplx2_exponentials
       tmphi = (double) k; tmplo = 0.0;
       ddf_div(minximhi[k],minximlo[k],tmphi,tmplo,&minximhi[k],&minximlo[k]);
    }
+}
+
+void random_cmplx2_exponential
+ ( int deg, double *xrehi, double *xrelo, double *ximhi, double *ximlo,
+   double *srehi, double *srelo, double *simhi, double *simlo )
+{
+   double tmphi,tmplo;
+
+   random_double_double(xrehi,xrelo);           // cos(a)
+
+   ddf_sqr(*xrehi,*xrelo,&tmphi,&tmplo);        // cos^2(a)
+   ddf_minus(&tmphi,&tmplo);                    // -cos^2(a)
+   ddf_inc_d(&tmphi,&tmplo,1.0);                // 1-cos^2(a)
+   ddf_sqrt(tmphi,tmplo,ximhi,ximlo);           // sin is sqrt
+
+   cmplx2_exponential
+      (deg,*xrehi,*xrelo,*ximhi,*ximlo,srehi,srelo,simhi,simlo);
 }
 
 void random_cmplx2_exponentials

@@ -1,3 +1,6 @@
+Tue 30 May 2023 : extended {random2, random4, random8}_series with
+  functions to generate random series following the exponentials.
+
 Mon 22 May 2023 : new function random_octo_double to generate a random
   complex number on the unit circle in octo double precision.
 

@@ -47,6 +47,14 @@ void dbl2_exponentials
  *   minxhi   high parts of the series of exp(-x), truncated to degree deg;
  *   minxlo   low parts of the series of exp(-x), truncated to degree deg. */
 
+void random_dbl2_exponential
+ ( int deg, double *xhi, double *xlo, double *shi, double *slo );
+/*
+ * DESCRIPTION :
+ *   Returns a power series truncated at degree deg
+ *   for a randomly generated double double x,
+ *   following the expansion of exp(x). */
+
 void random_dbl2_exponentials
  ( int deg, double *xhi, double *xlo,
    double *pluxhi, double *pluxlo, double *minxhi, double *minxlo );
@@ -135,6 +143,15 @@ void cmplx2_exponentials
  *             of exp(-x) truncated to degree deg;
  *   minximlo  low doubles of the imaginary parts of the power series
  *             of exp(-x) truncated to degree deg. */
+
+void random_cmplx2_exponential
+ ( int deg, double *xrehi, double *xrelo, double *ximhi, double *ximlo,
+   double *srehi, double *srelo, double *simhi, double *simlo );
+/*
+ * DESCRIPTION :
+ *   Returns power series following the expansion of exp(x),
+ *   for a complex x, with randomly generated real and imaginary parts
+ *   returned in xre and xim, truncated at degree deg. */
 
 void random_cmplx2_exponentials
  ( int deg, double *xrehi, double *xrelo, double *ximhi, double *ximlo,

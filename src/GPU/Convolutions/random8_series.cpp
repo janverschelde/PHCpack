@@ -106,6 +106,22 @@ void dbl8_exponentials
    }
 }
 
+void random_dbl8_exponential
+ ( int deg,
+   double *xhihihi, double *xlohihi, double *xhilohi, double *xlolohi,
+   double *xhihilo, double *xlohilo, double *xhilolo, double *xlololo,
+   double *shihihi, double *slohihi, double *shilohi, double *slolohi,
+   double *shihilo, double *slohilo, double *shilolo, double *slololo )
+{
+   random_octo_double
+      (xhihihi,xlohihi,xhilohi,xlolohi,xhihilo,xlohilo,xhilolo,xlololo);
+
+   dbl8_exponential
+      (deg,*xhihihi,*xlohihi,*xhilohi,*xlolohi,
+           *xhihilo,*xlohilo,*xhilolo,*xlololo,
+       shihihi,slohihi,shilohi,slolohi,shihilo,slohilo,shilolo,slololo);
+}
+
 void random_dbl8_exponentials
  ( int deg,
    double *xhihihi, double *xlohihi, double *xhilohi, double *xlolohi,
@@ -409,6 +425,48 @@ void cmplx8_exponentials
               &minximlolohi[k],&minximhihilo[k],&minximlohilo[k],
               &minximhilolo[k],&minximlololo[k]);
    }
+}
+
+void random_cmplx8_exponential
+ ( int deg,
+   double *xrehihihi, double *xrelohihi, double *xrehilohi, double *xrelolohi,
+   double *xrehihilo, double *xrelohilo, double *xrehilolo, double *xrelololo,
+   double *ximhihihi, double *ximlohihi, double *ximhilohi, double *ximlolohi,
+   double *ximhihilo, double *ximlohilo, double *ximhilolo, double *ximlololo,
+   double *srehihihi, double *srelohihi, double *srehilohi, double *srelolohi,
+   double *srehihilo, double *srelohilo, double *srehilolo, double *srelololo,
+   double *simhihihi, double *simlohihi, double *simhilohi, double *simlolohi,
+   double *simhihilo, double *simlohilo, double *simhilolo, double *simlololo )
+{
+   double tmphihihi,tmplohihi,tmphilohi,tmplolohi;
+   double tmphihilo,tmplohilo,tmphilolo,tmplololo;
+
+   random_octo_double
+      (xrehihihi,xrelohihi,xrehilohi,xrelolohi,
+       xrehihilo,xrelohilo,xrehilolo,xrelololo);               // cos(a)
+
+   odf_sqr(*xrehihihi,*xrelohihi,*xrehilohi,*xrelolohi,
+           *xrehihilo,*xrelohilo,*xrehilolo,*xrelololo,
+           &tmphihihi,&tmplohihi,&tmphilohi,&tmplolohi,
+           &tmphihilo,&tmplohilo,&tmphilolo,&tmplololo);       // cos^2(a)
+   odf_minus(&tmphihihi,&tmplohihi,&tmphilohi,&tmplolohi,
+             &tmphihilo,&tmplohilo,&tmphilolo,&tmplololo);     // -cos^2(a)
+   odf_inc_d(&tmphihihi,&tmplohihi,&tmphilohi,&tmplolohi,
+             &tmphihilo,&tmplohilo,&tmphilolo,&tmplololo,1.0); // 1-cos^2(a)
+   odf_sqrt(tmphihihi,tmplohihi,tmphilohi,tmplolohi,
+            tmphihilo,tmplohilo,tmphilolo,tmplololo,
+            ximhihihi,ximlohihi,ximhilohi,ximlolohi,
+            ximhihilo,ximlohilo,ximhilolo,ximlololo);          // sin is sqrt
+
+   cmplx8_exponential
+      (deg,*xrehihihi,*xrelohihi,*xrehilohi,*xrelolohi,
+           *xrehihilo,*xrelohilo,*xrehilolo,*xrelololo,
+           *ximhihihi,*ximlohihi,*ximhilohi,*ximlolohi,
+           *ximhihilo,*ximlohilo,*ximhilolo,*ximlololo,
+       srehihihi,srelohihi,srehilohi,srelolohi,
+       srehihilo,srelohilo,srehilolo,srelololo,
+       simhihihi,simlohihi,simhilohi,simlolohi,
+       simhihilo,simlohilo,simhilolo,simlololo);
 }
 
 void random_cmplx8_exponentials

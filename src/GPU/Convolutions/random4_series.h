@@ -75,6 +75,15 @@ void dbl4_exponentials
  *   minxhilo   second lowest doubles of the series of exp(-x);
  *   minxlolo   lowest doubles of the series of exp(-x). */
 
+void random_dbl4_exponential
+ ( int deg, double *xhihi, double *xlohi, double *xhilo, double *xlolo,
+   double *shihi, double *slohi, double *shilo, double *slolo );
+/*
+ * DESCRIPTION :
+ *   Returns a power series truncated at degree deg
+ *   for a randomly generated quad double x,
+ *   following the expansion of exp(x). */
+
 void random_dbl4_exponentials
  ( int deg, double *xhihi, double *xlohi, double *xhilo, double *xlolo,
    double *pluxhihi, double *pluxlohi, double *pluxhilo, double *pluxlolo,
@@ -225,6 +234,18 @@ void cmplx4_exponentials
  *               series truncated to degree deg;
  *   minximlolo  lowest doubles of the imaginary parts of the exp(-x) series
  *               truncated to degree deg. */
+
+void random_cmplx4_exponential
+ ( int deg,
+   double *xrehihi, double *xrelohi, double *xrehilo, double *xrelolo,
+   double *ximhihi, double *ximlohi, double *ximhilo, double *ximlolo,
+   double *srehihi, double *srelohi, double *srehilo, double *srelolo,
+   double *simhihi, double *simlohi, double *simhilo, double *simlolo );
+/*
+ * DESCRIPTION :
+ *   Returns power series following the expansion of exp(x),
+ *   for a complex x, with randomly generated real and imaginary parts
+ *   returned in xre and xim, truncated at degree deg. */
 
 void random_cmplx4_exponentials
  ( int deg, 
