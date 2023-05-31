@@ -124,7 +124,7 @@ __global__ void cmplxvectorized_flipsigns
 
 void GPU_cmplxvectorized_flipsigns
  ( int deg, int nbrflips, int *flipidx,
-   double *datari, double *elapsedms, bool verbose )
+   double *datari, double *elapsedms, int vrblvl )
 {
    const int deg1 = deg+1;
 
@@ -138,7 +138,7 @@ void GPU_cmplxvectorized_flipsigns
    cudaEventCreate(&stop);
    float milliseconds;
 
-   if(verbose)
+   if(vrblvl > 1)
    {
       cout << "flip indices :";
       for(int i=0; i<nbrflips; i++) cout << " " << flipidx[i];
@@ -154,7 +154,7 @@ void GPU_cmplxvectorized_flipsigns
 
    *elapsedms = (double) milliseconds;
 
-   if(verbose)
+   if(vrblvl > 1)
    {
        cout << fixed << setprecision(2);
        cout << "Time spent by flip sign kernels : ";
@@ -216,7 +216,7 @@ __global__ void cmplx_update_addjobs
 
 void dbl_convoluted_data_to_output
  ( double *data, double **output, int dim, int nbr, int deg, int *nvr,
-   int **idx, int *fstart, int *bstart, int *cstart, bool verbose )
+   int **idx, int *fstart, int *bstart, int *cstart, int vrblvl )
 {
    const int deg1 = deg+1;
    int ix0,ix1,ix2;
@@ -229,7 +229,7 @@ void dbl_convoluted_data_to_output
    {
       ix1 = fstart[k] + (nvr[k]-1)*deg1;
       
-      if(verbose)
+      if(vrblvl > 1)
          cout << "monomial " << k << " update starts at " << ix1 << endl;
 
       for(int i=0; i<=deg; i++) output[dim][i] += data[ix1++];
@@ -262,7 +262,7 @@ void dbl_convoluted_data_to_output
                ix0 = idx[k][j];            // j-th variable in monomial k
                ix1 = cstart[k] + (j-1)*deg1;
 
-               if(verbose)
+               if(vrblvl > 1)
                   cout << "monomial " << k << " derivative " << ix0
                        << " update starts at " << ix1 << endl;
 
@@ -276,7 +276,7 @@ void dbl_convoluted_data_to_output
 void cmplx_convoluted_data_to_output
  ( double *datare, double *dataim, double **outputre, double **outputim,
    int dim, int nbr, int deg, int *nvr,
-   int **idx, int *fstart, int *bstart, int *cstart, bool verbose )
+   int **idx, int *fstart, int *bstart, int *cstart, int vrblvl )
 {
    const int deg1 = deg+1;
    int ix0,ix1,ix2;
@@ -295,7 +295,7 @@ void cmplx_convoluted_data_to_output
    {
       ix1 = fstart[k] + (nvr[k]-1)*deg1;
       
-      if(verbose)
+      if(vrblvl > 1)
          cout << "monomial " << k << " update starts at " << ix1 << endl;
 
       for(int i=0; i<=deg; i++)
@@ -341,7 +341,7 @@ void cmplx_convoluted_data_to_output
                ix0 = idx[k][j];            // j-th variable in monomial k
                ix1 = cstart[k] + (j-1)*deg1;
 
-               if(verbose)
+               if(vrblvl > 1)
                   cout << "monomial " << k << " derivative " << ix0
                        << " update starts at " << ix1 << endl;
 
@@ -359,7 +359,7 @@ void cmplx_convoluted_data_to_output
 void dbl_added_data_to_output
  ( double *data, double **output, int dim, int nbr, int deg, int *nvr,
    int **idx, int *fstart, int *bstart, int *cstart, AdditionJobs jobs,
-   bool verbose )
+   int vrblvl )
 {
    const int deg1 = deg + 1;
    const int lastmon = nbr-1;
@@ -368,21 +368,21 @@ void dbl_added_data_to_output
 
    ix = fstart[lastmon] + lastidx*deg1;
 
-   if(verbose)
+   if(vrblvl > 1)
       cout << "Updating value starting at " << ix << " in data." << endl;
 
    for(int i=0; i<=deg; i++) output[dim][i] = data[ix++];
 
    int cnt = jobs.get_differential_count(0);
 
-   if(verbose)
+   if(vrblvl > 1)
       cout << "Differential count for variable 0 : " << cnt << endl;
 
    if(cnt == 0) // it could be there is no first variable anywhere ...
    {
       const int difidx = jobs.get_differential_index(0,0);
 
-      if(verbose)
+      if(vrblvl > 1)
          cout << "Differential index for variable 0 : " << difidx << endl;
 
       if(difidx < 0)
@@ -393,7 +393,7 @@ void dbl_added_data_to_output
       {
          int cffidx = (1 + difidx)*deg1;
 
-         if(verbose)
+         if(vrblvl > 1)
             cout << "updating derivative with coefficient ..." << endl;
 
          for(int i=0; i<=deg; i++) output[0][i] = data[cffidx++];
@@ -407,7 +407,7 @@ void dbl_added_data_to_output
 
       ix = bstart[ix0] + ix2*deg1;
       
-      if(verbose)
+      if(vrblvl > 1)
          cout << "Updating derivative 0 at " << ix << " in data." << endl;
 
       for(int i=0; i<=deg; i++) output[0][i] = data[ix++];
@@ -416,7 +416,7 @@ void dbl_added_data_to_output
    {
       int cnt = jobs.get_differential_count(k);
 
-      if(verbose)
+      if(vrblvl > 1)
          cout << "Differential count for variable " << k
               << " : " << cnt << endl;
 
@@ -424,7 +424,7 @@ void dbl_added_data_to_output
       {
          const int difidx = jobs.get_differential_index(k,0);
 
-         if(verbose)
+         if(vrblvl > 1)
             cout << "Differential index for variable " << k 
                  << " : " << difidx << endl;
 
@@ -436,7 +436,7 @@ void dbl_added_data_to_output
          {
             int cffidx = (1 + difidx)*deg1;
 
-            if(verbose)
+            if(vrblvl > 1)
                cout << "updating derivative with coefficient ..." << endl;
 
             for(int i=0; i<=deg; i++) output[k][i] = data[cffidx++];
@@ -451,7 +451,7 @@ void dbl_added_data_to_output
             int ix2 = nvr[ix0]-3;
             if(ix2 < 0) ix2 = 0;
 
-            if(verbose)
+            if(vrblvl > 1)
                cout << "Updating derivative " << k 
                     << " at " << ix << " in data." << endl;
 
@@ -463,7 +463,7 @@ void dbl_added_data_to_output
          {
             int ix2 = nvr[ix0]-2;
    
-            if(verbose)
+            if(vrblvl > 1)
                cout << "Updating derivative " << k 
                     << " at " << ix << " in data." << endl;
 
@@ -475,7 +475,7 @@ void dbl_added_data_to_output
          {
             int ix2 = jobs.position(nvr[ix0],idx[ix0],k) - 1;
    
-            if(verbose)
+            if(vrblvl > 1)
                cout << "Updating derivative " << k 
                     << " at " << ix << " in data." << endl;
 
@@ -490,7 +490,7 @@ void dbl_added_data_to_output
 void cmplx_added_data_to_output
  ( double *datare, double *dataim, double **outputre, double **outputim,
    int dim, int nbr, int deg, int *nvr, int **idx,
-   int *fstart, int *bstart, int *cstart, AdditionJobs jobs, bool verbose )
+   int *fstart, int *bstart, int *cstart, AdditionJobs jobs, int vrblvl )
 {
    const int deg1 = deg + 1;
    const int lastmon = nbr-1;
@@ -499,7 +499,7 @@ void cmplx_added_data_to_output
 
    ix = fstart[lastmon] + lastidx*deg1;
 
-   if(verbose)
+   if(vrblvl > 1)
       cout << "Updating value starting at " << ix << " in data." << endl;
 
    for(int i=0; i<=deg; i++)
@@ -508,14 +508,14 @@ void cmplx_added_data_to_output
    }
    int cnt = jobs.get_differential_count(0);
 
-   if(verbose)
+   if(vrblvl > 1)
       cout << "Differential count for variable 0 : " << cnt << endl;
 
    if(cnt == 0) // it could be there is no first variable anywhere ...
    {
       const int difidx = jobs.get_differential_index(0,0);
 
-      if(verbose)
+      if(vrblvl > 1)
          cout << "Differential index for variable 0 : " << difidx << endl;
 
       if(difidx < 0)
@@ -529,7 +529,7 @@ void cmplx_added_data_to_output
       {
          int cffidx = (1 + difidx)*deg1;
 
-         if(verbose)
+         if(vrblvl > 1)
             cout << "updating derivative with coefficient ..." << endl;
 
          for(int i=0; i<=deg; i++)
@@ -547,7 +547,7 @@ void cmplx_added_data_to_output
 
       ix = bstart[ix0] + ix2*deg1;
       
-      if(verbose)
+      if(vrblvl > 1)
          cout << "Updating derivative 0 at " << ix << " in data." << endl;
 
       for(int i=0; i<=deg; i++)
@@ -559,7 +559,7 @@ void cmplx_added_data_to_output
    {
       int cnt = jobs.get_differential_count(k);
 
-      if(verbose)
+      if(vrblvl > 1)
          cout << "Differential count for variable " << k
               << " : " << cnt << endl;
 
@@ -567,7 +567,7 @@ void cmplx_added_data_to_output
       {
          const int difidx = jobs.get_differential_index(k,0);
 
-         if(verbose)
+         if(vrblvl > 1)
             cout << "Differential index for variable " << k 
                  << " : " << difidx << endl;
 
@@ -582,7 +582,7 @@ void cmplx_added_data_to_output
          {
             int cffidx = (1 + difidx)*deg1;
 
-            if(verbose)
+            if(vrblvl > 1)
                cout << "updating derivative with coefficient ..." << endl;
 
             for(int i=0; i<=deg; i++)
@@ -601,7 +601,7 @@ void cmplx_added_data_to_output
             int ix2 = nvr[ix0]-3;
             if(ix2 < 0) ix2 = 0;
 
-            if(verbose)
+            if(vrblvl > 1)
                cout << "Updating derivative " << k 
                     << " at " << ix << " in data." << endl;
 
@@ -616,7 +616,7 @@ void cmplx_added_data_to_output
          {
             int ix2 = nvr[ix0]-2;
    
-            if(verbose)
+            if(vrblvl > 1)
                cout << "Updating derivative " << k 
                     << " at " << ix << " in data." << endl;
 
@@ -631,7 +631,7 @@ void cmplx_added_data_to_output
          {
             int ix2 = jobs.position(nvr[ix0],idx[ix0],k) - 1;
    
-            if(verbose)
+            if(vrblvl > 1)
                cout << "Updating derivative " << k 
                     << " at " << ix << " in data." << endl;
 
@@ -650,7 +650,7 @@ void cmplx_added_datavectorized_to_output
  ( double *datari, double **outputre, double **outputim,
    int dim, int nbr, int deg, int *nvr,
    int **idx, int *fstart, int *bstart, int *cstart,
-   int totcff, int offsetri, ComplexAdditionJobs jobs, bool verbose )
+   int totcff, int offsetri, ComplexAdditionJobs jobs, int vrblvl )
 {
    const int deg1 = deg + 1;
    const int lastmon = nbr-1;
@@ -661,7 +661,7 @@ void cmplx_added_datavectorized_to_output
    ix1re = fstart[lastmon] + lastidx*deg1;
    ix2im = fstart[lastmon] + lastidx*deg1 + totcffoffset;
 
-   if(verbose)
+   if(vrblvl > 1)
       cout << "Updating value starting at " << ix1re << " in data." << endl;
 
    for(int i=0; i<=deg; i++) // output[dim][i] = data[ix++];
@@ -671,14 +671,14 @@ void cmplx_added_datavectorized_to_output
    }
    int cnt = jobs.get_differential_count(0);
 
-   if(verbose)
+   if(vrblvl > 1)
       cout << "Differential count for variable 0 : " << cnt << endl;
 
    if(cnt == 0) // it could be there is no first variable anywhere ...
    {
       const int difidx = jobs.get_differential_index(0,0);
 
-      if(verbose)
+      if(vrblvl > 1)
          cout << "Differential index for variable 0 : " << difidx << endl;
 
       if(difidx < 0)
@@ -693,7 +693,7 @@ void cmplx_added_datavectorized_to_output
          ix1re = (1 + difidx)*deg1;
          ix2im = (1 + difidx)*deg1 + totcffoffset;
 
-         if(verbose)
+         if(vrblvl > 1)
             cout << "updating derivative with coefficient ..." << endl;
 
          for(int i=0; i<=deg; i++)
@@ -713,7 +713,7 @@ void cmplx_added_datavectorized_to_output
       ix1re = bstart[ix0] + ix2*deg1;
       ix2im = bstart[ix0] + ix2*deg1 + totcffoffset;
       
-      if(verbose)
+      if(vrblvl > 1)
          cout << "Updating derivative 0 at " << ix1re << " in data." << endl;
 
       for(int i=0; i<=deg; i++) // output[0][i] = data[ix++];
@@ -726,7 +726,7 @@ void cmplx_added_datavectorized_to_output
    {
       int cnt = jobs.get_differential_count(k);
 
-      if(verbose)
+      if(vrblvl > 1)
          cout << "Differential count for variable " << k
               << " : " << cnt << endl;
 
@@ -734,7 +734,7 @@ void cmplx_added_datavectorized_to_output
       {
          const int difidx = jobs.get_differential_index(k,0);
 
-         if(verbose)
+         if(vrblvl > 1)
             cout << "Differential index for variable " << k 
                  << " : " << difidx << endl;
 
@@ -750,7 +750,7 @@ void cmplx_added_datavectorized_to_output
             ix1re = (1 + difidx)*deg1;
             ix2im = (1 + difidx)*deg1 + totcffoffset;
 
-            if(verbose)
+            if(vrblvl > 1)
                cout << "updating derivative with coefficient ..." << endl;
 
             for(int i=0; i<=deg; i++)
@@ -773,7 +773,7 @@ void cmplx_added_datavectorized_to_output
             ix1re = bstart[ix0] + ix2*deg1;
             ix2im = bstart[ix0] + ix2*deg1 + totcffoffset;
 
-            if(verbose)
+            if(vrblvl > 1)
                cout << "Updating derivative " << k 
                     << " at " << ix1re << " in data." << endl;
 
@@ -790,7 +790,7 @@ void cmplx_added_datavectorized_to_output
             ix1re = fstart[ix0] + ix2*deg1;
             ix2im = fstart[ix0] + ix2*deg1 + totcffoffset;
  
-            if(verbose)
+            if(vrblvl > 1)
                cout << "Updating derivative " << k 
                     << " at " << ix1re << " in data." << endl;
 
@@ -804,7 +804,7 @@ void cmplx_added_datavectorized_to_output
          {
             int ix2 = jobs.position(nvr[ix0],idx[ix0],k) - 1;
 
-            if(verbose)
+            if(vrblvl > 1)
                cout << "Updating derivative " << k 
                     << " at " << ix1re << " in data." << endl;
 
@@ -899,7 +899,7 @@ void cmplxvectorized_data_setup
 void dbl_convolution_jobs
  ( int dim, int nbr, int deg, int *nvr, ConvolutionJobs cnvjobs,
    int *fstart, int *bstart, int *cstart,
-   double *data, double *cnvlapms, bool verbose )
+   double *data, double *cnvlapms, int vrblvl )
 {
    const int deg1 = deg+1;
 
@@ -908,6 +908,7 @@ void dbl_convolution_jobs
    cudaEventCreate(&stop);
    *cnvlapms = 0.0;
    float milliseconds;
+   const bool vrb  = (vrblvl > 1);
 
    for(int k=0; k<cnvjobs.get_depth(); k++)
    {
@@ -916,11 +917,11 @@ void dbl_convolution_jobs
       int *in2ix_h = new int[jobnbr];
       int *outix_h = new int[jobnbr];
 
-      if(verbose) cout << "preparing convolution jobs at layer "
-                       << k << " ..." << endl;
+      if(vrblvl > 1) cout << "preparing convolution jobs at layer "
+                          << k << " ..." << endl;
 
       convjobs_coordinates(cnvjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
-                           fstart,bstart,cstart,verbose);
+                           fstart,bstart,cstart,vrb);
       // if(deg1 == BS)
       {
          int *in1ix_d; // first input on device
@@ -934,7 +935,7 @@ void dbl_convolution_jobs
          cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
          cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
 
-         if(verbose)
+         if(vrblvl > 1)
             cout << "launching " << jobnbr << " blocks of " << deg1
                  << " threads for convolutions..." << endl;
          
@@ -954,7 +955,7 @@ void dbl_convolution_jobs
 void cmplx_convolution_jobs
  ( int dim, int nbr, int deg, int *nvr, ConvolutionJobs cnvjobs,
    int *fstart, int *bstart, int *cstart,
-   double *datare, double *dataim, double *cnvlapms, bool verbose )
+   double *datare, double *dataim, double *cnvlapms, int vrblvl )
 {
    const int deg1 = deg+1;
 
@@ -963,6 +964,7 @@ void cmplx_convolution_jobs
    cudaEventCreate(&stop);
    *cnvlapms = 0.0;
    float milliseconds;
+   const bool vrb = (vrblvl > 1);
 
    for(int k=0; k<cnvjobs.get_depth(); k++)
    {
@@ -971,11 +973,11 @@ void cmplx_convolution_jobs
       int *in2ix_h = new int[jobnbr];
       int *outix_h = new int[jobnbr];
 
-      if(verbose) cout << "preparing convolution jobs at layer "
-                       << k << " ..." << endl;
+      if(vrblvl > 1) cout << "preparing convolution jobs at layer "
+                          << k << " ..." << endl;
 
       convjobs_coordinates(cnvjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
-                           fstart,bstart,cstart,verbose);
+                           fstart,bstart,cstart,vrb);
       // if(deg1 == BS)
       {
          int *in1ix_d; // first input on device
@@ -989,7 +991,7 @@ void cmplx_convolution_jobs
          cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
          cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
 
-         if(verbose)
+         if(vrblvl > 1)
             cout << "launching " << jobnbr << " blocks of " << deg1
                  << " threads for convolutions ..." << endl;
          
@@ -1010,7 +1012,7 @@ void cmplxvectorized_convolution_jobs
  ( int dim, int nbr, int deg, int *nvr, int totcff, int offsetri,
    ComplexConvolutionJobs cnvjobs, ComplexIncrementJobs incjobs,
    int *fstart, int *bstart, int *cstart,
-   double *datari, double *cnvlapms, bool verbose )
+   double *datari, double *cnvlapms, int vrblvl )
 {
    const int deg1 = deg+1;
 
@@ -1020,6 +1022,7 @@ void cmplxvectorized_convolution_jobs
    *cnvlapms = 0.0;
    float milliseconds;
    double fliplapms;
+   const bool vrb = (vrblvl > 1);
 
    for(int k=0; k<cnvjobs.get_depth(); k++)
    {
@@ -1028,12 +1031,12 @@ void cmplxvectorized_convolution_jobs
       int *in2ix_h = new int[jobnbr];
       int *outix_h = new int[jobnbr];
 
-      if(verbose) cout << "preparing convolution jobs at layer "
+      if(vrblvl > 1) cout << "preparing convolution jobs at layer "
                        << k << " ..." << endl;
 
       complex_convjobs_coordinates
          (cnvjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,totcff,offsetri,
-          fstart,bstart,cstart,verbose);
+          fstart,bstart,cstart,vrb);
 
       // if(deg1 == BS)
       {
@@ -1048,7 +1051,7 @@ void cmplxvectorized_convolution_jobs
          cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
          cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
 
-         if(verbose)
+         if(vrblvl > 1)
             cout << "launching " << jobnbr << " blocks of " << deg1
                  << " threads for convolutions ..." << endl;
 
@@ -1064,19 +1067,19 @@ void cmplxvectorized_convolution_jobs
       jobnbr = incjobs.get_layer_count(k);
       // note: only half the number of increment jobs
 
-      if(verbose) cout << "preparing increment jobs at layer "
-                       << k << " ..." << endl;
+      if(vrblvl > 1) cout << "preparing increment jobs at layer "
+                          << k << " ..." << endl;
 
       complex_incjobs_coordinates
          (incjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,totcff,offsetri,
-          fstart,bstart,cstart,verbose);
+          fstart,bstart,cstart,vrb);
 
       const int nbrflips = jobnbr/2;
       int *rebidx = new int[nbrflips];
       for(int i=0, j=0; i<jobnbr; i=i+2, j++) rebidx[j] = in2ix_h[i];
 
       GPU_cmplxvectorized_flipsigns
-         (deg,nbrflips,rebidx,datari,&fliplapms,verbose);
+         (deg,nbrflips,rebidx,datari,&fliplapms,vrblvl);
       *cnvlapms += fliplapms;
 
       // if(BS == deg1)
@@ -1092,7 +1095,7 @@ void cmplxvectorized_convolution_jobs
          cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
          cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
 
-         if(verbose)
+         if(vrblvl > 1)
             cout << "launching " << jobnbr << " blocks of " << deg1
                  << " threads for increments ..." << endl;
 
@@ -1113,7 +1116,7 @@ void cmplxvectorized_convolution_jobs
 void dbl_addition_jobs
  ( int dim, int nbr, int deg, int *nvr, AdditionJobs addjobs,
    int *fstart, int *bstart, int *cstart,
-   double *data, double *addlapms, bool verbose )
+   double *data, double *addlapms, int vrblvl )
 {
    const int deg1 = deg+1;
 
@@ -1122,6 +1125,7 @@ void dbl_addition_jobs
    cudaEventCreate(&stop);
    *addlapms = 0.0;
    float milliseconds;
+   const bool vrb = (vrblvl > 1);
 
    for(int k=0; k<addjobs.get_depth(); k++)
    {
@@ -1130,11 +1134,11 @@ void dbl_addition_jobs
       int *in2ix_h = new int[jobnbr];
       int *outix_h = new int[jobnbr];
 
-      if(verbose) cout << "preparing addition jobs at layer "
-                       << k << " ..." << endl;
+      if(vrblvl > 1) cout << "preparing addition jobs at layer "
+                          << k << " ..." << endl;
 
       addjobs_coordinates(addjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
-                          fstart,bstart,cstart,verbose);
+                          fstart,bstart,cstart,vrb);
       // if(deg1 == BS)
       {
          int *in1ix_d; // first input on device
@@ -1148,7 +1152,7 @@ void dbl_addition_jobs
          cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
          cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
 
-         if(verbose)
+         if(vrblvl > 1)
             cout << "launching " << jobnbr << " blocks of " << deg1
                  << " threads for additions ..." << endl;
 
@@ -1168,7 +1172,7 @@ void dbl_addition_jobs
 void cmplx_addition_jobs
  ( int dim, int nbr, int deg, int *nvr, AdditionJobs addjobs,
    int *fstart, int *bstart, int *cstart,
-   double *datare, double *dataim, double *addlapms, bool verbose )
+   double *datare, double *dataim, double *addlapms, int vrblvl )
 {
    const int deg1 = deg+1;
 
@@ -1177,6 +1181,7 @@ void cmplx_addition_jobs
    cudaEventCreate(&stop);
    *addlapms = 0.0;
    float milliseconds;
+   const bool vrb = (vrblvl > 1);
 
    for(int k=0; k<addjobs.get_depth(); k++)
    {
@@ -1185,11 +1190,11 @@ void cmplx_addition_jobs
       int *in2ix_h = new int[jobnbr];
       int *outix_h = new int[jobnbr];
 
-      if(verbose) cout << "preparing addition jobs at layer "
-                       << k << " ..." << endl;
+      if(vrblvl > 1) cout << "preparing addition jobs at layer "
+                          << k << " ..." << endl;
 
       addjobs_coordinates(addjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
-                          fstart,bstart,cstart,verbose);
+                          fstart,bstart,cstart,vrb);
       // if(deg1 == BS)
       {
          int *in1ix_d; // first input on device
@@ -1203,7 +1208,7 @@ void cmplx_addition_jobs
          cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
          cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
 
-         if(verbose)
+         if(vrblvl > 1)
             cout << "launching " << jobnbr << " blocks of " << deg1
                  << " threads for additions ..." << endl;
 
@@ -1224,7 +1229,7 @@ void cmplxvectorized_addition_jobs
  ( int dim, int nbr, int deg, int *nvr, int totcff, int offsetri,
    ComplexAdditionJobs addjobs,
    int *fstart, int *bstart, int *cstart,
-   double *datari, double *addlapms, bool verbose )
+   double *datari, double *addlapms, int vrblvl )
 {
    const int deg1 = deg+1;
 
@@ -1233,6 +1238,7 @@ void cmplxvectorized_addition_jobs
    cudaEventCreate(&stop);
    *addlapms = 0.0;
    float milliseconds;
+   const bool vrb = (vrblvl > 1);
 
    for(int k=0; k<addjobs.get_depth(); k++)
    {
@@ -1241,12 +1247,12 @@ void cmplxvectorized_addition_jobs
       int *in2ix_h = new int[jobnbr];
       int *outix_h = new int[jobnbr];
 
-      if(verbose) cout << "preparing addition jobs at layer "
-                       << k << " ..." << endl;
+      if(vrblvl > 1) cout << "preparing addition jobs at layer "
+                          << k << " ..." << endl;
 
       complex_addjobs_coordinates
          (addjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,
-          totcff,offsetri,fstart,bstart,cstart,verbose);
+          totcff,offsetri,fstart,bstart,cstart,vrb);
 
       // if(deg1 == BS)
       {
@@ -1261,7 +1267,7 @@ void cmplxvectorized_addition_jobs
          cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
          cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
 
-         if(verbose)
+         if(vrblvl > 1)
             cout << "launching " << jobnbr << " blocks of " << deg1
                  << " threads for additions ..." << endl;
 
@@ -1283,7 +1289,7 @@ void GPU_dbl_poly_evaldiff
    double *cst, double **cff, double **input, double **output,
    ConvolutionJobs cnvjobs, AdditionJobs addjobs,
    double *cnvlapms, double *addlapms, double *elapsedms,
-   double *walltimesec, bool verbose )
+   double *walltimesec, int vrblvl )
 {
    const int totalcff = coefficient_count(dim,nbr,deg,nvr);
 
@@ -1297,7 +1303,7 @@ void GPU_dbl_poly_evaldiff
    coefficient_indices
       (dim,nbr,deg,nvr,fsums,bsums,csums,fstart,bstart,cstart);
 
-   if(verbose)
+   if(vrblvl > 1)
       write_coefficient_indices
          (totalcff,nbr,fsums,fstart,bsums,bstart,csums,cstart);
 
@@ -1316,11 +1322,11 @@ void GPU_dbl_poly_evaldiff
 
    dbl_convolution_jobs
       (dim,nbr,deg,nvr,cnvjobs,fstart,bstart,cstart,
-       data_d,cnvlapms,verbose);
+       data_d,cnvlapms,vrblvl);
 
    dbl_addition_jobs
       (dim,nbr,deg,nvr,addjobs,fstart,bstart,cstart,
-       data_d,addlapms,verbose);
+       data_d,addlapms,vrblvl);
 
    gettimeofday(&endtime,0);
    cudaMemcpy(data_h,data_d,szdata,cudaMemcpyDeviceToHost);
@@ -1330,13 +1336,14 @@ void GPU_dbl_poly_evaldiff
    *walltimesec = seconds + microseconds*1.0e-6;
 
    // dbl_convoluted_data_to_output
-   //    (data_h,output,dim,nbr,deg,nvr,idx,fstart,bstart,cstart,verbose);
+   //    (data_h,output,dim,nbr,deg,nvr,idx,fstart,bstart,cstart,vrblvl);
 
    dbl_added_data_to_output
       (data_h,output,dim,nbr,deg,nvr,idx,fstart,bstart,cstart,
-       addjobs,verbose);
+       addjobs,vrblvl);
 
-   if(verbose) write_GPU_timings(*cnvlapms,*addlapms,*elapsedms,*walltimesec);
+   if(vrblvl > 0)
+       write_GPU_timings(*cnvlapms,*addlapms,*elapsedms,*walltimesec);
 
    cudaFree(data_d);
 
@@ -1352,7 +1359,7 @@ void GPU_cmplx_poly_evaldiff
    double **inputre, double **inputim, double **outputre, double **outputim,
    ConvolutionJobs cnvjobs, AdditionJobs addjobs,
    double *cnvlapms, double *addlapms, double *elapsedms,
-   double *walltimesec, bool verbose )
+   double *walltimesec, int vrblvl )
 {
    const int totalcff = coefficient_count(dim,nbr,deg,nvr);
 
@@ -1366,7 +1373,7 @@ void GPU_cmplx_poly_evaldiff
    coefficient_indices
       (dim,nbr,deg,nvr,fsums,bsums,csums,fstart,bstart,cstart);
 
-   if(verbose)
+   if(vrblvl > 1)
       write_coefficient_indices
          (totalcff,nbr,fsums,fstart,bsums,bstart,csums,cstart);
 
@@ -1391,11 +1398,11 @@ void GPU_cmplx_poly_evaldiff
 
    cmplx_convolution_jobs
       (dim,nbr,deg,nvr,cnvjobs,fstart,bstart,cstart,
-       datare_d,dataim_d,cnvlapms,verbose);
+       datare_d,dataim_d,cnvlapms,vrblvl);
 
    cmplx_addition_jobs
       (dim,nbr,deg,nvr,addjobs,fstart,bstart,cstart,
-       datare_d,dataim_d,addlapms,verbose);
+       datare_d,dataim_d,addlapms,vrblvl);
 
    gettimeofday(&endtime,0);
    cudaMemcpy(datare_h,datare_d,szdata,cudaMemcpyDeviceToHost);
@@ -1407,13 +1414,14 @@ void GPU_cmplx_poly_evaldiff
 
    // cmplx_convoluted_data_to_output
    //    (datare_h,dataim_h,outputre,outputim,
-   //     dim,nbr,deg,nvr,idx,fstart,bstart,cstart,verbose);
+   //     dim,nbr,deg,nvr,idx,fstart,bstart,cstart,vrblvl);
 
    cmplx_added_data_to_output
       (datare_h,dataim_h,outputre,outputim,dim,nbr,deg,nvr,idx,
-       fstart,bstart,cstart,addjobs,verbose);
+       fstart,bstart,cstart,addjobs,vrblvl);
 
-   if(verbose) write_GPU_timings(*cnvlapms,*addlapms,*elapsedms,*walltimesec);
+   if(vrblvl > 0)
+      write_GPU_timings(*cnvlapms,*addlapms,*elapsedms,*walltimesec);
 
    cudaFree(datare_d); cudaFree(dataim_d);
 
@@ -1430,7 +1438,7 @@ void GPU_cmplxvectorized_poly_evaldiff
    ComplexConvolutionJobs cnvjobs, ComplexIncrementJobs incjobs,
    ComplexAdditionJobs addjobs,
    double *cnvlapms, double *addlapms, double *elapsedms,
-   double *walltimesec, bool verbose )
+   double *walltimesec, int vrblvl )
 {
    const int totalcff = complex_coefficient_count(dim,nbr,deg,nvr);
    const int diminput = (1 + nbr + dim)*(deg + 1); // dimension of input
@@ -1446,7 +1454,8 @@ void GPU_cmplxvectorized_poly_evaldiff
 
    complex_coefficient_indices
       (dim,nbr,deg,nvr,fsums,bsums,csums,fstart,bstart,cstart);
-   if(verbose)
+
+   if(vrblvl > 1)
    {
       cout << "        total count : " << totalcff << endl;
       cout << "offset for operands : " << offsetri << endl;
@@ -1471,11 +1480,11 @@ void GPU_cmplxvectorized_poly_evaldiff
 
    cmplxvectorized_convolution_jobs
       (dim,nbr,deg,nvr,totalcff,offsetri,cnvjobs,incjobs,fstart,bstart,cstart,
-       datari_d,cnvlapms,verbose);
+       datari_d,cnvlapms,vrblvl);
 
    cmplxvectorized_addition_jobs
       (dim,nbr,deg,nvr,totalcff,offsetri,addjobs,fstart,bstart,cstart,
-       datari_d,addlapms,verbose);
+       datari_d,addlapms,vrblvl);
 
    gettimeofday(&endtime,0);
    cudaMemcpy(datari_h,datari_d,szdata,cudaMemcpyDeviceToHost);
@@ -1486,9 +1495,10 @@ void GPU_cmplxvectorized_poly_evaldiff
 
    cmplx_added_datavectorized_to_output
       (datari_h,outputre,outputim,dim,nbr,deg,nvr,idx,fstart,bstart,cstart,
-       totalcff,offsetri,addjobs,verbose);
+       totalcff,offsetri,addjobs,vrblvl);
 
-   if(verbose) write_GPU_timings(*cnvlapms,*addlapms,*elapsedms,*walltimesec);
+   if(vrblvl > 0)
+      write_GPU_timings(*cnvlapms,*addlapms,*elapsedms,*walltimesec);
 
    cudaFree(datari_d);
 

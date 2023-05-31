@@ -108,7 +108,7 @@ void CPU_cmplx_poly_speel
 void CPU_dbl_poly_evaldiff
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
    double *cst, double **cff, double **input, double **output,
-   double *elapsedsec, bool verbose=false );
+   double *elapsedsec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Allocates work space memory to store the forward, backward, and
@@ -129,7 +129,7 @@ void CPU_dbl_poly_evaldiff
  *   input    contains the coefficients of the power series
  *            for all variables in the polynomial;
  *   output   space allocated for the value and all derivatives;
- *   verbose  if true, writes one line to screen for every convolution.
+ *   vrblvl   is the verbose level.
  *
  * ON RETURN :
  *   output   contains derivatives and the value of the polynomial,
@@ -142,7 +142,7 @@ void CPU_cmplx_poly_evaldiff
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
    double *cstre, double *cstim, double **cffre, double **cffim,
    double **inputre, double **inputim, double **outputre, double **outputim,
-   double *elapsedsec, bool verbose=false );
+   double *elapsedsec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Allocates work space memory to store the forward, backward, and
@@ -168,7 +168,7 @@ void CPU_cmplx_poly_evaldiff
  *   outputre has space allocated for the value and all derivatives;
  *   outputim has space allocated for the value and all derivatives;
  *   output   space allocated for the value and all derivatives;
- *   verbose  if true, writes one line to screen for every convolution.
+ *   vrblvl   is the verbose level.
  *
  * ON RETURN :
  *   outputre stores the real parts of the derivatives and
@@ -448,7 +448,7 @@ void CPU_dbl_poly_evaldiffjobs
  ( int dim, int nbr, int deg, int *nvr, int **idx, 
    double *cst, double **cff, double **input, double **output,
    ConvolutionJobs cnvjobs, AdditionJobs addjobs,
-   double *elapsedsec, bool verbose=false );
+   double *elapsedsec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the convolutions in the order as defined by cnvjobs,
@@ -471,7 +471,7 @@ void CPU_dbl_poly_evaldiffjobs
  *   output   space allocated for the value and all derivatives;
  *   cnvjobs  convolution jobs organized in layers;
  *   addjobs  addition jobs organized in layers;
- *   verbose  if true, writes one line to screen for every convolution.
+ *   vrblvl   is the verbose level.
  *
  * ON RETURN :
  *   output   contains derivatives and the value of the polynomial,
@@ -487,7 +487,7 @@ void CPU_cmplx_poly_evaldiffjobs
    double **inputre, double **inputim,
    double **outputre, double **outputim,
    ConvolutionJobs cnvjobs, AdditionJobs addjobs,
-   double *elapsedsec, bool verbose=false );
+   double *elapsedsec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the convolutions in the order as defined by cnvjobs,
@@ -516,7 +516,7 @@ void CPU_cmplx_poly_evaldiffjobs
  *   outputim has space allocated for the value and all derivatives;
  *   cnvjobs  convolution jobs organized in layers;
  *   addjobs  addition jobs organized in layers;
- *   verbose  if true, writes one line to screen for every convolution.
+ *   vrblvl   is the verbose level.
  *
  * ON RETURN :
  *   outputre stores the real parts of the derivatives and

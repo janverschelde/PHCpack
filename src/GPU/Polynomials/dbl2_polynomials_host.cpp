@@ -262,8 +262,10 @@ void CPU_dbl2_poly_evaldiff
    double **cffhi, double **cfflo,
    double **inputhi, double **inputlo, 
    double **outputhi, double **outputlo,
-   double *elapsedsec, bool verbose )
+   double *elapsedsec, int vrblvl )
 {
+   const bool vrb = (vrblvl > 1);
+
    double **forwardhi = new double*[dim];
    double **forwardlo = new double*[dim];
    double **backwardhi = new double*[dim-1]; // in case dim = 2
@@ -294,11 +296,11 @@ void CPU_dbl2_poly_evaldiff
    clock_t start = clock();
    CPU_dbl2_poly_speel
       (dim,nbr,deg,nvr,idx,cffhi,cfflo,inputhi,inputlo,outputhi,outputlo,
-       forwardhi,forwardlo,backwardhi,backwardlo,crosshi,crosslo,verbose);
+       forwardhi,forwardlo,backwardhi,backwardlo,crosshi,crosslo,vrb);
    clock_t end = clock();
    *elapsedsec = double(end - start)/CLOCKS_PER_SEC;
 
-   if(verbose)
+   if(vrblvl > 0)
    {
       cout << fixed << setprecision(3);
       cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
@@ -325,8 +327,10 @@ void CPU_cmplx2_poly_evaldiff
    double **inputimhi, double **inputimlo, 
    double **outputrehi, double **outputrelo,
    double **outputimhi, double **outputimlo,
-   double *elapsedsec, bool verbose )
+   double *elapsedsec, int vrblvl )
 {
+   const bool vrb = (vrblvl > 1);
+
    double **forwardrehi = new double*[dim];
    double **forwardrelo = new double*[dim];
    double **forwardimhi = new double*[dim];
@@ -379,11 +383,11 @@ void CPU_cmplx2_poly_evaldiff
        outputrehi,outputrelo,outputimhi,outputimlo,
        forwardrehi,forwardrelo,forwardimhi,forwardimlo,
        backwardrehi,backwardrelo,backwardimhi,backwardimlo,
-       crossrehi,crossrelo,crossimhi,crossimlo,verbose);
+       crossrehi,crossrelo,crossimhi,crossimlo,vrb);
    clock_t end = clock();
    *elapsedsec = double(end - start)/CLOCKS_PER_SEC;
 
-   if(verbose)
+   if(vrblvl > 0)
    {
       cout << fixed << setprecision(3);
       cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
@@ -1690,8 +1694,10 @@ void CPU_dbl2_poly_evaldiffjobs
    double *csthi, double *cstlo, double **cffhi, double **cfflo,
    double **inputhi, double **inputlo, double **outputhi, double **outputlo,
    ConvolutionJobs cnvjobs, AdditionJobs addjobs,
-   double *elapsedsec, bool verbose )
+   double *elapsedsec, int vrblvl )
 {
+   const bool vrb = (vrblvl > 1);
+
    double ***forwardhi = new double**[nbr];
    double ***forwardlo = new double**[nbr];
    double ***backwardhi = new double**[nbr];
@@ -1734,12 +1740,12 @@ void CPU_dbl2_poly_evaldiffjobs
    clock_t start = clock();
    for(int k=0; k<cnvjobs.get_depth(); k++)
    {
-      if(verbose) cout << "executing convolution jobs at layer "
-                       << k << " :" << endl;
+      if(vrb) cout << "executing convolution jobs at layer "
+                   << k << " :" << endl;
       for(int i=0; i<cnvjobs.get_layer_count(k); i++)
       {
          ConvolutionJob job = cnvjobs.get_job(k,i);
-         if(verbose) cout << "job " << i << " : " << job << endl;
+         if(vrb) cout << "job " << i << " : " << job << endl;
 
          int monidx = job.get_monomial_index();
 
@@ -1747,7 +1753,7 @@ void CPU_dbl2_poly_evaldiffjobs
             (deg,nvr[monidx],idx[monidx],cffhi[monidx],cfflo[monidx],
              inputhi,inputlo,forwardhi[monidx],forwardlo[monidx],
              backwardhi[monidx],backwardlo[monidx],
-             crosshi[monidx],crosslo[monidx],job,verbose);
+             crosshi[monidx],crosslo[monidx],job,vrb);
       }
    }
    //CPU_dbl_poly_updates
@@ -1755,11 +1761,11 @@ void CPU_dbl2_poly_evaldiffjobs
    CPU_dbl2_poly_addjobs
       (dim,nbr,deg,nvr,idx,csthi,cstlo,cffhi,cfflo,inputhi,inputlo,
        outputhi,outputlo,forwardhi,forwardlo,backwardhi,backwardlo,
-       crosshi,crosslo,addjobs,verbose);
+       crosshi,crosslo,addjobs,vrb);
    clock_t end = clock();
    *elapsedsec = double(end - start)/CLOCKS_PER_SEC;
 
-   if(verbose)
+   if(vrblvl > 0)
    {
       cout << fixed << setprecision(3);
       cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
@@ -1800,8 +1806,10 @@ void CPU_cmplx2_poly_evaldiffjobs
    double **outputrehi, double **outputrelo,
    double **outputimhi, double **outputimlo,
    ConvolutionJobs cnvjobs, AdditionJobs addjobs,
-   double *elapsedsec, bool verbose )
+   double *elapsedsec, int vrblvl )
 {
+   const bool vrb = (vrblvl > 1);
+
    double ***forwardrehi = new double**[nbr];
    double ***forwardrelo = new double**[nbr];
    double ***forwardimhi = new double**[nbr];
@@ -1862,12 +1870,12 @@ void CPU_cmplx2_poly_evaldiffjobs
    clock_t start = clock();
    for(int k=0; k<cnvjobs.get_depth(); k++)
    {
-      if(verbose) cout << "executing convolution jobs at layer "
-                       << k << " :" << endl;
+      if(vrb) cout << "executing convolution jobs at layer "
+                   << k << " :" << endl;
       for(int i=0; i<cnvjobs.get_layer_count(k); i++)
       {
          ConvolutionJob job = cnvjobs.get_job(k,i);
-         if(verbose) cout << "job " << i << " : " << job << endl;
+         if(vrb) cout << "job " << i << " : " << job << endl;
 
          int monidx = job.get_monomial_index();
 
@@ -1881,7 +1889,7 @@ void CPU_cmplx2_poly_evaldiffjobs
              backwardrehi[monidx],backwardrelo[monidx],
              backwardimhi[monidx],backwardimlo[monidx],
              crossrehi[monidx],crossrelo[monidx],
-             crossimhi[monidx],crossimlo[monidx],job,verbose);
+             crossimhi[monidx],crossimlo[monidx],job,vrb);
       }
    }
    //CPU_cmplx2_poly_updates
@@ -1897,12 +1905,12 @@ void CPU_cmplx2_poly_evaldiffjobs
        outputrehi,outputrelo,outputimhi,outputimlo,
        forwardrehi,forwardrelo,forwardimhi,forwardimlo,
        backwardrehi,backwardrelo,backwardimhi,backwardimlo,
-       crossrehi,crossrelo,crossimhi,crossimlo,addjobs,verbose);
+       crossrehi,crossrelo,crossimhi,crossimlo,addjobs,vrb);
 
    clock_t end = clock();
    *elapsedsec = double(end - start)/CLOCKS_PER_SEC;
 
-   if(verbose)
+   if(vrblvl > 0)
    {
       cout << fixed << setprecision(3);
       cout << "Elapsed CPU time (Linux), Wall time (Windows) : "

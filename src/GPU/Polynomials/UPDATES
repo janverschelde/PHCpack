@@ -3,6 +3,9 @@ Wed 31 May 2023 : new test_dbl4_cycsys.cpp, extended dbl4_polynomial_testers
   was extended, updated all makefiles.
   In test_{dbl, dbl2, dbl4, dbl8}_cycsys.cpp replaced the complex
   exponentials by random complex numbers for constant and coefficients.
+  In test_dbl8_cycsys.cpp, applied the verbose level correctly and made
+  updates in {dbl, dbl2, dbl4, dbl8}_polynomials_{host, kernels} to
+  control the verbosity better.
 
 Tue 30 May 2023 : new test_dbl_cycsys.cpp for cyclic n-roots systems.
   Updated the makefiles.  Extended dbl_polynomials_testers, makefile_unix,

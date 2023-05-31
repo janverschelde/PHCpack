@@ -352,7 +352,7 @@ double test_dbl8_sysevaldiff
       ConvolutionJobs cnvjobs(dim);
       AdditionJobs addjobs(dim,nbr[i]);
 
-      make_all_jobs(dim,nbr[i],nvr[i],idx[i],&cnvjobs,&addjobs,vrblvl);
+      make_all_jobs(dim,nbr[i],nvr[i],idx[i],&cnvjobs,&addjobs,vrb);
 
       double cnvlapms,addlapms,timelapms_d,walltimes_d;
 

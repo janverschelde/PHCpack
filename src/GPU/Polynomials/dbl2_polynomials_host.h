@@ -179,7 +179,7 @@ void CPU_dbl2_poly_evaldiff
    double **cffhi, double **cfflo,
    double **inputhi, double **inputlo, 
    double **outputhi, double **outputlo,
-   double *elapsedsec, bool verbose=false );
+   double *elapsedsec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Allocates work space memory to store the forward, backward, and
@@ -206,7 +206,7 @@ void CPU_dbl2_poly_evaldiff
  *              for all variables in the polynomial;
  *   outputhi   has space for high parts of the value and all derivatives;
  *   outputlo   has space for low parts of the value and all derivatives;
- *   verbose    if true, writes one line to screen for every convolution.
+ *   vrblvl     is the verbose level.
  *
  * ON RETURN :
  *   outputhi   has the high parts of derivatives and the value,
@@ -229,7 +229,7 @@ void CPU_cmplx2_poly_evaldiff
    double **inputimhi, double **inputimlo, 
    double **outputrehi, double **outputrelo,
    double **outputimhi, double **outputimlo,
-   double *elapsedsec, bool verbose=false );
+   double *elapsedsec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Allocates work space memory to store the forward, backward, and
@@ -280,7 +280,7 @@ void CPU_cmplx2_poly_evaldiff
  *                of the value and all derivatives;
  *   outputimlo   has space for the low doubles of the imaginary parts
  *                of the value and all derivatives;
- *   verbose      if true, writes one line to screen for every convolution.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   outputrehi   has the high doubles of the real parts,
@@ -802,7 +802,7 @@ void CPU_dbl2_poly_evaldiffjobs
    double *csthi, double *cstlo, double **cffhi, double **cfflo,
    double **inputhi, double **inputlo, double **outputhi, double **outputlo,
    ConvolutionJobs cnvjobs, AdditionJobs addjobs,
-   double *elapsedsec, bool verbose=false );
+   double *elapsedsec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the convolutions in the order as defined by cnvjobs,
@@ -829,7 +829,7 @@ void CPU_dbl2_poly_evaldiffjobs
  *   outputlo   has space for low parts of the value and all derivatives;
  *   cnvjobs    convolution jobs organized in layers;
  *   addjobs    addition jobs organized in layers;
- *   verbose    if true, writes one line to screen for every convolution.
+ *   vrblvl     is the verbose level.
  *
  * ON RETURN :
  *   outputhi   has the high parts of derivatives and the value,
@@ -853,7 +853,7 @@ void CPU_cmplx2_poly_evaldiffjobs
    double **outputrehi, double **outputrelo,
    double **outputimhi, double **outputimlo,
    ConvolutionJobs cnvjobs, AdditionJobs addjobs,
-   double *elapsedsec, bool verbose=false );
+   double *elapsedsec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the convolutions in the order as defined by cnvjobs,
@@ -906,7 +906,7 @@ void CPU_cmplx2_poly_evaldiffjobs
  *                of the value and all derivatives;
  *   cnvjobs      convolution jobs organized in layers;
  *   addjobs      addition jobs organized in layers;
- *   verbose      if true, writes one line to screen for every convolution.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   outputrehi   has the high doubles of the real parts

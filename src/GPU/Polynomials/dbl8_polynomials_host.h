@@ -505,7 +505,7 @@ void CPU_dbl8_poly_evaldiff
    double **outputhilohi, double **outputlolohi,
    double **outputhihilo, double **outputlohilo,
    double **outputhilolo, double **outputlololo,
-   double *elapsedsec, bool verbose=false );
+   double *elapsedsec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Allocates work space memory to store the forward, backward, and
@@ -567,7 +567,7 @@ void CPU_dbl8_poly_evaldiff
  *   outputlohilo   has space allocated for dim+1 series of degree deg;
  *   outputhilolo   has space allocated for dim+1 series of degree deg;
  *   outputlololo   has space allocated for dim+1 series of degree deg;
- *   verbose        if true, writes one line to screen for every convolution.
+ *   vrblvl         is the verbose level.
  *
  * ON RETURN :
  *   outputhihihi   has the highest parts of derivatives and the value,
@@ -638,7 +638,7 @@ void CPU_cmplx8_poly_evaldiff
    double **outputimhilohi, double **outputimlolohi,
    double **outputimhihilo, double **outputimlohilo,
    double **outputimhilolo, double **outputimlololo,
-   double *elapsedsec, bool verbose=false );
+   double *elapsedsec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Allocates work space memory to store the forward, backward, and
@@ -748,7 +748,7 @@ void CPU_cmplx8_poly_evaldiff
  *   outputimlohilo has space allocated for dim+1 series of degree deg;
  *   outputimhilolo has space allocated for dim+1 series of degree deg;
  *   outputimlololo has space allocated for dim+1 series of degree deg;
- *   verbose        if true, writes one line to screen for every convolution.
+ *   vrblvl         is the verbose level.
  *
  * ON RETURN :
  *   outputrehihihi has the highest parts of derivatives and the value,
@@ -2128,7 +2128,7 @@ void CPU_dbl8_poly_evaldiffjobs
    double **outputhihilo, double **outputlohilo,
    double **outputhilolo, double **outputlololo,
    ConvolutionJobs cnvjobs, AdditionJobs addjobs,
-   double *elapsedsec, bool verbose=false );
+   double *elapsedsec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the convolutions in the order as defined by cnvjobs,
@@ -2193,7 +2193,7 @@ void CPU_dbl8_poly_evaldiffjobs
  *   outputlololo   has space allocated for dim+1 series of degree deg;
  *   cnvjobs        convolution jobs organized in layers;
  *   addjobs        addition jobs organized in layers;
- *   verbose        if true, writes one line to screen for every convolution.
+ *   vrblvl         is the verbose level.
  *
  * ON RETURN :
  *   outputhihihi   has the highest parts of derivatives and the value,
@@ -2266,7 +2266,7 @@ void CPU_cmplx8_poly_evaldiffjobs
    double **outputimhihilo, double **outputimlohilo,
    double **outputimhilolo, double **outputimlololo,
    ConvolutionJobs cnvjobs, AdditionJobs addjobs,
-   double *elapsedsec, bool verbose=false );
+   double *elapsedsec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Computes the convolutions in the order as defined by cnvjobs,
@@ -2379,7 +2379,7 @@ void CPU_cmplx8_poly_evaldiffjobs
  *   outputimlololo has space for dim+1 series of degree deg;
  *   cnvjobs        convolution jobs organized in layers;
  *   addjobs        addition jobs organized in layers;
- *   verbose        if true, writes one line to screen for every convolution.
+ *   vrblvl         is the verbose level.
  *
  * ON RETURN :
  *   outputrehihihi has the highest real parts of derivatives and value,

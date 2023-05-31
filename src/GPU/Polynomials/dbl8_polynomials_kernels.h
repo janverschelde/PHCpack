@@ -255,7 +255,7 @@ void GPU_cmplx8vectorized_flipsigns
    double *datarihilohi, double *datarilolohi,
    double *datarihihilo, double *datarilohilo,
    double *datarihilolo, double *datarilololo,
-   double *elapsedms, bool verbose );
+   double *elapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Flips the signs in the second operand of the real convolutions
@@ -273,7 +273,7 @@ void GPU_cmplx8vectorized_flipsigns
  *   datarilohilo are the third lowest doubles of the convolutions;
  *   datarihilolo are the second lowest doubles of the convolutions;
  *   datarilololo are the lowest doubles of the convolutions;
- *   verbose      is the verbose flag.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   datarihihihi are the highest doubles of the computed data;
@@ -344,7 +344,7 @@ void dbl_convoluted_data8_to_output
    double **outputhihilo, double **outputlohilo,
    double **outputhilolo, double **outputlololo,
    int dim, int nbr, int deg, int *nvr,
-   int **idx, int *fstart, int *bstart, int *cstart, bool verbose=true );
+   int **idx, int *fstart, int *bstart, int *cstart, int vrblvl );
 /*
  * DESCRIPTION :
  *   Extracts the data computed on the device to the output.
@@ -389,7 +389,7 @@ void dbl_convoluted_data8_to_output
  *                for the k-th monomial;
  *   cstart       fstart[k] has the start position of the cross products
  *                for the k-th monomial;
- *   verbose      if true, writes extra information.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   outputhihihi has the highest parts of derivatives and the value,
@@ -436,7 +436,7 @@ void dbl_added_data8_to_output
    double **outputhilolo, double **outputlololo,
    int dim, int nbr, int deg, int *nvr,
    int **idx, int *fstart, int *bstart, int *cstart,
-   AdditionJobs jobs, bool verbose=true );
+   AdditionJobs jobs, int vrblvl );
 /*
  * DESCRIPTION :
  *   Extracts the data computed on the device to the output.
@@ -489,7 +489,7 @@ void dbl_added_data8_to_output
  *   cstart       fstart[k] has the start position of the cross products
  *                for the k-th monomial;
  *   jobs         defines all addition jobs;
- *   verbose      if true, writes extra information.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   outputhihihi has the highest parts of derivatives and the value,
@@ -540,7 +540,7 @@ void cmplx_added_data8vectorized_to_output
    double **outputimhilolo, double **outputimlololo,
    int dim, int nbr, int deg, int *nvr,
    int **idx, int *fstart, int *bstart, int *cstart,
-   int totcff, int offsetri, ComplexAdditionJobs jobs, bool verbose );
+   int totcff, int offsetri, ComplexAdditionJobs jobs, int vrblvl );
 /*
  * DESCRIPTION :
  *   Extracts the complex data computed on the device to the output.
@@ -603,7 +603,7 @@ void cmplx_added_data8vectorized_to_output
  *   totcff       total number of coefficients without vectorization;
  *   offsetri     size of the second operand;
  *   jobs         defines all addition jobs;
- *   verbose      if true, writes extra information.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   outputrehihihi has the highest doubles of the real parts
@@ -916,7 +916,7 @@ void dbl8_convolution_jobs
    double *datahilohi, double *datalolohi,
    double *datahihilo, double *datalohilo,
    double *datahilolo, double *datalololo,
-   double *cnvlapms, bool verbose );
+   double *cnvlapms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Launches the kernels for all convolution jobs on real data.
@@ -941,8 +941,7 @@ void dbl8_convolution_jobs
  *   datalohilo   third lowest doubles of the initialized data;
  *   datahilolo   second lowest doubles of the initialized data;
  *   datalololo   lowest doubles of the initialized data;
- *   verbose      if true, then information about each kernel launch
- *                is displayed.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   datahihihi   highest doubles of the convolutions;
@@ -964,7 +963,7 @@ void cmplx8vectorized_convolution_jobs
    double *datarihilohi, double *datarilolohi,
    double *datarihihilo, double *datarilohilo,
    double *datarihilolo, double *datarilololo,
-   double *cnvlapms, bool verbose );
+   double *cnvlapms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Launches the kernels for all convolution jobs on complex data,
@@ -993,8 +992,7 @@ void cmplx8vectorized_convolution_jobs
  *   datarilohilo are the third lowest doubles of the initialized data;
  *   datarihilolo are the second lowest doubles of the initialized data;
  *   datarilololo are the lowest doubles of the initialized data;
- *   verbose      if true, then information about each kernel launch
- *                is displayed.
+ *   vrblvl       ise the verbose level.
  *
  * ON RETURN :
  *   datarihihihi are the highest doubles of the convolutions;
@@ -1014,7 +1012,7 @@ void dbl8_addition_jobs
    double *datahihihi, double *datalohihi,
    double *datahilohi, double *datalolohi,
    double *datahihilo, double *datalohilo,
-   double *datahilolo, double *datalololo, double *addlapms, bool verbose );
+   double *datahilolo, double *datalololo, double *addlapms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Launches the kernels for all addition jobs on real data.
@@ -1039,8 +1037,7 @@ void dbl8_addition_jobs
  *   datalohilo   third lowest doubles of the convolutions;
  *   datahilolo   second lowest doubles of the convolutions;
  *   datalololo   lowest doubles of the convolutions;
- *   verbose      if true, then information about each kernel launch
- *                is displayed.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   datahihihi   highest doubles of the added convolutions;
@@ -1062,7 +1059,7 @@ void cmplx8vectorized_addition_jobs
    double *datarihilohi, double *datarilolohi,
    double *datarihihilo, double *datarilohilo,
    double *datarihilolo, double *datarilololo,
-   double *addlapms, bool verbose );
+   double *addlapms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Launches the kernels for all addition jobs on complex data,
@@ -1090,8 +1087,7 @@ void cmplx8vectorized_addition_jobs
  *   datarilohilo are the third lowest doubles of the convolutions;
  *   datarihilolo are the second lowest doubles of the convolutions;
  *   datarilololo are the lowest doubles of the convolutions.
- *   verbose      if true, then information about each kernel launch
- *                is displayed.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   datarihihihi are the highest doubles of the added convolutions;
@@ -1125,7 +1121,7 @@ void GPU_dbl8_poly_evaldiff
    double **outputhilolo, double **outputlololo,
    ConvolutionJobs cnvjobs, AdditionJobs addjobs,
    double *cnvlapms, double *addlapms, double *elapsedms,
-   double *walltimesec, bool verbose=true );
+   double *walltimesec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates and differentiations a polynomial in 
@@ -1191,7 +1187,7 @@ void GPU_dbl8_poly_evaldiff
  *   outputlohilo has space allocated for dim+1 series of degree deg;
  *   cnvjobs      convolution jobs organized in layers;
  *   addjobs      addition jobs organized in layers;
- *   verbose      if true, then extra output about the setup is written.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   outputhihihi has the highest parts of derivatives and the value,
@@ -1272,7 +1268,7 @@ void GPU_cmplx8vectorized_poly_evaldiff
    ComplexConvolutionJobs cnvjobs, ComplexIncrementJobs incjobs,
    ComplexAdditionJobs addjobs,
    double *cnvlapms, double *addlapms, double *elapsedms,
-   double *walltimesec, bool verbose=true );
+   double *walltimesec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates and differentiations a polynomial in several variables.
@@ -1453,7 +1449,7 @@ void GPU_cmplx8vectorized_poly_evaldiff
  *   cnvjobs        convolution jobs organized in layers;
  *   incjobs        increment jobs organized in layers;
  *   addjobs        addition jobs organized in layers;
- *   verbose        if true, then extra output about the setup is written.
+ *   vrblvl         is the verbose level.
  *
  * ON RETURN :
  *   outputrehihihi has the highest doubles of the real parts,

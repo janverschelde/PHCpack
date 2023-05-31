@@ -399,8 +399,10 @@ void CPU_dbl4_poly_evaldiff
    double **inputhilo, double **inputlolo, 
    double **outputhihi, double **outputlohi,
    double **outputhilo, double **outputlolo,
-   double *elapsedsec, bool verbose )
+   double *elapsedsec, int vrblvl )
 {
+   const bool vrb = (vrblvl > 1);
+
    double **forwardhihi = new double*[dim];
    double **forwardlohi = new double*[dim];
    double **forwardhilo = new double*[dim];
@@ -458,11 +460,11 @@ void CPU_dbl4_poly_evaldiff
          outputhihi,  outputlohi,  outputhilo,  outputlolo,
         forwardhihi, forwardlohi, forwardhilo, forwardlolo,
        backwardhihi,backwardlohi,backwardhilo,backwardlolo,
-          crosshihi,   crosslohi,   crosshilo,   crosslolo,verbose);
+          crosshihi,   crosslohi,   crosshilo,   crosslolo,vrb);
    clock_t end = clock();
    *elapsedsec = double(end - start)/CLOCKS_PER_SEC;
 
-   if(verbose)
+   if(vrblvl > 0)
    {
       cout << fixed << setprecision(3);
       cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
@@ -501,8 +503,10 @@ void CPU_cmplx4_poly_evaldiff
    double **outputrehilo, double **outputrelolo,
    double **outputimhihi, double **outputimlohi,
    double **outputimhilo, double **outputimlolo,
-   double *elapsedsec, bool verbose )
+   double *elapsedsec, int vrblvl )
 {
+   const bool vrb = (vrblvl > 1);
+
    double **forwardrehihi = new double*[dim];
    double **forwardrelohi = new double*[dim];
    double **forwardrehilo = new double*[dim];
@@ -602,11 +606,11 @@ void CPU_cmplx4_poly_evaldiff
        backwardrehihi,backwardrelohi,backwardrehilo,backwardrelolo,
        backwardimhihi,backwardimlohi,backwardimhilo,backwardimlolo,
        crossrehihi,crossrelohi,crossrehilo,crossrelolo,
-       crossimhihi,crossimlohi,crossimhilo,crossimlolo,verbose);
+       crossimhihi,crossimlohi,crossimhilo,crossimlolo,vrb);
    clock_t end = clock();
    *elapsedsec = double(end - start)/CLOCKS_PER_SEC;
 
-   if(verbose)
+   if(vrblvl > 0)
    {
       cout << fixed << setprecision(3);
       cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
@@ -2340,8 +2344,10 @@ void CPU_dbl4_poly_evaldiffjobs
    double **outputhihi, double **outputlohi,
    double **outputhilo, double **outputlolo,
    ConvolutionJobs cnvjobs, AdditionJobs addjobs,
-   double *elapsedsec, bool verbose )
+   double *elapsedsec, int vrblvl )
 {
+   const bool vrb = (vrblvl > 1);
+
    double ***forwardhihi = new double**[nbr];
    double ***forwardlohi = new double**[nbr];
    double ***forwardhilo = new double**[nbr];
@@ -2402,12 +2408,12 @@ void CPU_dbl4_poly_evaldiffjobs
    clock_t start = clock();
    for(int k=0; k<cnvjobs.get_depth(); k++)
    {
-      if(verbose) cout << "executing convolution jobs at layer "
-                       << k << " :" << endl;
+      if(vrb) cout << "executing convolution jobs at layer "
+                   << k << " :" << endl;
       for(int i=0; i<cnvjobs.get_layer_count(k); i++)
       {
          ConvolutionJob job = cnvjobs.get_job(k,i);
-         if(verbose) cout << "job " << i << " : " << job << endl;
+         if(vrb) cout << "job " << i << " : " << job << endl;
 
          int monidx = job.get_monomial_index();
 
@@ -2420,7 +2426,7 @@ void CPU_dbl4_poly_evaldiffjobs
              backwardhihi[monidx],backwardlohi[monidx],
              backwardhilo[monidx],backwardlolo[monidx],
                 crosshihi[monidx],   crosslohi[monidx],
-                crosshilo[monidx],   crosslolo[monidx],job,verbose);
+                crosshilo[monidx],   crosslolo[monidx],job,vrb);
       }
    }
    //CPU_dbl_poly_updates
@@ -2432,11 +2438,11 @@ void CPU_dbl4_poly_evaldiffjobs
          outputhihi,  outputlohi,  outputhilo,  outputlolo,
         forwardhihi, forwardlohi, forwardhilo, forwardlolo,
        backwardhihi,backwardlohi,backwardhilo,backwardlolo,
-          crosshihi,   crosslohi,   crosshilo,   crosslolo,addjobs,verbose);
+          crosshihi,   crosslohi,   crosshilo,   crosslolo,addjobs,vrb);
    clock_t end = clock();
    *elapsedsec = double(end - start)/CLOCKS_PER_SEC;
 
-   if(verbose)
+   if(vrblvl > 0)
    {
       cout << fixed << setprecision(3);
       cout << "Elapsed CPU time (Linux), Wall time (Windows) : "
@@ -2493,8 +2499,10 @@ void CPU_cmplx4_poly_evaldiffjobs
    double **outputimhihi, double **outputimlohi,
    double **outputimhilo, double **outputimlolo,
    ConvolutionJobs cnvjobs, AdditionJobs addjobs,
-   double *elapsedsec, bool verbose )
+   double *elapsedsec, int vrblvl )
 {
+   const bool vrb = (vrblvl > 1);
+
    double ***forwardrehihi = new double**[nbr];
    double ***forwardrelohi = new double**[nbr];
    double ***forwardrehilo = new double**[nbr];
@@ -2591,12 +2599,12 @@ void CPU_cmplx4_poly_evaldiffjobs
    clock_t start = clock();
    for(int k=0; k<cnvjobs.get_depth(); k++)
    {
-      if(verbose) cout << "executing convolution jobs at layer "
-                       << k << " :" << endl;
+      if(vrb) cout << "executing convolution jobs at layer "
+                   << k << " :" << endl;
       for(int i=0; i<cnvjobs.get_layer_count(k); i++)
       {
          ConvolutionJob job = cnvjobs.get_job(k,i);
-         if(verbose) cout << "job " << i << " : " << job << endl;
+         if(vrb) cout << "job " << i << " : " << job << endl;
 
          int monidx = job.get_monomial_index();
 
@@ -2619,7 +2627,7 @@ void CPU_cmplx4_poly_evaldiffjobs
              crossrehihi[monidx],crossrelohi[monidx],
              crossrehilo[monidx],crossrelolo[monidx],
              crossimhihi[monidx],crossimlohi[monidx],
-             crossimhilo[monidx],crossimlolo[monidx],job,verbose);
+             crossimhilo[monidx],crossimlolo[monidx],job,vrb);
       }
    }
  /*
@@ -2655,11 +2663,11 @@ void CPU_cmplx4_poly_evaldiffjobs
        backwardrehihi,backwardrelohi,backwardrehilo,backwardrelolo,
        backwardimhihi,backwardimlohi,backwardimhilo,backwardimlolo,
        crossrehihi,crossrelohi,crossrehilo,crossrelolo,
-       crossimhihi,crossimlohi,crossimhilo,crossimlolo,addjobs,verbose);
+       crossimhihi,crossimlohi,crossimhilo,crossimlolo,addjobs,vrb);
    clock_t end = clock();
    *elapsedsec = double(end - start)/CLOCKS_PER_SEC;
 
-   if(verbose)
+   if(vrblvl > 0)
    {
       cout << fixed << setprecision(3);
       cout << "Elapsed CPU time (Linux), Wall time (Windows) : "

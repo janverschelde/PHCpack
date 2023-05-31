@@ -168,7 +168,7 @@ void GPU_cmplx4vectorized_flipsigns
  ( int deg, int nbrflips, int *flipidx,
    double *datarihihi, double *datarilohi,
    double *datarihilo, double *datarilolo,
-   double *elapsedms, bool verbose=true );
+   double *elapsedms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Flips the signs in the second operand of the real convolutions
@@ -182,7 +182,7 @@ void GPU_cmplx4vectorized_flipsigns
  *   datarilohi   second highest doubles of the convolutions;
  *   datarihilo   second lowest doubles of the convolutions;
  *   datarilolo   lowest doubles of the convolutions;
- *   verbose      is the verbose flag.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   datarihihi   highest doubles of the computed data;
@@ -293,7 +293,7 @@ void dbl_convoluted_data4_to_output
    double **outputhihi, double **outputlohi,
    double **outputhilo, double **outputlolo,
    int dim, int nbr, int deg, int *nvr,
-   int **idx, int *fstart, int *bstart, int *cstart, bool verbose=true );
+   int **idx, int *fstart, int *bstart, int *cstart, int vrblvl );
 /*
  * DESCRIPTION :
  *   Extracts the data computed on the device to the output.
@@ -326,7 +326,7 @@ void dbl_convoluted_data4_to_output
  *                for the k-th monomial;
  *   cstart       fstart[k] has the start position of the cross products
  *                for the k-th monomial;
- *   verbose      if true, writes extra information.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   outputhihi   has the highest parts of derivatives and the value,
@@ -356,7 +356,7 @@ void cmplx_convoluted_data4_to_output
    double **outputimhihi, double **outputimlohi,
    double **outputimhilo, double **outputimlolo,
    int dim, int nbr, int deg, int *nvr,
-   int **idx, int *fstart, int *bstart, int *cstart, bool verbose );
+   int **idx, int *fstart, int *bstart, int *cstart, int vrblvl );
 /*
  * DESCRIPTION :
  *   Extracts the complex data computed on the device to the output.
@@ -417,7 +417,7 @@ void cmplx_convoluted_data4_to_output
  *                for the k-th monomial;
  *   cstart       fstart[k] has the start position of the cross products
  *                for the k-th monomial;
- *   verbose      if true, writes extra information.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   outputrehihi contains the highest doubles of the real parts
@@ -443,7 +443,7 @@ void dbl_added_data4_to_output
    double **outputhilo, double **outputlolo,
    int dim, int nbr, int deg, int *nvr,
    int **idx, int *fstart, int *bstart, int *cstart,
-   AdditionJobs jobs, bool verbose=true );
+   AdditionJobs jobs, int vrblvl );
 /*
  * DESCRIPTION :
  *   Extracts the data computed on the device to the output.
@@ -480,7 +480,7 @@ void dbl_added_data4_to_output
  *   cstart       fstart[k] has the start position of the cross products
  *                for the k-th monomial;
  *   jobs         defines all addition jobs;
- *   verbose      if true, writes extra information.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   outputhihi   has the highest parts of derivatives and the value,
@@ -511,7 +511,7 @@ void cmplx_added_data4_to_output
    double **outputimhilo, double **outputimlolo,
    int dim, int nbr, int deg, int *nvr,
    int **idx, int *fstart, int *bstart, int *cstart, AdditionJobs jobs,
-   bool verbose );
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Extracts the complex data computed on the device to the output.
@@ -572,7 +572,7 @@ void cmplx_added_data4_to_output
  *   cstart       fstart[k] has the start position of the cross products
  *                for the k-th monomial;
  *   jobs         defines all addition jobs;
- *   verbose      if true, writes extra information.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   outputrehihi contains the highest doubles of the real parts
@@ -602,7 +602,7 @@ void cmplx_added_data4vectorized_to_output
    int dim, int nbr, int deg, int *nvr,
    int **idx, int *fstart, int *bstart, int *cstart,
    int totcff, int offsetri, ComplexAdditionJobs jobs,
-   bool verbose );
+   int vrblvl );
 /*
  * DESCRIPTION :
  *   Extracts the complex data computed on the device to the output.
@@ -645,7 +645,7 @@ void cmplx_added_data4vectorized_to_output
  *   totcff       total number of coefficients without vectorization;
  *   offsetri     size of the second operand;
  *   jobs         defines all addition jobs;
- *   verbose      if true, writes extra information.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   outputrehihi contains the highest doubles of the real parts
@@ -931,7 +931,7 @@ void dbl4_convolution_jobs
  ( int dim, int nbr, int deg, int *nvr, ConvolutionJobs cnvjobs,
    int *fstart, int *bstart, int *cstart,
    double *datahihi, double *datalohi, double *datahilo, double *datalolo,
-   double *cnvlapms, bool verbose );
+   double *cnvlapms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Launches the kernels for all convolution jobs on real data.
@@ -952,8 +952,7 @@ void dbl4_convolution_jobs
  *   datalohi     second highest doubles of the initialized data;
  *   datahilo     second lowest doubles of the initialized data;
  *   datalolo     lowest doubles of the initialized data;
- *   verbose      if true, then information about each kernel launch
- *                is displayed.
+ *   vrblvl       is the verbose level.                 
  *
  * ON RETURN :
  *   datahihi     highest doubles of the convolutions;
@@ -970,7 +969,7 @@ void cmplx4_convolution_jobs
    double *datarehilo, double *datarelolo,
    double *dataimhihi, double *dataimlohi,
    double *dataimhilo, double *dataimlolo,
-   double *cnvlapms, bool verbose );
+   double *cnvlapms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Launches the kernels for all convolution jobs on complex data.
@@ -995,8 +994,7 @@ void cmplx4_convolution_jobs
  *   dataimlohi   second highest doubles of the initialized imag data;
  *   dataimhilo   second lowest doubles of the initialized imag data;
  *   dataimlolo   lowest doubles of the initialized imag data;
- *   verbose      if true, then information about each kernel launch
- *                is displayed.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   datarehihi   highest doubles of the real convolutions;
@@ -1016,7 +1014,7 @@ void cmplx4vectorized_convolution_jobs
    int *fstart, int *bstart, int *cstart,
    double *datarihihi, double *datarilohi,
    double *datarihilo, double *datarilolo,
-   double *cnvlapms, bool verbose );
+   double *cnvlapms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Launches the kernels for all convolution jobs on complex data,
@@ -1041,8 +1039,7 @@ void cmplx4vectorized_convolution_jobs
  *   datarilohi   second highest doubles of the initialized data;
  *   datarihilo   second lowest doubles of the initialized data;
  *   datarilolo   lowest doubles of the initialized data;
- *   verbose      if true, then information about each kernel launch
- *                is displayed.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   datarihihi   highest doubles of the convolutions;
@@ -1056,7 +1053,7 @@ void dbl4_addition_jobs
  ( int dim, int nbr, int deg, int *nvr, AdditionJobs addjobs,
    int *fstart, int *bstart, int *cstart,
    double *datahihi, double *datalohi, double *datahilo, double *datalolo,
-   double *addlapms, bool verbose );
+   double *addlapms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Launches the kernels for all addition jobs on real data.
@@ -1077,8 +1074,7 @@ void dbl4_addition_jobs
  *   datalohi     second highest doubles of the convolutions;
  *   datahilo     second lowest doubles of the convolutions;
  *   datalolo     lowest doubles of the convolutions;
- *   verbose      if true, then information about each kernel launch
- *                is displayed.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   datahihi     highest doubles of the added convolutions;
@@ -1095,7 +1091,7 @@ void cmplx4_addition_jobs
    double *datarehilo, double *datarelolo,
    double *dataimhihi, double *dataimlohi,
    double *dataimhilo, double *dataimlolo,
-   double *addlapms, bool verbose );
+   double *addlapms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Launches the kernels for all addition jobs on complex data.
@@ -1120,8 +1116,7 @@ void cmplx4_addition_jobs
  *   dataimlohi   second highest doubles of the imag convolutions;
  *   dataimhilo   second lowest doubles of the imag convolutions;
  *   dataimlolo   lowest doubles of the imag convolutions.
- *   verbose      if true, then information about each kernel launch
- *                is displayed.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   datarehihi   highest doubles of the added real convolutions;
@@ -1141,7 +1136,7 @@ void cmplx4vectorized_addition_jobs
    int *fstart, int *bstart, int *cstart,
    double *datarihihi, double *datarilohi,
    double *datarihilo, double *datarilolo,
-   double *addlapms, bool verbose );
+   double *addlapms, int vrblvl );
 /*
  * DESCRIPTION :
  *   Launches the kernels for all addition jobs on complex data,
@@ -1165,8 +1160,7 @@ void cmplx4vectorized_addition_jobs
  *   datarilohi   second highest doubles of the convolutions;
  *   datarihilo   second lowest doubles of the convolutions;
  *   datarilolo   lowest doubles of the convolutions.
- *   verbose      if true, then information about each kernel launch
- *                is displayed.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   datarihihi   highest doubles of the added convolutions;
@@ -1186,7 +1180,7 @@ void GPU_dbl4_poly_evaldiff
    double **outputhilo, double **outputlolo,
    ConvolutionJobs cnvjobs, AdditionJobs addjobs,
    double *cnvlapms, double *addlapms, double *elapsedms,
-   double *walltimesec, bool verbose=true );
+   double *walltimesec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates and differentiations a polynomial in several variables.
@@ -1229,7 +1223,7 @@ void GPU_dbl4_poly_evaldiff
  *   outputlolo   has space allocated for dim+1 series of degree deg;
  *   cnvjobs      convolution jobs organized in layers;
  *   addjobs      addition jobs organized in layers;
- *   verbose      if true, then extra output about the setup is written.
+ *   vrblvl       is the verbose level.
  *
  * ON RETURN :
  *   outputhihi   has the highest parts of derivatives and the value,
@@ -1277,7 +1271,7 @@ void GPU_cmplx4_poly_evaldiff
    double **outputimhilo, double **outputimlolo,
    ConvolutionJobs cnvjobs, AdditionJobs addjobs,
    double *cnvlapms, double *addlapms, double *elapsedms,
-   double *walltimesec, bool verbose=true );
+   double *walltimesec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates and differentiations a polynomial in several variables.
@@ -1376,7 +1370,7 @@ void GPU_cmplx4_poly_evaldiff
  *                  of the value and all derivatives;
  *   cnvjobs        convolution jobs organized in layers;
  *   addjobs        addition jobs organized in layers;
- *   verbose        if true, then extra output about the setup is written.
+ *   vrblvl         is the verbose level.
  *
  * ON RETURN :
  *   outputrehihi   has the highest doubles of the real parts,
@@ -1421,7 +1415,7 @@ void GPU_cmplx4vectorized_poly_evaldiff
    ComplexConvolutionJobs cnvjobs, ComplexIncrementJobs incjobs,
    ComplexAdditionJobs addjobs,
    double *cnvlapms, double *addlapms, double *elapsedms,
-   double *walltimesec, bool verbose=true );
+   double *walltimesec, int vrblvl );
 /*
  * DESCRIPTION :
  *   Evaluates and differentiations a polynomial in several variables.
@@ -1522,7 +1516,7 @@ void GPU_cmplx4vectorized_poly_evaldiff
  *   cnvjobs        convolution jobs organized in layers;
  *   incjobs        increment jobs organized in layers;
  *   addjobs        addition jobs organized in layers;
- *   verbose        if true, then extra output about the setup is written.
+ *   vrblvl         is the verbose level.
  *
  * ON RETURN :
  *   outputrehihi   has the highest doubles of the real parts,
