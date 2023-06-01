@@ -4,7 +4,7 @@
 #ifndef __dbl8_newton_method_h__
 #define __dbl8_newton_method_h__
 
-void dbl8_newton_qrstep
+void dbl8_column_newton_qrstep
  ( int szt, int nbt, int dim, int deg, int nbrcol,
    int *tailidx_h, int *tailidx_d,
    int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac,
@@ -111,7 +111,8 @@ void dbl8_newton_qrstep
 /*
  * DESCRIPTION :
  *   Does one step with Newton's method to update a power series,
- *   using QR factorization to solve linear systems.
+ *   using QR factorization to solve linear systems,
+ *   on one or more columns of monomials.
  *
  * REQUIRED : szt*nbt = dim for GPU computing.
  *
@@ -529,13 +530,14 @@ void dbl8_newton_qrstep
  *   totupdlapsedms accumulates the milliseconds spent on updates;
  *   totreslapsedms accumulates the milliseconds spent on residuals. */
 
-int test_dbl8_real_newton
+int test_dbl8_column_newton
  ( int szt, int nbt, int dim, int deg, int nbrcol,
    int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl );
 /*
  * DESCRIPTION :
- *   Runs Newton on a monomial system with real quad double arithmetic.
+ *   Runs Newton with real quad double arithmetic,
+ *   on one or more columns of monomials.
  *
  * ON ENTRY :
  *   szt       size of each tile and block;

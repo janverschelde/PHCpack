@@ -14,12 +14,51 @@
 
 using namespace std;
 
+int dbl4_test_columns
+ ( int dim, int deg, int size, int vrblvl, int nbritr, int nbrcol,
+   int nbsteps, int szt, int nbt, int mode, int cdata );
+/*
+ * DESCRIPTION :
+ *   Tests Newton's method using the column representation to
+ *   evaluate and differentiate the polynomials in a system.
+ *
+ * ON ENTRY :
+ *   dim      number of equations and variables in the system;
+ *   deg      degree at which the series are truncated;
+ *   size     size of the numbers in the exponent matrix;
+ *   vrblvl   verbose level;
+ *   nbritr   number of iterations to generate an exponent matrix,
+ *            or the type of input system;
+ *   nbrcol   number of column of monomials in the system;
+ *   nbsteps  maximum number of steps with Newton's method;
+ *   szt      size of each block of threads (tile);
+ *   nbt      number of blocks (tiles) for linear algebra;
+ *   mode     0 for host, 1 for device, 2 for host + device run;
+ *   cdata    0 if on real data, 1 if on complex data. */
+
+int dbl4_test_rows
+ ( int dim, int deg, int vrblvl,
+   int nbsteps, int szt, int nbt, int mode, int cdata );
+/*
+ * DESCRIPTION :
+ *   Tests Newton's method using the column representation to
+ *   evaluate and differentiate the polynomials in a system.
+ *
+ * ON ENTRY :
+ *   dim      number of equations and variables in the system;
+ *   deg      degree at which the series are truncated;
+ *   vrblvl   verbose level;
+ *   nbsteps  maximum number of steps with Newton's method;
+ *   szt      size of each block of threads (tile);
+ *   nbt      number of blocks (tiles) for linear algebra;
+ *   mode     0 for host, 1 for device, 2 for host + device run;
+ *   cdata    0 if on real data, 1 if on complex data. */
+
 int main ( void )
 {
    cout << "testing Newton in quad double precision..." << endl;
 
    int seed,dim,deg,size,vrblvl,nbritr,nbrcol,nbsteps,szt,nbt,mode,cdata;
-   double dpr = 1.0;
 
    prompt_newton_setup
       (&seed,&szt,&nbt,&dim,&deg,&size,&vrblvl,&mode,
@@ -36,6 +75,22 @@ int main ( void )
    if(nbritr > 0)
       cout << "generating an integer matrix of dimension " << dim
            << " ..." << endl;
+
+   int fail;
+
+   if(nbritr == -5)
+      fail = dbl4_test_rows(dim,deg,vrblvl,nbsteps,szt,nbt,mode,cdata);
+   else
+      fail = dbl4_test_columns(dim,deg,size,vrblvl,nbritr,nbrcol,
+                               nbsteps,szt,nbt,mode,cdata);
+   
+   return fail;
+}
+
+int dbl4_test_columns
+ ( int dim, int deg, int size, int vrblvl, int nbritr, int nbrcol,
+   int nbsteps, int szt, int nbt, int mode, int cdata )
+{
 /*
  * 1. defining the unimodular matrix of monomials
  */
@@ -118,14 +173,23 @@ int main ( void )
           write_cyclic_columns(nbrcol,dim,colnvr,colidx);
       }
    }
+   double dpr = 1.0;
+
    if(cdata == 0)
-      test_dbl4_real_newton
+      test_dbl4_column_newton
          (szt,nbt,dim,deg,nbrcol,colnvr,colidx,exp,nbrfac,expfac,rowsA,
           dpr,nbsteps,mode,vrblvl);
    else
-      test_dbl4_complex_newton
+      test_cmplx4_column_newton
          (szt,nbt,dim,deg,nbrcol,colnvr,colidx,exp,nbrfac,expfac,rowsA,
           dpr,nbsteps,mode,vrblvl);
 
+   return 0;
+}
+
+int dbl4_test_rows
+ ( int dim, int deg, int vrblvl,
+   int nbsteps, int szt, int nbt, int mode, int cdata )
+{
    return 0;
 }

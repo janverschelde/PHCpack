@@ -4,7 +4,7 @@
 #ifndef __cmplx_newton_method_h__
 #define __cmplx_newton_method_h__
 
-void cmplx_newton_qrstep
+void cmplx_column_newton_qrstep
  ( int szt, int nbt, int dim, int deg, int nbrcol,
    int *tailidx_h, int *tailidx_d,
    int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac,
@@ -33,7 +33,8 @@ void cmplx_newton_qrstep
 /*
  * DESCRIPTION :
  *   Does one step with Newton's method to update a power series,
- *   using QR factorization to solve linear systems, on complex data.
+ *   using QR factorization to solve linear systems, on complex data,
+ *   on one or more columns of monomials.
  *
  * REQUIRED : szt*nbt = dim for GPU computing.
  *
@@ -179,13 +180,14 @@ void cmplx_newton_qrstep
  *   totupdlapsedms accumulates the milliseconds spent on updates;
  *   totreslapsedms accumulates the milliseconds spent on residuals. */
 
-int test_dbl_complex_newton
+int test_cmplx_column_newton
  ( int szt, int nbt, int dim, int deg, int nbrcol,
    int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl );
 /*
  * DESCRIPTION :
- *   Runs Newton on a monomial system with complex double arithmetic.
+ *   Runs Newton with complex double arithmetic,
+ *   on one or more columns of monomials.
  *
  * ON ENTRY :
  *   szt       size of each tile and block;

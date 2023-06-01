@@ -29,7 +29,7 @@
 
 using namespace std;
 
-void cmplx4_newton_qrstep
+void cmplx4_column_newton_qrstep
  ( int szt, int nbt, int dim, int deg, int nbrcol,
    int *tailidx_h, int *tailidx_d,
    int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac,
@@ -545,7 +545,7 @@ void cmplx4_newton_qrstep
    }
 }
 
-int test_dbl4_complex_newton
+int test_cmplx4_column_newton
  ( int szt, int nbt, int dim, int deg, int nbrcol,
    int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
    double dpr, int nbsteps, int mode, int vrblvl )
@@ -1428,7 +1428,7 @@ int test_dbl4_complex_newton
          cout << "*** running Newton step " << step
               << " at degree " << wrkdeg << " ***" << endl;
 
-      cmplx4_newton_qrstep
+      cmplx4_column_newton_qrstep
          (szt,nbt,dim,wrkdeg,nbrcol,
           &tailidx_h,&tailidx_d,nvr,idx,exp,nbrfac,expfac,
           mbrhsrehihi,mbrhsrelohi,mbrhsrehilo,mbrhsrelolo,
