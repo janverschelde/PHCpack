@@ -201,7 +201,6 @@ __global__ void dbl8_increment_jobs
    datalololo[idx3] = zvlololo[tdx];
 }
 
-/*
 __global__ void cmplx8_padded_convjobs
  ( double *datarehihihi, double *datarelohihi,
    double *datarehilohi, double *datarelolohi,
@@ -451,7 +450,6 @@ __global__ void cmplx8_padded_convjobs
    dataimhilolo[idx3] = zvimhilolo[tdx];
    dataimlololo[idx3] = zvimlololo[tdx];
 }
-*/
 
 __global__ void cmplx8vectorized_flipsigns
  ( double *datarihihihi, double *datarilohihi,

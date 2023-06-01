@@ -1,3 +1,6 @@
+Thu 1 Jun 2023 : updated makefile_unix and makefile_windows to compile
+  test_*_newton.cpp for the jobs of the complex vectorized arithmetic.
+
 Fri 19 May 2023 : extended dbl4_systems_kernels to use the vectorized
   versions in the column evaluations, updated test_dbl4_cyclic.cpp,
   makefile_unix and makefile_windows.

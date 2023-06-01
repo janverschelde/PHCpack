@@ -1,3 +1,7 @@
+Thu 1 Jun 2023 : in dbl8_polynomials_kernels, the cmplx8_padded_convjobs
+  are needed to compile test_dbl8_newton.cpp in ../Newton.  Therefore,
+  removed the comments around the cmplx_padded_convjobs kernel.
+
 Wed 31 May 2023 : new test_dbl4_cycsys.cpp, extended dbl4_polynomial_testers
   and all makefiles.  Added test_dbl8_cycsys.cpp, dbl8_polynomial_testers
   was extended, updated all makefiles.

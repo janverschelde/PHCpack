@@ -107,7 +107,6 @@ __global__ void dbl8_increment_jobs
  *   datahilolo has the incremented second lowest doubles;
  *   datalololo has the incremented lowest doubles. */
 
-/*
 __global__ void cmplx8_padded_convjobs
  ( double *datarehihihi, double *datarelohihi,
    double *datarehilohi, double *datarelolohi,
@@ -117,7 +116,7 @@ __global__ void cmplx8_padded_convjobs
    double *dataimhilohi, double *dataimlolohi,
    double *dataimhihilo, double *dataimlohilo,
    double *dataimhilolo, double *dataimlololo,
-   int *in1idx, int *in2idx, int *outidx, int dim ); */
+   int *in1idx, int *in2idx, int *outidx, int dim );
 /*
  * DESCRIPTION :
  *   Executes all convolution jobs at the same layer, on complex data.

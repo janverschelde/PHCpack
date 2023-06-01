@@ -773,6 +773,9 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                  dbl_convolutions_host.o dbl_monomials_host.o \
                  convolution_job.o convolution_jobs.o write_job_counts.o \
                  addition_job.o addition_jobs.o job_coordinates.o \
+                 complexconv_job.o complexconv_jobs.o \
+                 complexinc_job.o complexinc_jobs.o \
+                 complexadd_job.o complexadd_jobs.o \
                  dbl_systems_host.o write_gpu_timings.o \
                  dbl_systems_kernels.o dbl_polynomials_kernels.o \
                  dbl_factorizations.o dbl_onenorms_host.o dbl_bals_host.o \
@@ -790,6 +793,9 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl_convolutions_host.o dbl_monomials_host.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
                   dbl_systems_host.o write_gpu_timings.o \
                   dbl_systems_kernels.o dbl_polynomials_kernels.o \
                   dbl_factorizations.o dbl_onenorms_host.o dbl_bals_host.o \
@@ -808,6 +814,9 @@ test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl2_factorizations.o dbl_onenorms_host.o dbl2_bals_host.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
                   dbl2_systems_host.o write_gpu_timings.o \
                   dbl2_systems_kernels.o dbl2_polynomials_kernels.o \
                   dbl2_newton_testers.o test_dbl2_newton.o \
@@ -828,6 +837,9 @@ test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl2_factorizations.o dbl_onenorms_host.o dbl2_bals_host.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
                   dbl2_systems_host.o write_gpu_timings.o \
                   dbl2_systems_kernels.o dbl2_polynomials_kernels.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
@@ -846,6 +858,9 @@ test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl4_tail_kernels.o dbl4_bals_kernels.o \
                   convolution_job.o convolution_jobs.o cyclic_columns.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
                   dbl4_systems_host.o write_gpu_timings.o write_job_counts.o \
                   dbl4_systems_kernels.o dbl4_polynomials_kernels.o \
                   dbl_bals_flopcounts.o write_dbl4_bstimeflops.o \
@@ -866,6 +881,9 @@ test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl4_tail_kernels.o dbl4_bals_kernels.o \
                   convolution_job.o convolution_jobs.o cyclic_columns.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
                   dbl4_systems_host.o write_gpu_timings.o \
                   dbl4_systems_kernels.o dbl4_polynomials_kernels.o \
                   dbl_bals_flopcounts.o write_dbl4_bstimeflops.o \
@@ -882,6 +900,9 @@ test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl8_convolutions_host.o dbl8_monomials_host.o \
                   convolution_job.o convolution_jobs.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
                   dbl8_systems_host.o write_gpu_timings.o \
                   dbl8_systems_kernels.o dbl8_polynomials_kernels.o \
                   dbl8_factorizations.o dbl_onenorms_host.o dbl8_bals_host.o \
@@ -903,6 +924,9 @@ test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl8_convolutions_host.o dbl8_monomials_host.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
+                  complexconv_job.o complexconv_jobs.o \
+                  complexinc_job.o complexinc_jobs.o \
+                  complexadd_job.o complexadd_jobs.o \
                   dbl8_systems_host.o write_gpu_timings.o \
                   dbl8_systems_kernels.o dbl8_polynomials_kernels.o \
                   dbl8_factorizations.o dbl_onenorms_host.o dbl8_bals_host.o \

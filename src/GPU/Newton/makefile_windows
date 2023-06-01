@@ -1114,6 +1114,9 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
                  dbl_convolutions_host.obj dbl_monomials_host.obj \
                  convolution_job.obj convolution_jobs.obj \
                  addition_job.obj addition_jobs.obj job_coordinates.obj \
+                 complexconv_job.obj complexconv_jobs.obj \
+                 complexadd_job.obj complexadd_jobs.obj \
+                 complexinc_job.obj complexinc_jobs.obj \
                  gettimeofday4win.obj write_gpu_timings.obj \
                  dbl_systems_host.obj write_dbl_bstimeflops.obj \
 		 write_dbl_qrtimeflops.obj write_job_counts.obj \
@@ -1131,6 +1134,9 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
 	     dbl_convolutions_host.obj dbl_monomials_host.obj \
              cyclic_columns.obj convolution_job.obj convolution_jobs.obj \
              addition_job.obj addition_jobs.obj job_coordinates.obj \
+             complexconv_job.obj complexconv_jobs.obj \
+             complexadd_job.obj complexadd_jobs.obj \
+             complexinc_job.obj complexinc_jobs.obj \
              dbl_systems_host.obj write_gpu_timings.obj write_job_counts.obj \
              gettimeofday4win.obj write_dbl_qrtimeflops.obj \
              dbl_systems_kernels.obj dbl_polynomials_kernels.obj \
@@ -1149,6 +1155,9 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
                   dbl2_convolutions_host.obj dbl2_monomials_host.obj \
                   convolution_job.obj convolution_jobs.obj \
                   addition_job.obj addition_jobs.obj job_coordinates.obj \
+                  complexconv_job.obj complexconv_jobs.obj \
+                  complexadd_job.obj complexadd_jobs.obj \
+                  complexinc_job.obj complexinc_jobs.obj \
                   gettimeofday4win.obj write_gpu_timings.obj \
                   dbl2_systems_host.obj write_dbl2_bstimeflops.obj \
 		  write_dbl2_qrtimeflops.obj write_job_counts.obj \
@@ -1168,6 +1177,9 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
 	     dbl2_convolutions_host.obj dbl2_monomials_host.obj \
              convolution_job.obj convolution_jobs.obj write_job_counts.obj \
              addition_job.obj addition_jobs.obj job_coordinates.obj \
+             complexconv_job.obj complexconv_jobs.obj \
+             complexadd_job.obj complexadd_jobs.obj \
+             complexinc_job.obj complexinc_jobs.obj \
              gettimeofday4win.obj write_gpu_timings.obj \
              dbl2_systems_host.obj dbl2_monomial_systems.obj \
              dbl2_systems_kernels.obj dbl2_polynomials_kernels.obj \
@@ -1188,6 +1200,9 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
                   dbl4_convolutions_host.obj dbl4_monomials_host.obj \
                   convolution_job.obj convolution_jobs.obj \
                   addition_job.obj addition_jobs.obj job_coordinates.obj \
+                  complexconv_job.obj complexconv_jobs.obj \
+                  complexadd_job.obj complexadd_jobs.obj \
+                  complexinc_job.obj complexinc_jobs.obj \
                   gettimeofday4win.obj write_gpu_timings.obj \
                   dbl4_systems_host.obj write_dbl4_bstimeflops.obj \
 		  write_dbl4_qrtimeflops.obj write_job_counts.obj \
@@ -1208,6 +1223,9 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
 	     dbl4_convolutions_host.obj dbl4_monomials_host.obj \
              convolution_job.obj convolution_jobs.obj \
              addition_job.obj addition_jobs.obj job_coordinates.obj \
+             complexconv_job.obj complexconv_jobs.obj \
+             complexadd_job.obj complexadd_jobs.obj \
+             complexinc_job.obj complexinc_jobs.obj \
              gettimeofday4win.obj write_gpu_timings.obj \
              dbl4_systems_host.obj write_dbl4_bstimeflops.obj \
 	     write_dbl4_qrtimeflops.obj write_job_counts.obj \
@@ -1228,6 +1246,9 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
                   dbl8_convolutions_host.obj dbl8_monomials_host.obj \
                   convolution_job.obj convolution_jobs.obj \
                   addition_job.obj addition_jobs.obj job_coordinates.obj \
+                  complexconv_job.obj complexconv_jobs.obj \
+                  complexadd_job.obj complexadd_jobs.obj \
+                  complexinc_job.obj complexinc_jobs.obj \
                   dbl8_systems_host.obj write_job_counts.obj \
                   dbl8_systems_kernels.obj dbl8_polynomials_kernels.obj \
                   dbl8_factorizations.obj dbl_onenorms_host.obj \
@@ -1249,6 +1270,9 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
 	     dbl8_convolutions_host.obj dbl8_monomials_host.obj \
              convolution_job.obj convolution_jobs.obj \
              addition_job.obj addition_jobs.obj job_coordinates.obj \
+             complexconv_job.obj complexconv_jobs.obj \
+             complexadd_job.obj complexadd_jobs.obj \
+             complexinc_job.obj complexinc_jobs.obj \
              dbl8_systems_host.obj write_job_counts.obj \
              dbl8_systems_kernels.obj dbl8_polynomials_kernels.obj \
              dbl8_factorizations.obj dbl_onenorms_host.obj \
