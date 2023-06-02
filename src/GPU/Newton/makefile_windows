@@ -96,6 +96,12 @@ random_monomials.obj:
                  -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: random_monomials.obj /EHsc
 
+random_polynomials.obj:
+	@-echo ">>> compiling random_polynomials ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(POL)/random_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random_polynomials.obj /EHsc
+
 random2_vectors.obj:
 	@-echo ">>> compiling double double random vector generators ..."
 	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
@@ -584,6 +590,12 @@ cyclic_columns.obj:
                       cyclic_columns.cpp \
                  /Fo: cyclic_columns.obj /EHsc
 
+cyclic_indices.obj:
+	@-echo ">>> compiling cyclic_indices ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(POL)/cyclic_indices.cpp \
+                 /Fo: cyclic_indices.obj /EHsc
+
 test_columns.obj:
 	@-echo ">>> compiling test_columns ..."
 	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
@@ -835,27 +847,28 @@ test_dbl8_flopbals.obj:
 
 test_dbl_newton.obj:
 	@-echo ">>> compiling test_dbl_newton ..."
-	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(winkitucrt) -I$(includepath) -O2 \
+	$(CL)\cl /c -I$(CNV) -I$(POL) -I$(MAT) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
                       test_dbl_newton.cpp \
                  /Fo: test_dbl_newton.obj /EHsc
 
 test_dbl2_newton.obj:
 	@-echo ">>> compiling test_dbl2_newton ..."
-	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) \
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(POL) -I$(MAT) \
                     -I$(winkitucrt) -I$(includepath) -O2 \
                       test_dbl2_newton.cpp \
                  /Fo: test_dbl2_newton.obj /EHsc
 
 test_dbl4_newton.obj:
 	@-echo ">>> compiling test_dbl4_newton ..."
-	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) \
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(POL) -I$(MAT) \
                     -I$(winkitucrt) -I$(includepath) -O2 \
                       test_dbl4_newton.cpp \
                  /Fo: test_dbl4_newton.obj /EHsc
 
 test_dbl8_newton.obj:
 	@-echo ">>> compiling test_dbl8_newton ..."
-	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) \
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(POL) -I$(MAT) \
                     -I$(winkitucrt) -I$(includepath) -O2 \
                       test_dbl8_newton.cpp \
                  /Fo: test_dbl8_newton.obj /EHsc
@@ -1111,6 +1124,7 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
 		 dbl_newton_method.obj cmplx_newton_method.obj \
 		 dbl_bals_kernels.obj dbl_tail_kernels.obj \
                  random_numbers.obj random_series.obj random_monomials.obj \
+                 random_polynomials.obj cyclic_indices.obj \
                  dbl_convolutions_host.obj dbl_monomials_host.obj \
                  convolution_job.obj convolution_jobs.obj \
                  addition_job.obj addition_jobs.obj job_coordinates.obj \
@@ -1131,6 +1145,7 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
 	     dbl_newton_testers.obj dbl_monomial_systems.obj \
              dbl_newton_method.obj cmplx_newton_method.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
+             random_polynomials.obj cyclic_indices.obj \
 	     dbl_convolutions_host.obj dbl_monomials_host.obj \
              cyclic_columns.obj convolution_job.obj convolution_jobs.obj \
              addition_job.obj addition_jobs.obj job_coordinates.obj \
@@ -1148,6 +1163,7 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
 
 test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
+                  random_polynomials.obj cyclic_indices.obj \
 		  random2_vectors.obj random2_series.obj cyclic_columns.obj \
                   dbl2_monomial_systems.obj prompt_newton_setup.obj \
                   double_double_functions.obj dbl2_newton_testers.obj \
@@ -1171,6 +1187,7 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
 	nvcc -ccbin=$(CL) -o test_dbl2_newton.exe test_dbl2_newton.obj \
              unimodular_matrices.obj prompt_newton_setup.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
+             random_polynomials.obj cyclic_indices.obj \
              random2_vectors.obj random2_series.obj cyclic_columns.obj \
              double_double_functions.obj dbl2_newton_testers.obj \
 	     dbl2_newton_method.obj cmplx2_newton_method.obj \
@@ -1193,6 +1210,7 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
 test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
                   dbl4_newton_method.obj cmplx4_newton_method.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
+                  random_polynomials.obj cyclic_indices.obj \
 		  random4_vectors.obj random4_series.obj cyclic_columns.obj \
                   dbl4_monomial_systems.obj \
 		  prompt_newton_setup.obj dbl4_newton_testers.obj \
@@ -1217,6 +1235,7 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
              dbl4_newton_method.obj cmplx4_newton_method.obj \
              unimodular_matrices.obj prompt_newton_setup.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
+             random_polynomials.obj cyclic_indices.obj \
              random4_vectors.obj random4_series.obj dbl4_monomial_systems.obj \
              double_double_functions.obj quad_double_functions.obj \
 	     dbl4_newton_testers.obj cyclic_columns.obj \
@@ -1239,6 +1258,7 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
 test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
                   dbl8_newton_method.obj cmplx8_newton_method.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
+                  random_polynomials.obj cyclic_indices.obj \
                   random8_vectors.obj random8_series.obj cyclic_columns.obj \
                   dbl8_monomial_systems.obj prompt_newton_setup.obj \
 		  double_double_functions.obj quad_double_functions.obj \
@@ -1263,6 +1283,7 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
              dbl8_newton_method.obj cmplx8_newton_method.obj \
              unimodular_matrices.obj prompt_newton_setup.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
+             random_polynomials.obj cyclic_indices.obj \
              random8_vectors.obj random8_series.obj cyclic_columns.obj \
              dbl8_monomial_systems.obj \
              double_double_functions.obj quad_double_functions.obj \
@@ -1350,6 +1371,7 @@ clean:
 
 cleanall:
 	del random_numbers.obj random_series.obj random_monomials.obj
+	del random_polynomials.obj cyclic_indices.obj
 	del double_double_functions.obj quad_double_functions.obj
 	del octo_double_functions.obj
 	del random2_series.obj random4_series.obj random8_series.obj

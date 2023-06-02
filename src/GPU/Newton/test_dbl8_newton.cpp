@@ -6,6 +6,7 @@
 #include <cmath>
 #include <time.h>
 #include "cyclic_columns.h"
+#include "cyclic_indices.h"
 #include "unimodular_matrices.h"
 #include "prompt_newton_setup.h"
 #include "dbl8_newton_testers.h"
@@ -192,5 +193,21 @@ int dbl8_test_rows
  ( int dim, int deg, int vrblvl,
    int nbsteps, int szt, int nbt, int mode, int cdata )
 {
+   int *nbr = new int[dim];     // number of monomials in each polynomial
+   int **nvr = new int*[dim];   // number of variables in dim polynomials
+   int ***idx = new int**[dim]; // we have dim polynomials
+
+   make_polynomial_indices(dim,nbr,nvr,idx);
+   write_polynomial_indices(dim,nbr,nvr,idx);
+
+   double dpr = 1.0;
+
+   if(cdata == 0)
+      test_dbl8_row_newton
+         (szt,nbt,dim,deg,nbr,nvr,idx,dpr,nbsteps,mode,vrblvl);
+   else
+      test_cmplx8_row_newton
+         (szt,nbt,dim,deg,nbr,nvr,idx,dpr,nbsteps,mode,vrblvl);
+
    return 0;
 }

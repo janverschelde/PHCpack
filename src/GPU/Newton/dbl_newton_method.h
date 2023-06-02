@@ -161,4 +161,28 @@ int test_dbl_column_newton
  *             2 for CPU and GPU;
  *   vrblvl    is the verbose level. */
 
+int test_dbl_row_newton
+ ( int szt, int nbt, int dim, int deg, int *nbr, int **nvr, int ***idx,
+   double dpr, int nbsteps, int mode, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Runs Newton with real double arithmetic,
+ *   on an indexed polynomial system.
+ *
+ * ON ENTRY :
+ *   szt       size of each tile and block;
+ *   nbt       number of tiles and number of blocks;
+ *   dim       number of equations and variables in the system;
+ *   deg       degree of the power series;
+ *   nbr       nbr[i] is the number of monomials in the i-th polynomial;
+ *   nvr       nvr[i][j] is the number of variables in the j-th monomial
+ *             of the i-th polynomial;
+ *   idx       idx[i][j] are the indices of the variables in monomial j
+ *             of the i-th polynomial;
+ *   dpr       damper multiplier for t, should be in (0.0, 1.0];
+ *   nbsteps   the number of Newton steps;
+ *   mode      the mode of execution, 0 for GPU only, 1 for CPU only,
+ *             2 for CPU and GPU;
+ *   vrblvl    is the verbose level. */
+
 #endif

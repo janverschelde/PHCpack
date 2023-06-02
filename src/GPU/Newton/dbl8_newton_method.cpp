@@ -1620,3 +1620,10 @@ int test_dbl8_column_newton
 
    return 0;
 }
+
+int test_dbl8_row_newton
+ ( int szt, int nbt, int dim, int deg, int *nbr, int **nvr, int ***idx,
+   double dpr, int nbsteps, int mode, int vrblvl )
+{
+   return 0;
+}

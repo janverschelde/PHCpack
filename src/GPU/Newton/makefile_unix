@@ -40,6 +40,10 @@ random_monomials.o:
 	@-echo ">>> compiling random_monomials ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/random_monomials.cpp
 
+random_polynomials.o:
+	@-echo ">>> compiling random_polynomials ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/random_polynomials.cpp
+
 random2_vectors.o:
 	@-echo ">>> compiling double double random vector generators ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/random2_vectors.cpp
@@ -397,6 +401,10 @@ cyclic_columns.o:
 	@-echo ">>> compiling cyclic_columns ..."
 	$(gpp) -O3 -c cyclic_columns.cpp
 
+cyclic_indices.o:
+	@-echo ">>> compiling cyclic_indices ..."
+	$(gpp) -O3 -c $(POL)/cyclic_indices.cpp
+
 test_columns.o:
 	@-echo ">>> compiling test_columns ..."
 	$(gpp) -O3 -c test_columns.cpp
@@ -531,19 +539,19 @@ prompt_newton_setup.o:
 
 test_dbl_newton.o:
 	@-echo ">>> compiling test_dbl_newton ..."
-	$(gpp) -O3 -c -I$(CNV) -I$(MAT) test_dbl_newton.cpp
+	$(gpp) -O3 -c -I$(CNV) -I$(POL) -I$(MAT) test_dbl_newton.cpp
 
 test_dbl2_newton.o:
 	@-echo ">>> compiling test_dbl2_newton ..."
-	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) test_dbl2_newton.cpp
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(POL) -I$(MAT) test_dbl2_newton.cpp
 
 test_dbl4_newton.o:
 	@-echo ">>> compiling test_dbl4_newton ..."
-	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) test_dbl4_newton.cpp
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(POL) -I$(MAT) test_dbl4_newton.cpp
 
 test_dbl8_newton.o:
 	@-echo ">>> compiling test_dbl8_newton ..."
-	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) test_dbl8_newton.cpp
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(POL) -I$(MAT) test_dbl8_newton.cpp
 
 test_unimodular: random_numbers.o random_series.o random_monomials.o \
                  unimodular_matrices.o test_unimodular.o
@@ -769,6 +777,7 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                  unimodular_matrices.o prompt_newton_setup.o \
                  dbl_newton_testers.o test_dbl_newton.o \
                  dbl_monomial_systems.o cyclic_columns.o \
+                 random_polynomials.o cyclic_indices.o \
                  dbl_newton_method.o cmplx_newton_method.o \
                  dbl_convolutions_host.o dbl_monomials_host.o \
                  convolution_job.o convolution_jobs.o write_job_counts.o \
@@ -787,6 +796,7 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_newton test_dbl_newton.o dbl_newton_testers.o \
                   dbl_monomial_systems.o cyclic_columns.o \
+                  random_polynomials.o cyclic_indices.o \
                   dbl_newton_method.o cmplx_newton_method.o \
                   prompt_newton_setup.o unimodular_matrices.o \
                   random_numbers.o random_series.o random_monomials.o \
@@ -809,6 +819,7 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
 test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o prompt_newton_setup.o \
                   double_double_functions.o cyclic_columns.o \
+                  random_polynomials.o cyclic_indices.o \
                   random2_vectors.o random2_series.o dbl2_monomial_systems.o \
                   dbl2_convolutions_host.o dbl2_monomials_host.o \
                   dbl2_factorizations.o dbl_onenorms_host.o dbl2_bals_host.o \
@@ -832,6 +843,7 @@ test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
                   random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o prompt_newton_setup.o \
                   double_double_functions.o cyclic_columns.o \
+                  random_polynomials.o cyclic_indices.o \
                   random2_vectors.o random2_series.o dbl2_monomial_systems.o \
                   dbl2_convolutions_host.o dbl2_monomials_host.o \
                   dbl2_factorizations.o dbl_onenorms_host.o dbl2_bals_host.o \
@@ -853,10 +865,11 @@ test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
                   random4_vectors.o random4_series.o dbl4_monomial_systems.o \
                   unimodular_matrices.o prompt_newton_setup.o \
                   double_double_functions.o quad_double_functions.o \
+                  cyclic_columns.o random_polynomials.o cyclic_indices.o \
                   dbl4_convolutions_host.o dbl4_monomials_host.o \
                   dbl4_factorizations.o dbl_onenorms_host.o dbl4_bals_host.o \
                   dbl4_tail_kernels.o dbl4_bals_kernels.o \
-                  convolution_job.o convolution_jobs.o cyclic_columns.o \
+                  convolution_job.o convolution_jobs.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   complexconv_job.o complexconv_jobs.o \
                   complexinc_job.o complexinc_jobs.o \
@@ -876,10 +889,11 @@ test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
                   random4_vectors.o random4_series.o dbl4_monomial_systems.o \
                   unimodular_matrices.o prompt_newton_setup.o \
                   double_double_functions.o quad_double_functions.o \
+                  cyclic_columns.o random_polynomials.o cyclic_indices.o \
                   dbl4_convolutions_host.o dbl4_monomials_host.o \
                   dbl4_factorizations.o dbl_onenorms_host.o dbl4_bals_host.o \
                   dbl4_tail_kernels.o dbl4_bals_kernels.o \
-                  convolution_job.o convolution_jobs.o cyclic_columns.o \
+                  convolution_job.o convolution_jobs.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   complexconv_job.o complexconv_jobs.o \
                   complexinc_job.o complexinc_jobs.o \
@@ -897,6 +911,7 @@ test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o prompt_newton_setup.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o cyclic_columns.o \
+                  random_polynomials.o cyclic_indices.o \
                   dbl8_convolutions_host.o dbl8_monomials_host.o \
                   convolution_job.o convolution_jobs.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
@@ -921,6 +936,7 @@ test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o prompt_newton_setup.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o cyclic_columns.o \
+                  random_polynomials.o cyclic_indices.o \
                   dbl8_convolutions_host.o dbl8_monomials_host.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
@@ -985,6 +1001,7 @@ clean:
 
 cleanall: clean
 	/bin/rm -f -r random_numbers.o random_series.o random_monomials.o
+	/bin/rm -f -r random_polynomials.o cyclic_indices.o
 	/bin/rm -f -r random2_series.o random4_series.o random8_series.o
 	/bin/rm -f -r random2_vectors.o random4_vectors.o random8_vectors.o
 	/bin/rm -f -r dbl_convolutions_host.o dbl_monomials_host.o
