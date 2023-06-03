@@ -1,3 +1,7 @@
+Sat 3 Jun 2023 : new {dbl, dbl2, dbl4, dbl8}_indexed_coefficients, with
+  code from test_{dbl, dbl2, dbl4, dbl8}_cycsys.cpp.
+  Updated makefile_unix and makefile_windows.
+
 Thu 1 Jun 2023 : in dbl8_polynomials_kernels, the cmplx8_padded_convjobs
   are needed to compile test_dbl8_newton.cpp in ../Newton.  Therefore,
   removed the comments around the cmplx_padded_convjobs kernel.

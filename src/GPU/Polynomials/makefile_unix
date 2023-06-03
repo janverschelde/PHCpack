@@ -457,6 +457,22 @@ cyclic_indices.o:
 	@-echo ">>> compiling cyclic_indices ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) cyclic_indices.cpp
 
+dbl_indexed_coefficients.o:
+	@-echo ">>> compiling dbl_indexed_coefficients ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) dbl_indexed_coefficients.cpp
+
+dbl2_indexed_coefficients.o:
+	@-echo ">>> compiling dbl2_indexed_coefficients ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) dbl2_indexed_coefficients.cpp
+
+dbl4_indexed_coefficients.o:
+	@-echo ">>> compiling dbl4_indexed_coefficients ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) dbl4_indexed_coefficients.cpp
+
+dbl8_indexed_coefficients.o:
+	@-echo ">>> compiling dbl8_indexed_coefficients ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) dbl8_indexed_coefficients.cpp
+
 test_dbl_cycsys.o:
 	@-echo ">>> compiling test_dbl_cycsys ..."
 	$(gpp) -O3 -c -I$(CUDA) -I$(MPD) -I$(CNV) test_dbl_cycsys.cpp
@@ -482,7 +498,8 @@ test_dbl_cycsys: random_numbers.o random_series.o random_monomials.o \
                  job_coordinates.o write_job_counts.o write_gpu_timings.o \
                  dbl_convolutions_host.o dbl_monomials_host.o \
                  dbl_polynomials_host.o dbl_polynomials_kernels.o \
-                 dbl_polynomials_testers.o cyclic_indices.o test_dbl_cycsys.o
+                 dbl_polynomials_testers.o cyclic_indices.o \
+                 dbl_indexed_coefficients.o test_dbl_cycsys.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl_cycsys test_dbl_cycsys.o cyclic_indices.o \
                   random_numbers.o random_series.o random_monomials.o \
@@ -494,7 +511,7 @@ test_dbl_cycsys: random_numbers.o random_series.o random_monomials.o \
                   job_coordinates.o write_job_counts.o write_gpu_timings.o \
                   dbl_convolutions_host.o dbl_monomials_host.o \
                   dbl_polynomials_host.o dbl_polynomials_kernels.o \
-                  dbl_polynomials_testers.o \
+                  dbl_polynomials_testers.o dbl_indexed_coefficients.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl2_cycsys: random_numbers.o random_series.o random_monomials.o \
@@ -510,7 +527,7 @@ test_dbl2_cycsys: random_numbers.o random_series.o random_monomials.o \
                   dbl2_convolutions_host.o dbl2_monomials_host.o \
                   dbl2_polynomials_host.o dbl2_polynomials_kernels.o \
                   dbl2_polynomials_testers.o cyclic_indices.o \
-                  test_dbl2_cycsys.o
+                  dbl2_indexed_coefficients.o test_dbl2_cycsys.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl2_cycsys test_dbl2_cycsys.o cyclic_indices.o \
                   random_numbers.o random_series.o random_monomials.o \
@@ -525,7 +542,7 @@ test_dbl2_cycsys: random_numbers.o random_series.o random_monomials.o \
                   job_coordinates.o write_job_counts.o write_gpu_timings.o \
                   dbl2_convolutions_host.o dbl2_monomials_host.o \
                   dbl2_polynomials_host.o dbl2_polynomials_kernels.o \
-                  dbl2_polynomials_testers.o \
+                  dbl2_polynomials_testers.o dbl2_indexed_coefficients.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl4_cycsys: random_numbers.o random_series.o random_monomials.o \
@@ -541,7 +558,7 @@ test_dbl4_cycsys: random_numbers.o random_series.o random_monomials.o \
                   dbl4_convolutions_host.o dbl4_monomials_host.o \
                   dbl4_polynomials_host.o dbl4_polynomials_kernels.o \
                   dbl4_polynomials_testers.o cyclic_indices.o \
-                  test_dbl4_cycsys.o
+                  dbl4_indexed_coefficients.o test_dbl4_cycsys.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl4_cycsys test_dbl4_cycsys.o cyclic_indices.o \
                   random_numbers.o random_series.o random_monomials.o \
@@ -556,7 +573,7 @@ test_dbl4_cycsys: random_numbers.o random_series.o random_monomials.o \
                   job_coordinates.o write_job_counts.o write_gpu_timings.o \
                   dbl4_convolutions_host.o dbl4_monomials_host.o \
                   dbl4_polynomials_host.o dbl4_polynomials_kernels.o \
-                  dbl4_polynomials_testers.o \
+                  dbl4_polynomials_testers.o dbl4_indexed_coefficients.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 test_dbl8_cycsys: random_numbers.o random_series.o random_monomials.o \
@@ -573,7 +590,7 @@ test_dbl8_cycsys: random_numbers.o random_series.o random_monomials.o \
                   dbl8_convolutions_host.o dbl8_monomials_host.o \
                   dbl8_polynomials_host.o dbl8_polynomials_kernels.o \
                   dbl8_polynomials_testers.o cyclic_indices.o \
-                  test_dbl8_cycsys.o
+                  dbl8_indexed_coefficients.o test_dbl8_cycsys.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dbl8_cycsys test_dbl8_cycsys.o cyclic_indices.o \
                   random_numbers.o random_series.o random_monomials.o \
@@ -589,7 +606,7 @@ test_dbl8_cycsys: random_numbers.o random_series.o random_monomials.o \
                   job_coordinates.o write_job_counts.o write_gpu_timings.o \
                   dbl8_convolutions_host.o dbl8_monomials_host.o \
                   dbl8_polynomials_host.o dbl8_polynomials_kernels.o \
-                  dbl8_polynomials_testers.o \
+                  dbl8_polynomials_testers.o dbl8_indexed_coefficients.o \
                -lcuda -lcudart -L$(CUDALIB)
 
 test_convolution_jobs: random_numbers.o random_series.o random_monomials.o \
@@ -1284,6 +1301,8 @@ clean:
 	/bin/rm -f -r job_coordinates.o write_job_counts.o prompt_for_setup.o
 	/bin/rm -f -r write_gpu_timings.o job_makers.o
 	/bin/rm -f -r cyclic_indices.o
+	/bin/rm -f -r dbl_indexed_coefficients.o dbl2_indexed_coefficients.o
+	/bin/rm -f -r dbl4_indexed_coefficients.o dbl8_indexed_coefficients.o
 	/bin/rm -f -r test_dbl_cycsys.o test_dbl_cycsys
 	/bin/rm -f -r test_dbl2_cycsys.o test_dbl2_cycsys
 	/bin/rm -f -r test_dbl4_cycsys.o test_dbl4_cycsys

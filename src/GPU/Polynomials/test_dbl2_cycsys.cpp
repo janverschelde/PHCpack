@@ -13,6 +13,7 @@
 #include "dbl2_polynomials_kernels.h"
 #include "dbl2_polynomials_testers.h"
 #include "cyclic_indices.h"
+#include "dbl2_indexed_coefficients.h"
 
 using namespace std;
 
@@ -118,61 +119,21 @@ double test_dbl2_sysevaldiff
  ( int dim, int deg, int *nbr, int **nvr, int ***idx, int vrblvl )
 {
    const int degp1 = deg+1;
-/* generate constant and coefficients */
-   double rndhi,rndlo;
    double **csthi = new double*[dim];
    double **cstlo = new double*[dim];
-   for(int i=0; i<dim; i++)
-   {
-      csthi[i] = new double[deg+1];
-      cstlo[i] = new double[deg+1];
-      random_dbl2_exponential(deg,&rndhi,&rndlo,csthi[i],cstlo[i]);
-   }
-   if(vrblvl > 1)
-   {
-      cout << scientific << setprecision(16);
-      cout << "Constant coefficient series :" << endl;
-      for(int i=0; i<dim; i++)
-      {
-         cout << "-> coefficients of series " << i << " :" << endl;
-         for(int j=0; j<=deg; j++)
-            cout << csthi[i][j] << "  " << cstlo[i][j] << endl;
-      }
-   }
    double ***cffhi = new double**[dim];
    double ***cfflo = new double**[dim];
-   for(int i=0; i<dim; i++)
-   {
-      cffhi[i] = new double*[nbr[i]];
-      cfflo[i] = new double*[nbr[i]];
-      for(int j=0; j<nbr[i]; j++)
-      {
-         cffhi[i][j] = new double[deg+1];
-         cfflo[i][j] = new double[deg+1];
-         random_dbl2_exponential(deg,&rndhi,&rndlo,cffhi[i][j],cfflo[i][j]);
-      }
-   }
-   if(vrblvl > 1)
-   {
-      cout << scientific << setprecision(16);
-      for(int i=0; i<dim; i++)
-      {
-         for(int j=0; j<nbr[i]; j++)
-         {
-            cout << "-> coefficients of monomial " << j
-                 << " of polynomial " << i << " :" << endl;
-            for(int k=0; k<=deg; k++)
-               cout << cffhi[i][j][k] << "  " << cfflo[i][j][k] << endl;
-         }
-      }
-   }
+
+   dbl2_make_coefficients
+      (dim,deg,nbr,nvr,idx,csthi,cstlo,cffhi,cfflo,vrblvl);
+
 /* define the input and allocate the output */
    double **inputhi = new double*[dim]; // dim series of degree deg
    double **inputlo = new double*[dim]; // dim series of degree deg
    for(int i=0; i<dim; i++)
    {
-      inputhi[i] = new double[deg+1];
-      inputlo[i] = new double[deg+1];
+      inputhi[i] = new double[degp1];
+      inputlo[i] = new double[degp1];
    }
    make_real2_input(dim,deg,inputhi,inputlo);
 
@@ -263,81 +224,19 @@ double test_cmplx2_sysevaldiff
  ( int dim, int deg, int *nbr, int **nvr, int ***idx, int vrblvl )
 {
    const int degp1 = deg+1;
-/* generate constant and coefficients */
-   double rndrehi,rndrelo,rndimhi,rndimlo;
    double **cstrehi = new double*[dim];
    double **cstrelo = new double*[dim];
    double **cstimhi = new double*[dim];
    double **cstimlo = new double*[dim];
-   for(int i=0; i<dim; i++)
-   {
-      cstrehi[i] = new double[degp1];
-      cstrelo[i] = new double[degp1];
-      cstimhi[i] = new double[degp1];
-      cstimlo[i] = new double[degp1];
-/*
-      random_cmplx2_exponential
-         (deg,&rndrehi,&rndrelo,&rndimhi,&rndimlo,
-          cstrehi[i],cstrelo[i],cstimhi[i],cstimlo[i]);
- */
-      for(int k=0; k<=deg; k++)
-         random_double_double_complex
-            (&cstrehi[i][k],&cstrelo[i][k],&cstimhi[i][k],&cstimlo[i][k]);
-   }
-   if(vrblvl > 1)
-   {
-      cout << scientific << setprecision(16);
-      cout << "Constant coefficient series :" << endl;
-      for(int i=0; i<dim; i++)
-      {
-         cout << "-> coefficients of series " << i << " :" << endl;
-         for(int j=0; j<=deg; j++)
-            cout << cstrehi[i][j] << "  " << cstrelo[i][j] << endl
-                 << cstimhi[i][j] << "  " << cstimlo[i][j] << endl;
-      }
-   }
    double ***cffrehi = new double**[dim];
    double ***cffrelo = new double**[dim];
    double ***cffimhi = new double**[dim];
    double ***cffimlo = new double**[dim];
-   for(int i=0; i<dim; i++)
-   {
-      cffrehi[i] = new double*[nbr[i]];
-      cffrelo[i] = new double*[nbr[i]];
-      cffimhi[i] = new double*[nbr[i]];
-      cffimlo[i] = new double*[nbr[i]];
-      for(int j=0; j<nbr[i]; j++)
-      {
-         cffrehi[i][j] = new double[degp1];
-         cffrelo[i][j] = new double[degp1];
-         cffimhi[i][j] = new double[degp1];
-         cffimlo[i][j] = new double[degp1];
- /*
-         random_cmplx2_exponential
-            (deg,&rndrehi,&rndrelo,&rndimhi,&rndimlo,
-             cffrehi[i][j],cffrelo[i][j],cffimhi[i][j],cffimlo[i][j]);
-  */
-         for(int k=0; k<=deg; k++)
-            random_double_double_complex
-               (&cffrehi[i][j][k],&cffrelo[i][j][k],
-                &cffimhi[i][j][k],&cffimlo[i][j][k]);
-      }
-   }
-   if(vrblvl > 1)
-   {
-      cout << scientific << setprecision(16);
-      for(int i=0; i<dim; i++)
-      {
-         for(int j=0; j<nbr[i]; j++)
-         {
-            cout << "-> coefficients of monomial " << j
-                 << " of polynomial " << i << " :" << endl;
-            for(int k=0; k<=deg; k++)
-               cout << cffrehi[i][j][k] << "  " << cffrelo[i][j][k] << endl
-                    << cffimhi[i][j][k] << "  " << cffimlo[i][j][k] << endl;
-         }
-      }
-   }
+
+   cmplx2_make_coefficients
+      (dim,deg,nbr,nvr,idx,cstrehi,cstrelo,cstimhi,cstimlo,
+       cffrehi,cffrelo,cffimhi,cffimlo,vrblvl);
+
 /* generate input series and allocate the output */
    double **inputrehi = new double*[dim]; // dim series of degree deg
    double **inputrelo = new double*[dim];

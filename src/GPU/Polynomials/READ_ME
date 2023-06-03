@@ -85,6 +85,10 @@ run_dbl10_polynomials     : run specific tests in deca double precision
 run_polynomials           : run specific tests in all precisions
 -----------------------------------------------------------------------------
 cyclic_indices            : defines the indices of cyclic n-roots
+dbl_indexed_coefficients  : makes coefficients in double precision
+dbl2_indexed_coefficients : makes coefficients in double double precision
+dbl4_indexed_coefficients : makes coefficients in quad double precision
+dbl8_indexed_coefficients : makes coefficients in octo double precision
 test_dbl_cycsys           : tests cyclic n-roots in double precision
 test_dbl2_cycsys          : tests cyclic n-roots in double double precision
 test_dbl4_cycsys          : tests cyclic n-roots in quad double precision

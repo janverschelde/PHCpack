@@ -726,6 +726,34 @@ cyclic_indices.obj:
                  /I$(CUDASDK)/include \
                  /Fo: cyclic_indices.obj /EHsc
 
+dbl_indexed_coefficients.obj:
+	@-echo ">>> compiling dbl_indexed_coefficients ..."
+	$(CL)\cl /c dbl_indexed_coefficients.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_indexed_coefficients.obj /EHsc
+
+dbl2_indexed_coefficients.obj:
+	@-echo ">>> compiling dbl2_indexed_coefficients ..."
+	$(CL)\cl /c dbl2_indexed_coefficients.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl2_indexed_coefficients.obj /EHsc
+
+dbl4_indexed_coefficients.obj:
+	@-echo ">>> compiling dbl4_indexed_coefficients ..."
+	$(CL)\cl /c dbl4_indexed_coefficients.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl4_indexed_coefficients.obj /EHsc
+
+dbl8_indexed_coefficients.obj:
+	@-echo ">>> compiling dbl8_indexed_coefficients ..."
+	$(CL)\cl /c dbl8_indexed_coefficients.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl8_indexed_coefficients.obj /EHsc
+
 test_dbl_cycsys.obj:
 	@-echo ">>> compiling test_dbl_cycsys ..."
 	$(CL)\cl /c test_dbl_cycsys.cpp \
@@ -766,7 +794,7 @@ test_dbl_cycsys: random_numbers.obj random_series.obj \
                  dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
                  dbl_polynomials_testers.obj write_gpu_timings.obj \
                  gettimeofday4win.obj test_dbl_cycsys.obj \
-                 cyclic_indices.obj
+                 cyclic_indices.obj dbl_indexed_coefficients.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl_cycsys.exe test_dbl_cycsys.obj \
                  random_numbers.obj random_series.obj \
@@ -780,7 +808,8 @@ test_dbl_cycsys: random_numbers.obj random_series.obj \
                  dbl_convolutions_host.obj dbl_monomials_host.obj \
                  dbl_polynomials_host.obj dbl_polynomials_kernels.obj \
                  dbl_polynomials_testers.obj write_gpu_timings.obj \
-                 gettimeofday4win.obj cyclic_indices.obj
+                 gettimeofday4win.obj cyclic_indices.obj \
+                 dbl_indexed_coefficients.obj
 
 test_dbl2_cycsys: random_numbers.obj random_series.obj \
                   random_monomials.obj random_polynomials.obj \
@@ -797,7 +826,7 @@ test_dbl2_cycsys: random_numbers.obj random_series.obj \
                   dbl2_polynomials_host.obj dbl2_polynomials_kernels.obj \
                   dbl2_polynomials_testers.obj write_gpu_timings.obj \
                   gettimeofday4win.obj test_dbl2_cycsys.obj \
-	          cyclic_indices.obj
+	          cyclic_indices.obj dbl2_indexed_coefficients.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl2_cycsys.exe test_dbl2_cycsys.obj \
                  random_numbers.obj random_series.obj \
@@ -814,7 +843,8 @@ test_dbl2_cycsys: random_numbers.obj random_series.obj \
                  dbl2_convolutions_host.obj dbl2_monomials_host.obj \
                  dbl2_polynomials_host.obj dbl2_polynomials_kernels.obj \
                  dbl2_polynomials_testers.obj write_gpu_timings.obj \
-                 gettimeofday4win.obj cyclic_indices.obj
+                 gettimeofday4win.obj cyclic_indices.obj \
+                 dbl2_indexed_coefficients.obj
 
 test_dbl4_cycsys: random_numbers.obj random_series.obj \
                   random_monomials.obj random_polynomials.obj \
@@ -831,7 +861,7 @@ test_dbl4_cycsys: random_numbers.obj random_series.obj \
                   dbl4_polynomials_host.obj dbl4_polynomials_kernels.obj \
                   dbl4_polynomials_testers.obj write_gpu_timings.obj \
                   gettimeofday4win.obj test_dbl4_cycsys.obj \
-	          cyclic_indices.obj
+	          cyclic_indices.obj dbl4_indexed_coefficients.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl4_cycsys.exe test_dbl4_cycsys.obj \
                  random_numbers.obj random_series.obj \
@@ -848,7 +878,8 @@ test_dbl4_cycsys: random_numbers.obj random_series.obj \
                  dbl4_convolutions_host.obj dbl4_monomials_host.obj \
                  dbl4_polynomials_host.obj dbl4_polynomials_kernels.obj \
                  dbl4_polynomials_testers.obj write_gpu_timings.obj \
-                 gettimeofday4win.obj cyclic_indices.obj
+                 gettimeofday4win.obj cyclic_indices.obj \
+                 dbl4_indexed_coefficients.obj
 
 test_dbl8_cycsys: random_numbers.obj random_series.obj \
                   random_monomials.obj random_polynomials.obj \
@@ -866,7 +897,7 @@ test_dbl8_cycsys: random_numbers.obj random_series.obj \
                   dbl8_polynomials_host.obj dbl8_polynomials_kernels.obj \
                   dbl8_polynomials_testers.obj write_gpu_timings.obj \
                   gettimeofday4win.obj test_dbl8_cycsys.obj \
-	          cyclic_indices.obj
+	          cyclic_indices.obj dbl8_indexed_coefficients.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_dbl8_cycsys.exe test_dbl8_cycsys.obj \
                  random_numbers.obj random_series.obj \
@@ -884,7 +915,8 @@ test_dbl8_cycsys: random_numbers.obj random_series.obj \
                  dbl8_convolutions_host.obj dbl8_monomials_host.obj \
                  dbl8_polynomials_host.obj dbl8_polynomials_kernels.obj \
                  dbl8_polynomials_testers.obj write_gpu_timings.obj \
-                 gettimeofday4win.obj cyclic_indices.obj
+                 gettimeofday4win.obj cyclic_indices.obj \
+		 dbl8_indexed_coefficients.obj
 
 test_convolution_jobs: random_numbers.obj random_series.obj \
 	               random_monomials.obj random_polynomials.obj \
@@ -1606,6 +1638,8 @@ clean:
 	del test_complexadd_jobs.exp test_complexadd_jobs.obj
 	del job_coordinates.obj write_job_counts.obj
 	del cyclic_indices.obj
+	del dbl_indexed_coefficients.obj dbl2_indexed_coefficients.obj
+	del dbl4_indexed_coefficients.obj dbl8_indexed_coefficients.obj
 	del test_dbl_cycsys.exe test_dbl_cycsys.lib
 	del test_dbl_cycsys.exp test_dbl_cycsys.obj
 	del test_dbl2_cycsys.exe test_dbl2_cycsys.lib
