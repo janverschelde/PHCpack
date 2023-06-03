@@ -14,6 +14,15 @@
 #endif
 #include "random_numbers.h"
 #include "random_monomials.h"
+#include "dbl_indexed_coefficients.h"
+#include "dbl_polynomials_host.h"
+#include "convolution_jobs.h"
+#include "addition_jobs.h"
+#include "complexconv_jobs.h"
+#include "complexinc_jobs.h"
+#include "complexadd_jobs.h"
+#include "job_makers.h"
+#include "dbl_polynomials_kernels.h"
 #include "dbl_factorizations.h"
 #include "dbl_monomial_systems.h"
 #include "unimodular_matrices.h"
@@ -26,7 +35,70 @@
 
 using namespace std;
 
-void dbl_column_newton_qrstep
+int dbl_errors_funjacrhs
+ ( int dim, int deg, double **funval_h, double **funval_d,
+   double ***jacval_h, double ***jacval_d,
+   double **rhs_h, double **rhs_d, int vrblvl )
+{
+   const int degp1 = deg+1;
+   const double tol = 1.0e-8;
+   int fail = 0;
+   double errsum = 0.0;
+
+   cout << scientific << setprecision(3);
+   cout << "comparing CPU with GPU function values ... " << endl;
+   errsum = dbl_error2sum(dim,degp1,funval_h,funval_d,"funval",vrblvl);
+   cout << "sum of errors : " << errsum << endl;
+   fail += (errsum > tol);
+   cout << "comparing CPU with GPU Jacobians ... " << endl;
+   errsum = dbl_error3sum
+               (degp1,dim,dim,jacval_h,jacval_d,"jacval",vrblvl);
+   cout << "sum of errors : " << errsum << endl;
+   fail += (errsum > tol);
+   cout << "comparing CPU with GPU right hand sides ... " << endl;
+   errsum = dbl_error2sum(degp1,dim,rhs_h,rhs_d,"rhs",vrblvl);
+   cout << "sum of errors : " << errsum << endl;
+   fail += (errsum > tol);
+
+   return fail;
+}
+
+int dbl_errors_inurhsQRsol
+ ( int dim, int deg, double **input_h, double **input_d,
+   double **Q_h, double **Q_d, double **R_h, double **R_d,
+   double **urhs_h, double **urhs_d, double **sol_h, double **sol_d,
+   int vrblvl )
+{
+   const int degp1 = deg+1;
+   const double tol = 1.0e-8;
+   int fail = 0;
+
+   cout << scientific << setprecision(3);
+   cout << "comparing CPU with GPU matrices Q ... " << endl;
+   double errsum = dbl_error2sum(dim,dim,Q_h,Q_d,"Q",vrblvl);
+   cout << "sum of errors : " << errsum << endl;
+   fail += (errsum > tol);
+   cout << "comparing CPU with GPU matrices R ... " << endl;
+   errsum = dbl_error2sum(dim,dim,R_h,R_d,"R",vrblvl);
+   cout << "sum of errors : " << errsum << endl;
+   fail += (errsum > tol);
+   cout << "comparing CPU with GPU updated rhs ... " << endl;
+   errsum = dbl_error2sum(degp1,dim,urhs_h,urhs_d,"urhs",vrblvl);
+   cout << "sum of errors : " << errsum << endl;
+   fail += (errsum > tol);
+   cout << "comparing CPU with GPU update to solutions ... " << endl;
+   errsum = dbl_error2sum(degp1,dim,sol_h,sol_d,"sol",vrblvl);
+   cout << "sum of errors : " << errsum << endl;
+   fail += (errsum > tol);
+   cout << "comparing CPU with GPU series ... " << endl;
+   errsum = dbl_error2sum(dim,degp1,input_h,input_d,"input",vrblvl);
+   cout << "sum of errors : " << errsum << endl;
+   fail += (errsum > tol);
+
+   return fail;
+}
+
+int dbl_column_newton_qrstep
  ( int szt, int nbt, int dim, int deg, int nbrcol,
    int *tailidx_h, int *tailidx_d,
    int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac,
@@ -129,18 +201,8 @@ void dbl_column_newton_qrstep
    }
    if((vrblvl > 0) && (mode == 2))
    {
-      cout << scientific << setprecision(3);
-      cout << "comparing CPU with GPU function values ... " << endl;
-      double errsum = 0.0;
-      errsum = dbl_error2sum(dim,degp1,funval_h,funval_d,"funval",vrblvl);
-      cout << "sum of errors : " << errsum << endl;
-      cout << "comparing CPU with GPU Jacobians ... " << endl;
-      errsum = dbl_error3sum
-                  (degp1,dim,dim,jacval_h,jacval_d,"jacval",vrblvl);
-      cout << "sum of errors : " << errsum << endl;
-      cout << "comparing CPU with GPU right hand sides ... " << endl;
-      errsum = dbl_error2sum(degp1,dim,rhs_h,rhs_d,"rhs",vrblvl);
-      cout << "sum of errors : " << errsum << endl;
+      int fail = dbl_errors_funjacrhs(dim,deg,funval_h,funval_d,
+                                      jacval_h,jacval_d,rhs_h,rhs_d,vrblvl);
    }
    if((mode == 1) || (mode == 2))
    {
@@ -216,22 +278,84 @@ void dbl_column_newton_qrstep
       dbl_update_series(dim,degp1,*tailidx_d-1,input_d,sol_d,vrblvl);
    }
    if((vrblvl > 0) && (mode == 2))
+      return dbl_errors_inurhsQRsol(dim,deg,
+         input_h,input_d,Q_h,Q_d,R_h,R_d,urhs_h,urhs_d,sol_h,sol_d,vrblvl);
+   else
+      return 0;
+}
+
+int dbl_row_newton_qrstep
+ ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
+   int *nbr, int **nvr, int ***idx,
+   double **cst, double ***cff, double dpr, double **acc,
+   double **input_h, double **input_d, double ***output_h, double ***output_d,
+   double **funval_h, double **funval_d,
+   double ***jacval_h, double ***jacval_d, double **rhs_h, double **rhs_d,
+   double **urhs_h, double **urhs_d, double **sol_h, double **sol_d,
+   double **Q_h, double **Q_d, double **R_h, double **R_d,
+   double *workvec, double **resvec, double *resmax,
+   bool *zeroQ_h, bool *noqr_h, bool *zeroQ_d, bool *noqr_d,
+   int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
+   double *totcnvlapsedms, double *totqrlapsedms, double *totqtblapsedms,
+   double *totbslapsedms, double *totupdlapsedms, double *totreslapsedms,
+   int vrblvl, int mode )
+{
+   const int degp1 = deg+1;
+
+   if((mode == 1) || (mode == 2))
    {
+      if(vrblvl > 0)
+         cout << "calling CPU_dbl_poly_evaldiff ..." << endl;
+
+      double timelapsed_h = 0.0;
+
+      for(int i=0; i<dim; i++)
+      {
+         double lapsed;
+
+         CPU_dbl_poly_evaldiff
+           (dim,nbr[i],deg,nvr[i],idx[i],cst[i],cff[i],input_h,
+            output_h[i],&lapsed,0); // no output: vrblvl is zero
+
+         timelapsed_h += lapsed;
+      }
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      if(vrblvl > 0)
+         cout << "calling GPU_dbl_poly_evaldiff ..." << endl;
+
+      double timelapsed_d = 0.0;
+
+      for(int i=0; i<dim; i++)
+      {
+         double cnvlapms,addlapms,timelapms_d,walltimes_d;
+
+         ConvolutionJobs cnvjobs(dim);
+         AdditionJobs addjobs(dim,nbr[i]);
+
+         make_all_jobs(dim,nbr[i],nvr[i],idx[i],&cnvjobs,&addjobs,false);
+
+         GPU_dbl_poly_evaldiff
+            (degp1,dim,nbr[i],deg,nvr[i],idx[i],cst[i],cff[i],input_d,
+             output_d[i],cnvjobs,addjobs,
+             &cnvlapms,&addlapms,&timelapms_d,&walltimes_d,0); // vrblvl);
+
+         timelapsed_d += walltimes_d;
+      }
+   }
+   if((vrblvl > 0) && (mode == 2))
+   {
+      cout << "comparing CPU with GPU evaluations ... " << endl;
+      double errsum = 0.0;
+
+      errsum = dbl_error3sum
+                  (dim,dim+1,degp1,output_h,output_d,"output",vrblvl);
+      // first dim is the number of monomials,
+      // dim+1 is number of variables for each derivative,
+      // plus the last component with the function value
+
       cout << scientific << setprecision(3);
-      cout << "comparing CPU with GPU matrices Q ... " << endl;
-      double errsum = dbl_error2sum(dim,dim,Q_h,Q_d,"Q",vrblvl);
-      cout << "sum of errors : " << errsum << endl;
-      cout << "comparing CPU with GPU matrices R ... " << endl;
-      errsum = dbl_error2sum(dim,dim,R_h,R_d,"R",vrblvl);
-      cout << "sum of errors : " << errsum << endl;
-      cout << "comparing CPU with GPU updated rhs ... " << endl;
-      errsum = dbl_error2sum(degp1,dim,urhs_h,urhs_d,"urhs",vrblvl);
-      cout << "sum of errors : " << errsum << endl;
-      cout << "comparing CPU with GPU update to solutions ... " << endl;
-      errsum = dbl_error2sum(degp1,dim,sol_h,sol_d,"sol",vrblvl);
-      cout << "sum of errors : " << errsum << endl;
-      cout << "comparing CPU with GPU series ... " << endl;
-      errsum = dbl_error2sum(dim,degp1,input_h,input_d,"input",vrblvl);
       cout << "sum of errors : " << errsum << endl;
    }
 }
@@ -286,10 +410,11 @@ int dbl_allocate_inoutfunjac
    return 0;
 }
 
-int dbl_allocate_rhsqr
+int dbl_allocate_rhsqrsol
  ( int dim, int deg, int mode,
    double **rhs_h, double **rhs_d, double **urhs_h, double **urhs_d,
-   double **Q_h, double **Q_d, double **R_h, double **R_d )
+   double **Q_h, double **Q_d, double **R_h, double **R_d,
+   double **sol_h, double **sol_d )
 {
    const int degp1 = deg+1;
 
@@ -299,6 +424,7 @@ int dbl_allocate_rhsqr
       for(int i=0; i<degp1; i++) urhs_h[i] = new double[dim];
       for(int i=0; i<dim; i++) Q_h[i] = new double[dim];
       for(int i=0; i<dim; i++) R_h[i] = new double[dim];
+      for(int i=0; i<degp1; i++) sol_h[i] = new double[dim];
    }
    if((mode == 0) || (mode == 2))
    {
@@ -306,8 +432,266 @@ int dbl_allocate_rhsqr
       for(int i=0; i<degp1; i++) urhs_d[i] = new double[dim];
       for(int i=0; i<dim; i++) Q_d[i] = new double[dim];
       for(int i=0; i<dim; i++) R_d[i] = new double[dim];
+      for(int i=0; i<degp1; i++) sol_d[i] = new double[dim];
    }
    return 0;
+}
+
+void dbl_start_setup
+ ( int dim, int deg, double **testsol,
+   double **input_h, double **input_d, int mode, int vrblvl )
+{
+   double *start0 = new double[dim];
+
+   for(int i=0; i<dim; i++)  // compute start vector
+   {
+      start0[i] = testsol[i][0];
+   }
+   if((mode == 1) || (mode == 2))
+      real_start_series_vector(dim,deg,start0,input_h);
+   else
+      real_start_series_vector(dim,deg,start0,input_d);
+
+   if(mode == 2)
+   {
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<=deg; j++)
+            input_d[i][j] = input_h[i][j];
+   }
+   if(vrblvl > 1)
+   {
+      cout << scientific << setprecision(16);
+      cout << "The leading coefficients of the input series :" << endl;
+
+      if((mode == 1) || (mode == 2))
+         for(int i=0; i<dim; i++)
+            cout << i << " : " << input_h[i][0] << endl;
+      else
+         for(int i=0; i<dim; i++)
+            cout << i << " : " << input_d[i][0] << endl;
+   }
+}
+
+void dbl_column_setup
+ ( int dim, int deg, int nbrcol,
+   int **nvr, int ***idx, int **rowsA, double ***cff,
+   double **testsol, double **mbrhs,
+   double **input_h, double **input_d, int mode, int vrblvl )
+{
+   const int degp1 = deg+1;
+
+   for(int i=0; i<dim; i++) testsol[i] = new double[degp1];
+
+   make_real_exponentials(dim,deg,testsol);
+
+   // compute the right hand sides via evaluation
+
+   for(int i=0; i<dim; i++)
+   {
+      mbrhs[i] = new double[degp1];
+
+      mbrhs[i][0] = 1.0;     // initialize product to one
+
+      for(int k=1; k<degp1; k++) mbrhs[i][k] = 0.0;
+   }
+   if(nbrcol == 1)
+      evaluate_real_monomials(dim,deg,rowsA,testsol,mbrhs);
+   else
+      evaluate_real_columns
+         (dim,deg,nbrcol,nvr,idx,rowsA,cff,testsol,mbrhs,vrblvl);
+
+   if(vrblvl > 1)
+   {
+      cout << "the right hand side series :" << endl;
+      cout << scientific << setprecision(16);
+
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<degp1; j++)
+            cout << "rhs[" << i << "][" << j << "] : "
+                 << mbrhs[i][j] << endl;
+   }
+   dbl_start_setup(dim,deg,testsol,input_h,input_d,mode,vrblvl);
+}
+
+void dbl_row_setup
+ ( int dim, int deg, int *nbr, int **nvr, int ***idx,
+   double **cst, double ***cff, double **testsol, 
+   double **input_h, double **input_d,
+   double ***output_h, double ***output_d, int mode, int vrblvl )
+{
+   const int degp1 = deg+1;
+
+   for(int i=0; i<dim; i++) testsol[i] = new double[degp1];
+
+   make_real_exponentials(dim,deg,testsol);
+
+   if(mode == 1)
+   {
+      if(vrblvl > 0)
+         cout << "evaluating test solution on the host ..." << endl;
+
+      double timelapsed_h = 0.0;
+
+      for(int i=0; i<dim; i++)
+      {
+         double lapsed;
+
+         CPU_dbl_poly_evaldiff
+           (dim,nbr[i],deg,nvr[i],idx[i],cst[i],cff[i],testsol,
+            output_h[i],&lapsed,0); // no output: vrblvl is zero
+
+         timelapsed_h += lapsed;
+      }
+      for(int i=0; i<dim; i++) // adjust constant coefficients
+      {
+         for(int j=0; j<=deg; j++)
+            cst[i][j] = cst[i][j] - output_h[i][dim][j];
+      }
+      if(vrblvl > 1) // evaluate again to test
+      {
+         for(int i=0; i<dim; i++)
+         {
+            double lapsed;
+
+            CPU_dbl_poly_evaldiff
+              (dim,nbr[i],deg,nvr[i],idx[i],cst[i],cff[i],testsol,
+               output_h[i],&lapsed,0); // no output: vrblvl is zero
+
+            timelapsed_h += lapsed;
+         }
+         double errsum = 0.0;
+
+         for(int i=0; i<dim; i++)
+            for(int j=0; j<=deg; j++)
+               errsum = errsum + output_h[i][dim][j];
+
+         cout << scientific << setprecision(2)
+              << "residual of test solution : " << errsum << endl;
+      }
+   }
+   else // GPU is faster
+   {
+      if(vrblvl > 0)
+         cout << "evaluating test solution on the device ..." << endl;
+
+      const bool vrb = false; // no output (vrblvl > 1);
+      double timelapsed_d = 0.0;
+
+      for(int i=0; i<dim; i++)
+      {
+         double cnvlapms,addlapms,timelapms_d,walltimes_d;
+
+         ConvolutionJobs cnvjobs(dim);
+         AdditionJobs addjobs(dim,nbr[i]);
+
+         make_all_jobs(dim,nbr[i],nvr[i],idx[i],&cnvjobs,&addjobs,vrb);
+
+         GPU_dbl_poly_evaldiff
+            (degp1,dim,nbr[i],deg,nvr[i],idx[i],cst[i],cff[i],testsol,
+             output_d[i],cnvjobs,addjobs,
+             &cnvlapms,&addlapms,&timelapms_d,&walltimes_d,0); // vrblvl);
+
+         timelapsed_d += walltimes_d;
+      }
+      for(int i=0; i<dim; i++) // adjust constant coefficients
+      {
+         for(int j=0; j<=deg; j++)
+            cst[i][j] = cst[i][j] - output_d[i][dim][j];
+      }
+      if(vrblvl > 1) // evaluate again to test
+      {
+         for(int i=0; i<dim; i++)
+         {
+            double cnvlapms,addlapms,timelapms_d,walltimes_d;
+   
+            ConvolutionJobs cnvjobs(dim);
+            AdditionJobs addjobs(dim,nbr[i]);
+
+            make_all_jobs(dim,nbr[i],nvr[i],idx[i],&cnvjobs,&addjobs,vrb);
+
+            GPU_dbl_poly_evaldiff
+               (degp1,dim,nbr[i],deg,nvr[i],idx[i],cst[i],cff[i],testsol,
+                output_d[i],cnvjobs,addjobs,
+                &cnvlapms,&addlapms,&timelapms_d,&walltimes_d,0); // vrblvl);
+   
+            timelapsed_d += walltimes_d;
+         }
+         double errsum = 0.0;
+
+         for(int i=0; i<dim; i++)
+            for(int j=0; j<=deg; j++)
+               errsum = errsum + output_d[i][dim][j];
+
+         cout << scientific << setprecision(2)
+              << "residual of test solution : " << errsum << endl;
+      }
+   }
+   dbl_start_setup(dim,deg,testsol,input_h,input_d,mode,vrblvl);
+}
+
+int dbl_error_testsol
+ ( int dim, int deg, int mode,
+   double **testsol, double **input_h, double **input_d )
+{
+   double errsum = 0.0;
+
+   cout << scientific << setprecision(16); // just in case vrblvl == 0
+   cout << "The solution series : " << endl;
+
+   for(int j=0; j<=deg; j++)
+   {
+      cout << "coefficient of degree " << j << " :" << endl;
+
+      for(int i=0; i<dim; i++)
+      {
+         cout << "sol[" << i << "][" << j << "] : "
+              << testsol[i][j] << endl;
+
+         if((mode == 0) || (mode == 2))
+         {
+            cout << "x_d[" << i << "][" << j << "] : "
+                           << input_d[i][j] << endl;
+            errsum += abs(testsol[i][j] - input_d[i][j]);
+         }
+         if((mode == 1) || (mode == 2))
+         {
+            cout << "x_h[" << i << "][" << j << "] : "
+                           << input_h[i][j] << endl;
+            errsum += abs(testsol[i][j] - input_h[i][j]);
+         }
+      }
+   }
+   cout << "error : " << errsum << endl;
+
+   return (errsum > 1.0e-8);
+}
+
+void write_newton_times
+ ( int stepcnt, double walltimesec, double totcnvlapsedms,
+   double totqrlapsedms, double totqtblapsedms, double totbslapsedms,
+   double totupdlapsedms, double totreslapsedms )
+{
+   cout << "Wall clock time on all " << stepcnt << " Newton steps : ";
+   cout << fixed << setprecision(3) 
+        << walltimesec << " seconds." << endl;
+   cout << "     Time spent by all convolution kernels : "
+        << totcnvlapsedms << " milliseconds." << endl;
+   cout << "  Time spent by all Householder QR kernels : "
+        << totqrlapsedms << " milliseconds." << endl;
+   cout << "     Time spent by all Q times rhs kernels : "
+        << totqtblapsedms << " milliseconds." << endl;
+   cout << "Time spent by all backsubstitution kernels : "
+        << totbslapsedms << " milliseconds." << endl;
+   cout << "          Time spent by all update kernels : "
+        << totupdlapsedms << " milliseconds." << endl;
+   cout << "        Time spent by all residual kernels : "
+        << totreslapsedms << " milliseconds." << endl;
+
+   double totkerneltime = totcnvlapsedms + totqrlapsedms + totqtblapsedms
+                        + totbslapsedms + totupdlapsedms + totreslapsedms;
+
+   cout << "           Total time spent by all kernels : "
+        << totkerneltime << " milliseconds." << endl;
 }
 
 int test_dbl_column_newton
@@ -328,6 +712,9 @@ int test_dbl_column_newton
       cff[i] = new double*[dim]; // the coefficients of monomials
       for(int j=0; j<dim; j++) cff[i][j] = new double[degp1];
    }
+   if(nbrcol != 1) // generate coefficients for the columns
+      make_real_coefficients(nbrcol,dim,cff);
+
    double **input_h;
    double **input_d;
    double ***output_h;
@@ -362,19 +749,6 @@ int test_dbl_column_newton
    // The solution x(t) to jacval(t)*x(t) = -funval(t) in linearized
    // format is a series truncated at degree deg, with as coefficients
    // arrays of dimension dim.
-   double **sol_h;
-   double **sol_d;
-
-   if((mode == 1) || (mode == 2))
-   {
-      sol_h = new double*[degp1];
-      for(int i=0; i<degp1; i++) sol_h[i] = new double[dim];
-   }
-   if((mode == 0) || (mode == 2))
-   {
-      sol_d = new double*[degp1];
-      for(int i=0; i<degp1; i++) sol_d[i] = new double[dim];
-   }
    // The right hand side -funval(t) in linearized format is a series
    // truncated at degree deg, with arrays of dimension dim as coefficients.
    double **rhs_h;
@@ -385,6 +759,8 @@ int test_dbl_column_newton
    double **Q_d;
    double **R_h;
    double **R_d;
+   double **sol_h;
+   double **sol_d;
 
    if((mode == 1) || (mode == 2))
    {
@@ -392,6 +768,7 @@ int test_dbl_column_newton
       urhs_h = new double*[degp1];
       Q_h = new double*[dim];
       R_h = new double*[dim];
+      sol_h = new double*[degp1];
    }
    if((mode == 0) || (mode == 2))
    {
@@ -399,8 +776,10 @@ int test_dbl_column_newton
       urhs_d = new double*[degp1];
       Q_d = new double*[dim];
       R_d = new double*[dim];
+      sol_d = new double*[degp1];
    }
-   dbl_allocate_rhsqr(dim,deg,mode,rhs_h,rhs_d,urhs_h,urhs_d,Q_h,Q_d,R_h,R_d);
+   dbl_allocate_rhsqrsol
+      (dim,deg,mode,rhs_h,rhs_d,urhs_h,urhs_d,Q_h,Q_d,R_h,R_d,sol_h,sol_d);
 
    double *workvec = new double[dim];
    // Copy the rhs vector into work space for inplace solver.
@@ -411,72 +790,14 @@ int test_dbl_column_newton
 /*
  * 3. initialize input, coefficient, evaluate, differentiate, and solve
  */
-   // Define the initial input, a vector of ones.
+   if(vrblvl > 0) cout << "setting up the test solution ..." << endl;
 
-   if(vrblvl > 0) cout << "setting up the test system ..." << endl;
-
-   double **sol = new double*[dim];
-
-   for(int i=0; i<dim; i++) sol[i] = new double[degp1];
-
-   make_real_exponentials(dim,deg,sol);
-   if(nbrcol != 1) // generate coefficients for the columns
-      make_real_coefficients(nbrcol,dim,cff);
-
-   // compute the right hand sides via evaluation
-
+   double **testsol = new double*[dim];
    double **mbrhs = new double*[dim];
 
-   for(int i=0; i<dim; i++)
-   {
-      mbrhs[i] = new double[degp1];
+   dbl_column_setup(dim,deg,nbrcol,nvr,idx,rowsA,cff,testsol,mbrhs,
+                    input_h,input_d,mode,vrblvl);
 
-      mbrhs[i][0] = 1.0;     // initialize product to one
-
-      for(int k=1; k<degp1; k++) mbrhs[i][k] = 0.0;
-   }
-   if(nbrcol == 1)
-      evaluate_real_monomials(dim,deg,rowsA,sol,mbrhs);
-   else
-      evaluate_real_columns(dim,deg,nbrcol,nvr,idx,rowsA,cff,sol,mbrhs,vrblvl);
-
-   if(vrblvl > 1)
-   {
-      cout << "the right hand side series :" << endl;
-      cout << scientific << setprecision(16);
-      for(int i=0; i<dim; i++)
-         for(int j=0; j<degp1; j++)
-            cout << "rhs[" << i << "][" << j << "] : "
-                 << mbrhs[i][j] << endl;
-   }
-   double *start0 = new double[dim];
-
-   for(int i=0; i<dim; i++)  // compute start vector
-   {
-      start0[i] = sol[i][0];
-   }
-   if((mode == 1) || (mode == 2))
-      real_start_series_vector(dim,deg,start0,input_h);
-   else
-      real_start_series_vector(dim,deg,start0,input_d);
-
-   if(mode == 2)
-   {
-      for(int i=0; i<dim; i++)
-         for(int j=0; j<degp1; j++)
-            input_d[i][j] = input_h[i][j];
-   }
-   if(vrblvl > 1)
-   {
-      cout << scientific << setprecision(16);
-      cout << "The leading coefficients of the input series :" << endl;
-      if((mode == 1) || (mode == 2))
-         for(int i=0; i<dim; i++)
-            cout << i << " : " << input_h[i][0] << endl;
-      else
-         for(int i=0; i<dim; i++)
-            cout << i << " : " << input_d[i][0] << endl;
-   }
    if(vrblvl > 0) cout << scientific << setprecision(16);
 
    int upidx_h = 0;
@@ -539,53 +860,11 @@ int test_dbl_column_newton
    long microseconds = endtime.tv_usec - begintime.tv_usec;
    double walltimesec = seconds + microseconds*1.0e-6;
 
-   double errsum = 0.0;
+   dbl_error_testsol(dim,deg,mode,testsol,input_h,input_d);
 
-   cout << scientific << setprecision(16); // just in case vrblvl == 0
-   cout << "The solution series : " << endl;
-   for(int j=0; j<degp1; j++)
-   {
-      cout << "coefficient of degree " << j << " :" << endl;
-      for(int i=0; i<dim; i++)
-      {
-         cout << "sol[" << i << "][" << j << "] : " << sol[i][j] << endl;
-         if((mode == 0) || (mode == 2))
-         {
-            cout << "x_d[" << i << "][" << j << "] : "
-                           << input_d[i][j] << endl;
-            errsum += abs(sol[i][j] - input_d[i][j]);
-         }
-         if((mode == 1) || (mode == 2))
-         {
-            cout << "x_h[" << i << "][" << j << "] : "
-                           << input_h[i][j] << endl;
-            errsum += abs(sol[i][j] - input_h[i][j]);
-         }
-      }
-   }
-   cout << "error : " << errsum << endl;
-
-   cout << "Wall clock time on all " << stepcnt << " Newton steps : ";
-   cout << fixed << setprecision(3) 
-        << walltimesec << " seconds." << endl;
-   cout << "     Time spent by all convolution kernels : "
-        << totcnvlapsedms << " milliseconds." << endl;
-   cout << "  Time spent by all Householder QR kernels : "
-        << totqrlapsedms << " milliseconds." << endl;
-   cout << "     Time spent by all Q times rhs kernels : "
-        << totqtblapsedms << " milliseconds." << endl;
-   cout << "Time spent by all backsubstitution kernels : "
-        << totbslapsedms << " milliseconds." << endl;
-   cout << "          Time spent by all update kernels : "
-        << totupdlapsedms << " milliseconds." << endl;
-   cout << "        Time spent by all residual kernels : "
-        << totreslapsedms << " milliseconds." << endl;
-
-   double totkerneltime = totcnvlapsedms + totqrlapsedms + totqtblapsedms
-                        + totbslapsedms + totupdlapsedms + totreslapsedms;
-
-   cout << "           Total time spent by all kernels : "
-        << totkerneltime << " milliseconds." << endl;
+   write_newton_times
+      (stepcnt,walltimesec,totcnvlapsedms,totqrlapsedms,totqtblapsedms,
+       totbslapsedms,totupdlapsedms,totreslapsedms);
 
    return 0;
 }
@@ -595,6 +874,10 @@ int test_dbl_row_newton
    double dpr, int nbsteps, int mode, int vrblvl )
 {
    const int degp1 = deg+1;
+   double **cst = new double*[dim];
+   double ***cff = new double**[dim];
+
+   dbl_make_coefficients(dim,deg,nbr,nvr,idx,cst,cff,vrblvl);
 
    double **input_h;
    double **input_d;
@@ -633,6 +916,8 @@ int test_dbl_row_newton
    double **Q_d;
    double **R_h;
    double **R_d;
+   double **sol_h;
+   double **sol_d;
 
    if((mode == 1) || (mode == 2))
    {
@@ -640,6 +925,7 @@ int test_dbl_row_newton
       urhs_h = new double*[degp1];
       Q_h = new double*[dim];
       R_h = new double*[dim];
+      sol_h = new double*[degp1];
    }
    if((mode == 0) || (mode == 2))
    {
@@ -647,8 +933,96 @@ int test_dbl_row_newton
       urhs_d = new double*[degp1];
       Q_d = new double*[dim];
       R_d = new double*[dim];
+      sol_d = new double*[degp1];
    }
-   dbl_allocate_rhsqr(dim,deg,mode,rhs_h,rhs_d,urhs_h,urhs_d,Q_h,Q_d,R_h,R_d);
+   dbl_allocate_rhsqrsol
+      (dim,deg,mode,rhs_h,rhs_d,urhs_h,urhs_d,Q_h,Q_d,R_h,R_d,sol_h,sol_d);
+
+   if(vrblvl > 0) cout << "setting up the test solution ..." << endl;
+
+   double **testsol = new double*[dim];
+
+   dbl_row_setup(dim,deg,nbr,nvr,idx,cst,cff,testsol,
+                 input_h,input_d,output_h,output_d,mode,vrblvl);
+
+// alocating some extra work space
+
+   double **acc = new double*[dim+1]; // accumulate series in one column
+   for(int i=0; i<=dim; i++) acc[i] = new double[degp1];
+   double *workvec = new double[dim];
+   // Copy the rhs vector into work space for inplace solver.
+
+   double **resvec = new double*[degp1];
+   for(int i=0; i<degp1; i++) resvec[i] = new double[dim];
+   double resmax;
+
+   if(vrblvl > 0) cout << scientific << setprecision(16);
+
+   int upidx_h = 0;
+   int bsidx_h = 0;
+   int upidx_d = 0;
+   int bsidx_d = 0;
+   bool zeroQ_h = true;
+   bool zeroQ_d = true;
+   bool noqr_h = false;
+   bool noqr_d = false;
+   int tailidx_h = 1;
+   int tailidx_d = 1;
+   int wrkdeg = 0; // working degree of precision
+   int stepcnt = 0;
+
+   double totcnvlapsedms = 0.0;
+   double totqrlapsedms = 0.0;
+   double totqtblapsedms = 0.0;
+   double totbslapsedms = 0.0;
+   double totupdlapsedms = 0.0;
+   double totreslapsedms = 0.0;
+
+   struct timeval begintime,endtime; // wall clock time of computations
+   gettimeofday(&begintime,0);
+
+   for(int step=0; step<nbsteps; step++)
+   {
+      if(vrblvl > 0)
+         cout << "*** running Newton step " << step
+              << " at degree " << wrkdeg << " ***" << endl;
+
+      dbl_row_newton_qrstep
+         (szt,nbt,dim,wrkdeg,&tailidx_h,&tailidx_d,
+          nbr,nvr,idx,cst,cff,dpr,acc,
+          input_h,input_d,output_h,output_d,funval_h,funval_d,
+          jacval_h,jacval_d,rhs_h,rhs_d,urhs_h,urhs_d,sol_h,sol_d,
+          Q_h,Q_d,R_h,R_d,workvec,resvec,&resmax,
+          &zeroQ_h,&noqr_h,&zeroQ_d,&noqr_d,
+          &upidx_h,&bsidx_h,&upidx_d,&bsidx_d,
+          &totcnvlapsedms,&totqrlapsedms,&totqtblapsedms,&totbslapsedms,
+          &totupdlapsedms,&totreslapsedms,vrblvl,mode);
+
+      stepcnt = stepcnt + 1;
+
+      if(vrblvl > 0)
+         cout << "up_h : " << upidx_h << "  bs_h : " << bsidx_h
+              << "  tail_h : " << tailidx_h
+              << "  up_d : " << upidx_d << "  bs_d : " << bsidx_d
+              << "  tail_d : " << tailidx_d
+              << "  wdeg : " << wrkdeg << endl;
+
+      if((mode == 1) || (mode == 2)) if(tailidx_h >= deg) break;
+      if((mode == 0) || (mode == 2)) if(tailidx_d >= deg) break;
+
+      wrkdeg = wrkdeg + 1 + wrkdeg/2;
+      if(wrkdeg > deg) wrkdeg = deg;
+   }
+   gettimeofday(&endtime,0);
+   long seconds = endtime.tv_sec - begintime.tv_sec;
+   long microseconds = endtime.tv_usec - begintime.tv_usec;
+   double walltimesec = seconds + microseconds*1.0e-6;
+
+   dbl_error_testsol(dim,deg,mode,testsol,input_h,input_d);
+
+   write_newton_times
+      (stepcnt,walltimesec,totcnvlapsedms,totqrlapsedms,totqtblapsedms,
+       totbslapsedms,totupdlapsedms,totreslapsedms);
 
    return 0;
 }

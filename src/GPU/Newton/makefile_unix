@@ -88,6 +88,11 @@ dbl_monomials_host.o:
 	@-echo ">>> compiling dbl_monomials_host ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl_monomials_host.cpp
 
+dbl_polynomials_host.o:
+	@-echo ">>> compiling dbl_polynomials_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(POL) \
+                        $(POL)/dbl_polynomials_host.cpp
+
 dbl2_monomials_host.o:
 	@-echo ">>> compiling dbl2_monomials_host ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl2_monomials_host.cpp
@@ -405,6 +410,22 @@ cyclic_indices.o:
 	@-echo ">>> compiling cyclic_indices ..."
 	$(gpp) -O3 -c $(POL)/cyclic_indices.cpp
 
+dbl_indexed_coefficients.o:
+	@-echo ">>> compiling dbl_indexed_coefficients ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/dbl_indexed_coefficients.cpp
+
+dbl2_indexed_coefficients.o:
+	@-echo ">>> compiling dbl2_indexed_coefficients ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/dbl2_indexed_coefficients.cpp
+
+dbl4_indexed_coefficients.o:
+	@-echo ">>> compiling dbl4_indexed_coefficients ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/dbl4_indexed_coefficients.cpp
+
+dbl8_indexed_coefficients.o:
+	@-echo ">>> compiling dbl8_indexed_coefficients ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/dbl8_indexed_coefficients.cpp
+
 test_columns.o:
 	@-echo ">>> compiling test_columns ..."
 	$(gpp) -O3 -c test_columns.cpp
@@ -484,6 +505,10 @@ complexadd_jobs.o:
 job_coordinates.o:
 	@-echo ">>> compiling job_coordinates ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/job_coordinates.cpp
+
+job_makers.o:
+	@-echo ">>> compiling job_makers ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/job_makers.cpp
 
 write_job_counts.o:
 	@-echo ">>> compiling write_job_counts ..."
@@ -778,13 +803,15 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                  dbl_newton_testers.o test_dbl_newton.o \
                  dbl_monomial_systems.o cyclic_columns.o \
                  random_polynomials.o cyclic_indices.o \
+                 dbl_indexed_coefficients.o \
                  dbl_newton_method.o cmplx_newton_method.o \
                  dbl_convolutions_host.o dbl_monomials_host.o \
+                 dbl_polynomials_host.o \
                  convolution_job.o convolution_jobs.o write_job_counts.o \
                  addition_job.o addition_jobs.o job_coordinates.o \
                  complexconv_job.o complexconv_jobs.o \
                  complexinc_job.o complexinc_jobs.o \
-                 complexadd_job.o complexadd_jobs.o \
+                 complexadd_job.o complexadd_jobs.o job_makers.o \
                  dbl_systems_host.o write_gpu_timings.o \
                  dbl_systems_kernels.o dbl_polynomials_kernels.o \
                  dbl_factorizations.o dbl_onenorms_host.o dbl_bals_host.o \
@@ -797,15 +824,17 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
 	$(gpp) -o test_dbl_newton test_dbl_newton.o dbl_newton_testers.o \
                   dbl_monomial_systems.o cyclic_columns.o \
                   random_polynomials.o cyclic_indices.o \
+                  dbl_indexed_coefficients.o \
                   dbl_newton_method.o cmplx_newton_method.o \
                   prompt_newton_setup.o unimodular_matrices.o \
                   random_numbers.o random_series.o random_monomials.o \
                   dbl_convolutions_host.o dbl_monomials_host.o \
+                  dbl_polynomials_host.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   complexconv_job.o complexconv_jobs.o \
                   complexinc_job.o complexinc_jobs.o \
-                  complexadd_job.o complexadd_jobs.o \
+                  complexadd_job.o complexadd_jobs.o job_makers.o \
                   dbl_systems_host.o write_gpu_timings.o \
                   dbl_systems_kernels.o dbl_polynomials_kernels.o \
                   dbl_factorizations.o dbl_onenorms_host.o dbl_bals_host.o \
@@ -1002,12 +1031,15 @@ clean:
 cleanall: clean
 	/bin/rm -f -r random_numbers.o random_series.o random_monomials.o
 	/bin/rm -f -r random_polynomials.o cyclic_indices.o
+	/bin/rm -f -r dbl_indexed_coefficients.o dbl2_indexed_coefficients.o
+	/bin/rm -f -r dbl4_indexed_coefficients.o dbl8_indexed_coefficients.o
 	/bin/rm -f -r random2_series.o random4_series.o random8_series.o
 	/bin/rm -f -r random2_vectors.o random4_vectors.o random8_vectors.o
 	/bin/rm -f -r dbl_convolutions_host.o dbl_monomials_host.o
 	/bin/rm -f -r dbl2_convolutions_host.o dbl2_monomials_host.o
 	/bin/rm -f -r dbl4_convolutions_host.o dbl4_monomials_host.o
 	/bin/rm -f -r dbl8_convolutions_host.o dbl8_monomials_host.o
+	/bin/rm -f -r dbl_polynomials_host.o
 	/bin/rm -f -r double_double_functions.o
 	/bin/rm -f -r quad_double_functions.o
 	/bin/rm -f -r octo_double_functions.o
@@ -1021,7 +1053,7 @@ cleanall: clean
 	/bin/rm -f -r addition_job.o addition_jobs.o job_coordinates.o
 	/bin/rm -f -r complexconv_job.o complexconv_jobs.o
 	/bin/rm -f -r complexinc_job.o complexinc_jobs.o
-	/bin/rm -f -r complexadd_job.o complexadd_jobs.o
+	/bin/rm -f -r complexadd_job.o complexadd_jobs.o job_makers.o
 	/bin/rm -f -r dbl_polynomials_kernels.o write_gpu_timings.o
 	/bin/rm -f -r dbl2_polynomials_kernels.o dbl4_polynomials_kernels.o
 	/bin/rm -f -r dbl8_polynomials_kernels.o

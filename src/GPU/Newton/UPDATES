@@ -1,3 +1,6 @@
+Sat 3 Jun 2023 : refactored and added to dbl_newton_method,
+  updated makefile_unix and makefile_windows.
+
 Fri 2 Jun 2023 : put allocations in dbl_newton_method in functions.
 
 Thu 1 Jun 2023 : updated makefile_unix and makefile_windows to compile

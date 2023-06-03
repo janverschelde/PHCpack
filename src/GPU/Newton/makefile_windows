@@ -168,6 +168,30 @@ dbl8_monomials_host.obj:
                  -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: dbl8_monomials_host.obj /EHsc
 
+dbl_polynomials_host.obj:
+	@-echo ">>> compiling dbl_polynomials_host ..."
+	$(CL)\cl /c -I$(CNV) -I$(POL) $(POL)/dbl_polynomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl_polynomials_host.obj /EHsc
+
+dbl2_polynomials_host.obj:
+	@-echo ">>> compiling dbl2_polynomials_host ..."
+	$(CL)\cl /c -I$(CNV) -I$(POL) $(POL)/dbl2_polynomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl2_polynomials_host.obj /EHsc
+
+dbl4_polynomials_host.obj:
+	@-echo ">>> compiling dbl4_polynomials_host ..."
+	$(CL)\cl /c -I$(CNV) -I$(POL) $(POL)/dbl4_polynomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl4_polynomials_host.obj /EHsc
+
+dbl8_polynomials_host.obj:
+	@-echo ">>> compiling dbl8_polynomials_host ..."
+	$(CL)\cl /c -I$(CNV) -I$(POL) $(POL)/dbl8_polynomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl8_polynomials_host.obj /EHsc
+
 dbl_factorizations.obj:
 	@-echo ">>> compiling dbl_factorizations ..."
 	$(CL)\cl /c -I$(MAT) $(MAT)/dbl_factorizations.cpp \
@@ -596,6 +620,30 @@ cyclic_indices.obj:
                       $(POL)/cyclic_indices.cpp \
                  /Fo: cyclic_indices.obj /EHsc
 
+dbl_indexed_coefficients.obj:
+	@-echo ">>> compiling dbl_indexed_coefficients ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) -I$(CNV) \
+                      $(POL)/dbl_indexed_coefficients.cpp \
+                 /Fo: dbl_indexed_coefficients.obj /EHsc
+
+dbl2_indexed_coefficients.obj:
+	@-echo ">>> compiling dbl2_indexed_coefficients ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) -I$(CNV) \
+                      $(POL)/dbl2_indexed_coefficients.cpp \
+                 /Fo: dbl2_indexed_coefficients.obj /EHsc
+
+dbl4_indexed_coefficients.obj:
+	@-echo ">>> compiling dbl4_indexed_coefficients ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) -I$(CNV) \
+                      $(POL)/dbl4_indexed_coefficients.cpp \
+                 /Fo: dbl4_indexed_coefficients.obj /EHsc
+
+dbl8_indexed_coefficients.obj:
+	@-echo ">>> compiling dbl8_indexed_coefficients ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) -I$(CNV) \
+                      $(POL)/dbl8_indexed_coefficients.cpp \
+                 /Fo: dbl8_indexed_coefficients.obj /EHsc
+
 test_columns.obj:
 	@-echo ">>> compiling test_columns ..."
 	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
@@ -715,6 +763,12 @@ job_coordinates.obj:
 	$(CL)\cl /c $(POL)/job_coordinates.cpp \
                  -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
                  /Fo: job_coordinates.obj /EHsc
+
+job_makers.obj:
+	@-echo ">>> compiling job_makers ..."
+	$(CL)\cl /c $(POL)/job_makers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: job_makers.obj /EHsc
 
 write_job_counts.obj:
 	@-echo ">>> compiling write_job_counts ..."
@@ -1125,12 +1179,14 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
 		 dbl_bals_kernels.obj dbl_tail_kernels.obj \
                  random_numbers.obj random_series.obj random_monomials.obj \
                  random_polynomials.obj cyclic_indices.obj \
+		 dbl_indexed_coefficients.obj \
                  dbl_convolutions_host.obj dbl_monomials_host.obj \
+		 dbl_polynomials_host.obj \
                  convolution_job.obj convolution_jobs.obj \
                  addition_job.obj addition_jobs.obj job_coordinates.obj \
                  complexconv_job.obj complexconv_jobs.obj \
                  complexadd_job.obj complexadd_jobs.obj \
-                 complexinc_job.obj complexinc_jobs.obj \
+                 complexinc_job.obj complexinc_jobs.obj job_makers.obj \
                  gettimeofday4win.obj write_gpu_timings.obj \
                  dbl_systems_host.obj write_dbl_bstimeflops.obj \
 		 write_dbl_qrtimeflops.obj write_job_counts.obj \
@@ -1146,12 +1202,14 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
              dbl_newton_method.obj cmplx_newton_method.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              random_polynomials.obj cyclic_indices.obj \
+	     dbl_indexed_coefficients.obj \
 	     dbl_convolutions_host.obj dbl_monomials_host.obj \
+	     dbl_polynomials_host.obj \
              cyclic_columns.obj convolution_job.obj convolution_jobs.obj \
              addition_job.obj addition_jobs.obj job_coordinates.obj \
              complexconv_job.obj complexconv_jobs.obj \
              complexadd_job.obj complexadd_jobs.obj \
-             complexinc_job.obj complexinc_jobs.obj \
+             complexinc_job.obj complexinc_jobs.obj job_makers.obj \
              dbl_systems_host.obj write_gpu_timings.obj write_job_counts.obj \
              gettimeofday4win.obj write_dbl_qrtimeflops.obj \
              dbl_systems_kernels.obj dbl_polynomials_kernels.obj \
@@ -1372,6 +1430,8 @@ clean:
 cleanall:
 	del random_numbers.obj random_series.obj random_monomials.obj
 	del random_polynomials.obj cyclic_indices.obj
+	del dbl_indexed_coefficients.obj dbl2_indexed_coefficients.obj
+	del dbl4_indexed_coefficients.obj dbl8_indexed_coefficients.obj
 	del double_double_functions.obj quad_double_functions.obj
 	del octo_double_functions.obj
 	del random2_series.obj random4_series.obj random8_series.obj
@@ -1380,6 +1440,8 @@ cleanall:
 	del dbl2_convolutions_host.obj dbl2_monomials_host.obj
 	del dbl4_convolutions_host.obj dbl4_monomials_host.obj
 	del dbl8_convolutions_host.obj dbl8_monomials_host.obj
+	del dbl_polynomials_host.obj dbl2_polynomials_host.obj
+	del dbl4_polynomials_host.obj dbl8_polynomials_host.obj
 	del dbl_factorizations.obj dbl2_factorizations.obj
 	del dbl4_factorizations.obj dbl8_factorizations.obj
 	del dbl_baqr_kernels.obj dbl_tabs_kernels.obj
@@ -1390,7 +1452,7 @@ cleanall:
 	del addition_job.obj addition_jobs.obj job_coordinates.obj
 	del complexconv_job.obj complexconv_jobs.obj 
 	del complexinc_job.obj complexinc_jobs.obj 
-	del complexadd_job.obj complexadd_jobs.obj 
+	del complexadd_job.obj complexadd_jobs.obj job_makers.obj
 	del dbl_polynomials_kernels.obj dbl2_polynomials_kernels.obj
 	del dbl4_polynomials_kernels.obj dbl8_polynomials_kernels.obj
 	del gettimeofday4win.obj
