@@ -1,3 +1,5 @@
+Fri 2 Jun 2023 : put allocations in dbl_newton_method in functions.
+
 Thu 1 Jun 2023 : updated makefile_unix and makefile_windows to compile
   test_*_newton.cpp for the jobs of the complex vectorized arithmetic.
   Extended unimodular_matrices.cpp with an extra test option.

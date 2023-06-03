@@ -236,6 +236,80 @@ void dbl_column_newton_qrstep
    }
 }
 
+int dbl_allocate_inoutfunjac
+ ( int dim, int deg, int mode,
+   double **input_h, double **input_d,
+   double ***output_h, double ***output_d,
+   double **funval_h, double **funval_d,
+   double ***jacval_h, double ***jacval_d )
+{
+   const int degp1 = deg+1;
+
+   if((mode == 1) || (mode == 2))
+   {
+      for(int i=0; i<dim; i++)
+      {
+         input_h[i] = new double[degp1];
+         output_h[i] = new double*[dim+1];
+
+         for(int j=0; j<=dim; j++)
+            output_h[i][j] = new double[degp1];
+
+         funval_h[i] = new double[degp1];
+      }
+      for(int i=0; i<degp1; i++) // jacval[i] is matrix of dimension dim
+      {
+         jacval_h[i] = new double*[dim];
+         for(int j=0; j<dim; j++)
+            jacval_h[i][j] = new double[dim];
+      }
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      for(int i=0; i<dim; i++)
+      {
+         input_d[i] = new double[degp1];
+         output_d[i] = new double*[dim+1];
+
+         for(int j=0; j<=dim; j++)
+            output_d[i][j] = new double[degp1];
+
+         funval_d[i] = new double[degp1];
+      }
+      for(int i=0; i<degp1; i++) // jacval[i] is matrix of dimension dim
+      {
+         jacval_d[i] = new double*[dim];
+         for(int j=0; j<dim; j++)
+            jacval_d[i][j] = new double[dim];
+      }
+   }
+   return 0;
+}
+
+int dbl_allocate_rhsqr
+ ( int dim, int deg, int mode,
+   double **rhs_h, double **rhs_d, double **urhs_h, double **urhs_d,
+   double **Q_h, double **Q_d, double **R_h, double **R_d )
+{
+   const int degp1 = deg+1;
+
+   if((mode == 1) || (mode == 2))
+   {
+      for(int i=0; i<degp1; i++) rhs_h[i] = new double[dim];
+      for(int i=0; i<degp1; i++) urhs_h[i] = new double[dim];
+      for(int i=0; i<dim; i++) Q_h[i] = new double[dim];
+      for(int i=0; i<dim; i++) R_h[i] = new double[dim];
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      for(int i=0; i<degp1; i++) rhs_d[i] = new double[dim];
+      for(int i=0; i<degp1; i++) urhs_d[i] = new double[dim];
+      for(int i=0; i<dim; i++) Q_d[i] = new double[dim];
+      for(int i=0; i<dim; i++) R_d[i] = new double[dim];
+   }
+   return 0;
+}
+
 int test_dbl_column_newton
  ( int szt, int nbt, int dim, int deg, int nbrcol,
    int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
@@ -245,14 +319,7 @@ int test_dbl_column_newton
  * 1. allocating input and output space for evaluation and differentiation
  */
    const int degp1 = deg+1;
-   double **input_h = new double*[dim];
-   double **input_d = new double*[dim];
-   for(int i=0; i<dim; i++)
-   {
-       input_h[i] = new double[degp1];
-       input_d[i] = new double[degp1];
-   }
-   // allocate memory for coefficients and the output
+
    double **acc = new double*[dim+1]; // accumulate series in one column
    for(int i=0; i<=dim; i++) acc[i] = new double[degp1];
    double ***cff = new double**[nbrcol];
@@ -261,40 +328,12 @@ int test_dbl_column_newton
       cff[i] = new double*[dim]; // the coefficients of monomials
       for(int j=0; j<dim; j++) cff[i][j] = new double[degp1];
    }
+   double **input_h;
+   double **input_d;
    double ***output_h;
    double ***output_d;
-
-   if((mode == 1) || (mode == 2))
-   {
-      output_h = new double**[dim];
-      for(int i=0; i<dim; i++)
-      {
-         output_h[i] = new double*[dim+1];
-         for(int j=0; j<=dim; j++) output_h[i][j] = new double[degp1];
-      }
-   }
-   if((mode == 0) || (mode == 2))
-   {
-      output_d = new double**[dim];
-      for(int i=0; i<dim; i++)
-      {
-         output_d[i] = new double*[dim+1];
-         for(int j=0; j<=dim; j++) output_d[i][j] = new double[degp1];
-      }
-   }
    double **funval_h;  // function values on host
    double **funval_d;  // function values on device
-
-   if((mode == 1) || (mode == 2))
-   {
-      funval_h = new double*[dim];
-      for(int i=0; i<dim; i++) funval_h[i] = new double[degp1];
-   }
-   if((mode == 0) || (mode == 2))
-   {
-      funval_d = new double*[dim];
-      for(int i=0; i<dim; i++) funval_d[i] = new double[degp1];
-   }
    // The derivatives in the output are a series truncated at degree deg.
    // The coefficients of the series are matrices of dimension dim.
    double ***jacval_h;
@@ -302,22 +341,21 @@ int test_dbl_column_newton
 
    if((mode == 1) || (mode == 2))
    {
+      input_h = new double*[dim];
+      output_h = new double**[dim];
+      funval_h = new double*[dim];
       jacval_h = new double**[degp1];
-      for(int i=0; i<degp1; i++) // jacval[i] is matrix of dimension dim
-      {
-         jacval_h[i] = new double*[dim];
-         for(int j=0; j<dim; j++) jacval_h[i][j] = new double[dim];
-      }
    }
    if((mode == 0) || (mode == 2))
    {
+      input_d = new double*[dim];
+      output_d = new double**[dim];
+      funval_d = new double*[dim];
       jacval_d = new double**[degp1];
-      for(int i=0; i<degp1; i++) // jacval[i] is matrix of dimension dim
-      {
-         jacval_d[i] = new double*[dim];
-         for(int j=0; j<dim; j++) jacval_d[i][j] = new double[dim];
-      }
    }
+   dbl_allocate_inoutfunjac
+      (dim,deg,mode,input_h,input_d,output_h,output_d,
+       funval_h,funval_d,jacval_h,jacval_d);
 /*
  * 2. allocate space to solve the linearized power series system
  */
@@ -339,65 +377,37 @@ int test_dbl_column_newton
    }
    // The right hand side -funval(t) in linearized format is a series
    // truncated at degree deg, with arrays of dimension dim as coefficients.
-   double **rhs_h = new double*[degp1];
-   double **rhs_d = new double*[degp1];
-
-   if((mode == 1) || (mode == 2))
-   {
-      rhs_h = new double*[degp1];
-      for(int i=0; i<degp1; i++) rhs_h[i] = new double[dim];
-   }
-   if((mode == 0) || (mode == 2))
-   {
-      rhs_d = new double*[degp1];
-      for(int i=0; i<degp1; i++) rhs_d[i] = new double[dim];
-   }
-   double *workvec = new double[dim];
-   // Copy the rhs vector into work space for inplace solver.
-
+   double **rhs_h;
+   double **rhs_d;
    double **urhs_h;
    double **urhs_d;
-
-   if((mode == 1) || (mode == 2))
-   {
-      urhs_h = new double*[degp1];
-      for(int i=0; i<degp1; i++) urhs_h[i] = new double[dim];
-   }
-   if((mode == 0) || (mode == 2))
-   {
-      urhs_d = new double*[degp1];
-      for(int i=0; i<degp1; i++) urhs_d[i] = new double[dim];
-   }
-   double **resvec = new double*[degp1];
-   for(int i=0; i<degp1; i++) resvec[i] = new double[dim];
-   double resmax;
-
    double **Q_h;
    double **Q_d;
-
-   if((mode == 1) || (mode == 2))
-   {
-      Q_h = new double*[dim];
-      for(int i=0; i<dim; i++) Q_h[i] = new double[dim];
-   }
-   if((mode == 0) || (mode == 2))
-   {
-      Q_d = new double*[dim];
-      for(int i=0; i<dim; i++) Q_d[i] = new double[dim];
-   }
    double **R_h;
    double **R_d;
 
    if((mode == 1) || (mode == 2))
    {
+      rhs_h = new double*[degp1];
+      urhs_h = new double*[degp1];
+      Q_h = new double*[dim];
       R_h = new double*[dim];
-      for(int i=0; i<dim; i++) R_h[i] = new double[dim];
    }
    if((mode == 0) || (mode == 2))
    {
+      rhs_d = new double*[degp1];
+      urhs_d = new double*[degp1];
+      Q_d = new double*[dim];
       R_d = new double*[dim];
-      for(int i=0; i<dim; i++) R_d[i] = new double[dim];
    }
+   dbl_allocate_rhsqr(dim,deg,mode,rhs_h,rhs_d,urhs_h,urhs_d,Q_h,Q_d,R_h,R_d);
+
+   double *workvec = new double[dim];
+   // Copy the rhs vector into work space for inplace solver.
+
+   double **resvec = new double*[degp1];
+   for(int i=0; i<degp1; i++) resvec[i] = new double[dim];
+   double resmax;
 /*
  * 3. initialize input, coefficient, evaluate, differentiate, and solve
  */
@@ -445,21 +455,27 @@ int test_dbl_column_newton
    {
       start0[i] = sol[i][0];
    }
-   real_start_series_vector(dim,deg,start0,input_h);
+   if((mode == 1) || (mode == 2))
+      real_start_series_vector(dim,deg,start0,input_h);
+   else
+      real_start_series_vector(dim,deg,start0,input_d);
 
-   for(int i=0; i<dim; i++)
-      for(int j=0; j<degp1; j++)
-      {
-         // input_h[i][j] = sol[i][j]; // check if evaluation is done right
-         input_d[i][j] = input_h[i][j];
-      }
-
+   if(mode == 2)
+   {
+      for(int i=0; i<dim; i++)
+         for(int j=0; j<degp1; j++)
+            input_d[i][j] = input_h[i][j];
+   }
    if(vrblvl > 1)
    {
       cout << scientific << setprecision(16);
       cout << "The leading coefficients of the input series :" << endl;
-      for(int i=0; i<dim; i++)
-         cout << i << " : " << input_h[i][0] << endl;
+      if((mode == 1) || (mode == 2))
+         for(int i=0; i<dim; i++)
+            cout << i << " : " << input_h[i][0] << endl;
+      else
+         for(int i=0; i<dim; i++)
+            cout << i << " : " << input_d[i][0] << endl;
    }
    if(vrblvl > 0) cout << scientific << setprecision(16);
 
@@ -578,5 +594,61 @@ int test_dbl_row_newton
  ( int szt, int nbt, int dim, int deg, int *nbr, int **nvr, int ***idx,
    double dpr, int nbsteps, int mode, int vrblvl )
 {
+   const int degp1 = deg+1;
+
+   double **input_h;
+   double **input_d;
+   double ***output_h;
+   double ***output_d;
+   double **funval_h;  // function values on host
+   double **funval_d;  // function values on device
+   // The derivatives in the output are a series truncated at degree deg.
+   // The coefficients of the series are matrices of dimension dim.
+   double ***jacval_h;
+   double ***jacval_d;
+
+   if((mode == 1) || (mode == 2))
+   {
+      input_h = new double*[dim];
+      output_h = new double**[dim];
+      funval_h = new double*[dim];
+      jacval_h = new double**[degp1];
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      input_d = new double*[dim];
+      output_d = new double**[dim];
+      funval_d = new double*[dim];
+      jacval_d = new double**[degp1];
+   }
+   dbl_allocate_inoutfunjac
+      (dim,deg,mode,input_h,input_d,output_h,output_d,
+       funval_h,funval_d,jacval_h,jacval_d);
+
+   double **rhs_h;
+   double **rhs_d;
+   double **urhs_h;
+   double **urhs_d;
+   double **Q_h;
+   double **Q_d;
+   double **R_h;
+   double **R_d;
+
+   if((mode == 1) || (mode == 2))
+   {
+      rhs_h = new double*[degp1];
+      urhs_h = new double*[degp1];
+      Q_h = new double*[dim];
+      R_h = new double*[dim];
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      rhs_d = new double*[degp1];
+      urhs_d = new double*[degp1];
+      Q_d = new double*[dim];
+      R_d = new double*[dim];
+   }
+   dbl_allocate_rhsqr(dim,deg,mode,rhs_h,rhs_d,urhs_h,urhs_d,Q_h,Q_d,R_h,R_d);
+
    return 0;
 }

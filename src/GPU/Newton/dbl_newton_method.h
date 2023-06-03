@@ -129,6 +129,55 @@ void dbl_column_newton_qrstep
  *   totupdlapsedms accumulates the milliseconds spent on updates;
  *   totreslapsedms accumulates the milliseconds spent on residuals. */
 
+int dbl_allocate_inoutfunjac
+ ( int dim, int deg, int mode,
+   double **input_h, double **input_d,
+   double ***output_h, double ***output_d,
+   double **funval_h, double **funval_d,
+   double ***jacval_h, double ***jacval_d );
+/*
+ * DESCRIPTION :
+ *   Allocates work space memory for input, output,
+ *   the function values and the value of the Jacobian matrix.
+ *
+ * ON ENTRY :
+ *   dim        dimension of the system;
+ *   deg        degree at which the series are truncated;
+ *   mode       0 (GPU), 1 (CPU), or 2 (GPU+CPU).
+ *
+ * ON RETURN :
+ *   input_h    input on the host;
+ *   input_d    input on the device;
+ *   output_h   output on the host;
+ *   output_d   output on the device;
+ *   funval_h   function values on the host;
+ *   funval_d   function values on the device;
+ *   jacval_h   values of the Jacobian matrix on the host;
+ *   jacval_d   values of the Jacobian matrix on the device. */
+
+int dbl_allocate_rhsqr
+ ( int dim, int deg, int mode,
+   double **rhs_h, double **rhs_d, double **urhs_h, double **urhs_d,
+   double **Q_h, double **Q_d, double **R_h, double **R_d );
+/*
+ * DESCRIPTION :
+ *   Allocates work space memory for the linearized power series system.
+ *
+ * ON ENTRY :
+ *   dim        dimension of the system;
+ *   deg        degree at which the series are truncated;
+ *   mode       0 (GPU), 1 (CPU), or 2 (GPU+CPU).
+ *
+ * ON RETURN :
+ *   rhs_h      right-hand side on the host;
+ *   rhs_d      right-hand side on the device;
+ *   urhs_h     updated right-hand side on the host;
+ *   urhs_d     updated right-hand side on the device;
+ *   Q_h        Q on the host;
+ *   Q_d        Q on the device;
+ *   R_h        R on the host;
+ *   R_d        R on the device. */
+
 int test_dbl_column_newton
  ( int szt, int nbt, int dim, int deg, int nbrcol,
    int **nvr, int ***idx, int **exp, int *nbrfac, int **expfac, int **rowsA,
