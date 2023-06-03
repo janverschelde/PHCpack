@@ -1,5 +1,8 @@
 Sat 3 Jun 2023 : refactored and added to dbl_newton_method,
   updated makefile_unix and makefile_windows.
+  Extended dbl_systems_host with functions to map the output of the
+  evaluation and differentiation to functions values and matrix series,
+  extended dbl_newton_method to a functional Newton method.
 
 Fri 2 Jun 2023 : put allocations in dbl_newton_method in functions.
 

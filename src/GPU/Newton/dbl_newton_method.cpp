@@ -45,19 +45,24 @@ int dbl_errors_funjacrhs
    int fail = 0;
    double errsum = 0.0;
 
-   cout << scientific << setprecision(3);
+   cout << scientific << setprecision(16);
    cout << "comparing CPU with GPU function values ... " << endl;
    errsum = dbl_error2sum(dim,degp1,funval_h,funval_d,"funval",vrblvl);
-   cout << "sum of errors : " << errsum << endl;
+   cout << scientific << setprecision(2)
+        << "sum of errors : " << errsum << endl;
    fail += (errsum > tol);
+   cout << scientific << setprecision(16);
    cout << "comparing CPU with GPU Jacobians ... " << endl;
    errsum = dbl_error3sum
                (degp1,dim,dim,jacval_h,jacval_d,"jacval",vrblvl);
-   cout << "sum of errors : " << errsum << endl;
+   cout << scientific << setprecision(2)
+        << "sum of errors : " << errsum << endl;
    fail += (errsum > tol);
+   cout << scientific << setprecision(16);
    cout << "comparing CPU with GPU right hand sides ... " << endl;
    errsum = dbl_error2sum(degp1,dim,rhs_h,rhs_d,"rhs",vrblvl);
-   cout << "sum of errors : " << errsum << endl;
+   cout << scientific << setprecision(2)
+        << "sum of errors : " << errsum << endl;
    fail += (errsum > tol);
 
    return fail;
@@ -73,29 +78,128 @@ int dbl_errors_inurhsQRsol
    const double tol = 1.0e-8;
    int fail = 0;
 
-   cout << scientific << setprecision(3);
+   cout << scientific << setprecision(16);
    cout << "comparing CPU with GPU matrices Q ... " << endl;
    double errsum = dbl_error2sum(dim,dim,Q_h,Q_d,"Q",vrblvl);
-   cout << "sum of errors : " << errsum << endl;
+   cout << scientific << setprecision(2)
+        << "sum of errors : " << errsum << endl;
    fail += (errsum > tol);
+   cout << scientific << setprecision(16);
    cout << "comparing CPU with GPU matrices R ... " << endl;
    errsum = dbl_error2sum(dim,dim,R_h,R_d,"R",vrblvl);
-   cout << "sum of errors : " << errsum << endl;
+   cout << scientific << setprecision(2)
+        << "sum of errors : " << errsum << endl;
    fail += (errsum > tol);
+   cout << scientific << setprecision(16);
    cout << "comparing CPU with GPU updated rhs ... " << endl;
    errsum = dbl_error2sum(degp1,dim,urhs_h,urhs_d,"urhs",vrblvl);
-   cout << "sum of errors : " << errsum << endl;
+   cout << scientific << setprecision(2)
+        << "sum of errors : " << errsum << endl;
    fail += (errsum > tol);
+   cout << scientific << setprecision(16);
    cout << "comparing CPU with GPU update to solutions ... " << endl;
    errsum = dbl_error2sum(degp1,dim,sol_h,sol_d,"sol",vrblvl);
    cout << "sum of errors : " << errsum << endl;
    fail += (errsum > tol);
    cout << "comparing CPU with GPU series ... " << endl;
    errsum = dbl_error2sum(dim,degp1,input_h,input_d,"input",vrblvl);
-   cout << "sum of errors : " << errsum << endl;
+   cout << scientific << setprecision(2)
+        << "sum of errors : " << errsum << endl;
    fail += (errsum > tol);
 
    return fail;
+}
+
+int dbl_update_newton_qrstep
+ ( int szt, int nbt, int dim, int deg,
+   int *tailidx_h, int *tailidx_d, double **input_h, double **input_d,
+   double **funval_h, double **funval_d,
+   double ***jacval_h, double ***jacval_d, double **rhs_h, double **rhs_d,
+   double **urhs_h, double **urhs_d, double **sol_h, double **sol_d,
+   double **Q_h, double **Q_d, double **R_h, double **R_d,
+   double *workvec, double **resvec, double *resmax,
+   bool *zeroQ_h, bool *noqr_h, bool *zeroQ_d, bool *noqr_d,
+   int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
+   double *totqrlapsedms, double *totqtblapsedms,
+   double *totbslapsedms, double *totupdlapsedms, double *totreslapsedms,
+   int vrblvl, int mode )
+{
+   const int degp1 = deg+1;
+
+   if((mode == 1) || (mode == 2))
+   {
+      for(int i=0; i<degp1; i++) // save original rhs for residual
+         for(int j=0; j<dim; j++) urhs_h[i][j] = rhs_h[i][j];
+
+      for(int i=0; i<degp1; i++) // initialize the solution to zero
+         for(int j=0; j<dim; j++) sol_h[i][j] = 0.0;
+
+      if(vrblvl > 0)
+         cout << "calling CPU_dbl_qrbs_solve ..." << endl;
+
+      int oldtail = *tailidx_h;
+      int newtail = oldtail;
+
+      CPU_dbl_qrbs_solve
+         (dim,degp1,oldtail,jacval_h,urhs_h,sol_h,Q_h,R_h,workvec,
+          zeroQ_h,noqr_h,upidx_h,bsidx_h,&newtail,vrblvl);
+
+      *tailidx_h = newtail;
+ 
+      if(vrblvl > 0)
+      {
+         cout << "calling CPU_dbl_linear_residue ..." << endl;
+
+         CPU_dbl_linear_residue
+            (dim,degp1,*tailidx_h-1,jacval_h,rhs_h,sol_h,
+             resvec,resmax,vrblvl);
+         cout << scientific << setprecision(3)
+              << "maximum residual : " << *resmax << endl;
+      }
+      dbl_update_series(dim,degp1,*tailidx_h-1,input_h,sol_h,vrblvl);
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      for(int i=0; i<degp1; i++) // save original rhs for residual
+         for(int j=0; j<dim; j++) urhs_d[i][j] = rhs_d[i][j];
+
+      for(int i=0; i<degp1; i++) // initialize the solution to zero
+         for(int j=0; j<dim; j++) sol_d[i][j] = 0.0;
+
+      if(vrblvl > 0)
+         cout << "calling GPU_dbl_bals_solve ..." << endl;
+
+      int oldtail = *tailidx_d;
+      int newtail = oldtail;
+
+      GPU_dbl_bals_solve
+         (dim,degp1,szt,nbt,oldtail,jacval_d,Q_d,R_d,urhs_d,sol_d,
+          zeroQ_d,noqr_d,upidx_d,bsidx_d,&newtail,
+          totqrlapsedms,totqtblapsedms,totbslapsedms,totupdlapsedms,vrblvl);
+
+      *tailidx_d = newtail;
+
+      if(vrblvl > 0)
+      {
+         cout << "calling GPU_dbl_linear_residue ..." << endl;
+
+         double elapsedms = 0.0;
+         long long int addcnt = 0;
+         long long int mulcnt = 0;
+
+         GPU_dbl_linear_residue
+            (dim,degp1,szt,nbt,*tailidx_d-1,jacval_d,rhs_d,sol_d,
+             resvec,resmax,&elapsedms,&addcnt,&mulcnt,vrblvl);
+         cout << scientific << setprecision(3)
+              << "maximum residual : " << *resmax;
+         cout << fixed << setprecision(3)
+              << "  total kernel time : " << elapsedms
+              << " milliseconds" << endl;
+         *totreslapsedms += elapsedms;
+      }
+      dbl_update_series(dim,degp1,*tailidx_d-1,input_d,sol_d,vrblvl);
+   }
+   return 0;
 }
 
 int dbl_column_newton_qrstep
@@ -201,82 +305,18 @@ int dbl_column_newton_qrstep
    }
    if((vrblvl > 0) && (mode == 2))
    {
-      int fail = dbl_errors_funjacrhs(dim,deg,funval_h,funval_d,
-                                      jacval_h,jacval_d,rhs_h,rhs_d,vrblvl);
+      int fail = dbl_errors_funjacrhs
+         (dim,deg,funval_h,funval_d,jacval_h,jacval_d,rhs_h,rhs_d,vrblvl);
    }
-   if((mode == 1) || (mode == 2))
-   {
-      for(int i=0; i<degp1; i++) // save original rhs for residual
-         for(int j=0; j<dim; j++) urhs_h[i][j] = rhs_h[i][j];
+   dbl_update_newton_qrstep
+      (szt,nbt,dim,deg,tailidx_h,tailidx_d,input_h,input_d,
+       funval_h,funval_d,jacval_h,jacval_d,
+       rhs_h,rhs_d,urhs_h,urhs_d,sol_h,sol_d,
+       Q_h,Q_d,R_h,R_d,workvec,resvec,resmax,
+       zeroQ_h,noqr_h,zeroQ_d,noqr_d,upidx_h,bsidx_h,upidx_d,bsidx_d,
+       totqrlapsedms,totqtblapsedms,totbslapsedms,
+       totupdlapsedms,totreslapsedms,vrblvl,mode);
 
-      for(int i=0; i<degp1; i++) // initialize the solution to zero
-         for(int j=0; j<dim; j++) sol_h[i][j] = 0.0;
-
-      if(vrblvl > 0)
-         cout << "calling CPU_dbl_qrbs_solve ..." << endl;
-
-      int oldtail = *tailidx_h;
-      int newtail = oldtail;
-
-      CPU_dbl_qrbs_solve
-         (dim,degp1,oldtail,jacval_h,urhs_h,sol_h,Q_h,R_h,workvec,
-          zeroQ_h,noqr_h,upidx_h,bsidx_h,&newtail,vrblvl);
-
-      *tailidx_h = newtail;
- 
-      if(vrblvl > 0)
-      {
-         cout << "calling CPU_dbl_linear_residue ..." << endl;
-
-         CPU_dbl_linear_residue
-            (dim,degp1,*tailidx_h-1,jacval_h,rhs_h,sol_h,
-             resvec,resmax,vrblvl);
-         cout << scientific << setprecision(3)
-              << "maximum residual : " << *resmax << endl;
-      }
-      dbl_update_series(dim,degp1,*tailidx_h-1,input_h,sol_h,vrblvl);
-   }
-   if((mode == 0) || (mode == 2))
-   {
-      for(int i=0; i<degp1; i++) // save original rhs for residual
-         for(int j=0; j<dim; j++) urhs_d[i][j] = rhs_d[i][j];
-
-      for(int i=0; i<degp1; i++) // initialize the solution to zero
-         for(int j=0; j<dim; j++) sol_d[i][j] = 0.0;
-
-      if(vrblvl > 0)
-         cout << "calling GPU_dbl_bals_solve ..." << endl;
-
-      int oldtail = *tailidx_d;
-      int newtail = oldtail;
-
-      GPU_dbl_bals_solve
-         (dim,degp1,szt,nbt,oldtail,jacval_d,Q_d,R_d,urhs_d,sol_d,
-          zeroQ_d,noqr_d,upidx_d,bsidx_d,&newtail,
-          totqrlapsedms,totqtblapsedms,totbslapsedms,totupdlapsedms,vrblvl);
-
-      *tailidx_d = newtail;
-
-      if(vrblvl > 0)
-      {
-         cout << "calling GPU_dbl_linear_residue ..." << endl;
-
-         double elapsedms = 0.0;
-         long long int addcnt = 0;
-         long long int mulcnt = 0;
-
-         GPU_dbl_linear_residue
-            (dim,degp1,szt,nbt,*tailidx_d-1,jacval_d,rhs_d,sol_d,
-             resvec,resmax,&elapsedms,&addcnt,&mulcnt,vrblvl);
-         cout << scientific << setprecision(3)
-              << "maximum residual : " << *resmax;
-         cout << fixed << setprecision(3)
-              << "  total kernel time : " << elapsedms
-              << " milliseconds" << endl;
-         *totreslapsedms += elapsedms;
-      }
-      dbl_update_series(dim,degp1,*tailidx_d-1,input_d,sol_d,vrblvl);
-   }
    if((vrblvl > 0) && (mode == 2))
       return dbl_errors_inurhsQRsol(dim,deg,
          input_h,input_d,Q_h,Q_d,R_h,R_d,urhs_h,urhs_d,sol_h,sol_d,vrblvl);
@@ -287,7 +327,7 @@ int dbl_column_newton_qrstep
 int dbl_row_newton_qrstep
  ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
    int *nbr, int **nvr, int ***idx,
-   double **cst, double ***cff, double dpr, double **acc,
+   double **cst, double ***cff, double dpr,
    double **input_h, double **input_d, double ***output_h, double ***output_d,
    double **funval_h, double **funval_d,
    double ***jacval_h, double ***jacval_d, double **rhs_h, double **rhs_d,
@@ -346,7 +386,9 @@ int dbl_row_newton_qrstep
    }
    if((vrblvl > 0) && (mode == 2))
    {
-      cout << "comparing CPU with GPU evaluations ... " << endl;
+      cout << scientific << setprecision(16)
+           << "comparing CPU with GPU evaluations ... " << endl;
+   
       double errsum = 0.0;
 
       errsum = dbl_error3sum
@@ -355,9 +397,46 @@ int dbl_row_newton_qrstep
       // dim+1 is number of variables for each derivative,
       // plus the last component with the function value
 
-      cout << scientific << setprecision(3);
+      cout << scientific << setprecision(2);
       cout << "sum of errors : " << errsum << endl;
    }
+   if(vrblvl > 0)
+      cout << "mapping the output to values of function and matrix series ..."
+           << endl;
+
+   if((mode == 1) || (mode == 2))
+   {
+      dbl_map_evaldiff_output(dim,deg,output_h,funval_h,jacval_h,vrblvl);
+
+      for(int i=0; i<degp1; i++)
+         for(int j=0; j<dim; j++) rhs_h[i][j] = -funval_h[j][i];
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      dbl_map_evaldiff_output(dim,deg,output_d,funval_d,jacval_d,vrblvl);
+
+      for(int i=0; i<degp1; i++)
+         for(int j=0; j<dim; j++) rhs_d[i][j] = -funval_d[j][i];
+   }
+   if((vrblvl > 0) && (mode == 2))
+   {
+      int fail = dbl_errors_funjacrhs
+         (dim,deg,funval_h,funval_d,jacval_h,jacval_d,rhs_h,rhs_d,vrblvl);
+   }
+   dbl_update_newton_qrstep
+      (szt,nbt,dim,deg,tailidx_h,tailidx_d,input_h,input_d,
+       funval_h,funval_d,jacval_h,jacval_d,
+       rhs_h,rhs_d,urhs_h,urhs_d,sol_h,sol_d,
+       Q_h,Q_d,R_h,R_d,workvec,resvec,resmax,
+       zeroQ_h,noqr_h,zeroQ_d,noqr_d,upidx_h,bsidx_h,upidx_d,bsidx_d,
+       totqrlapsedms,totqtblapsedms,totbslapsedms,
+       totupdlapsedms,totreslapsedms,vrblvl,mode);
+
+   if((vrblvl > 0) && (mode == 2))
+      return dbl_errors_inurhsQRsol(dim,deg,
+         input_h,input_d,Q_h,Q_d,R_h,R_d,urhs_h,urhs_d,sol_h,sol_d,vrblvl);
+   else
+      return 0;
 }
 
 int dbl_allocate_inoutfunjac
@@ -878,6 +957,10 @@ int test_dbl_row_newton
    double ***cff = new double**[dim];
 
    dbl_make_coefficients(dim,deg,nbr,nvr,idx,cst,cff,vrblvl);
+   // must randomize the leading coefficients,
+   // because for exponenials all leading coefficients are one
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<nbr[i]; j++) cff[i][j][0] = random_double();
 
    double **input_h;
    double **input_d;
@@ -947,8 +1030,6 @@ int test_dbl_row_newton
 
 // alocating some extra work space
 
-   double **acc = new double*[dim+1]; // accumulate series in one column
-   for(int i=0; i<=dim; i++) acc[i] = new double[degp1];
    double *workvec = new double[dim];
    // Copy the rhs vector into work space for inplace solver.
 
@@ -989,7 +1070,7 @@ int test_dbl_row_newton
 
       dbl_row_newton_qrstep
          (szt,nbt,dim,wrkdeg,&tailidx_h,&tailidx_d,
-          nbr,nvr,idx,cst,cff,dpr,acc,
+          nbr,nvr,idx,cst,cff,dpr,
           input_h,input_d,output_h,output_d,funval_h,funval_d,
           jacval_h,jacval_d,rhs_h,rhs_d,urhs_h,urhs_d,sol_h,sol_d,
           Q_h,Q_d,R_h,R_d,workvec,resvec,&resmax,

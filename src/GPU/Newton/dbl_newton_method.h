@@ -49,6 +49,98 @@ int dbl_errors_inurhsQRsol
  *   sol_d     update to the solutoin on the device;
  *   vrblvl    is the verbose level. */
 
+int dbl_update_newton_qrstep
+ ( int szt, int nbt, int dim, int deg,
+   int *tailidx_h, int *tailidx_d, double **input_h, double **input_d,
+   double **funval_h, double **funval_d,
+   double ***jacval_h, double ***jacval_d, double **rhs_h, double **rhs_d,
+   double **urhs_h, double **urhs_d, double **sol_h, double **sol_d,
+   double **Q_h, double **Q_d, double **R_h, double **R_d,
+   double *workvec, double **resvec, double *resmax,
+   bool *zeroQ_h, bool *noqr_h, bool *zeroQ_d, bool *noqr_d,
+   int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
+   double *totqrlapsedms, double *totqtblapsedms,
+   double *totbslapsedms, double *totupdlapsedms, double *totreslapsedms,
+   int vrblvl, int mode );
+/*
+ * DESCRIPTION :
+ *   Given the function values and the matrix series of the Jacobian,
+ *   computes the update to the solution series.
+ *
+ * REQUIRED : szt*nbt = dim for GPU acceleration, when mode is 2.
+ *
+ * ON ENTRY :
+ *   szt       size of each tile and block;
+ *   nbt       number of tiles and number of blocks;
+ *   dim       number of monomials;
+ *   deg       degree of the power series;
+ *   tailidx_h is the start index of the update of the tail on the host;
+ *   tailidx_d is the start index of the update of the tail on the device;
+ *   input_h   coefficients of the power series of degree deg,
+ *             for dim variables, computed on host;
+ *   input_d   series computed on device;
+ *   funval_h  evaluated power series computed by host;
+ *   funval_d  evaluated power series computed by device;
+ *   jacval_h  deg+1 matrices of dimension dim on host;
+ *   jacval_d  deg+1 matrices of dimension dim on device;
+ *   rhs_h     space for deg+1 vectors of dimension dim on host;
+ *   rhs_d     space for deg+1 vectors of dimension dim on device;
+ *   urhs_h    space for updated right hand side vectors computed by host;
+ *   urhs_d    space for updated right hand side vectors computed by device; 
+ *   sol_h     space for deg+1 vectors of dimension dim;
+ *   sol_d     space for deg+1 vectors of dimension dim;
+ *   Q_h       space allocated for the Q computed by the host;
+ *   Q_d       space allocated for the Q computed by the device;
+ *   R_h       space allocated for the R computed by the host;
+ *   R_d       space allocated for the R computed by the device;
+ *   wrkvec    work space allocated for a vector of dimension dim;
+ *   resvec    space for deg+1 vectors of dimension dim;
+ *   zeroQ_h   if true, then Q is zero and Q must be computed on host;
+ *   noqr_h    flag if true, then no qr on host;
+ *   zeroQ_d   if true, then Q is zero and Q must be computed on device;
+ *   noqr_d    flag if true, then no qr on device;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions;
+ *   totupdlapsedms accumulates the milliseconds spent on updates;
+ *   totreslapsedms accumulates the milliseconds spent on residuals;
+ *   vrblvl    is the verbose level;
+ *   mode      execution mode, 0 (GPU only), 1 (CPU only) or 2 (GPU+CPU).
+ *
+ * ON RETURN :
+ *   tailidx_h is the updated value for tailidx_h;
+ *   tailidx_d is the updated value for tailidx_d;
+ *   input_h   power series computed on host (depending on mode);
+ *   input_d   power series computed on device (depending on mode);
+ *   rhs_h     the linearized right hand side are the function values
+ *             subtracted by 1 and added by t, computed by host;
+ *   rhs_d     the linearized right hand side are the function values
+ *             subtracted by 1 and added by t, computed by device;
+ *   urhs_h    right hand side vector updated by the host;
+ *   urhs_d    right hand side vector updated by the device;
+ *   sol_h     solution computed by the host;
+ *   sol_d     solution computed by the device;
+ *   Q_h       Q of the QR factorization computed by the host;
+ *   Q_d       Q of the QR factorization computed by the device;
+ *   R_h       R of the QR factorization computed by the host;
+ *   R_d       R of the QR factorization computed by the device;
+ *   wrkmat    has a copy of the Jacobian matrix;
+ *   resvec    residual vectors;
+ *   resmax    the maximum element of the residual vectors;
+ *   zeroQ_h   false if Q was computed on host;
+ *   noqr_h    updated flag if ||dx_0|| is zero for the first time on host;
+ *   zeroQ_d   false if Q was computed on device;
+ *   noqr_d    updated flag if ||dx_0|| is zero for the first time on device;
+ *   upidx_h   counts the number of updates skipped by host;
+ *   bsidx_h   counts the number of backsubstitutions skipped by host;
+ *   upidx_d   counts the number of updates skipped by device;
+ *   bsidx_d   counts the number of backsubstitutions skipped by device;
+ *   totqrlapsedms accumulates the milliseconds spent on the Householder QR;
+ *   totqtblapsedms accumulates the milliseconds spent on Q times rhs;
+ *   totbslapsedms accumulates the milliseconds spent on back substitutions;
+ *   totupdlapsedms accumulates the milliseconds spent on updates;
+ *   totreslapsedms accumulates the milliseconds spent on residuals. */
+
 int dbl_column_newton_qrstep
  ( int szt, int nbt, int dim, int deg, int nbrcol,
    int *tailidx_h, int *tailidx_d,
@@ -177,7 +269,7 @@ int dbl_column_newton_qrstep
 int dbl_row_newton_qrstep
  ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
    int *nbr, int **nvr, int ***idx,
-   double **cst, double ***cff, double dpr, double **acc,
+   double **cst, double ***cff, double dpr,
    double **input_h, double **input_d, double ***output_h, double ***output_d,
    double **funval_h, double **funval_d,
    double ***jacval_h, double ***jacval_d, double **rhs_h, double **rhs_d,
@@ -211,7 +303,6 @@ int dbl_row_newton_qrstep
  *   cst       vector of the constant coefficients of the system;
  *   cff       coefficients of the monomials in each column;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];
- *   acc       space to accumulate dim+1 power series of degree deg;
  *   input_h   coefficients of the power series of degree deg,
  *             for dim variables, computed on host;
  *   input_d   space for power series computed on device;

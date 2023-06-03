@@ -274,4 +274,61 @@ void cmplx_define_rhs
  *   rhsre     real parts of the linearized right hand sides;
  *   rhsim     imaginary parts of the linearized right hand sides. */
 
+void dbl_map_evaldiff_output
+ ( int dim, int deg, double ***output, double **funval, double ***jacval,
+   int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Maps the output of the evaluation and differentation to the
+ *   real function values and the values of the Jacobian matrix.
+ *
+ * ON ENTRY :
+ *   dim       number of equations and variables;
+ *   deg       degree at which the series are truncated;
+ *   output    output[i][j][k] is the k-th coefficient of the series
+ *             of the derivative of the i-th polynomial with respect
+ *             to the variable j;
+ *   funval    space for the dim series of the function values;
+ *   jacval    space for the matrix series of the Jacobian.
+ *
+ * ON RETURN :
+ *   funval    funval[i] has the function values of the series
+ *             evaluated at the i-th polynomial;
+ *   jacval    jacval[k] is the k-th coefficient of the matrix series
+ *             of the Jacobian matrix. */
+
+void cmplx_map_evaldiff_output
+ ( int dim, int deg, double ***outputre, double ***outputim,
+   double **funvalre, double **funvalim,
+   double ***jacvalre, double ***jacvalim, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Maps the output of the evaluation and differentation to the
+ *   complex function values and the values of the Jacobian matrix.
+ *
+ * ON ENTRY :
+ *   dim       number of equations and variables;
+ *   deg       degree at which the series are truncated;
+ *   outputre  outputre[i][j][k] is the real part of the k-th coefficient
+ *             of the series of the derivative of the i-th polynomial
+ *             with respect to the variable j;
+ *   outputim  outputim[i][j][k] is the imaginary part of the k-th coefficient
+ *             of the series of the derivative of the i-th polynomial
+ *             with respect to the variable j;
+ *   funvalre  space for the dim series of the function values;
+ *   funvalim  space for the dim series of the function values;
+ *   jacvalre  space for the matrix series of the Jacobian;
+ *   jacvalim  space for the matrix series of the Jacobian;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   funvalre  funvalre[i] has the real parts of the function values
+ *             of the series evaluated at the i-th polynomial;
+ *   funvalim  funvalim[i] has the imaginary parts of the function values
+ *             of the series evaluated at the i-th polynomial;
+ *   jacvalre  jacvalre[k] is the real part of the k-th coefficient
+ *             of the matrix series of the Jacobian matrix;
+ *   jacvalim  jacvalim[k] is the imaginary part of the k-th coefficient
+ *             of the matrix series of the Jacobian matrix. */
+
 #endif
