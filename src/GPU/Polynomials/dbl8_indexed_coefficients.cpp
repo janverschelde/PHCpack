@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <cmath>
 #include "random8_monomials.h"
+#include "random8_vectors.h"
 #include "random8_series.h"
 #include "random8_polynomials.h"
 

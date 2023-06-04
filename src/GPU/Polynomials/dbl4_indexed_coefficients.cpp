@@ -7,6 +7,7 @@
 #include <cmath>
 #include "random4_monomials.h"
 #include "random4_series.h"
+#include "random4_vectors.h"
 #include "random4_polynomials.h"
 
 using namespace std;

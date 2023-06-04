@@ -1,3 +1,5 @@
+Sun 4 Jun 2023 : fixed {dbl2, dbl4, dbl8}_indexed_coefficients.cpp.
+
 Sat 3 Jun 2023 : new {dbl, dbl2, dbl4, dbl8}_indexed_coefficients, with
   code from test_{dbl, dbl2, dbl4, dbl8}_cycsys.cpp.
   Updated makefile_unix and makefile_windows.

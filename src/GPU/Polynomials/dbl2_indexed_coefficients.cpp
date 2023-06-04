@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <cstdlib>
 #include <cmath>
+#include "random2_vectors.h"
 #include "random2_monomials.h"
 #include "random2_polynomials.h"
 #include "random2_series.h"
