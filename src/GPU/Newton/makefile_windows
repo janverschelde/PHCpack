@@ -96,11 +96,47 @@ random_monomials.obj:
                  -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: random_monomials.obj /EHsc
 
+random2_monomials.obj:
+	@-echo ">>> compiling random2_monomials ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/random2_monomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random2_monomials.obj /EHsc
+
+random4_monomials.obj:
+	@-echo ">>> compiling random4_monomials ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/random4_monomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random4_monomials.obj /EHsc
+
+random8_monomials.obj:
+	@-echo ">>> compiling random8_monomials ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/random8_monomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random8_monomials.obj /EHsc
+
 random_polynomials.obj:
 	@-echo ">>> compiling random_polynomials ..."
 	$(CL)\cl /c -I$(MPD) -I$(CNV) $(POL)/random_polynomials.cpp \
                  -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: random_polynomials.obj /EHsc
+
+random2_polynomials.obj:
+	@-echo ">>> compiling random2_polynomials ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(POL)/random2_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random2_polynomials.obj /EHsc
+
+random4_polynomials.obj:
+	@-echo ">>> compiling random4_polynomials ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(POL)/random4_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random4_polynomials.obj /EHsc
+
+random8_polynomials.obj:
+	@-echo ">>> compiling random8_polynomials ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(POL)/random8_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random8_polynomials.obj /EHsc
 
 random2_vectors.obj:
 	@-echo ">>> compiling double double random vector generators ..."
@@ -176,19 +212,22 @@ dbl_polynomials_host.obj:
 
 dbl2_polynomials_host.obj:
 	@-echo ">>> compiling dbl2_polynomials_host ..."
-	$(CL)\cl /c -I$(CNV) -I$(POL) $(POL)/dbl2_polynomials_host.cpp \
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(POL) \
+                      $(POL)/dbl2_polynomials_host.cpp \
                  -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: dbl2_polynomials_host.obj /EHsc
 
 dbl4_polynomials_host.obj:
 	@-echo ">>> compiling dbl4_polynomials_host ..."
-	$(CL)\cl /c -I$(CNV) -I$(POL) $(POL)/dbl4_polynomials_host.cpp \
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(POL) \
+                      $(POL)/dbl4_polynomials_host.cpp \
                  -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: dbl4_polynomials_host.obj /EHsc
 
 dbl8_polynomials_host.obj:
 	@-echo ">>> compiling dbl8_polynomials_host ..."
-	$(CL)\cl /c -I$(CNV) -I$(POL) $(POL)/dbl8_polynomials_host.cpp \
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(POL) \
+                      $(POL)/dbl8_polynomials_host.cpp \
                  -I$(winkitucrt) -I$(includepath) -O2 \
                  /Fo: dbl8_polynomials_host.obj /EHsc
 
@@ -1230,18 +1269,22 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
 test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
                   random_polynomials.obj cyclic_indices.obj \
-		  random2_vectors.obj random2_series.obj cyclic_columns.obj \
+		  random2_vectors.obj random2_series.obj \
+		  random2_monomials.obj random2_polynomials.obj \
+                  cyclic_columns.obj dbl2_indexed_coefficients.obj \
                   dbl2_monomial_systems.obj prompt_newton_setup.obj \
                   double_double_functions.obj dbl2_newton_testers.obj \
 		  dbl2_newton_method.obj cmplx2_newton_method.obj \
                   dbl2_convolutions_host.obj dbl2_monomials_host.obj \
+                  dbl2_polynomials_host.obj \
                   convolution_job.obj convolution_jobs.obj \
                   addition_job.obj addition_jobs.obj job_coordinates.obj \
                   complexconv_job.obj complexconv_jobs.obj \
                   complexadd_job.obj complexadd_jobs.obj \
-                  complexinc_job.obj complexinc_jobs.obj \
+                  complexinc_job.obj complexinc_jobs.obj job_makers.obj \
                   gettimeofday4win.obj write_gpu_timings.obj \
                   dbl2_systems_host.obj write_dbl2_bstimeflops.obj \
+                  write_newton_times.obj \
 		  write_dbl2_qrtimeflops.obj write_job_counts.obj \
                   dbl2_systems_kernels.obj dbl2_polynomials_kernels.obj \
                   dbl2_factorizations.obj dbl_onenorms_host.obj \
@@ -1255,15 +1298,19 @@ test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              random_polynomials.obj cyclic_indices.obj \
              random2_vectors.obj random2_series.obj cyclic_columns.obj \
+             random2_monomials.obj random2_polynomials.obj \
+             dbl2_indexed_coefficients.obj \
              double_double_functions.obj dbl2_newton_testers.obj \
 	     dbl2_newton_method.obj cmplx2_newton_method.obj \
 	     dbl2_convolutions_host.obj dbl2_monomials_host.obj \
+             dbl2_polynomials_host.obj \
              convolution_job.obj convolution_jobs.obj write_job_counts.obj \
              addition_job.obj addition_jobs.obj job_coordinates.obj \
              complexconv_job.obj complexconv_jobs.obj \
              complexadd_job.obj complexadd_jobs.obj \
-             complexinc_job.obj complexinc_jobs.obj \
+             complexinc_job.obj complexinc_jobs.obj job_makers.obj \
              gettimeofday4win.obj write_gpu_timings.obj \
+             write_newton_times.obj \
              dbl2_systems_host.obj dbl2_monomial_systems.obj \
              dbl2_systems_kernels.obj dbl2_polynomials_kernels.obj \
              dbl2_factorizations.obj dbl_onenorms_host.obj \
@@ -1445,6 +1492,9 @@ cleanall:
 	del octo_double_functions.obj
 	del random2_series.obj random4_series.obj random8_series.obj
 	del random2_vectors.obj random4_vectors.obj random8_vectors.obj
+	del random2_monomials.obj random2_polynomials.obj
+	del random4_monomials.obj random4_polynomials.obj
+	del random8_monomials.obj random8_polynomials.obj
 	del dbl_convolutions_host.obj dbl_monomials_host.obj
 	del dbl2_convolutions_host.obj dbl2_monomials_host.obj
 	del dbl4_convolutions_host.obj dbl4_monomials_host.obj

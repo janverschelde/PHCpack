@@ -40,9 +40,33 @@ random_monomials.o:
 	@-echo ">>> compiling random_monomials ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/random_monomials.cpp
 
+random2_monomials.o:
+	@-echo ">>> compiling random2_monomials ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/random2_monomials.cpp
+
+random4_monomials.o:
+	@-echo ">>> compiling random4_monomials ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/random4_monomials.cpp
+
+random8_monomials.o:
+	@-echo ">>> compiling random8_monomials ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/random8_monomials.cpp
+
 random_polynomials.o:
 	@-echo ">>> compiling random_polynomials ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/random_polynomials.cpp
+
+random2_polynomials.o:
+	@-echo ">>> compiling random2_polynomials ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/random2_polynomials.cpp
+
+random4_polynomials.o:
+	@-echo ">>> compiling random4_polynomials ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/random4_polynomials.cpp
+
+random8_polynomials.o:
+	@-echo ">>> compiling random8_polynomials ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/random8_polynomials.cpp
 
 random2_vectors.o:
 	@-echo ">>> compiling double double random vector generators ..."
@@ -88,11 +112,6 @@ dbl_monomials_host.o:
 	@-echo ">>> compiling dbl_monomials_host ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl_monomials_host.cpp
 
-dbl_polynomials_host.o:
-	@-echo ">>> compiling dbl_polynomials_host ..."
-	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(POL) \
-                        $(POL)/dbl_polynomials_host.cpp
-
 dbl2_monomials_host.o:
 	@-echo ">>> compiling dbl2_monomials_host ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl2_monomials_host.cpp
@@ -104,6 +123,26 @@ dbl4_monomials_host.o:
 dbl8_monomials_host.o:
 	@-echo ">>> compiling dbl8_monomials_host ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/dbl8_monomials_host.cpp
+
+dbl_polynomials_host.o:
+	@-echo ">>> compiling dbl_polynomials_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(POL) \
+                        $(POL)/dbl_polynomials_host.cpp
+
+dbl2_polynomials_host.o:
+	@-echo ">>> compiling dbl2_polynomials_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(POL) \
+                        $(POL)/dbl2_polynomials_host.cpp
+
+dbl4_polynomials_host.o:
+	@-echo ">>> compiling dbl4_polynomials_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(POL) \
+                        $(POL)/dbl4_polynomials_host.cpp
+
+dbl8_polynomials_host.o:
+	@-echo ">>> compiling dbl8_polynomials_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(POL) \
+                        $(POL)/dbl8_polynomials_host.cpp
 
 dbl_factorizations.o:
 	@-echo ">>> compiling dbl_factorizations ..."
@@ -491,7 +530,7 @@ complexadd_job.o:
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/complexadd_job.cpp
 
 complexconv_jobs.o:
-	@-echo ">>> compiling complexconvs_job ..."
+	@-echo ">>> compiling complexconv_jobs ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(POL)/complexconv_jobs.cpp
 
 complexinc_jobs.o:
@@ -853,21 +892,24 @@ test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o prompt_newton_setup.o \
                   double_double_functions.o cyclic_columns.o \
                   random_polynomials.o cyclic_indices.o \
+                  random2_vectors.o random2_series.o random2_monomials.o \
+                  random2_polynomials.o dbl2_indexed_coefficients.o \
                   random2_vectors.o random2_series.o dbl2_monomial_systems.o \
                   dbl2_convolutions_host.o dbl2_monomials_host.o \
+                  dbl2_polynomials_host.o \
                   dbl2_factorizations.o dbl_onenorms_host.o dbl2_bals_host.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   complexconv_job.o complexconv_jobs.o \
                   complexinc_job.o complexinc_jobs.o \
-                  complexadd_job.o complexadd_jobs.o \
+                  complexadd_job.o complexadd_jobs.o job_makers.o \
                   dbl2_systems_host.o write_gpu_timings.o \
                   dbl2_systems_kernels.o dbl2_polynomials_kernels.o \
                   dbl2_newton_testers.o test_dbl2_newton.o \
                   dbl2_newton_method.o cmplx2_newton_method.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl_bals_flopcounts.o write_dbl2_bstimeflops.o \
-                  write_dbl2_qrtimeflops.o \
+                  write_dbl2_qrtimeflops.o write_newton_times.o  \
                   dbl2_baqr_kernels.o dbl2_tabs_kernels.o \
                   dbl2_tail_kernels.o dbl2_bals_kernels.o
 	@-echo ">>> linking ..."
@@ -877,19 +919,22 @@ test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
                   unimodular_matrices.o prompt_newton_setup.o \
                   double_double_functions.o cyclic_columns.o \
                   random_polynomials.o cyclic_indices.o \
-                  random2_vectors.o random2_series.o dbl2_monomial_systems.o \
+                  random2_vectors.o random2_series.o random2_monomials.o \
+                  random2_polynomials.o dbl2_indexed_coefficients.o \
+                  dbl2_monomial_systems.o \
                   dbl2_convolutions_host.o dbl2_monomials_host.o \
+                  dbl2_polynomials_host.o \
                   dbl2_factorizations.o dbl_onenorms_host.o dbl2_bals_host.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   complexconv_job.o complexconv_jobs.o \
                   complexinc_job.o complexinc_jobs.o \
-                  complexadd_job.o complexadd_jobs.o \
+                  complexadd_job.o complexadd_jobs.o job_makers.o \
                   dbl2_systems_host.o write_gpu_timings.o \
                   dbl2_systems_kernels.o dbl2_polynomials_kernels.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl_bals_flopcounts.o write_dbl2_bstimeflops.o \
-                  write_dbl2_qrtimeflops.o \
+                  write_dbl2_qrtimeflops.o  write_newton_times.o \
                   dbl2_baqr_kernels.o dbl2_tabs_kernels.o \
                   dbl2_tail_kernels.o dbl2_bals_kernels.o \
                -lcuda -lcudart -L$(CUDALIB)
@@ -1040,11 +1085,15 @@ cleanall: clean
 	/bin/rm -f -r dbl4_indexed_coefficients.o dbl8_indexed_coefficients.o
 	/bin/rm -f -r random2_series.o random4_series.o random8_series.o
 	/bin/rm -f -r random2_vectors.o random4_vectors.o random8_vectors.o
+	/bin/rm -f -r random2_monomials.o random2_polynomials.o 
+	/bin/rm -f -r random4_monomials.o random4_polynomials.o 
+	/bin/rm -f -r random8_monomials.o random8_polynomials.o 
 	/bin/rm -f -r dbl_convolutions_host.o dbl_monomials_host.o
 	/bin/rm -f -r dbl2_convolutions_host.o dbl2_monomials_host.o
 	/bin/rm -f -r dbl4_convolutions_host.o dbl4_monomials_host.o
 	/bin/rm -f -r dbl8_convolutions_host.o dbl8_monomials_host.o
-	/bin/rm -f -r dbl_polynomials_host.o
+	/bin/rm -f -r dbl_polynomials_host.o dbl2_polynomials_host.o
+	/bin/rm -f -r dbl4_polynomials_host.o dbl8_polynomials_host.o
 	/bin/rm -f -r double_double_functions.o
 	/bin/rm -f -r quad_double_functions.o
 	/bin/rm -f -r octo_double_functions.o

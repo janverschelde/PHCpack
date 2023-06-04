@@ -396,4 +396,72 @@ void cmplx2_define_rhs
  *   rhsimhi   high doubles of the imaginary parts of the linearized rhs;
  *   rhsimlo   low doubles of the imaginary parts of the linearized rhs. */
 
+void dbl2_map_evaldiff_output
+ ( int dim, int deg, double ***outputhi, double ***outputlo,
+   double **funvalhi, double **funvallo,
+   double ***jacvalhi, double ***jacvallo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Maps the output of the evaluation and differentation to the
+ *   real function values and the values of the Jacobian matrix.
+ *
+ * ON ENTRY :
+ *   dim       number of equations and variables;
+ *   deg       degree at which the series are truncated;
+ *   output    output[i][j][k] is the k-th coefficient of the series
+ *             of the derivative of the i-th polynomial with respect
+ *             to the variable j;
+ *   funvalhi  space for the dim series of the function values;
+ *   funvallo  space for the dim series of the function values;
+ *   jacvalhi  space for the matrix series of the Jacobian.
+ *   jacvallo  space for the matrix series of the Jacobian.
+ *
+ * ON RETURN :
+ *   funvalhi  has the high doubles the function values;
+ *   funvallo  has the low doubles the function values;
+ *   jacvalhi  has the high doubles of the Jacobian matrix series;
+ *   jacvallo  has the low doubles of the Jacobian matrix series. */
+
+void cmplx2_map_evaldiff_output
+ ( int dim, int deg,
+   double ***outputrehi, double ***outputrelo,
+   double ***outputimhi, double ***outputimlo,
+   double **funvalrehi, double **funvalrelo,
+   double **funvalimhi, double **funvalimlo,
+   double ***jacvalrehi, double ***jacvalrelo,
+   double ***jacvalimhi, double ***jacvalimlo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Maps the output of the evaluation and differentation to the
+ *   complex function values and the values of the Jacobian matrix.
+ *
+ * ON ENTRY :
+ *   dim       number of equations and variables;
+ *   deg       degree at which the series are truncated;
+ *   outputrehi has the high doubles of output;
+ *   outputrelo has the low doubles of output;
+ *   funvalre  space for the dim series of the function values;
+ *   funvalim  space for the dim series of the function values;
+ *   jacvalre  space for the matrix series of the Jacobian;
+ *   jacvalim  space for the matrix series of the Jacobian;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   funvalrehi has the high doubles of the real parts
+ *             of the function values;
+ *   funvalrelo has the low doubles of the real parts
+ *             of the function values;
+ *   funvalimhi has the high doubles of the imaginary parts
+ *             of the function values;
+ *   funvalimlo has the low doubles of the imaginary parts
+ *             of the function values;
+ *   jacvalrehi has the high doubles of the real parts
+ *             of the Jacobian matrix series;
+ *   jacvalrelo has the low doubles of the real parts
+ *             of the Jacobian matrix series;
+ *   jacvalimhi has the high doubles of the imaginary parts
+ *             of the Jacobian matrix series;
+ *   jacvalimlo has the low doubles of the imaginary parts
+ *             of the Jacobian matrix series. */
+
 #endif

@@ -2,6 +2,7 @@
 // the file dbl2_systems_host.h.
 
 #include <iostream>
+#include <iomanip>
 #include "double_double_functions.h"
 #include "dbl2_convolutions_host.h"
 #include "dbl2_monomials_host.h"
@@ -701,6 +702,120 @@ void cmplx2_define_rhs
             cout << rhsrehi[i][j] << "  " << rhsrelo[i][j] << endl
                  << "  "
                  << rhsimhi[i][j] << "  " << rhsimlo[i][j] << endl;
+      }
+   }
+}
+
+void dbl2_map_evaldiff_output
+ ( int dim, int deg, double ***outputhi, double ***outputlo,
+   double **funvalhi, double **funvallo,
+   double ***jacvalhi, double ***jacvallo, int vrblvl )
+{
+   // The coefficients of the series for the function values
+   // at the input are in output[i][dim].
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<=deg; j++)
+      {
+         funvalhi[i][j] = outputhi[i][dim][j];
+         funvallo[i][j] = outputlo[i][dim][j];
+      }
+
+   if(vrblvl > 1)
+   {
+      cout << scientific << setprecision(16);
+      cout << "The leading coefficients of the evaluated series :" << endl;
+
+      for(int i=0; i<dim; i++)
+         cout << i << " : " << funvalhi[i][0] << "  "
+                            << funvallo[i][0] << endl;
+   }
+   // output[i][j][k] is the k-th coefficient in the series
+   // the derivative of the i-th polynomial with respect to variable j.
+
+   for(int i=0; i<dim; i++)          // the i-th polynomial
+   {
+      for(int j=0; j<dim; j++)       // derivative w.r.t. j-th variable
+      {
+         for(int k=0; k<=deg; k++) 
+         {
+            jacvalhi[k][i][j] = outputhi[i][j][k];
+            jacvallo[k][i][j] = outputlo[i][j][k];
+         }
+      }
+   }
+   if(vrblvl > 1)
+   {
+      cout << "The leading coefficients of the Jacobian matrix : " << endl;
+
+      for(int i=0; i<dim; i++)
+      {
+         cout << "row " << i << " : " << endl;
+         for(int j=0; j<dim; j++)
+            cout << jacvalhi[0][i][j] << "  "
+                 << jacvallo[0][i][j] << endl;
+      }
+   }
+}
+
+void cmplx2_map_evaldiff_output
+ ( int dim, int deg,
+   double ***outputrehi, double ***outputrelo,
+   double ***outputimhi, double ***outputimlo,
+   double **funvalrehi, double **funvalrelo,
+   double **funvalimhi, double **funvalimlo,
+   double ***jacvalrehi, double ***jacvalrelo,
+   double ***jacvalimhi, double ***jacvalimlo, int vrblvl )
+{
+   // The coefficients of the series for the function values
+   // at the input are in output[i][dim].
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<=deg; j++)
+      {
+         funvalrehi[i][j] = outputrehi[i][dim][j];
+         funvalrelo[i][j] = outputrelo[i][dim][j];
+         funvalimhi[i][j] = outputimhi[i][dim][j];
+         funvalimlo[i][j] = outputimlo[i][dim][j];
+      }
+
+   if(vrblvl > 1)
+   {
+      cout << scientific << setprecision(16);
+      cout << "The leading coefficients of the evaluated series :" << endl;
+
+      for(int i=0; i<dim; i++)
+         cout << i << " : " << funvalrehi[i][0] << "  "
+                            << funvalrelo[i][0] << endl
+                            << funvalimhi[i][0] << "  "
+                            << funvalimlo[i][0] << endl;
+   }
+   // output[i][j][k] is the k-th coefficient in the series
+   // the derivative of the i-th polynomial with respect to variable j.
+
+   for(int i=0; i<dim; i++)          // the i-th polynomial
+   {
+      for(int j=0; j<dim; j++)       // derivative w.r.t. j-th variable
+      {
+         for(int k=0; k<=deg; k++) 
+         {
+            jacvalrehi[k][i][j] = outputrehi[i][j][k];
+            jacvalrelo[k][i][j] = outputrelo[i][j][k];
+            jacvalimhi[k][i][j] = outputimhi[i][j][k];
+            jacvalimlo[k][i][j] = outputimlo[i][j][k];
+         }
+      }
+   }
+   if(vrblvl > 1)
+   {
+      cout << "The leading coefficients of the Jacobian matrix : " << endl;
+
+      for(int i=0; i<dim; i++)
+      {
+         cout << "row " << i << " : " << endl;
+         for(int j=0; j<dim; j++)
+            cout << jacvalrehi[0][i][j] << "  "
+                 << jacvalrelo[0][i][j] << endl
+                 << jacvalimhi[0][i][j] << "  "
+                 << jacvalimlo[0][i][j] << endl;
       }
    }
 }

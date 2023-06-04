@@ -1,6 +1,9 @@
 Sun 4 Jun 2023 : refactored and added to cmplx_newton_method.
   New write_newton_times with code from dbl_newton_method.
   Updated makefile_unix and makefile_windows.
+  Extended dbl2_systems_host with functions to map output.
+  Refactored and added to dbl2_newton_method code for indexed systems.
+  Updated makefile_unix and makefile_windows.
 
 Sat 3 Jun 2023 : refactored and added to dbl_newton_method,
   updated makefile_unix and makefile_windows.
