@@ -46,7 +46,7 @@ int dbl_errors_inurhsQRsol
  *   urhs_h    updated right hand side on the host;
  *   urhs_d    updated right hand side on the device;
  *   sol_h     update to the solution on the host,
- *   sol_d     update to the solutoin on the device;
+ *   sol_d     update to the solution on the device;
  *   vrblvl    is the verbose level. */
 
 int dbl_update_newton_qrstep
@@ -296,12 +296,13 @@ int dbl_row_newton_qrstep
  *   deg       degree of the power series;
  *   tailidx_h is the start index of the update of the tail on the host;
  *   tailidx_d is the start index of the update of the tail on the device;
+ *   nbr       nbr[i] is the number of monomials in the i-th polynomial;
  *   nvr       nvr[i][j] is the number of variables in the j-th monomial
  *             of the i-th polynomial;
  *   idx       idx[i][j] are the indices of the variables in monomial j
  *             of the i-th polynomial;
  *   cst       vector of the constant coefficients of the system;
- *   cff       coefficients of the monomials in each column;
+ *   cff       coefficients of the monomials in the system;
  *   dpr       damper multiplier for t, should be in (0.0, 1.0];
  *   input_h   coefficients of the power series of degree deg,
  *             for dim variables, computed on host;
@@ -538,24 +539,6 @@ int dbl_error_testsol
  *   testsol    series of the test solution;
  *   input_h    results on host if mode is 1 or 2;
  *   input_d    results on device if mode is 0 or 2. */
-
-void write_newton_times
- ( int stepcnt, double walltimesec, double totcnvlapsedms,
-   double totqrlapsedms, double totqtblapsedms, double totbslapsedms,
-   double totupdlapsedms, double totreslapsedms );
-/*
- * DESCRIPTION :
- *   Writes the times of running Newton's method.
- *
- * ON ENTRY :
- *   stepcnt    number of Newton steps done;
- *   walltimesec is the elapsed wall clock time in seconds;
- *   totcnvlapsedms is the convolutions time in milliseconds;
- *   totqrlapsedms is the qr decomposition time in milliseconds;
- *   totqtblapsedms is the q^T*b time in milliseconds;
- *   totbslapsedms is the back substitution time in milliseconds;
- *   totupdlapsedms is the update time in milliseconds;
- *   totreslapsedms is the residual time in milliseconds. */
 
 int test_dbl_column_newton
  ( int szt, int nbt, int dim, int deg, int nbrcol,

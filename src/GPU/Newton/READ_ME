@@ -66,6 +66,7 @@ cmplx2_newton_method     : Newton on double double complex numbers
 cmplx4_newton_method     : Newton on quad double complex numbers
 cmplx8_newton_method     : Newton on octo double complex numbers
 ------------------------------------------------------------------------------
+write_newton_times       : utility to write timings of Newton runs
 test_dbl_newton          : main test Newton in double precision
 test_dbl2_newton         : main test Newton in double double precision
 test_dbl4_newton         : main test Newton in quad double precision

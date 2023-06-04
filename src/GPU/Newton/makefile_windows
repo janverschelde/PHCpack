@@ -1131,6 +1131,12 @@ prompt_newton_setup.obj:
                       prompt_newton_setup.cpp \
                  /Fo: prompt_newton_setup.obj /EHsc
 
+write_newton_times.obj:
+	@-echo ">>> compiling write_newton_times ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
+                      write_newton_times.cpp \
+                 /Fo: write_newton_times.obj /EHsc
+
 test_dbl_flopbals: random_numbers.obj test_dbl_flopbals.obj \
                    dbl_tail_kernels.obj dbl_bals_flopcounts.obj \
                    gettimeofday4win.obj
@@ -1190,6 +1196,7 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
                  gettimeofday4win.obj write_gpu_timings.obj \
                  dbl_systems_host.obj write_dbl_bstimeflops.obj \
 		 write_dbl_qrtimeflops.obj write_job_counts.obj \
+                 write_newton_times.obj \
                  dbl_systems_kernels.obj dbl_polynomials_kernels.obj \
                  dbl_factorizations.obj dbl_onenorms_host.obj \
 		 dbl_bals_host.obj dbl_bals_flopcounts.obj \
@@ -1212,6 +1219,7 @@ test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
              complexinc_job.obj complexinc_jobs.obj job_makers.obj \
              dbl_systems_host.obj write_gpu_timings.obj write_job_counts.obj \
              gettimeofday4win.obj write_dbl_qrtimeflops.obj \
+             write_newton_times.obj \
              dbl_systems_kernels.obj dbl_polynomials_kernels.obj \
              dbl_factorizations.obj dbl_onenorms_host.obj \
              dbl_bals_host.obj dbl_tail_kernels.obj dbl_bals_kernels.obj \
@@ -1418,6 +1426,7 @@ clean:
 	del test_dbl4_flopbals.obj test_dbl4_flopbals_lib
 	del test_dbl8_flopbals.exe test_dbl8_flopbals.exp
 	del test_dbl8_flopbals.obj test_dbl8_flopbals_lib
+	del write_newton_times.obj
 	del test_dbl_newton.exe test_dbl_newton.exp
 	del test_dbl_newton.obj test_dbl_newton_lib
 	del test_dbl2_newton.exe test_dbl2_newton.exp

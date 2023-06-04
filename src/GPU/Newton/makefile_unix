@@ -562,6 +562,10 @@ prompt_newton_setup.o:
 	@-echo ">>> compiling prompt_newton_setup ..."
 	$(gpp) -O3 -c prompt_newton_setup.cpp
 
+write_newton_times.o:
+	@-echo ">>> compiling write_newton_times ..."
+	$(gpp) -O3 -c write_newton_times.cpp
+
 test_dbl_newton.o:
 	@-echo ">>> compiling test_dbl_newton ..."
 	$(gpp) -O3 -c -I$(CNV) -I$(POL) -I$(MAT) test_dbl_newton.cpp
@@ -817,7 +821,7 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                  dbl_factorizations.o dbl_onenorms_host.o dbl_bals_host.o \
                  dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                  dbl_bals_flopcounts.o write_dbl_bstimeflops.o \
-                 write_dbl_qrtimeflops.o \
+                 write_dbl_qrtimeflops.o write_newton_times.o \
                  dbl_baqr_kernels.o dbl_tabs_kernels.o \
                  dbl_tail_kernels.o dbl_bals_kernels.o
 	@-echo ">>> linking ..."
@@ -840,7 +844,7 @@ test_dbl_newton: random_numbers.o random_series.o random_monomials.o \
                   dbl_factorizations.o dbl_onenorms_host.o dbl_bals_host.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl_bals_flopcounts.o write_dbl_bstimeflops.o \
-                  write_dbl_qrtimeflops.o \
+                  write_dbl_qrtimeflops.o write_newton_times.o \
                   dbl_baqr_kernels.o dbl_tabs_kernels.o \
                   dbl_tail_kernels.o dbl_bals_kernels.o \
                 -lcuda -lcudart -L$(CUDALIB)
@@ -1023,6 +1027,7 @@ clean:
 	/bin/rm -f -r test_dbl2_flopbals.o test_dbl2_flopbals
 	/bin/rm -f -r test_dbl4_flopbals.o test_dbl4_flopbals
 	/bin/rm -f -r test_dbl8_flopbals.o test_dbl8_flopbals
+	/bin/rm -f -r write_newton_times.o
 	/bin/rm -f -r test_dbl_newton.o test_dbl_newton
 	/bin/rm -f -r test_dbl2_newton.o test_dbl2_newton
 	/bin/rm -f -r test_dbl4_newton.o test_dbl4_newton
