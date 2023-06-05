@@ -2,6 +2,7 @@
 // the file dbl4_systems_host.h.
 
 #include <iostream>
+#include <iomanip>
 #include "quad_double_functions.h"
 #include "dbl4_convolutions_host.h"
 #include "dbl4_monomials_host.h"
@@ -942,6 +943,154 @@ void cmplx4_define_rhs
                  << rhsimhihi[i][j] << "  " << rhsimlohi[i][j] << endl
                  << "  "
                  << rhsimhilo[i][j] << "  " << rhsimlolo[i][j] << endl;
+      }
+   }
+}
+
+void dbl4_map_evaldiff_output
+ ( int dim, int deg,
+    double ***outputhihi, double ***outputlohi,
+    double ***outputhilo, double ***outputlolo,
+   double **funvalhihi, double **funvallohi,
+   double **funvalhilo, double **funvallolo,
+   double ***jacvalhihi, double ***jacvallohi,
+   double ***jacvalhilo, double ***jacvallolo, int vrblvl )
+{
+   // The coefficients of the series for the function values
+   // at the input are in output[i][dim].
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<=deg; j++)
+      {
+         funvalhihi[i][j] = outputhihi[i][dim][j];
+         funvallohi[i][j] = outputlohi[i][dim][j];
+         funvalhilo[i][j] = outputhilo[i][dim][j];
+         funvallolo[i][j] = outputlolo[i][dim][j];
+      }
+
+   if(vrblvl > 1)
+   {
+      cout << scientific << setprecision(16);
+      cout << "The leading coefficients of the evaluated series :" << endl;
+
+      for(int i=0; i<dim; i++)
+         cout << i << " : " << funvalhihi[i][0] << "  "
+                            << funvallohi[i][0] << endl
+                            << funvalhilo[i][0] << "  "
+                            << funvallolo[i][0] << endl;
+   }
+   // output[i][j][k] is the k-th coefficient in the series
+   // the derivative of the i-th polynomial with respect to variable j.
+
+   for(int i=0; i<dim; i++)          // the i-th polynomial
+   {
+      for(int j=0; j<dim; j++)       // derivative w.r.t. j-th variable
+      {
+         for(int k=0; k<=deg; k++) 
+         {
+            jacvalhihi[k][i][j] = outputhihi[i][j][k];
+            jacvallohi[k][i][j] = outputlohi[i][j][k];
+            jacvalhilo[k][i][j] = outputhilo[i][j][k];
+            jacvallolo[k][i][j] = outputlolo[i][j][k];
+         }
+      }
+   }
+   if(vrblvl > 1)
+   {
+      cout << "The leading coefficients of the Jacobian matrix : " << endl;
+
+      for(int i=0; i<dim; i++)
+      {
+         cout << "row " << i << " : " << endl;
+         for(int j=0; j<dim; j++)
+            cout << jacvalhihi[0][i][j] << "  "
+                 << jacvallohi[0][i][j] << endl
+                 << jacvalhilo[0][i][j] << "  "
+                 << jacvallolo[0][i][j] << endl;
+      }
+   }
+}
+
+void cmplx4_map_evaldiff_output
+ ( int dim, int deg,
+   double ***outputrehihi, double ***outputrelohi,
+   double ***outputrehilo, double ***outputrelolo,
+   double ***outputimhihi, double ***outputimlohi,
+   double ***outputimhilo, double ***outputimlolo,
+   double **funvalrehihi, double **funvalrelohi,
+   double **funvalrehilo, double **funvalrelolo,
+   double **funvalimhihi, double **funvalimlohi,
+   double **funvalimhilo, double **funvalimlolo,
+   double ***jacvalrehihi, double ***jacvalrelohi,
+   double ***jacvalrehilo, double ***jacvalrelolo,
+   double ***jacvalimhihi, double ***jacvalimlohi,
+   double ***jacvalimhilo, double ***jacvalimlolo, int vrblvl )
+{
+   // The coefficients of the series for the function values
+   // at the input are in output[i][dim].
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<=deg; j++)
+      {
+         funvalrehihi[i][j] = outputrehihi[i][dim][j];
+         funvalrelohi[i][j] = outputrelohi[i][dim][j];
+         funvalrehilo[i][j] = outputrehilo[i][dim][j];
+         funvalrelolo[i][j] = outputrelolo[i][dim][j];
+         funvalimhihi[i][j] = outputimhihi[i][dim][j];
+         funvalimlohi[i][j] = outputimlohi[i][dim][j];
+         funvalimhilo[i][j] = outputimhilo[i][dim][j];
+         funvalimlolo[i][j] = outputimlolo[i][dim][j];
+      }
+
+   if(vrblvl > 1)
+   {
+      cout << scientific << setprecision(16);
+      cout << "The leading coefficients of the evaluated series :" << endl;
+
+      for(int i=0; i<dim; i++)
+         cout << i << " : " << funvalrehihi[i][0] << "  "
+                            << funvalrelohi[i][0] << endl
+                            << funvalrehilo[i][0] << "  "
+                            << funvalrelolo[i][0] << endl
+                            << funvalimhihi[i][0] << "  "
+                            << funvalimlohi[i][0] << endl
+                            << funvalimhilo[i][0] << "  "
+                            << funvalimlolo[i][0] << endl;
+   }
+   // output[i][j][k] is the k-th coefficient in the series
+   // the derivative of the i-th polynomial with respect to variable j.
+
+   for(int i=0; i<dim; i++)          // the i-th polynomial
+   {
+      for(int j=0; j<dim; j++)       // derivative w.r.t. j-th variable
+      {
+         for(int k=0; k<=deg; k++) 
+         {
+            jacvalrehihi[k][i][j] = outputrehihi[i][j][k];
+            jacvalrelohi[k][i][j] = outputrelohi[i][j][k];
+            jacvalrehilo[k][i][j] = outputrehilo[i][j][k];
+            jacvalrelolo[k][i][j] = outputrelolo[i][j][k];
+            jacvalimhihi[k][i][j] = outputimhihi[i][j][k];
+            jacvalimlohi[k][i][j] = outputimlohi[i][j][k];
+            jacvalimhilo[k][i][j] = outputimhilo[i][j][k];
+            jacvalimlolo[k][i][j] = outputimlolo[i][j][k];
+         }
+      }
+   }
+   if(vrblvl > 1)
+   {
+      cout << "The leading coefficients of the Jacobian matrix : " << endl;
+
+      for(int i=0; i<dim; i++)
+      {
+         cout << "row " << i << " : " << endl;
+         for(int j=0; j<dim; j++)
+            cout << jacvalrehihi[0][i][j] << "  "
+                 << jacvalrelohi[0][i][j] << endl
+                 << jacvalrehilo[0][i][j] << "  "
+                 << jacvalrelolo[0][i][j] << endl
+                 << jacvalimhihi[0][i][j] << "  "
+                 << jacvalimlohi[0][i][j] << endl
+                 << jacvalimhilo[0][i][j] << "  "
+                 << jacvalimlolo[0][i][j] << endl;
       }
    }
 }

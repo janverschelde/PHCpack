@@ -1325,7 +1325,8 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
                   random_polynomials.obj cyclic_indices.obj \
 		  random4_vectors.obj random4_series.obj cyclic_columns.obj \
-                  dbl4_monomial_systems.obj \
+                  dbl4_indexed_coefficients.obj dbl4_monomial_systems.obj \
+                  random4_monomials.obj random4_polynomials.obj \
 		  prompt_newton_setup.obj dbl4_newton_testers.obj \
                   double_double_functions.obj quad_double_functions.obj \
                   dbl4_convolutions_host.obj dbl4_monomials_host.obj \
@@ -1333,10 +1334,11 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
                   addition_job.obj addition_jobs.obj job_coordinates.obj \
                   complexconv_job.obj complexconv_jobs.obj \
                   complexadd_job.obj complexadd_jobs.obj \
-                  complexinc_job.obj complexinc_jobs.obj \
+                  complexinc_job.obj complexinc_jobs.obj job_makers.obj \
                   gettimeofday4win.obj write_gpu_timings.obj \
                   dbl4_systems_host.obj write_dbl4_bstimeflops.obj \
 		  write_dbl4_qrtimeflops.obj write_job_counts.obj \
+                  write_newton_times.obj dbl4_polynomials_host.obj \
                   dbl4_systems_kernels.obj dbl4_polynomials_kernels.obj \
                   dbl4_factorizations.obj dbl_onenorms_host.obj \
                   dbl4_bals_host.obj dbl_bals_flopcounts.obj \
@@ -1349,7 +1351,9 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
              unimodular_matrices.obj prompt_newton_setup.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              random_polynomials.obj cyclic_indices.obj \
+             dbl4_indexed_coefficients.obj \
              random4_vectors.obj random4_series.obj dbl4_monomial_systems.obj \
+             random4_monomials.obj random4_polynomials.obj \
              double_double_functions.obj quad_double_functions.obj \
 	     dbl4_newton_testers.obj cyclic_columns.obj \
 	     dbl4_convolutions_host.obj dbl4_monomials_host.obj \
@@ -1357,10 +1361,11 @@ test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
              addition_job.obj addition_jobs.obj job_coordinates.obj \
              complexconv_job.obj complexconv_jobs.obj \
              complexadd_job.obj complexadd_jobs.obj \
-             complexinc_job.obj complexinc_jobs.obj \
+             complexinc_job.obj complexinc_jobs.obj job_makers.obj \
              gettimeofday4win.obj write_gpu_timings.obj \
              dbl4_systems_host.obj write_dbl4_bstimeflops.obj \
 	     write_dbl4_qrtimeflops.obj write_job_counts.obj \
+             write_newton_times.obj dbl4_polynomials_host.obj \
              dbl4_systems_kernels.obj dbl4_polynomials_kernels.obj \
              dbl4_factorizations.obj dbl_onenorms_host.obj \
              dbl4_bals_host.obj dbl_bals_flopcounts.obj \

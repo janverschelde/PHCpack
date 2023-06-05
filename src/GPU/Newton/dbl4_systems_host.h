@@ -660,4 +660,120 @@ void cmplx4_define_rhs
  *   rhsimhilo are 2nd lowest doubles of imag parts of the linearized rhs;
  *   rhsimlolo are lowest doubles of imag parts of the linearized rhs. */
 
+void dbl4_map_evaldiff_output
+ ( int dim, int deg,
+    double ***outputhihi, double ***outputlohi,
+    double ***outputhilo, double ***outputlolo,
+   double **funvalhihi, double **funvallohi,
+   double **funvalhilo, double **funvallolo,
+   double ***jacvalhihi, double ***jacvallohi,
+   double ***jacvalhilo, double ***jacvallolo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Maps the output of the evaluation and differentation to the
+ *   real function values and the values of the Jacobian matrix.
+ *
+ * ON ENTRY :
+ *   dim       number of equations and variables;
+ *   deg       degree at which the series are truncated;
+ *   output    output[i][j][k] is the k-th coefficient of the series
+ *             of the derivative of the i-th polynomial with respect
+ *             to the variable j;
+ *   funvalhihi has space for the dim series of the function values;
+ *   funvallohi has space for the dim series of the function values;
+ *   funvalhilo has space for the dim series of the function values;
+ *   funvallolo has space for the dim series of the function values;
+ *   jacvalhihi has space for the matrix series of the Jacobian.
+ *   jacvallohi has space for the matrix series of the Jacobian.
+ *   jacvalhilo has space for the matrix series of the Jacobian.
+ *   jacvallolo has space for the matrix series of the Jacobian.
+ *
+ * ON RETURN :
+ *   funvalhihi has the highest doubles the function values;
+ *   funvallohi has the 2nd highest doubles the function values;
+ *   funvalhilo has the 2nd lowest doubles the function values;
+ *   funvallolo has the lowest doubles the function values;
+ *   jacvalhihi has the highest doubles of the Jacobian matrix series;
+ *   jacvallohi has the 2nd highest doubles of the Jacobian matrix series;
+ *   jacvalhilo has the 2nd lowest doubles of the Jacobian matrix series;
+ *   jacvallolo has the lowest doubles of the Jacobian matrix series. */
+
+void cmplx4_map_evaldiff_output
+ ( int dim, int deg,
+   double ***outputrehihi, double ***outputrelohi,
+   double ***outputrehilo, double ***outputrelolo,
+   double ***outputimhihi, double ***outputimlohi,
+   double ***outputimhilo, double ***outputimlolo,
+   double **funvalrehihi, double **funvalrelohi,
+   double **funvalrehilo, double **funvalrelolo,
+   double **funvalimhihi, double **funvalimlohi,
+   double **funvalimhilo, double **funvalimlolo,
+   double ***jacvalrehihi, double ***jacvalrelohi,
+   double ***jacvalrehilo, double ***jacvalrelolo,
+   double ***jacvalimhihi, double ***jacvalimlohi,
+   double ***jacvalimhilo, double ***jacvalimlolo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Maps the output of the evaluation and differentation to the
+ *   complex function values and the values of the Jacobian matrix.
+ *
+ * ON ENTRY :
+ *   dim       number of equations and variables;
+ *   deg       degree at which the series are truncated;
+ *   outputrehihi has the highest doubles of the real parts of the output;
+ *   outputrelohi has the 2nd highest doubles of the real parts of the output;
+ *   outputrehilo has the 2nd lowest doubles of the real parts of the output;
+ *   outputrelolo has the lowest doubles of the real parts of the output;
+ *   funvalrehihi has space for the dim series of the function values;
+ *   funvalrelohi has space for the dim series of the function values;
+ *   funvalrehilo has space for the dim series of the function values;
+ *   funvalrelolo has space for the dim series of the function values;
+ *   funvalimhihi has space for the dim series of the function values;
+ *   funvalimlohi has space for the dim series of the function values;
+ *   funvalimhilo has space for the dim series of the function values;
+ *   funvalimlolo has space for the dim series of the function values;
+ *   jacvalrehihi has space for the matrix series of the Jacobian;
+ *   jacvalrelohi has space for the matrix series of the Jacobian;
+ *   jacvalrehilo has space for the matrix series of the Jacobian;
+ *   jacvalrelolo has space for the matrix series of the Jacobian;
+ *   jacvalimhihi has space for the matrix series of the Jacobian;
+ *   jacvalimlohi has space for the matrix series of the Jacobian;
+ *   jacvalimhilo has space for the matrix series of the Jacobian;
+ *   jacvalimlolo has space for the matrix series of the Jacobian;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   funvalrehihi has the highest doubles of the real parts
+ *             of the function values;
+ *   funvalrelohi has the second highest doubles of the real parts
+ *             of the function values;
+ *   funvalrehilo has the second lowest doubles of the real parts
+ *             of the function values;
+ *   funvalrelolo has the lowest doubles of the real parts
+ *             of the function values;
+ *   funvalimhihi has the highest doubles of the imaginary parts
+ *             of the function values;
+ *   funvalimlohi has the second highest doubles of the imaginary parts
+ *             of the function values;
+ *   funvalimhilo has the second lowest doubles of the imaginary parts
+ *             of the function values;
+ *   funvalimlolo has the lowest doubles of the imaginary parts
+ *             of the function values;
+ *   jacvalrehihi has the highest doubles of the real parts
+ *             of the Jacobian matrix series;
+ *   jacvalrelohi has the second highest doubles of the real parts
+ *             of the Jacobian matrix series;
+ *   jacvalrehilo has the second lowest doubles of the real parts
+ *             of the Jacobian matrix series;
+ *   jacvalrelolo has the lowest doubles of the real parts
+ *             of the Jacobian matrix series;
+ *   jacvalimhihi has the highest doubles of the imaginary parts
+ *             of the Jacobian matrix series;
+ *   jacvalimlohi has the second highest doubles of the imaginary parts
+ *             of the Jacobian matrix series;
+ *   jacvalimhilo has the second lowest doubles of the imaginary parts
+ *             of the Jacobian matrix series;
+ *   jacvalimlolo has the lowest doubles of the imaginary parts
+ *             of the Jacobian matrix series. */
+
 #endif

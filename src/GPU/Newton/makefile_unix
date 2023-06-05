@@ -941,21 +941,24 @@ test_dbl2_newton: random_numbers.o random_series.o random_monomials.o \
 
 test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
                   random4_vectors.o random4_series.o dbl4_monomial_systems.o \
+                  random4_monomials.o random4_polynomials.o \
                   unimodular_matrices.o prompt_newton_setup.o \
                   double_double_functions.o quad_double_functions.o \
                   cyclic_columns.o random_polynomials.o cyclic_indices.o \
+                  dbl4_indexed_coefficients.o \
                   dbl4_convolutions_host.o dbl4_monomials_host.o \
+                  dbl4_polynomials_host.o \
                   dbl4_factorizations.o dbl_onenorms_host.o dbl4_bals_host.o \
                   dbl4_tail_kernels.o dbl4_bals_kernels.o \
                   convolution_job.o convolution_jobs.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   complexconv_job.o complexconv_jobs.o \
                   complexinc_job.o complexinc_jobs.o \
-                  complexadd_job.o complexadd_jobs.o \
+                  complexadd_job.o complexadd_jobs.o job_makers.o \
                   dbl4_systems_host.o write_gpu_timings.o write_job_counts.o \
                   dbl4_systems_kernels.o dbl4_polynomials_kernels.o \
                   dbl_bals_flopcounts.o write_dbl4_bstimeflops.o \
-                  write_dbl4_qrtimeflops.o \
+                  write_dbl4_qrtimeflops.o write_newton_times.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl4_baqr_kernels.o dbl4_tabs_kernels.o \
                   dbl4_newton_method.o cmplx4_newton_method.o \
@@ -964,19 +967,23 @@ test_dbl4_newton: random_numbers.o random_series.o random_monomials.o \
 	$(gpp) -o test_dbl4_newton test_dbl4_newton.o dbl4_newton_testers.o \
                   dbl4_newton_method.o cmplx4_newton_method.o \
                   random_numbers.o random_series.o random_monomials.o \
-                  random4_vectors.o random4_series.o dbl4_monomial_systems.o \
+                  random4_vectors.o random4_series.o random4_monomials.o \
+                  random4_polynomials.o dbl4_monomial_systems.o \
                   unimodular_matrices.o prompt_newton_setup.o \
                   double_double_functions.o quad_double_functions.o \
                   cyclic_columns.o random_polynomials.o cyclic_indices.o \
+                  dbl4_indexed_coefficients.o \
                   dbl4_convolutions_host.o dbl4_monomials_host.o \
+                  dbl4_polynomials_host.o \
                   dbl4_factorizations.o dbl_onenorms_host.o dbl4_bals_host.o \
                   dbl4_tail_kernels.o dbl4_bals_kernels.o \
                   convolution_job.o convolution_jobs.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   complexconv_job.o complexconv_jobs.o \
                   complexinc_job.o complexinc_jobs.o \
-                  complexadd_job.o complexadd_jobs.o \
-                  dbl4_systems_host.o write_gpu_timings.o \
+                  complexadd_job.o complexadd_jobs.o job_makers.o \
+                  dbl4_systems_host.o \
+                  write_gpu_timings.o write_newton_times.o \
                   dbl4_systems_kernels.o dbl4_polynomials_kernels.o \
                   dbl_bals_flopcounts.o write_dbl4_bstimeflops.o \
                   write_dbl4_qrtimeflops.o write_job_counts.o \
