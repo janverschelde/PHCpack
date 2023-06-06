@@ -1164,4 +1164,238 @@ void cmplx8_define_rhs
  *   rhsimhilolo are 2nd lowest doubles of imag parts of the linearized rhs;
  *   rhsimlololo are lowest doubles of imag parts of the linearized rhs. */
 
+void dbl8_map_evaldiff_output
+ ( int dim, int deg,
+   double ***outputhihihi, double ***outputlohihi,
+   double ***outputhilohi, double ***outputlolohi,
+   double ***outputhihilo, double ***outputlohilo,
+   double ***outputhilolo, double ***outputlololo,
+   double **funvalhihihi, double **funvallohihi,
+   double **funvalhilohi, double **funvallolohi,
+   double **funvalhihilo, double **funvallohilo,
+   double **funvalhilolo, double **funvallololo,
+   double ***jacvalhihihi, double ***jacvallohihi,
+   double ***jacvalhilohi, double ***jacvallolohi,
+   double ***jacvalhihilo, double ***jacvallohilo,
+   double ***jacvalhilolo, double ***jacvallololo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Maps the output of the evaluation and differentation to the
+ *   real function values and the values of the Jacobian matrix.
+ *
+ * ON ENTRY :
+ *   dim       number of equations and variables;
+ *   deg       degree at which the series are truncated;
+ *   output    output[i][j][k] is the k-th coefficient of the series
+ *             of the derivative of the i-th polynomial with respect
+ *             to the variable j;
+ *   funvalhihihi has space for the dim series of the function values;
+ *   funvallohihi has space for the dim series of the function values;
+ *   funvalhilohi has space for the dim series of the function values;
+ *   funvallolohi has space for the dim series of the function values;
+ *   funvalhihilo has space for the dim series of the function values;
+ *   funvallohilo has space for the dim series of the function values;
+ *   funvalhilolo has space for the dim series of the function values;
+ *   funvallololo has space for the dim series of the function values;
+ *   jacvalhihihi has space for the matrix series of the Jacobian.
+ *   jacvallohihi has space for the matrix series of the Jacobian.
+ *   jacvalhilohi has space for the matrix series of the Jacobian.
+ *   jacvallolohi has space for the matrix series of the Jacobian.
+ *   jacvalhihilo has space for the matrix series of the Jacobian.
+ *   jacvallohilo has space for the matrix series of the Jacobian.
+ *   jacvalhilolo has space for the matrix series of the Jacobian.
+ *   jacvallololo has space for the matrix series of the Jacobian.
+ *
+ * ON RETURN :
+ *   funvalhihihi has the highest doubles the function values;
+ *   funvallohihi has the 2nd highest doubles the function values;
+ *   funvalhilohi has the 3rd highest doubles the function values;
+ *   funvallolohi has the 4th highest doubles the function values;
+ *   funvalhihilo has the 4th lowest doubles the function values;
+ *   funvallohilo has the 3rd lowest doubles the function values;
+ *   funvalhilolo has the 2nd lowest doubles the function values;
+ *   funvallololo has the lowest doubles the function values;
+ *   jacvalhihihi has the highest doubles of the Jacobian matrix series;
+ *   jacvallohihi has the 2nd highest doubles of the Jacobian matrix series;
+ *   jacvalhilohi has the 3rd highest doubles of the Jacobian matrix series;
+ *   jacvallolohi has the 4th highest doubles of the Jacobian matrix series;
+ *   jacvalhihilo has the 4th lowest doubles of the Jacobian matrix series;
+ *   jacvallohilo has the 3rd lowest doubles of the Jacobian matrix series;
+ *   jacvalhilolo has the 2nd lowest doubles of the Jacobian matrix series;
+ *   jacvallololo has the lowest doubles of the Jacobian matrix series. */
+
+void cmplx8_map_evaldiff_output
+ ( int dim, int deg,
+   double ***outputrehihihi, double ***outputrelohihi,
+   double ***outputrehilohi, double ***outputrelolohi,
+   double ***outputrehihilo, double ***outputrelohilo,
+   double ***outputrehilolo, double ***outputrelololo,
+   double ***outputimhihihi, double ***outputimlohihi,
+   double ***outputimhilohi, double ***outputimlolohi,
+   double ***outputimhihilo, double ***outputimlohilo,
+   double ***outputimhilolo, double ***outputimlololo,
+   double **funvalrehihihi, double **funvalrelohihi,
+   double **funvalrehilohi, double **funvalrelolohi,
+   double **funvalrehihilo, double **funvalrelohilo,
+   double **funvalrehilolo, double **funvalrelololo,
+   double **funvalimhihihi, double **funvalimlohihi,
+   double **funvalimhilohi, double **funvalimlolohi,
+   double **funvalimhihilo, double **funvalimlohilo,
+   double **funvalimhilolo, double **funvalimlololo,
+   double ***jacvalrehihihi, double ***jacvalrelohihi,
+   double ***jacvalrehilohi, double ***jacvalrelolohi,
+   double ***jacvalrehihilo, double ***jacvalrelohilo,
+   double ***jacvalrehilolo, double ***jacvalrelololo,
+   double ***jacvalimhihihi, double ***jacvalimlohihi,
+   double ***jacvalimhilohi, double ***jacvalimlolohi,
+   double ***jacvalimhihilo, double ***jacvalimlohilo,
+   double ***jacvalimhilolo, double ***jacvalimlololo, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Maps the output of the evaluation and differentation to the
+ *   complex function values and the values of the Jacobian matrix.
+ *
+ * ON ENTRY :
+ *   dim       number of equations and variables;
+ *   deg       degree at which the series are truncated;
+ *   outputrehihihi has the highest doubles of the real parts of output;
+ *   outputrelohihi has the 2nd highest doubles of the real parts of output;
+ *   outputrehilohi has the 3rd highest doubles of the real parts of output;
+ *   outputrelolohi has the 4th highest doubles of the real parts of output;
+ *   outputrehihilo has the 4th lowest doubles of the real parts of output;
+ *   outputrelohilo has the 3rd lowest doubles of the real parts of output;
+ *   outputrehilolo has the 2nd lowest doubles of the real parts of output;
+ *   outputrelololo has the lowest doubles of the real parts of output;
+ *   funvalrehihihi has space for the dim series of the function values;
+ *   funvalrelohihi has space for the dim series of the function values;
+ *   funvalrehilohi has space for the dim series of the function values;
+ *   funvalrelolohi has space for the dim series of the function values;
+ *   funvalrehihilo has space for the dim series of the function values;
+ *   funvalrelohilo has space for the dim series of the function values;
+ *   funvalrehilolo has space for the dim series of the function values;
+ *   funvalrelololo has space for the dim series of the function values;
+ *   funvalimhihihi has space for the dim series of the function values;
+ *   funvalimlohihi has space for the dim series of the function values;
+ *   funvalimhilohi has space for the dim series of the function values;
+ *   funvalimlolohi has space for the dim series of the function values;
+ *   funvalimhihilo has space for the dim series of the function values;
+ *   funvalimlohilo has space for the dim series of the function values;
+ *   funvalimhilolo has space for the dim series of the function values;
+ *   funvalimlololo has space for the dim series of the function values;
+ *   jacvalrehihihi has space for the matrix series of the Jacobian;
+ *   jacvalrelohihi has space for the matrix series of the Jacobian;
+ *   jacvalrehilohi has space for the matrix series of the Jacobian;
+ *   jacvalrelolohi has space for the matrix series of the Jacobian;
+ *   jacvalrehihilo has space for the matrix series of the Jacobian;
+ *   jacvalrelohilo has space for the matrix series of the Jacobian;
+ *   jacvalrehilolo has space for the matrix series of the Jacobian;
+ *   jacvalrelololo has space for the matrix series of the Jacobian;
+ *   jacvalimhihihi has space for the matrix series of the Jacobian;
+ *   jacvalimlohihi has space for the matrix series of the Jacobian;
+ *   jacvalimhilohi has space for the matrix series of the Jacobian;
+ *   jacvalimlolohi has space for the matrix series of the Jacobian;
+ *   jacvalimhihilo has space for the matrix series of the Jacobian;
+ *   jacvalimlohilo has space for the matrix series of the Jacobian;
+ *   jacvalimhilolo has space for the matrix series of the Jacobian;
+ *   jacvalimlololo has space for the matrix series of the Jacobian;
+ *   vrblvl    is the verbose level.
+ *
+ * ON RETURN :
+ *   funvalrehihihi has the highest doubles of the real parts
+ *             of the function values;
+ *   funvalrelohihi has the second highest doubles of the real parts
+ *             of the function values;
+ *   funvalrehilohi has the third highest doubles of the real parts
+ *             of the function values;
+ *   funvalrelolohi has the fourth highest doubles of the real parts
+ *             of the function values;
+ *   funvalrehihilo has the fourth lowest doubles of the real parts
+ *             of the function values;
+ *   funvalrelohilo has the third lowest doubles of the real parts
+ *             of the function values;
+ *   funvalrehilolo has the second lowest doubles of the real parts
+ *             of the function values;
+ *   funvalrelololo has the lowest doubles of the real parts
+ *             of the function values;
+ *   funvalimhihihi has the highest doubles of the imaginary parts
+ *             of the function values;
+ *   funvalimlohihi has the second highest doubles of the imaginary parts
+ *             of the function values;
+ *   funvalimhilohi has the third highest doubles of the imaginary parts
+ *             of the function values;
+ *   funvalimlolohi has the fourth highest doubles of the imaginary parts
+ *             of the function values;
+ *   funvalimhihilo has the fourth lowest doubles of the imaginary parts
+ *             of the function values;
+ *   funvalimlohilo has the third lowest doubles of the imaginary parts
+ *             of the function values;
+ *   funvalimhilolo has the second lowest doubles of the imaginary parts
+ *             of the function values;
+ *   funvalimlololo has the lowest doubles of the imaginary parts
+ *             of the function values;
+ *   jacvalrehihihi_h are the highest doubles of the real parts
+ *             of a matrix series, computed on host;
+ *   jacvalrelohihi_h are the second highest doubles of the real parts
+ *             of a matrix series, computed on host;
+ *   jacvalrehilohi_h are the third highest doubles of the real parts
+ *             of a matrix series, computed on host;
+ *   jacvalrelolohi_h are the fourth highest doubles of the real parts
+ *             of a matrix series, computed on host;
+ *   jacvalrehihilo_h are the fourth lowest doubles of the real parts
+ *             of a matrix series, computed on host;
+ *   jacvalrelohilo_h are the third lowest doubles of the real parts
+ *             of a matrix series, computed on host;
+ *   jacvalrehilolo_h are the second lowest doubles of the real parts
+ *             of a matrix series, computed on host;
+ *   jacvalrelololo_h are the lowest doubles of the real parts
+ *             of a matrix series, computed on host;
+ *   jacvalimhihihi_h are the highest doubles of the real parts
+ *             of a matrix series, computed on host;
+ *   jacvalimlohihi_h are the second highest doubles of the real parts
+ *             of a matrix series, computed on host;
+ *   jacvalimhilohi_h are the third highest doubles of the real parts
+ *             of a matrix series, computed on host;
+ *   jacvalimlolohi_h are the fourth highest doubles of the real parts
+ *             of a matrix series, computed on host;
+ *   jacvalimhihilo_h are the fourth lowest doubles of the real parts
+ *             of a matrix series, computed on host;
+ *   jacvalimlohilo_h are the third lowest doubles of the real parts
+ *             of a matrix series, computed on host;
+ *   jacvalimhilolo_h are the second lowest doubles of the real parts
+ *             of a matrix series, computed on host;
+ *   jacvalimlololo_h are the lowest doubles of the real parts
+ *             of a matrix series, computed on host;
+ *   jacvalrehihihi_d are the highest doubles of the real parts
+ *             of a matrix series, computed on device;
+ *   jacvalrelohihi_d are the second highest doubles of the real parts
+ *             of a matrix series, computed on device;
+ *   jacvalrehilohi_d are the third highest doubles of the real parts
+ *             of a matrix series, computed on device;
+ *   jacvalrelolohi_d are the fourth highest doubles of the real parts
+ *             of a matrix series, computed on device;
+ *   jacvalrehihilo_d are the fourth lowest doubles of the real parts
+ *             of a matrix series, computed on device;
+ *   jacvalrelohilo_d are the third lowest doubles of the real parts
+ *             of a matrix series, computed on device;
+ *   jacvalrehilolo_d are the second lowest doubles of the real parts
+ *             of a matrix series, computed on device;
+ *   jacvalrelololo_d are the lowest doubles of the real parts
+ *             of a matrix series, computed on device;
+ *   jacvalimhihihi_d are the highest doubles of the real parts
+ *             of a matrix series, computed on device;
+ *   jacvalimlohihi_d are the second highest doubles of the real parts
+ *             of a matrix series, computed on device;
+ *   jacvalimhilohi_d are the third highest doubles of the real parts
+ *             of a matrix series, computed on device;
+ *   jacvalimlolohi_d are the fourth highest doubles of the real parts
+ *             of a matrix series, computed on device;
+ *   jacvalimhihilo_d are the fourth lowest doubles of the real parts
+ *             of a matrix series, computed on device;
+ *   jacvalimlohilo_d are the third lowest doubles of the real parts
+ *             of a matrix series, computed on device;
+ *   jacvalimhilolo_d are the second lowest doubles of the real parts
+ *             of a matrix series, computed on device;
+ *   jacvalimlololo_d are the lowest doubles of the real parts
+ *             of a matrix series, computed on device. */
+
 #endif

@@ -1378,20 +1378,24 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
                   random_numbers.obj random_series.obj random_monomials.obj \
                   random_polynomials.obj cyclic_indices.obj \
                   random8_vectors.obj random8_series.obj cyclic_columns.obj \
+                  random8_monomials.obj random8_polynomials.obj \
+                  dbl8_indexed_coefficients.obj \
                   dbl8_monomial_systems.obj prompt_newton_setup.obj \
 		  double_double_functions.obj quad_double_functions.obj \
 		  octo_double_functions.obj dbl8_newton_testers.obj \
                   dbl8_convolutions_host.obj dbl8_monomials_host.obj \
+                  dbl8_polynomials_host.obj \
                   convolution_job.obj convolution_jobs.obj \
                   addition_job.obj addition_jobs.obj job_coordinates.obj \
                   complexconv_job.obj complexconv_jobs.obj \
                   complexadd_job.obj complexadd_jobs.obj \
-                  complexinc_job.obj complexinc_jobs.obj \
+                  complexinc_job.obj complexinc_jobs.obj job_makers.obj \
                   dbl8_systems_host.obj write_job_counts.obj \
                   dbl8_systems_kernels.obj dbl8_polynomials_kernels.obj \
                   dbl8_factorizations.obj dbl_onenorms_host.obj \
                   dbl8_bals_host.obj write_dbl8_qrtimeflops.obj \
                   gettimeofday4win.obj write_gpu_timings.obj \
+                  write_newton_times.obj \
                   dbl_bals_flopcounts.obj write_dbl8_bstimeflops.obj \
 		  dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
 		  dbl8_baqr_kernels.obj dbl8_tabs_kernels.obj \
@@ -1403,20 +1407,23 @@ test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
              random_numbers.obj random_series.obj random_monomials.obj \
              random_polynomials.obj cyclic_indices.obj \
              random8_vectors.obj random8_series.obj cyclic_columns.obj \
-             dbl8_monomial_systems.obj \
+             random8_monomials.obj random8_polynomials.obj \
+             dbl8_indexed_coefficients.obj dbl8_monomial_systems.obj \
              double_double_functions.obj quad_double_functions.obj \
 	     octo_double_functions.obj dbl8_newton_testers.obj \
 	     dbl8_convolutions_host.obj dbl8_monomials_host.obj \
+             dbl8_polynomials_host.obj \
              convolution_job.obj convolution_jobs.obj \
              addition_job.obj addition_jobs.obj job_coordinates.obj \
              complexconv_job.obj complexconv_jobs.obj \
              complexadd_job.obj complexadd_jobs.obj \
-             complexinc_job.obj complexinc_jobs.obj \
+             complexinc_job.obj complexinc_jobs.obj job_makers.obj \
              dbl8_systems_host.obj write_job_counts.obj \
              dbl8_systems_kernels.obj dbl8_polynomials_kernels.obj \
              dbl8_factorizations.obj dbl_onenorms_host.obj \
              dbl8_bals_host.obj write_dbl8_qrtimeflops.obj \
              gettimeofday4win.obj write_gpu_timings.obj \
+             write_newton_times.obj \
              dbl_bals_flopcounts.obj write_dbl8_bstimeflops.obj \
              dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
              dbl8_baqr_kernels.obj dbl8_tabs_kernels.obj \

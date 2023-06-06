@@ -997,17 +997,21 @@ test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o cyclic_columns.o \
                   random_polynomials.o cyclic_indices.o \
+                  random8_monomials.o random8_polynomials.o \
+                  dbl8_indexed_coefficients.o \
                   dbl8_convolutions_host.o dbl8_monomials_host.o \
+                  dbl8_polynomials_host.o \
                   convolution_job.o convolution_jobs.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   complexconv_job.o complexconv_jobs.o \
                   complexinc_job.o complexinc_jobs.o \
-                  complexadd_job.o complexadd_jobs.o \
+                  complexadd_job.o complexadd_jobs.o job_makers.o \
                   dbl8_systems_host.o write_gpu_timings.o \
                   dbl8_systems_kernels.o dbl8_polynomials_kernels.o \
                   dbl8_factorizations.o dbl_onenorms_host.o dbl8_bals_host.o \
                   dbl_bals_flopcounts.o write_dbl8_bstimeflops.o \
                   write_dbl8_qrtimeflops.o write_job_counts.o \
+                  write_newton_times.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl8_baqr_kernels.o dbl8_tabs_kernels.o \
                   dbl8_tail_kernels.o dbl8_bals_kernels.o \
@@ -1022,17 +1026,20 @@ test_dbl8_newton: random_numbers.o random_series.o random_monomials.o \
                   double_double_functions.o quad_double_functions.o \
                   octo_double_functions.o cyclic_columns.o \
                   random_polynomials.o cyclic_indices.o \
+                  random8_monomials.o random8_polynomials.o \
+                  dbl8_indexed_coefficients.o \
                   dbl8_convolutions_host.o dbl8_monomials_host.o \
+                  dbl8_polynomials_host.o \
                   convolution_job.o convolution_jobs.o write_job_counts.o \
                   addition_job.o addition_jobs.o job_coordinates.o \
                   complexconv_job.o complexconv_jobs.o \
                   complexinc_job.o complexinc_jobs.o \
-                  complexadd_job.o complexadd_jobs.o \
+                  complexadd_job.o complexadd_jobs.o job_makers.o \
                   dbl8_systems_host.o write_gpu_timings.o \
                   dbl8_systems_kernels.o dbl8_polynomials_kernels.o \
                   dbl8_factorizations.o dbl_onenorms_host.o dbl8_bals_host.o \
                   dbl_bals_flopcounts.o write_dbl8_bstimeflops.o \
-                  write_dbl8_qrtimeflops.o \
+                  write_dbl8_qrtimeflops.o write_newton_times.o \
                   dbl_baqr_flopcounts.o dbl_tabs_flopcounts.o \
                   dbl8_baqr_kernels.o dbl8_tabs_kernels.o \
                   dbl8_tail_kernels.o dbl8_bals_kernels.o \
