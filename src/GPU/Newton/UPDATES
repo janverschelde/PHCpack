@@ -1,4 +1,5 @@
-Tue 6 Jun 2023 : refactored cmplx8_newton_method. 
+Tue 6 Jun 2023 : refactored cmplx8_newton_method.
+  Added the functional octo double Newton to cmplx8_newton_method.
 
 Mon 5 Jun 2023 : refactored and extended dbl4_newton_method,
   extended dbl4_systems_host, updated makefile_unix and makefile_windows.

@@ -16,8 +16,17 @@
 #include "random_numbers.h"
 #include "random_monomials.h"
 #include "octo_double_functions.h"
+#include "dbl8_indexed_coefficients.h"
 #include "dbl8_convolutions_host.h"
 #include "dbl8_monomials_host.h"
+#include "dbl8_polynomials_host.h"
+#include "convolution_jobs.h"
+#include "addition_jobs.h"
+#include "complexconv_jobs.h"
+#include "complexinc_jobs.h"
+#include "complexadd_jobs.h"
+#include "job_makers.h"
+#include "dbl8_polynomials_kernels.h"
 #include "dbl8_factorizations.h"
 #include "dbl8_monomial_systems.h"
 #include "dbl8_bals_host.h"
@@ -1417,6 +1426,573 @@ int cmplx8_column_newton_qrstep
       return 0;
 }
 
+int cmplx8_row_newton_qrstep
+ ( int szt, int nbt, int dim, int deg, int *tailidx_h, int *tailidx_d,
+   int *nbr, int **nvr, int ***idx,
+   double **cstrehihihi, double **cstrelohihi,
+   double **cstrehilohi, double **cstrelolohi,
+   double **cstrehihilo, double **cstrelohilo,
+   double **cstrehilolo, double **cstrelololo,
+   double **cstimhihihi, double **cstimlohihi,
+   double **cstimhilohi, double **cstimlolohi,
+   double **cstimhihilo, double **cstimlohilo,
+   double **cstimhilolo, double **cstimlololo,
+   double ***cffrehihihi, double ***cffrelohihi,
+   double ***cffrehilohi, double ***cffrelolohi,
+   double ***cffrehihilo, double ***cffrelohilo,
+   double ***cffrehilolo, double ***cffrelololo,
+   double ***cffimhihihi, double ***cffimlohihi,
+   double ***cffimhilohi, double ***cffimlolohi,
+   double ***cffimhihilo, double ***cffimlohilo,
+   double ***cffimhilolo, double ***cffimlololo,
+   double dpr,
+   double **inputrehihihi_h, double **inputrelohihi_h,
+   double **inputrehilohi_h, double **inputrelolohi_h,
+   double **inputrehihilo_h, double **inputrelohilo_h,
+   double **inputrehilolo_h, double **inputrelololo_h,
+   double **inputimhihihi_h, double **inputimlohihi_h,
+   double **inputimhilohi_h, double **inputimlolohi_h,
+   double **inputimhihilo_h, double **inputimlohilo_h,
+   double **inputimhilolo_h, double **inputimlololo_h,
+   double **inputrehihihi_d, double **inputrelohihi_d,
+   double **inputrehilohi_d, double **inputrelolohi_d,
+   double **inputrehihilo_d, double **inputrelohilo_d,
+   double **inputrehilolo_d, double **inputrelololo_d,
+   double **inputimhihihi_d, double **inputimlohihi_d,
+   double **inputimhilohi_d, double **inputimlolohi_d,
+   double **inputimhihilo_d, double **inputimlohilo_d,
+   double **inputimhilolo_d, double **inputimlololo_d,
+   double ***outputrehihihi_h, double ***outputrelohihi_h,
+   double ***outputrehilohi_h, double ***outputrelolohi_h,
+   double ***outputrehihilo_h, double ***outputrelohilo_h,
+   double ***outputrehilolo_h, double ***outputrelololo_h,
+   double ***outputimhihihi_h, double ***outputimlohihi_h,
+   double ***outputimhilohi_h, double ***outputimlolohi_h,
+   double ***outputimhihilo_h, double ***outputimlohilo_h,
+   double ***outputimhilolo_h, double ***outputimlololo_h,
+   double ***outputrehihihi_d, double ***outputrelohihi_d,
+   double ***outputrehilohi_d, double ***outputrelolohi_d,
+   double ***outputrehihilo_d, double ***outputrelohilo_d,
+   double ***outputrehilolo_d, double ***outputrelololo_d,
+   double ***outputimhihihi_d, double ***outputimlohihi_d,
+   double ***outputimhilohi_d, double ***outputimlolohi_d,
+   double ***outputimhihilo_d, double ***outputimlohilo_d,
+   double ***outputimhilolo_d, double ***outputimlololo_d,
+   double **funvalrehihihi_h, double **funvalrelohihi_h,
+   double **funvalrehilohi_h, double **funvalrelolohi_h,
+   double **funvalrehihilo_h, double **funvalrelohilo_h,
+   double **funvalrehilolo_h, double **funvalrelololo_h,
+   double **funvalimhihihi_h, double **funvalimlohihi_h,
+   double **funvalimhilohi_h, double **funvalimlolohi_h,
+   double **funvalimhihilo_h, double **funvalimlohilo_h,
+   double **funvalimhilolo_h, double **funvalimlololo_h,
+   double **funvalrehihihi_d, double **funvalrelohihi_d,
+   double **funvalrehilohi_d, double **funvalrelolohi_d,
+   double **funvalrehihilo_d, double **funvalrelohilo_d,
+   double **funvalrehilolo_d, double **funvalrelololo_d,
+   double **funvalimhihihi_d, double **funvalimlohihi_d,
+   double **funvalimhilohi_d, double **funvalimlolohi_d,
+   double **funvalimhihilo_d, double **funvalimlohilo_d,
+   double **funvalimhilolo_d, double **funvalimlololo_d,
+   double ***jacvalrehihihi_h, double ***jacvalrelohihi_h,
+   double ***jacvalrehilohi_h, double ***jacvalrelolohi_h,
+   double ***jacvalrehihilo_h, double ***jacvalrelohilo_h,
+   double ***jacvalrehilolo_h, double ***jacvalrelololo_h,
+   double ***jacvalimhihihi_h, double ***jacvalimlohihi_h,
+   double ***jacvalimhilohi_h, double ***jacvalimlolohi_h,
+   double ***jacvalimhihilo_h, double ***jacvalimlohilo_h,
+   double ***jacvalimhilolo_h, double ***jacvalimlololo_h,
+   double ***jacvalrehihihi_d, double ***jacvalrelohihi_d,
+   double ***jacvalrehilohi_d, double ***jacvalrelolohi_d,
+   double ***jacvalrehihilo_d, double ***jacvalrelohilo_d,
+   double ***jacvalrehilolo_d, double ***jacvalrelololo_d,
+   double ***jacvalimhihihi_d, double ***jacvalimlohihi_d,
+   double ***jacvalimhilohi_d, double ***jacvalimlolohi_d,
+   double ***jacvalimhihilo_d, double ***jacvalimlohilo_d,
+   double ***jacvalimhilolo_d, double ***jacvalimlololo_d,
+   double **rhsrehihihi_h, double **rhsrelohihi_h,
+   double **rhsrehilohi_h, double **rhsrelolohi_h,
+   double **rhsrehihilo_h, double **rhsrelohilo_h,
+   double **rhsrehilolo_h, double **rhsrelololo_h,
+   double **rhsimhihihi_h, double **rhsimlohihi_h,
+   double **rhsimhilohi_h, double **rhsimlolohi_h,
+   double **rhsimhihilo_h, double **rhsimlohilo_h,
+   double **rhsimhilolo_h, double **rhsimlololo_h,
+   double **rhsrehihihi_d, double **rhsrelohihi_d, 
+   double **rhsrehilohi_d, double **rhsrelolohi_d, 
+   double **rhsrehihilo_d, double **rhsrelohilo_d, 
+   double **rhsrehilolo_d, double **rhsrelololo_d, 
+   double **rhsimhihihi_d, double **rhsimlohihi_d,
+   double **rhsimhilohi_d, double **rhsimlolohi_d,
+   double **rhsimhihilo_d, double **rhsimlohilo_d,
+   double **rhsimhilolo_d, double **rhsimlololo_d,
+   double **urhsrehihihi_h, double **urhsrelohihi_h,
+   double **urhsrehilohi_h, double **urhsrelolohi_h,
+   double **urhsrehihilo_h, double **urhsrelohilo_h,
+   double **urhsrehilolo_h, double **urhsrelololo_h,
+   double **urhsimhihihi_h, double **urhsimlohihi_h,
+   double **urhsimhilohi_h, double **urhsimlolohi_h,
+   double **urhsimhihilo_h, double **urhsimlohilo_h,
+   double **urhsimhilolo_h, double **urhsimlololo_h,
+   double **urhsrehihihi_d, double **urhsrelohihi_d,
+   double **urhsrehilohi_d, double **urhsrelolohi_d,
+   double **urhsrehihilo_d, double **urhsrelohilo_d,
+   double **urhsrehilolo_d, double **urhsrelololo_d,
+   double **urhsimhihihi_d, double **urhsimlohihi_d,
+   double **urhsimhilohi_d, double **urhsimlolohi_d,
+   double **urhsimhihilo_d, double **urhsimlohilo_d,
+   double **urhsimhilolo_d, double **urhsimlololo_d,
+   double **solrehihihi_h, double **solrelohihi_h,
+   double **solrehilohi_h, double **solrelolohi_h,
+   double **solrehihilo_h, double **solrelohilo_h,
+   double **solrehilolo_h, double **solrelololo_h,
+   double **solimhihihi_h, double **solimlohihi_h, 
+   double **solimhilohi_h, double **solimlolohi_h, 
+   double **solimhihilo_h, double **solimlohilo_h, 
+   double **solimhilolo_h, double **solimlololo_h, 
+   double **solrehihihi_d, double **solrelohihi_d, 
+   double **solrehilohi_d, double **solrelolohi_d, 
+   double **solrehihilo_d, double **solrelohilo_d, 
+   double **solrehilolo_d, double **solrelololo_d, 
+   double **solimhihihi_d, double **solimlohihi_d,
+   double **solimhilohi_d, double **solimlolohi_d,
+   double **solimhihilo_d, double **solimlohilo_d,
+   double **solimhilolo_d, double **solimlololo_d,
+   double **Qrehihihi_h, double **Qrelohihi_h,
+   double **Qrehilohi_h, double **Qrelolohi_h,
+   double **Qrehihilo_h, double **Qrelohilo_h,
+   double **Qrehilolo_h, double **Qrelololo_h,
+   double **Qimhihihi_h, double **Qimlohihi_h,
+   double **Qimhilohi_h, double **Qimlolohi_h,
+   double **Qimhihilo_h, double **Qimlohilo_h,
+   double **Qimhilolo_h, double **Qimlololo_h,
+   double **Qrehihihi_d, double **Qrelohihi_d,
+   double **Qrehilohi_d, double **Qrelolohi_d,
+   double **Qrehihilo_d, double **Qrelohilo_d,
+   double **Qrehilolo_d, double **Qrelololo_d,
+   double **Qimhihihi_d, double **Qimlohihi_d, 
+   double **Qimhilohi_d, double **Qimlolohi_d, 
+   double **Qimhihilo_d, double **Qimlohilo_d, 
+   double **Qimhilolo_d, double **Qimlololo_d, 
+   double **Rrehihihi_h, double **Rrelohihi_h,
+   double **Rrehilohi_h, double **Rrelolohi_h,
+   double **Rrehihilo_h, double **Rrelohilo_h,
+   double **Rrehilolo_h, double **Rrelololo_h,
+   double **Rimhihihi_h, double **Rimlohihi_h, 
+   double **Rimhilohi_h, double **Rimlolohi_h, 
+   double **Rimhihilo_h, double **Rimlohilo_h, 
+   double **Rimhilolo_h, double **Rimlololo_h, 
+   double **Rrehihihi_d, double **Rrelohihi_d,
+   double **Rrehilohi_d, double **Rrelolohi_d,
+   double **Rrehihilo_d, double **Rrelohilo_d,
+   double **Rrehilolo_d, double **Rrelololo_d,
+   double **Rimhihihi_d, double **Rimlohihi_d,
+   double **Rimhilohi_d, double **Rimlolohi_d,
+   double **Rimhihilo_d, double **Rimlohilo_d,
+   double **Rimhilolo_d, double **Rimlololo_d,
+   double *workvecrehihihi, double *workvecrelohihi,
+   double *workvecrehilohi, double *workvecrelolohi,
+   double *workvecrehihilo, double *workvecrelohilo,
+   double *workvecrehilolo, double *workvecrelololo,
+   double *workvecimhihihi, double *workvecimlohihi,
+   double *workvecimhilohi, double *workvecimlolohi,
+   double *workvecimhihilo, double *workvecimlohilo,
+   double *workvecimhilolo, double *workvecimlololo,
+   double **resvecrehihihi, double **resvecrelohihi,
+   double **resvecrehilohi, double **resvecrelolohi,
+   double **resvecrehihilo, double **resvecrelohilo,
+   double **resvecrehilolo, double **resvecrelololo,
+   double **resvecimhihihi, double **resvecimlohihi,
+   double **resvecimhilohi, double **resvecimlolohi,
+   double **resvecimhihilo, double **resvecimlohilo,
+   double **resvecimhilolo, double **resvecimlololo,
+   double *resmaxhihihi, double *resmaxlohihi,
+   double *resmaxhilohi, double *resmaxlolohi,
+   double *resmaxhihilo, double *resmaxlohilo,
+   double *resmaxhilolo, double *resmaxlololo,
+   bool *zeroQ_h, bool *noqr_h, bool *zeroQ_d, bool *noqr_d,
+   int *upidx_h, int *bsidx_h, int *upidx_d, int *bsidx_d,
+   double *totcnvlapsedms, double *totqrlapsedms, double *totqtblapsedms, 
+   double *totbslapsedms, double *totupdlapsedms, double *totreslapsedms,
+   int vrblvl, int mode )
+{
+   const int degp1 = deg+1;
+
+   if((mode == 1) || (mode == 2))
+   {
+      if(vrblvl > 0)
+         cout << "calling CPU_cmplx8_poly_evaldiff ..." << endl;
+
+      double timelapsed_h = 0.0;
+
+      for(int i=0; i<dim; i++)
+      {
+         double lapsed;
+
+         CPU_cmplx8_poly_evaldiff
+           (dim,nbr[i],deg,nvr[i],idx[i],
+            cstrehihihi[i],cstrelohihi[i],cstrehilohi[i],cstrelolohi[i],
+            cstrehihilo[i],cstrelohilo[i],cstrehilolo[i],cstrelololo[i],
+            cstimhihihi[i],cstimlohihi[i],cstimhilohi[i],cstimlolohi[i],
+            cstimhihilo[i],cstimlohilo[i],cstimhilolo[i],cstimlololo[i],
+            cffrehihihi[i],cffrelohihi[i],cffrehilohi[i],cffrelolohi[i],
+            cffrehihilo[i],cffrelohilo[i],cffrehilolo[i],cffrelololo[i],
+            cffimhihihi[i],cffimlohihi[i],cffimhilohi[i],cffimlolohi[i],
+            cffimhihilo[i],cffimlohilo[i],cffimhilolo[i],cffimlololo[i],
+            inputrehihihi_h,inputrelohihi_h,inputrehilohi_h,inputrelolohi_h,
+            inputrehihilo_h,inputrelohilo_h,inputrehilolo_h,inputrelololo_h,
+            inputimhihihi_h,inputimlohihi_h,inputimhilohi_h,inputimlolohi_h,
+            inputimhihilo_h,inputimlohilo_h,inputimhilolo_h,inputimlololo_h,
+            outputrehihihi_h[i],outputrelohihi_h[i],
+            outputrehilohi_h[i],outputrelolohi_h[i],
+            outputrehihilo_h[i],outputrelohilo_h[i],
+            outputrehilolo_h[i],outputrelololo_h[i],
+            outputimhihihi_h[i],outputimlohihi_h[i],
+            outputimhilohi_h[i],outputimlolohi_h[i],
+            outputimhihilo_h[i],outputimlohilo_h[i],
+            outputimhilolo_h[i],outputimlololo_h[i],&lapsed,0);
+
+         timelapsed_h += lapsed;
+      }
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      if(vrblvl > 0)
+         cout << "calling GPU_cmplx8_poly_evaldiff ..." << endl;
+
+      double timelapsed_d = 0.0;
+
+      for(int i=0; i<dim; i++)
+      {
+         double cnvlapms,addlapms,timelapms_d,walltimes_d;
+
+         ComplexConvolutionJobs cnvjobs(dim);
+         ComplexIncrementJobs incjobs(cnvjobs,false);
+         ComplexAdditionJobs addjobs(dim,nbr[i]);
+
+         make_all_complex_jobs
+            (dim,nbr[i],nvr[i],idx[i],&cnvjobs,&incjobs,&addjobs,false);
+
+         GPU_cmplx8vectorized_poly_evaldiff
+           (degp1,dim,nbr[i],deg,nvr[i],idx[i],
+            cstrehihihi[i],cstrelohihi[i],cstrehilohi[i],cstrelolohi[i],
+            cstrehihilo[i],cstrelohilo[i],cstrehilolo[i],cstrelololo[i],
+            cstimhihihi[i],cstimlohihi[i],cstimhilohi[i],cstimlolohi[i],
+            cstimhihilo[i],cstimlohilo[i],cstimhilolo[i],cstimlololo[i],
+            cffrehihihi[i],cffrelohihi[i],cffrehilohi[i],cffrelolohi[i],
+            cffrehihilo[i],cffrelohilo[i],cffrehilolo[i],cffrelololo[i],
+            cffimhihihi[i],cffimlohihi[i],cffimhilohi[i],cffimlolohi[i],
+            cffimhihilo[i],cffimlohilo[i],cffimhilolo[i],cffimlololo[i],
+            inputrehihihi_d,inputrelohihi_d,inputrehilohi_d,inputrelolohi_d,
+            inputrehihilo_d,inputrelohilo_d,inputrehilolo_d,inputrelololo_d,
+            inputimhihihi_d,inputimlohihi_d,inputimhilohi_d,inputimlolohi_d,
+            inputimhihilo_d,inputimlohilo_d,inputimhilolo_d,inputimlololo_d,
+            outputrehihihi_d[i],outputrelohihi_d[i],
+            outputrehilohi_d[i],outputrelolohi_d[i],
+            outputrehihilo_d[i],outputrelohilo_d[i],
+            outputrehilolo_d[i],outputrelololo_d[i],
+            outputimhihihi_d[i],outputimlohihi_d[i],
+            outputimhilohi_d[i],outputimlolohi_d[i],
+            outputimhihilo_d[i],outputimlohilo_d[i],
+            outputimhilolo_d[i],outputimlololo_d[i],cnvjobs,incjobs,addjobs,
+            &cnvlapms,&addlapms,&timelapms_d,&walltimes_d,0); // vrblvl);
+
+         timelapsed_d += walltimes_d;
+      }
+   }
+   if((vrblvl > 0) && (mode == 2))
+   {
+      cout << scientific << setprecision(16)
+           << "comparing CPU with GPU evaluations ... " << endl;
+   
+      double errsum = 0.0;
+
+      errsum = cmplx8_error3sum(dim,dim+1,degp1,
+                  outputrehihihi_h,outputrelohihi_h,
+                  outputrehilohi_h,outputrelolohi_h,
+                  outputrehihilo_h,outputrelohilo_h,
+                  outputrehilolo_h,outputrelololo_h,
+                  outputimhihihi_h,outputimlohihi_h,
+                  outputimhilohi_h,outputimlolohi_h,
+                  outputimhihilo_h,outputimlohilo_h,
+                  outputimhilolo_h,outputimlololo_h,
+                  outputrehihihi_d,outputrelohihi_d,
+                  outputrehilohi_d,outputrelolohi_d,
+                  outputrehihilo_d,outputrelohilo_d,
+                  outputrehilolo_d,outputrelololo_d,
+                  outputimhihihi_d,outputimlohihi_d,
+                  outputimhilohi_d,outputimlolohi_d,
+                  outputimhihilo_d,outputimlohilo_d,
+                  outputimhilolo_d,outputimlololo_d,"output",vrblvl);
+      // first dim is the number of monomials,
+      // dim+1 is number of variables for each derivative,
+      // plus the last component with the function value
+
+      cout << scientific << setprecision(2);
+      cout << "sum of errors : " << errsum << endl;
+   }
+   if(vrblvl > 0)
+      cout << "mapping the output to values of function and matrix series ..."
+           << endl;
+
+   if((mode == 1) || (mode == 2))
+   {
+      cmplx8_map_evaldiff_output(dim,deg,
+         outputrehihihi_h,outputrelohihi_h,outputrehilohi_h,outputrelolohi_h,
+         outputrehihilo_h,outputrelohilo_h,outputrehilolo_h,outputrelololo_h,
+         outputimhihihi_h,outputimlohihi_h,outputimhilohi_h,outputimlolohi_h,
+         outputimhihilo_h,outputimlohilo_h,outputimhilolo_h,outputimlololo_h,
+         funvalrehihihi_h,funvalrelohihi_h,funvalrehilohi_h,funvalrelolohi_h,
+         funvalrehihilo_h,funvalrelohilo_h,funvalrehilolo_h,funvalrelololo_h,
+         funvalimhihihi_h,funvalimlohihi_h,funvalimhilohi_h,funvalimlolohi_h,
+         funvalimhihilo_h,funvalimlohilo_h,funvalimhilolo_h,funvalimlololo_h,
+         jacvalrehihihi_h,jacvalrelohihi_h,jacvalrehilohi_h,jacvalrelolohi_h,
+         jacvalrehihilo_h,jacvalrelohilo_h,jacvalrehilolo_h,jacvalrelololo_h,
+         jacvalimhihihi_h,jacvalimlohihi_h,jacvalimhilohi_h,jacvalimlolohi_h,
+         jacvalimhihilo_h,jacvalimlohilo_h,jacvalimhilolo_h,jacvalimlololo_h,
+         vrblvl);
+
+      for(int i=0; i<degp1; i++)
+         for(int j=0; j<dim; j++)
+         {
+            rhsrehihihi_h[i][j] = -funvalrehihihi_h[j][i];
+            rhsrelohihi_h[i][j] = -funvalrelohihi_h[j][i];
+            rhsrehilohi_h[i][j] = -funvalrehilohi_h[j][i];
+            rhsrelolohi_h[i][j] = -funvalrelolohi_h[j][i];
+            rhsrehihilo_h[i][j] = -funvalrehihilo_h[j][i];
+            rhsrelohilo_h[i][j] = -funvalrelohilo_h[j][i];
+            rhsrehilolo_h[i][j] = -funvalrehilolo_h[j][i];
+            rhsrelololo_h[i][j] = -funvalrelololo_h[j][i];
+            rhsimhihihi_h[i][j] = -funvalimhihihi_h[j][i];
+            rhsimlohihi_h[i][j] = -funvalimlohihi_h[j][i];
+            rhsimhilohi_h[i][j] = -funvalimhilohi_h[j][i];
+            rhsimlolohi_h[i][j] = -funvalimlolohi_h[j][i];
+            rhsimhihilo_h[i][j] = -funvalimhihilo_h[j][i];
+            rhsimlohilo_h[i][j] = -funvalimlohilo_h[j][i];
+            rhsimhilolo_h[i][j] = -funvalimhilolo_h[j][i];
+            rhsimlololo_h[i][j] = -funvalimlololo_h[j][i];
+         }
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      cmplx8_map_evaldiff_output(dim,deg,
+         outputrehihihi_d,outputrelohihi_d,outputrehilohi_d,outputrelolohi_d,
+         outputrehihilo_d,outputrelohilo_d,outputrehilolo_d,outputrelololo_d,
+         outputimhihihi_d,outputimlohihi_d,outputimhilohi_d,outputimlolohi_d,
+         outputimhihilo_d,outputimlohilo_d,outputimhilolo_d,outputimlololo_d,
+         funvalrehihihi_d,funvalrelohihi_d,funvalrehilohi_d,funvalrelolohi_d,
+         funvalrehihilo_d,funvalrelohilo_d,funvalrehilolo_d,funvalrelololo_d,
+         funvalimhihihi_d,funvalimlohihi_d,funvalimhilohi_d,funvalimlolohi_d,
+         funvalimhihilo_d,funvalimlohilo_d,funvalimhilolo_d,funvalimlololo_d,
+         jacvalrehihihi_d,jacvalrelohihi_d,jacvalrehilohi_d,jacvalrelolohi_d,
+         jacvalrehihilo_d,jacvalrelohilo_d,jacvalrehilolo_d,jacvalrelololo_d,
+         jacvalimhihihi_d,jacvalimlohihi_d,jacvalimhilohi_d,jacvalimlolohi_d,
+         jacvalimhihilo_d,jacvalimlohilo_d,jacvalimhilolo_d,jacvalimlololo_d,
+         vrblvl);
+
+      for(int i=0; i<degp1; i++)
+         for(int j=0; j<dim; j++)
+         {
+            rhsrehihihi_d[i][j] = -funvalrehihihi_d[j][i];
+            rhsrelohihi_d[i][j] = -funvalrelohihi_d[j][i];
+            rhsrehilohi_d[i][j] = -funvalrehilohi_d[j][i];
+            rhsrelolohi_d[i][j] = -funvalrelolohi_d[j][i];
+            rhsrehihilo_d[i][j] = -funvalrehihilo_d[j][i];
+            rhsrelohilo_d[i][j] = -funvalrelohilo_d[j][i];
+            rhsrehilolo_d[i][j] = -funvalrehilolo_d[j][i];
+            rhsrelololo_d[i][j] = -funvalrelololo_d[j][i];
+            rhsimhihihi_d[i][j] = -funvalimhihihi_d[j][i];
+            rhsimlohihi_d[i][j] = -funvalimlohihi_d[j][i];
+            rhsimhilohi_d[i][j] = -funvalimhilohi_d[j][i];
+            rhsimlolohi_d[i][j] = -funvalimlolohi_d[j][i];
+            rhsimhihilo_d[i][j] = -funvalimhihilo_d[j][i];
+            rhsimlohilo_d[i][j] = -funvalimlohilo_d[j][i];
+            rhsimhilolo_d[i][j] = -funvalimhilolo_d[j][i];
+            rhsimlololo_d[i][j] = -funvalimlololo_d[j][i];
+         }
+   }
+   if((vrblvl > 0) && (mode == 2))
+   {
+      int fail = cmplx8_errors_funjacrhs(dim,deg,
+                    funvalrehihihi_h,funvalrelohihi_h,
+                    funvalrelohihi_h,funvalrelolohi_h,
+                    funvalrehihilo_h,funvalrelohilo_h,
+                    funvalrelohilo_h,funvalrelololo_h,
+                    funvalimhihihi_h,funvalimlohihi_h,
+                    funvalimlohihi_h,funvalimlolohi_h,
+                    funvalimhihilo_h,funvalimlohilo_h,
+                    funvalimlohilo_h,funvalimlololo_h,
+                    funvalrehihihi_d,funvalrelohihi_d,
+                    funvalrelohihi_d,funvalrelolohi_d,
+                    funvalrehihilo_d,funvalrelohilo_d,
+                    funvalrelohilo_d,funvalrelololo_d,
+                    funvalimhihihi_d,funvalimlohihi_d,
+                    funvalimlohihi_d,funvalimlolohi_d,
+                    funvalimhihilo_d,funvalimlohilo_d,
+                    funvalimlohilo_d,funvalimlololo_d,
+                    jacvalrehihihi_h,jacvalrelohihi_h,
+                    jacvalrelohihi_h,jacvalrelolohi_h,
+                    jacvalrehihilo_h,jacvalrelohilo_h,
+                    jacvalrelohilo_h,jacvalrelololo_h,
+                    jacvalimhihihi_h,jacvalimlohihi_h,
+                    jacvalimlohihi_h,jacvalimlolohi_h,
+                    jacvalimhihilo_h,jacvalimlohilo_h,
+                    jacvalimlohilo_h,jacvalimlololo_h,
+                    jacvalrehihihi_d,jacvalrelohihi_d,
+                    jacvalrelohihi_d,jacvalrelolohi_d,
+                    jacvalrehihilo_d,jacvalrelohilo_d,
+                    jacvalrelohilo_d,jacvalrelololo_d,
+                    jacvalimhihihi_d,jacvalimlohihi_d,
+                    jacvalimlohihi_d,jacvalimlolohi_d,
+                    jacvalimhihilo_d,jacvalimlohilo_d,
+                    jacvalimlohilo_d,jacvalimlololo_d,
+                    rhsrehihihi_h,rhsrelohihi_h,rhsrelohihi_h,rhsrelolohi_h,
+                    rhsrehihilo_h,rhsrelohilo_h,rhsrelohilo_h,rhsrelololo_h,
+                    rhsimhihihi_h,rhsimlohihi_h,rhsimlohihi_h,rhsimlolohi_h,
+                    rhsimhihilo_h,rhsimlohilo_h,rhsimlohilo_h,rhsimlololo_h,
+                    rhsrehihihi_d,rhsrelohihi_d,rhsrelohihi_d,rhsrelolohi_d,
+                    rhsrehihilo_d,rhsrelohilo_d,rhsrelohilo_d,rhsrelololo_d,
+                    rhsimhihihi_d,rhsimlohihi_d,rhsimlohihi_d,rhsimlolohi_d,
+                    rhsimhihilo_d,rhsimlohilo_d,rhsimlohilo_d,rhsimlololo_d,
+                    vrblvl);
+   }
+   cmplx8_update_newton_qrstep
+      (szt,nbt,dim,deg,tailidx_h,tailidx_d,
+       inputrehihihi_h,inputrelohihi_h,inputrehilohi_h,inputrelolohi_h,
+       inputrehihilo_h,inputrelohilo_h,inputrehilolo_h,inputrelololo_h,
+       inputimhihihi_h,inputimlohihi_h,inputimhilohi_h,inputimlolohi_h,
+       inputimhihilo_h,inputimlohilo_h,inputimhilolo_h,inputimlololo_h,
+       inputrehihihi_d,inputrelohihi_d,inputrehilohi_d,inputrelolohi_d,
+       inputrehihilo_d,inputrelohilo_d,inputrehilolo_d,inputrelololo_d,
+       inputimhihihi_d,inputimlohihi_d,inputimhilohi_d,inputimlolohi_d,
+       inputimhihilo_d,inputimlohilo_d,inputimhilolo_d,inputimlololo_d,
+       funvalrehihihi_h,funvalrelohihi_h,funvalrehilohi_h,funvalrelolohi_h,
+       funvalrehihilo_h,funvalrelohilo_h,funvalrehilolo_h,funvalrelololo_h,
+       funvalimhihihi_h,funvalimlohihi_h,funvalimhilohi_h,funvalimlolohi_h,
+       funvalimhihilo_h,funvalimlohilo_h,funvalimhilolo_h,funvalimlololo_h,
+       funvalrehihihi_d,funvalrelohihi_d,funvalrehilohi_d,funvalrelolohi_d,
+       funvalrehihilo_d,funvalrelohilo_d,funvalrehilolo_d,funvalrelololo_d,
+       funvalimhihihi_d,funvalimlohihi_d,funvalimhilohi_d,funvalimlolohi_d,
+       funvalimhihilo_d,funvalimlohilo_d,funvalimhilolo_d,funvalimlololo_d,
+       jacvalrehihihi_h,jacvalrelohihi_h,jacvalrehilohi_h,jacvalrelolohi_h,
+       jacvalrehihilo_h,jacvalrelohilo_h,jacvalrehilolo_h,jacvalrelololo_h,
+       jacvalimhihihi_h,jacvalimlohihi_h,jacvalimhilohi_h,jacvalimlolohi_h,
+       jacvalimhihilo_h,jacvalimlohilo_h,jacvalimhilolo_h,jacvalimlololo_h,
+       jacvalrehihihi_d,jacvalrelohihi_d,jacvalrehilohi_d,jacvalrelolohi_d,
+       jacvalrehihilo_d,jacvalrelohilo_d,jacvalrehilolo_d,jacvalrelololo_d,
+       jacvalimhihihi_d,jacvalimlohihi_d,jacvalimhilohi_d,jacvalimlolohi_d,
+       jacvalimhihilo_d,jacvalimlohilo_d,jacvalimhilolo_d,jacvalimlololo_d,
+       rhsrehihihi_h,rhsrelohihi_h,rhsrehilohi_h,rhsrelolohi_h,
+       rhsrehihilo_h,rhsrelohilo_h,rhsrehilolo_h,rhsrelololo_h,
+       rhsimhihihi_h,rhsimlohihi_h,rhsimhilohi_h,rhsimlolohi_h,
+       rhsimhihilo_h,rhsimlohilo_h,rhsimhilolo_h,rhsimlololo_h,
+       rhsrehihihi_d,rhsrelohihi_d,rhsrehilohi_d,rhsrelolohi_d,
+       rhsrehihilo_d,rhsrelohilo_d,rhsrehilolo_d,rhsrelololo_d,
+       rhsimhihihi_d,rhsimlohihi_d,rhsimhilohi_d,rhsimlolohi_d,
+       rhsimhihilo_d,rhsimlohilo_d,rhsimhilolo_d,rhsimlololo_d,
+       urhsrehihihi_h,urhsrelohihi_h,urhsrehilohi_h,urhsrelolohi_h,
+       urhsrehihilo_h,urhsrelohilo_h,urhsrehilolo_h,urhsrelololo_h,
+       urhsimhihihi_h,urhsimlohihi_h,urhsimhilohi_h,urhsimlolohi_h,
+       urhsimhihilo_h,urhsimlohilo_h,urhsimhilolo_h,urhsimlololo_h,
+       urhsrehihihi_d,urhsrelohihi_d,urhsrehilohi_d,urhsrelolohi_d,
+       urhsrehihilo_d,urhsrelohilo_d,urhsrehilolo_d,urhsrelololo_d,
+       urhsimhihihi_d,urhsimlohihi_d,urhsimhilohi_d,urhsimlolohi_d,
+       urhsimhihilo_d,urhsimlohilo_d,urhsimhilolo_d,urhsimlololo_d,
+       solrehihihi_h,solrelohihi_h,solrehilohi_h,solrelolohi_h,
+       solrehihilo_h,solrelohilo_h,solrehilolo_h,solrelololo_h,
+       solimhihihi_h,solimlohihi_h,solimhilohi_h,solimlolohi_h,
+       solimhihilo_h,solimlohilo_h,solimhilolo_h,solimlololo_h,
+       solrehihihi_d,solrelohihi_d,solrehilohi_d,solrelolohi_d,
+       solrehihilo_d,solrelohilo_d,solrehilolo_d,solrelololo_d,
+       solimhihihi_d,solimlohihi_d,solimhilohi_d,solimlolohi_d,
+       solimhihilo_d,solimlohilo_d,solimhilolo_d,solimlololo_d,
+       Qrehihihi_h,Qrelohihi_h,Qrehilohi_h,Qrelolohi_h,
+       Qrehihilo_h,Qrelohilo_h,Qrehilolo_h,Qrelololo_h,
+       Qimhihihi_h,Qimlohihi_h,Qimhilohi_h,Qimlolohi_h,
+       Qimhihilo_h,Qimlohilo_h,Qimhilolo_h,Qimlololo_h,
+       Qrehihihi_d,Qrelohihi_d,Qrehilohi_d,Qrelolohi_d,
+       Qrehihilo_d,Qrelohilo_d,Qrehilolo_d,Qrelololo_d,
+       Qimhihihi_d,Qimlohihi_d,Qimhilohi_d,Qimlolohi_d,
+       Qimhihilo_d,Qimlohilo_d,Qimhilolo_d,Qimlololo_d,
+       Rrehihihi_h,Rrelohihi_h,Rrehilohi_h,Rrelolohi_h,
+       Rrehihilo_h,Rrelohilo_h,Rrehilolo_h,Rrelololo_h,
+       Rimhihihi_h,Rimlohihi_h,Rimhilohi_h,Rimlolohi_h,
+       Rimhihilo_h,Rimlohilo_h,Rimhilolo_h,Rimlololo_h,
+       Rrehihihi_d,Rrelohihi_d,Rrehilohi_d,Rrelolohi_d,
+       Rrehihilo_d,Rrelohilo_d,Rrehilolo_d,Rrelololo_d,
+       Rimhihihi_d,Rimlohihi_d,Rimhilohi_d,Rimlolohi_d,
+       Rimhihilo_d,Rimlohilo_d,Rimhilolo_d,Rimlololo_d,
+       workvecrehihihi,workvecrelohihi,workvecrehilohi,workvecrelolohi,
+       workvecrehihilo,workvecrelohilo,workvecrehilolo,workvecrelololo,
+       workvecimhihihi,workvecimlohihi,workvecimhilohi,workvecimlolohi,
+       workvecimhihilo,workvecimlohilo,workvecimhilolo,workvecimlololo,
+       resvecrehihihi,resvecrelohihi,resvecrehilohi,resvecrelolohi,
+       resvecrehihilo,resvecrelohilo,resvecrehilolo,resvecrelololo,
+       resvecimhihihi,resvecimlohihi,resvecimhilohi,resvecimlolohi,
+       resvecimhihilo,resvecimlohilo,resvecimhilolo,resvecimlololo,
+       resmaxhihihi,resmaxlohihi,resmaxhilohi,resmaxlolohi,
+       resmaxhihilo,resmaxlohilo,resmaxhilolo,resmaxlololo,
+       zeroQ_h,noqr_h,zeroQ_d,noqr_d,upidx_h,bsidx_h,upidx_d,bsidx_d,
+       totqrlapsedms,totqtblapsedms,totbslapsedms,
+       totupdlapsedms,totreslapsedms,vrblvl,mode);
+
+   if((vrblvl > 0) && (mode == 2))
+   {
+      return cmplx8_errors_inurhsQRsol(dim,deg,
+                inputrehihihi_h,inputrelohihi_h,
+                inputrehilohi_h,inputrelolohi_h,
+                inputrehihilo_h,inputrelohilo_h,
+                inputrehilolo_h,inputrelololo_h,
+                inputimhihihi_h,inputimlohihi_h,
+                inputimhilohi_h,inputimlolohi_h,
+                inputimhihilo_h,inputimlohilo_h,
+                inputimhilolo_h,inputimlololo_h,
+                inputrehihihi_d,inputrelohihi_d,
+                inputrehilohi_d,inputrelolohi_d,
+                inputrehihilo_d,inputrelohilo_d,
+                inputrehilolo_d,inputrelololo_d,
+                inputimhihihi_d,inputimlohihi_d,
+                inputimhilohi_d,inputimlolohi_d,
+                inputimhihilo_d,inputimlohilo_d,
+                inputimhilolo_d,inputimlololo_d,
+                Qrehihihi_h,Qrelohihi_h,Qrehilohi_h,Qrelolohi_h,
+                Qrehihilo_h,Qrelohilo_h,Qrehilolo_h,Qrelololo_h,
+                Qimhihihi_h,Qimlohihi_h,Qimhilohi_h,Qimlolohi_h,
+                Qimhihilo_h,Qimlohilo_h,Qimhilolo_h,Qimlololo_h,
+                Qrehihihi_d,Qrelohihi_d,Qrehilohi_d,Qrelolohi_d,
+                Qrehihilo_d,Qrelohilo_d,Qrehilolo_d,Qrelololo_d,
+                Qimhihihi_d,Qimlohihi_d,Qimhilohi_d,Qimlolohi_d,
+                Qimhihilo_d,Qimlohilo_d,Qimhilolo_d,Qimlololo_d,
+                Rrehihihi_h,Rrelohihi_h,Rrehilohi_h,Rrelolohi_h,
+                Rrehihilo_h,Rrelohilo_h,Rrehilolo_h,Rrelololo_h,
+                Rimhihihi_h,Rimlohihi_h,Rimhilohi_h,Rimlolohi_h,
+                Rimhihilo_h,Rimlohilo_h,Rimhilolo_h,Rimlololo_h,
+                Rrehihihi_d,Rrelohihi_d,Rrehilohi_d,Rrelolohi_d,
+                Rrehihilo_d,Rrelohilo_d,Rrehilolo_d,Rrelololo_d,
+                Rimhihihi_d,Rimlohihi_d,Rimhilohi_d,Rimlolohi_d,
+                Rimhihilo_d,Rimlohilo_d,Rimhilolo_d,Rimlololo_d,
+                urhsrehihihi_h,urhsrelohihi_h,urhsrehilohi_h,urhsrelolohi_h,
+                urhsrehihilo_h,urhsrelohilo_h,urhsrehilolo_h,urhsrelololo_h,
+                urhsimhihihi_h,urhsimlohihi_h,urhsimhilohi_h,urhsimlolohi_h,
+                urhsimhihilo_h,urhsimlohilo_h,urhsimhilolo_h,urhsimlololo_h,
+                urhsrehihihi_d,urhsrelohihi_d,urhsrehilohi_d,urhsrelolohi_d,
+                urhsrehihilo_d,urhsrelohilo_d,urhsrehilolo_d,urhsrelololo_d,
+                urhsimhihihi_d,urhsimlohihi_d,urhsimhilohi_d,urhsimlolohi_d,
+                urhsimhihilo_d,urhsimlohilo_d,urhsimhilolo_d,urhsimlololo_d,
+                solrehihihi_h,solrelohihi_h,solrehilohi_h,solrelolohi_h,
+                solrehihilo_h,solrelohilo_h,solrehilolo_h,solrelololo_h,
+                solimhihihi_h,solimlohihi_h,solimhilohi_h,solimlolohi_h,
+                solimhihilo_h,solimlohilo_h,solimhilolo_h,solimlololo_h,
+                solrehihihi_d,solrelohihi_d,solrehilohi_d,solrelolohi_d,
+                solrehihilo_d,solrelohilo_d,solrehilolo_d,solrelololo_d,
+                solimhihihi_d,solimlohihi_d,solimhilohi_d,solimlolohi_d,
+                solimhihilo_d,solimlohilo_d,solimhilolo_d,solimlololo_d,
+                vrblvl);
+   }
+   else 
+      return 0;
+}
+
 int cmplx8_allocate_inoutfunjac
  ( int dim, int deg, int mode,
    double **inputrehihihi_h, double **inputrelohihi_h,
@@ -2323,6 +2899,358 @@ void cmplx8_column_setup
                  << mbrhsimhihilo[i][j] << "  " << mbrhsimlohilo[i][j] << endl
                  << "  "
                  << mbrhsimhilolo[i][j] << "  " << mbrhsimlololo[i][j] << endl;
+   }
+   cmplx8_start_setup(dim,deg,
+      testsolrehihihi,testsolrelohihi,testsolrehilohi,testsolrelolohi,
+      testsolrehihilo,testsolrelohilo,testsolrehilolo,testsolrelololo,
+      testsolimhihihi,testsolimlohihi,testsolimhilohi,testsolimlolohi,
+      testsolimhihilo,testsolimlohilo,testsolimhilolo,testsolimlololo,
+      inputrehihihi_h,inputrelohihi_h,inputrehilohi_h,inputrelolohi_h,
+      inputrehihilo_h,inputrelohilo_h,inputrehilolo_h,inputrelololo_h,
+      inputimhihihi_h,inputimlohihi_h,inputimhilohi_h,inputimlolohi_h,
+      inputimhihilo_h,inputimlohilo_h,inputimhilolo_h,inputimlololo_h,
+      inputrehihihi_d,inputrelohihi_d,inputrehilohi_d,inputrelolohi_d,
+      inputrehihilo_d,inputrelohilo_d,inputrehilolo_d,inputrelololo_d,
+      inputimhihihi_d,inputimlohihi_d,inputimhilohi_d,inputimlolohi_d,
+      inputimhihilo_d,inputimlohilo_d,inputimhilolo_d,inputimlololo_d,
+      mode,vrblvl);
+}
+
+void cmplx8_row_setup
+ ( int dim, int deg, int *nbr, int **nvr, int ***idx,
+   double **cstrehihihi, double **cstrelohihi,
+   double **cstrehilohi, double **cstrelolohi,
+   double **cstrehihilo, double **cstrelohilo,
+   double **cstrehilolo, double **cstrelololo,
+   double **cstimhihihi, double **cstimlohihi,
+   double **cstimhilohi, double **cstimlolohi,
+   double **cstimhihilo, double **cstimlohilo,
+   double **cstimhilolo, double **cstimlololo,
+   double ***cffrehihihi, double ***cffrelohihi,
+   double ***cffrehilohi, double ***cffrelolohi,
+   double ***cffrehihilo, double ***cffrelohilo,
+   double ***cffrehilolo, double ***cffrelololo,
+   double ***cffimhihihi, double ***cffimlohihi,
+   double ***cffimhilohi, double ***cffimlolohi,
+   double ***cffimhihilo, double ***cffimlohilo,
+   double ***cffimhilolo, double ***cffimlololo,
+   double **testsolrehihihi, double **testsolrelohihi,
+   double **testsolrehilohi, double **testsolrelolohi,
+   double **testsolrehihilo, double **testsolrelohilo,
+   double **testsolrehilolo, double **testsolrelololo,
+   double **testsolimhihihi, double **testsolimlohihi,
+   double **testsolimhilohi, double **testsolimlolohi,
+   double **testsolimhihilo, double **testsolimlohilo,
+   double **testsolimhilolo, double **testsolimlololo,
+   double **inputrehihihi_h, double **inputrelohihi_h,
+   double **inputrehilohi_h, double **inputrelolohi_h,
+   double **inputrehihilo_h, double **inputrelohilo_h,
+   double **inputrehilolo_h, double **inputrelololo_h,
+   double **inputimhihihi_h, double **inputimlohihi_h,
+   double **inputimhilohi_h, double **inputimlolohi_h,
+   double **inputimhihilo_h, double **inputimlohilo_h,
+   double **inputimhilolo_h, double **inputimlololo_h,
+   double **inputrehihihi_d, double **inputrelohihi_d,
+   double **inputrehilohi_d, double **inputrelolohi_d,
+   double **inputrehihilo_d, double **inputrelohilo_d,
+   double **inputrehilolo_d, double **inputrelololo_d,
+   double **inputimhihihi_d, double **inputimlohihi_d,
+   double **inputimhilohi_d, double **inputimlolohi_d,
+   double **inputimhihilo_d, double **inputimlohilo_d,
+   double **inputimhilolo_d, double **inputimlololo_d, 
+   double ***outputrehihihi_h, double ***outputrelohihi_h,
+   double ***outputrehilohi_h, double ***outputrelolohi_h,
+   double ***outputrehihilo_h, double ***outputrelohilo_h,
+   double ***outputrehilolo_h, double ***outputrelololo_h,
+   double ***outputimhihihi_h, double ***outputimlohihi_h,
+   double ***outputimhilohi_h, double ***outputimlolohi_h,
+   double ***outputimhihilo_h, double ***outputimlohilo_h,
+   double ***outputimhilolo_h, double ***outputimlololo_h,
+   double ***outputrehihihi_d, double ***outputrelohihi_d,
+   double ***outputrehilohi_d, double ***outputrelolohi_d,
+   double ***outputrehihilo_d, double ***outputrelohilo_d,
+   double ***outputrehilolo_d, double ***outputrelololo_d,
+   double ***outputimhihihi_d, double ***outputimlohihi_d,
+   double ***outputimhilohi_d, double ***outputimlolohi_d,
+   double ***outputimhihilo_d, double ***outputimlohilo_d,
+   double ***outputimhilolo_d, double ***outputimlololo_d,
+   int mode, int vrblvl )
+{
+   const int degp1 = deg+1;
+
+   for(int i=0; i<dim; i++)
+   {
+      testsolrehihihi[i] = new double[degp1];
+      testsolrelohihi[i] = new double[degp1];
+      testsolrehilohi[i] = new double[degp1];
+      testsolrelolohi[i] = new double[degp1];
+      testsolrehihilo[i] = new double[degp1];
+      testsolrelohilo[i] = new double[degp1];
+      testsolrehilolo[i] = new double[degp1];
+      testsolrelololo[i] = new double[degp1];
+      testsolimhihihi[i] = new double[degp1];
+      testsolimlohihi[i] = new double[degp1];
+      testsolimhilohi[i] = new double[degp1];
+      testsolimlolohi[i] = new double[degp1];
+      testsolimhihilo[i] = new double[degp1];
+      testsolimlohilo[i] = new double[degp1];
+      testsolimhilolo[i] = new double[degp1];
+      testsolimlololo[i] = new double[degp1];
+   }
+   make_complex8_exponentials(dim,deg,
+      testsolrehihihi,testsolrelohihi,testsolrehilohi,testsolrelolohi,
+      testsolrehihilo,testsolrelohilo,testsolrehilolo,testsolrelololo,
+      testsolimhihihi,testsolimlohihi,testsolimhilohi,testsolimlolohi,
+      testsolimhihilo,testsolimlohilo,testsolimhilolo,testsolimlololo);
+
+   if(mode == 1)
+   {
+      if(vrblvl > 0)
+         cout << "evaluating test solution on the host ..." << endl;
+
+      double timelapsed_h = 0.0;
+
+      for(int i=0; i<dim; i++)
+      {
+         double lapsed;
+
+         CPU_cmplx8_poly_evaldiff
+           (dim,nbr[i],deg,nvr[i],idx[i],
+            cstrehihihi[i],cstrelohihi[i],cstrehilohi[i],cstrelolohi[i],
+            cstrehihilo[i],cstrelohilo[i],cstrehilolo[i],cstrelololo[i],
+            cstimhihihi[i],cstimlohihi[i],cstimhilohi[i],cstimlolohi[i],
+            cstimhihilo[i],cstimlohilo[i],cstimhilolo[i],cstimlololo[i],
+            cffrehihihi[i],cffrelohihi[i],cffrehilohi[i],cffrelolohi[i],
+            cffrehihilo[i],cffrelohilo[i],cffrehilolo[i],cffrelololo[i],
+            cffimhihihi[i],cffimlohihi[i],cffimhilohi[i],cffimlolohi[i],
+            cffimhihilo[i],cffimlohilo[i],cffimhilolo[i],cffimlololo[i],
+            testsolrehihihi,testsolrelohihi,testsolrehilohi,testsolrelolohi,
+            testsolrehihilo,testsolrelohilo,testsolrehilolo,testsolrelololo,
+            testsolimhihihi,testsolimlohihi,testsolimhilohi,testsolimlolohi,
+            testsolimhihilo,testsolimlohilo,testsolimhilolo,testsolimlololo,
+            outputrehihihi_h[i],outputrelohihi_h[i],
+            outputrehilohi_h[i],outputrelolohi_h[i],
+            outputrehihilo_h[i],outputrelohilo_h[i],
+            outputrehilolo_h[i],outputrelololo_h[i],
+            outputimhihihi_h[i],outputimlohihi_h[i],
+            outputimhilohi_h[i],outputimlolohi_h[i],
+            outputimhihilo_h[i],outputimlohilo_h[i],
+            outputimhilolo_h[i],outputimlololo_h[i],&lapsed,0);
+
+         timelapsed_h += lapsed;
+      }
+      for(int i=0; i<dim; i++) // adjust constant coefficients
+      {
+         for(int j=0; j<=deg; j++)
+         {
+            // cstre[i][j] = cstre[i][j] - outputre_h[i][dim][j];
+            odf_dec(&cstrehihihi[i][j],&cstrelohihi[i][j],
+                    &cstrehilohi[i][j],&cstrelolohi[i][j],
+                    &cstrehihilo[i][j],&cstrelohilo[i][j],
+                    &cstrehilolo[i][j],&cstrelololo[i][j],
+                    outputrehihihi_h[i][dim][j],outputrelohihi_h[i][dim][j],
+                    outputrehilohi_h[i][dim][j],outputrelolohi_h[i][dim][j],
+                    outputrehihilo_h[i][dim][j],outputrelohilo_h[i][dim][j],
+                    outputrehilolo_h[i][dim][j],outputrelololo_h[i][dim][j]);
+            // cstim[i][j] = cstim[i][j] - outputim_h[i][dim][j];
+            odf_dec(&cstimhihihi[i][j],&cstimlohihi[i][j],
+                    &cstimhilohi[i][j],&cstimlolohi[i][j],
+                    &cstimhihilo[i][j],&cstimlohilo[i][j],
+                    &cstimhilolo[i][j],&cstimlololo[i][j],
+                    outputimhihihi_h[i][dim][j],outputimlohihi_h[i][dim][j],
+                    outputimhilohi_h[i][dim][j],outputimlolohi_h[i][dim][j],
+                    outputimhihilo_h[i][dim][j],outputimlohilo_h[i][dim][j],
+                    outputimhilolo_h[i][dim][j],outputimlololo_h[i][dim][j]);
+         }
+      }
+      if(vrblvl > 1) // evaluate again to test
+      {
+         for(int i=0; i<dim; i++)
+         {
+            double lapsed;
+
+            CPU_cmplx8_poly_evaldiff
+              (dim,nbr[i],deg,nvr[i],idx[i],
+               cstrehihihi[i],cstrelohihi[i],cstrehilohi[i],cstrelolohi[i],
+               cstrehihilo[i],cstrelohilo[i],cstrehilolo[i],cstrelololo[i],
+               cstimhihihi[i],cstimlohihi[i],cstimhilohi[i],cstimlolohi[i],
+               cstimhihilo[i],cstimlohilo[i],cstimhilolo[i],cstimlololo[i],
+               cffrehihihi[i],cffrelohihi[i],cffrehilohi[i],cffrelolohi[i],
+               cffrehihilo[i],cffrelohilo[i],cffrehilolo[i],cffrelololo[i],
+               cffimhihihi[i],cffimlohihi[i],cffimhilohi[i],cffimlolohi[i],
+               cffimhihilo[i],cffimlohilo[i],cffimhilolo[i],cffimlololo[i],
+               testsolrehihihi,testsolrelohihi,testsolrehilohi,testsolrelolohi,
+               testsolrehihilo,testsolrelohilo,testsolrehilolo,testsolrelololo,
+               testsolimhihihi,testsolimlohihi,testsolimhilohi,testsolimlolohi,
+               testsolimhihilo,testsolimlohilo,testsolimhilolo,testsolimlololo,
+               outputrehihihi_h[i],outputrelohihi_h[i],
+               outputrehilohi_h[i],outputrelolohi_h[i],
+               outputrehihilo_h[i],outputrelohilo_h[i],
+               outputrehilolo_h[i],outputrelololo_h[i],
+               outputimhihihi_h[i],outputimlohihi_h[i],
+               outputimhilohi_h[i],outputimlolohi_h[i],
+               outputimhihilo_h[i],outputimlohilo_h[i],
+               outputimhilolo_h[i],outputimlololo_h[i],&lapsed,0);
+
+            timelapsed_h += lapsed;
+         }
+         double errsum = 0.0;
+
+         for(int i=0; i<dim; i++)
+            for(int j=0; j<=deg; j++)
+               errsum = errsum + outputrehihihi_h[i][dim][j]
+                               + outputrelohihi_h[i][dim][j]
+                               + outputrehilohi_h[i][dim][j]
+                               + outputrelolohi_h[i][dim][j]
+                               + outputrehihilo_h[i][dim][j]
+                               + outputrelohilo_h[i][dim][j]
+                               + outputrehilolo_h[i][dim][j]
+                               + outputrelololo_h[i][dim][j]
+                               + outputimhihihi_h[i][dim][j]
+                               + outputimlohihi_h[i][dim][j]
+                               + outputimhilohi_h[i][dim][j]
+                               + outputimlolohi_h[i][dim][j]
+                               + outputimhihilo_h[i][dim][j]
+                               + outputimlohilo_h[i][dim][j]
+                               + outputimhilolo_h[i][dim][j]
+                               + outputimlololo_h[i][dim][j]; 
+
+         cout << scientific << setprecision(2)
+              << "residual of test solution : " << errsum << endl;
+      }
+   }
+   else // GPU is faster
+   {
+      if(vrblvl > 0)
+         cout << "evaluating test solution on the device ..." << endl;
+
+      const bool vrb = false; // no output (vrblvl > 1);
+      double timelapsed_d = 0.0;
+
+      for(int i=0; i<dim; i++)
+      {
+         double cnvlapms,addlapms,timelapms_d,walltimes_d;
+
+         ComplexConvolutionJobs cnvjobs(dim);
+         ComplexIncrementJobs incjobs(cnvjobs,false);
+         ComplexAdditionJobs addjobs(dim,nbr[i]);
+
+         make_all_complex_jobs
+            (dim,nbr[i],nvr[i],idx[i],&cnvjobs,&incjobs,&addjobs,vrb);
+
+         GPU_cmplx8vectorized_poly_evaldiff
+           (degp1,dim,nbr[i],deg,nvr[i],idx[i],
+            cstrehihihi[i],cstrelohihi[i],cstrehilohi[i],cstrelolohi[i],
+            cstrehihilo[i],cstrelohilo[i],cstrehilolo[i],cstrelololo[i],
+            cstimhihihi[i],cstimlohihi[i],cstimhilohi[i],cstimlolohi[i],
+            cstimhihilo[i],cstimlohilo[i],cstimhilolo[i],cstimlololo[i],
+            cffrehihihi[i],cffrelohihi[i],cffrehilohi[i],cffrelolohi[i],
+            cffrehihilo[i],cffrelohilo[i],cffrehilolo[i],cffrelololo[i],
+            cffimhihihi[i],cffimlohihi[i],cffimhilohi[i],cffimlolohi[i],
+            cffimhihilo[i],cffimlohilo[i],cffimhilolo[i],cffimlololo[i],
+            testsolrehihihi,testsolrelohihi,testsolrehilohi,testsolrelolohi,
+            testsolrehihilo,testsolrelohilo,testsolrehilolo,testsolrelololo,
+            testsolimhihihi,testsolimlohihi,testsolimhilohi,testsolimlolohi,
+            testsolimhihilo,testsolimlohilo,testsolimhilolo,testsolimlololo,
+            outputrehihihi_d[i],outputrelohihi_d[i],
+            outputrehilohi_d[i],outputrelolohi_d[i],
+            outputrehihilo_d[i],outputrelohilo_d[i],
+            outputrehilolo_d[i],outputrelololo_d[i],
+            outputimhihihi_d[i],outputimlohihi_d[i],
+            outputimhilohi_d[i],outputimlolohi_d[i],
+            outputimhihilo_d[i],outputimlohilo_d[i],
+            outputimhilolo_d[i],outputimlololo_d[i],cnvjobs,incjobs,addjobs,
+            &cnvlapms,&addlapms,&timelapms_d,&walltimes_d,0); // vrblvl);
+
+         timelapsed_d += walltimes_d;
+      }
+      for(int i=0; i<dim; i++) // adjust constant coefficients
+      {
+         for(int j=0; j<=deg; j++)
+         {
+            // cstre[i][j] = cstre[i][j] - outputre_d[i][dim][j];
+            odf_dec(&cstrehihihi[i][j],&cstrelohihi[i][j],
+                    &cstrehilohi[i][j],&cstrelolohi[i][j],
+                    &cstrehihilo[i][j],&cstrelohilo[i][j],
+                    &cstrehilolo[i][j],&cstrelololo[i][j],
+                    outputrehihihi_d[i][dim][j],outputrelohihi_d[i][dim][j],
+                    outputrehilohi_d[i][dim][j],outputrelolohi_d[i][dim][j],
+                    outputrehihilo_d[i][dim][j],outputrelohilo_d[i][dim][j],
+                    outputrehilolo_d[i][dim][j],outputrelololo_d[i][dim][j]);
+            // cstim[i][j] = cstim[i][j] - outputim_d[i][dim][j];
+            odf_dec(&cstimhihihi[i][j],&cstimlohihi[i][j],
+                    &cstimhilohi[i][j],&cstimlolohi[i][j],
+                    &cstimhihilo[i][j],&cstimlohilo[i][j],
+                    &cstimhilolo[i][j],&cstimlololo[i][j],
+                    outputimhihihi_d[i][dim][j],outputimlohihi_d[i][dim][j],
+                    outputimhilohi_d[i][dim][j],outputimlolohi_d[i][dim][j],
+                    outputimhihilo_d[i][dim][j],outputimlohilo_d[i][dim][j],
+                    outputimhilolo_d[i][dim][j],outputimlololo_d[i][dim][j]);
+         }
+      }
+      if(vrblvl > 1) // evaluate again to test
+      {
+         for(int i=0; i<dim; i++)
+         {
+            double cnvlapms,addlapms,timelapms_d,walltimes_d;
+   
+            ComplexConvolutionJobs cnvjobs(dim);
+            ComplexIncrementJobs incjobs(cnvjobs,false);
+            ComplexAdditionJobs addjobs(dim,nbr[i]);
+
+            make_all_complex_jobs
+               (dim,nbr[i],nvr[i],idx[i],&cnvjobs,&incjobs,&addjobs,vrb);
+
+            GPU_cmplx8vectorized_poly_evaldiff
+              (degp1,dim,nbr[i],deg,nvr[i],idx[i],
+               cstrehihihi[i],cstrelohihi[i],cstrehilohi[i],cstrelolohi[i],
+               cstrehihilo[i],cstrelohilo[i],cstrehilolo[i],cstrelololo[i],
+               cstimhihihi[i],cstimlohihi[i],cstimhilohi[i],cstimlolohi[i],
+               cstimhihilo[i],cstimlohilo[i],cstimhilolo[i],cstimlololo[i],
+               cffrehihihi[i],cffrelohihi[i],cffrehilohi[i],cffrelolohi[i],
+               cffrehihilo[i],cffrelohilo[i],cffrehilolo[i],cffrelololo[i],
+               cffimhihihi[i],cffimlohihi[i],cffimhilohi[i],cffimlolohi[i],
+               cffimhihilo[i],cffimlohilo[i],cffimhilolo[i],cffimlololo[i],
+               testsolrehihihi,testsolrelohihi,testsolrehilohi,testsolrelolohi,
+               testsolrehihilo,testsolrelohilo,testsolrehilolo,testsolrelololo,
+               testsolimhihihi,testsolimlohihi,testsolimhilohi,testsolimlolohi,
+               testsolimhihilo,testsolimlohilo,testsolimhilolo,testsolimlololo,
+               outputrehihihi_d[i],outputrelohihi_d[i],
+               outputrehilohi_d[i],outputrelolohi_d[i],
+               outputrehihilo_d[i],outputrelohilo_d[i],
+               outputrehilolo_d[i],outputrelololo_d[i],
+               outputimhihihi_d[i],outputimlohihi_d[i],
+               outputimhilohi_d[i],outputimlolohi_d[i],
+               outputimhihilo_d[i],outputimlohilo_d[i],
+               outputimhilolo_d[i],outputimlololo_d[i],cnvjobs,incjobs,addjobs,
+               &cnvlapms,&addlapms,&timelapms_d,&walltimes_d,0); // vrblvl);
+
+            timelapsed_d += walltimes_d;
+         }
+         double errsum = 0.0;
+
+         for(int i=0; i<dim; i++)
+            for(int j=0; j<=deg; j++)
+               errsum = errsum + outputrehihihi_d[i][dim][j]
+                               + outputrelohihi_d[i][dim][j]
+                               + outputrehilohi_d[i][dim][j]
+                               + outputrelolohi_d[i][dim][j]
+                               + outputrehihilo_d[i][dim][j]
+                               + outputrelohilo_d[i][dim][j]
+                               + outputrehilolo_d[i][dim][j]
+                               + outputrelololo_d[i][dim][j]
+                               + outputimhihihi_d[i][dim][j]
+                               + outputimlohihi_d[i][dim][j]
+                               + outputimhilohi_d[i][dim][j]
+                               + outputimlolohi_d[i][dim][j]
+                               + outputimhihilo_d[i][dim][j]
+                               + outputimlohilo_d[i][dim][j]
+                               + outputimhilolo_d[i][dim][j]
+                               + outputimlololo_d[i][dim][j];
+
+         cout << scientific << setprecision(2)
+              << "residual of test solution : " << errsum << endl;
+      }
    }
    cmplx8_start_setup(dim,deg,
       testsolrehihihi,testsolrelohihi,testsolrehilohi,testsolrelolohi,
@@ -3562,5 +4490,1013 @@ int test_cmplx8_row_newton
  ( int szt, int nbt, int dim, int deg, int *nbr, int **nvr, int ***idx,
    double dpr, int nbsteps, int mode, int vrblvl )
 {
+   const int degp1 = deg+1;
+
+   double **cstrehihihi = new double*[dim];
+   double **cstrelohihi = new double*[dim];
+   double **cstrehilohi = new double*[dim]; 
+   double **cstrelolohi = new double*[dim];
+   double **cstrehihilo = new double*[dim];
+   double **cstrelohilo = new double*[dim];
+   double **cstrehilolo = new double*[dim]; 
+   double **cstrelololo = new double*[dim];
+   double **cstimhihihi = new double*[dim]; 
+   double **cstimlohihi = new double*[dim]; 
+   double **cstimhilohi = new double*[dim]; 
+   double **cstimlolohi = new double*[dim]; 
+   double **cstimhihilo = new double*[dim]; 
+   double **cstimlohilo = new double*[dim]; 
+   double **cstimhilolo = new double*[dim]; 
+   double **cstimlololo = new double*[dim]; 
+   double ***cffrehihihi = new double**[dim];
+   double ***cffrelohihi = new double**[dim];
+   double ***cffrehilohi = new double**[dim]; 
+   double ***cffrelolohi = new double**[dim];
+   double ***cffrehihilo = new double**[dim];
+   double ***cffrelohilo = new double**[dim];
+   double ***cffrehilolo = new double**[dim]; 
+   double ***cffrelololo = new double**[dim];
+   double ***cffimhihihi = new double**[dim]; 
+   double ***cffimlohihi = new double**[dim]; 
+   double ***cffimhilohi = new double**[dim]; 
+   double ***cffimlolohi = new double**[dim]; 
+   double ***cffimhihilo = new double**[dim]; 
+   double ***cffimlohilo = new double**[dim]; 
+   double ***cffimhilolo = new double**[dim]; 
+   double ***cffimlololo = new double**[dim]; 
+
+   cmplx8_make_coefficients(dim,deg,nbr,nvr,idx,
+      cstrehihihi,cstrelohihi,cstrehilohi,cstrelolohi,
+      cstrehihilo,cstrelohilo,cstrehilolo,cstrelololo,
+      cstimhihihi,cstimlohihi,cstimhilohi,cstimlolohi,
+      cstimhihilo,cstimlohilo,cstimhilolo,cstimlololo,
+      cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+      cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+      cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+      cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,vrblvl);
+
+   double **inputrehihihi_h;
+   double **inputrelohihi_h;
+   double **inputrehilohi_h;
+   double **inputrelolohi_h;
+   double **inputrehihilo_h;
+   double **inputrelohilo_h;
+   double **inputrehilolo_h;
+   double **inputrelololo_h;
+   double **inputimhihihi_h;
+   double **inputimlohihi_h;
+   double **inputimhilohi_h;
+   double **inputimlolohi_h;
+   double **inputimhihilo_h;
+   double **inputimlohilo_h;
+   double **inputimhilolo_h;
+   double **inputimlololo_h;
+   double **inputrehihihi_d;
+   double **inputrelohihi_d;
+   double **inputrehilohi_d;
+   double **inputrelolohi_d;
+   double **inputrehihilo_d;
+   double **inputrelohilo_d;
+   double **inputrehilolo_d;
+   double **inputrelololo_d;
+   double **inputimhihihi_d;
+   double **inputimlohihi_d;
+   double **inputimhilohi_d;
+   double **inputimlolohi_d;
+   double **inputimhihilo_d;
+   double **inputimlohilo_d;
+   double **inputimhilolo_d;
+   double **inputimlololo_d;
+   double ***outputrehihihi_h;
+   double ***outputrelohihi_h;
+   double ***outputrehilohi_h;
+   double ***outputrelolohi_h;
+   double ***outputrehihilo_h;
+   double ***outputrelohilo_h;
+   double ***outputrehilolo_h;
+   double ***outputrelololo_h;
+   double ***outputimhihihi_h;
+   double ***outputimlohihi_h;
+   double ***outputimhilohi_h;
+   double ***outputimlolohi_h;
+   double ***outputimhihilo_h;
+   double ***outputimlohilo_h;
+   double ***outputimhilolo_h;
+   double ***outputimlololo_h;
+   double ***outputrehihihi_d;
+   double ***outputrelohihi_d;
+   double ***outputrehilohi_d;
+   double ***outputrelolohi_d;
+   double ***outputrehihilo_d;
+   double ***outputrelohilo_d;
+   double ***outputrehilolo_d;
+   double ***outputrelololo_d;
+   double ***outputimhihihi_d;
+   double ***outputimlohihi_d;
+   double ***outputimhilohi_d;
+   double ***outputimlolohi_d;
+   double ***outputimhihilo_d;
+   double ***outputimlohilo_d;
+   double ***outputimhilolo_d;
+   double ***outputimlololo_d;
+   double **funvalrehihihi_h;
+   double **funvalrelohihi_h;
+   double **funvalrehilohi_h;
+   double **funvalrelolohi_h;
+   double **funvalrehihilo_h;
+   double **funvalrelohilo_h;
+   double **funvalrehilolo_h;
+   double **funvalrelololo_h;
+   double **funvalimhihihi_h;
+   double **funvalimlohihi_h;
+   double **funvalimhilohi_h;
+   double **funvalimlolohi_h;
+   double **funvalimhihilo_h;
+   double **funvalimlohilo_h;
+   double **funvalimhilolo_h;
+   double **funvalimlololo_h;
+   double **funvalrehihihi_d;
+   double **funvalrelohihi_d;
+   double **funvalrehilohi_d;
+   double **funvalrelolohi_d;
+   double **funvalrehihilo_d;
+   double **funvalrelohilo_d;
+   double **funvalrehilolo_d;
+   double **funvalrelololo_d;
+   double **funvalimhihihi_d;
+   double **funvalimlohihi_d;
+   double **funvalimhilohi_d;
+   double **funvalimlolohi_d;
+   double **funvalimhihilo_d;
+   double **funvalimlohilo_d;
+   double **funvalimhilolo_d;
+   double **funvalimlololo_d;
+   double ***jacvalrehihihi_h;
+   double ***jacvalrelohihi_h;
+   double ***jacvalrehilohi_h;
+   double ***jacvalrelolohi_h;
+   double ***jacvalrehihilo_h;
+   double ***jacvalrelohilo_h;
+   double ***jacvalrehilolo_h;
+   double ***jacvalrelololo_h;
+   double ***jacvalimhihihi_h;
+   double ***jacvalimlohihi_h;
+   double ***jacvalimhilohi_h;
+   double ***jacvalimlolohi_h;
+   double ***jacvalimhihilo_h;
+   double ***jacvalimlohilo_h;
+   double ***jacvalimhilolo_h;
+   double ***jacvalimlololo_h;
+   double ***jacvalrehihihi_d;
+   double ***jacvalrelohihi_d;
+   double ***jacvalrehilohi_d;
+   double ***jacvalrelolohi_d;
+   double ***jacvalrehihilo_d;
+   double ***jacvalrelohilo_d;
+   double ***jacvalrehilolo_d;
+   double ***jacvalrelololo_d;
+   double ***jacvalimhihihi_d;
+   double ***jacvalimlohihi_d;
+   double ***jacvalimhilohi_d;
+   double ***jacvalimlolohi_d;
+   double ***jacvalimhihilo_d;
+   double ***jacvalimlohilo_d;
+   double ***jacvalimhilolo_d;
+   double ***jacvalimlololo_d;
+
+   if((mode == 1) || (mode == 2))
+   {
+      inputrehihihi_h = new double*[dim];
+      inputrelohihi_h = new double*[dim];
+      inputrehilohi_h = new double*[dim];
+      inputrelolohi_h = new double*[dim];
+      inputrehihilo_h = new double*[dim];
+      inputrelohilo_h = new double*[dim];
+      inputrehilolo_h = new double*[dim];
+      inputrelololo_h = new double*[dim];
+      inputimhihihi_h = new double*[dim];
+      inputimlohihi_h = new double*[dim];
+      inputimhilohi_h = new double*[dim];
+      inputimlolohi_h = new double*[dim];
+      inputimhihilo_h = new double*[dim];
+      inputimlohilo_h = new double*[dim];
+      inputimhilolo_h = new double*[dim];
+      inputimlololo_h = new double*[dim];
+      outputrehihihi_h = new double**[dim];
+      outputrelohihi_h = new double**[dim];
+      outputrehilohi_h = new double**[dim];
+      outputrelolohi_h = new double**[dim];
+      outputrehihilo_h = new double**[dim];
+      outputrelohilo_h = new double**[dim];
+      outputrehilolo_h = new double**[dim];
+      outputrelololo_h = new double**[dim];
+      outputimhihihi_h = new double**[dim];
+      outputimlohihi_h = new double**[dim];
+      outputimhilohi_h = new double**[dim];
+      outputimlolohi_h = new double**[dim];
+      outputimhihilo_h = new double**[dim];
+      outputimlohilo_h = new double**[dim];
+      outputimhilolo_h = new double**[dim];
+      outputimlololo_h = new double**[dim];
+      funvalrehihihi_h = new double*[dim];
+      funvalrelohihi_h = new double*[dim];
+      funvalrehilohi_h = new double*[dim];
+      funvalrelolohi_h = new double*[dim];
+      funvalrehihilo_h = new double*[dim];
+      funvalrelohilo_h = new double*[dim];
+      funvalrehilolo_h = new double*[dim];
+      funvalrelololo_h = new double*[dim];
+      funvalimhihihi_h = new double*[dim];
+      funvalimlohihi_h = new double*[dim];
+      funvalimhilohi_h = new double*[dim];
+      funvalimlolohi_h = new double*[dim];
+      funvalimhihilo_h = new double*[dim];
+      funvalimlohilo_h = new double*[dim];
+      funvalimhilolo_h = new double*[dim];
+      funvalimlololo_h = new double*[dim];
+      jacvalrehihihi_h = new double**[degp1];
+      jacvalrelohihi_h = new double**[degp1];
+      jacvalrehilohi_h = new double**[degp1];
+      jacvalrelolohi_h = new double**[degp1];
+      jacvalrehihilo_h = new double**[degp1];
+      jacvalrelohilo_h = new double**[degp1];
+      jacvalrehilolo_h = new double**[degp1];
+      jacvalrelololo_h = new double**[degp1];
+      jacvalimhihihi_h = new double**[degp1];
+      jacvalimlohihi_h = new double**[degp1];
+      jacvalimhilohi_h = new double**[degp1];
+      jacvalimlolohi_h = new double**[degp1];
+      jacvalimhihilo_h = new double**[degp1];
+      jacvalimlohilo_h = new double**[degp1];
+      jacvalimhilolo_h = new double**[degp1];
+      jacvalimlololo_h = new double**[degp1];
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      inputrehihihi_d = new double*[dim];
+      inputrelohihi_d = new double*[dim];
+      inputrehilohi_d = new double*[dim];
+      inputrelolohi_d = new double*[dim];
+      inputrehihilo_d = new double*[dim];
+      inputrelohilo_d = new double*[dim];
+      inputrehilolo_d = new double*[dim];
+      inputrelololo_d = new double*[dim];
+      inputimhihihi_d = new double*[dim];
+      inputimlohihi_d = new double*[dim];
+      inputimhilohi_d = new double*[dim];
+      inputimlolohi_d = new double*[dim];
+      inputimhihilo_d = new double*[dim];
+      inputimlohilo_d = new double*[dim];
+      inputimhilolo_d = new double*[dim];
+      inputimlololo_d = new double*[dim];
+      outputrehihihi_d = new double**[dim];
+      outputrelohihi_d = new double**[dim];
+      outputrehilohi_d = new double**[dim];
+      outputrelolohi_d = new double**[dim];
+      outputrehihilo_d = new double**[dim];
+      outputrelohilo_d = new double**[dim];
+      outputrehilolo_d = new double**[dim];
+      outputrelololo_d = new double**[dim];
+      outputimhihihi_d = new double**[dim];
+      outputimlohihi_d = new double**[dim];
+      outputimhilohi_d = new double**[dim];
+      outputimlolohi_d = new double**[dim];
+      outputimhihilo_d = new double**[dim];
+      outputimlohilo_d = new double**[dim];
+      outputimhilolo_d = new double**[dim];
+      outputimlololo_d = new double**[dim];
+      funvalrehihihi_d = new double*[dim];
+      funvalrelohihi_d = new double*[dim];
+      funvalrehilohi_d = new double*[dim];
+      funvalrelolohi_d = new double*[dim];
+      funvalrehihilo_d = new double*[dim];
+      funvalrelohilo_d = new double*[dim];
+      funvalrehilolo_d = new double*[dim];
+      funvalrelololo_d = new double*[dim];
+      funvalimhihihi_d = new double*[dim];
+      funvalimlohihi_d = new double*[dim];
+      funvalimhilohi_d = new double*[dim];
+      funvalimlolohi_d = new double*[dim];
+      funvalimhihilo_d = new double*[dim];
+      funvalimlohilo_d = new double*[dim];
+      funvalimhilolo_d = new double*[dim];
+      funvalimlololo_d = new double*[dim];
+      jacvalrehihihi_d = new double**[degp1];
+      jacvalrelohihi_d = new double**[degp1];
+      jacvalrehilohi_d = new double**[degp1];
+      jacvalrelolohi_d = new double**[degp1];
+      jacvalrehihilo_d = new double**[degp1];
+      jacvalrelohilo_d = new double**[degp1];
+      jacvalrehilolo_d = new double**[degp1];
+      jacvalrelololo_d = new double**[degp1];
+      jacvalimhihihi_d = new double**[degp1];
+      jacvalimlohihi_d = new double**[degp1];
+      jacvalimhilohi_d = new double**[degp1];
+      jacvalimlolohi_d = new double**[degp1];
+      jacvalimhihilo_d = new double**[degp1];
+      jacvalimlohilo_d = new double**[degp1];
+      jacvalimhilolo_d = new double**[degp1];
+      jacvalimlololo_d = new double**[degp1];
+   }
+   cmplx8_allocate_inoutfunjac(dim,deg,mode,
+       inputrehihihi_h,inputrelohihi_h,inputrehilohi_h,inputrelolohi_h,
+       inputrehihilo_h,inputrelohilo_h,inputrehilolo_h,inputrelololo_h,
+       inputimhihihi_h,inputimlohihi_h,inputimhilohi_h,inputimlolohi_h,
+       inputimhihilo_h,inputimlohilo_h,inputimhilolo_h,inputimlololo_h,
+       inputrehihihi_d,inputrelohihi_d,inputrehilohi_d,inputrelolohi_d,
+       inputrehihilo_d,inputrelohilo_d,inputrehilolo_d,inputrelololo_d,
+       inputimhihihi_d,inputimlohihi_d,inputimhilohi_d,inputimlolohi_d,
+       inputimhihilo_d,inputimlohilo_d,inputimhilolo_d,inputimlololo_d,
+       outputrehihihi_h,outputrelohihi_h,outputrehilohi_h,outputrelolohi_h,
+       outputrehihilo_h,outputrelohilo_h,outputrehilolo_h,outputrelololo_h,
+       outputimhihihi_h,outputimlohihi_h,outputimhilohi_h,outputimlolohi_h,
+       outputimhihilo_h,outputimlohilo_h,outputimhilolo_h,outputimlololo_h,
+       outputrehihihi_d,outputrelohihi_d,outputrehilohi_d,outputrelolohi_d,
+       outputrehihilo_d,outputrelohilo_d,outputrehilolo_d,outputrelololo_d,
+       outputimhihihi_d,outputimlohihi_d,outputimhilohi_d,outputimlolohi_d,
+       outputimhihilo_d,outputimlohilo_d,outputimhilolo_d,outputimlololo_d,
+       funvalrehihihi_h,funvalrelohihi_h,funvalrehilohi_h,funvalrelolohi_h,
+       funvalrehihilo_h,funvalrelohilo_h,funvalrehilolo_h,funvalrelololo_h,
+       funvalimhihihi_h,funvalimlohihi_h,funvalimhilohi_h,funvalimlolohi_h,
+       funvalimhihilo_h,funvalimlohilo_h,funvalimhilolo_h,funvalimlololo_h,
+       funvalrehihihi_d,funvalrelohihi_d,funvalrehilohi_d,funvalrelolohi_d,
+       funvalrehihilo_d,funvalrelohilo_d,funvalrehilolo_d,funvalrelololo_d,
+       funvalimhihihi_d,funvalimlohihi_d,funvalimhilohi_d,funvalimlolohi_d,
+       funvalimhihilo_d,funvalimlohilo_d,funvalimhilolo_d,funvalimlololo_d,
+       jacvalrehihihi_h,jacvalrelohihi_h,jacvalrehilohi_h,jacvalrelolohi_h,
+       jacvalrehihilo_h,jacvalrelohilo_h,jacvalrehilolo_h,jacvalrelololo_h,
+       jacvalimhihihi_h,jacvalimlohihi_h,jacvalimhilohi_h,jacvalimlolohi_h,
+       jacvalimhihilo_h,jacvalimlohilo_h,jacvalimhilolo_h,jacvalimlololo_h,
+       jacvalrehihihi_d,jacvalrelohihi_d,jacvalrehilohi_d,jacvalrelolohi_d,
+       jacvalrehihilo_d,jacvalrelohilo_d,jacvalrehilolo_d,jacvalrelololo_d,
+       jacvalimhihihi_d,jacvalimlohihi_d,jacvalimhilohi_d,jacvalimlolohi_d,
+       jacvalimhihilo_d,jacvalimlohilo_d,jacvalimhilolo_d,jacvalimlololo_d);
+/*
+ * 2. allocate space to solve the linearized power series system
+ */
+   // The solution x(t) to jacval(t)*x(t) = -funval(t) in linearized
+   // format is a series truncated at degree deg, with as coefficients
+   // arrays of dimension dim.
+
+   double **rhsrehihihi_h;
+   double **rhsrelohihi_h;
+   double **rhsrehilohi_h;
+   double **rhsrelolohi_h;
+   double **rhsrehihilo_h;
+   double **rhsrelohilo_h;
+   double **rhsrehilolo_h;
+   double **rhsrelololo_h;
+   double **rhsimhihihi_h;
+   double **rhsimlohihi_h;
+   double **rhsimhilohi_h;
+   double **rhsimlolohi_h;
+   double **rhsimhihilo_h;
+   double **rhsimlohilo_h;
+   double **rhsimhilolo_h;
+   double **rhsimlololo_h;
+   double **rhsrehihihi_d;
+   double **rhsrelohihi_d;
+   double **rhsrehilohi_d;
+   double **rhsrelolohi_d;
+   double **rhsrehihilo_d;
+   double **rhsrelohilo_d;
+   double **rhsrehilolo_d;
+   double **rhsrelololo_d;
+   double **rhsimhihihi_d;
+   double **rhsimlohihi_d;
+   double **rhsimhilohi_d;
+   double **rhsimlolohi_d;
+   double **rhsimhihilo_d;
+   double **rhsimlohilo_d;
+   double **rhsimhilolo_d;
+   double **rhsimlololo_d;
+
+   double **urhsrehihihi_h;
+   double **urhsrelohihi_h;
+   double **urhsrehilohi_h;
+   double **urhsrelolohi_h;
+   double **urhsrehihilo_h;
+   double **urhsrelohilo_h;
+   double **urhsrehilolo_h;
+   double **urhsrelololo_h;
+   double **urhsimhihihi_h;
+   double **urhsimlohihi_h;
+   double **urhsimhilohi_h;
+   double **urhsimlolohi_h;
+   double **urhsimhihilo_h;
+   double **urhsimlohilo_h;
+   double **urhsimhilolo_h;
+   double **urhsimlololo_h;
+   double **urhsrehihihi_d;
+   double **urhsrelohihi_d;
+   double **urhsrehilohi_d;
+   double **urhsrelolohi_d;
+   double **urhsrehihilo_d;
+   double **urhsrelohilo_d;
+   double **urhsrehilolo_d;
+   double **urhsrelololo_d;
+   double **urhsimhihihi_d;
+   double **urhsimlohihi_d;
+   double **urhsimhilohi_d;
+   double **urhsimlolohi_d;
+   double **urhsimhihilo_d;
+   double **urhsimlohilo_d;
+   double **urhsimhilolo_d;
+   double **urhsimlololo_d;
+
+   double **solrehihihi_h;
+   double **solrelohihi_h;
+   double **solrehilohi_h;
+   double **solrelolohi_h;
+   double **solrehihilo_h;
+   double **solrelohilo_h;
+   double **solrehilolo_h;
+   double **solrelololo_h;
+   double **solimhihihi_h;
+   double **solimlohihi_h;
+   double **solimhilohi_h;
+   double **solimlolohi_h;
+   double **solimhihilo_h;
+   double **solimlohilo_h;
+   double **solimhilolo_h;
+   double **solimlololo_h;
+   double **solrehihihi_d;
+   double **solrelohihi_d;
+   double **solrehilohi_d;
+   double **solrelolohi_d;
+   double **solrehihilo_d;
+   double **solrelohilo_d;
+   double **solrehilolo_d;
+   double **solrelololo_d;
+   double **solimhihihi_d;
+   double **solimlohihi_d;
+   double **solimhilohi_d;
+   double **solimlolohi_d;
+   double **solimhihilo_d;
+   double **solimlohilo_d;
+   double **solimhilolo_d;
+   double **solimlololo_d;
+
+   double **Qrehihihi_h;
+   double **Qrelohihi_h;
+   double **Qrehilohi_h;
+   double **Qrelolohi_h;
+   double **Qrehihilo_h;
+   double **Qrelohilo_h;
+   double **Qrehilolo_h;
+   double **Qrelololo_h;
+   double **Qimhihihi_h;
+   double **Qimlohihi_h;
+   double **Qimhilohi_h;
+   double **Qimlolohi_h;
+   double **Qimhihilo_h;
+   double **Qimlohilo_h;
+   double **Qimhilolo_h;
+   double **Qimlololo_h;
+   double **Qrehihihi_d;
+   double **Qrelohihi_d;
+   double **Qrehilohi_d;
+   double **Qrelolohi_d;
+   double **Qrehihilo_d;
+   double **Qrelohilo_d;
+   double **Qrehilolo_d;
+   double **Qrelololo_d;
+   double **Qimhihihi_d;
+   double **Qimlohihi_d;
+   double **Qimhilohi_d;
+   double **Qimlolohi_d;
+   double **Qimhihilo_d;
+   double **Qimlohilo_d;
+   double **Qimhilolo_d;
+   double **Qimlololo_d;
+
+   double **Rrehihihi_h;
+   double **Rrelohihi_h;
+   double **Rrehilohi_h;
+   double **Rrelolohi_h;
+   double **Rrehihilo_h;
+   double **Rrelohilo_h;
+   double **Rrehilolo_h;
+   double **Rrelololo_h;
+   double **Rimhihihi_h;
+   double **Rimlohihi_h;
+   double **Rimhilohi_h;
+   double **Rimlolohi_h;
+   double **Rimhihilo_h;
+   double **Rimlohilo_h;
+   double **Rimhilolo_h;
+   double **Rimlololo_h;
+   double **Rrehihihi_d;
+   double **Rrelohihi_d;
+   double **Rrehilohi_d;
+   double **Rrelolohi_d;
+   double **Rrehihilo_d;
+   double **Rrelohilo_d;
+   double **Rrehilolo_d;
+   double **Rrelololo_d;
+   double **Rimhihihi_d;
+   double **Rimlohihi_d;
+   double **Rimhilohi_d;
+   double **Rimlolohi_d;
+   double **Rimhihilo_d;
+   double **Rimlohilo_d;
+   double **Rimhilolo_d;
+   double **Rimlololo_d;
+
+   if((mode == 1) || (mode == 2))
+   {
+      rhsrehihihi_h = new double*[degp1];
+      rhsrelohihi_h = new double*[degp1];
+      rhsrehilohi_h = new double*[degp1];
+      rhsrelolohi_h = new double*[degp1];
+      rhsrehihilo_h = new double*[degp1];
+      rhsrelohilo_h = new double*[degp1];
+      rhsrehilolo_h = new double*[degp1];
+      rhsrelololo_h = new double*[degp1];
+      rhsimhihihi_h = new double*[degp1];
+      rhsimlohihi_h = new double*[degp1];
+      rhsimhilohi_h = new double*[degp1];
+      rhsimlolohi_h = new double*[degp1];
+      rhsimhihilo_h = new double*[degp1];
+      rhsimlohilo_h = new double*[degp1];
+      rhsimhilolo_h = new double*[degp1];
+      rhsimlololo_h = new double*[degp1];
+
+      urhsrehihihi_h = new double*[degp1];
+      urhsrelohihi_h = new double*[degp1];
+      urhsrehilohi_h = new double*[degp1];
+      urhsrelolohi_h = new double*[degp1];
+      urhsrehihilo_h = new double*[degp1];
+      urhsrelohilo_h = new double*[degp1];
+      urhsrehilolo_h = new double*[degp1];
+      urhsrelololo_h = new double*[degp1];
+      urhsimhihihi_h = new double*[degp1];
+      urhsimlohihi_h = new double*[degp1];
+      urhsimhilohi_h = new double*[degp1];
+      urhsimlolohi_h = new double*[degp1];
+      urhsimhihilo_h = new double*[degp1];
+      urhsimlohilo_h = new double*[degp1];
+      urhsimhilolo_h = new double*[degp1];
+      urhsimlololo_h = new double*[degp1];
+
+      solrehihihi_h = new double*[degp1];
+      solrelohihi_h = new double*[degp1];
+      solrehilohi_h = new double*[degp1];
+      solrelolohi_h = new double*[degp1];
+      solrehihilo_h = new double*[degp1];
+      solrelohilo_h = new double*[degp1];
+      solrehilolo_h = new double*[degp1];
+      solrelololo_h = new double*[degp1];
+      solimhihihi_h = new double*[degp1];
+      solimlohihi_h = new double*[degp1];
+      solimhilohi_h = new double*[degp1];
+      solimlolohi_h = new double*[degp1];
+      solimhihilo_h = new double*[degp1];
+      solimlohilo_h = new double*[degp1];
+      solimhilolo_h = new double*[degp1];
+      solimlololo_h = new double*[degp1];
+
+      Qrehihihi_h = new double*[dim];
+      Qrelohihi_h = new double*[dim];
+      Qrehilohi_h = new double*[dim];
+      Qrelolohi_h = new double*[dim];
+      Qrehihilo_h = new double*[dim];
+      Qrelohilo_h = new double*[dim];
+      Qrehilolo_h = new double*[dim];
+      Qrelololo_h = new double*[dim];
+      Qimhihihi_h = new double*[dim];
+      Qimlohihi_h = new double*[dim];
+      Qimhilohi_h = new double*[dim];
+      Qimlolohi_h = new double*[dim];
+      Qimhihilo_h = new double*[dim];
+      Qimlohilo_h = new double*[dim];
+      Qimhilolo_h = new double*[dim];
+      Qimlololo_h = new double*[dim];
+
+      Rrehihihi_h = new double*[dim];
+      Rrelohihi_h = new double*[dim];
+      Rrehilohi_h = new double*[dim];
+      Rrelolohi_h = new double*[dim];
+      Rrehihilo_h = new double*[dim];
+      Rrelohilo_h = new double*[dim];
+      Rrehilolo_h = new double*[dim];
+      Rrelololo_h = new double*[dim];
+      Rimhihihi_h = new double*[dim];
+      Rimlohihi_h = new double*[dim];
+      Rimhilohi_h = new double*[dim];
+      Rimlolohi_h = new double*[dim];
+      Rimhihilo_h = new double*[dim];
+      Rimlohilo_h = new double*[dim];
+      Rimhilolo_h = new double*[dim];
+      Rimlololo_h = new double*[dim];
+   }
+   if((mode == 0) || (mode == 2))
+   {
+      rhsrehihihi_d = new double*[degp1];
+      rhsrelohihi_d = new double*[degp1];
+      rhsrehilohi_d = new double*[degp1];
+      rhsrelolohi_d = new double*[degp1];
+      rhsrehihilo_d = new double*[degp1];
+      rhsrelohilo_d = new double*[degp1];
+      rhsrehilolo_d = new double*[degp1];
+      rhsrelololo_d = new double*[degp1];
+      rhsimhihihi_d = new double*[degp1];
+      rhsimlohihi_d = new double*[degp1];
+      rhsimhilohi_d = new double*[degp1];
+      rhsimlolohi_d = new double*[degp1];
+      rhsimhihilo_d = new double*[degp1];
+      rhsimlohilo_d = new double*[degp1];
+      rhsimhilolo_d = new double*[degp1];
+      rhsimlololo_d = new double*[degp1];
+
+      urhsrehihihi_d = new double*[degp1];
+      urhsrelohihi_d = new double*[degp1];
+      urhsrehilohi_d = new double*[degp1];
+      urhsrelolohi_d = new double*[degp1];
+      urhsrehihilo_d = new double*[degp1];
+      urhsrelohilo_d = new double*[degp1];
+      urhsrehilolo_d = new double*[degp1];
+      urhsrelololo_d = new double*[degp1];
+      urhsimhihihi_d = new double*[degp1];
+      urhsimlohihi_d = new double*[degp1];
+      urhsimhilohi_d = new double*[degp1];
+      urhsimlolohi_d = new double*[degp1];
+      urhsimhihilo_d = new double*[degp1];
+      urhsimlohilo_d = new double*[degp1];
+      urhsimhilolo_d = new double*[degp1];
+      urhsimlololo_d = new double*[degp1];
+
+      solrehihihi_d = new double*[degp1];
+      solrelohihi_d = new double*[degp1];
+      solrehilohi_d = new double*[degp1];
+      solrelolohi_d = new double*[degp1];
+      solrehihilo_d = new double*[degp1];
+      solrelohilo_d = new double*[degp1];
+      solrehilolo_d = new double*[degp1];
+      solrelololo_d = new double*[degp1];
+      solimhihihi_d = new double*[degp1];
+      solimlohihi_d = new double*[degp1];
+      solimhilohi_d = new double*[degp1];
+      solimlolohi_d = new double*[degp1];
+      solimhihilo_d = new double*[degp1];
+      solimlohilo_d = new double*[degp1];
+      solimhilolo_d = new double*[degp1];
+      solimlololo_d = new double*[degp1];
+
+      Qrehihihi_d = new double*[dim];
+      Qrelohihi_d = new double*[dim];
+      Qrehilohi_d = new double*[dim];
+      Qrelolohi_d = new double*[dim];
+      Qrehihilo_d = new double*[dim];
+      Qrelohilo_d = new double*[dim];
+      Qrehilolo_d = new double*[dim];
+      Qrelololo_d = new double*[dim];
+      Qimhihihi_d = new double*[dim];
+      Qimlohihi_d = new double*[dim];
+      Qimhilohi_d = new double*[dim];
+      Qimlolohi_d = new double*[dim];
+      Qimhihilo_d = new double*[dim];
+      Qimlohilo_d = new double*[dim];
+      Qimhilolo_d = new double*[dim];
+      Qimlololo_d = new double*[dim];
+
+      Rrehihihi_d = new double*[dim];
+      Rrelohihi_d = new double*[dim];
+      Rrehilohi_d = new double*[dim];
+      Rrelolohi_d = new double*[dim];
+      Rrehihilo_d = new double*[dim];
+      Rrelohilo_d = new double*[dim];
+      Rrehilolo_d = new double*[dim];
+      Rrelololo_d = new double*[dim];
+      Rimhihihi_d = new double*[dim];
+      Rimlohihi_d = new double*[dim];
+      Rimhilohi_d = new double*[dim];
+      Rimlolohi_d = new double*[dim];
+      Rimhihilo_d = new double*[dim];
+      Rimlohilo_d = new double*[dim];
+      Rimhilolo_d = new double*[dim];
+      Rimlololo_d = new double*[dim];
+   }
+   cmplx8_allocate_rhsqrsol(dim,deg,mode,
+       rhsrehihihi_h,rhsrelohihi_h,rhsrehilohi_h,rhsrelolohi_h,
+       rhsrehihilo_h,rhsrelohilo_h,rhsrehilolo_h,rhsrelololo_h,
+       rhsimhihihi_h,rhsimlohihi_h,rhsimhilohi_h,rhsimlolohi_h,
+       rhsimhihilo_h,rhsimlohilo_h,rhsimhilolo_h,rhsimlololo_h,
+       rhsrehihihi_d,rhsrelohihi_d,rhsrehilohi_d,rhsrelolohi_d,
+       rhsrehihilo_d,rhsrelohilo_d,rhsrehilolo_d,rhsrelololo_d,
+       rhsimhihihi_d,rhsimlohihi_d,rhsimhilohi_d,rhsimlolohi_d,
+       rhsimhihilo_d,rhsimlohilo_d,rhsimhilolo_d,rhsimlololo_d,
+       urhsrehihihi_h,urhsrelohihi_h,urhsrehilohi_h,urhsrelolohi_h,
+       urhsrehihilo_h,urhsrelohilo_h,urhsrehilolo_h,urhsrelololo_h,
+       urhsimhihihi_h,urhsimlohihi_h,urhsimhilohi_h,urhsimlolohi_h,
+       urhsimhihilo_h,urhsimlohilo_h,urhsimhilolo_h,urhsimlololo_h,
+       urhsrehihihi_d,urhsrelohihi_d,urhsrehilohi_d,urhsrelolohi_d,
+       urhsrehihilo_d,urhsrelohilo_d,urhsrehilolo_d,urhsrelololo_d,
+       urhsimhihihi_d,urhsimlohihi_d,urhsimhilohi_d,urhsimlolohi_d,
+       urhsimhihilo_d,urhsimlohilo_d,urhsimhilolo_d,urhsimlololo_d,
+       Qrehihihi_h,Qrelohihi_h,Qrehilohi_h,Qrelolohi_h,
+       Qrehihilo_h,Qrelohilo_h,Qrehilolo_h,Qrelololo_h,
+       Qimhihihi_h,Qimlohihi_h,Qimhilohi_h,Qimlolohi_h,
+       Qimhihilo_h,Qimlohilo_h,Qimhilolo_h,Qimlololo_h,
+       Qrehihihi_d,Qrelohihi_d,Qrehilohi_d,Qrelolohi_d,
+       Qrehihilo_d,Qrelohilo_d,Qrehilolo_d,Qrelololo_d,
+       Qimhihihi_d,Qimlohihi_d,Qimhilohi_d,Qimlolohi_d,
+       Qimhihilo_d,Qimlohilo_d,Qimhilolo_d,Qimlololo_d,
+       Rrehihihi_h,Rrelohihi_h,Rrehilohi_h,Rrelolohi_h,
+       Rrehihilo_h,Rrelohilo_h,Rrehilolo_h,Rrelololo_h,
+       Rimhihihi_h,Rimlohihi_h,Rimhilohi_h,Rimlolohi_h,
+       Rimhihilo_h,Rimlohilo_h,Rimhilolo_h,Rimlololo_h,
+       Rrehihihi_d,Rrelohihi_d,Rrehilohi_d,Rrelolohi_d,
+       Rrehihilo_d,Rrelohilo_d,Rrehilolo_d,Rrelololo_d,
+       Rimhihihi_d,Rimlohihi_d,Rimhilohi_d,Rimlolohi_d,
+       Rimhihilo_d,Rimlohilo_d,Rimhilolo_d,Rimlololo_d,
+       solrehihihi_h,solrelohihi_h,solrehilohi_h,solrelolohi_h,
+       solrehihilo_h,solrelohilo_h,solrehilolo_h,solrelololo_h,
+       solimhihihi_h,solimlohihi_h,solimhilohi_h,solimlolohi_h,
+       solimhihilo_h,solimlohilo_h,solimhilolo_h,solimlololo_h,
+       solrehihihi_d,solrelohihi_d,solrehilohi_d,solrelolohi_d,
+       solrehihilo_d,solrelohilo_d,solrehilolo_d,solrelololo_d,
+       solimhihihi_d,solimlohihi_d,solimhilohi_d,solimlolohi_d,
+       solimhihilo_d,solimlohilo_d,solimhilolo_d,solimlololo_d);
+
+   if(vrblvl > 0) cout << "setting up the test solution ..." << endl;
+
+   double **testsolrehihihi = new double*[dim];
+   double **testsolrelohihi = new double*[dim];
+   double **testsolrehilohi = new double*[dim];
+   double **testsolrelolohi = new double*[dim];
+   double **testsolrehihilo = new double*[dim];
+   double **testsolrelohilo = new double*[dim];
+   double **testsolrehilolo = new double*[dim];
+   double **testsolrelololo = new double*[dim];
+   double **testsolimhihihi = new double*[dim];
+   double **testsolimlohihi = new double*[dim];
+   double **testsolimhilohi = new double*[dim];
+   double **testsolimlolohi = new double*[dim];
+   double **testsolimhihilo = new double*[dim];
+   double **testsolimlohilo = new double*[dim];
+   double **testsolimhilolo = new double*[dim];
+   double **testsolimlololo = new double*[dim];
+
+   cmplx8_row_setup(dim,deg,nbr,nvr,idx,
+      cstrehihihi,cstrelohihi,cstrehilohi,cstrelolohi,
+      cstrehihilo,cstrelohilo,cstrehilolo,cstrelololo,
+      cstimhihihi,cstimlohihi,cstimhilohi,cstimlolohi,
+      cstimhihilo,cstimlohilo,cstimhilolo,cstimlololo,
+      cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+      cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+      cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+      cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
+      testsolrehihihi,testsolrelohihi,testsolrehilohi,testsolrelolohi,
+      testsolrehihilo,testsolrelohilo,testsolrehilolo,testsolrelololo,
+      testsolimhihihi,testsolimlohihi,testsolimhilohi,testsolimlolohi,
+      testsolimhihilo,testsolimlohilo,testsolimhilolo,testsolimlololo,
+      inputrehihihi_h,inputrelohihi_h,inputrehilohi_h,inputrelolohi_h,
+      inputrehihilo_h,inputrelohilo_h,inputrehilolo_h,inputrelololo_h,
+      inputimhihihi_h,inputimlohihi_h,inputimhilohi_h,inputimlolohi_h,
+      inputimhihilo_h,inputimlohilo_h,inputimhilolo_h,inputimlololo_h,
+      inputrehihihi_d,inputrelohihi_d,inputrehilohi_d,inputrelolohi_d,
+      inputrehihilo_d,inputrelohilo_d,inputrehilolo_d,inputrelololo_d,
+      inputimhihihi_d,inputimlohihi_d,inputimhilohi_d,inputimlolohi_d,
+      inputimhihilo_d,inputimlohilo_d,inputimhilolo_d,inputimlololo_d,
+      outputrehihihi_h,outputrelohihi_h,
+      outputrehilohi_h,outputrelolohi_h,
+      outputrehihilo_h,outputrelohilo_h,
+      outputrehilolo_h,outputrelololo_h,
+      outputimhihihi_h,outputimlohihi_h,
+      outputimhilohi_h,outputimlolohi_h,
+      outputimhihilo_h,outputimlohilo_h,
+      outputimhilolo_h,outputimlololo_h,
+      outputrehihihi_d,outputrelohihi_d,
+      outputrehilohi_d,outputrelolohi_d,
+      outputrehihilo_d,outputrelohilo_d,
+      outputrehilolo_d,outputrelololo_d,
+      outputimhihihi_d,outputimlohihi_d,
+      outputimhilohi_d,outputimlolohi_d,
+      outputimhihilo_d,outputimlohilo_d,
+      outputimhilolo_d,outputimlololo_d,mode,vrblvl);
+
+   double *workvecrehihihi = new double[dim];
+   double *workvecrelohihi = new double[dim];
+   double *workvecrehilohi = new double[dim];
+   double *workvecrelolohi = new double[dim];
+   double *workvecrehihilo = new double[dim];
+   double *workvecrelohilo = new double[dim];
+   double *workvecrehilolo = new double[dim];
+   double *workvecrelololo = new double[dim];
+   double *workvecimhihihi = new double[dim];
+   double *workvecimlohihi = new double[dim];
+   double *workvecimhilohi = new double[dim];
+   double *workvecimlolohi = new double[dim];
+   double *workvecimhihilo = new double[dim];
+   double *workvecimlohilo = new double[dim];
+   double *workvecimhilolo = new double[dim];
+   double *workvecimlololo = new double[dim];
+
+   double **resvecrehihihi = new double*[degp1];
+   double **resvecrelohihi = new double*[degp1];
+   double **resvecrehilohi = new double*[degp1];
+   double **resvecrelolohi = new double*[degp1];
+   double **resvecrehihilo = new double*[degp1];
+   double **resvecrelohilo = new double*[degp1];
+   double **resvecrehilolo = new double*[degp1];
+   double **resvecrelololo = new double*[degp1];
+   double **resvecimhihihi = new double*[degp1];
+   double **resvecimlohihi = new double*[degp1];
+   double **resvecimhilohi = new double*[degp1];
+   double **resvecimlolohi = new double*[degp1];
+   double **resvecimhihilo = new double*[degp1];
+   double **resvecimlohilo = new double*[degp1];
+   double **resvecimhilolo = new double*[degp1];
+   double **resvecimlololo = new double*[degp1];
+
+   for(int i=0; i<degp1; i++)
+   {
+      resvecrehihihi[i] = new double[dim];
+      resvecrelohihi[i] = new double[dim];
+      resvecrehilohi[i] = new double[dim];
+      resvecrelolohi[i] = new double[dim];
+      resvecrehihilo[i] = new double[dim];
+      resvecrelohilo[i] = new double[dim];
+      resvecrehilolo[i] = new double[dim];
+      resvecrelololo[i] = new double[dim];
+      resvecimhihihi[i] = new double[dim];
+      resvecimlohihi[i] = new double[dim];
+      resvecimhilohi[i] = new double[dim];
+      resvecimlolohi[i] = new double[dim];
+      resvecimhihilo[i] = new double[dim];
+      resvecimlohilo[i] = new double[dim];
+      resvecimhilolo[i] = new double[dim];
+      resvecimlololo[i] = new double[dim];
+   }
+   double resmaxhihihi,resmaxlohihi,resmaxhilohi,resmaxlolohi;
+   double resmaxhihilo,resmaxlohilo,resmaxhilolo,resmaxlololo;
+
+   if(vrblvl > 0) cout << scientific << setprecision(16);
+
+   int upidx_h = 0;
+   int bsidx_h = 0;
+   int upidx_d = 0;
+   int bsidx_d = 0;
+   bool zeroQ_h = true;
+   bool zeroQ_d = true;
+   bool noqr_h = false;
+   bool noqr_d = false;
+   int tailidx_h = 1;
+   int tailidx_d = 1;
+   int wrkdeg = 0; // working degree of precision
+   int stepcnt = 0;
+
+   double totcnvlapsedms = 0.0;
+   double totqrlapsedms = 0.0;
+   double totqtblapsedms = 0.0;
+   double totbslapsedms = 0.0;
+   double totupdlapsedms = 0.0;
+   double totreslapsedms = 0.0;
+
+   struct timeval begintime,endtime; // wall clock time of computations
+   gettimeofday(&begintime,0);
+
+   for(int step=0; step<nbsteps; step++)
+   {
+      if(vrblvl > 0)
+         cout << "*** running Newton step " << step
+              << " at degree " << wrkdeg << " ***" << endl;
+
+      cmplx8_row_newton_qrstep
+         (szt,nbt,dim,wrkdeg,&tailidx_h,&tailidx_d,nbr,nvr,idx,
+          cstrehihihi,cstrelohihi,cstrehilohi,cstrelolohi,
+          cstrehihilo,cstrelohilo,cstrehilolo,cstrelololo,
+          cstimhihihi,cstimlohihi,cstimhilohi,cstimlolohi,
+          cstimhihilo,cstimlohilo,cstimhilolo,cstimlololo,
+          cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+          cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+          cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+          cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,dpr,
+          inputrehihihi_h,inputrelohihi_h,inputrehilohi_h,inputrelolohi_h,
+          inputrehihilo_h,inputrelohilo_h,inputrehilolo_h,inputrelololo_h,
+          inputimhihihi_h,inputimlohihi_h,inputimhilohi_h,inputimlolohi_h,
+          inputimhihilo_h,inputimlohilo_h,inputimhilolo_h,inputimlololo_h,
+          inputrehihihi_d,inputrelohihi_d,inputrehilohi_d,inputrelolohi_d,
+          inputrehihilo_d,inputrelohilo_d,inputrehilolo_d,inputrelololo_d,
+          inputimhihihi_d,inputimlohihi_d,inputimhilohi_d,inputimlolohi_d,
+          inputimhihilo_d,inputimlohilo_d,inputimhilolo_d,inputimlololo_d,
+          outputrehihihi_h,outputrelohihi_h,outputrehilohi_h,outputrelolohi_h,
+          outputrehihilo_h,outputrelohilo_h,outputrehilolo_h,outputrelololo_h,
+          outputimhihihi_h,outputimlohihi_h,outputimhilohi_h,outputimlolohi_h,
+          outputimhihilo_h,outputimlohilo_h,outputimhilolo_h,outputimlololo_h,
+          outputrehihihi_d,outputrelohihi_d,outputrehilohi_d,outputrelolohi_d,
+          outputrehihilo_d,outputrelohilo_d,outputrehilolo_d,outputrelololo_d,
+          outputimhihihi_d,outputimlohihi_d,outputimhilohi_d,outputimlolohi_d,
+          outputimhihilo_d,outputimlohilo_d,outputimhilolo_d,outputimlololo_d,
+          funvalrehihihi_h,funvalrelohihi_h,funvalrehilohi_h,funvalrelolohi_h,
+          funvalrehihilo_h,funvalrelohilo_h,funvalrehilolo_h,funvalrelololo_h,
+          funvalimhihihi_h,funvalimlohihi_h,funvalimhilohi_h,funvalimlolohi_h,
+          funvalimhihilo_h,funvalimlohilo_h,funvalimhilolo_h,funvalimlololo_h,
+          funvalrehihihi_d,funvalrelohihi_d,funvalrehilohi_d,funvalrelolohi_d,
+          funvalrehihilo_d,funvalrelohilo_d,funvalrehilolo_d,funvalrelololo_d,
+          funvalimhihihi_d,funvalimlohihi_d,funvalimhilohi_d,funvalimlolohi_d,
+          funvalimhihilo_d,funvalimlohilo_d,funvalimhilolo_d,funvalimlololo_d,
+          jacvalrehihihi_h,jacvalrelohihi_h,jacvalrehilohi_h,jacvalrelolohi_h,
+          jacvalrehihilo_h,jacvalrelohilo_h,jacvalrehilolo_h,jacvalrelololo_h,
+          jacvalimhihihi_h,jacvalimlohihi_h,jacvalimhilohi_h,jacvalimlolohi_h,
+          jacvalimhihilo_h,jacvalimlohilo_h,jacvalimhilolo_h,jacvalimlololo_h,
+          jacvalrehihihi_d,jacvalrelohihi_d,jacvalrehilohi_d,jacvalrelolohi_d,
+          jacvalrehihilo_d,jacvalrelohilo_d,jacvalrehilolo_d,jacvalrelololo_d,
+          jacvalimhihihi_d,jacvalimlohihi_d,jacvalimhilohi_d,jacvalimlolohi_d,
+          jacvalimhihilo_d,jacvalimlohilo_d,jacvalimhilolo_d,jacvalimlololo_d,
+          rhsrehihihi_h,rhsrelohihi_h,rhsrehilohi_h,rhsrelolohi_h,
+          rhsrehihilo_h,rhsrelohilo_h,rhsrehilolo_h,rhsrelololo_h,
+          rhsimhihihi_h,rhsimlohihi_h,rhsimhilohi_h,rhsimlolohi_h,
+          rhsimhihilo_h,rhsimlohilo_h,rhsimhilolo_h,rhsimlololo_h,
+          rhsrehihihi_d,rhsrelohihi_d,rhsrehilohi_d,rhsrelolohi_d,
+          rhsrehihilo_d,rhsrelohilo_d,rhsrehilolo_d,rhsrelololo_d,
+          rhsimhihihi_d,rhsimlohihi_d,rhsimhilohi_d,rhsimlolohi_d,
+          rhsimhihilo_d,rhsimlohilo_d,rhsimhilolo_d,rhsimlololo_d,
+          urhsrehihihi_h,urhsrelohihi_h,urhsrehilohi_h,urhsrelolohi_h,
+          urhsrehihilo_h,urhsrelohilo_h,urhsrehilolo_h,urhsrelololo_h,
+          urhsimhihihi_h,urhsimlohihi_h,urhsimhilohi_h,urhsimlolohi_h,
+          urhsimhihilo_h,urhsimlohilo_h,urhsimhilolo_h,urhsimlololo_h,
+          urhsrehihihi_d,urhsrelohihi_d,urhsrehilohi_d,urhsrelolohi_d,
+          urhsrehihilo_d,urhsrelohilo_d,urhsrehilolo_d,urhsrelololo_d,
+          urhsimhihihi_d,urhsimlohihi_d,urhsimhilohi_d,urhsimlolohi_d,
+          urhsimhihilo_d,urhsimlohilo_d,urhsimhilolo_d,urhsimlololo_d,
+          solrehihihi_h,solrelohihi_h,solrehilohi_h,solrelolohi_h,
+          solrehihilo_h,solrelohilo_h,solrehilolo_h,solrelololo_h,
+          solimhihihi_h,solimlohihi_h,solimhilohi_h,solimlolohi_h,
+          solimhihilo_h,solimlohilo_h,solimhilolo_h,solimlololo_h,
+          solrehihihi_d,solrelohihi_d,solrehilohi_d,solrelolohi_d,
+          solrehihilo_d,solrelohilo_d,solrehilolo_d,solrelololo_d,
+          solimhihihi_d,solimlohihi_d,solimhilohi_d,solimlolohi_d,
+          solimhihilo_d,solimlohilo_d,solimhilolo_d,solimlololo_d,
+          Qrehihihi_h,Qrelohihi_h,Qrehilohi_h,Qrelolohi_h,
+          Qrehihilo_h,Qrelohilo_h,Qrehilolo_h,Qrelololo_h,
+          Qimhihihi_h,Qimlohihi_h,Qimhilohi_h,Qimlolohi_h,
+          Qimhihilo_h,Qimlohilo_h,Qimhilolo_h,Qimlololo_h,
+          Qrehihihi_d,Qrelohihi_d,Qrehilohi_d,Qrelolohi_d,
+          Qrehihilo_d,Qrelohilo_d,Qrehilolo_d,Qrelololo_d,
+          Qimhihihi_d,Qimlohihi_d,Qimhilohi_d,Qimlolohi_d,
+          Qimhihilo_d,Qimlohilo_d,Qimhilolo_d,Qimlololo_d,
+          Rrehihihi_h,Rrelohihi_h,Rrehilohi_h,Rrelolohi_h,
+          Rrehihilo_h,Rrelohilo_h,Rrehilolo_h,Rrelololo_h,
+          Rimhihihi_h,Rimlohihi_h,Rimhilohi_h,Rimlolohi_h,
+          Rimhihilo_h,Rimlohilo_h,Rimhilolo_h,Rimlololo_h,
+          Rrehihihi_d,Rrelohihi_d,Rrehilohi_d,Rrelolohi_d,
+          Rrehihilo_d,Rrelohilo_d,Rrehilolo_d,Rrelololo_d,
+          Rimhihihi_d,Rimlohihi_d,Rimhilohi_d,Rimlolohi_d,
+          Rimhihilo_d,Rimlohilo_d,Rimhilolo_d,Rimlololo_d,
+          workvecrehihihi,workvecrelohihi,workvecrehilohi,workvecrelolohi,
+          workvecrehihilo,workvecrelohilo,workvecrehilolo,workvecrelololo,
+          workvecimhihihi,workvecimlohihi,workvecimhilohi,workvecimlolohi,
+          workvecimhihilo,workvecimlohilo,workvecimhilolo,workvecimlololo,
+          resvecrehihihi,resvecrelohihi,resvecrehilohi,resvecrelolohi,
+          resvecrehihilo,resvecrelohilo,resvecrehilolo,resvecrelololo,
+          resvecimhihihi,resvecimlohihi,resvecimhilohi,resvecimlolohi,
+          resvecimhihilo,resvecimlohilo,resvecimhilolo,resvecimlololo,
+          &resmaxhihihi,&resmaxlohihi,&resmaxhilohi,&resmaxlolohi,
+          &resmaxhihilo,&resmaxlohilo,&resmaxhilolo,&resmaxlololo,
+          &zeroQ_h,&noqr_h,&zeroQ_d,&noqr_d,
+          &upidx_h,&bsidx_h,&upidx_d,&bsidx_d,
+          &totcnvlapsedms,&totqrlapsedms,&totqtblapsedms,&totbslapsedms,
+          &totupdlapsedms,&totreslapsedms,vrblvl,mode);
+
+      stepcnt = stepcnt + 1;
+
+      if(vrblvl > 0)
+         cout << "up_h : " << upidx_h << "  bs_h : " << bsidx_h
+              << "  tail_h : " << tailidx_h
+              << "  up_d : " << upidx_d << "  bs_d : " << bsidx_d
+              << "  tail_d : " << tailidx_d
+              << "  wdeg : " << wrkdeg << endl;
+
+      if((mode == 1) || (mode == 2)) if(tailidx_h >= deg) break;
+      if((mode == 0) || (mode == 2)) if(tailidx_d >= deg) break;
+
+      wrkdeg = wrkdeg + 1 + wrkdeg/2;
+      if(wrkdeg > deg) wrkdeg = deg;
+   }
+   gettimeofday(&endtime,0);
+   long seconds = endtime.tv_sec - begintime.tv_sec;
+   long microseconds = endtime.tv_usec - begintime.tv_usec;
+   double walltimesec = seconds + microseconds*1.0e-6;
+
+   cmplx8_error_testsol(dim,deg,mode,
+      testsolrehihihi,testsolrelohihi,testsolrehilohi,testsolrelolohi,
+      testsolrehihilo,testsolrelohilo,testsolrehilolo,testsolrelololo,
+      testsolimhihihi,testsolimlohihi,testsolimhilohi,testsolimlolohi,
+      testsolimhihilo,testsolimlohilo,testsolimhilolo,testsolimlololo,
+      inputrehihihi_h,inputrelohihi_h,inputrehilohi_h,inputrelolohi_h,
+      inputrehihilo_h,inputrelohilo_h,inputrehilolo_h,inputrelololo_h,
+      inputimhihihi_h,inputimlohihi_h,inputimhilohi_h,inputimlolohi_h,
+      inputimhihilo_h,inputimlohilo_h,inputimhilolo_h,inputimlololo_h,
+      inputrehihihi_d,inputrelohihi_d,inputrehilohi_d,inputrelolohi_d,
+      inputrehihilo_d,inputrelohilo_d,inputrehilolo_d,inputrelololo_d,
+      inputimhihihi_d,inputimlohihi_d,inputimhilohi_d,inputimlolohi_d,
+      inputimhihilo_d,inputimlohilo_d,inputimhilolo_d,inputimlololo_d);
+
+   write_newton_times
+      (stepcnt,walltimesec,totcnvlapsedms,totqrlapsedms,totqtblapsedms,
+       totbslapsedms,totupdlapsedms,totreslapsedms);
+
    return 0;
 }
