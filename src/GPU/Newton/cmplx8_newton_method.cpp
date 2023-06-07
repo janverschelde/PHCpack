@@ -1652,8 +1652,17 @@ int cmplx8_row_newton_qrstep
             outputimhihilo_h[i],outputimlohilo_h[i],
             outputimhilolo_h[i],outputimlololo_h[i],&lapsed,0);
 
+         if(vrblvl > 0)
+            cout << fixed << setprecision(3)
+                 << "Evaluated and differentiated polynomial " << i
+                 << " in " << lapsed << " seconds." << endl;
+
          timelapsed_h += lapsed;
       }
+      if(vrblvl > 0)
+         cout << fixed << setprecision(3)
+              << "Evaluated and differentiated system in "
+              << timelapsed_h << " seconds." << endl;
    }
    if((mode == 0) || (mode == 2))
    {
@@ -1697,8 +1706,17 @@ int cmplx8_row_newton_qrstep
             outputimhilolo_d[i],outputimlololo_d[i],cnvjobs,incjobs,addjobs,
             &cnvlapms,&addlapms,&timelapms_d,&walltimes_d,0); // vrblvl);
 
+         if(vrblvl > 0)
+            cout << fixed << setprecision(3)
+                 << "Evaluated and differentiated polynomial " << i
+                 << " in " << walltimes_d << " seconds." << endl;
+
          timelapsed_d += walltimes_d;
       }
+      if(vrblvl > 0)
+         cout << fixed << setprecision(3)
+              << "Evaluated and differentiated system in "
+              << timelapsed_d << " seconds." << endl;
    }
    if((vrblvl > 0) && (mode == 2))
    {
@@ -3006,7 +3024,7 @@ void cmplx8_row_setup
    if(mode == 1)
    {
       if(vrblvl > 0)
-         cout << "evaluating test solution on the host ..." << endl;
+         cout << "Evaluating test solution on the host ..." << endl;
 
       double timelapsed_h = 0.0;
 
@@ -3037,8 +3055,18 @@ void cmplx8_row_setup
             outputimhihilo_h[i],outputimlohilo_h[i],
             outputimhilolo_h[i],outputimlololo_h[i],&lapsed,0);
 
+         if(vrblvl > 0)
+            cout << fixed << setprecision(3)
+                 << "Evaluated and differentiated polynomial " << i
+                 << " in " << lapsed << " seconds." << endl;
+
          timelapsed_h += lapsed;
       }
+      if(vrblvl > 0)
+         cout << fixed << setprecision(3)
+              << "Evaluated and differentiated system in "
+              << timelapsed_h << " seconds." << endl;
+
       for(int i=0; i<dim; i++) // adjust constant coefficients
       {
          for(int j=0; j<=deg; j++)
@@ -3065,6 +3093,8 @@ void cmplx8_row_setup
       }
       if(vrblvl > 1) // evaluate again to test
       {
+         cout << "Evaluating again to compute the residual ..." << endl;
+
          for(int i=0; i<dim; i++)
          {
             double lapsed;
@@ -3092,8 +3122,16 @@ void cmplx8_row_setup
                outputimhihilo_h[i],outputimlohilo_h[i],
                outputimhilolo_h[i],outputimlololo_h[i],&lapsed,0);
 
+            cout << fixed << setprecision(3)
+                 << "Evaluated and differentiated polynomial " << i
+                 << " in " << lapsed << " seconds." << endl;
+
             timelapsed_h += lapsed;
          }
+         cout << fixed << setprecision(3)
+              << "Evaluated and differentiated system in "
+              << timelapsed_h << " seconds." << endl;
+
          double errsum = 0.0;
 
          for(int i=0; i<dim; i++)
@@ -3116,13 +3154,13 @@ void cmplx8_row_setup
                                + outputimlololo_h[i][dim][j]; 
 
          cout << scientific << setprecision(2)
-              << "residual of test solution : " << errsum << endl;
+              << "Residual of test solution : " << errsum << endl;
       }
    }
    else // GPU is faster
    {
       if(vrblvl > 0)
-         cout << "evaluating test solution on the device ..." << endl;
+         cout << "Evaluating test solution on the device ..." << endl;
 
       const bool vrb = false; // no output (vrblvl > 1);
       double timelapsed_d = 0.0;
@@ -3162,8 +3200,18 @@ void cmplx8_row_setup
             outputimhilolo_d[i],outputimlololo_d[i],cnvjobs,incjobs,addjobs,
             &cnvlapms,&addlapms,&timelapms_d,&walltimes_d,0); // vrblvl);
 
+            if(vrblvl > 0)
+               cout << fixed << setprecision(3)
+                    << "Evaluated and differentiated polynomial " << i
+                    << " in " << walltimes_d << " seconds." << endl;
+
          timelapsed_d += walltimes_d;
       }
+      if(vrblvl > 0)
+         cout << fixed << setprecision(3)
+              << "Evaluated and differentiated system in "
+              << timelapsed_d << " seconds." << endl;
+
       for(int i=0; i<dim; i++) // adjust constant coefficients
       {
          for(int j=0; j<=deg; j++)
@@ -3190,6 +3238,8 @@ void cmplx8_row_setup
       }
       if(vrblvl > 1) // evaluate again to test
       {
+         cout << "Evaluating again to compute the residual ..." << endl;
+
          for(int i=0; i<dim; i++)
          {
             double cnvlapms,addlapms,timelapms_d,walltimes_d;
@@ -3225,8 +3275,16 @@ void cmplx8_row_setup
                outputimhilolo_d[i],outputimlololo_d[i],cnvjobs,incjobs,addjobs,
                &cnvlapms,&addlapms,&timelapms_d,&walltimes_d,0); // vrblvl);
 
+            cout << fixed << setprecision(3)
+                 << "Evaluated and differentiated polynomial " << i
+                 << " in " << walltimes_d << " seconds." << endl;
+
             timelapsed_d += walltimes_d;
          }
+         cout << fixed << setprecision(3)
+              << "Evaluated and differentiated system in "
+              << timelapsed_d << " seconds." << endl;
+
          double errsum = 0.0;
 
          for(int i=0; i<dim; i++)
@@ -3249,7 +3307,7 @@ void cmplx8_row_setup
                                + outputimlololo_d[i][dim][j];
 
          cout << scientific << setprecision(2)
-              << "residual of test solution : " << errsum << endl;
+              << "Residual of test solution : " << errsum << endl;
       }
    }
    cmplx8_start_setup(dim,deg,
@@ -3395,7 +3453,8 @@ int cmplx8_error_testsol
          }
       }
    }
-   cout << "error : " << errsum << endl;
+   cout << scientific << setprecision(2)
+        << "error : " << errsum << endl;
 
    return (errsum > 1.0e-100);
 }
@@ -4253,7 +4312,7 @@ int test_cmplx8_column_newton
  * 3. initialize input, coefficient, evaluate, differentiate, and solve
  */
 
-   if(vrblvl > 0) cout << "setting up the test solution ..." << endl;
+   if(vrblvl > 0) cout << "Setting up the test solution ..." << endl;
 
    double **testsolrehihihi = new double*[dim];
    double **testsolrelohihi = new double*[dim];
@@ -5219,7 +5278,7 @@ int test_cmplx8_row_newton
        solimhihihi_d,solimlohihi_d,solimhilohi_d,solimlolohi_d,
        solimhihilo_d,solimlohilo_d,solimhilolo_d,solimlololo_d);
 
-   if(vrblvl > 0) cout << "setting up the test solution ..." << endl;
+   if(vrblvl > 0) cout << "Setting up the test solution ..." << endl;
 
    double **testsolrehihihi = new double*[dim];
    double **testsolrelohihi = new double*[dim];

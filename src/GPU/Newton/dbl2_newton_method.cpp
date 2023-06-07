@@ -469,8 +469,17 @@ int dbl2_row_newton_qrstep
            (dim,nbr[i],deg,nvr[i],idx[i],csthi[i],cstlo[i],cffhi[i],cfflo[i],
             inputhi_h,inputlo_h,outputhi_h[i],outputlo_h[i],&lapsed,0);
 
+         if(vrblvl > 0)
+            cout << fixed << setprecision(3)
+                 << "Evaluated and differentiated polynomial " << i
+                 << " in " << lapsed << " seconds." << endl;
+
          timelapsed_h += lapsed;
       }
+      if(vrblvl > 0)
+         cout << fixed << setprecision(3)
+              << "Evaluated and differentiated system in "
+              << timelapsed_h << " seconds." << endl;
    }
    if((mode == 0) || (mode == 2))
    {
@@ -494,8 +503,17 @@ int dbl2_row_newton_qrstep
              outputhi_d[i],outputlo_d[i],cnvjobs,addjobs,
              &cnvlapms,&addlapms,&timelapms_d,&walltimes_d,0); // vrblvl);
 
+         if(vrblvl > 0)
+            cout << fixed << setprecision(3)
+                 << "Evaluated and differentiated polynomial " << i
+                 << " in " << walltimes_d << " seconds." << endl;
+
          timelapsed_d += walltimes_d;
       }
+      if(vrblvl > 0)
+         cout << fixed << setprecision(3)
+              << "Evaluated and differentiated system in "
+              << timelapsed_d << " seconds." << endl;
    }
    if((vrblvl > 0) && (mode == 2))
    {
@@ -823,7 +841,7 @@ void dbl2_row_setup
    if(mode == 1)
    {
       if(vrblvl > 0)
-         cout << "evaluating test solution on the host ..." << endl;
+         cout << "Evaluating test solution on the host ..." << endl;
 
       double timelapsed_h = 0.0;
 
@@ -835,8 +853,18 @@ void dbl2_row_setup
             csthi[i],cstlo[i],cffhi[i],cfflo[i],
             testsolhi,testsollo,outputhi_h[i],outputlo_h[i],&lapsed,0);
 
+         if(vrblvl > 0)
+            cout << fixed << setprecision(3)
+                 << "Evaluated and differentiated polynomial " << i
+                 << " in " << lapsed << " seconds." << endl;
+
          timelapsed_h += lapsed;
       }
+      if(vrblvl > 0)
+         cout << fixed << setprecision(3)
+              << "Evaluated and differentiated system in "
+              << timelapsed_h << " seconds." << endl;
+
       for(int i=0; i<dim; i++) // adjust constant coefficients
       {
          for(int j=0; j<=deg; j++) // cst[i][j] -= output_h[i][dim][j];
@@ -845,6 +873,8 @@ void dbl2_row_setup
       }
       if(vrblvl > 1) // evaluate again to test
       {
+         cout << "Evaluating again to compute the residual ..." << endl;
+
          for(int i=0; i<dim; i++)
          {
             double lapsed;
@@ -853,8 +883,16 @@ void dbl2_row_setup
                csthi[i],cstlo[i],cffhi[i],cfflo[i],
                testsolhi,testsollo,outputhi_h[i],outputlo_h[i],&lapsed,0);
 
+            cout << fixed << setprecision(3)
+                 << "Evaluated and differentiated polynomial " << i
+                 << " in " << lapsed << " seconds." << endl;
+
             timelapsed_h += lapsed;
          }
+         cout << fixed << setprecision(3)
+              << "Evaluated and differentiated system in "
+              << timelapsed_h << " seconds." << endl;
+
          double errsum = 0.0;
 
          for(int i=0; i<dim; i++)
@@ -863,13 +901,13 @@ void dbl2_row_setup
                                + outputlo_h[i][dim][j];
 
          cout << scientific << setprecision(2)
-              << "residual of test solution : " << errsum << endl;
+              << "Residual of test solution : " << errsum << endl;
       }
    }
    else // GPU is faster
    {
       if(vrblvl > 0)
-         cout << "evaluating test solution on the device ..." << endl;
+         cout << "Evaluating test solution on the device ..." << endl;
 
       const bool vrb = false; // no output (vrblvl > 1);
       double timelapsed_d = 0.0;
@@ -889,8 +927,18 @@ void dbl2_row_setup
              outputhi_d[i],outputlo_d[i],cnvjobs,addjobs,
              &cnvlapms,&addlapms,&timelapms_d,&walltimes_d,0); // vrblvl);
 
+         if(vrblvl > 0)
+            cout << fixed << setprecision(3)
+                 << "Evaluated and differentiated polynomial " << i
+                 << " in " << walltimes_d << " seconds." << endl;
+
          timelapsed_d += walltimes_d;
       }
+      if(vrblvl > 0)
+         cout << fixed << setprecision(3)
+              << "Evaluated and differentiated system in "
+              << timelapsed_d << " seconds." << endl;
+
       for(int i=0; i<dim; i++) // adjust constant coefficients
       {
          for(int j=0; j<=deg; j++) // cst[i][j] -= output_d[i][dim][j];
@@ -899,6 +947,8 @@ void dbl2_row_setup
       }
       if(vrblvl > 1) // evaluate again to test
       {
+         cout << "Evaluating again to compute the residual ..." << endl;
+
          for(int i=0; i<dim; i++)
          {
             double cnvlapms,addlapms,timelapms_d,walltimes_d;
@@ -913,9 +963,17 @@ void dbl2_row_setup
                 cffhi[i],cfflo[i],testsolhi,testsollo,
                 outputhi_d[i],outputlo_d[i],cnvjobs,addjobs,
                 &cnvlapms,&addlapms,&timelapms_d,&walltimes_d,0);
+
+            cout << fixed << setprecision(3)
+                 << "Evaluated and differentiated polynomial " << i
+                 << " in " << walltimes_d << " seconds." << endl;
    
             timelapsed_d += walltimes_d;
          }
+         cout << fixed << setprecision(3)
+              << "Evaluated and differentiated system in "
+              << timelapsed_d << " seconds." << endl;
+
          double errsum = 0.0;
 
          for(int i=0; i<dim; i++)
@@ -1138,7 +1196,7 @@ int test_dbl2_column_newton
  * 3. initialize input, coefficient, evaluate, differentiate, and solve
  */
 
-   if(vrblvl > 0) cout << "setting up the test system ..." << endl;
+   if(vrblvl > 0) cout << "Setting up the test solution ..." << endl;
 
    double **testsolhi = new double*[dim];
    double **testsollo = new double*[dim];
@@ -1345,7 +1403,7 @@ int test_dbl2_row_newton
        Qhi_h,Qlo_h,Qhi_d,Qlo_d,Rhi_h,Rlo_h,Rhi_d,Rlo_d,
        solhi_h,sollo_h,solhi_d,sollo_d);
 
-   if(vrblvl > 0) cout << "setting up the test solution ..." << endl;
+   if(vrblvl > 0) cout << "Setting up the test solution ..." << endl;
 
    double **testsolhi = new double*[dim];
    double **testsollo = new double*[dim];

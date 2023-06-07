@@ -965,8 +965,17 @@ int cmplx4_row_newton_qrstep
             outputimhihi_h[i],outputimlohi_h[i],
             outputimhilo_h[i],outputimlolo_h[i],&lapsed,0); // no output
 
+         if(vrblvl > 0)
+            cout << fixed << setprecision(3)
+                 << "Evaluated and differentiated polynomial " << i
+                 << " in " << lapsed << " seconds." << endl;
+
          timelapsed_h += lapsed;
       }
+      if(vrblvl > 0)
+         cout << fixed << setprecision(3)
+              << "Evaluated and differentiated system in "
+              << timelapsed_h << " seconds." << endl;
    }
    if((mode == 0) || (mode == 2))
    {
@@ -1000,8 +1009,17 @@ int cmplx4_row_newton_qrstep
              outputimhilo_d[i],outputimlolo_d[i],cnvjobs,incjobs,addjobs,
              &cnvlapms,&addlapms,&timelapms_d,&walltimes_d,0); // vrblvl);
 
+         if(vrblvl > 0)
+            cout << fixed << setprecision(3)
+                 << "Evaluated and differentiated polynomial " << i
+                 << " in " << walltimes_d << " seconds." << endl;
+
          timelapsed_d += walltimes_d;
       }
+      if(vrblvl > 0)
+         cout << fixed << setprecision(3)
+              << "Evaluated and differentiated system in "
+              << timelapsed_d << " seconds." << endl;
    }
    if((vrblvl > 0) && (mode == 2))
    {
@@ -1747,7 +1765,7 @@ void cmplx4_row_setup
    if(mode == 1)
    {
       if(vrblvl > 0)
-         cout << "evaluating test solution on the host ..." << endl;
+         cout << "Evaluating test solution on the host ..." << endl;
 
       double timelapsed_h = 0.0;
 
@@ -1768,8 +1786,18 @@ void cmplx4_row_setup
             outputimhihi_h[i],outputimlohi_h[i],
             outputimhilo_h[i],outputimlolo_h[i],&lapsed,0); // no output
 
+         if(vrblvl > 0)
+            cout << fixed << setprecision(3)
+                 << "Evaluated and differentiated polynomial " << i
+                 << " in " << lapsed << " seconds." << endl;
+
          timelapsed_h += lapsed;
       }
+      if(vrblvl > 0)
+         cout << fixed << setprecision(3)
+              << "Evaluated and differentiated system in "
+              << timelapsed_h << " seconds." << endl;
+
       for(int i=0; i<dim; i++) // adjust constant coefficients
       {
          for(int j=0; j<=deg; j++)
@@ -1788,6 +1816,8 @@ void cmplx4_row_setup
       }
       if(vrblvl > 1) // evaluate again to test
       {
+         cout << "Evaluating again to compute the residual ..." << endl;
+
          for(int i=0; i<dim; i++)
          {
             double lapsed;
@@ -1805,8 +1835,16 @@ void cmplx4_row_setup
                outputimhihi_h[i],outputimlohi_h[i],
                outputimhilo_h[i],outputimlolo_h[i],&lapsed,0); // no output
 
+            cout << fixed << setprecision(3)
+                 << "Evaluated and differentiated polynomial " << i
+                 << " in " << lapsed << " seconds." << endl;
+
             timelapsed_h += lapsed;
          }
+         cout << fixed << setprecision(3)
+              << "Evaluated and differentiated system in "
+              << timelapsed_h << " seconds." << endl;
+
          double errsum = 0.0;
 
          for(int i=0; i<dim; i++)
@@ -1821,13 +1859,13 @@ void cmplx4_row_setup
                                + outputimlolo_h[i][dim][j]; 
 
          cout << scientific << setprecision(2)
-              << "residual of test solution : " << errsum << endl;
+              << "Residual of test solution : " << errsum << endl;
       }
    }
    else // GPU is faster
    {
       if(vrblvl > 0)
-         cout << "evaluating test solution on the device ..." << endl;
+         cout << "Evaluating test solution on the device ..." << endl;
 
       const bool vrb = false; // no output (vrblvl > 1);
       double timelapsed_d = 0.0;
@@ -1857,8 +1895,18 @@ void cmplx4_row_setup
              outputimhilo_d[i],outputimlolo_d[i],cnvjobs,incjobs,addjobs,
              &cnvlapms,&addlapms,&timelapms_d,&walltimes_d,0); // vrblvl);
 
+         if(vrblvl > 0)
+            cout << fixed << setprecision(3)
+                 << "Evaluated and differentiated polynomial " << i
+                 << " in " << walltimes_d << " seconds." << endl;
+
          timelapsed_d += walltimes_d;
       }
+      if(vrblvl > 0)
+         cout << fixed << setprecision(3)
+              << "Evaluated and differentiated system in "
+              << timelapsed_d << " seconds." << endl;
+
       for(int i=0; i<dim; i++) // adjust constant coefficients
       {
          for(int j=0; j<=deg; j++)
@@ -1877,6 +1925,8 @@ void cmplx4_row_setup
       }
       if(vrblvl > 1) // evaluate again to test
       {
+         cout << "Evaluating again to compute the residual ..." << endl;
+
          for(int i=0; i<dim; i++)
          {
             double cnvlapms,addlapms,timelapms_d,walltimes_d;
@@ -1902,8 +1952,16 @@ void cmplx4_row_setup
                 outputimhilo_d[i],outputimlolo_d[i],cnvjobs,incjobs,addjobs,
                 &cnvlapms,&addlapms,&timelapms_d,&walltimes_d,0); // vrblvl);
 
+            cout << fixed << setprecision(3)
+                 << "Evaluated and differentiated polynomial " << i
+                 << " in " << walltimes_d << " seconds." << endl;
+
             timelapsed_d += walltimes_d;
          }
+         cout << fixed << setprecision(3)
+              << "Evaluated and differentiated system in "
+              << timelapsed_d << " seconds." << endl;
+
          double errsum = 0.0;
 
          for(int i=0; i<dim; i++)
@@ -1918,7 +1976,7 @@ void cmplx4_row_setup
                                + outputimlolo_d[i][dim][j];
 
          cout << scientific << setprecision(2)
-              << "residual of test solution : " << errsum << endl;
+              << "Residual of test solution : " << errsum << endl;
       }
    }
    cmplx4_start_setup(dim,deg,
@@ -2462,7 +2520,7 @@ int test_cmplx4_column_newton
  * 3. initialize input, coefficient, evaluate, differentiate, and solve
  */
 
-   if(vrblvl > 0) cout << "setting up the test solution ..." << endl;
+   if(vrblvl > 0) cout << "Setting up the test solution ..." << endl;
 
    double **testsolrehihi = new double*[dim];
    double **testsolrelohi = new double*[dim];
@@ -2992,7 +3050,7 @@ int test_cmplx4_row_newton
        solrehihi_d,solrelohi_d,solrehilo_d,solrelolo_d,
        solimhihi_d,solimlohi_d,solimhilo_d,solimlolo_d);
 
-   if(vrblvl > 0) cout << "setting up the test solution ..." << endl;
+   if(vrblvl > 0) cout << "Setting up the test solution ..." << endl;
 
    double **testsolrehihi = new double*[dim];
    double **testsolrelohi = new double*[dim];
