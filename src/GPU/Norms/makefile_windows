@@ -3,7 +3,7 @@
 # The option '-O3' is unknown and replaced by '-O2'.
 
 # location for the C code of the QD library
-QDsrc=../../Ada/Math_Lib/QD
+QDsrc=../../Ada/Math_Lib/QD/C
 
 # location of the command line Microsoft Visual Studio Compiler
 CL="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64"
