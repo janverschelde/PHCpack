@@ -1,0 +1,1065 @@
+# This makefile is for the command line version
+# of the Microsoft Visual Studio Compiler on Windows 10.
+# The option '-O3' is unknown and replaced by '-O2'.
+
+# location for the code for multiple double precision
+MPD=../Norms
+# location for the code for monomial evaluation and differentiation
+CNV=../Convolutions
+# location for the Polynomials folder for the wingettimeofday.h
+POL=../Polynomials
+
+# architecture flag
+smflag=sm_75
+
+# location of the command line Microsoft Visual Studio Compiler
+# CL="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64"
+CL="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\bin\Hostx64\x64"
+
+# include path for the Microsoft Visual Studio Compiler
+# includepath="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\include"
+includepath="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include"
+
+# include path for the Windows Kit
+# winkitucrt="C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt"
+winkitucrt="C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt"
+
+# libaries of the Microsoft Visual Studio compiler
+# libdirvs="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\lib\x64"
+libdirvs="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\lib\x64"
+
+# libraries of the Windows Kits
+# libdirkitum="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\um\x64"
+# libdirkitucrt="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\ucrt\x64"
+libdirkitum="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.22000.0\um\x64"
+libdirkitucrt="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.22000.0\ucrt\x64"
+
+# include files of the CUDA SDK
+# CUDASDK="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2"
+CUDASDK="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1"
+# library folder of the CUDA SDK
+# CUDALIB="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\lib\x64"
+CUDALIB="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1\lib\x64"
+
+random_numbers.obj:
+	@-echo ">>> compiling double random number generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random_numbers.cpp \
+                 /Fo: random_numbers.obj /EHsc
+
+random_series.obj:
+	@-echo ">>> compiling double random series generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(CNV)/random_series.cpp \
+                 /Fo: random_series.obj /EHsc
+
+random_matrices.obj:
+	@-echo ">>> compiling double random_matrices generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random_matrices.cpp \
+                 /Fo: random_matrices.obj /EHsc
+
+dbl_convolutions_host.obj:
+	@-echo ">>> compiling dbl_convolutions_host ..."
+	$(CL)\cl /c -I$(CNV) $(CNV)/dbl_convolutions_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl_convolutions_host.obj
+
+dbl_matrices_host.obj:
+	@-echo ">>> compiling dbl_matrices_host ..."
+	$(CL)\cl /c -I$(CNV) dbl_matrices_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl_matrices_host.obj /EHsc
+
+dbl_matrices_kernels.obj:
+	@-echo ">>> compiling dbl_matrices_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 \
+                dbl_matrices_kernels.cu \
+             -o dbl_matrices_kernels.obj
+
+dbl_vectors_testers.obj:
+	@-echo ">>> compiling dbl_vectors_testers ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) dbl_vectors_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_vectors_testers.obj /EHsc
+
+test_dbl_vectors.obj:
+	@-echo ">>> compiling test_dbl_vectors ..."
+	$(CL)\cl /c test_dbl_vectors.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl_vectors.obj /EHsc
+
+test_dbl_vectors: random_numbers.obj random_series.obj \
+	          random_matrices.obj dbl_convolutions_host.obj \
+                  dbl_matrices_host.obj dbl_matrices_kernels.obj \
+                  dbl_vectors_testers.obj test_dbl_vectors.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl_vectors.exe \
+              random_numbers.obj random_series.obj random_matrices.obj \
+              dbl_convolutions_host.obj dbl_matrices_host.obj \
+              dbl_matrices_kernels.obj dbl_vectors_testers.obj \
+              test_dbl_vectors.obj
+
+dbl_matrices_testers.obj:
+	@-echo ">>> compiling dbl_matrices_testers ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) dbl_matrices_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl_matrices_testers.obj /EHsc
+
+test_dbl_matrices.obj:
+	@-echo ">>> compiling test_dbl_matrices ..."
+	$(CL)\cl /c test_dbl_matrices.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl_matrices.obj /EHsc
+
+test_dbl_matrices: random_numbers.obj random_series.obj \
+	           random_matrices.obj dbl_convolutions_host.obj \
+                   dbl_matrices_host.obj dbl_linearization.obj \
+                   dbl_matrices_testers.obj test_dbl_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl_matrices.exe \
+              random_numbers.obj random_series.obj random_matrices.obj \
+              dbl_convolutions_host.obj dbl_matrices_host.obj \
+              dbl_linearization.obj dbl_matrices_testers.obj \
+              test_dbl_matrices.obj
+
+test_upper_jobs.obj:
+	@-echo ">>> compiling test_upper_jobs ..."
+	$(CL)\cl /c test_upper_jobs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_upper_jobs.obj /EHsc
+
+test_upper_jobs: test_upper_jobs.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_upper_jobs.exe test_upper_jobs.obj
+
+dbl_linearization.obj:
+	@-echo ">>> compiling dbl_linearization ..."
+	$(CL)\cl /c dbl_linearization.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_linearization.obj /EHsc
+
+test_dbl_linearization.obj:
+	@-echo ">>> compiling test_dbl_linearization ..."
+	$(CL)\cl /c test_dbl_linearization.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl_linearization.obj /EHsc
+
+test_dbl_linearization: test_dbl_linearization.obj dbl_linearization.obj \
+                        random_numbers.obj random_series.obj \
+                        random_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl_linearization.exe \
+             test_dbl_linearization.obj dbl_linearization.obj \
+             random_numbers.obj random_series.obj random_matrices.obj
+
+dbl_factorizations.obj:
+	@-echo ">>> compiling dbl_factorizations ..."
+	$(CL)\cl /c dbl_factorizations.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_factorizations.obj /EHsc
+
+dbl_factors_testers.obj:
+	@-echo ">>> compiling dbl_factors_testers ..."
+	$(CL)\cl /c dbl_factors_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_factors_testers.obj /EHsc
+
+test_dbl_factors.obj:
+	@-echo ">>> compiling test_dbl_factors ..."
+	$(CL)\cl /c test_dbl_factors.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl_factors.obj /EHsc
+
+test_dbl_factors: test_dbl_factors.obj dbl_factorizations.obj \
+                  random_numbers.obj random_series.obj \
+                  random_matrices.obj dbl_factors_testers.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl_factors.exe \
+             test_dbl_factors.obj dbl_factorizations.obj \
+	     dbl_factors_testers.obj \
+             random_numbers.obj random_series.obj random_matrices.obj
+
+double_double_functions.obj:
+	@-echo ">>> compiling double double functions ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/double_double_functions.cpp \
+                 /Fo: double_double_functions.obj /EHsc
+
+quad_double_functions.obj:
+	@-echo ">>> compiling quad double functions ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/quad_double_functions.cpp \
+                 /Fo: quad_double_functions.obj /EHsc
+
+octo_double_functions.obj:
+	@-echo ">>> compiling octo double functions ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/octo_double_functions.cpp \
+                 /Fo: octo_double_functions.obj /EHsc
+
+random2_vectors.obj:
+	@-echo ">>> compiling double double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random2_vectors.cpp \
+                 /Fo: random2_vectors.obj /EHsc
+
+random4_vectors.obj:
+	@-echo ">>> compiling quad double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random4_vectors.cpp \
+                 /Fo: random4_vectors.obj /EHsc
+
+random8_vectors.obj:
+	@-echo ">>> compiling octo double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random8_vectors.cpp \
+                 /Fo: random8_vectors.obj /EHsc
+
+random2_matrices.obj:
+	@-echo ">>> compiling double double random matrix generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random2_matrices.cpp \
+                 /Fo: random2_matrices.obj /EHsc
+
+random4_matrices.obj:
+	@-echo ">>> compiling quad double random matrix generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random4_matrices.cpp \
+                 /Fo: random4_matrices.obj /EHsc
+
+random8_matrices.obj:
+	@-echo ">>> compiling octo double random matrix generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random8_matrices.cpp \
+                 /Fo: random8_matrices.obj /EHsc
+
+dbl2_factorizations.obj:
+	@-echo ">>> compiling dbl2_factorizations ..."
+	$(CL)\cl /c dbl2_factorizations.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl2_factorizations.obj /EHsc
+
+dbl2_factors_testers.obj:
+	@-echo ">>> compiling dbl2_factors_testers ..."
+	$(CL)\cl /c dbl2_factors_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl2_factors_testers.obj /EHsc
+
+test_dbl2_factors.obj:
+	@-echo ">>> compiling test_dbl2_factors ..."
+	$(CL)\cl /c test_dbl2_factors.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl2_factors.obj /EHsc
+
+test_dbl2_factors: test_dbl2_factors.obj dbl2_factorizations.obj \
+                   double_double_functions.obj \
+                   random_numbers.obj random2_vectors.obj \
+                   random2_matrices.obj dbl2_factors_testers.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl2_factors.exe \
+             test_dbl2_factors.obj dbl2_factorizations.obj \
+	     double_double_functions.obj dbl2_factors_testers.obj \
+             random_numbers.obj random2_vectors.obj random2_matrices.obj
+
+dbl4_factorizations.obj:
+	@-echo ">>> compiling dbl4_factorizations ..."
+	$(CL)\cl /c dbl4_factorizations.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl4_factorizations.obj /EHsc
+
+dbl4_factors_testers.obj:
+	@-echo ">>> compiling dbl4_factors_testers ..."
+	$(CL)\cl /c dbl4_factors_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl4_factors_testers.obj /EHsc
+
+test_dbl4_factors.obj:
+	@-echo ">>> compiling test_dbl4_factors ..."
+	$(CL)\cl /c test_dbl4_factors.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl4_factors.obj /EHsc
+
+test_dbl4_factors: test_dbl4_factors.obj dbl4_factorizations.obj \
+                   double_double_functions.obj \
+                   quad_double_functions.obj \
+                   random_numbers.obj random4_vectors.obj \
+                   random4_matrices.obj dbl4_factors_testers.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl4_factors.exe \
+             test_dbl4_factors.obj dbl4_factorizations.obj \
+	     double_double_functions.obj quad_double_functions.obj \
+             dbl4_factors_testers.obj \
+             random_numbers.obj random4_vectors.obj random4_matrices.obj
+
+dbl8_factorizations.obj:
+	@-echo ">>> compiling dbl8_factorizations ..."
+	$(CL)\cl /c dbl8_factorizations.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl8_factorizations.obj /EHsc
+
+dbl8_factors_testers.obj:
+	@-echo ">>> compiling dbl8_factors_testers ..."
+	$(CL)\cl /c dbl8_factors_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl8_factors_testers.obj /EHsc
+
+test_dbl8_factors.obj:
+	@-echo ">>> compiling test_dbl8_factors ..."
+	$(CL)\cl /c test_dbl8_factors.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl8_factors.obj /EHsc
+
+test_dbl8_factors: test_dbl8_factors.obj dbl8_factorizations.obj \
+                   double_double_functions.obj \
+                   quad_double_functions.obj \
+                   octo_double_functions.obj \
+                   random_numbers.obj random8_vectors.obj \
+                   random8_matrices.obj dbl8_factors_testers.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl8_factors.exe \
+             test_dbl8_factors.obj dbl8_factorizations.obj \
+	     double_double_functions.obj quad_double_functions.obj \
+             octo_double_functions.obj dbl8_factors_testers.obj \
+             random_numbers.obj random8_vectors.obj random8_matrices.obj
+
+dbl_tabs_host.obj:
+	@-echo ">>> compiling dbl_tabs_host ..."
+	$(CL)\cl /c dbl_tabs_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_tabs_host.obj /EHsc
+
+dbl_tabs_flopcounts.obj:
+	@-echo ">>> compiling dbl_tabs_flopcounts ..."
+	$(CL)\cl /c dbl_tabs_flopcounts.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_tabs_flopcounts.obj /EHsc
+
+write_dbl_bstimeflops.obj:
+	@-echo ">>> compiling write_dbl_bstimeflops ..."
+	$(CL)\cl /c write_dbl_bstimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: write_dbl_bstimeflops.obj /EHsc
+
+write_dbl_qrtimeflops.obj:
+	@-echo ">>> compiling write_dbl_qrtimeflops ..."
+	$(CL)\cl /c write_dbl_qrtimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: write_dbl_qrtimeflops.obj /EHsc
+
+write_dbl2_bstimeflops.obj:
+	@-echo ">>> compiling write_dbl2_bstimeflops ..."
+	$(CL)\cl /c write_dbl2_bstimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: write_dbl2_bstimeflops.obj /EHsc
+
+write_dbl2_qrtimeflops.obj:
+	@-echo ">>> compiling write_dbl2_qrtimeflops ..."
+	$(CL)\cl /c write_dbl2_qrtimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: write_dbl2_qrtimeflops.obj /EHsc
+
+write_dbl4_bstimeflops.obj:
+	@-echo ">>> compiling write_dbl4_bstimeflops ..."
+	$(CL)\cl /c write_dbl4_bstimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: write_dbl4_bstimeflops.obj /EHsc
+
+write_dbl4_qrtimeflops.obj:
+	@-echo ">>> compiling write_dbl4_qrtimeflops ..."
+	$(CL)\cl /c write_dbl4_qrtimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: write_dbl4_qrtimeflops.obj /EHsc
+
+write_dbl8_bstimeflops.obj:
+	@-echo ">>> compiling write_dbl8_bstimeflops ..."
+	$(CL)\cl /c write_dbl8_bstimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: write_dbl8_bstimeflops.obj /EHsc
+
+write_dbl8_qrtimeflops.obj:
+	@-echo ">>> compiling write_dbl8_qrtimeflops ..."
+	$(CL)\cl /c write_dbl8_qrtimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: write_dbl8_qrtimeflops.obj /EHsc
+
+gettimeofday4win.obj:
+	@-echo ">>> compiling gettimeofday4win ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 \
+                gettimeofday4win.cpp \
+             -o gettimeofday4win.obj
+
+dbl_tabs_kernels.obj:
+	@-echo ">>> compiling dbl_tabs_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) \
+             --define-macro winwalltime=1 \
+                dbl_tabs_kernels.cu \
+             -o dbl_tabs_kernels.obj
+
+dbl_test_utilities.obj:
+	@-echo ">>> compiling dbl_test_utilities ..."
+	$(CL)\cl /c dbl_test_utilities.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl_test_utilities.obj /EHsc
+
+dbl_tabs_testers.obj:
+	@-echo ">>> compiling dbl_tabs_testers ..."
+	$(CL)\cl /c dbl_tabs_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_tabs_testers.obj /EHsc
+
+test_dbl_tabs.obj:
+	@-echo ">>> compiling test_dbl_tabs ..."
+	$(CL)\cl /c test_dbl_tabs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl_tabs.obj /EHsc
+
+test_dbl_tabs: test_dbl_tabs.obj dbl_tabs_testers.obj \
+               dbl_tabs_flopcounts.obj write_dbl_bstimeflops.obj \
+	       dbl_tabs_host.obj dbl_tabs_kernels.obj dbl_test_utilities.obj \
+               dbl_convolutions_host.obj dbl_factorizations.obj \
+               gettimeofday4win.obj dbl_data_files.obj \
+               random_numbers.obj random_series.obj random_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl_tabs.exe \
+             test_dbl_tabs.obj dbl_tabs_testers.obj \
+             dbl_tabs_flopcounts.obj write_dbl_bstimeflops.obj \
+             dbl_tabs_host.obj dbl_tabs_kernels.obj dbl_test_utilities.obj \
+             dbl_convolutions_host.obj dbl_factorizations.obj \
+             gettimeofday4win.obj dbl_data_files.obj \
+             random_numbers.obj random_series.obj random_matrices.obj
+
+dbl2_tabs_host.obj:
+	@-echo ">>> compiling dbl2_tabs_host ..."
+	$(CL)\cl /c dbl2_tabs_host.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl2_tabs_host.obj /EHsc
+
+dbl2_tabs_kernels.obj:
+	@-echo ">>> compiling dbl2_tabs_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) -I$(POL) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                dbl2_tabs_kernels.cu \
+             -o dbl2_tabs_kernels.obj
+
+dbl2_test_utilities.obj:
+	@-echo ">>> compiling dbl2_test_utilities ..."
+	$(CL)\cl /c dbl2_test_utilities.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl2_test_utilities.obj /EHsc
+
+dbl2_tabs_testers.obj:
+	@-echo ">>> compiling dbl2_tabs_testers ..."
+	$(CL)\cl /c dbl2_tabs_testers.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl2_tabs_testers.obj /EHsc
+
+test_dbl2_tabs.obj:
+	@-echo ">>> compiling test_dbl2_tabs ..."
+	$(CL)\cl /c test_dbl2_tabs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl2_tabs.obj /EHsc
+
+test_dbl2_tabs: test_dbl2_tabs.obj dbl2_tabs_testers.obj \
+                dbl_tabs_flopcounts.obj write_dbl2_bstimeflops.obj \
+                dbl2_test_utilities.obj \
+		dbl_test_utilities.obj dbl_factorizations.obj \
+                double_double_functions.obj dbl2_tabs_host.obj \
+		dbl2_tabs_kernels.obj dbl2_factorizations.obj \
+		gettimeofday4win.obj dbl_data_files.obj \
+                random_numbers.obj random2_vectors.obj \
+		random_series.obj random_matrices.obj random2_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl2_tabs.exe test_dbl2_tabs.obj \
+             dbl2_tabs_testers.obj dbl2_test_utilities.obj \
+	     dbl_test_utilities.obj dbl_factorizations.obj \
+	     gettimeofday4win.obj dbl_tabs_flopcounts.obj \
+	     write_dbl2_bstimeflops.obj \
+             dbl2_tabs_host.obj double_double_functions.obj \
+	     dbl2_tabs_kernels.obj dbl2_factorizations.obj \
+             random_numbers.obj random2_vectors.obj dbl_data_files.obj \
+             random_series.obj random_matrices.obj random2_matrices.obj
+
+dbl4_tabs_host.obj:
+	@-echo ">>> compiling dbl4_tabs_host ..."
+	$(CL)\cl /c dbl4_tabs_host.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl4_tabs_host.obj /EHsc
+
+dbl4_tabs_kernels.obj:
+	@-echo ">>> compiling dbl4_tabs_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) -I$(POL) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                dbl4_tabs_kernels.cu \
+             -o dbl4_tabs_kernels.obj
+
+dbl4_test_utilities.obj:
+	@-echo ">>> compiling dbl4_test_utilities ..."
+	$(CL)\cl /c dbl4_test_utilities.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl4_test_utilities.obj /EHsc
+
+dbl4_tabs_testers.obj:
+	@-echo ">>> compiling dbl4_tabs_testers ..."
+	$(CL)\cl /c dbl4_tabs_testers.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl4_tabs_testers.obj /EHsc
+
+test_dbl4_tabs.obj:
+	@-echo ">>> compiling test_dbl4_tabs ..."
+	$(CL)\cl /c test_dbl4_tabs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl4_tabs.obj /EHsc
+
+test_dbl4_tabs: test_dbl4_tabs.obj dbl4_tabs_testers.obj \
+                dbl4_test_utilities.obj dbl_data_files.obj \
+                double_double_functions.obj quad_double_functions.obj \
+                dbl4_tabs_host.obj dbl4_factorizations.obj \
+		dbl4_tabs_kernels.obj dbl_tabs_flopcounts.obj \
+                write_dbl4_bstimeflops.obj \
+		dbl_test_utilities.obj dbl_factorizations.obj \
+		gettimeofday4win.obj random_series.obj random_matrices.obj \
+                random_numbers.obj random4_vectors.obj random4_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl4_tabs.exe test_dbl4_tabs.obj \
+             dbl4_tabs_testers.obj dbl4_test_utilities.obj \
+	     gettimeofday4win.obj dbl_data_files.obj \
+             double_double_functions.obj quad_double_functions.obj \
+	     dbl4_tabs_host.obj dbl4_factorizations.obj \
+	     dbl_test_utilities.obj dbl_factorizations.obj \
+	     dbl4_tabs_kernels.obj dbl_tabs_flopcounts.obj \
+             write_dbl4_bstimeflops.obj \
+             random_numbers.obj random_series.obj random_matrices.obj \
+	     random4_vectors.obj random4_matrices.obj
+
+dbl8_tabs_host.obj:
+	@-echo ">>> compiling dbl8_tabs_host ..."
+	$(CL)\cl /c dbl8_tabs_host.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl8_tabs_host.obj /EHsc
+
+dbl8_tabs_kernels.obj:
+	@-echo ">>> compiling dbl8_tabs_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) -I$(POL) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                dbl8_tabs_kernels.cu \
+             -o dbl8_tabs_kernels.obj
+
+dbl8_test_utilities.obj:
+	@-echo ">>> compiling dbl8_test_utilities ..."
+	$(CL)\cl /c dbl8_test_utilities.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl8_test_utilities.obj /EHsc
+
+dbl8_tabs_testers.obj:
+	@-echo ">>> compiling dbl8_tabs_testers ..."
+	$(CL)\cl /c dbl8_tabs_testers.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl8_tabs_testers.obj /EHsc
+
+test_dbl8_tabs.obj:
+	@-echo ">>> compiling test_dbl8_tabs ..."
+	$(CL)\cl /c test_dbl8_tabs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl8_tabs.obj /EHsc
+
+test_dbl8_tabs: test_dbl8_tabs.obj dbl8_tabs_testers.obj \
+                double_double_functions.obj quad_double_functions.obj \
+		octo_double_functions.obj dbl8_tabs_kernels.obj \
+                dbl8_tabs_host.obj dbl8_factorizations.obj \
+		dbl8_test_utilities.obj dbl_tabs_flopcounts.obj \
+                write_dbl8_bstimeflops.obj \
+		dbl_factorizations.obj dbl_test_utilities.obj \
+                gettimeofday4win.obj dbl_data_files.obj \
+                random_numbers.obj random8_vectors.obj \
+		random_series.obj random_matrices.obj random8_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl8_tabs.exe test_dbl8_tabs.obj \
+             dbl8_tabs_testers.obj dbl_tabs_flopcounts.obj \
+             write_dbl8_bstimeflops.obj \
+             gettimeofday4win.obj dbl_data_files.obj \
+	     dbl_factorizations.obj dbl_test_utilities.obj \
+             double_double_functions.obj quad_double_functions.obj \
+	     octo_double_functions.obj dbl8_test_utilities.obj \
+	     dbl8_tabs_host.obj dbl8_tabs_kernels.obj dbl8_factorizations.obj \
+             random_numbers.obj random8_vectors.obj \
+	     random_series.obj random_matrices.obj random8_matrices.obj
+
+dbl_data_files.obj:
+	@-echo ">>> compiling dbl_data_files ..."
+	$(CL)\cl /c dbl_data_files.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_data_files.obj /EHsc
+
+make_data_files.obj:
+	@-echo ">>> compiling make_data_files ..."
+	$(CL)\cl /c make_data_files.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: make_data_files.obj /EHsc
+
+make_data_files: dbl_data_files.obj make_data_files.obj \
+	         dbl_factorizations.obj dbl_test_utilities.obj \
+		 random_numbers.obj random_series.obj random_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o make_data_files.exe \
+             make_data_files.obj dbl_data_files.obj \
+	     dbl_factorizations.obj dbl_test_utilities.obj \
+	     random_numbers.obj random_series.obj random_matrices.obj
+
+dbl_baqr_host.obj:
+	@-echo ">>> compiling dbl_baqr_host ..."
+	$(CL)\cl /c dbl_baqr_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_baqr_host.obj /EHsc
+
+dbl_baqr_kernels.obj:
+	@-echo ">>> compiling dbl_baqr_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) \
+             --define-macro winwalltime=1 \
+                dbl_baqr_kernels.cu \
+             -o dbl_baqr_kernels.obj
+
+dbl_baqr_flopcounts.obj:
+	@-echo ">>> compiling dbl_baqr_flopcounts ..."
+	$(CL)\cl /c dbl_baqr_flopcounts.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_baqr_flopcounts.obj /EHsc
+
+dbl_baqr_testers.obj:
+	@-echo ">>> compiling dbl_baqr_testers ..."
+	$(CL)\cl /c dbl_baqr_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_baqr_testers.obj /EHsc
+
+prompt_baqr_setup.obj:
+	@-echo ">>> compiling prompt_baqr_setup ..."
+	$(CL)\cl /c prompt_baqr_setup.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: prompt_baqr_setup.obj /EHsc
+
+test_dbl_baqr.obj:
+	@-echo ">>> compiling test_dbl_baqr ..."
+	$(CL)\cl /c test_dbl_baqr.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl_baqr.obj /EHsc
+
+test_dbl_baqr: test_dbl_baqr.obj prompt_baqr_setup.obj \
+               dbl_baqr_testers.obj dbl_factors_testers.obj \
+               dbl_baqr_host.obj dbl_baqr_kernels.obj \
+               dbl_factorizations.obj dbl_baqr_flopcounts.obj \
+	       gettimeofday4win.obj write_dbl_qrtimeflops.obj \
+               random_numbers.obj random_series.obj random_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl_baqr.exe test_dbl_baqr.obj \
+             prompt_baqr_setup.obj dbl_baqr_testers.obj \
+             dbl_factors_testers.obj dbl_factorizations.obj \
+             dbl_baqr_host.obj dbl_baqr_kernels.obj dbl_baqr_flopcounts.obj \
+             gettimeofday4win.obj write_dbl_qrtimeflops.obj \
+             random_numbers.obj random_series.obj random_matrices.obj
+
+dbl2_baqr_host.obj:
+	@-echo ">>> compiling dbl2_baqr_host ..."
+	$(CL)\cl /c dbl2_baqr_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl2_baqr_host.obj /EHsc
+
+dbl2_baqr_kernels.obj:
+	@-echo ">>> compiling dbl2_baqr_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                dbl2_baqr_kernels.cu \
+             -o dbl2_baqr_kernels.obj
+
+dbl2_baqr_testers.obj:
+	@-echo ">>> compiling dbl2_baqr_testers ..."
+	$(CL)\cl /c dbl2_baqr_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl2_baqr_testers.obj /EHsc
+
+test_dbl2_baqr.obj:
+	@-echo ">>> compiling test_dbl2_baqr ..."
+	$(CL)\cl /c test_dbl2_baqr.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl2_baqr.obj /EHsc
+
+test_dbl2_baqr: test_dbl2_baqr.obj dbl2_baqr_testers.obj \
+                prompt_baqr_setup.obj double_double_functions.obj \
+	        dbl2_factors_testers.obj dbl2_baqr_host.obj \
+                dbl2_factorizations.obj dbl2_baqr_kernels.obj \
+		dbl_baqr_flopcounts.obj gettimeofday4win.obj \
+		write_dbl2_qrtimeflops.obj \
+                random_numbers.obj random2_vectors.obj random2_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl2_baqr.exe test_dbl2_baqr.obj \
+             prompt_baqr_setup.obj dbl2_baqr_testers.obj \
+             double_double_functions.obj dbl2_factors_testers.obj \
+             dbl2_factorizations.obj dbl2_baqr_host.obj dbl2_baqr_kernels.obj \
+	     dbl_baqr_flopcounts.obj gettimeofday4win.obj \
+	     write_dbl2_qrtimeflops.obj \
+             random_numbers.obj random2_vectors.obj random2_matrices.obj
+
+dbl4_baqr_host.obj:
+	@-echo ">>> compiling dbl4_baqr_host ..."
+	$(CL)\cl /c dbl4_baqr_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl4_baqr_host.obj /EHsc
+
+dbl4_baqr_kernels.obj:
+	@-echo ">>> compiling dbl4_baqr_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                dbl4_baqr_kernels.cu \
+             -o dbl4_baqr_kernels.obj
+
+dbl4_baqr_testers.obj:
+	@-echo ">>> compiling dbl4_baqr_testers ..."
+	$(CL)\cl /c dbl4_baqr_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl4_baqr_testers.obj /EHsc
+
+test_dbl4_baqr.obj:
+	@-echo ">>> compiling test_dbl4_baqr ..."
+	$(CL)\cl /c test_dbl4_baqr.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl4_baqr.obj /EHsc
+
+test_dbl4_baqr: test_dbl4_baqr.obj dbl4_baqr_testers.obj \
+                prompt_baqr_setup.obj \
+                double_double_functions.obj quad_double_functions.obj \
+	        dbl4_factors_testers.obj dbl4_baqr_host.obj \
+                dbl4_factorizations.obj dbl4_baqr_kernels.obj \
+		gettimeofday4win.obj dbl_baqr_flopcounts.obj \
+		write_dbl4_qrtimeflops.obj \
+                random_numbers.obj random4_vectors.obj random4_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl4_baqr.exe test_dbl4_baqr.obj \
+             prompt_baqr_setup.obj dbl4_baqr_testers.obj \
+             double_double_functions.obj quad_double_functions.obj \
+             dbl4_factors_testers.obj dbl_baqr_flopcounts.obj \
+             dbl4_factorizations.obj dbl4_baqr_host.obj \
+	     gettimeofday4win.obj dbl4_baqr_kernels.obj \
+	     write_dbl4_qrtimeflops.obj \
+             random_numbers.obj random4_vectors.obj random4_matrices.obj
+
+dbl8_baqr_host.obj:
+	@-echo ">>> compiling dbl8_baqr_host ..."
+	$(CL)\cl /c dbl8_baqr_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl8_baqr_host.obj /EHsc
+
+dbl8_baqr_kernels.obj:
+	@-echo ">>> compiling dbl8_baqr_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                dbl8_baqr_kernels.cu \
+             -o dbl8_baqr_kernels.obj
+
+dbl8_baqr_testers.obj:
+	@-echo ">>> compiling dbl8_baqr_testers ..."
+	$(CL)\cl /c dbl8_baqr_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl8_baqr_testers.obj /EHsc
+
+test_dbl8_baqr.obj:
+	@-echo ">>> compiling test_dbl8_baqr ..."
+	$(CL)\cl /c test_dbl8_baqr.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl8_baqr.obj /EHsc
+
+test_dbl8_baqr: test_dbl8_baqr.obj dbl8_baqr_testers.obj \
+                prompt_baqr_setup.obj octo_double_functions.obj \
+                double_double_functions.obj quad_double_functions.obj \
+	        dbl8_factors_testers.obj dbl8_baqr_host.obj \
+                dbl8_factorizations.obj dbl8_baqr_kernels.obj \
+		gettimeofday4win.obj dbl_baqr_flopcounts.obj \
+		write_dbl8_qrtimeflops.obj \
+                random_numbers.obj random8_vectors.obj random8_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl8_baqr.exe test_dbl8_baqr.obj \
+             prompt_baqr_setup.obj dbl8_baqr_testers.obj \
+             double_double_functions.obj quad_double_functions.obj \
+	     octo_double_functions.obj gettimeofday4win.obj \
+             dbl8_factors_testers.obj dbl_baqr_flopcounts.obj \
+             dbl8_factorizations.obj dbl8_baqr_host.obj \
+	     dbl8_baqr_kernels.obj write_dbl8_qrtimeflops.obj \
+             random_numbers.obj random8_vectors.obj random8_matrices.obj
+
+dbl_qrbs_testers.obj:
+	@-echo ">>> compiling dbl_qrbs_testers ..."
+	$(CL)\cl /c dbl_qrbs_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_qrbs_testers.obj /EHsc
+
+test_dbl_qrbs.obj:
+	@-echo ">>> compiling test_dbl_qrbs ..."
+	$(CL)\cl /c test_dbl_qrbs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl_qrbs.obj /EHsc
+
+test_dbl_qrbs: test_dbl_qrbs.obj prompt_baqr_setup.obj \
+               dbl_qrbs_testers.obj dbl_factors_testers.obj \
+               dbl_baqr_host.obj dbl_baqr_kernels.obj \
+	       dbl_tabs_host.obj dbl_test_utilities.obj \
+               dbl_factorizations.obj dbl_baqr_flopcounts.obj \
+	       dbl_tabs_kernels.obj dbl_tabs_flopcounts.obj \
+	       gettimeofday4win.obj \
+               random_numbers.obj random_series.obj random_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl_qrbs.exe test_dbl_qrbs.obj \
+             prompt_baqr_setup.obj dbl_qrbs_testers.obj \
+	     dbl_tabs_host.obj dbl_test_utilities.obj \
+             dbl_factors_testers.obj dbl_factorizations.obj \
+             dbl_baqr_host.obj dbl_baqr_kernels.obj dbl_baqr_flopcounts.obj \
+             dbl_tabs_kernels.obj dbl_tabs_flopcounts.obj \
+	     gettimeofday4win.obj \
+             random_numbers.obj random_series.obj random_matrices.obj
+
+dbl2_qrbs_testers.obj:
+	@-echo ">>> compiling dbl2_qrbs_testers ..."
+	$(CL)\cl /c dbl2_qrbs_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl2_qrbs_testers.obj /EHsc
+
+test_dbl2_qrbs.obj:
+	@-echo ">>> compiling test_dbl2_qrbs ..."
+	$(CL)\cl /c test_dbl2_qrbs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl2_qrbs.obj /EHsc
+
+test_dbl2_qrbs: test_dbl2_qrbs.obj prompt_baqr_setup.obj \
+                double_double_functions.obj \
+                dbl2_qrbs_testers.obj dbl2_factors_testers.obj \
+                dbl2_baqr_host.obj dbl2_baqr_kernels.obj \
+	        dbl2_tabs_host.obj dbl2_tabs_kernels.obj \
+		dbl2_test_utilities.obj dbl2_factorizations.obj \
+		dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
+		gettimeofday4win.obj \
+                random_numbers.obj random2_vectors.obj random2_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl2_qrbs.exe test_dbl2_qrbs.obj \
+             double_double_functions.obj prompt_baqr_setup.obj \
+	     dbl2_qrbs_testers.obj dbl2_test_utilities.obj \
+             dbl2_factors_testers.obj dbl2_factorizations.obj \
+             dbl2_baqr_host.obj dbl2_baqr_kernels.obj dbl_baqr_flopcounts.obj \
+             dbl2_tabs_host.obj dbl2_tabs_kernels.obj dbl_tabs_flopcounts.obj \
+	     gettimeofday4win.obj \
+             random_numbers.obj random2_vectors.obj random2_matrices.obj
+
+dbl4_qrbs_testers.obj:
+	@-echo ">>> compiling dbl4_qrbs_testers ..."
+	$(CL)\cl /c dbl4_qrbs_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl4_qrbs_testers.obj /EHsc
+
+test_dbl4_qrbs.obj:
+	@-echo ">>> compiling test_dbl4_qrbs ..."
+	$(CL)\cl /c test_dbl4_qrbs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl4_qrbs.obj /EHsc
+
+test_dbl4_qrbs: test_dbl4_qrbs.obj prompt_baqr_setup.obj \
+                double_double_functions.obj quad_double_functions.obj \
+                dbl4_qrbs_testers.obj dbl4_factors_testers.obj \
+                dbl4_baqr_host.obj dbl4_baqr_kernels.obj \
+	        dbl4_tabs_host.obj dbl4_tabs_kernels.obj \
+		dbl4_test_utilities.obj dbl4_factorizations.obj \
+		dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
+		gettimeofday4win.obj \
+                random_numbers.obj random4_vectors.obj random4_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl4_qrbs.exe test_dbl4_qrbs.obj \
+             double_double_functions.obj quad_double_functions.obj \
+	     prompt_baqr_setup.obj gettimeofday4win.obj \
+	     dbl4_qrbs_testers.obj dbl4_test_utilities.obj \
+             dbl4_factors_testers.obj dbl4_factorizations.obj \
+             dbl4_baqr_host.obj dbl4_baqr_kernels.obj dbl_baqr_flopcounts.obj \
+             dbl4_tabs_host.obj dbl4_tabs_kernels.obj dbl_tabs_flopcounts.obj \
+             random_numbers.obj random4_vectors.obj random4_matrices.obj
+
+dbl8_qrbs_testers.obj:
+	@-echo ">>> compiling dbl8_qrbs_testers ..."
+	$(CL)\cl /c dbl8_qrbs_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl8_qrbs_testers.obj /EHsc
+
+test_dbl8_qrbs.obj:
+	@-echo ">>> compiling test_dbl8_qrbs ..."
+	$(CL)\cl /c test_dbl8_qrbs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: test_dbl8_qrbs.obj /EHsc
+
+test_dbl8_qrbs: test_dbl8_qrbs.obj prompt_baqr_setup.obj \
+                double_double_functions.obj quad_double_functions.obj \
+		octo_double_functions.obj gettimeofday4win.obj \
+                dbl8_qrbs_testers.obj dbl8_factors_testers.obj \
+                dbl8_baqr_host.obj dbl8_baqr_kernels.obj \
+	        dbl8_tabs_host.obj dbl8_tabs_kernels.obj \
+		dbl8_test_utilities.obj dbl8_factorizations.obj \
+		dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
+                random_numbers.obj random8_vectors.obj random8_matrices.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl8_qrbs.exe test_dbl8_qrbs.obj \
+             double_double_functions.obj quad_double_functions.obj \
+	     octo_double_functions.obj \
+	     prompt_baqr_setup.obj gettimeofday4win.obj \
+	     dbl8_qrbs_testers.obj dbl8_test_utilities.obj \
+             dbl8_factors_testers.obj dbl8_factorizations.obj \
+             dbl8_baqr_host.obj dbl8_baqr_kernels.obj dbl_baqr_flopcounts.obj \
+             dbl8_tabs_host.obj dbl8_tabs_kernels.obj dbl_tabs_flopcounts.obj \
+             random_numbers.obj random8_vectors.obj random8_matrices.obj
+
+clean:
+	del *~
+	del test_dbl_vectors.obj test_dbl_vectors_lib
+	del test_dbl_vectors.exe test_dbl_vectors.exp
+	del test_dbl_matrices.obj test_dbl_matrices_lib
+	del test_dbl_matrices.exe test_dbl_matrices.exp
+	del test_upper_jobs.obj test_upper_jobs_lib
+	del test_upper_jobs.exe test_upper_jobs.exp
+	del dbl_linearization.obj
+	del test_dbl_linearization.obj test_dbl_linearization_lib
+	del test_dbl_linearization.exe test_dbl_linearization.exp
+	del dbl_factorizations.obj dbl_factors_testers.obj
+	del test_dbl_factors.obj test_dbl_factors_lib
+	del test_dbl_factors.exe test_dbl_factors.exp
+	del dbl2_factorizations.obj dbl2_factors_testers.obj
+	del test_dbl2_factors.obj test_dbl2_factors_lib
+	del test_dbl2_factors.exe test_dbl2_factors.exp
+	del dbl4_factorizations.obj dbl4_factors_testers.obj
+	del test_dbl4_factors.obj test_dbl4_factors_lib
+	del test_dbl4_factors.exe test_dbl4_factors.exp
+	del dbl8_factorizations.obj dbl8_factors_testers.obj
+	del test_dbl8_factors.obj test_dbl8_factors_lib
+	del test_dbl8_factors.exe test_dbl8_factors.exp
+	del random_matrices.obj gettimeofday4win.obj
+	del dbl_matrices_host.obj dbl_matrices_kernels.obj
+	del dbl_matrices_testers.obj dbl_vectors_testers.obj
+	del dbl_tabs_host.obj dbl_tabs_kernels.obj dbl_test_utilities.obj
+	del dbl_tabs_testers.obj test_dbl_tabs.obj dbl_tabs_flopcounts.obj
+	del write_dbl_bstimeflops.obj write_dbl2_bstimeflops.obj
+	del write_dbl4_bstimeflops.obj write_dbl8_bstimeflops.obj
+	del test_dbl_tabs.obj test_dbl_tabs_lib
+	del test_dbl_tabs.exe test_dbl_tabs.exp
+	del double_double_functions.obj
+	del quad_double_functions.obj
+	del octo_double_functions.obj
+	del random2_vectors.obj random2_matrices.obj
+	del random4_vectors.obj random4_matrices.obj
+	del random8_vectors.obj random8_matrices.obj
+	del dbl2_tabs_host.obj dbl2_tabs_kernels.obj
+	del dbl2_test_utilities.obj dbl2_tabs_testers.obj
+	del test_dbl2_tabs.obj test_dbl2_tabs_lib
+	del test_dbl2_tabs.exe test_dbl2_tabs.exp
+	del dbl4_tabs_host.obj dbl4_tabs_kernels.obj
+	del dbl4_test_utilities.obj dbl4_tabs_testers.obj
+	del test_dbl4_tabs.obj test_dbl4_tabs_lib
+	del test_dbl4_tabs.exe test_dbl4_tabs.exp
+	del dbl8_tabs_host.obj dbl8_tabs_kernels.obj
+	del dbl8_test_utilities.obj dbl8_tabs_testers.obj
+	del test_dbl8_tabs.obj test_dbl8_tabs_lib
+	del test_dbl8_tabs.exe test_dbl8_tabs.exp
+	del dbl_data_files.obj
+	del make_data_files.obj make_data_files_lib
+	del make_data_files.exe make_data_files.exp
+	del dbl_baqr_host.obj dbl_baqr_kernels.obj dbl_baqr_testers.obj
+	del dbl_baqr_flopcounts.obj
+	del test_dbl_baqr.obj test_dbl_baqr_lib prompt_baqr_setup.obj
+	del test_dbl_baqr.exe test_dbl_baqr.exp
+	del dbl2_baqr_host.obj dbl2_baqr_kernels.obj dbl2_baqr_testers.obj
+	del test_dbl2_baqr.obj test_dbl2_baqr_lib
+	del test_dbl2_baqr.exe test_dbl2_baqr.exp
+	del dbl4_baqr_host.obj dbl4_baqr_kernels.obj dbl4_baqr_testers.obj
+	del test_dbl4_baqr.obj test_dbl4_baqr_lib
+	del test_dbl4_baqr.exe test_dbl4_baqr.exp
+	del dbl8_baqr_host.obj dbl8_baqr_kernels.obj dbl8_baqr_testers.obj
+	del test_dbl8_baqr.obj test_dbl8_baqr_lib
+	del test_dbl8_baqr.exe test_dbl8_baqr.exp
+	del write_dbl_qrtimeflops.obj write_dbl2_qrtimeflops.obj
+	del write_dbl4_qrtimeflops.obj write_dbl8_qrtimeflops.obj
+	del test_dbl_qrbs.obj test_dbl_qrbs_lib
+	del test_dbl_qrbs.exe test_dbl_qrbs.exp
+	del dbl_qrbs_testers.obj
+	del test_dbl2_qrbs.obj test_dbl2_qrbs_lib
+	del test_dbl2_qrbs.exe test_dbl2_qrbs.exp
+	del dbl2_qrbs_testers.obj
+	del test_dbl4_qrbs.obj test_dbl4_qrbs_lib
+	del test_dbl4_qrbs.exe test_dbl4_qrbs.exp
+	del dbl4_qrbs_testers.obj
+	del test_dbl8_qrbs.obj test_dbl8_qrbs_lib
+	del test_dbl8_qrbs.exe test_dbl8_qrbs.exp
+	del dbl8_qrbs_testers.obj
+
+cleanall: clean
+	del *exe *obj *exp *lib
