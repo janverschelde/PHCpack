@@ -3,8 +3,9 @@
 # to use the makefile_windows or the makefile_unix,
 # respectively for a Windows or GNU Linux/Unix computer.
 
-MAKEFILE = makefile_windows
-# MAKEFILE = makefile_unix
+# MAKEFILE = makefile_windows2
+# MAKEFILE = makefile_windows
+MAKEFILE = makefile_unix
 
 test_convolutions:
 	make -f $(MAKEFILE) test_convolutions

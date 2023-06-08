@@ -1,0 +1,871 @@
+# This makefile is for the command line version
+# of the 2022 Community Microsoft Visual Studio Compiler on Windows 11
+# The option '-O3' is unknown and replaced by '-O2'.
+
+# location for the C code for multiple double precision
+MPD=../Norms
+
+# architecture flag
+smflag=sm_70
+
+# location of the command line Microsoft Visual Studio Compiler
+# CL="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64"
+CL="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\bin\Hostx64\x64"
+
+# include path for the Microsoft Visual Studio Compiler
+# includepath="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\include"
+includepath="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include"
+
+# include path for the Windows Kit
+# winkitucrt="C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt"
+winkitucrt="C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt"
+
+# libaries of the Microsoft Visual Studio compiler
+# libdirvs="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\lib\x64"
+libdirvs="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\lib\x64"
+
+# libraries of the Windows Kits
+# libdirkitum="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\um\x64"
+# libdirkitucrt="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\ucrt\x64"
+libdirkitum="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.22000.0\um\x64"
+libdirkitucrt="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.22000.0\ucrt\x64"
+
+# include files of the CUDA SDK
+# CUDASDK="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2"
+CUDASDK="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1"
+# library folder of the CUDA SDK
+# CUDALIB="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\lib\x64"
+CUDALIB="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1\lib\x64"
+
+convolutions_kernels.obj:
+	@-echo ">>> compiling all convolution kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+                convolutions_kernels.cu \
+             -o convolutions_kernels.obj
+
+dbl_convolutions_kernels.obj:
+	@-echo ">>> compiling convolution kernels for doubles ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 \
+                dbl_convolutions_kernels.cu \
+             -o dbl_convolutions_kernels.obj
+
+dbl2_convolutions_kernels.obj:
+	@-echo ">>> compiling convolution kernels for double doubles ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
+                dbl2_convolutions_kernels.cu \
+             -o dbl2_convolutions_kernels.obj
+
+dbl3_convolutions_kernels.obj:
+	@-echo ">>> compiling convolution kernels for triple doubles ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
+                dbl3_convolutions_kernels.cu \
+             -o dbl3_convolutions_kernels.obj
+
+dbl4_convolutions_kernels.obj:
+	@-echo ">>> compiling convolution kernels for quad doubles ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
+                dbl4_convolutions_kernels.cu \
+             -o dbl4_convolutions_kernels.obj
+
+dbl5_convolutions_kernels.obj:
+	@-echo ">>> compiling convolution kernels for penta doubles ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
+                dbl5_convolutions_kernels.cu \
+             -o dbl5_convolutions_kernels.obj
+
+dbl8_convolutions_kernels.obj:
+	@-echo ">>> compiling convolution kernels for octo doubles ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
+                dbl8_convolutions_kernels.cu \
+             -o dbl8_convolutions_kernels.obj
+
+dbl10_convolutions_kernels.obj:
+	@-echo ">>> compiling convolution kernels for deca doubles ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
+                dbl10_convolutions_kernels.cu \
+             -o dbl10_convolutions_kernels.obj
+
+dbl_monomials_kernels.obj:
+	@-echo ">>> compiling monomial kernels for doubles ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+                dbl_monomials_kernels.cu \
+             -o dbl_monomials_kernels.obj
+
+dbl2_monomials_kernels.obj:
+	@-echo ">>> compiling monomial kernels for double doubles ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
+                dbl2_monomials_kernels.cu \
+             -o dbl2_monomials_kernels.obj
+
+dbl3_monomials_kernels.obj:
+	@-echo ">>> compiling monomial kernels for triple doubles ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
+                dbl3_monomials_kernels.cu \
+             -o dbl3_monomials_kernels.obj
+
+dbl4_monomials_kernels.obj:
+	@-echo ">>> compiling monomial kernels for quad doubles ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
+                dbl4_monomials_kernels.cu \
+             -o dbl4_monomials_kernels.obj
+
+dbl5_monomials_kernels.obj:
+	@-echo ">>> compiling monomial kernels for penta doubles ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
+                dbl5_monomials_kernels.cu \
+             -o dbl5_monomials_kernels.obj
+
+dbl8_monomials_kernels.obj:
+	@-echo ">>> compiling monomial kernels for octo doubles ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
+                dbl8_monomials_kernels.cu \
+             -o dbl8_monomials_kernels.obj
+
+dbl10_monomials_kernels.obj:
+	@-echo ">>> compiling monomial kernels for deca doubles ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(MPD) \
+             --define-macro gpufun=1 \
+                dbl10_monomials_kernels.cu \
+             -o dbl10_monomials_kernels.obj
+
+random_numbers.obj:
+	@-echo ">>> compiling random number generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random_numbers.cpp \
+                 /Fo: random_numbers.obj /EHsc
+
+random2_vectors.obj:
+	@-echo ">>> compiling double double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random2_vectors.cpp \
+                 /Fo: random2_vectors.obj /EHsc
+
+random3_vectors.obj:
+	@-echo ">>> compiling triple double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random3_vectors.cpp \
+                 /Fo: random3_vectors.obj /EHsc
+
+random4_vectors.obj:
+	@-echo ">>> compiling quad double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random4_vectors.cpp \
+                 /Fo: random4_vectors.obj /EHsc
+
+random5_vectors.obj:
+	@-echo ">>> compiling penta double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random5_vectors.cpp \
+                 /Fo: random5_vectors.obj /EHsc
+
+random8_vectors.obj:
+	@-echo ">>> compiling octo double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random8_vectors.cpp \
+                 /Fo: random8_vectors.obj /EHsc
+
+random10_vectors.obj:
+	@-echo ">>> compiling deca double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random10_vectors.cpp \
+                 /Fo: random10_vectors.obj /EHsc
+
+random_series.obj:
+	@-echo ">>> compiling double random series generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random_series.cpp \
+                 /Fo: random_series.obj /EHsc
+
+random2_series.obj:
+	@-echo ">>> compiling double double random series generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random2_series.cpp \
+                 /Fo: random2_series.obj /EHsc
+
+random3_series.obj:
+	@-echo ">>> compiling triple double random series generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random3_series.cpp \
+                 /Fo: random3_series.obj /EHsc
+
+random4_series.obj:
+	@-echo ">>> compiling quad double random series generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random4_series.cpp \
+                 /Fo: random4_series.obj /EHsc
+
+random5_series.obj:
+	@-echo ">>> compiling penta double random series generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random5_series.cpp \
+                 /Fo: random5_series.obj /EHsc
+
+random8_series.obj:
+	@-echo ">>> compiling octo double random series generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random8_series.cpp \
+                 /Fo: random8_series.obj /EHsc
+
+random10_series.obj:
+	@-echo ">>> compiling deca double random series generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random10_series.cpp \
+                 /Fo: random10_series.obj /EHsc
+
+random_monomials.obj:
+	@-echo ">>> compiling double random monomials generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random_monomials.cpp \
+                 /Fo: random_monomials.obj /EHsc
+
+random2_monomials.obj:
+	@-echo ">>> compiling double double random monomials generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random2_monomials.cpp \
+                 /Fo: random2_monomials.obj /EHsc
+
+random3_monomials.obj:
+	@-echo ">>> compiling triple double random monomials generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random3_monomials.cpp \
+                 /Fo: random3_monomials.obj /EHsc
+
+random4_monomials.obj:
+	@-echo ">>> compiling quad double random monomials generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random4_monomials.cpp \
+                 /Fo: random4_monomials.obj /EHsc
+
+random5_monomials.obj:
+	@-echo ">>> compiling penta double random monomials generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random5_monomials.cpp \
+                 /Fo: random5_monomials.obj /EHsc
+
+random8_monomials.obj:
+	@-echo ">>> compiling octo double random monomials generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random8_monomials.cpp \
+                 /Fo: random8_monomials.obj /EHsc
+
+random10_monomials.obj:
+	@-echo ">>> compiling deca double random monomials generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      random10_monomials.cpp \
+                 /Fo: random10_monomials.obj /EHsc
+
+double_double_functions.obj:
+	@-echo ">>> compiling double double functions..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/double_double_functions.cpp \
+                 /Fo: double_double_functions.obj /EHsc
+
+triple_double_functions.obj:
+	@-echo ">>> compiling triple double functions..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/triple_double_functions.cpp \
+                 /Fo: triple_double_functions.obj /EHsc
+
+quad_double_functions.obj:
+	@-echo ">>> compiling quad double functions..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/quad_double_functions.cpp \
+                 /Fo: quad_double_functions.obj /EHsc
+
+penta_double_functions.obj:
+	@-echo ">>> compiling penta double functions..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/penta_double_functions.cpp \
+                 /Fo: penta_double_functions.obj /EHsc
+
+octo_double_functions.obj:
+	@-echo ">>> compiling octo double functions..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/octo_double_functions.cpp \
+                 /Fo: octo_double_functions.obj /EHsc
+
+deca_double_functions.obj:
+	@-echo ">>> compiling deca double functions..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/deca_double_functions.cpp \
+                 /Fo: deca_double_functions.obj /EHsc
+
+dbl_convolutions_host.obj:
+	@-echo ">>> compiling dbl_convolutions_host ..."
+	$(CL)\cl /c dbl_convolutions_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl_convolutions_host.obj
+
+dbl2_convolutions_host.obj:
+	@-echo ">>> compiling dbl2_convolutions_host ..."
+	$(CL)\cl /c dbl2_convolutions_host.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl2_convolutions_host.obj
+
+dbl3_convolutions_host.obj:
+	@-echo ">>> compiling dbl3_convolutions_host ..."
+	$(CL)\cl /c dbl3_convolutions_host.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl3_convolutions_host.obj
+
+dbl4_convolutions_host.obj:
+	@-echo ">>> compiling dbl4_convolutions_host ..."
+	$(CL)\cl /c dbl4_convolutions_host.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl4_convolutions_host.obj
+
+dbl5_convolutions_host.obj:
+	@-echo ">>> compiling dbl5_convolutions_host ..."
+	$(CL)\cl /c dbl5_convolutions_host.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl5_convolutions_host.obj
+
+dbl8_convolutions_host.obj:
+	@-echo ">>> compiling dbl8_convolutions_host ..."
+	$(CL)\cl /c dbl8_convolutions_host.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl8_convolutions_host.obj
+
+dbl10_convolutions_host.obj:
+	@-echo ">>> compiling dbl10_convolutions_host ..."
+	$(CL)\cl /c dbl10_convolutions_host.cpp \
+                 -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl10_convolutions_host.obj
+
+dbl_convolutions_testers.obj:
+	@-echo ">>> compiling dbl_convolutions_testers ..."
+	$(CL)\cl /c dbl_convolutions_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl_convolutions_testers.obj /EHsc
+
+dbl2_convolutions_testers.obj:
+	@-echo ">>> compiling dbl2_convolutions_testers ..."
+	$(CL)\cl /c dbl2_convolutions_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl2_convolutions_testers.obj /EHsc
+
+dbl3_convolutions_testers.obj:
+	@-echo ">>> compiling dbl3_convolutions_testers ..."
+	$(CL)\cl /c dbl3_convolutions_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl3_convolutions_testers.obj /EHsc
+
+dbl4_convolutions_testers.obj:
+	@-echo ">>> compiling dbl4_convolutions_testers ..."
+	$(CL)\cl /c dbl4_convolutions_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl4_convolutions_testers.obj /EHsc
+
+dbl5_convolutions_testers.obj:
+	@-echo ">>> compiling dbl5_convolutions_testers ..."
+	$(CL)\cl /c dbl5_convolutions_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl5_convolutions_testers.obj /EHsc
+
+dbl8_convolutions_testers.obj:
+	@-echo ">>> compiling dbl8_convolutions_testers ..."
+	$(CL)\cl /c dbl8_convolutions_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl8_convolutions_testers.obj /EHsc
+
+dbl10_convolutions_testers.obj:
+	@-echo ">>> compiling dbl10_convolutions_testers ..."
+	$(CL)\cl /c dbl10_convolutions_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl10_convolutions_testers.obj /EHsc
+
+test_convolutions.obj:
+	@-echo ">>> compiling test_convolutions ..."
+	$(CL)\cl /c test_convolutions.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_convolutions.obj /EHsc
+
+test_dbl_convolutions.obj:
+	@-echo ">>> compiling test_dbl_convolutions ..."
+	$(CL)\cl /c test_dbl_convolutions.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl_convolutions.obj /EHsc
+
+test_dbl2_convolutions.obj:
+	@-echo ">>> compiling test_dbl2_convolutions ..."
+	$(CL)\cl /c test_dbl2_convolutions.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl2_convolutions.obj /EHsc
+
+test_dbl3_convolutions.obj:
+	@-echo ">>> compiling test_dbl3_convolutions ..."
+	$(CL)\cl /c test_dbl3_convolutions.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl3_convolutions.obj /EHsc
+
+test_dbl4_convolutions.obj:
+	@-echo ">>> compiling test_dbl4_convolutions ..."
+	$(CL)\cl /c test_dbl4_convolutions.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl4_convolutions.obj /EHsc
+
+test_dbl5_convolutions.obj:
+	@-echo ">>> compiling test_dbl5_convolutions ..."
+	$(CL)\cl /c test_dbl5_convolutions.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl5_convolutions.obj /EHsc
+
+test_dbl8_convolutions.obj:
+	@-echo ">>> compiling test_dbl8_convolutions ..."
+	$(CL)\cl /c test_dbl8_convolutions.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl8_convolutions.obj /EHsc
+
+test_dbl10_convolutions.obj:
+	@-echo ">>> compiling test_dbl10_convolutions ..."
+	$(CL)\cl /c test_dbl10_convolutions.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl10_convolutions.obj /EHsc
+
+dbl_monomials_host.obj:
+	@-echo ">>> compiling dbl_monomials_host ..."
+	$(CL)\cl /c dbl_monomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -02 \
+                 /Fo: dbl_monomials_host.obj /EHsc
+
+dbl2_monomials_host.obj:
+	@-echo ">>> compiling dbl2_monomials_host ..."
+	$(CL)\cl /c dbl2_monomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -02 \
+                 /Fo: dbl2_monomials_host.obj /EHsc
+
+dbl3_monomials_host.obj:
+	@-echo ">>> compiling dbl3_monomials_host ..."
+	$(CL)\cl /c dbl3_monomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -02 \
+                 /Fo: dbl3_monomials_host.obj /EHsc
+
+dbl4_monomials_host.obj:
+	@-echo ">>> compiling dbl4_monomials_host ..."
+	$(CL)\cl /c dbl4_monomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -02 \
+                 /Fo: dbl4_monomials_host.obj /EHsc
+
+dbl5_monomials_host.obj:
+	@-echo ">>> compiling dbl5_monomials_host ..."
+	$(CL)\cl /c dbl5_monomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -02 \
+                 /Fo: dbl5_monomials_host.obj /EHsc
+
+dbl8_monomials_host.obj:
+	@-echo ">>> compiling dbl8_monomials_host ..."
+	$(CL)\cl /c dbl8_monomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -02 \
+                 /Fo: dbl8_monomials_host.obj /EHsc
+
+dbl10_monomials_host.obj:
+	@-echo ">>> compiling dbl10_monomials_host ..."
+	$(CL)\cl /c dbl10_monomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -02 \
+                 /Fo: dbl10_monomials_host.obj /EHsc
+
+dbl_monomials_testers.obj:
+	@-echo ">>> compiling dbl_monomials_testers ..."
+	$(CL)\cl /c dbl_monomials_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl_monomials_testers.obj /EHsc
+
+dbl2_monomials_testers.obj:
+	@-echo ">>> compiling dbl2_monomials_testers ..."
+	$(CL)\cl /c dbl2_monomials_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl2_monomials_testers.obj /EHsc
+
+dbl3_monomials_testers.obj:
+	@-echo ">>> compiling dbl3_monomials_testers ..."
+	$(CL)\cl /c dbl3_monomials_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl3_monomials_testers.obj /EHsc
+
+dbl4_monomials_testers.obj:
+	@-echo ">>> compiling dbl4_monomials_testers ..."
+	$(CL)\cl /c dbl4_monomials_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl4_monomials_testers.obj /EHsc
+
+dbl5_monomials_testers.obj:
+	@-echo ">>> compiling dbl5_monomials_testers ..."
+	$(CL)\cl /c dbl5_monomials_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl5_monomials_testers.obj /EHsc
+
+dbl8_monomials_testers.obj:
+	@-echo ">>> compiling dbl8_monomials_testers ..."
+	$(CL)\cl /c dbl8_monomials_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl8_monomials_testers.obj /EHsc
+
+dbl10_monomials_testers.obj:
+	@-echo ">>> compiling dbl10_monomials_testers ..."
+	$(CL)\cl /c dbl10_monomials_testers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: dbl10_monomials_testers.obj /EHsc
+
+test_monomials.obj:
+	@-echo ">>> compiling test_monomials ..."
+	$(CL)\cl /c test_monomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_monomials.obj /EHsc
+
+test_dbl_monomials.obj:
+	@-echo ">>> compiling test_dbl_monomials ..."
+	$(CL)\cl /c test_dbl_monomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl_monomials.obj /EHsc
+
+test_dbl2_monomials.obj:
+	@-echo ">>> compiling test_dbl2_monomials ..."
+	$(CL)\cl /c test_dbl2_monomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl2_monomials.obj /EHsc
+
+test_dbl3_monomials.obj:
+	@-echo ">>> compiling test_dbl3_monomials ..."
+	$(CL)\cl /c test_dbl3_monomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl3_monomials.obj /EHsc
+
+test_dbl4_monomials.obj:
+	@-echo ">>> compiling test_dbl4_monomials ..."
+	$(CL)\cl /c test_dbl4_monomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl4_monomials.obj /EHsc
+
+test_dbl5_monomials.obj:
+	@-echo ">>> compiling test_dbl5_monomials ..."
+	$(CL)\cl /c test_dbl5_monomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl5_monomials.obj /EHsc
+
+test_dbl8_monomials.obj:
+	@-echo ">>> compiling test_dbl8_monomials ..."
+	$(CL)\cl /c test_dbl8_monomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl8_monomials.obj /EHsc
+
+test_dbl10_monomials.obj:
+	@-echo ">>> compiling test_dbl10_monomials ..."
+	$(CL)\cl /c test_dbl10_monomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) \
+                 /I$(CUDASDK)/include -02 \
+                 /Fo: test_dbl10_monomials.obj /EHsc
+
+test_convolutions: convolutions_kernels.obj test_convolutions.obj \
+                   random_numbers.obj random_series.obj \
+          double_double_functions.obj random2_vectors.obj random2_series.obj \
+          triple_double_functions.obj random3_vectors.obj random3_series.obj \
+          quad_double_functions.obj random4_vectors.obj random4_series.obj \
+          penta_double_functions.obj random5_vectors.obj random5_series.obj \
+          octo_double_functions.obj random8_vectors.obj random8_series.obj \
+          deca_double_functions.obj random10_vectors.obj random10_series.obj \
+                   dbl_convolutions_host.obj dbl_convolutions_testers.obj \
+                   dbl2_convolutions_host.obj dbl2_convolutions_testers.obj \
+                   dbl3_convolutions_host.obj dbl3_convolutions_testers.obj \
+                   dbl4_convolutions_host.obj dbl4_convolutions_testers.obj \
+                   dbl5_convolutions_host.obj dbl5_convolutions_testers.obj \
+                   dbl8_convolutions_host.obj dbl8_convolutions_testers.obj \
+                   dbl10_convolutions_host.obj dbl10_convolutions_testers.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_convolutions.exe convolutions_kernels.obj \
+             random_numbers.obj random_series.obj test_convolutions.obj \
+          double_double_functions.obj random2_vectors.obj random2_series.obj \
+          triple_double_functions.obj random3_vectors.obj random3_series.obj \
+          quad_double_functions.obj random4_vectors.obj random4_series.obj \
+          penta_double_functions.obj random5_vectors.obj random5_series.obj \
+          octo_double_functions.obj random8_vectors.obj random8_series.obj \
+          deca_double_functions.obj random10_vectors.obj random10_series.obj \
+             dbl_convolutions_host.obj dbl_convolutions_testers.obj \
+             dbl2_convolutions_host.obj dbl2_convolutions_testers.obj \
+             dbl3_convolutions_host.obj dbl3_convolutions_testers.obj \
+             dbl4_convolutions_host.obj dbl4_convolutions_testers.obj \
+             dbl5_convolutions_host.obj dbl5_convolutions_testers.obj \
+             dbl8_convolutions_host.obj dbl8_convolutions_testers.obj \
+             dbl10_convolutions_host.obj dbl10_convolutions_testers.obj
+
+test_dbl_convolutions: random_numbers.obj random_series.obj \
+                       dbl_convolutions_kernels.obj \
+                       dbl_convolutions_host.obj test_dbl_convolutions.obj \
+		       dbl_convolutions_testers.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl_convolutions.exe random_numbers.obj \
+             random_series.obj dbl_convolutions_kernels.obj \
+             dbl_convolutions_host.obj test_dbl_convolutions.obj \
+             dbl_convolutions_testers.obj
+
+test_dbl2_convolutions: double_double_functions.obj random_numbers.obj \
+                        random2_vectors.obj random2_series.obj \
+                    dbl2_convolutions_host.obj dbl2_convolutions_kernels.obj \
+                    dbl2_convolutions_testers.obj test_dbl2_convolutions.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl2_convolutions.exe \
+             double_double_functions.obj dbl2_convolutions_kernels.obj \
+             random_numbers.obj random2_vectors.obj random2_series.obj \
+             dbl2_convolutions_host.obj test_dbl2_convolutions.obj \
+	     dbl2_convolutions_testers.obj
+
+test_dbl3_convolutions: double_double_functions.obj \
+                        triple_double_functions.obj random_numbers.obj \
+                        random3_vectors.obj random3_series.obj \
+                    dbl3_convolutions_host.obj dbl3_convolutions_kernels.obj \
+                    dbl3_convolutions_testers.obj test_dbl3_convolutions.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl3_convolutions.exe \
+             double_double_functions.obj triple_double_functions.obj \
+             random_numbers.obj random3_vectors.obj random3_series.obj \
+             dbl3_convolutions_kernels.obj dbl3_convolutions_host.obj \
+             dbl3_convolutions_testers.obj test_dbl3_convolutions.obj
+
+test_dbl4_convolutions: double_double_functions.obj \
+                        quad_double_functions.obj random_numbers.obj \
+                        random4_vectors.obj random4_series.obj \
+                    dbl4_convolutions_host.obj dbl4_convolutions_kernels.obj \
+                    dbl4_convolutions_testers.obj test_dbl4_convolutions.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl4_convolutions.exe \
+             double_double_functions.obj quad_double_functions.obj \
+             random_numbers.obj random4_vectors.obj random4_series.obj \
+             dbl4_convolutions_kernels.obj dbl4_convolutions_host.obj \
+             dbl4_convolutions_testers.obj test_dbl4_convolutions.obj
+
+test_dbl5_convolutions: double_double_functions.obj \
+                        penta_double_functions.obj random_numbers.obj \
+                        random5_vectors.obj random5_series.obj \
+                    dbl5_convolutions_host.obj dbl5_convolutions_kernels.obj \
+                    dbl5_convolutions_testers.obj test_dbl5_convolutions.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl5_convolutions.exe \
+             double_double_functions.obj penta_double_functions.obj \
+             random_numbers.obj random5_vectors.obj random5_series.obj \
+             dbl5_convolutions_kernels.obj dbl5_convolutions_host.obj \
+             dbl5_convolutions_testers.obj test_dbl5_convolutions.obj
+
+test_dbl8_convolutions: double_double_functions.obj \
+                        quad_double_functions.obj \
+                        octo_double_functions.obj random_numbers.obj \
+                        random8_vectors.obj random8_series.obj \
+                    dbl8_convolutions_host.obj dbl8_convolutions_kernels.obj \
+                    dbl8_convolutions_testers.obj test_dbl8_convolutions.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl8_convolutions.exe \
+             double_double_functions.obj quad_double_functions.obj \
+             octo_double_functions.obj \
+             random_numbers.obj random8_vectors.obj random8_series.obj \
+             dbl8_convolutions_kernels.obj dbl8_convolutions_host.obj \
+             dbl8_convolutions_testers.obj test_dbl8_convolutions.obj
+
+test_dbl10_convolutions: double_double_functions.obj \
+                         quad_double_functions.obj \
+                 octo_double_functions.obj deca_double_functions.obj \
+                 random_numbers.obj random10_vectors.obj random10_series.obj \
+                 dbl10_convolutions_host.obj dbl10_convolutions_kernels.obj \
+                 dbl10_convolutions_testers.obj test_dbl10_convolutions.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl10_convolutions.exe \
+             double_double_functions.obj quad_double_functions.obj \
+             octo_double_functions.obj deca_double_functions.obj \
+             random_numbers.obj random10_vectors.obj random10_series.obj \
+             dbl10_convolutions_host.obj dbl10_convolutions_kernels.obj \
+       	     dbl10_convolutions_testers.obj test_dbl10_convolutions.obj
+
+test_monomials: random_numbers.obj random_series.obj random_monomials.obj \
+                random2_vectors.obj random2_series.obj random2_monomials.obj \
+                random3_vectors.obj random3_series.obj random3_monomials.obj \
+                random4_vectors.obj random4_series.obj random4_monomials.obj \
+                random5_vectors.obj random5_series.obj random5_monomials.obj \
+                random8_vectors.obj random8_series.obj random8_monomials.obj \
+             random10_vectors.obj random10_series.obj random10_monomials.obj \
+                double_double_functions.obj triple_double_functions.obj \
+		quad_double_functions.obj penta_double_functions.obj \
+                octo_double_functions.obj deca_double_functions.obj \
+                dbl_convolutions_host.obj dbl_monomials_host.obj \
+                dbl_monomials_kernels.obj dbl_monomials_testers.obj \
+                dbl2_convolutions_host.obj dbl2_monomials_host.obj \
+                dbl2_monomials_kernels.obj dbl2_monomials_testers.obj \
+                dbl3_convolutions_host.obj dbl3_monomials_host.obj \
+                dbl3_monomials_kernels.obj dbl3_monomials_testers.obj \
+                dbl4_convolutions_host.obj dbl4_monomials_host.obj \
+                dbl4_monomials_kernels.obj dbl4_monomials_testers.obj \
+                dbl5_convolutions_host.obj dbl5_monomials_host.obj \
+                dbl5_monomials_kernels.obj dbl5_monomials_testers.obj \
+                dbl8_convolutions_host.obj dbl8_monomials_host.obj \
+                dbl8_monomials_kernels.obj dbl8_monomials_testers.obj \
+                dbl10_convolutions_host.obj dbl10_monomials_host.obj \
+                dbl10_monomials_kernels.obj dbl10_monomials_testers.obj \
+                test_monomials.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_monomials.exe test_monomials.obj \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random2_vectors.obj random2_series.obj random2_monomials.obj \
+              random3_vectors.obj random3_series.obj random3_monomials.obj \
+              random4_vectors.obj random4_series.obj random4_monomials.obj \
+              random5_vectors.obj random5_series.obj random5_monomials.obj \
+              random8_vectors.obj random8_series.obj random8_monomials.obj \
+              random10_vectors.obj random10_series.obj random10_monomials.obj \
+              double_double_functions.obj triple_double_functions.obj \
+              quad_double_functions.obj penta_double_functions.obj \
+              octo_double_functions.obj deca_double_functions.obj \
+              dbl_convolutions_host.obj dbl_monomials_host.obj \
+              dbl_monomials_kernels.obj dbl_monomials_testers.obj \
+              dbl2_convolutions_host.obj dbl2_monomials_host.obj \
+              dbl2_monomials_kernels.obj dbl2_monomials_testers.obj \
+              dbl3_convolutions_host.obj dbl3_monomials_host.obj \
+              dbl3_monomials_kernels.obj dbl3_monomials_testers.obj \
+              dbl4_convolutions_host.obj dbl4_monomials_host.obj \
+              dbl4_monomials_kernels.obj dbl4_monomials_testers.obj \
+              dbl5_convolutions_host.obj dbl5_monomials_host.obj \
+              dbl5_monomials_kernels.obj dbl5_monomials_testers.obj \
+              dbl8_convolutions_host.obj dbl8_monomials_host.obj \
+              dbl8_monomials_kernels.obj dbl8_monomials_testers.obj \
+              dbl10_convolutions_host.obj dbl10_monomials_host.obj \
+              dbl10_monomials_kernels.obj dbl10_monomials_testers.obj
+
+test_dbl_monomials: random_numbers.obj random_series.obj random_monomials.obj \
+                    dbl_convolutions_host.obj dbl_monomials_host.obj \
+                    dbl_monomials_kernels.obj dbl_monomials_testers.obj \
+                    test_dbl_monomials.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl_monomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              dbl_convolutions_host.obj dbl_monomials_host.obj \
+              dbl_monomials_kernels.obj dbl_monomials_testers.obj \
+              test_dbl_monomials.obj
+
+test_dbl2_monomials: random_numbers.obj random_series.obj random_monomials.obj \
+                     random2_vectors.obj random2_series.obj \
+                     random2_monomials.obj double_double_functions.obj \
+                     dbl2_convolutions_host.obj dbl2_monomials_host.obj \
+                     dbl2_monomials_kernels.obj dbl2_monomials_testers.obj \
+                     test_dbl2_monomials.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl2_monomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random2_vectors.obj random2_series.obj random2_monomials.obj \
+              double_double_functions.obj dbl2_convolutions_host.obj \
+              dbl2_monomials_host.obj dbl2_monomials_kernels.obj \
+              dbl2_monomials_testers.obj test_dbl2_monomials.obj
+
+test_dbl3_monomials: random_numbers.obj random_series.obj random_monomials.obj \
+                     random3_vectors.obj random3_series.obj \
+                     random3_monomials.obj double_double_functions.obj \
+		     triple_double_functions.obj dbl3_convolutions_host.obj \
+                     dbl3_monomials_host.obj dbl3_monomials_kernels.obj \
+                     test_dbl3_monomials.obj dbl3_monomials_testers.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl3_monomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random3_vectors.obj random3_series.obj random3_monomials.obj \
+              double_double_functions.obj triple_double_functions.obj \
+              dbl3_convolutions_host.obj dbl3_monomials_host.obj \
+              dbl3_monomials_kernels.obj dbl3_monomials_testers.obj \
+              test_dbl3_monomials.obj
+
+test_dbl4_monomials: random_numbers.obj random_series.obj random_monomials.obj \
+                     random4_vectors.obj random4_series.obj \
+                     random4_monomials.obj double_double_functions.obj \
+		     quad_double_functions.obj dbl4_convolutions_host.obj \
+                     dbl4_monomials_host.obj dbl4_monomials_kernels.obj \
+                     dbl4_monomials_testers.obj test_dbl4_monomials.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl4_monomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random4_vectors.obj random4_series.obj random4_monomials.obj \
+              double_double_functions.obj quad_double_functions.obj \
+              dbl4_convolutions_host.obj dbl4_monomials_host.obj \
+              dbl4_monomials_kernels.obj dbl4_monomials_testers.obj \
+              test_dbl4_monomials.obj
+
+test_dbl5_monomials: random_numbers.obj random_series.obj random_monomials.obj \
+                     random5_vectors.obj random5_series.obj \
+                     random5_monomials.obj double_double_functions.obj \
+		     penta_double_functions.obj dbl5_convolutions_host.obj \
+                     dbl5_monomials_host.obj dbl5_monomials_kernels.obj \
+                     dbl5_monomials_testers.obj test_dbl5_monomials.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl5_monomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random5_vectors.obj random5_series.obj random5_monomials.obj \
+              double_double_functions.obj penta_double_functions.obj \
+              dbl5_convolutions_host.obj dbl5_monomials_host.obj \
+              dbl5_monomials_kernels.obj dbl5_monomials_testers.obj \
+              test_dbl5_monomials.obj
+
+test_dbl8_monomials: random_numbers.obj random_series.obj random_monomials.obj \
+                     random8_vectors.obj random8_series.obj \
+                     random8_monomials.obj double_double_functions.obj \
+		     quad_double_functions.obj octo_double_functions.obj \
+                     dbl8_convolutions_host.obj dbl8_monomials_kernels.obj \
+                     dbl8_monomials_host.obj test_dbl8_monomials.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl8_monomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random8_vectors.obj random8_series.obj random8_monomials.obj \
+              double_double_functions.obj quad_double_functions.obj \
+              octo_double_functions.obj dbl8_convolutions_host.obj \
+              dbl8_monomials_host.obj dbl8_monomials_kernels.obj \
+              dbl8_monomials_testers.obj test_dbl8_monomials.obj
+
+test_dbl10_monomials: random_numbers.obj random_series.obj \
+                      random_monomials.obj random10_vectors.obj \
+                      random10_series.obj random10_monomials.obj \
+                 double_double_functions.obj quad_double_functions.obj \
+                 octo_double_functions.obj deca_double_functions.obj \
+                 dbl10_convolutions_host.obj dbl10_monomials_host.obj \
+                 dbl10_monomials_kernels.obj dbl10_monomials_testers.obj \
+                 test_dbl10_monomials.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl10_monomials.exe \
+              random_numbers.obj random_series.obj random_monomials.obj \
+              random10_vectors.obj random10_series.obj random10_monomials.obj \
+              double_double_functions.obj quad_double_functions.obj \
+              octo_double_functions.obj deca_double_functions.obj  \
+              dbl10_convolutions_host.obj dbl10_monomials_host.obj \
+              dbl10_monomials_kernels.obj dbl10_monomials_testers.obj \
+              test_dbl10_monomials.obj
+
+clean:
+	del *exe *obj *exp *lib *~
