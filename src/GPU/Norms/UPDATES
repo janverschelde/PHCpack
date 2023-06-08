@@ -1,3 +1,10 @@
+Wed 7 Jun 2023 : added makefile_windows2 to compile on RTX 4080 with
+  the 2022 Community edition of Microsoft Visual Studio.
+  Defined M_PI in random_numbers.cpp. 
+  The source files for the C++ files of the multiple double arithmetic
+  are now located in the C folder of src/Math_Lib/QD/C and must have
+  the .cpp (not the .c) extension.
+
 Mon 27 Sep 2021 : to octo_double_gpufun, adde a function for an inplace
   multiplication of an octo double with a double.
 

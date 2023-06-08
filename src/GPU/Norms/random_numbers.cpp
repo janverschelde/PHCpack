@@ -5,6 +5,8 @@
 #include <cmath>
 #include "random_numbers.h"
 
+#define M_PI 3.141592653589793
+
 double random_double ( void )
 {
    double r = (double) rand();
