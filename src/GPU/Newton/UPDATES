@@ -1,3 +1,7 @@
+Wed 7 Jun 2023 : new makefile_windows2 for NVIDIA RTX 4080,
+  with 2022 Community Microsoft Visual Studio compiler and
+  the NVIDIA CUDA Toolkit version 12.1.
+
 Tue 6 Jun 2023 : refactored cmplx8_newton_method.
   Added the functional octo double Newton to cmplx8_newton_method.
   Updated {dbl, dbl2, dbl4, dbl8, cmplx, cmplx2, cmplx4, cmplx8}_newton_

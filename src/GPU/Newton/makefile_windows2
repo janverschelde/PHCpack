@@ -1,0 +1,1543 @@
+# This makefile is for the command line version
+# of the 2022 Community Microsoft Visual Studio on Windows 11.
+# The option '-O3' is unknown and replaced by '-O2'.
+
+# location for the code for multiple double precision
+MPD=../Norms
+# location for the code for monomial evaluation and differentiation
+CNV=../Convolutions
+# location for the Polynomials folder for the wingettimeofday.h
+POL=../Polynomials
+# location for the Matrices folder for the solving of linear systems
+MAT=../Matrices
+
+# architecture flag
+smflag=sm_75
+
+# location of the command line Microsoft Visual Studio Compiler
+# CL="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64"
+CL="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\bin\Hostx64\x64"
+
+# include path for the Microsoft Visual Studio Compiler
+# includepath="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\include"
+includepath="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\include"
+
+# include path for the Windows Kit
+# winkitucrt="C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt"
+winkitucrt="C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\ucrt"
+# include path for the Windows.h file
+# winkitum="C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um"
+winkitum="C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\um"
+# include path for the winapifamily.h
+# winkitshared="C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\shared"
+winkitshared="C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared"
+
+# libaries of the Microsoft Visual Studio compiler
+# libdirvs="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\lib\x64"
+libdirvs="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\lib\x64"
+
+# libraries of the Windows Kits
+# libdirkitum="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\um\x64"
+# libdirkitucrt="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.18362.0\ucrt\x64"
+libdirkitum="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.22000.0\um\x64"
+libdirkitucrt="C:\Program Files (x86)\Windows Kits\10\Lib\10.0.22000.0\ucrt\x64"
+
+# include files of the CUDA SDK
+# CUDASDK="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2"
+CUDASDK="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1"
+# library folder of the CUDA SDK
+# CUDALIB="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\lib\x64"
+CUDALIB="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1\lib\x64"
+
+double_double_functions.obj:
+	@-echo ">>> compiling double double functions ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/double_double_functions.cpp \
+                 /Fo: double_double_functions.obj /EHsc
+
+quad_double_functions.obj:
+	@-echo ">>> compiling quad double functions ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/quad_double_functions.cpp \
+                 /Fo: quad_double_functions.obj /EHsc
+
+octo_double_functions.obj:
+	@-echo ">>> compiling octo double functions ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/octo_double_functions.cpp \
+                 /Fo: octo_double_functions.obj /EHsc
+
+random_numbers.obj:
+	@-echo ">>> compiling random_numbers ..."
+	$(CL)\cl /c -I$(MPD) $(MPD)/random_numbers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random_numbers.obj /EHsc
+
+random_series.obj:
+	@-echo ">>> compiling random_series ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/random_series.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random_series.obj /EHsc
+
+random2_series.obj:
+	@-echo ">>> compiling double double random_series ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/random2_series.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random2_series.obj /EHsc
+
+random4_series.obj:
+	@-echo ">>> compiling quad double random_series ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/random4_series.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random4_series.obj /EHsc
+
+random8_series.obj:
+	@-echo ">>> compiling octo double random_series ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/random8_series.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random8_series.obj /EHsc
+
+random_monomials.obj:
+	@-echo ">>> compiling random_monomials ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/random_monomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random_monomials.obj /EHsc
+
+random2_monomials.obj:
+	@-echo ">>> compiling random2_monomials ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/random2_monomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random2_monomials.obj /EHsc
+
+random4_monomials.obj:
+	@-echo ">>> compiling random4_monomials ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/random4_monomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random4_monomials.obj /EHsc
+
+random8_monomials.obj:
+	@-echo ">>> compiling random8_monomials ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/random8_monomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random8_monomials.obj /EHsc
+
+random_polynomials.obj:
+	@-echo ">>> compiling random_polynomials ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(POL)/random_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random_polynomials.obj /EHsc
+
+random2_polynomials.obj:
+	@-echo ">>> compiling random2_polynomials ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(POL)/random2_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random2_polynomials.obj /EHsc
+
+random4_polynomials.obj:
+	@-echo ">>> compiling random4_polynomials ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(POL)/random4_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random4_polynomials.obj /EHsc
+
+random8_polynomials.obj:
+	@-echo ">>> compiling random8_polynomials ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(POL)/random8_polynomials.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: random8_polynomials.obj /EHsc
+
+random2_vectors.obj:
+	@-echo ">>> compiling double double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random2_vectors.cpp \
+                 /Fo: random2_vectors.obj /EHsc
+
+random4_vectors.obj:
+	@-echo ">>> compiling quad double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random4_vectors.cpp \
+                 /Fo: random4_vectors.obj /EHsc
+
+random8_vectors.obj:
+	@-echo ">>> compiling octo double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random8_vectors.cpp \
+                 /Fo: random8_vectors.obj /EHsc
+
+dbl_convolutions_host.obj:
+	@-echo ">>> compiling dbl_convolutions_host ..."
+	$(CL)\cl /c -I$(CNV) $(CNV)/dbl_convolutions_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl_convolutions_host.obj /EHsc
+
+dbl2_convolutions_host.obj:
+	@-echo ">>> compiling dbl2_convolutions_host ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/dbl2_convolutions_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl2_convolutions_host.obj /EHsc
+
+dbl4_convolutions_host.obj:
+	@-echo ">>> compiling dbl4_convolutions_host ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/dbl4_convolutions_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl4_convolutions_host.obj /EHsc
+
+dbl8_convolutions_host.obj:
+	@-echo ">>> compiling dbl8_convolutions_host ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/dbl8_convolutions_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl8_convolutions_host.obj /EHsc
+
+dbl_monomials_host.obj:
+	@-echo ">>> compiling dbl_monomials_host ..."
+	$(CL)\cl /c -I$(CNV) $(CNV)/dbl_monomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl_monomials_host.obj /EHsc
+
+dbl2_monomials_host.obj:
+	@-echo ">>> compiling dbl2_monomials_host ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/dbl2_monomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl2_monomials_host.obj /EHsc
+
+dbl4_monomials_host.obj:
+	@-echo ">>> compiling dbl4_monomials_host ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/dbl4_monomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl4_monomials_host.obj /EHsc
+
+dbl8_monomials_host.obj:
+	@-echo ">>> compiling dbl8_monomials_host ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) $(CNV)/dbl8_monomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl8_monomials_host.obj /EHsc
+
+dbl_polynomials_host.obj:
+	@-echo ">>> compiling dbl_polynomials_host ..."
+	$(CL)\cl /c -I$(CNV) -I$(POL) $(POL)/dbl_polynomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl_polynomials_host.obj /EHsc
+
+dbl2_polynomials_host.obj:
+	@-echo ">>> compiling dbl2_polynomials_host ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(POL) \
+                      $(POL)/dbl2_polynomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl2_polynomials_host.obj /EHsc
+
+dbl4_polynomials_host.obj:
+	@-echo ">>> compiling dbl4_polynomials_host ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(POL) \
+                      $(POL)/dbl4_polynomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl4_polynomials_host.obj /EHsc
+
+dbl8_polynomials_host.obj:
+	@-echo ">>> compiling dbl8_polynomials_host ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(POL) \
+                      $(POL)/dbl8_polynomials_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl8_polynomials_host.obj /EHsc
+
+dbl_factorizations.obj:
+	@-echo ">>> compiling dbl_factorizations ..."
+	$(CL)\cl /c -I$(MAT) $(MAT)/dbl_factorizations.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl_factorizations.obj /EHsc
+
+dbl2_factorizations.obj:
+	@-echo ">>> compiling dbl2_factorizations ..."
+	$(CL)\cl /c -I$(MPD) -I$(MAT) $(MAT)/dbl2_factorizations.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl2_factorizations.obj /EHsc
+
+dbl4_factorizations.obj:
+	@-echo ">>> compiling dbl4_factorizations ..."
+	$(CL)\cl /c -I$(MPD) -I$(MAT) $(MAT)/dbl4_factorizations.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl4_factorizations.obj /EHsc
+
+dbl8_factorizations.obj:
+	@-echo ">>> compiling dbl8_factorizations ..."
+	$(CL)\cl /c -I$(MPD) -I$(MAT) $(MAT)/dbl8_factorizations.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: dbl8_factorizations.obj /EHsc
+
+unimodular_matrices.obj:
+	@-echo ">>> compiling unimodular matrices ..."
+	$(CL)\cl /c -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      unimodular_matrices.cpp \
+                 /Fo: unimodular_matrices.obj /EHsc
+
+dbl_onenorms_host.obj:
+	@-echo ">>> compiling dbl_onenorms_host ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl_onenorms_host.cpp \
+                 /Fo: dbl_onenorms_host.obj /EHsc
+
+dbl_bals_host.obj:
+	@-echo ">>> compiling dbl_bals_host ..."
+	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl_bals_host.cpp \
+                 /Fo: dbl_bals_host.obj /EHsc
+
+dbl2_bals_host.obj:
+	@-echo ">>> compiling dbl2_bals_host ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl2_bals_host.cpp \
+                 /Fo: dbl2_bals_host.obj /EHsc
+
+dbl4_bals_host.obj:
+	@-echo ">>> compiling dbl4_bals_host ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl4_bals_host.cpp \
+                 /Fo: dbl4_bals_host.obj /EHsc
+
+dbl8_bals_host.obj:
+	@-echo ">>> compiling dbl8_bals_host ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl8_bals_host.cpp \
+                 /Fo: dbl8_bals_host.obj /EHsc
+
+dbl_baqr_flopcounts.obj:
+	@-echo ">>> compiling dbl_baqr_flopcounts ..."
+	$(CL)\cl /c $(MAT)/dbl_baqr_flopcounts.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_baqr_flopcounts.obj /EHsc
+
+dbl_tabs_flopcounts.obj:
+	@-echo ">>> compiling dbl_tabs_flopcounts ..."
+	$(CL)\cl /c $(MAT)/dbl_tabs_flopcounts.cpp \
+                 -I$(winkitucrt) -I$(includepath) -O2 \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_tabs_flopcounts.obj /EHsc
+
+gettimeofday4win.obj:
+	@-echo ">>> compiling gettimeofday4win ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 \
+                $(MAT)/gettimeofday4win.cpp \
+             -o gettimeofday4win.obj
+
+dbl_baqr_kernels.obj:
+	@-echo ">>> compiling dbl_baqr_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) \
+             --define-macro winwalltime=1 \
+                $(MAT)/dbl_baqr_kernels.cu \
+             -o dbl_baqr_kernels.obj
+
+dbl2_baqr_kernels.obj:
+	@-echo ">>> compiling dbl2_baqr_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                $(MAT)/dbl2_baqr_kernels.cu \
+             -o dbl2_baqr_kernels.obj
+
+dbl4_baqr_kernels.obj:
+	@-echo ">>> compiling dbl4_baqr_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                $(MAT)/dbl4_baqr_kernels.cu \
+             -o dbl4_baqr_kernels.obj
+
+dbl8_baqr_kernels.obj:
+	@-echo ">>> compiling dbl8_baqr_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                $(MAT)/dbl8_baqr_kernels.cu \
+             -o dbl8_baqr_kernels.obj
+
+dbl_tabs_kernels.obj:
+	@-echo ">>> compiling dbl_tabs_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) \
+             --define-macro winwalltime=1 \
+                $(MAT)/dbl_tabs_kernels.cu \
+             -o dbl_tabs_kernels.obj
+
+dbl2_tabs_kernels.obj:
+	@-echo ">>> compiling dbl2_tabs_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                $(MAT)/dbl2_tabs_kernels.cu \
+             -o dbl2_tabs_kernels.obj
+
+dbl4_tabs_kernels.obj:
+	@-echo ">>> compiling dbl4_tabs_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                $(MAT)/dbl4_tabs_kernels.cu \
+             -o dbl4_tabs_kernels.obj
+
+dbl8_tabs_kernels.obj:
+	@-echo ">>> compiling dbl8_tabs_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                $(MAT)/dbl8_tabs_kernels.cu \
+             -o dbl8_tabs_kernels.obj
+
+dbl_polynomials_kernels.obj:
+	@-echo ">>> compiling dbl_polynomials_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(CNV) -I$(MAT) \
+             --define-macro winwalltime=1 \
+                $(POL)/dbl_polynomials_kernels.cu \
+             -o dbl_polynomials_kernels.obj
+
+dbl2_polynomials_kernels.obj:
+	@-echo ">>> compiling dbl2_polynomials_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(CNV) -I$(MAT) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                $(POL)/dbl2_polynomials_kernels.cu \
+             -o dbl2_polynomials_kernels.obj
+
+dbl4_polynomials_kernels.obj:
+	@-echo ">>> compiling dbl4_polynomials_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(CNV) -I$(MAT) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                $(POL)/dbl4_polynomials_kernels.cu \
+             -o dbl4_polynomials_kernels.obj
+
+dbl8_polynomials_kernels.obj:
+	@-echo ">>> compiling dbl8_polynomials_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(CNV) -I$(MAT) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                $(POL)/dbl8_polynomials_kernels.cu \
+             -o dbl8_polynomials_kernels.obj
+
+dbl_tail_kernels.obj:
+	@-echo ">>> compiling dbl_tail_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MAT) \
+             --define-macro winwalltime=1 \
+                dbl_tail_kernels.cu \
+             -o dbl_tail_kernels.obj
+
+dbl2_tail_kernels.obj:
+	@-echo ">>> compiling dbl2_tail_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MAT) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                dbl2_tail_kernels.cu \
+             -o dbl2_tail_kernels.obj
+
+dbl4_tail_kernels.obj:
+	@-echo ">>> compiling dbl4_tail_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MAT) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                dbl4_tail_kernels.cu \
+             -o dbl4_tail_kernels.obj
+
+dbl8_tail_kernels.obj:
+	@-echo ">>> compiling dbl8_tail_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MAT) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                dbl8_tail_kernels.cu \
+             -o dbl8_tail_kernels.obj
+
+dbl_bals_kernels.obj:
+	@-echo ">>> compiling dbl_bals_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MAT) \
+             --define-macro winwalltime=1 \
+                dbl_bals_kernels.cu \
+             -o dbl_bals_kernels.obj
+
+dbl2_bals_kernels.obj:
+	@-echo ">>> compiling dbl2_bals_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MAT) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                dbl2_bals_kernels.cu \
+             -o dbl2_bals_kernels.obj
+
+dbl4_bals_kernels.obj:
+	@-echo ">>> compiling dbl4_bals_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MAT) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                dbl4_bals_kernels.cu \
+             -o dbl4_bals_kernels.obj
+
+dbl8_bals_kernels.obj:
+	@-echo ">>> compiling dbl8_bals_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(POL) -I$(MAT) -I$(MPD) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                dbl8_bals_kernels.cu \
+             -o dbl8_bals_kernels.obj
+
+dbl_systems_host.obj:
+	@-echo ">>> compiling dbl_systems_host ..."
+	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl_systems_host.cpp \
+                 /Fo: dbl_systems_host.obj /EHsc
+
+dbl2_systems_host.obj:
+	@-echo ">>> compiling dbl2_systems_host ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl2_systems_host.cpp \
+                 /Fo: dbl2_systems_host.obj /EHsc
+
+dbl4_systems_host.obj:
+	@-echo ">>> compiling dbl4_systems_host ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl4_systems_host.cpp \
+                 /Fo: dbl4_systems_host.obj /EHsc
+
+dbl8_systems_host.obj:
+	@-echo ">>> compiling dbl8_systems_host ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl8_systems_host.cpp \
+                 /Fo: dbl8_systems_host.obj /EHsc
+
+dbl_systems_kernels.obj:
+	@-echo ">>> compiling dbl_systems_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 -I$(CNV) -I$(MAT) -I$(POL) \
+             --define-macro winwalltime=1 \
+                dbl_systems_kernels.cu \
+             -o dbl_systems_kernels.obj
+
+dbl2_systems_kernels.obj:
+	@-echo ">>> compiling dbl2_systems_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 \
+             -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                dbl2_systems_kernels.cu \
+             -o dbl2_systems_kernels.obj
+
+dbl4_systems_kernels.obj:
+	@-echo ">>> compiling dbl4_systems_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 \
+             -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                dbl4_systems_kernels.cu \
+             -o dbl4_systems_kernels.obj
+
+dbl8_systems_kernels.obj:
+	@-echo ">>> compiling dbl8_systems_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 \
+             -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+             --define-macro winwalltime=1 \
+             --define-macro gpufun=1 \
+                dbl8_systems_kernels.cu \
+             -o dbl8_systems_kernels.obj
+
+dbl_newton_method.obj:
+	@-echo ">>> compiling dbl_newton_method ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
+                      dbl_newton_method.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_newton_method.obj /EHsc
+
+dbl2_newton_method.obj:
+	@-echo ">>> compiling dbl2_newton_method ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
+                      dbl2_newton_method.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl2_newton_method.obj /EHsc
+
+dbl4_newton_method.obj:
+	@-echo ">>> compiling dbl4_newton_method ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
+                      dbl4_newton_method.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl4_newton_method.obj /EHsc
+
+dbl8_newton_method.obj:
+	@-echo ">>> compiling dbl8_newton_method ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
+                      dbl8_newton_method.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl8_newton_method.obj /EHsc
+
+cmplx_newton_method.obj:
+	@-echo ">>> compiling cmplx_newton_method ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
+                      cmplx_newton_method.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: cmplx_newton_method.obj /EHsc
+
+cmplx2_newton_method.obj:
+	@-echo ">>> compiling cmplx2_newton_method ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
+                      cmplx2_newton_method.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: cmplx2_newton_method.obj /EHsc
+
+cmplx4_newton_method.obj:
+	@-echo ">>> compiling cmplx4_newton_method ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
+                      cmplx4_newton_method.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: cmplx4_newton_method.obj /EHsc
+
+cmplx8_newton_method.obj:
+	@-echo ">>> compiling cmplx8_newton_method ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(winkitum) -I$(winkitshared) \
+                    -I$(includepath) -O2 \
+                    -D winwalltime=1 \
+                      cmplx8_newton_method.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: cmplx8_newton_method.obj /EHsc
+
+dbl_newton_testers.obj:
+	@-echo ">>> compiling dbl_newton_testers ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl_newton_testers.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl_newton_testers.obj /EHsc
+
+dbl2_newton_testers.obj:
+	@-echo ">>> compiling dbl2_newton_testers ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl2_newton_testers.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl2_newton_testers.obj /EHsc
+
+dbl4_newton_testers.obj:
+	@-echo ">>> compiling dbl4_newton_testers ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl4_newton_testers.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl4_newton_testers.obj /EHsc
+
+dbl8_newton_testers.obj:
+	@-echo ">>> compiling dbl8_newton_testers ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl8_newton_testers.cpp \
+                 /I$(CUDASDK)/include \
+                 /Fo: dbl8_newton_testers.obj /EHsc
+
+test_unimodular.obj:
+	@-echo ">>> compiling test_unimodular ..."
+	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(winkitucrt) -I$(includepath) -O2 \
+                      test_unimodular.cpp \
+                 /Fo: test_unimodular.obj /EHsc
+
+cyclic_columns.obj:
+	@-echo ">>> compiling cyclic_columns ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
+                      cyclic_columns.cpp \
+                 /Fo: cyclic_columns.obj /EHsc
+
+cyclic_indices.obj:
+	@-echo ">>> compiling cyclic_indices ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(POL)/cyclic_indices.cpp \
+                 /Fo: cyclic_indices.obj /EHsc
+
+dbl_indexed_coefficients.obj:
+	@-echo ">>> compiling dbl_indexed_coefficients ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) -I$(CNV) \
+                      $(POL)/dbl_indexed_coefficients.cpp \
+                 /Fo: dbl_indexed_coefficients.obj /EHsc
+
+dbl2_indexed_coefficients.obj:
+	@-echo ">>> compiling dbl2_indexed_coefficients ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) -I$(CNV) \
+                      $(POL)/dbl2_indexed_coefficients.cpp \
+                 /Fo: dbl2_indexed_coefficients.obj /EHsc
+
+dbl4_indexed_coefficients.obj:
+	@-echo ">>> compiling dbl4_indexed_coefficients ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) -I$(CNV) \
+                      $(POL)/dbl4_indexed_coefficients.cpp \
+                 /Fo: dbl4_indexed_coefficients.obj /EHsc
+
+dbl8_indexed_coefficients.obj:
+	@-echo ">>> compiling dbl8_indexed_coefficients ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 -I$(MPD) -I$(CNV) \
+                      $(POL)/dbl8_indexed_coefficients.cpp \
+                 /Fo: dbl8_indexed_coefficients.obj /EHsc
+
+test_columns.obj:
+	@-echo ">>> compiling test_columns ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
+                      test_columns.cpp \
+                 /Fo: test_columns.obj /EHsc
+
+dbl_monomial_systems.obj:
+	@-echo ">>> compiling dbl_monomial_systems ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl_monomial_systems.cpp \
+                 /Fo: dbl_monomial_systems.obj /EHsc
+
+dbl2_monomial_systems.obj:
+	@-echo ">>> compiling dbl2_monomial_systems ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl2_monomial_systems.cpp \
+                 /Fo: dbl2_monomial_systems.obj /EHsc
+
+dbl4_monomial_systems.obj:
+	@-echo ">>> compiling dbl4_monomial_systems ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl4_monomial_systems.cpp \
+                 /Fo: dbl4_monomial_systems.obj /EHsc
+
+dbl8_monomial_systems.obj:
+	@-echo ">>> compiling dbl8_monomial_systems ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      dbl8_monomial_systems.cpp \
+                 /Fo: dbl8_monomial_systems.obj /EHsc
+
+test_monomial_systems.obj:
+	@-echo ">>> compiling test_monomial_systems ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      test_monomial_systems.cpp \
+                 /Fo: test_monomial_systems.obj /EHsc
+
+test2_monomial_systems.obj:
+	@-echo ">>> compiling test2_monomial_systems ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      test2_monomial_systems.cpp \
+                 /Fo: test2_monomial_systems.obj /EHsc
+
+test4_monomial_systems.obj:
+	@-echo ">>> compiling test4_monomial_systems ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      test4_monomial_systems.cpp \
+                 /Fo: test4_monomial_systems.obj /EHsc
+
+test8_monomial_systems.obj:
+	@-echo ">>> compiling test8_monomial_systems ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(winkitucrt) -I$(includepath) -O2 \
+                      test8_monomial_systems.cpp \
+                 /Fo: test8_monomial_systems.obj /EHsc
+
+convolution_job.obj:
+	@-echo ">>> compiling convolution_job ..."
+	$(CL)\cl /c $(POL)/convolution_job.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: convolution_job.obj /EHsc
+
+convolution_jobs.obj:
+	@-echo ">>> compiling convolution_jobs ..."
+	$(CL)\cl /c $(POL)/convolution_jobs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: convolution_jobs.obj /EHsc
+
+addition_job.obj:
+	@-echo ">>> compiling addition_job ..."
+	$(CL)\cl /c $(POL)/addition_job.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: addition_job.obj /EHsc
+
+addition_jobs.obj:
+	@-echo ">>> compiling addition_jobs ..."
+	$(CL)\cl /c $(POL)/addition_jobs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: addition_jobs.obj /EHsc
+
+complexconv_job.obj:
+	@-echo ">>> compiling complexconv_job ..."
+	$(CL)\cl /c $(POL)/complexconv_job.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: complexconv_job.obj /EHsc
+
+complexconv_jobs.obj:
+	@-echo ">>> compiling complexconv_jobs ..."
+	$(CL)\cl /c $(POL)/complexconv_jobs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: complexconv_jobs.obj /EHsc
+
+complexinc_job.obj:
+	@-echo ">>> compiling complexinc_job ..."
+	$(CL)\cl /c $(POL)/complexinc_job.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: complexinc_job.obj /EHsc
+
+complexinc_jobs.obj:
+	@-echo ">>> compiling complexinc_jobs ..."
+	$(CL)\cl /c $(POL)/complexinc_jobs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: complexinc_jobs.obj /EHsc
+
+complexadd_job.obj:
+	@-echo ">>> compiling complexadd_job ..."
+	$(CL)\cl /c $(POL)/complexadd_job.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: complexadd_job.obj /EHsc
+
+complexadd_jobs.obj:
+	@-echo ">>> compiling complexadd_jobs ..."
+	$(CL)\cl /c $(POL)/complexadd_jobs.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: complexadd_jobs.obj /EHsc
+
+job_coordinates.obj:
+	@-echo ">>> compiling job_coordinates ..."
+	$(CL)\cl /c $(POL)/job_coordinates.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: job_coordinates.obj /EHsc
+
+job_makers.obj:
+	@-echo ">>> compiling job_makers ..."
+	$(CL)\cl /c $(POL)/job_makers.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: job_makers.obj /EHsc
+
+write_job_counts.obj:
+	@-echo ">>> compiling write_job_counts ..."
+	$(CL)\cl /c $(POL)/write_job_counts.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: write_job_counts.obj /EHsc
+
+test_monomial_jobs.obj:
+	@-echo ">>> compiling test_monomial_jobs ..."
+	$(CL)\cl /c -I$(CNV) -I$(MAT) -I$(POL) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      test_monomial_jobs.cpp \
+                 /Fo: test_monomial_jobs.obj /EHsc
+
+test_dbl_cyclic.obj:
+	@-echo ">>> compiling test_dbl_cyclic ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(POL) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      test_dbl_cyclic.cpp \
+                 /Fo: test_dbl_cyclic.obj /EHsc
+
+test_dbl2_cyclic.obj:
+	@-echo ">>> compiling test_dbl2_cyclic ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(POL) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      test_dbl2_cyclic.cpp \
+                 /Fo: test_dbl2_cyclic.obj /EHsc
+
+test_dbl4_cyclic.obj:
+	@-echo ">>> compiling test_dbl4_cyclic ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(POL) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      test_dbl4_cyclic.cpp \
+                 /Fo: test_dbl4_cyclic.obj /EHsc
+
+test_dbl8_cyclic.obj:
+	@-echo ">>> compiling test_dbl8_cyclic ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(POL) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      test_dbl8_cyclic.cpp \
+                 /Fo: test_dbl8_cyclic.obj /EHsc
+
+write_gpu_timings.obj:
+	@-echo ">>> compiling write_gpu_timings ..."
+	$(CL)\cl /c $(POL)/write_gpu_timings.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: write_gpu_timings.obj /EHsc
+
+dbl_bals_flopcounts.obj:
+	@-echo ">>> compiling dbl_bals_flopcounts ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O2 \
+                      dbl_bals_flopcounts.cpp \
+                   -o dbl_bals_flopcounts.obj
+
+write_dbl_bstimeflops.obj:
+	@-echo ">>> compiling write_dbl_bstimeflops ..."
+	$(CL)\cl /c $(MAT)/write_dbl_bstimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: write_dbl_bstimeflops.obj /EHsc
+
+write_dbl_qrtimeflops.obj:
+	@-echo ">>> compiling write_dbl_qrtimeflops ..."
+	$(CL)\cl /c $(MAT)/write_dbl_qrtimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: write_dbl_qrtimeflops.obj /EHsc
+
+write_dbl2_bstimeflops.obj:
+	@-echo ">>> compiling write_dbl2_bstimeflops ..."
+	$(CL)\cl /c $(MAT)/write_dbl2_bstimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: write_dbl2_bstimeflops.obj /EHsc
+
+write_dbl2_qrtimeflops.obj:
+	@-echo ">>> compiling write_dbl2_qrtimeflops ..."
+	$(CL)\cl /c $(MAT)/write_dbl2_qrtimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: write_dbl2_qrtimeflops.obj /EHsc
+
+write_dbl4_bstimeflops.obj:
+	@-echo ">>> compiling write_dbl4_bstimeflops ..."
+	$(CL)\cl /c $(MAT)/write_dbl4_bstimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: write_dbl4_bstimeflops.obj /EHsc
+
+write_dbl4_qrtimeflops.obj:
+	@-echo ">>> compiling write_dbl4_qrtimeflops ..."
+	$(CL)\cl /c $(MAT)/write_dbl4_qrtimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: write_dbl4_qrtimeflops.obj /EHsc
+
+write_dbl8_bstimeflops.obj:
+	@-echo ">>> compiling write_dbl8_bstimeflops ..."
+	$(CL)\cl /c $(MAT)/write_dbl8_bstimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: write_dbl8_bstimeflops.obj /EHsc
+
+write_dbl8_qrtimeflops.obj:
+	@-echo ">>> compiling write_dbl8_qrtimeflops ..."
+	$(CL)\cl /c $(MAT)/write_dbl8_qrtimeflops.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MPD) -I$(CNV) -O2 \
+                 /Fo: write_dbl8_qrtimeflops.obj /EHsc
+
+test_dbl_flopbals.obj:
+	@-echo ">>> compiling test_dbl_flopbals ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O2 -I$(MPD) -I$(MAT) \
+             --define-macro winwalltime=1 \
+                      test_dbl_flopbals.cpp \
+                   -o test_dbl_flopbals.obj
+
+test_dbl2_flopbals.obj:
+	@-echo ">>> compiling test_dbl2_flopbals ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O2 -I$(MPD) -I$(MAT) \
+             --define-macro winwalltime=1 \
+                      test_dbl2_flopbals.cpp \
+                   -o test_dbl2_flopbals.obj
+
+test_dbl4_flopbals.obj:
+	@-echo ">>> compiling test_dbl4_flopbals ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O2 -I$(MPD) -I$(MAT) \
+             --define-macro winwalltime=1 \
+                      test_dbl4_flopbals.cpp \
+                   -o test_dbl4_flopbals.obj
+
+test_dbl8_flopbals.obj:
+	@-echo ">>> compiling test_dbl8_flopbals ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O2 -I$(MPD) -I$(MAT) \
+             --define-macro winwalltime=1 \
+                      test_dbl8_flopbals.cpp \
+                   -o test_dbl8_flopbals.obj
+
+test_dbl_newton.obj:
+	@-echo ">>> compiling test_dbl_newton ..."
+	$(CL)\cl /c -I$(CNV) -I$(POL) -I$(MAT) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      test_dbl_newton.cpp \
+                 /Fo: test_dbl_newton.obj /EHsc
+
+test_dbl2_newton.obj:
+	@-echo ">>> compiling test_dbl2_newton ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(POL) -I$(MAT) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      test_dbl2_newton.cpp \
+                 /Fo: test_dbl2_newton.obj /EHsc
+
+test_dbl4_newton.obj:
+	@-echo ">>> compiling test_dbl4_newton ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(POL) -I$(MAT) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      test_dbl4_newton.cpp \
+                 /Fo: test_dbl4_newton.obj /EHsc
+
+test_dbl8_newton.obj:
+	@-echo ">>> compiling test_dbl8_newton ..."
+	$(CL)\cl /c -I$(MPD) -I$(CNV) -I$(POL) -I$(MAT) \
+                    -I$(winkitucrt) -I$(includepath) -O2 \
+                      test_dbl8_newton.cpp \
+                 /Fo: test_dbl8_newton.obj /EHsc
+
+test_unimodular: unimodular_matrices.obj test_unimodular.obj \
+                 random_numbers.obj random_series.obj random_monomials.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_unimodular.exe test_unimodular.obj \
+             unimodular_matrices.obj \
+             random_numbers.obj random_series.obj random_monomials.obj
+
+test_columns: cyclic_columns.obj test_columns.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_columns.exe \
+             cyclic_columns.obj test_columns.obj
+
+test_monomial_systems: cyclic_columns.obj \
+	         test_monomial_systems.obj unimodular_matrices.obj \
+                 random_numbers.obj random_series.obj random_monomials.obj \
+                 dbl_monomial_systems.obj dbl_convolutions_host.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_monomial_systems.exe cyclic_columns.obj \
+             test_monomial_systems.obj dbl_monomial_systems.obj \
+             unimodular_matrices.obj dbl_convolutions_host.obj \
+             random_numbers.obj random_series.obj random_monomials.obj
+
+test2_monomial_systems: test2_monomial_systems.obj unimodular_matrices.obj \
+                 random_numbers.obj random_series.obj random_monomials.obj \
+                 double_double_functions.obj cyclic_columns.obj \
+		 random2_vectors.obj random2_series.obj \
+                 dbl2_monomial_systems.obj dbl2_convolutions_host.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test2_monomial_systems.exe \
+             test2_monomial_systems.obj dbl2_monomial_systems.obj \
+             unimodular_matrices.obj dbl2_convolutions_host.obj \
+             random_numbers.obj random_series.obj random_monomials.obj \
+             double_double_functions.obj \
+	     random2_vectors.obj random2_series.obj cyclic_columns.obj
+
+test4_monomial_systems: test4_monomial_systems.obj unimodular_matrices.obj \
+                 random_numbers.obj random_series.obj random_monomials.obj \
+                 double_double_functions.obj quad_double_functions.obj \
+		 random4_vectors.obj random4_series.obj cyclic_columns.obj \
+                 dbl4_monomial_systems.obj dbl4_convolutions_host.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test4_monomial_systems.exe \
+             test4_monomial_systems.obj dbl4_monomial_systems.obj \
+             unimodular_matrices.obj dbl4_convolutions_host.obj \
+             random_numbers.obj random_series.obj random_monomials.obj \
+             double_double_functions.obj quad_double_functions.obj \
+	     random4_vectors.obj random4_series.obj cyclic_columns.obj
+
+test8_monomial_systems: test8_monomial_systems.obj unimodular_matrices.obj \
+                 random_numbers.obj random_series.obj random_monomials.obj \
+                 double_double_functions.obj quad_double_functions.obj \
+		 octo_double_functions.obj cyclic_columns.obj \
+		 random8_vectors.obj random8_series.obj \
+                 dbl8_monomial_systems.obj dbl8_convolutions_host.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test8_monomial_systems.exe \
+             test8_monomial_systems.obj dbl8_monomial_systems.obj \
+             unimodular_matrices.obj dbl8_convolutions_host.obj \
+             random_numbers.obj random_series.obj random_monomials.obj \
+             double_double_functions.obj quad_double_functions.obj \
+	     octo_double_functions.obj random8_vectors.obj random8_series.obj \
+	     cyclic_columns.obj
+
+test_monomial_jobs: unimodular_matrices.obj test_monomial_jobs.obj \
+                    convolution_job.obj convolution_jobs.obj \
+                    random_numbers.obj random_series.obj random_monomials.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_monomial_jobs.exe \
+                             test_monomial_jobs.obj \
+             unimodular_matrices.obj convolution_job.obj convolution_jobs.obj \
+             random_numbers.obj random_series.obj random_monomials.obj
+
+test_dbl_cyclic: cyclic_columns.obj test_dbl_cyclic.obj \
+                 random_numbers.obj random_series.obj \
+                 dbl_convolutions_host.obj dbl_monomials_host.obj \
+                 dbl_systems_host.obj dbl_monomial_systems.obj \
+                 convolution_job.obj convolution_jobs.obj \
+                 write_job_counts.obj job_coordinates.obj \
+                 addition_job.obj addition_jobs.obj \
+                 complexconv_job.obj complexconv_jobs.obj \
+                 complexadd_job.obj complexadd_jobs.obj \
+                 complexinc_job.obj complexinc_jobs.obj \
+                 dbl_systems_kernels.obj dbl_polynomials_kernels.obj \
+                 dbl_newton_testers.obj write_gpu_timings.obj \
+                 gettimeofday4win.obj
+	nvcc -ccbin=$(CL) -o test_dbl_cyclic.exe \
+                             test_dbl_cyclic.obj cyclic_columns.obj \
+                 random_numbers.obj random_series.obj \
+                 dbl_convolutions_host.obj dbl_monomials_host.obj \
+                 dbl_systems_host.obj dbl_monomial_systems.obj \
+                 convolution_job.obj convolution_jobs.obj \
+                 write_job_counts.obj job_coordinates.obj \
+                 addition_job.obj addition_jobs.obj \
+                 complexconv_job.obj complexconv_jobs.obj \
+                 complexadd_job.obj complexadd_jobs.obj \
+                 complexinc_job.obj complexinc_jobs.obj \
+                 dbl_systems_kernels.obj dbl_polynomials_kernels.obj \
+                 dbl_newton_testers.obj write_gpu_timings.obj \
+                 gettimeofday4win.obj
+
+test_dbl2_cyclic: cyclic_columns.obj test_dbl2_cyclic.obj \
+                  random_numbers.obj random_series.obj \
+                  random2_vectors.obj random2_series.obj \
+                  double_double_functions.obj \
+                  dbl2_convolutions_host.obj dbl2_monomials_host.obj \
+                  dbl2_systems_host.obj dbl2_monomial_systems.obj \
+                  convolution_job.obj convolution_jobs.obj \
+                  write_job_counts.obj job_coordinates.obj \
+                  addition_job.obj addition_jobs.obj \
+                  complexconv_job.obj complexconv_jobs.obj \
+                  complexadd_job.obj complexadd_jobs.obj \
+                  complexinc_job.obj complexinc_jobs.obj \
+                  dbl2_systems_kernels.obj dbl2_polynomials_kernels.obj \
+                  dbl2_newton_testers.obj write_gpu_timings.obj \
+                  gettimeofday4win.obj
+	nvcc -ccbin=$(CL) -o test_dbl2_cyclic.exe \
+                             test_dbl2_cyclic.obj cyclic_columns.obj \
+                 random_numbers.obj random_series.obj \
+                 random2_vectors.obj random2_series.obj \
+                 double_double_functions.obj \
+                 dbl2_convolutions_host.obj dbl2_monomials_host.obj \
+                 dbl2_systems_host.obj dbl2_monomial_systems.obj \
+                 convolution_job.obj convolution_jobs.obj \
+                 write_job_counts.obj job_coordinates.obj \
+                 addition_job.obj addition_jobs.obj \
+                 complexconv_job.obj complexconv_jobs.obj \
+                 complexadd_job.obj complexadd_jobs.obj \
+                 complexinc_job.obj complexinc_jobs.obj \
+                 dbl2_systems_kernels.obj dbl2_polynomials_kernels.obj \
+                 dbl2_newton_testers.obj write_gpu_timings.obj \
+                 gettimeofday4win.obj
+
+test_dbl4_cyclic: cyclic_columns.obj test_dbl4_cyclic.obj \
+                  random_numbers.obj random_series.obj \
+                  random4_vectors.obj random4_series.obj \
+                  double_double_functions.obj quad_double_functions.obj \
+                  dbl4_convolutions_host.obj dbl4_monomials_host.obj \
+                  dbl4_systems_host.obj dbl4_monomial_systems.obj \
+                  convolution_job.obj convolution_jobs.obj \
+                  write_job_counts.obj job_coordinates.obj \
+                  addition_job.obj addition_jobs.obj \
+                  complexconv_job.obj complexconv_jobs.obj \
+                  complexadd_job.obj complexadd_jobs.obj \
+                  complexinc_job.obj complexinc_jobs.obj \
+                  dbl4_systems_kernels.obj dbl4_polynomials_kernels.obj \
+                  dbl4_newton_testers.obj write_gpu_timings.obj \
+                  gettimeofday4win.obj
+	nvcc -ccbin=$(CL) -o test_dbl4_cyclic.exe \
+                             test_dbl4_cyclic.obj cyclic_columns.obj \
+                 random_numbers.obj random_series.obj \
+                 random4_vectors.obj random4_series.obj \
+                 double_double_functions.obj quad_double_functions.obj \
+                 dbl4_convolutions_host.obj dbl4_monomials_host.obj \
+                 dbl4_systems_host.obj dbl4_monomial_systems.obj \
+                 convolution_job.obj convolution_jobs.obj \
+                 write_job_counts.obj job_coordinates.obj \
+                 addition_job.obj addition_jobs.obj \
+                 complexconv_job.obj complexconv_jobs.obj \
+                 complexadd_job.obj complexadd_jobs.obj \
+                 complexinc_job.obj complexinc_jobs.obj \
+                 dbl4_systems_kernels.obj dbl4_polynomials_kernels.obj \
+                 dbl4_newton_testers.obj write_gpu_timings.obj \
+                 gettimeofday4win.obj
+
+test_dbl8_cyclic: cyclic_columns.obj test_dbl8_cyclic.obj \
+                  random_numbers.obj random_series.obj \
+                  random8_vectors.obj random8_series.obj \
+                  double_double_functions.obj quad_double_functions.obj \
+                  octo_double_functions.obj \
+                  dbl8_convolutions_host.obj dbl8_monomials_host.obj \
+                  dbl8_systems_host.obj dbl8_monomial_systems.obj \
+                  convolution_job.obj convolution_jobs.obj \
+                  write_job_counts.obj job_coordinates.obj \
+                  addition_job.obj addition_jobs.obj \
+                  complexconv_job.obj complexconv_jobs.obj \
+                  complexadd_job.obj complexadd_jobs.obj \
+                  complexinc_job.obj complexinc_jobs.obj \
+                  dbl8_systems_kernels.obj dbl8_polynomials_kernels.obj \
+                  dbl8_newton_testers.obj write_gpu_timings.obj \
+                  gettimeofday4win.obj
+	nvcc -ccbin=$(CL) -o test_dbl8_cyclic.exe \
+                             test_dbl8_cyclic.obj cyclic_columns.obj \
+                 random_numbers.obj random_series.obj \
+                 random8_vectors.obj random8_series.obj \
+                 double_double_functions.obj quad_double_functions.obj \
+                 octo_double_functions.obj \
+                 dbl8_convolutions_host.obj dbl8_monomials_host.obj \
+                 dbl8_systems_host.obj dbl8_monomial_systems.obj \
+                 convolution_job.obj convolution_jobs.obj \
+                 write_job_counts.obj job_coordinates.obj \
+                 addition_job.obj addition_jobs.obj \
+                 complexconv_job.obj complexconv_jobs.obj \
+                 complexadd_job.obj complexadd_jobs.obj \
+                 complexinc_job.obj complexinc_jobs.obj \
+                 dbl8_systems_kernels.obj dbl8_polynomials_kernels.obj \
+                 dbl8_newton_testers.obj write_gpu_timings.obj \
+                 gettimeofday4win.obj
+
+prompt_newton_setup.obj:
+	@-echo ">>> compiling prompt_newton_setup ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
+                      prompt_newton_setup.cpp \
+                 /Fo: prompt_newton_setup.obj /EHsc
+
+write_newton_times.obj:
+	@-echo ">>> compiling write_newton_times ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
+                      write_newton_times.cpp \
+                 /Fo: write_newton_times.obj /EHsc
+
+test_dbl_flopbals: random_numbers.obj test_dbl_flopbals.obj \
+                   dbl_tail_kernels.obj dbl_bals_flopcounts.obj \
+                   gettimeofday4win.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl_flopbals.exe test_dbl_flopbals.obj \
+	     random_numbers.obj dbl_tail_kernels.obj dbl_bals_flopcounts.obj \
+             gettimeofday4win.obj
+
+test_dbl2_flopbals: random_numbers.obj random2_vectors.obj \
+                    double_double_functions.obj test_dbl2_flopbals.obj \
+                    dbl2_tail_kernels.obj dbl_bals_flopcounts.obj \
+                    gettimeofday4win.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl2_flopbals.exe test_dbl2_flopbals.obj \
+	     random_numbers.obj random2_vectors.obj dbl_bals_flopcounts.obj \
+	     double_double_functions.obj dbl2_tail_kernels.obj \
+	     gettimeofday4win.obj
+
+test_dbl4_flopbals: random_numbers.obj random4_vectors.obj \
+                    double_double_functions.obj quad_double_functions.obj \
+		    test_dbl4_flopbals.obj dbl_bals_flopcounts.obj \
+                    dbl4_tail_kernels.obj gettimeofday4win.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl4_flopbals.exe test_dbl4_flopbals.obj \
+	     random_numbers.obj random4_vectors.obj \
+	     double_double_functions.obj quad_double_functions.obj \
+	     dbl4_tail_kernels.obj dbl_bals_flopcounts.obj \
+             gettimeofday4win.obj
+
+test_dbl8_flopbals: random_numbers.obj random8_vectors.obj \
+                    double_double_functions.obj quad_double_functions.obj \
+                    octo_double_functions.obj dbl_bals_flopcounts.obj \
+		    test_dbl8_flopbals.obj dbl8_tail_kernels.obj \
+		    gettimeofday4win.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl8_flopbals.exe test_dbl8_flopbals.obj \
+	     random_numbers.obj random8_vectors.obj \
+	     double_double_functions.obj quad_double_functions.obj \
+	     octo_double_functions.obj dbl_bals_flopcounts.obj \
+	     dbl8_tail_kernels.obj gettimeofday4win.obj
+
+test_dbl_newton: unimodular_matrices.obj test_dbl_newton.obj \
+                 dbl_newton_testers.obj prompt_newton_setup.obj \
+		 dbl_monomial_systems.obj cyclic_columns.obj \
+		 dbl_newton_method.obj cmplx_newton_method.obj \
+		 dbl_bals_kernels.obj dbl_tail_kernels.obj \
+                 random_numbers.obj random_series.obj random_monomials.obj \
+                 random_polynomials.obj cyclic_indices.obj \
+		 dbl_indexed_coefficients.obj \
+                 dbl_convolutions_host.obj dbl_monomials_host.obj \
+		 dbl_polynomials_host.obj \
+                 convolution_job.obj convolution_jobs.obj \
+                 addition_job.obj addition_jobs.obj job_coordinates.obj \
+                 complexconv_job.obj complexconv_jobs.obj \
+                 complexadd_job.obj complexadd_jobs.obj \
+                 complexinc_job.obj complexinc_jobs.obj job_makers.obj \
+                 gettimeofday4win.obj write_gpu_timings.obj \
+                 dbl_systems_host.obj write_dbl_bstimeflops.obj \
+		 write_dbl_qrtimeflops.obj write_job_counts.obj \
+                 write_newton_times.obj \
+                 dbl_systems_kernels.obj dbl_polynomials_kernels.obj \
+                 dbl_factorizations.obj dbl_onenorms_host.obj \
+		 dbl_bals_host.obj dbl_bals_flopcounts.obj \
+		 dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
+		 dbl_baqr_kernels.obj dbl_tabs_kernels.obj 
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl_newton.exe test_dbl_newton.obj \
+             unimodular_matrices.obj prompt_newton_setup.obj \
+	     dbl_newton_testers.obj dbl_monomial_systems.obj \
+             dbl_newton_method.obj cmplx_newton_method.obj \
+             random_numbers.obj random_series.obj random_monomials.obj \
+             random_polynomials.obj cyclic_indices.obj \
+	     dbl_indexed_coefficients.obj \
+	     dbl_convolutions_host.obj dbl_monomials_host.obj \
+	     dbl_polynomials_host.obj \
+             cyclic_columns.obj convolution_job.obj convolution_jobs.obj \
+             addition_job.obj addition_jobs.obj job_coordinates.obj \
+             complexconv_job.obj complexconv_jobs.obj \
+             complexadd_job.obj complexadd_jobs.obj \
+             complexinc_job.obj complexinc_jobs.obj job_makers.obj \
+             dbl_systems_host.obj write_gpu_timings.obj write_job_counts.obj \
+             gettimeofday4win.obj write_dbl_qrtimeflops.obj \
+             write_newton_times.obj \
+             dbl_systems_kernels.obj dbl_polynomials_kernels.obj \
+             dbl_factorizations.obj dbl_onenorms_host.obj \
+             dbl_bals_host.obj dbl_tail_kernels.obj dbl_bals_kernels.obj \
+             dbl_bals_flopcounts.obj write_dbl_bstimeflops.obj \
+	     dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
+	     dbl_baqr_kernels.obj dbl_tabs_kernels.obj
+
+test_dbl2_newton: unimodular_matrices.obj test_dbl2_newton.obj \
+                  random_numbers.obj random_series.obj random_monomials.obj \
+                  random_polynomials.obj cyclic_indices.obj \
+		  random2_vectors.obj random2_series.obj \
+		  random2_monomials.obj random2_polynomials.obj \
+                  cyclic_columns.obj dbl2_indexed_coefficients.obj \
+                  dbl2_monomial_systems.obj prompt_newton_setup.obj \
+                  double_double_functions.obj dbl2_newton_testers.obj \
+		  dbl2_newton_method.obj cmplx2_newton_method.obj \
+                  dbl2_convolutions_host.obj dbl2_monomials_host.obj \
+                  dbl2_polynomials_host.obj \
+                  convolution_job.obj convolution_jobs.obj \
+                  addition_job.obj addition_jobs.obj job_coordinates.obj \
+                  complexconv_job.obj complexconv_jobs.obj \
+                  complexadd_job.obj complexadd_jobs.obj \
+                  complexinc_job.obj complexinc_jobs.obj job_makers.obj \
+                  gettimeofday4win.obj write_gpu_timings.obj \
+                  dbl2_systems_host.obj write_dbl2_bstimeflops.obj \
+                  write_newton_times.obj \
+		  write_dbl2_qrtimeflops.obj write_job_counts.obj \
+                  dbl2_systems_kernels.obj dbl2_polynomials_kernels.obj \
+                  dbl2_factorizations.obj dbl_onenorms_host.obj \
+                  dbl2_bals_host.obj dbl_bals_flopcounts.obj \
+		  dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
+		  dbl2_baqr_kernels.obj dbl2_tabs_kernels.obj \
+                  dbl2_tail_kernels.obj dbl2_bals_kernels.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl2_newton.exe test_dbl2_newton.obj \
+             unimodular_matrices.obj prompt_newton_setup.obj \
+             random_numbers.obj random_series.obj random_monomials.obj \
+             random_polynomials.obj cyclic_indices.obj \
+             random2_vectors.obj random2_series.obj cyclic_columns.obj \
+             random2_monomials.obj random2_polynomials.obj \
+             dbl2_indexed_coefficients.obj \
+             double_double_functions.obj dbl2_newton_testers.obj \
+	     dbl2_newton_method.obj cmplx2_newton_method.obj \
+	     dbl2_convolutions_host.obj dbl2_monomials_host.obj \
+             dbl2_polynomials_host.obj \
+             convolution_job.obj convolution_jobs.obj write_job_counts.obj \
+             addition_job.obj addition_jobs.obj job_coordinates.obj \
+             complexconv_job.obj complexconv_jobs.obj \
+             complexadd_job.obj complexadd_jobs.obj \
+             complexinc_job.obj complexinc_jobs.obj job_makers.obj \
+             gettimeofday4win.obj write_gpu_timings.obj \
+             write_newton_times.obj \
+             dbl2_systems_host.obj dbl2_monomial_systems.obj \
+             dbl2_systems_kernels.obj dbl2_polynomials_kernels.obj \
+             dbl2_factorizations.obj dbl_onenorms_host.obj \
+             dbl2_bals_host.obj dbl_bals_flopcounts.obj \
+             write_dbl2_bstimeflops.obj write_dbl2_qrtimeflops.obj \
+             dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
+             dbl2_baqr_kernels.obj dbl2_tabs_kernels.obj \
+             dbl2_tail_kernels.obj dbl2_bals_kernels.obj
+
+test_dbl4_newton: unimodular_matrices.obj test_dbl4_newton.obj \
+                  dbl4_newton_method.obj cmplx4_newton_method.obj \
+                  random_numbers.obj random_series.obj random_monomials.obj \
+                  random_polynomials.obj cyclic_indices.obj \
+		  random4_vectors.obj random4_series.obj cyclic_columns.obj \
+                  dbl4_indexed_coefficients.obj dbl4_monomial_systems.obj \
+                  random4_monomials.obj random4_polynomials.obj \
+		  prompt_newton_setup.obj dbl4_newton_testers.obj \
+                  double_double_functions.obj quad_double_functions.obj \
+                  dbl4_convolutions_host.obj dbl4_monomials_host.obj \
+                  convolution_job.obj convolution_jobs.obj \
+                  addition_job.obj addition_jobs.obj job_coordinates.obj \
+                  complexconv_job.obj complexconv_jobs.obj \
+                  complexadd_job.obj complexadd_jobs.obj \
+                  complexinc_job.obj complexinc_jobs.obj job_makers.obj \
+                  gettimeofday4win.obj write_gpu_timings.obj \
+                  dbl4_systems_host.obj write_dbl4_bstimeflops.obj \
+		  write_dbl4_qrtimeflops.obj write_job_counts.obj \
+                  write_newton_times.obj dbl4_polynomials_host.obj \
+                  dbl4_systems_kernels.obj dbl4_polynomials_kernels.obj \
+                  dbl4_factorizations.obj dbl_onenorms_host.obj \
+                  dbl4_bals_host.obj dbl_bals_flopcounts.obj \
+		  dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
+		  dbl4_baqr_kernels.obj dbl4_tabs_kernels.obj \
+                  dbl4_tail_kernels.obj dbl4_bals_kernels.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl4_newton.exe test_dbl4_newton.obj \
+             dbl4_newton_method.obj cmplx4_newton_method.obj \
+             unimodular_matrices.obj prompt_newton_setup.obj \
+             random_numbers.obj random_series.obj random_monomials.obj \
+             random_polynomials.obj cyclic_indices.obj \
+             dbl4_indexed_coefficients.obj \
+             random4_vectors.obj random4_series.obj dbl4_monomial_systems.obj \
+             random4_monomials.obj random4_polynomials.obj \
+             double_double_functions.obj quad_double_functions.obj \
+	     dbl4_newton_testers.obj cyclic_columns.obj \
+	     dbl4_convolutions_host.obj dbl4_monomials_host.obj \
+             convolution_job.obj convolution_jobs.obj \
+             addition_job.obj addition_jobs.obj job_coordinates.obj \
+             complexconv_job.obj complexconv_jobs.obj \
+             complexadd_job.obj complexadd_jobs.obj \
+             complexinc_job.obj complexinc_jobs.obj job_makers.obj \
+             gettimeofday4win.obj write_gpu_timings.obj \
+             dbl4_systems_host.obj write_dbl4_bstimeflops.obj \
+	     write_dbl4_qrtimeflops.obj write_job_counts.obj \
+             write_newton_times.obj dbl4_polynomials_host.obj \
+             dbl4_systems_kernels.obj dbl4_polynomials_kernels.obj \
+             dbl4_factorizations.obj dbl_onenorms_host.obj \
+             dbl4_bals_host.obj dbl_bals_flopcounts.obj \
+             dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
+             dbl4_baqr_kernels.obj dbl4_tabs_kernels.obj \
+             dbl4_tail_kernels.obj dbl4_bals_kernels.obj
+
+test_dbl8_newton: unimodular_matrices.obj test_dbl8_newton.obj \
+                  dbl8_newton_method.obj cmplx8_newton_method.obj \
+                  random_numbers.obj random_series.obj random_monomials.obj \
+                  random_polynomials.obj cyclic_indices.obj \
+                  random8_vectors.obj random8_series.obj cyclic_columns.obj \
+                  random8_monomials.obj random8_polynomials.obj \
+                  dbl8_indexed_coefficients.obj \
+                  dbl8_monomial_systems.obj prompt_newton_setup.obj \
+		  double_double_functions.obj quad_double_functions.obj \
+		  octo_double_functions.obj dbl8_newton_testers.obj \
+                  dbl8_convolutions_host.obj dbl8_monomials_host.obj \
+                  dbl8_polynomials_host.obj \
+                  convolution_job.obj convolution_jobs.obj \
+                  addition_job.obj addition_jobs.obj job_coordinates.obj \
+                  complexconv_job.obj complexconv_jobs.obj \
+                  complexadd_job.obj complexadd_jobs.obj \
+                  complexinc_job.obj complexinc_jobs.obj job_makers.obj \
+                  dbl8_systems_host.obj write_job_counts.obj \
+                  dbl8_systems_kernels.obj dbl8_polynomials_kernels.obj \
+                  dbl8_factorizations.obj dbl_onenorms_host.obj \
+                  dbl8_bals_host.obj write_dbl8_qrtimeflops.obj \
+                  gettimeofday4win.obj write_gpu_timings.obj \
+                  write_newton_times.obj \
+                  dbl_bals_flopcounts.obj write_dbl8_bstimeflops.obj \
+		  dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
+		  dbl8_baqr_kernels.obj dbl8_tabs_kernels.obj \
+                  dbl8_tail_kernels.obj dbl8_bals_kernels.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dbl8_newton.exe test_dbl8_newton.obj \
+             dbl8_newton_method.obj cmplx8_newton_method.obj \
+             unimodular_matrices.obj prompt_newton_setup.obj \
+             random_numbers.obj random_series.obj random_monomials.obj \
+             random_polynomials.obj cyclic_indices.obj \
+             random8_vectors.obj random8_series.obj cyclic_columns.obj \
+             random8_monomials.obj random8_polynomials.obj \
+             dbl8_indexed_coefficients.obj dbl8_monomial_systems.obj \
+             double_double_functions.obj quad_double_functions.obj \
+	     octo_double_functions.obj dbl8_newton_testers.obj \
+	     dbl8_convolutions_host.obj dbl8_monomials_host.obj \
+             dbl8_polynomials_host.obj \
+             convolution_job.obj convolution_jobs.obj \
+             addition_job.obj addition_jobs.obj job_coordinates.obj \
+             complexconv_job.obj complexconv_jobs.obj \
+             complexadd_job.obj complexadd_jobs.obj \
+             complexinc_job.obj complexinc_jobs.obj job_makers.obj \
+             dbl8_systems_host.obj write_job_counts.obj \
+             dbl8_systems_kernels.obj dbl8_polynomials_kernels.obj \
+             dbl8_factorizations.obj dbl_onenorms_host.obj \
+             dbl8_bals_host.obj write_dbl8_qrtimeflops.obj \
+             gettimeofday4win.obj write_gpu_timings.obj \
+             write_newton_times.obj \
+             dbl_bals_flopcounts.obj write_dbl8_bstimeflops.obj \
+             dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj \
+             dbl8_baqr_kernels.obj dbl8_tabs_kernels.obj \
+             dbl8_tail_kernels.obj dbl8_bals_kernels.obj
+
+clean:
+	del dbl_onenorms_host.obj dbl_bals_host.obj dbl2_bals_host.obj
+	del dbl4_bals_host.obj dbl8_bals_host.obj
+	del dbl_tail_kernels.obj dbl_bals_kernels.obj
+	del dbl2_tail_kernels.obj dbl2_bals_kernels.obj
+	del dbl4_tail_kernels.obj dbl4_bals_kernels.obj
+	del dbl8_tail_kernels.obj dbl8_bals_kernels.obj
+	del unimodular_matrices.obj 
+	del test_unimodular.exe test_unimodular.exp
+	del test_unimodular.obj test_unimodular.lib
+	del test_columns.exe test_columns.exp
+	del test_columns.obj test_columns.lib cyclic_columns.obj
+	del test_dbl_cyclic.exe test_dbl_cyclic.exp
+	del test_dbl_cyclic.obj test_dbl_cyclic.lib
+	del test_dbl2_cyclic.exe test_dbl2_cyclic.exp
+	del test_dbl2_cyclic.obj test_dbl2_cyclic.lib
+	del test_dbl4_cyclic.exe test_dbl4_cyclic.exp
+	del test_dbl4_cyclic.obj test_dbl4_cyclic.lib
+	del test_dbl8_cyclic.exe test_dbl8_cyclic.exp
+	del test_dbl8_cyclic.obj test_dbl8_cyclic.lib
+	del dbl_monomial_systems.obj test_monomial_systems.obj
+	del dbl2_monomial_systems.obj test2_monomial_systems.obj
+	del dbl4_monomial_systems.obj test4_monomial_systems.obj
+	del dbl8_monomial_systems.obj test8_monomial_systems.obj
+	del test_monomial_systems.exe test_monomial_systems.exp
+	del test_monomial_systems.obj test_monomial_systems.lib
+	del test2_monomial_systems.exe test2_monomial_systems.exp
+	del test2_monomial_systems.obj test2_monomial_systems.lib
+	del test4_monomial_systems.exe test4_monomial_systems.exp
+	del test4_monomial_systems.obj test4_monomial_systems.lib
+	del test8_monomial_systems.exe test8_monomial_systems.exp
+	del test8_monomial_systems.obj test8_monomial_systems.lib
+	del prompt_newton_setup.obj 
+	del dbl_systems_host.obj dbl_systems_kernels.obj
+	del dbl2_systems_host.obj dbl2_systems_kernels.obj
+	del dbl4_systems_host.obj dbl4_systems_kernels.obj
+	del dbl8_systems_host.obj dbl8_systems_kernels.obj
+	del dbl_newton_method.obj cmplx_newton_method.obj
+	del dbl2_newton_method.obj cmplx2_newton_method.obj
+	del dbl4_newton_method.obj cmplx4_newton_method.obj
+	del dbl8_newton_method.obj cmplx8_newton_method.obj
+	del dbl_newton_testers.obj dbl2_newton_testers.obj
+	del dbl4_newton_testers.obj dbl8_newton_testers.obj
+	del convolution_job.obj convolution_jobs.obj
+	del addition_job.obj addition_jobs.obj job_coordinates.obj
+	del test_monomial_jobs.exe test_monomial_jobs.exp
+	del test_monomial_jobs.obj test_monomial_jobs.lib
+	del dbl_bals_flopcounts.obj
+	del test_dbl_flopbals.exe test_dbl_flopbals.exp
+	del test_dbl_flopbals.obj test_dbl_flopbals_lib
+	del test_dbl2_flopbals.exe test_dbl2_flopbals.exp
+	del test_dbl2_flopbals.obj test_dbl2_flopbals_lib
+	del test_dbl4_flopbals.exe test_dbl4_flopbals.exp
+	del test_dbl4_flopbals.obj test_dbl4_flopbals_lib
+	del test_dbl8_flopbals.exe test_dbl8_flopbals.exp
+	del test_dbl8_flopbals.obj test_dbl8_flopbals_lib
+	del write_newton_times.obj
+	del test_dbl_newton.exe test_dbl_newton.exp
+	del test_dbl_newton.obj test_dbl_newton_lib
+	del test_dbl2_newton.exe test_dbl2_newton.exp
+	del test_dbl2_newton.obj test_dbl2_newton_lib
+	del test_dbl4_newton.exe test_dbl4_newton.exp
+	del test_dbl4_newton.obj test_dbl4_newton_lib
+	del test_dbl8_newton.exe test_dbl8_newton.exp
+	del test_dbl8_newton.obj test_dbl8_newton_lib
+
+cleanall:
+	del random_numbers.obj random_series.obj random_monomials.obj
+	del random_polynomials.obj cyclic_indices.obj
+	del dbl_indexed_coefficients.obj dbl2_indexed_coefficients.obj
+	del dbl4_indexed_coefficients.obj dbl8_indexed_coefficients.obj
+	del double_double_functions.obj quad_double_functions.obj
+	del octo_double_functions.obj
+	del random2_series.obj random4_series.obj random8_series.obj
+	del random2_vectors.obj random4_vectors.obj random8_vectors.obj
+	del random2_monomials.obj random2_polynomials.obj
+	del random4_monomials.obj random4_polynomials.obj
+	del random8_monomials.obj random8_polynomials.obj
+	del dbl_convolutions_host.obj dbl_monomials_host.obj
+	del dbl2_convolutions_host.obj dbl2_monomials_host.obj
+	del dbl4_convolutions_host.obj dbl4_monomials_host.obj
+	del dbl8_convolutions_host.obj dbl8_monomials_host.obj
+	del dbl_polynomials_host.obj dbl2_polynomials_host.obj
+	del dbl4_polynomials_host.obj dbl8_polynomials_host.obj
+	del dbl_factorizations.obj dbl2_factorizations.obj
+	del dbl4_factorizations.obj dbl8_factorizations.obj
+	del dbl_baqr_kernels.obj dbl_tabs_kernels.obj
+	del dbl2_baqr_kernels.obj dbl2_tabs_kernels.obj
+	del dbl4_baqr_kernels.obj dbl4_tabs_kernels.obj
+	del dbl8_baqr_kernels.obj dbl8_tabs_kernels.obj
+	del convolution_job.obj convolution_jobs.obj write_job_counts.obj
+	del addition_job.obj addition_jobs.obj job_coordinates.obj
+	del complexconv_job.obj complexconv_jobs.obj 
+	del complexinc_job.obj complexinc_jobs.obj 
+	del complexadd_job.obj complexadd_jobs.obj job_makers.obj
+	del dbl_polynomials_kernels.obj dbl2_polynomials_kernels.obj
+	del dbl4_polynomials_kernels.obj dbl8_polynomials_kernels.obj
+	del gettimeofday4win.obj
+	del dbl_baqr_flopcounts.obj dbl_tabs_flopcounts.obj
+	del write_dbl_bstimeflops.obj write_dbl2_bstimeflops.obj
+	del write_dbl4_bstimeflops.obj write_dbl8_bstimeflops.obj
+	del write_dbl_qrtimeflops.obj write_dbl2_qrtimeflops.obj
+	del write_dbl4_qrtimeflops.obj write_dbl8_qrtimeflops.obj
+	del *exe *obj *exp *lib
+	del *~
