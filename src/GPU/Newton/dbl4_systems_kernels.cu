@@ -44,13 +44,52 @@ void write_dbl4_cnvflops
 
    cout << "    Total number of bytes : " << bytecnt << endl;
 
-   double intensity = ((double) flopcnt)/bytecnt;
+   const double intensity = ((double) flopcnt)/bytecnt;
    cout << "     Arithmetic intensity : "
         << scientific << setprecision(3) << intensity
         << " #flops/#bytes" << endl;
 
-   double kernflops = 1000.0*((double) flopcnt)/kernms;
-   double wallflops = ((double) flopcnt)/wallsec;
+   const double kernflops = 1000.0*((double) flopcnt)/kernms;
+   const double wallflops = ((double) flopcnt)/wallsec;
+   const int gigacnt = pow(2.0,30);
+
+   cout << "Kernel Time Flops : "
+        << scientific << setprecision(3) << kernflops;
+   cout << fixed << setprecision(3)
+        << " = " << kernflops/gigacnt << " Gigaflops" << endl;
+   cout << " Wall Clock Flops : "
+        << scientific << setprecision(3) << wallflops;
+   cout << fixed << setprecision(3)
+        << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+}
+
+void write_vectorized4_cnvincflops
+ ( int dim, int deg,
+   ComplexConvolutionJobs cnvjobs, ComplexIncrementJobs incjobs,
+   double kernms, double wallsec )
+{
+   long long int addcnt1,addcnt2,mulcnt,flopcnt;
+
+   complexconv_operation_counts(deg,cnvjobs,&addcnt1,&mulcnt,1);
+   complexinc_operation_counts(deg,incjobs,&addcnt2,1);
+
+   flopcnt = 89*(addcnt1 + addcnt2) + 336*mulcnt;
+   /*
+      1 complex addition takes 2 floating-point (fp) additions
+      1 complex multiplication takes 2 fp additions and 4 fp multiplications
+   => quadruple the number of fp additions and multiplications */
+
+   long long int bytecnt = 8*dim*(deg+1);
+
+   cout << "    Total number of bytes : " << bytecnt << endl;
+
+   const double intensity = ((double) flopcnt)/bytecnt;
+   cout << "     Arithmetic intensity : "
+        << scientific << setprecision(3) << intensity
+        << " #flops/#bytes" << endl;
+
+   const double kernflops = 1000.0*((double) flopcnt)/kernms;
+   const double wallflops = ((double) flopcnt)/wallsec;
    const int gigacnt = pow(2.0,30);
 
    cout << "Kernel Time Flops : "
@@ -862,7 +901,8 @@ void GPU_cmplx4vectorized_mon_evaldiff
    if(vrblvl > 0)
    {
       write_GPU_timings(*cnvlapms,0.0,*elapsedms,*walltimesec);
-      // write_dbl4_cnvflops(dim,deg,1,cnvjobs,*elapsedms,*walltimesec);
+      write_vectorized4_cnvincflops
+         (dim,deg,cnvjobs,incjobs,*elapsedms,*walltimesec);
    }
    cudaFree(datarihihi_d); cudaFree(datarilohi_d);
    cudaFree(datarihilo_d); cudaFree(datarilolo_d);
@@ -1159,6 +1199,201 @@ void GPU_cmplx4_evaluate_monomials
        inputimhihi,inputimlohi,inputimhilo,inputimlolo,
        outputrehihi,outputrelohi,outputrehilo,outputrelolo,
        outputimhihi,outputimlohi,outputimhilo,outputimlolo,jobs,
+       &cnvlapms,&elapsedms,&walltimesec,vrblvl);
+
+   *totcnvlapsedms += elapsedms;
+
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<dim; i++)
+      {
+         cout << "output series for monomial " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << outputrehihi[i][dim][j] << "  "
+                 << outputrelohi[i][dim][j] << endl << "  " 
+                 << outputrehilo[i][dim][j] << "  "
+                 << outputrelolo[i][dim][j] << endl << "  " 
+                 << outputimhihi[i][dim][j] << "  "
+                 << outputimlohi[i][dim][j] << endl << "  "
+                 << outputimhilo[i][dim][j] << "  "
+                 << outputimlolo[i][dim][j] << endl;
+      }
+   }
+   for(int i=0; i<dim; i++) // multiply derivatives with the powers
+   {
+      if(nbrfac[i] > 0) // there are common factors in monomial i
+      {
+         for(int j=0; j<nvr[i]; j++) // run over all exponents
+         {
+            if(expfac[i][j] > 0) // the j-th exponent with variable idx[i][j]
+            {
+               int idxvar = idx[i][j];
+               double fac = (double) exp[i][j];
+               double acchihi,acclohi,acchilo,acclolo;
+
+               // multiply derivative w.r.t. idxvar with factor
+               for(int k=0; k<=deg; k++)
+               {
+                  // outputre[i][idxvar][k] = fac*outputre[i][idxvar][k];
+                  qdf_mul(outputrehihi[i][idxvar][k],
+                          outputrelohi[i][idxvar][k],
+                          outputrehilo[i][idxvar][k],
+                          outputrelolo[i][idxvar][k],fac,0.0,0.0,0.0,
+                          &acchihi,&acclohi,&acchilo,&acclolo);
+                  outputrehihi[i][idxvar][k] = acchihi;
+                  outputrelohi[i][idxvar][k] = acclohi;
+                  outputrehilo[i][idxvar][k] = acchilo;
+                  outputrelolo[i][idxvar][k] = acclolo;
+                  // outputim[i][idxvar][k] = fac*outputim[i][idxvar][k];
+                  qdf_mul(outputimhihi[i][idxvar][k],
+                          outputimlohi[i][idxvar][k],
+                          outputimhilo[i][idxvar][k],
+                          outputimlolo[i][idxvar][k],fac,0.0,0.0,0.0,
+                          &acchihi,&acclohi,&acchilo,&acclolo);
+                  outputimhihi[i][idxvar][k] = acchihi;
+                  outputimlohi[i][idxvar][k] = acclohi;
+                  outputimhilo[i][idxvar][k] = acchilo;
+                  outputimlolo[i][idxvar][k] = acclolo;
+               }
+            }
+         }
+      }
+   }
+}
+
+void GPU_cmplx4vectorized_evaluate_monomials
+ ( int dim, int deg, int szt, int nbt,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   double **cffrehihi, double **cffrelohi,
+   double **cffrehilo, double **cffrelolo,
+   double **cffimhihi, double **cffimlohi,
+   double **cffimhilo, double **cffimlolo,
+   double *accrehihi, double *accrelohi,
+   double *accrehilo, double *accrelolo,
+   double *accimhihi, double *accimlohi,
+   double *accimhilo, double *accimlolo,
+   double **inputrehihi, double **inputrelohi,
+   double **inputrehilo, double **inputrelolo,
+   double **inputimhihi, double **inputimlohi, 
+   double **inputimhilo, double **inputimlolo, 
+   double ***outputrehihi, double ***outputrelohi, 
+   double ***outputrehilo, double ***outputrelolo, 
+   double ***outputimhihi, double ***outputimlohi,
+   double ***outputimhilo, double ***outputimlolo,
+   double *totcnvlapsedms, int vrblvl )
+{
+   for(int i=0; i<dim; i++) // common factors in the coefficients
+   {
+      if(nbrfac[i] > 0) // there are common factors in monomial i
+      {
+         for(int j=0; j<nvr[i]; j++) // run over all exponents
+         {
+            if(expfac[i][j] > 0) // the j-th exponent with variable idx[i][j]
+            {
+               int idxvar = idx[i][j];
+
+               for(int k=0; k<expfac[i][j]; k++)
+               {
+                  CPU_cmplx4_product
+                     (deg,inputrehihi[idxvar],inputrelohi[idxvar],
+                          inputrehilo[idxvar],inputrelolo[idxvar],
+                          inputimhihi[idxvar],inputimlohi[idxvar],
+                          inputimhilo[idxvar],inputimlolo[idxvar],
+                      cffrehihi[i],cffrelohi[i],cffrehilo[i],cffrelolo[i],
+                      cffimhihi[i],cffimlohi[i],cffimhilo[i],cffimlolo[i],
+                      accrehihi,accrelohi,accrehilo,accrelolo,
+                      accimhihi,accimlohi,accimhilo,accimlolo);
+
+                  for(int L=0; L<=deg; L++)
+                  {
+                     cffrehihi[i][L] = accrehihi[L];
+                     cffrelohi[i][L] = accrelohi[L];
+                     cffrehilo[i][L] = accrehilo[L];
+                     cffrelolo[i][L] = accrelolo[L];
+                     cffimhihi[i][L] = accimhihi[L];
+                     cffimlohi[i][L] = accimlohi[L];
+                     cffimhilo[i][L] = accimhilo[L];
+                     cffimlolo[i][L] = accimlolo[L];
+                  }
+               }
+            }
+         }
+      }
+   }
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<dim; i++)
+      {
+         cout << "coefficients for monomial " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << cffrehihi[i][j] << "  " << cffrelohi[i][j] << endl << "  "
+                 << cffrehilo[i][j] << "  " << cffrelolo[i][j] << endl << "  "
+                 << cffimhihi[i][j] << "  " << cffimlohi[i][j] << endl << "  "
+                 << cffimhilo[i][j] << "  " << cffimlolo[i][j] << endl;
+      }
+      cout << "dim : " << dim << "  nvr :";
+      for(int i=0; i<dim; i++) cout << " " << nvr[i];
+      cout << endl;
+      cout << "deg : " << deg;
+      for(int i=0; i<dim; i++) 
+      {
+         cout << "  idx[" << i << "] :";
+         for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
+      }
+      cout << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "input series for variable " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << inputrehihi[i][j] << "  " << inputrelohi[i][j] << endl
+                 << "  "
+                 << inputrehilo[i][j] << "  " << inputrelolo[i][j] << endl
+                 << "  "
+                 << inputimhihi[i][j] << "  " << inputimlohi[i][j] << endl
+                 << "  "
+                 << inputimhilo[i][j] << "  " << inputimlolo[i][j] << endl;
+      }
+   }
+   bool verbose = (vrblvl > 1);
+   double cnvlapms,elapsedms,walltimesec;
+
+   // ConvolutionJobs jobs(dim);
+   // jobs.make(dim,nvr,idx,verbose);
+   ComplexConvolutionJobs cnvjobs(dim);
+   cnvjobs.make(dim,nvr,idx,verbose);
+
+   ComplexIncrementJobs incjobs(cnvjobs,verbose);
+
+   if(verbose)
+   {
+      for(int k=0; k<cnvjobs.get_depth(); k++)
+      {
+         cout << "jobs at layer " << k << " :" << endl;
+         for(int i=0; i<cnvjobs.get_layer_count(k); i++)
+            cout << cnvjobs.get_job(k,i) << endl;
+      }
+      cout << "dimension : " << dim << endl;
+      cout << "number of monomials : " << dim << endl;
+      cout << "number of convolution jobs : "
+           << cnvjobs.get_count() << endl;
+      cout << "number of layers : " << cnvjobs.get_depth() << endl;
+      cout << "frequency of layer counts :" << endl;
+      int checksum = 0;
+      for(int i=0; i<cnvjobs.get_depth(); i++)
+      {
+         cout << i << " : " << cnvjobs.get_layer_count(i) << endl;
+         checksum = checksum + cnvjobs.get_layer_count(i); 
+      }
+      cout << "layer count sum : " << checksum << endl;
+   }
+   GPU_cmplx4vectorized_mon_evaldiff
+      (szt,dim,dim,deg,nvr,idx,
+       cffrehihi,cffrelohi,cffrehilo,cffrelolo,
+       cffimhihi,cffimlohi,cffimhilo,cffimlolo,
+       inputrehihi,inputrelohi,inputrehilo,inputrelolo,
+       inputimhihi,inputimlohi,inputimhilo,inputimlolo,
+       outputrehihi,outputrelohi,outputrehilo,outputrelolo,
+       outputimhihi,outputimlohi,outputimhilo,outputimlolo,cnvjobs,incjobs,
        &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
    *totcnvlapsedms += elapsedms;

@@ -10,7 +10,8 @@
 #include "complexinc_jobs.h"
 
 void write_dbl4_cnvflops
- ( int dim, int deg, ConvolutionJobs cnvjobs, double kernms, double wallsec );
+ ( int dim, int deg, int ctype,
+   ConvolutionJobs cnvjobs, double kernms, double wallsec );
 /*
  * DESCRIPTION :
  *   Writes the kernel and wall time flops for the convolution jobs.
@@ -18,7 +19,25 @@ void write_dbl4_cnvflops
  * ON ENTRY :
  *   dim      number of series;
  *   deg      order of the series, truncation degree;
+ *   ctype    0 if on real data, 1 if on complex data;
  *   cnvjobs  defines the convolution jobs;
+ *   kernms   kernel time elapsed in milliseconds; 
+ *   wallsec  wall clock time elapsed in seconds. */
+
+void write_vectorized4_cnvincflops
+ ( int dim, int deg,
+   ComplexConvolutionJobs cnvjobs, ComplexIncrementJobs incjobs,
+   double kernms, double wallsec );
+/*
+ * DESCRIPTION :
+ *   Writes the kernel and wall time flops for the convolution
+ *   and the increment jobs in the complex vectorized arithmetic.
+ *
+ * ON ENTRY :
+ *   dim      number of series;
+ *   deg      order of the series, truncation degree;
+ *   cnvjobs  defines the convolution jobs;
+ *   incjobs  defines the increment jobs;
  *   kernms   kernel time elapsed in milliseconds; 
  *   wallsec  wall clock time elapsed in seconds. */
 
@@ -679,6 +698,166 @@ void GPU_cmplx4_evaluate_monomials
 /*
  * DESCRIPTION :
  *   Evaluates monomials at power series.
+ *
+ * ON ENTRY :
+ *   dim       number of monomials;
+ *   deg       degree of the power series;
+ *   szt       size of each block of threads;
+ *   nbt       number of thread blocks;
+ *   nvr       nvr[i] is the number of variables in the i-th monomial;
+ *   idx       idx[i] are the indices of the variables in monomial i;
+ *   exp       exp[i] are the exponents of the variables in monomial i;
+ *   nbrfac    nbrfac[i] are the number of exponents > 1 in monomial i;
+ *   expfac    expfac[i] are the exponents in the i-th polynomial
+ *             that are larger than one, minus one in the factor,
+ *             if exp[i][k] > 1, then expfac[i][k] = exp[i][k] - 1;
+ *   cffrehihi are the highest doubles of the real parts of the coefficients;
+ *   cffrelohi are the second highest doubles of the real parts
+ *             of the coefficients;
+ *   cffrehilo are the second lowest doubles of the real parts
+ *             of the coefficients;
+ *   cffrelolo are the lowest doubles of the real parts of the coefficients
+ *   cffimhihi are the highest doubles of the imaginary parts
+ *             of the coefficients;
+ *   cffimlohi are the second highest doubles of the imaginary parts
+ *             of the coefficients;
+ *   cffimhilo are the second lowest doubles of the imaginary parts
+ *             of the coefficients;
+ *   cffimlolo are the lowest doubles of the imaginary parts
+ *             of the coefficients;
+ *   accrehihi has space to accumulate one series of degree deg;
+ *   accrelohi has space to accumulate one series of degree deg;
+ *   accrehilo has space to accumulate one series of degree deg;
+ *   accrelolo has space to accumulate one series of degree deg;
+ *   accimhihi has space to accumulate one  series of degree deg;
+ *   accimlohi has space to accumulate one  series of degree deg;
+ *   accimhilo has space to accumulate one  series of degree deg;
+ *   accimlolo has space to accumulate one  series of degree deg;
+ *   inputrehihi has the highest doubles of the real parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputrelohi has the second highest doubles of the real parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputrehilo has the second lowest doubles of the real parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputrelolo has the lowest doubles of the real parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputimhihi has the highest doubles of the imaginary parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputimlohi has the second highest doubles of the imaginary parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputimhilo has the second lowest doubles of the imaginary parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   inputimlolo has the lowest doubles of the imaginary parts of
+ *             coefficients of the series of degree deg, for dim variables;
+ *   outputrehihi has space for the highest doubles of the real parts
+ *             of the output;
+ *   outputrelohi has space for the second highest doubles of the real parts
+ *             of the output;
+ *   outputrehilo has space for the second lowest doubles of the real parts
+ *             of the output;
+ *   outputrelolo has space for the lowest doubles of the real parts
+ *             of the output;
+ *   outputimhihi has space for the highest doubles of the imaginary
+ *             parts of the output;
+ *   outputimlohi has space for the second highest doubles of the imaginary
+ *             parts of the output;
+ *   outputimhilo has space for the second lowest doubles of the imaginary
+ *             parts of the output;
+ *   outputimlolo has space for the lowest doubles of the imaginary
+ *             parts of the output;
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions;
+ *   vrblvl   is the verbose level, if zero, then no output.
+ *
+ * ON RETURN :
+ *   cffrehihi has the highest doubles of the real parts
+ *             of the evaluated common factors;
+ *   cffrelohi has the second highest doubles of the real parts
+ *             of the evaluated common factors;
+ *   cffrehilo has the second lowest doubles of the real parts
+ *             of the evaluated common factors;
+ *   cffrelolo has the lowest doubles of the real parts
+ *             of the evaluated common factors;
+ *   cffimhihi has the highest doubles of the imaginary parts
+ *             of the evaluated common factors;
+ *   cffimlohi has the second highest doubles of the imaginary parts
+ *             of the evaluated common factors;
+ *   cffimhilo has the second lowest doubles of the imaginary parts
+ *             of the evaluated common factors;
+ *   cffimlolo has the lowest doubles of the imaginary parts
+ *             of the evaluated common factors;
+ *   outputrehihi has the highest doubles of the real parts of the evaluated
+ *             and differentiated monomials, outputrehihi[i][dim] has the
+ *             highest doubles of the real parts of the value of the input
+ *             at the i-th monomial, and for k in range 0..nvr[i]-1:
+ *             outputrehihi[i][idx[k]] has the highest doubles
+ *             of the real parts of the derivative w.r.t. idx[k];
+ *   outputrelohi has the highest doubles of the real parts of the evaluated
+ *             and differentiated monomials, outputrelohi[i][dim] has the
+ *             second highest doubles of the real parts of the value of the
+ *             input at the i-th monomial, and for k in range 0..nvr[i]-1:
+ *             outputrelohi[i][idx[k]] has the second highest doubles
+ *             of the real parts of the derivative w.r.t. idx[k];
+ *   outputrehilo has the second lowest doubles of the real parts of the
+ *             evaluated and differentiated monomials, outputrehilo[i][dim]
+ *             has the second lowest doubles of the real parts of the value of
+ *             the input at the i-th monomial, and for k in range 0..nvr[i]-1:
+ *             outputrehilo[i][idx[k]] has the second lowest doubles
+ *             of the real parts of the derivative w.r.t. idx[k];
+ *   outputrelolo has the lowest doubles of the real parts of the evaluated
+ *             and differentiated monomials, outputrelolo[i][dim] has the
+ *             lowest doubles of the real parts of the value of the input
+ *             at the i-th monomial, and for k in range 0..nvr[i]-1:
+ *             outputrelolo[i][idx[k]] has the lowest doubles
+ *             of the real parts of the derivative w.r.t. idx[k];
+ *   outputimhihi has the highest doubles of the imaginary parts of the
+ *             evaluated and differentiated monomials, outputimhihi[i][dim]
+ *             has the highest doubles of the imaginary part of the value of
+ *             the input at the i-th monomial, and for k in range 0..nvr[i]-1:
+ *             outputimhi[i][idx[k]] has the highest doubles
+ *             of the imaginary parts of te derivative w.r.t. idx[k];
+ *   outputimlohi has the second highest doubles of the imaginary parts of the
+ *             evaluated and differentiated monomials, outputimlohi[i][dim]
+ *             has the second highest doubles of the imaginary part of the
+ *             value of the input at the i-th monomial, and for k in range
+ *             0..nvr[i]-1: outputimlohi[i][idx[k]] has the second highest
+ *             doubles of the imaginary parts of te derivative w.r.t. idx[k];
+ *   outputimhilo has the second lowest doubles of the imaginary parts of the
+ *             evaluated and differentiated monomials, outputimhilo[i][dim]
+ *             has the second lowest doubles of the imaginary part of the
+ *             value of the input at the i-th monomial, and for k in range
+ *             0..nvr[i]-1: outputimhilo[i][idx[k]] has the second lowest
+ *             doubles of the imaginary parts of te derivative w.r.t. idx[k];
+ *   outputimlolo has the lowest doubles of the imaginary parts of the
+ *             evaluated and differentiated monomials, outputimlolo[i][dim]
+ *             has the lowest doubles of the imaginary part of the value of
+ *             the input at the i-th monomial, and for k in range 0..nvr[i]-1:
+ *             outputimlolo[i][idx[k]] has the lowest doubles
+ *             of the imaginary parts of te derivative w.r.t. idx[k];
+ *   totcnvlapsedms accumulates the milliseconds spent on the convolutions. */
+
+void GPU_cmplx4vectorized_evaluate_monomials
+ ( int dim, int deg, int szt, int nbt,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   double **cffrehihi, double **cffrelohi,
+   double **cffrehilo, double **cffrelolo,
+   double **cffimhihi, double **cffimlohi,
+   double **cffimhilo, double **cffimlolo,
+   double *accrehihi, double *accrelohi,
+   double *accrehilo, double *accrelolo,
+   double *accimhihi, double *accimlohi,
+   double *accimhilo, double *accimlolo,
+   double **inputrehihi, double **inputrelohi,
+   double **inputrehilo, double **inputrelolo,
+   double **inputimhihi, double **inputimlohi, 
+   double **inputimhilo, double **inputimlolo, 
+   double ***outputrehihi, double ***outputrelohi, 
+   double ***outputrehilo, double ***outputrelolo, 
+   double ***outputimhihi, double ***outputimlohi,
+   double ***outputimhilo, double ***outputimlolo,
+   double *totcnvlapsedms, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Evaluates monomials at power series using complex vectorized arithmetic.
  *
  * ON ENTRY :
  *   dim       number of monomials;
