@@ -118,6 +118,23 @@ void complexconv_operation_counts
    *mulcnt = cnvmulcnt;
 }
 
+void complexinc_operation_counts
+ ( int deg, ComplexIncrementJobs incjobs,
+   long long int *addcnt, int vrblvl )
+{
+   const long long int nbrinc = incjobs.get_count();
+   const long long int degp1 = deg+1;
+   const long long int incaddcnt = degp1*nbrinc;
+
+   if(vrblvl > 0)
+   {
+      cout << "truncation degree : " << deg << endl;
+      cout << "number of additions in " << nbrinc
+           << " increment jobs : " << incaddcnt << endl;
+   }
+   *addcnt = incaddcnt;
+}
+
 void write_operation_counts
  ( int deg, ConvolutionJobs cnvjobs, AdditionJobs addjobs )
 {

@@ -1,5 +1,5 @@
-Wed 7 Jun 2023 : new makefile_windows2 for 2022 Community Microsoft
-  Visual Studio and NVIDIA CUDA Toolkit 12.1 on RTX 4080.
+Sat 17 Jun 2023 : extended write_job_counts with operation counts for
+  the increment jobs in the complex vectorized arithmetic.
 
 Sun 4 Jun 2023 : fixed {dbl2, dbl4, dbl8}_indexed_coefficients.cpp.
 

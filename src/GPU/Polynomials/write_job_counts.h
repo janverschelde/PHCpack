@@ -6,6 +6,7 @@
 #include "convolution_jobs.h"
 #include "addition_jobs.h"
 #include "complexconv_jobs.h"
+#include "complexinc_jobs.h"
 #include "complexadd_jobs.h"
 
 void write_convolution_counts ( ConvolutionJobs jobs );
@@ -63,6 +64,23 @@ void complexconv_operation_counts
  * ON RETURN :
  *   addcnt   total number of additions;
  *   mulcnt   total number of multiplications. */
+
+void complexinc_operation_counts
+ ( int deg, ComplexIncrementJobs incjobs,
+   long long int *addcnt, int vrblvl );
+/*
+ * DESCRIPTION :
+ *   Returns the total number of addition operations defined
+ *   by the increment jobs for series truncated at degree deg.
+ *   Writes the floating-point operation counts if vrblvl > 0.
+ *
+ * ON ENTRY :
+ *   deg      truncation degree of the series;
+ *   incjobs  defines the increment jobs;
+ *   vrblvl   if zero then no output, else writes the counts.
+ *
+ * ON RETURN :
+ *   addcnt   total number of additions. */
 
 void write_operation_counts
  ( int deg, ConvolutionJobs cnvjobs, AdditionJobs addjobs );
