@@ -22,7 +22,6 @@ void ComplexConvolutionJobs::make_monomial
    int layer = 0; // determines the order of execution
 
    freqlaycnt[layer] = freqlaycnt[layer] + 4; // add 4 jobs to layer
-   jobcount = 0;
    {
       // coefficient times the first variable to forward f[0]
       // first operand of real part
@@ -301,6 +300,7 @@ void ComplexConvolutionJobs::make
       vector<ComplexConvolutionJob> jobvec;
       jobs.push_back(jobvec);
    }
+   jobcount = 0;
 
    int ix1,ix2;
 

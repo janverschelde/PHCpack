@@ -51,6 +51,8 @@ int main ( void )
                           + incjobs.get_layer_count(i); 
    }
    cout << "total layer count sum : " << checksum << endl;
+   cout << "number of convolutions jobs : " << cnvjobs.get_count() << endl;
+   cout << "number of increment jobs : " << incjobs.get_count() << endl;
 
    cout << "seed used : " << seedused << endl;
 

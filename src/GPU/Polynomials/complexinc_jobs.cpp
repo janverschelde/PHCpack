@@ -21,6 +21,7 @@ ComplexIncrementJobs::ComplexIncrementJobs
       jobs.push_back(jobvec);
    }
    jobcount = 0;
+   laydepth = dimension;
 
    for(int k=0; k<cnvjobs.get_depth(); k++)
    {

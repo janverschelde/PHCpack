@@ -1,5 +1,8 @@
 Sun 18 Jun 2023 : fixed increment of job counter (when not verbose)
   in complexinc_jobs.cpp and complexconv_jobs.cpp.
+  Fixed layer depth in complexinc_jobs.cpp and in complexconv_jobs.cpp,
+  the job count should not be set to zero for every monomial!
+  Added an output statement to test_complexconv_jobs.cpp.
 
 Sat 17 Jun 2023 : extended write_job_counts with operation counts for
   the increment jobs in the complex vectorized arithmetic.
