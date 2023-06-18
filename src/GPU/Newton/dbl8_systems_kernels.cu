@@ -44,13 +44,52 @@ void write_dbl8_cnvflops
 
    cout << "    Total number of bytes : " << bytecnt << endl;
 
-   double intensity = ((double) flopcnt)/bytecnt;
+   const double intensity = ((double) flopcnt)/bytecnt;
    cout << "     Arithmetic intensity : "
         << scientific << setprecision(3) << intensity
         << " #flops/#bytes" << endl;
 
-   double kernflops = 1000.0*((double) flopcnt)/kernms;
-   double wallflops = ((double) flopcnt)/wallsec;
+   const double kernflops = 1000.0*((double) flopcnt)/kernms;
+   const double wallflops = ((double) flopcnt)/wallsec;
+   const int gigacnt = pow(2.0,30);
+
+   cout << "Kernel Time Flops : "
+        << scientific << setprecision(3) << kernflops;
+   cout << fixed << setprecision(3)
+        << " = " << kernflops/gigacnt << " Gigaflops" << endl;
+   cout << " Wall Clock Flops : "
+        << scientific << setprecision(3) << wallflops;
+   cout << fixed << setprecision(3)
+        << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+}
+
+void write_vectorized8_cnvincflops
+ ( int dim, int deg,
+   ComplexConvolutionJobs cnvjobs, ComplexIncrementJobs incjobs,
+   double kernms, double wallsec )
+{
+   long long int addcnt1,addcnt2,mulcnt,flopcnt;
+
+   complexconv_operation_counts(deg,cnvjobs,&addcnt1,&mulcnt,1);
+   complexinc_operation_counts(deg,incjobs,&addcnt2,1);
+
+   flopcnt = 270*(addcnt1 + addcnt2) + 1742*mulcnt;
+   /*
+      1 complex addition takes 2 floating-point (fp) additions
+      1 complex multiplication takes 2 fp additions and 4 fp multiplications
+   => quadruple the number of fp additions and multiplications */
+
+   long long int bytecnt = 16*dim*(deg+1);
+
+   cout << "    Total number of bytes : " << bytecnt << endl;
+
+   const double intensity = ((double) flopcnt)/bytecnt;
+   cout << "     Arithmetic intensity : "
+        << scientific << setprecision(3) << intensity
+        << " #flops/#bytes" << endl;
+
+   const double kernflops = 1000.0*((double) flopcnt)/kernms;
+   const double wallflops = ((double) flopcnt)/wallsec;
    const int gigacnt = pow(2.0,30);
 
    cout << "Kernel Time Flops : "
@@ -327,6 +366,172 @@ void cmplx8_evaldiffdata_to_output
                   outputimlohilo[k][ix0][i] = dataimlohilo[ix1];
                   outputimhilolo[k][ix0][i] = dataimhilolo[ix1];
                   outputimlololo[k][ix0][i] = dataimlololo[ix1++];
+               }
+            }
+         }
+      }
+   }
+}
+
+void cmplx8vectorized_evaldiffdata_to_output
+ ( double *datarihihihi, double *datarilohihi,
+   double *datarihilohi, double *datarilolohi,
+   double *datarihihilo, double *datarilohilo,
+   double *datarihilolo, double *datarilololo,
+   double ***outputrehihihi, double ***outputrelohihi,
+   double ***outputrehilohi, double ***outputrelolohi,
+   double ***outputrehihilo, double ***outputrelohilo,
+   double ***outputrehilolo, double ***outputrelololo,
+   double ***outputimhihihi, double ***outputimlohihi,
+   double ***outputimhilohi, double ***outputimlolohi,
+   double ***outputimhihilo, double ***outputimlohilo,
+   double ***outputimhilolo, double ***outputimlololo,
+   int dim, int nbr, int deg, int *nvr,
+   int **idx, int *fstart, int *bstart, int *cstart,
+   int totalcff, int offsetri, int vrblvl )
+{
+   const int deg1 = deg+1;
+   const int totcffoffset = totalcff + offsetri;
+   int ix0,ix2;
+   int ix1re,ix2im;
+
+   for(int k=0; k<nbr; k++)
+   {
+      ix1re = fstart[k] + (nvr[k]-1)*deg1;
+      ix2im = fstart[k] + (nvr[k]-1)*deg1 + totcffoffset;
+      
+      if(vrblvl > 1)
+         cout << "monomial " << k << " update starts at "
+              << ix1re << ", " << ix2im << endl;
+
+      for(int i=0; i<=deg; i++)
+      {
+         outputrehihihi[k][dim][i] = datarihihihi[ix1re];
+         outputrelohihi[k][dim][i] = datarilohihi[ix1re];
+         outputrehilohi[k][dim][i] = datarihilohi[ix1re];
+         outputrelolohi[k][dim][i] = datarilolohi[ix1re];
+         outputrehihilo[k][dim][i] = datarihihilo[ix1re];
+         outputrelohilo[k][dim][i] = datarilohilo[ix1re];
+         outputrehilolo[k][dim][i] = datarihilolo[ix1re];
+         outputrelololo[k][dim][i] = datarilololo[ix1re++];
+         outputimhihihi[k][dim][i] = datarihihihi[ix2im];
+         outputimlohihi[k][dim][i] = datarilohihi[ix2im];
+         outputimhilohi[k][dim][i] = datarihilohi[ix2im];
+         outputimlolohi[k][dim][i] = datarilolohi[ix2im];
+         outputimhihilo[k][dim][i] = datarihihilo[ix2im];
+         outputimlohilo[k][dim][i] = datarilohilo[ix2im];
+         outputimhilolo[k][dim][i] = datarihilolo[ix2im];
+         outputimlololo[k][dim][i] = datarilololo[ix2im++];
+      }
+      ix0 = idx[k][0];
+
+      if(nvr[k] == 1)
+      {
+         ix1re = (1 + k)*deg1;
+         ix2im = (1 + k)*deg1 + totcffoffset;
+            
+         for(int i=0; i<=deg; i++)
+         {
+            outputrehihihi[k][ix0][i] = datarihihihi[ix1re];
+            outputrelohihi[k][ix0][i] = datarilohihi[ix1re];
+            outputrehilohi[k][ix0][i] = datarihilohi[ix1re];
+            outputrelolohi[k][ix0][i] = datarilolohi[ix1re];
+            outputrehihilo[k][ix0][i] = datarihihilo[ix1re];
+            outputrelohilo[k][ix0][i] = datarilohilo[ix1re];
+            outputrehilolo[k][ix0][i] = datarihilolo[ix1re];
+            outputrelololo[k][ix0][i] = datarilololo[ix1re++];
+            outputimhihihi[k][ix0][i] = datarihihihi[ix2im];
+            outputimlohihi[k][ix0][i] = datarilohihi[ix2im];
+            outputimhilohi[k][ix0][i] = datarihilohi[ix2im];
+            outputimlolohi[k][ix0][i] = datarilolohi[ix2im];
+            outputimhihilo[k][ix0][i] = datarihihilo[ix2im];
+            outputimlohilo[k][ix0][i] = datarilohilo[ix2im];
+            outputimhilolo[k][ix0][i] = datarihilolo[ix2im];
+            outputimlololo[k][ix0][i] = datarilololo[ix2im++];
+         }
+      }
+      else if(nvr[k] > 1)
+      {                               // first and last derivative
+         // ix2 = nvr[k]-3;
+         // if(ix2 < 0) ix2 = 0;
+         ix2 = nvr[k] - 2;            // complex vectorized is different
+         ix1re = bstart[k] + ix2*deg1;
+         ix2im = bstart[k] + ix2*deg1 + totcffoffset;
+
+         for(int i=0; i<=deg; i++)
+         {
+            outputrehihihi[k][ix0][i] = datarihihihi[ix1re];
+            outputrelohihi[k][ix0][i] = datarilohihi[ix1re];
+            outputrehilohi[k][ix0][i] = datarihilohi[ix1re];
+            outputrelolohi[k][ix0][i] = datarilolohi[ix1re];
+            outputrehihilo[k][ix0][i] = datarihihilo[ix1re];
+            outputrelohilo[k][ix0][i] = datarilohilo[ix1re];
+            outputrehilolo[k][ix0][i] = datarihilolo[ix1re];
+            outputrelololo[k][ix0][i] = datarilololo[ix1re++];
+            outputimhihihi[k][ix0][i] = datarihihihi[ix2im];
+            outputimlohihi[k][ix0][i] = datarilohihi[ix2im];
+            outputimhilohi[k][ix0][i] = datarihilohi[ix2im];
+            outputimlolohi[k][ix0][i] = datarilolohi[ix2im];
+            outputimhihilo[k][ix0][i] = datarihihilo[ix2im];
+            outputimlohilo[k][ix0][i] = datarilohilo[ix2im];
+            outputimhilolo[k][ix0][i] = datarihilolo[ix2im];
+            outputimlololo[k][ix0][i] = datarilololo[ix2im++];
+         }
+         ix2 = nvr[k]-2;
+         ix1re = fstart[k] + ix2*deg1;
+         ix2im = fstart[k] + ix2*deg1 + totcffoffset;
+         ix0 = idx[k][ix2+1];
+
+         for(int i=0; i<=deg; i++)
+         {
+            outputrehihihi[k][ix0][i] = datarihihihi[ix1re];
+            outputrelohihi[k][ix0][i] = datarilohihi[ix1re];
+            outputrehilohi[k][ix0][i] = datarihilohi[ix1re];
+            outputrelolohi[k][ix0][i] = datarilolohi[ix1re];
+            outputrehihilo[k][ix0][i] = datarihihilo[ix1re];
+            outputrelohilo[k][ix0][i] = datarilohilo[ix1re];
+            outputrehilolo[k][ix0][i] = datarihilolo[ix1re];
+            outputrelololo[k][ix0][i] = datarilololo[ix1re++];
+            outputimhihihi[k][ix0][i] = datarihihihi[ix2im];
+            outputimlohihi[k][ix0][i] = datarilohihi[ix2im];
+            outputimhilohi[k][ix0][i] = datarihilohi[ix2im];
+            outputimlolohi[k][ix0][i] = datarilolohi[ix2im];
+            outputimhihilo[k][ix0][i] = datarihihilo[ix2im];
+            outputimlohilo[k][ix0][i] = datarilohilo[ix2im];
+            outputimhilolo[k][ix0][i] = datarihilolo[ix2im];
+            outputimlololo[k][ix0][i] = datarilololo[ix2im++];
+         }
+         if(nvr[k] > 2)                   // all other derivatives
+         {
+            for(int j=1; j<nvr[k]-1; j++)
+            {
+               ix0 = idx[k][j];            // j-th variable in monomial k
+               ix1re = cstart[k] + (j-1)*deg1;
+               ix2im = cstart[k] + (j-1)*deg1 + totcffoffset;
+
+               if(vrblvl > 1)
+                  cout << "monomial " << k << " derivative " << ix0
+                       << " update starts at "
+                       << ix1re << ", " << ix2im << endl;
+
+               for(int i=0; i<=deg; i++)
+               {
+                  outputrehihihi[k][ix0][i] = datarihihihi[ix1re];
+                  outputrelohihi[k][ix0][i] = datarilohihi[ix1re];
+                  outputrehilohi[k][ix0][i] = datarihilohi[ix1re];
+                  outputrelolohi[k][ix0][i] = datarilolohi[ix1re];
+                  outputrehihilo[k][ix0][i] = datarihihilo[ix1re];
+                  outputrelohilo[k][ix0][i] = datarilohilo[ix1re];
+                  outputrehilolo[k][ix0][i] = datarihilolo[ix1re];
+                  outputrelololo[k][ix0][i] = datarilololo[ix1re++];
+                  outputimhihihi[k][ix0][i] = datarihihihi[ix2im];
+                  outputimlohihi[k][ix0][i] = datarilohihi[ix2im];
+                  outputimhilohi[k][ix0][i] = datarihilohi[ix2im];
+                  outputimlolohi[k][ix0][i] = datarilolohi[ix2im];
+                  outputimhihilo[k][ix0][i] = datarihihilo[ix2im];
+                  outputimlohilo[k][ix0][i] = datarilohilo[ix2im];
+                  outputimhilolo[k][ix0][i] = datarihilolo[ix2im];
+                  outputimlololo[k][ix0][i] = datarilololo[ix2im++];
                }
             }
          }
@@ -825,6 +1030,310 @@ void GPU_cmplx8_mon_evaldiff
    free(fsums); free(bsums); free(csums);
 }
 
+void GPU_cmplx8vectorized_mon_evaldiff
+ ( int szt, int dim, int nbr, int deg, int *nvr, int **idx,
+   double **cffrehihihi, double **cffrelohihi,
+   double **cffrehilohi, double **cffrelolohi,
+   double **cffrehihilo, double **cffrelohilo,
+   double **cffrehilolo, double **cffrelololo,
+   double **cffimhihihi, double **cffimlohihi,
+   double **cffimhilohi, double **cffimlolohi,
+   double **cffimhihilo, double **cffimlohilo,
+   double **cffimhilolo, double **cffimlololo,
+   double **inputrehihihi, double **inputrelohihi,
+   double **inputrehilohi, double **inputrelolohi,
+   double **inputrehihilo, double **inputrelohilo,
+   double **inputrehilolo, double **inputrelololo,
+   double **inputimhihihi, double **inputimlohihi,
+   double **inputimhilohi, double **inputimlolohi,
+   double **inputimhihilo, double **inputimlohilo,
+   double **inputimhilolo, double **inputimlololo,
+   double ***outputrehihihi, double ***outputrelohihi,
+   double ***outputrehilohi, double ***outputrelolohi,
+   double ***outputrehihilo, double ***outputrelohilo,
+   double ***outputrehilolo, double ***outputrelololo,
+   double ***outputimhihihi, double ***outputimlohihi,
+   double ***outputimhilohi, double ***outputimlolohi,
+   double ***outputimhihilo, double ***outputimlohilo,
+   double ***outputimhilolo, double ***outputimlololo,
+   ComplexConvolutionJobs cnvjobs, ComplexIncrementJobs incjobs,
+   double *cnvlapms, double *elapsedms, double *walltimesec, int vrblvl )
+{
+   const int deg1 = deg+1;
+   const int totalcff = complex_coefficient_count(dim,nbr,deg,nvr);
+   const int diminput = (1 + nbr + dim)*deg1; // dimension of input
+   const int offsetri = totalcff - diminput;  // offset for re/im operands
+   const int cmplxtotcff = 2*(totalcff + offsetri);
+
+   int *fstart = new int[nbr];
+   int *bstart = new int[nbr];
+   int *cstart = new int[nbr];
+   int *fsums = new int[nbr];
+   int *bsums = new int[nbr];
+   int *csums = new int[nbr];
+
+   // code is adjusted from the complex vectorized versions 
+   // in dbl_polynomials_kernels.cu
+
+   complex_coefficient_indices
+      (dim,nbr,deg,nvr,fsums,bsums,csums,fstart,bstart,cstart);
+
+   if(vrblvl > 1)
+   {
+      cout << "        total count : " << totalcff << endl;
+      cout << "offset for operands : " << offsetri << endl;
+      cout << "complex total count : " << cmplxtotcff << endl;
+      write_coefficient_indices
+         (totalcff,nbr,fsums,fstart,bsums,bstart,csums,cstart);
+   }
+   double *datarihihihi_h = new double[cmplxtotcff]; // data on host
+   double *datarilohihi_h = new double[cmplxtotcff];
+   double *datarihilohi_h = new double[cmplxtotcff];
+   double *datarilolohi_h = new double[cmplxtotcff];
+   double *datarihihilo_h = new double[cmplxtotcff]; 
+   double *datarilohilo_h = new double[cmplxtotcff];
+   double *datarihilolo_h = new double[cmplxtotcff];
+   double *datarilololo_h = new double[cmplxtotcff];
+
+   int ix1 = 0;
+   int ix2 = totalcff + offsetri;
+
+   for(int i=0; i<deg1; i++)
+   {
+      datarihihihi_h[ix1]   = 0.0; // cst[i]; no constant
+      datarilohihi_h[ix1]   = 0.0;
+      datarihilohi_h[ix1]   = 0.0;
+      datarilolohi_h[ix1]   = 0.0;
+      datarihihilo_h[ix1]   = 0.0;
+      datarilohilo_h[ix1]   = 0.0;
+      datarihilolo_h[ix1]   = 0.0;
+      datarilololo_h[ix1++] = 0.0;
+      datarihihihi_h[ix2]   = 0.0;
+      datarilohihi_h[ix2]   = 0.0;
+      datarihilohi_h[ix2]   = 0.0;
+      datarilolohi_h[ix2]   = 0.0;
+      datarihihilo_h[ix2]   = 0.0;
+      datarilohilo_h[ix2]   = 0.0;
+      datarihilolo_h[ix2]   = 0.0;
+      datarilololo_h[ix2++] = 0.0;
+   }
+   for(int i=0; i<nbr; i++)
+      for(int j=0; j<deg1; j++)
+      {
+         datarihihihi_h[ix1]   = cffrehihihi[i][j];
+         datarilohihi_h[ix1]   = cffrelohihi[i][j];
+         datarihilohi_h[ix1]   = cffrehilohi[i][j];
+         datarilolohi_h[ix1]   = cffrelolohi[i][j];
+         datarihihilo_h[ix1]   = cffrehihilo[i][j];
+         datarilohilo_h[ix1]   = cffrelohilo[i][j];
+         datarihilolo_h[ix1]   = cffrehilolo[i][j];
+         datarilololo_h[ix1++] = cffrelololo[i][j];
+         datarihihihi_h[ix2]   = cffimhihihi[i][j];
+         datarilohihi_h[ix2]   = cffimlohihi[i][j];
+         datarihilohi_h[ix2]   = cffimhilohi[i][j];
+         datarilolohi_h[ix2]   = cffimlolohi[i][j];
+         datarihihilo_h[ix2]   = cffimhihilo[i][j];
+         datarilohilo_h[ix2]   = cffimlohilo[i][j];
+         datarihilolo_h[ix2]   = cffimhilolo[i][j];
+         datarilololo_h[ix2++] = cffimlololo[i][j];
+      }
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<deg1; j++)
+      {
+         datarihihihi_h[ix1]   = inputrehihihi[i][j];
+         datarilohihi_h[ix1]   = inputrelohihi[i][j];
+         datarihilohi_h[ix1]   = inputrehilohi[i][j];
+         datarilolohi_h[ix1]   = inputrelolohi[i][j];
+         datarihihilo_h[ix1]   = inputrehihilo[i][j];
+         datarilohilo_h[ix1]   = inputrelohilo[i][j];
+         datarihilolo_h[ix1]   = inputrehilolo[i][j];
+         datarilololo_h[ix1++] = inputrelololo[i][j];
+         datarihihihi_h[ix2]   = inputimhihihi[i][j];
+         datarilohihi_h[ix2]   = inputimlohihi[i][j];
+         datarihilohi_h[ix2]   = inputimhilohi[i][j];
+         datarilolohi_h[ix2]   = inputimlolohi[i][j];
+         datarihihilo_h[ix2]   = inputimhihilo[i][j];
+         datarilohilo_h[ix2]   = inputimlohilo[i][j];
+         datarihilolo_h[ix2]   = inputimhilolo[i][j];
+         datarilololo_h[ix2++] = inputimlololo[i][j];
+      }
+
+   double *datarihihihi_d;                   // device data
+   double *datarilohihi_d;
+   double *datarihilohi_d;
+   double *datarilolohi_d;
+   double *datarihihilo_d;
+   double *datarilohilo_d;
+   double *datarihilolo_d;
+   double *datarilololo_d;
+   const size_t szdata = cmplxtotcff*sizeof(double);
+   cudaMalloc((void**)&datarihihihi_d,szdata);
+   cudaMalloc((void**)&datarilohihi_d,szdata);
+   cudaMalloc((void**)&datarihilohi_d,szdata);
+   cudaMalloc((void**)&datarilolohi_d,szdata);
+   cudaMalloc((void**)&datarihihilo_d,szdata);
+   cudaMalloc((void**)&datarilohilo_d,szdata);
+   cudaMalloc((void**)&datarihilolo_d,szdata);
+   cudaMalloc((void**)&datarilololo_d,szdata);
+   cudaMemcpy(datarihihihi_d,datarihihihi_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datarilohihi_d,datarilohihi_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datarihilohi_d,datarihilohi_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datarilolohi_d,datarilolohi_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datarihihilo_d,datarihihilo_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datarilohilo_d,datarilohilo_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datarihilolo_d,datarihilolo_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datarilololo_d,datarilololo_h,szdata,cudaMemcpyHostToDevice);
+
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   *cnvlapms = 0.0;
+   float milliseconds;
+   double fliplapms;
+   struct timeval begintime,endtime; // wall clock time of computations
+   bool verbose = (vrblvl > 1);
+
+   gettimeofday(&begintime,0);
+   for(int k=0; k<cnvjobs.get_depth(); k++)
+   {
+      int jobnbr = cnvjobs.get_layer_count(k);
+      int *in1ix_h = new int[jobnbr];
+      int *in2ix_h = new int[jobnbr];
+      int *outix_h = new int[jobnbr];
+
+      if(verbose) cout << "preparing convolution jobs at layer "
+                       << k << " ..." << endl;
+
+      complex_convjobs_coordinates
+         (cnvjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,totalcff,offsetri,
+          fstart,bstart,cstart,verbose);
+      // if(deg1 == szt)
+      {
+         int *in1ix_d; // first input on device
+         int *in2ix_d; // second input on device
+         int *outix_d; // output indices on device
+         const size_t szjobidx = jobnbr*sizeof(int);
+         cudaMalloc((void**)&in1ix_d,szjobidx);
+         cudaMalloc((void**)&in2ix_d,szjobidx);
+         cudaMalloc((void**)&outix_d,szjobidx);
+         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+
+         if(verbose)
+            cout << "launching " << jobnbr << " blocks of " << deg1
+                 << " threads ..." << endl;
+         
+         cudaEventRecord(start);
+
+         dbl8_padded_convjobs<<<jobnbr,deg1>>>
+            (datarihihihi_d,datarilohihi_d,datarihilohi_d,datarilolohi_d,
+             datarihihilo_d,datarilohilo_d,datarihilolo_d,datarilololo_d,
+             in1ix_d,in2ix_d,outix_d,deg1);
+
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *cnvlapms += milliseconds;
+
+         cudaFree(in1ix_d); cudaFree(in2ix_d); cudaFree(outix_d);
+      }
+      // code to flip signs and run the increment jobs
+      jobnbr = incjobs.get_layer_count(k);
+      // note: only half the number of increment jobs
+
+      if(verbose) cout << "preparing increment jobs at layer "
+                       << k << " ..." << endl;
+
+      complex_incjobs_coordinates
+         (incjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,totalcff,offsetri,
+          fstart,bstart,cstart,verbose);
+
+      const int nbrflips = jobnbr/2;
+      int *rebidx = new int[nbrflips];
+      for(int i=0, j=0; i<jobnbr; i=i+2, j++) rebidx[j] = in2ix_h[i];
+
+      GPU_cmplx8vectorized_flipsigns
+        (deg,nbrflips,rebidx,
+         datarihihihi_d,datarilohihi_d,datarihilohi_d,datarilolohi_d,
+         datarihihilo_d,datarilohilo_d,datarihilolo_d,datarilololo_d,
+         &fliplapms,vrblvl);
+      *cnvlapms += fliplapms;
+
+      // if(BS == deg1)
+      {
+         int *in1ix_d; // first input on device
+         int *in2ix_d; // second input on device
+         int *outix_d; // output indices on device
+         const size_t szjobidx = jobnbr*sizeof(int);
+         cudaMalloc((void**)&in1ix_d,szjobidx);
+         cudaMalloc((void**)&in2ix_d,szjobidx);
+         cudaMalloc((void**)&outix_d,szjobidx);
+         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+
+         if(verbose)
+            cout << "launching " << jobnbr << " blocks of " << deg1
+                 << " threads for increments ..." << endl;
+
+         cudaEventRecord(start);
+         dbl8_increment_jobs<<<jobnbr,deg1>>>
+            (datarihihihi_d,datarilohihi_d,datarihilohi_d,datarilolohi_d,
+             datarihihilo_d,datarilohilo_d,datarihilolo_d,datarilololo_d,
+             in1ix_d,in2ix_d,outix_d,deg1);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *cnvlapms += milliseconds;
+
+         cudaFree(in1ix_d); cudaFree(in2ix_d); cudaFree(outix_d);
+      }
+      free(in1ix_h); free(in2ix_h); free(outix_h); free(rebidx);
+   }
+   gettimeofday(&endtime,0);
+   cudaMemcpy(datarihihihi_h,datarihihihi_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datarilohihi_h,datarilohihi_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datarihilohi_h,datarihilohi_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datarilolohi_h,datarilolohi_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datarihihilo_h,datarihihilo_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datarilohilo_h,datarilohilo_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datarihilolo_h,datarihilolo_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datarilololo_h,datarilololo_d,szdata,cudaMemcpyDeviceToHost);
+   *elapsedms = *cnvlapms;
+   long seconds = endtime.tv_sec - begintime.tv_sec;
+   long microseconds = endtime.tv_usec - begintime.tv_usec;
+   *walltimesec = seconds + microseconds*1.0e-6;
+
+   cmplx8vectorized_evaldiffdata_to_output
+      (datarihihihi_h,datarilohihi_h,datarihilohi_h,datarilolohi_h,
+       datarihihilo_h,datarilohilo_h,datarihilolo_h,datarilololo_h,
+       outputrehihihi,outputrelohihi,outputrehilohi,outputrelolohi,
+       outputrehihilo,outputrelohilo,outputrehilolo,outputrelololo,
+       outputimhihihi,outputimlohihi,outputimhilohi,outputimlolohi,
+       outputimhihilo,outputimlohilo,outputimhilolo,outputimlololo,
+       dim,nbr,deg,nvr,idx,fstart,bstart,cstart,totalcff,offsetri,vrblvl);
+
+   if(vrblvl > 0)
+   {
+      write_GPU_timings(*cnvlapms,0.0,*elapsedms,*walltimesec);
+      write_vectorized8_cnvincflops
+         (dim,deg,cnvjobs,incjobs,*elapsedms,*walltimesec);
+   }
+   cudaFree(datarihihihi_d); cudaFree(datarilohihi_d);
+   cudaFree(datarihilohi_d); cudaFree(datarilolohi_d);
+   cudaFree(datarihihilo_d); cudaFree(datarilohilo_d);
+   cudaFree(datarihilolo_d); cudaFree(datarilololo_d);
+
+   free(datarihihihi_h); free(datarilohihi_h);
+   free(datarihilohi_h); free(datarilolohi_h);
+   free(datarihihilo_h); free(datarilohilo_h);
+   free(datarihilolo_h); free(datarilololo_h);
+
+   free(fstart); free(bstart); free(cstart);
+   free(fsums); free(bsums); free(csums);
+}
+
 void GPU_dbl8_evaluate_monomials
  ( int dim, int deg, int szt, int nbt,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
@@ -1212,6 +1721,291 @@ void GPU_cmplx8_evaluate_monomials
        outputimhihihi,outputimlohihi,outputimhilohi,outputimlolohi,
        outputimhihilo,outputimlohilo,outputimhilolo,outputimlololo,jobs,
        &cnvlapms,&elapsedms,&walltimesec,vrblvl);
+
+   *totcnvlapsedms += elapsedms;
+
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<dim; i++)
+      {
+         cout << "output series for monomial " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << outputrehihihi[i][dim][j] << "  "
+                 << outputrelohihi[i][dim][j] << endl << "  " 
+                 << outputrehilohi[i][dim][j] << "  "
+                 << outputrelolohi[i][dim][j] << endl << "  " 
+                 << outputrehihilo[i][dim][j] << "  "
+                 << outputrelohilo[i][dim][j] << endl << "  " 
+                 << outputrehilolo[i][dim][j] << "  "
+                 << outputrelololo[i][dim][j] << endl << "  " 
+                 << outputimhihihi[i][dim][j] << "  "
+                 << outputimlohihi[i][dim][j] << endl << "  "
+                 << outputimhilohi[i][dim][j] << "  "
+                 << outputimlolohi[i][dim][j] << endl << "  "
+                 << outputimhihilo[i][dim][j] << "  "
+                 << outputimlohilo[i][dim][j] << endl << "  "
+                 << outputimhilolo[i][dim][j] << "  "
+                 << outputimlololo[i][dim][j] << endl;
+      }
+   }
+   for(int i=0; i<dim; i++) // multiply derivatives with the powers
+   {
+      if(nbrfac[i] > 0) // there are common factors in monomial i
+      {
+         for(int j=0; j<nvr[i]; j++) // run over all exponents
+         {
+            if(expfac[i][j] > 0) // the j-th exponent with variable idx[i][j]
+            {
+               int idxvar = idx[i][j];
+               double fac = (double) exp[i][j];
+               double acchihihi,acclohihi,acchilohi,acclolohi;
+               double acchihilo,acclohilo,acchilolo,acclololo;
+
+               // multiply derivative w.r.t. idxvar with factor
+               for(int k=0; k<=deg; k++)
+               {
+                  // outputre[i][idxvar][k] = fac*outputre[i][idxvar][k];
+                  odf_mul(outputrehihihi[i][idxvar][k],
+                          outputrelohihi[i][idxvar][k],
+                          outputrehilohi[i][idxvar][k],
+                          outputrelolohi[i][idxvar][k],
+                          outputrehihilo[i][idxvar][k],
+                          outputrelohilo[i][idxvar][k],
+                          outputrehilolo[i][idxvar][k],
+                          outputrelololo[i][idxvar][k],
+                          fac,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+                          &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                          &acchihilo,&acclohilo,&acchilolo,&acclololo);
+                  outputrehihihi[i][idxvar][k] = acchihihi;
+                  outputrelohihi[i][idxvar][k] = acclohihi;
+                  outputrehilohi[i][idxvar][k] = acchilohi;
+                  outputrelolohi[i][idxvar][k] = acclolohi;
+                  outputrehihilo[i][idxvar][k] = acchihilo;
+                  outputrelohilo[i][idxvar][k] = acclohilo;
+                  outputrehilolo[i][idxvar][k] = acchilolo;
+                  outputrelololo[i][idxvar][k] = acclololo;
+                  // outputim[i][idxvar][k] = fac*outputim[i][idxvar][k];
+                  odf_mul(outputimhihihi[i][idxvar][k],
+                          outputimlohihi[i][idxvar][k],
+                          outputimhilohi[i][idxvar][k],
+                          outputimlolohi[i][idxvar][k],
+                          outputimhihilo[i][idxvar][k],
+                          outputimlohilo[i][idxvar][k],
+                          outputimhilolo[i][idxvar][k],
+                          outputimlololo[i][idxvar][k],
+                          fac,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+                          &acchihihi,&acclohihi,&acchilohi,&acclolohi,
+                          &acchihilo,&acclohilo,&acchilolo,&acclololo);
+                  outputimhihihi[i][idxvar][k] = acchihihi;
+                  outputimlohihi[i][idxvar][k] = acclohihi;
+                  outputimhilohi[i][idxvar][k] = acchilohi;
+                  outputimlolohi[i][idxvar][k] = acclolohi;
+                  outputimhihilo[i][idxvar][k] = acchihilo;
+                  outputimlohilo[i][idxvar][k] = acclohilo;
+                  outputimhilolo[i][idxvar][k] = acchilolo;
+                  outputimlololo[i][idxvar][k] = acclololo;
+               }
+            }
+         }
+      }
+   }
+}
+
+void GPU_cmplx8vectorized_evaluate_monomials
+ ( int dim, int deg, int szt, int nbt,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   double **cffrehihihi, double **cffrelohihi,
+   double **cffrehilohi, double **cffrelolohi,
+   double **cffrehihilo, double **cffrelohilo,
+   double **cffrehilolo, double **cffrelololo,
+   double **cffimhihihi, double **cffimlohihi,
+   double **cffimhilohi, double **cffimlolohi,
+   double **cffimhihilo, double **cffimlohilo,
+   double **cffimhilolo, double **cffimlololo,
+   double *accrehihihi, double *accrelohihi,
+   double *accrehilohi, double *accrelolohi,
+   double *accrehihilo, double *accrelohilo,
+   double *accrehilolo, double *accrelololo,
+   double *accimhihihi, double *accimlohihi,
+   double *accimhilohi, double *accimlolohi,
+   double *accimhihilo, double *accimlohilo,
+   double *accimhilolo, double *accimlololo,
+   double **inputrehihihi, double **inputrelohihi,
+   double **inputrehilohi, double **inputrelolohi,
+   double **inputrehihilo, double **inputrelohilo,
+   double **inputrehilolo, double **inputrelololo,
+   double **inputimhihihi, double **inputimlohihi, 
+   double **inputimhilohi, double **inputimlolohi, 
+   double **inputimhihilo, double **inputimlohilo, 
+   double **inputimhilolo, double **inputimlololo, 
+   double ***outputrehihihi, double ***outputrelohihi, 
+   double ***outputrehilohi, double ***outputrelolohi, 
+   double ***outputrehihilo, double ***outputrelohilo, 
+   double ***outputrehilolo, double ***outputrelololo, 
+   double ***outputimhihihi, double ***outputimlohihi,
+   double ***outputimhilohi, double ***outputimlolohi,
+   double ***outputimhihilo, double ***outputimlohilo,
+   double ***outputimhilolo, double ***outputimlololo,
+   double *totcnvlapsedms, int vrblvl )
+{
+   for(int i=0; i<dim; i++) // common factors in the coefficients
+   {
+      if(nbrfac[i] > 0) // there are common factors in monomial i
+      {
+         for(int j=0; j<nvr[i]; j++) // run over all exponents
+         {
+            if(expfac[i][j] > 0) // the j-th exponent with variable idx[i][j]
+            {
+               int idxvar = idx[i][j];
+
+               for(int k=0; k<expfac[i][j]; k++)
+               {
+                  CPU_cmplx8_product
+                     (deg,inputrehihihi[idxvar],inputrelohihi[idxvar],
+                          inputrehilohi[idxvar],inputrelolohi[idxvar],
+                          inputrehihilo[idxvar],inputrelohilo[idxvar],
+                          inputrehilolo[idxvar],inputrelololo[idxvar],
+                          inputimhihihi[idxvar],inputimlohihi[idxvar],
+                          inputimhilohi[idxvar],inputimlolohi[idxvar],
+                          inputimhihilo[idxvar],inputimlohilo[idxvar],
+                          inputimhilolo[idxvar],inputimlololo[idxvar],
+                      cffrehihihi[i],cffrelohihi[i],
+                      cffrehilohi[i],cffrelolohi[i],
+                      cffrehihilo[i],cffrelohilo[i],
+                      cffrehilolo[i],cffrelololo[i],
+                      cffimhihihi[i],cffimlohihi[i],
+                      cffimhilohi[i],cffimlolohi[i],
+                      cffimhihilo[i],cffimlohilo[i],
+                      cffimhilolo[i],cffimlololo[i],
+                      accrehihihi,accrelohihi,accrehilohi,accrelolohi,
+                      accrehihilo,accrelohilo,accrehilolo,accrelololo,
+                      accimhihihi,accimlohihi,accimhilohi,accimlolohi,
+                      accimhihilo,accimlohilo,accimhilolo,accimlololo);
+
+                  for(int L=0; L<=deg; L++)
+                  {
+                     cffrehihihi[i][L] = accrehihihi[L];
+                     cffrelohihi[i][L] = accrelohihi[L];
+                     cffrehilohi[i][L] = accrehilohi[L];
+                     cffrelolohi[i][L] = accrelolohi[L];
+                     cffrehihilo[i][L] = accrehihilo[L];
+                     cffrelohilo[i][L] = accrelohilo[L];
+                     cffrehilolo[i][L] = accrehilolo[L];
+                     cffrelololo[i][L] = accrelololo[L];
+                     cffimhihihi[i][L] = accimhihihi[L];
+                     cffimlohihi[i][L] = accimlohihi[L];
+                     cffimhilohi[i][L] = accimhilohi[L];
+                     cffimlolohi[i][L] = accimlolohi[L];
+                     cffimhihilo[i][L] = accimhihilo[L];
+                     cffimlohilo[i][L] = accimlohilo[L];
+                     cffimhilolo[i][L] = accimhilolo[L];
+                     cffimlololo[i][L] = accimlololo[L];
+                  }
+               }
+            }
+         }
+      }
+   }
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<dim; i++)
+      {
+         cout << "coefficients for monomial " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << cffrehihihi[i][j] << "  " << cffrelohihi[i][j] << endl
+                 << "  "
+                 << cffrehilohi[i][j] << "  " << cffrelolohi[i][j] << endl
+                 << "  "
+                 << cffrehihilo[i][j] << "  " << cffrelohilo[i][j] << endl
+                 << "  "
+                 << cffrehilolo[i][j] << "  " << cffrelololo[i][j] << endl
+                 << "  "
+                 << cffimhihihi[i][j] << "  " << cffimlohihi[i][j] << endl
+                 << "  "
+                 << cffimhilohi[i][j] << "  " << cffimlolohi[i][j] << endl
+                 << "  "
+                 << cffimhihilo[i][j] << "  " << cffimlohilo[i][j] << endl
+                 << "  "
+                 << cffimhilolo[i][j] << "  " << cffimlololo[i][j] << endl;
+      }
+      cout << "dim : " << dim << "  nvr :";
+      for(int i=0; i<dim; i++) cout << " " << nvr[i];
+      cout << endl;
+      cout << "deg : " << deg;
+      for(int i=0; i<dim; i++) 
+      {
+         cout << "  idx[" << i << "] :";
+         for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
+      }
+      cout << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "input series for variable " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << inputrehihihi[i][j] << "  " << inputrelohihi[i][j] << endl
+                 << "  "
+                 << inputrehilohi[i][j] << "  " << inputrelolohi[i][j] << endl
+                 << "  "
+                 << inputrehihilo[i][j] << "  " << inputrelohilo[i][j] << endl
+                 << "  "
+                 << inputrehilolo[i][j] << "  " << inputrelololo[i][j] << endl
+                 << "  "
+                 << inputimhihihi[i][j] << "  " << inputimlohihi[i][j] << endl
+                 << "  "
+                 << inputimhilohi[i][j] << "  " << inputimlolohi[i][j] << endl
+                 << "  "
+                 << inputimhihilo[i][j] << "  " << inputimlohilo[i][j] << endl
+                 << "  "
+                 << inputimhilolo[i][j] << "  " << inputimlololo[i][j] << endl;
+      }
+   }
+   bool verbose = (vrblvl > 1);
+   double cnvlapms,elapsedms,walltimesec;
+
+   // ConvolutionJobs jobs(dim);
+   // jobs.make(dim,nvr,idx,verbose);
+   ComplexConvolutionJobs cnvjobs(dim);
+   cnvjobs.make(dim,nvr,idx,verbose);
+
+   ComplexIncrementJobs incjobs(cnvjobs,verbose);
+
+   if(verbose)
+   {
+      for(int k=0; k<cnvjobs.get_depth(); k++)
+      {
+         cout << "jobs at layer " << k << " :" << endl;
+         for(int i=0; i<cnvjobs.get_layer_count(k); i++)
+            cout << cnvjobs.get_job(k,i) << endl;
+      }
+      cout << "dimension : " << dim << endl;
+      cout << "number of monomials : " << dim << endl;
+      cout << "number of convolution jobs : "
+           << cnvjobs.get_count() << endl;
+      cout << "number of layers : " << cnvjobs.get_depth() << endl;
+      cout << "frequency of layer counts :" << endl;
+      int checksum = 0;
+      for(int i=0; i<cnvjobs.get_depth(); i++)
+      {
+         cout << i << " : " << cnvjobs.get_layer_count(i) << endl;
+         checksum = checksum + cnvjobs.get_layer_count(i); 
+      }
+      cout << "layer count sum : " << checksum << endl;
+   }
+   GPU_cmplx8vectorized_mon_evaldiff
+      (szt,dim,dim,deg,nvr,idx,
+       cffrehihihi,cffrelohihi,cffrehilohi,cffrelolohi,
+       cffrehihilo,cffrelohilo,cffrehilolo,cffrelololo,
+       cffimhihihi,cffimlohihi,cffimhilohi,cffimlolohi,
+       cffimhihilo,cffimlohilo,cffimhilolo,cffimlololo,
+       inputrehihihi,inputrelohihi,inputrehilohi,inputrelolohi,
+       inputrehihilo,inputrelohilo,inputrehilolo,inputrelololo,
+       inputimhihihi,inputimlohihi,inputimhilohi,inputimlolohi,
+       inputimhihilo,inputimlohilo,inputimhilolo,inputimlololo,
+       outputrehihihi,outputrelohihi,outputrehilohi,outputrelolohi,
+       outputrehihilo,outputrelohilo,outputrehilolo,outputrelololo,
+       outputimhihihi,outputimlohihi,outputimhilohi,outputimlolohi,
+       outputimhihilo,outputimlohilo,outputimhilolo,outputimlololo,
+       cnvjobs,incjobs,&cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
    *totcnvlapsedms += elapsedms;
 

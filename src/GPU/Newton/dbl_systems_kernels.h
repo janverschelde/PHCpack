@@ -133,12 +133,11 @@ void cmplxvectorized_evaldiffdata_to_output
    int totalcff, int offsetri, int vrblvl );
 /*
  * DESCRIPTION :
- *   Extracts the complex data computed on the device to the output.
+ *   Extracts the complex data computed on the device
+ *   using vectorized arithmetic to the output.
  *
  * ON ENTRY :
- *   datare   real parts of coefficients of all monomials and input, 
- *            computed forward, backward, and cross products;
- *   dataim   imaginary parts of coefficients of all monomials and input, 
+ *   datari   coefficients of all monomials and input, 
  *            computed forward, backward, and cross products;
  *   outputre has space for the value and all derivatives;
  *   outputim has space for the value and all derivatives;

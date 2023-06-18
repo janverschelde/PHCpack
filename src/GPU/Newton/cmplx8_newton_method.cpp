@@ -1011,8 +1011,31 @@ int cmplx8_column_newton_qrstep
              cffimhihihi[0],cffimlohihi[0],cffimhilohi[0],cffimlolohi[0],
              cffimhihilo[0],cffimlohilo[0],cffimhilolo[0],cffimlololo[0]);
          // reset the coefficients
-
+/*
          GPU_cmplx8_evaluate_monomials
+            (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
+             cffrehihihi[0],cffrelohihi[0],cffrehilohi[0],cffrelolohi[0],
+             cffrehihilo[0],cffrelohilo[0],cffrehilolo[0],cffrelololo[0],
+             cffimhihihi[0],cffimlohihi[0],cffimhilohi[0],cffimlolohi[0],
+             cffimhihilo[0],cffimlohilo[0],cffimhilolo[0],cffimlololo[0],
+             accrehihihi[0],accrelohihi[0],accrehilohi[0],accrelolohi[0],
+             accrehihilo[0],accrelohilo[0],accrehilolo[0],accrelololo[0],
+             accimhihihi[0],accimlohihi[0],accimhilohi[0],accimlolohi[0],
+             accimhihilo[0],accimlohilo[0],accimhilolo[0],accimlololo[0],
+             inputrehihihi_d,inputrelohihi_d,inputrehilohi_d,inputrelolohi_d,
+             inputrehihilo_d,inputrelohilo_d,inputrehilolo_d,inputrelololo_d,
+             inputimhihihi_d,inputimlohihi_d,inputimhilohi_d,inputimlolohi_d,
+             inputimhihilo_d,inputimlohilo_d,inputimhilolo_d,inputimlololo_d,
+             outputrehihihi_d,outputrelohihi_d,
+             outputrehilohi_d,outputrelolohi_d,
+             outputrehihilo_d,outputrelohilo_d,
+             outputrehilolo_d,outputrelololo_d,
+             outputimhihihi_d,outputimlohihi_d,
+             outputimhilohi_d,outputimlolohi_d,
+             outputimhihilo_d,outputimlohilo_d,
+             outputimhilolo_d,outputimlololo_d,totcnvlapsedms,vrblvl);
+ */
+         GPU_cmplx8vectorized_evaluate_monomials
             (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
              cffrehihihi[0],cffrelohihi[0],cffrehilohi[0],cffrelolohi[0],
              cffrehihilo[0],cffrelohilo[0],cffrehilolo[0],cffrelololo[0],

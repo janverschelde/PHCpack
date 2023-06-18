@@ -5,6 +5,8 @@ Sat 17 Jun 2023 : extended dbl_systems_kernels with vectorized versions to
   complex vectorized arithmetic on monomial systems.
   Extended dbl4_systems_kernels and cmplx4_newton_method.cpp to apply
   complex vectorized arithmetic on monomial systems.
+  Extended dbl8_systems_kernels and cmplx8_newton_method.cpp to apply
+  complex vectorized arithmetic on monomial systems.
 
 Tue 6 Jun 2023 : refactored cmplx8_newton_method.
   Added the functional octo double Newton to cmplx8_newton_method.
