@@ -27,23 +27,27 @@ void ComplexConvolutionJobs::make_monomial
       // coefficient times the first variable to forward f[0]
       // first operand of real part
       ComplexConvolutionJob job1(monidx,-1,-1,0,ix1,1,0);
-      if(verbose) cout << ++jobcount << " : " << job1
-                                     << " : layer " << layer << endl;
+      jobcount = jobcount + 1;
+      if(verbose) cout << jobcount << " : " << job1
+                                   << " : layer " << layer << endl;
       jobs[layer].push_back(job1);
       // second operand of real part
       ComplexConvolutionJob job2(monidx,-2,-1,4,ix1,4,0);
-      if(verbose) cout << ++jobcount << " : " << job2
-                                     << " : layer " << layer << endl;
+      jobcount = jobcount + 1;
+      if(verbose) cout << jobcount << " : " << job2
+                                   << " : layer " << layer << endl;
       jobs[layer].push_back(job2);
       // first operand of imaginary part
       ComplexConvolutionJob job3(monidx,-1,-1,4,ix1,7,0);
-      if(verbose) cout << ++jobcount << " : " << job3
-                                     << " : layer " << layer << endl;
+      jobcount = jobcount + 1;
+      if(verbose) cout << jobcount << " : " << job3
+                                   << " : layer " << layer << endl;
       jobs[layer].push_back(job3);
       // second operand of imaginary part
       ComplexConvolutionJob job4(monidx,-2,-1,0,ix1,10,0);
-      if(verbose) cout << ++jobcount << " : " << job4
-                                     << " : layer " << layer << endl;
+      jobcount = jobcount + 1;
+      if(verbose) cout << jobcount << " : " << job4
+                                   << " : layer " << layer << endl;
       jobs[layer].push_back(job4);
    }
    layer = layer + 1;
@@ -56,23 +60,27 @@ void ComplexConvolutionJobs::make_monomial
       {
          // first operand of real part
          ComplexConvolutionJob job1(monidx,1,i-1,0,ix2,1,i);
-         if(verbose) cout << ++jobcount << " : " << job1
-                                        << " : layer " << layer << endl;
+         jobcount = jobcount + 1;
+         if(verbose) cout << jobcount << " : " << job1
+                                      << " : layer " << layer << endl;
          jobs[layer].push_back(job1);
          // second operand of real part
          ComplexConvolutionJob job2(monidx,5,i-1,4,ix2,4,i);
-         if(verbose) cout << ++jobcount << " : " << job2
-                                        << " : layer " << layer << endl;
+         jobcount = jobcount + 1;
+         if(verbose) cout << jobcount << " : " << job2
+                                      << " : layer " << layer << endl;
          jobs[layer].push_back(job2);
          // first operand of imaginary part
          ComplexConvolutionJob job3(monidx,1,i-1,4,ix2,7,i);
-         if(verbose) cout << ++jobcount << " : " << job3
-                                        << " : layer " << layer << endl;
+         jobcount = jobcount + 1;
+         if(verbose) cout << jobcount << " : " << job3
+                                      << " : layer " << layer << endl;
          jobs[layer].push_back(job3);
          // second operand of imaginary part
          ComplexConvolutionJob job4(monidx,5,i-1,0,ix2,10,i);
-         if(verbose) cout << ++jobcount << " : " << job4
-                                        << " : layer " << layer << endl;
+         jobcount = jobcount + 1;
+         if(verbose) cout << jobcount << " : " << job4
+                                      << " : layer " << layer << endl;
          jobs[layer].push_back(job4);
       }
       layer = layer + 1;
@@ -91,23 +99,27 @@ void ComplexConvolutionJobs::make_monomial
       {
          // first operand of real part
          ComplexConvolutionJob job1(monidx,0,ix1,0,ix2,2,0);
-         if(verbose) cout << ++jobcount << " : " << job1
-                                        << " : layer " << layer << endl;
+         jobcount = jobcount + 1;
+         if(verbose) cout << jobcount << " : " << job1
+                                      << " : layer " << layer << endl;
          jobs[layer].push_back(job1);
          // second operand of real part
          ComplexConvolutionJob job2(monidx,4,ix1,4,ix2,5,0);
-         if(verbose) cout << ++jobcount << " : " << job2
-                                        << " : layer " << layer << endl;
+         jobcount = jobcount + 1;
+         if(verbose) cout << jobcount << " : " << job2
+                                      << " : layer " << layer << endl;
          jobs[layer].push_back(job2);
          // first operand of imaginary part
          ComplexConvolutionJob job3(monidx,0,ix1,4,ix2,8,0);
-         if(verbose) cout << ++jobcount << " : " << job3
-                                        << " : layer " << layer << endl;
+         jobcount = jobcount + 1;
+         if(verbose) cout << jobcount << " : " << job3
+                                      << " : layer " << layer << endl;
          jobs[layer].push_back(job3);
          // second operand of imaginary part
          ComplexConvolutionJob job4(monidx,4,ix1,0,ix2,11,0);
-         if(verbose) cout << ++jobcount << " : " << job4
-                                        << " : layer " << layer << endl;
+         jobcount = jobcount + 1;
+         if(verbose) cout << jobcount << " : " << job4
+                                      << " : layer " << layer << endl;
          jobs[layer].push_back(job4);
       }
       layer = layer + 1;
@@ -120,23 +132,27 @@ void ComplexConvolutionJobs::make_monomial
          {
             // first operand of real part
             ComplexConvolutionJob job1(monidx,2,i-1,0,ix2,2,i);
-            if(verbose) cout << ++jobcount << " : " << job1
-                                           << " : layer " << layer << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job1
+                                         << " : layer " << layer << endl;
             jobs[layer].push_back(job1);
             // second operand of real part
             ComplexConvolutionJob job2(monidx,6,i-1,4,ix2,5,i);
-            if(verbose) cout << ++jobcount << " : " << job2
-                                           << " : layer " << layer << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job2
+                                         << " : layer " << layer << endl;
             jobs[layer].push_back(job2);
             // first operand of imaginary part
             ComplexConvolutionJob job3(monidx,2,i-1,4,ix2,8,i);
-            if(verbose) cout << ++jobcount << " : " << job3
-                                           << " : layer " << layer << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job3
+                                         << " : layer " << layer << endl;
             jobs[layer].push_back(job3);
             // second operand of imaginary part
             ComplexConvolutionJob job4(monidx,6,i-1,0,ix2,11,i);
-            if(verbose) cout << ++jobcount << " : " << job4
-                                           << " : layer " << layer << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job4
+                                         << " : layer " << layer << endl;
             jobs[layer].push_back(job4);
          }
          layer = layer + 1;
@@ -145,23 +161,27 @@ void ComplexConvolutionJobs::make_monomial
       {
          // first operand of real part
          ComplexConvolutionJob job1(monidx,2,nvr-3,-1,-1,2,nvr-2);
-         if(verbose) cout << ++jobcount << " : " << job1
-                                        << " : layer " << layer << endl;
+         jobcount = jobcount + 1;
+         if(verbose) cout << jobcount << " : " << job1
+                                      << " : layer " << layer << endl;
          jobs[layer].push_back(job1);
          // second operand of real part
          ComplexConvolutionJob job2(monidx,6,nvr-3,-2,-1,5,nvr-2);
-         if(verbose) cout << ++jobcount << " : " << job2
-                                        << " : layer " << layer << endl;
+         jobcount = jobcount + 1;
+         if(verbose) cout << jobcount << " : " << job2
+                                      << " : layer " << layer << endl;
          jobs[layer].push_back(job2);
          // first operand of imaginary part
          ComplexConvolutionJob job3(monidx,2,nvr-3,-2,-1,8,nvr-2);
-         if(verbose) cout << ++jobcount << " : " << job3
-                                        << " : layer " << layer << endl;
+         jobcount = jobcount + 1;
+         if(verbose) cout << jobcount << " : " << job3
+                                      << " : layer " << layer << endl;
          jobs[layer].push_back(job3);
          // second operand of imaginary part
          ComplexConvolutionJob job4(monidx,6,nvr-3,-1,-1,11,nvr-2);
-         if(verbose) cout << ++jobcount << " : " << job4
-                                        << " : layer " << layer << endl;
+         jobcount = jobcount + 1;
+         if(verbose) cout << jobcount << " : " << job4
+                                      << " : layer " << layer << endl;
          jobs[layer].push_back(job4);
       }
       layer = layer + 1;
@@ -177,23 +197,27 @@ void ComplexConvolutionJobs::make_monomial
          {
             // first operand of real part
             ComplexConvolutionJob job1(monidx,1,0,0,ix2,3,0);
-            if(verbose) cout << ++jobcount << " : " << job1
-                                           << " : layer " << layer << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job1
+                                         << " : layer " << layer << endl;
             jobs[layer].push_back(job1);
             // second operand of real part
             ComplexConvolutionJob job2(monidx,5,0,4,ix2,6,0);
-            if(verbose) cout << ++jobcount << " : " << job2
-                                           << " : layer " << layer << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job2
+                                         << " : layer " << layer << endl;
             jobs[layer].push_back(job2);
             // first operand of imaginary part
             ComplexConvolutionJob job3(monidx,1,0,4,ix2,9,0);
-            if(verbose) cout << ++jobcount << " : " << job3
-                                           << " : layer " << layer << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job3
+                                         << " : layer " << layer << endl;
             jobs[layer].push_back(job3);
             // second operand of imaginary part
             ComplexConvolutionJob job4(monidx,5,0,0,ix2,12,0);
-            if(verbose) cout << ++jobcount << " : " << job4
-                                           << " : layer " << layer << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job4
+                                         << " : layer " << layer << endl;
             jobs[layer].push_back(job4);
          }
       }
@@ -209,23 +233,27 @@ void ComplexConvolutionJobs::make_monomial
             {
                // first operand of real part
                ComplexConvolutionJob job1(monidx,1,i,2,ix2,3,i);
-               if(verbose) cout << ++jobcount << " : " << job1
-                                              << " : layer " << layer << endl;
+               jobcount = jobcount + 1;
+               if(verbose) cout << jobcount << " : " << job1
+                                            << " : layer " << layer << endl;
                jobs[layer].push_back(job1);
                // second operand of real part
                ComplexConvolutionJob job2(monidx,5,i,6,ix2,6,i);
-               if(verbose) cout << ++jobcount << " : " << job2
-                                              << " : layer " << layer << endl;
+               jobcount = jobcount + 1;
+               if(verbose) cout << jobcount << " : " << job2
+                                            << " : layer " << layer << endl;
                jobs[layer].push_back(job2);
                // first operand of imaginary part
                ComplexConvolutionJob job3(monidx,1,i,6,ix2,9,i);
-               if(verbose) cout << ++jobcount << " : " << job3
-                                              << " : layer " << layer << endl;
+               jobcount = jobcount + 1;
+               if(verbose) cout << jobcount << " : " << job3
+                                            << " : layer " << layer << endl;
                jobs[layer].push_back(job3);
                // second operand of imaginary part
                ComplexConvolutionJob job4(monidx,5,i,2,ix2,12,i);
-               if(verbose) cout << ++jobcount << " : " << job4
-                                              << " : layer " << layer << endl;
+               jobcount = jobcount + 1;
+               if(verbose) cout << jobcount << " : " << job4
+                                            << " : layer " << layer << endl;
                jobs[layer].push_back(job4);
             }
          }
@@ -236,23 +264,27 @@ void ComplexConvolutionJobs::make_monomial
          {
             // first operand of real part
             ComplexConvolutionJob job1(monidx,1,nvr-3,0,ix2,3,nvr-3);
-            if(verbose) cout << ++jobcount << " : " << job1
-                                           << " : layer " << layer << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job1
+                                         << " : layer " << layer << endl;
             jobs[layer].push_back(job1);
             // second operand of real part
             ComplexConvolutionJob job2(monidx,5,nvr-3,4,ix2,6,nvr-3);
-            if(verbose) cout << ++jobcount << " : " << job2
-                                           << " : layer " << layer << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job2
+                                         << " : layer " << layer << endl;
             jobs[layer].push_back(job2);
             // first operand of imaginary part
             ComplexConvolutionJob job3(monidx,1,nvr-3,4,ix2,9,nvr-3);
-            if(verbose) cout << ++jobcount << " : " << job3
-                                           << " : layer " << layer << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job3
+                                         << " : layer " << layer << endl;
             jobs[layer].push_back(job3);
             // second operand of imaginary part
             ComplexConvolutionJob job4(monidx,5,nvr-3,0,ix2,12,nvr-3);
-            if(verbose) cout << ++jobcount << " : " << job4
-                                           << " : layer " << layer << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job4
+                                         << " : layer " << layer << endl;
             jobs[layer].push_back(job4);
          }
       }
@@ -281,23 +313,27 @@ void ComplexConvolutionJobs::make
          freqlaycnt[0] = freqlaycnt[0] + 4;
          // first operand of real part
          ComplexConvolutionJob job1(i,-1,-1,0,ix1,1,0);
-         if(verbose) cout << ++jobcount << " : " << job1
-                                        << " : layer 0" << endl;
+         jobcount = jobcount + 1;
+         if(verbose) cout << jobcount << " : " << job1
+                                      << " : layer 0" << endl;
          jobs[0].push_back(job1);
          // second operand of real part
          ComplexConvolutionJob job2(i,-2,-1,4,ix1,4,0);
-         if(verbose) cout << ++jobcount << " : " << job2
-                                        << " : layer 0" << endl;
+         jobcount = jobcount + 1;
+         if(verbose) cout << jobcount << " : " << job2
+                                      << " : layer 0" << endl;
          jobs[0].push_back(job2);
          // first operand of imaginary part
          ComplexConvolutionJob job3(i,-1,-1,4,ix1,7,0);
-         if(verbose) cout << ++jobcount << " : " << job3
-                                        << " : layer 0" << endl;
+         jobcount = jobcount + 1;
+         if(verbose) cout << jobcount << " : " << job3
+                                      << " : layer 0" << endl;
          jobs[0].push_back(job3);
          // second operand of imaginary part
          ComplexConvolutionJob job4(i,-2,-1,0,ix1,10,0);
-         if(verbose) cout << ++jobcount << " : " << job4
-                                        << " : layer 0" << endl;
+         jobcount = jobcount + 1;
+         if(verbose) cout << jobcount << " : " << job4
+                                      << " : layer 0" << endl;
          jobs[0].push_back(job4);
 
          if(laydepth < 1) laydepth = 1; // we have one layer
@@ -310,69 +346,81 @@ void ComplexConvolutionJobs::make
          {
             // first operand of real part
             ComplexConvolutionJob job1(i,-1,-1,0,ix1,1,0);
-            if(verbose) cout << ++jobcount << " : " << job1
-                                           << " : layer 0" << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job1
+                                         << " : layer 0" << endl;
             jobs[0].push_back(job1);
             // second operand of real part
             ComplexConvolutionJob job2(i,-2,-1,4,ix1,4,0);
-            if(verbose) cout << ++jobcount << " : " << job2
-                                           << " : layer 0" << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job2
+                                         << " : layer 0" << endl;
             jobs[0].push_back(job2);
             // first operand of imaginary part
             ComplexConvolutionJob job3(i,-1,-1,4,ix1,7,0);
-            if(verbose) cout << ++jobcount << " : " << job3
-                                           << " : layer 0" << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job3
+                                         << " : layer 0" << endl;
             jobs[0].push_back(job3);
             // second operand of imaginary part
             ComplexConvolutionJob job4(i,-2,-1,0,ix1,10,0);
-            if(verbose) cout << ++jobcount << " : " << job4
-                                           << " : layer 0" << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job4
+                                         << " : layer 0" << endl;
             jobs[0].push_back(job4);
          }
          freqlaycnt[0] = freqlaycnt[0] + 4;
          {
             // first operand of real part
             ComplexConvolutionJob job1(i,-1,-1,0,ix2,2,0);
-            if(verbose) cout << ++jobcount << " : " << job1
-                                           << " : layer 0" << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job1
+                                         << " : layer 0" << endl;
             jobs[0].push_back(job1);
             // second operand of real part
             ComplexConvolutionJob job2(i,-2,-1,4,ix2,5,0);
-            if(verbose) cout << ++jobcount << " : " << job2
-                                           << " : layer 0" << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job2
+                                         << " : layer 0" << endl;
             jobs[0].push_back(job2);
             // first operand of imaginary part
             ComplexConvolutionJob job3(i,-1,-1,4,ix2,8,0);
-            if(verbose) cout << ++jobcount << " : " << job3
-                                           << " : layer 0" << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job3
+                                         << " : layer 0" << endl;
             jobs[0].push_back(job3);
             // second operand of real part
             ComplexConvolutionJob job4(i,-2,-1,0,ix2,11,0);
-            if(verbose) cout << ++jobcount << " : " << job4
-                                           << " : layer 0" << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job4
+                                         << " : layer 0" << endl;
             jobs[0].push_back(job4);
          }
          freqlaycnt[1] = freqlaycnt[1] + 4;
          {
             // first operand of real part
             ComplexConvolutionJob job1(i,1,0,0,ix2,1,1);
-            if(verbose) cout << ++jobcount << " : " << job1
-                                           << " : layer 1" << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job1
+                                         << " : layer 1" << endl;
             jobs[1].push_back(job1);
             // second operand of real part
             ComplexConvolutionJob job2(i,5,0,4,ix2,4,1);
-            if(verbose) cout << ++jobcount << " : " << job2
-                                           << " : layer 1" << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job2
+                                         << " : layer 1" << endl;
             jobs[1].push_back(job2);
             // first operand of imaginary part
             ComplexConvolutionJob job3(i,1,0,4,ix2,7,1);
-            if(verbose) cout << ++jobcount << " : " << job3
-                                           << " : layer 1" << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job3
+                                         << " : layer 1" << endl;
             jobs[1].push_back(job3);
             // second operand of imaginary part
             ComplexConvolutionJob job4(i,5,0,0,ix2,10,1);
-            if(verbose) cout << ++jobcount << " : " << job4
-                                           << " : layer 1" << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job4
+                                         << " : layer 1" << endl;
             jobs[1].push_back(job4);
          }
          if(laydepth < 2) laydepth = 2; // we have two layers

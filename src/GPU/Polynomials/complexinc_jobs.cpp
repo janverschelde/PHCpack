@@ -38,8 +38,9 @@ ComplexIncrementJobs::ComplexIncrementJobs
          {
             ComplexIncrementJob job(cnvmon,cnvotp,cnvoix,true);
 
-            if(verbose) cout << ++jobcount << " : " << job
-                                           << " : layer " << k << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job
+                                         << " : layer " << k << endl;
             jobs[k].push_back(job);
             freqlaycnt[k] = freqlaycnt[k] + 1;
          }
@@ -47,8 +48,9 @@ ComplexIncrementJobs::ComplexIncrementJobs
          {
             ComplexIncrementJob job(cnvmon,cnvotp-6,cnvoix,false);
 
-            if(verbose) cout << ++jobcount << " : " << job
-                                           << " : layer " << k << endl;
+            jobcount = jobcount + 1;
+            if(verbose) cout << jobcount << " : " << job
+                                         << " : layer " << k << endl;
             jobs[k].push_back(job);
             freqlaycnt[k] = freqlaycnt[k] + 1;
          }

@@ -1,3 +1,6 @@
+Sun 18 Jun 2023 : fixed increment of job counter (when not verbose)
+  in complexinc_jobs.cpp and complexconv_jobs.cpp.
+
 Sat 17 Jun 2023 : extended write_job_counts with operation counts for
   the increment jobs in the complex vectorized arithmetic.
 
