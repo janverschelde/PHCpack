@@ -310,8 +310,13 @@ int cmplx_column_newton_qrstep
       {
          cmplx_unit_series_vector(dim,deg,cffre[0],cffim[0]);
          // reset coefficients
-
+/*
          GPU_cmplx_evaluate_monomials
+            (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
+             cffre[0],cffim[0],accre[0],accim[0],inputre_d,inputim_d,
+             outputre_d,outputim_d,totcnvlapsedms,vrblvl);
+ */
+         GPU_cmplxvectorized_evaluate_monomials
             (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
              cffre[0],cffim[0],accre[0],accim[0],inputre_d,inputim_d,
              outputre_d,outputim_d,totcnvlapsedms,vrblvl);
