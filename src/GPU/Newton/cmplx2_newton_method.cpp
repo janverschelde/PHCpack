@@ -417,8 +417,16 @@ int cmplx2_column_newton_qrstep
          cmplx2_unit_series_vector
             (dim,deg,cffrehi[0],cffrelo[0],cffimhi[0],cffimlo[0]);
          // reset the coefficients
-
+/*
          GPU_cmplx2_evaluate_monomials
+            (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
+             cffrehi[0],cffrelo[0],cffimhi[0],cffimlo[0],
+             accrehi[0],accrelo[0],accimhi[0],accimlo[0],
+             inputrehi_d,inputrelo_d,inputimhi_d,inputimlo_d,
+             outputrehi_d,outputrelo_d,outputimhi_d,outputimlo_d,
+             totcnvlapsedms,vrblvl);
+ */
+         GPU_cmplx2vectorized_evaluate_monomials
             (dim,deg,szt,nbt,nvr[0],idx[0],exp,nbrfac,expfac,
              cffrehi[0],cffrelo[0],cffimhi[0],cffimlo[0],
              accrehi[0],accrelo[0],accimhi[0],accimlo[0],

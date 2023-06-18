@@ -44,13 +44,52 @@ void write_dbl2_cnvflops
 
    cout << "    Total number of bytes : " << bytecnt << endl;
 
-   double intensity = ((double) flopcnt)/bytecnt;
+   const double intensity = ((double) flopcnt)/bytecnt;
    cout << "     Arithmetic intensity : "
         << scientific << setprecision(3) << intensity
         << " #flops/#bytes" << endl;
 
-   double kernflops = 1000.0*((double) flopcnt)/kernms;
-   double wallflops = ((double) flopcnt)/wallsec;
+   const double kernflops = 1000.0*((double) flopcnt)/kernms;
+   const double wallflops = ((double) flopcnt)/wallsec;
+   const int gigacnt = pow(2.0,30);
+
+   cout << "Kernel Time Flops : "
+        << scientific << setprecision(3) << kernflops;
+   cout << fixed << setprecision(3)
+        << " = " << kernflops/gigacnt << " Gigaflops" << endl;
+   cout << " Wall Clock Flops : "
+        << scientific << setprecision(3) << wallflops;
+   cout << fixed << setprecision(3)
+        << " = " << wallflops/gigacnt << " Gigaflops" << endl;
+}
+
+void write_vectorized2_cnvincflops
+ ( int dim, int deg,
+   ComplexConvolutionJobs cnvjobs, ComplexIncrementJobs incjobs,
+   double kernms, double wallsec )
+{
+   long long int addcnt1,addcnt2,mulcnt,flopcnt;
+
+   complexconv_operation_counts(deg,cnvjobs,&addcnt1,&mulcnt,1);
+   complexinc_operation_counts(deg,incjobs,&addcnt2,1);
+
+   flopcnt = 20*(addcnt1 + addcnt2) + 23*mulcnt;
+   /*
+      1 complex addition takes 2 floating-point (fp) additions
+      1 complex multiplication takes 2 fp additions and 4 fp multiplications
+   => quadruple the number of fp additions and multiplications */
+
+   long long int bytecnt = 4*dim*(deg+1);
+
+   cout << "    Total number of bytes : " << bytecnt << endl;
+
+   const double intensity = ((double) flopcnt)/bytecnt;
+   cout << "     Arithmetic intensity : "
+        << scientific << setprecision(3) << intensity
+        << " #flops/#bytes" << endl;
+
+   const double kernflops = 1000.0*((double) flopcnt)/kernms;
+   const double wallflops = ((double) flopcnt)/wallsec;
    const int gigacnt = pow(2.0,30);
 
    cout << "Kernel Time Flops : "
@@ -217,6 +256,103 @@ void cmplx2_evaldiffdata_to_output
                   outputrelo[k][ix0][i] = datarelo[ix1];
                   outputimhi[k][ix0][i] = dataimhi[ix1];
                   outputimlo[k][ix0][i] = dataimlo[ix1++];
+               }
+            }
+         }
+      }
+   }
+}
+
+void cmplx2vectorized_evaldiffdata_to_output
+ ( double *datarihi, double *datarilo,
+   double ***outputrehi, double ***outputrelo,
+   double ***outputimhi, double ***outputimlo,
+   int dim, int nbr, int deg, int *nvr,
+   int **idx, int *fstart, int *bstart, int *cstart,
+   int totalcff, int offsetri, int vrblvl )
+{
+   const int deg1 = deg+1;
+   const int totcffoffset = totalcff + offsetri;
+   int ix0,ix2;
+   int ix1re,ix2im;
+
+   for(int k=0; k<nbr; k++)
+   {
+      ix1re = fstart[k] + (nvr[k]-1)*deg1;
+      ix2im = fstart[k] + (nvr[k]-1)*deg1 + totcffoffset;
+      
+      if(vrblvl > 1)
+         cout << "monomial " << k << " update starts at "
+              << ix1re << ", " << ix2im << endl;
+
+      for(int i=0; i<=deg; i++)
+      {
+         outputrehi[k][dim][i] = datarihi[ix1re];
+         outputrelo[k][dim][i] = datarilo[ix1re++];
+         outputimhi[k][dim][i] = datarihi[ix2im];
+         outputimlo[k][dim][i] = datarilo[ix2im++];
+      }
+      ix0 = idx[k][0];
+
+      if(nvr[k] == 1)
+      {
+         ix1re = (1 + k)*deg1;
+         ix2im = (1 + k)*deg1 + totcffoffset;
+            
+         for(int i=0; i<=deg; i++)
+         {
+            outputrehi[k][ix0][i] = datarihi[ix1re];
+            outputrelo[k][ix0][i] = datarilo[ix1re++];
+            outputimhi[k][ix0][i] = datarihi[ix2im];
+            outputimlo[k][ix0][i] = datarilo[ix2im++];
+         }
+      }
+      else if(nvr[k] > 1)
+      {                               // first and last derivative
+         // ix2 = nvr[k]-3;
+         // if(ix2 < 0) ix2 = 0;
+         ix2 = nvr[k] - 2;            // complex vectorized is different ...
+         ix1re = bstart[k] + ix2*deg1;
+         ix2im = bstart[k] + ix2*deg1 + totcffoffset;
+
+         for(int i=0; i<=deg; i++)
+         {
+            outputrehi[k][ix0][i] = datarihi[ix1re];
+            outputrelo[k][ix0][i] = datarilo[ix1re++];
+            outputimhi[k][ix0][i] = datarihi[ix2im];
+            outputimlo[k][ix0][i] = datarilo[ix2im++];
+         }
+         ix2 = nvr[k]-2;
+         ix1re = fstart[k] + ix2*deg1;
+         ix2im = fstart[k] + ix2*deg1 + totcffoffset;
+         ix0 = idx[k][ix2+1];
+
+         for(int i=0; i<=deg; i++)
+         {
+            outputrehi[k][ix0][i] = datarihi[ix1re];
+            outputrelo[k][ix0][i] = datarilo[ix1re++];
+            outputimhi[k][ix0][i] = datarihi[ix2im];
+            outputimlo[k][ix0][i] = datarilo[ix2im++];
+         }
+         if(nvr[k] > 2)                   // all other derivatives
+         {
+            for(int j=1; j<nvr[k]-1; j++)
+            {
+               ix0 = idx[k][j];            // j-th variable in monomial k
+               ix1re = cstart[k] + (j-1)*deg1;
+               ix2im = cstart[k] + (j-1)*deg1 + totcffoffset;
+
+               if(vrblvl > 1)
+                  cout << "monomial " << k << " derivative " << ix0
+                       << " update starts at "
+                       << ix1re << ", " << ix2im << endl;
+
+               for(int i=0; i<=deg; i++)
+               {
+                  outputrehi[k][ix0][i] = datarihi[ix1re];
+                  outputrelo[k][ix0][i] = datarilo[ix1re++];
+                  outputimhi[k][ix0][i] = datarihi[ix2im];
+                  outputimlo[k][ix0][i] = datarilo[ix2im++];
                }
             }
          }
@@ -504,6 +640,211 @@ void GPU_cmplx2_mon_evaldiff
    free(fsums); free(bsums); free(csums);
 }
 
+void GPU_cmplx2vectorized_mon_evaldiff
+ ( int szt, int dim, int nbr, int deg, int *nvr, int **idx,
+   double **cffrehi, double **cffrelo, double **cffimhi, double **cffimlo,
+   double **inputrehi, double **inputrelo,
+   double **inputimhi, double **inputimlo,
+   double ***outputrehi, double ***outputrelo,
+   double ***outputimhi, double ***outputimlo,
+   ComplexConvolutionJobs cnvjobs, ComplexIncrementJobs incjobs,
+   double *cnvlapms, double *elapsedms, double *walltimesec, int vrblvl )
+{
+   const int deg1 = deg+1;
+   const int totalcff = complex_coefficient_count(dim,nbr,deg,nvr);
+   const int diminput = (1 + nbr + dim)*deg1; // dimension of input
+   const int offsetri = totalcff - diminput;  // offset for re/im operands
+   const int cmplxtotcff = 2*(totalcff + offsetri);
+
+   int *fstart = new int[nbr];
+   int *bstart = new int[nbr];
+   int *cstart = new int[nbr];
+   int *fsums = new int[nbr];
+   int *bsums = new int[nbr];
+   int *csums = new int[nbr];
+
+   // code is adjusted from the complex vectorized versions 
+   // in dbl_polynomials_kernels.cu
+
+   complex_coefficient_indices
+      (dim,nbr,deg,nvr,fsums,bsums,csums,fstart,bstart,cstart);
+
+   if(vrblvl > 1)
+   {
+      cout << "        total count : " << totalcff << endl;
+      cout << "offset for operands : " << offsetri << endl;
+      cout << "complex total count : " << cmplxtotcff << endl;
+      write_coefficient_indices
+         (totalcff,nbr,fsums,fstart,bsums,bstart,csums,cstart);
+   }
+   double *datarihi_h = new double[cmplxtotcff];   // data on host
+   double *datarilo_h = new double[cmplxtotcff];
+
+   int ix1 = 0;
+   int ix2 = totalcff + offsetri;
+
+   for(int i=0; i<deg1; i++)
+   {
+      datarihi_h[ix1]   = 0.0; // cst[i]; no constant
+      datarilo_h[ix1++] = 0.0;
+      datarihi_h[ix2]   = 0.0;
+      datarilo_h[ix2++] = 0.0;
+   }
+   for(int i=0; i<nbr; i++)
+      for(int j=0; j<deg1; j++)
+      {
+         datarihi_h[ix1]   = cffrehi[i][j];
+         datarilo_h[ix1++] = cffrelo[i][j];
+         datarihi_h[ix2]   = cffimhi[i][j];
+         datarilo_h[ix2++] = cffimlo[i][j];
+      }
+   for(int i=0; i<dim; i++)
+      for(int j=0; j<deg1; j++)
+      {
+         datarihi_h[ix1]   = inputrehi[i][j];
+         datarilo_h[ix1++] = inputrelo[i][j];
+         datarihi_h[ix2]   = inputimhi[i][j];
+         datarilo_h[ix2++] = inputimlo[i][j];
+      }
+
+   for(int i=0; i<2*offsetri; i++)
+   {
+      datarihi_h[ix1]   = 0.0;
+      datarilo_h[ix1++] = 0.0;
+      datarihi_h[ix2]   = 0.0;
+      datarilo_h[ix2++] = 0.0;
+   }
+
+   double *datarihi_d;                        // device data
+   double *datarilo_d;
+   const size_t szdata = cmplxtotcff*sizeof(double);
+   cudaMalloc((void**)&datarihi_d,szdata);
+   cudaMalloc((void**)&datarilo_d,szdata);
+   cudaMemcpy(datarihi_d,datarihi_h,szdata,cudaMemcpyHostToDevice);
+   cudaMemcpy(datarilo_d,datarilo_h,szdata,cudaMemcpyHostToDevice);
+
+   cudaEvent_t start,stop;           // to measure time spent by kernels 
+   cudaEventCreate(&start);
+   cudaEventCreate(&stop);
+   *cnvlapms = 0.0;
+   float milliseconds;
+   double fliplapms;
+   struct timeval begintime,endtime; // wall clock time of computations
+   bool verbose = (vrblvl > 1);
+
+   gettimeofday(&begintime,0);
+   for(int k=0; k<cnvjobs.get_depth(); k++)
+   {
+      int jobnbr = cnvjobs.get_layer_count(k);
+      int *in1ix_h = new int[jobnbr];
+      int *in2ix_h = new int[jobnbr];
+      int *outix_h = new int[jobnbr];
+
+      if(verbose) cout << "preparing convolution jobs at layer "
+                       << k << " ..." << endl;
+
+      complex_convjobs_coordinates
+         (cnvjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,totalcff,offsetri,
+          fstart,bstart,cstart,verbose);
+      // if(deg1 == szt)
+      {
+         int *in1ix_d; // first input on device
+         int *in2ix_d; // second input on device
+         int *outix_d; // output indices on device
+         const size_t szjobidx = jobnbr*sizeof(int);
+         cudaMalloc((void**)&in1ix_d,szjobidx);
+         cudaMalloc((void**)&in2ix_d,szjobidx);
+         cudaMalloc((void**)&outix_d,szjobidx);
+         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+
+         if(verbose)
+            cout << "launching " << jobnbr << " blocks of " << deg1
+                 << " threads for convolutions ..." << endl;
+         
+         cudaEventRecord(start);
+         dbl2_padded_convjobs<<<jobnbr,deg1>>>
+            (datarihi_d,datarilo_d,in1ix_d,in2ix_d,outix_d,deg1);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *cnvlapms += milliseconds;
+
+         cudaFree(in1ix_d); cudaFree(in2ix_d); cudaFree(outix_d);
+      }
+      // code to flip signs and run the increment jobs
+      jobnbr = incjobs.get_layer_count(k);
+      // note: only half the number of increment jobs
+
+      if(vrblvl > 1) cout << "preparing increment jobs at layer "
+                          << k << " ..." << endl;
+
+      complex_incjobs_coordinates
+         (incjobs,k,in1ix_h,in2ix_h,outix_h,dim,nbr,deg,nvr,totalcff,offsetri,
+          fstart,bstart,cstart,verbose);
+
+      const int nbrflips = jobnbr/2;
+      int *rebidx = new int[nbrflips];
+      for(int i=0, j=0; i<jobnbr; i=i+2, j++) rebidx[j] = in2ix_h[i];
+
+      GPU_cmplx2vectorized_flipsigns
+         (deg,nbrflips,rebidx,datarihi_d,datarilo_d,&fliplapms,vrblvl);
+      *cnvlapms += fliplapms;
+
+      // if(BS == deg1)
+      {
+         int *in1ix_d; // first input on device
+         int *in2ix_d; // second input on device
+         int *outix_d; // output indices on device
+         const size_t szjobidx = jobnbr*sizeof(int);
+         cudaMalloc((void**)&in1ix_d,szjobidx);
+         cudaMalloc((void**)&in2ix_d,szjobidx);
+         cudaMalloc((void**)&outix_d,szjobidx);
+         cudaMemcpy(in1ix_d,in1ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(in2ix_d,in2ix_h,szjobidx,cudaMemcpyHostToDevice);
+         cudaMemcpy(outix_d,outix_h,szjobidx,cudaMemcpyHostToDevice);
+
+         if(verbose)
+            cout << "launching " << jobnbr << " blocks of " << deg1
+                 << " threads for increments ..." << endl;
+
+         cudaEventRecord(start);
+         dbl2_increment_jobs<<<jobnbr,deg1>>>
+            (datarihi_d,datarilo_d,in1ix_d,in2ix_d,outix_d,deg1);
+         cudaEventRecord(stop);
+         cudaEventSynchronize(stop);
+         cudaEventElapsedTime(&milliseconds,start,stop);
+         *cnvlapms += milliseconds;
+         cudaFree(in1ix_d); cudaFree(in2ix_d); cudaFree(outix_d);
+      }
+      free(in1ix_h); free(in2ix_h); free(outix_h); free(rebidx);
+   }
+   gettimeofday(&endtime,0);
+   cudaMemcpy(datarihi_h,datarihi_d,szdata,cudaMemcpyDeviceToHost);
+   cudaMemcpy(datarilo_h,datarilo_d,szdata,cudaMemcpyDeviceToHost);
+   *elapsedms = *cnvlapms;
+   long seconds = endtime.tv_sec - begintime.tv_sec;
+   long microseconds = endtime.tv_usec - begintime.tv_usec;
+   *walltimesec = seconds + microseconds*1.0e-6;
+
+   cmplx2vectorized_evaldiffdata_to_output
+      (datarihi_h,datarilo_h,outputrehi,outputrelo,outputimhi,outputimlo,
+       dim,nbr,deg,nvr,idx,fstart,bstart,cstart,totalcff,offsetri,vrblvl);
+
+   if(vrblvl > 0)
+   {
+      write_GPU_timings(*cnvlapms,0.0,*elapsedms,*walltimesec);
+      write_vectorized2_cnvincflops
+         (dim,deg,cnvjobs,incjobs,*elapsedms,*walltimesec);
+   }
+   cudaFree(datarihi_d); cudaFree(datarilo_d);
+   free(datarihi_h); free(datarilo_h);
+
+   free(fstart); free(bstart); free(cstart);
+   free(fsums); free(bsums); free(csums);
+}
+
 void GPU_dbl2_evaluate_monomials
  ( int dim, int deg, int szt, int nbt,
    int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
@@ -733,6 +1074,156 @@ void GPU_cmplx2_evaluate_monomials
       (szt,dim,dim,deg,nvr,idx,cffrehi,cffrelo,cffimhi,cffimlo,
        inputrehi,inputrelo,inputimhi,inputimlo,
        outputrehi,outputrelo,outputimhi,outputimlo,jobs,
+       &cnvlapms,&elapsedms,&walltimesec,vrblvl);
+
+   *totcnvlapsedms += elapsedms;
+
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<dim; i++)
+      {
+         cout << "output series for monomial " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << outputrehi[i][dim][j] << "  "
+                 << outputrelo[i][dim][j] << endl << "  " 
+                 << outputimhi[i][dim][j] << "  "
+                 << outputimlo[i][dim][j] << endl;
+      }
+   }
+   for(int i=0; i<dim; i++) // multiply derivatives with the powers
+   {
+      if(nbrfac[i] > 0) // there are common factors in monomial i
+      {
+         for(int j=0; j<nvr[i]; j++) // run over all exponents
+         {
+            if(expfac[i][j] > 0) // the j-th exponent with variable idx[i][j]
+            {
+               int idxvar = idx[i][j];
+               double fac = (double) exp[i][j];
+               double acchi,acclo;
+
+               // multiply derivative w.r.t. idxvar with factor
+               for(int k=0; k<=deg; k++)
+               {
+                  // outputre[i][idxvar][k] = fac*outputre[i][idxvar][k];
+                  ddf_mul(outputrehi[i][idxvar][k],
+                          outputrelo[i][idxvar][k],fac,0.0,&acchi,&acclo);
+                  outputrehi[i][idxvar][k] = acchi;
+                  outputrelo[i][idxvar][k] = acclo;
+                  // outputim[i][idxvar][k] = fac*outputim[i][idxvar][k];
+                  ddf_mul(outputimhi[i][idxvar][k],
+                          outputimlo[i][idxvar][k],fac,0.0,&acchi,&acclo);
+                  outputimhi[i][idxvar][k] = acchi;
+                  outputimlo[i][idxvar][k] = acclo;
+               }
+            }
+         }
+      }
+   }
+}
+
+void GPU_cmplx2vectorized_evaluate_monomials
+ ( int dim, int deg, int szt, int nbt,
+   int *nvr, int **idx, int **exp, int *nbrfac, int **expfac,
+   double **cffrehi, double **cffrelo, double **cffimhi, double **cffimlo,
+   double *accrehi, double *accrelo, double *accimhi, double *accimlo,
+   double **inputrehi, double **inputrelo,
+   double **inputimhi, double **inputimlo, 
+   double ***outputrehi, double ***outputrelo, 
+   double ***outputimhi, double ***outputimlo,
+   double *totcnvlapsedms, int vrblvl )
+{
+   for(int i=0; i<dim; i++) // common factors in the coefficients
+   {
+      if(nbrfac[i] > 0) // there are common factors in monomial i
+      {
+         for(int j=0; j<nvr[i]; j++) // run over all exponents
+         {
+            if(expfac[i][j] > 0) // the j-th exponent with variable idx[i][j]
+            {
+               int idxvar = idx[i][j];
+
+               for(int k=0; k<expfac[i][j]; k++)
+               {
+                  CPU_cmplx2_product
+                     (deg,inputrehi[idxvar],inputrelo[idxvar],
+                          inputimhi[idxvar],inputimlo[idxvar],
+                      cffrehi[i],cffrelo[i],cffimhi[i],cffimlo[i],
+                      accrehi,accrelo,accimhi,accimlo);
+
+                  for(int L=0; L<=deg; L++)
+                  {
+                     cffrehi[i][L] = accrehi[L]; cffrelo[i][L] = accrelo[L];
+                     cffimhi[i][L] = accimhi[L]; cffimlo[i][L] = accimlo[L];
+                  }
+               }
+            }
+         }
+      }
+   }
+   if(vrblvl > 1)
+   {
+      for(int i=0; i<dim; i++)
+      {
+         cout << "coefficients for monomial " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << cffrehi[i][j] << "  " << cffrelo[i][j] << endl << "  "
+                 << cffimhi[i][j] << "  " << cffimlo[i][j] << endl;
+      }
+      cout << "dim : " << dim << "  nvr :";
+      for(int i=0; i<dim; i++) cout << " " << nvr[i];
+      cout << endl;
+      cout << "deg : " << deg;
+      for(int i=0; i<dim; i++) 
+      {
+         cout << "  idx[" << i << "] :";
+         for(int j=0; j<nvr[i]; j++) cout << " " << idx[i][j];
+      }
+      cout << endl;
+      for(int i=0; i<dim; i++)
+      {
+         cout << "input series for variable " << i << " :" << endl;
+         for(int j=0; j<=deg; j++)
+            cout << inputrehi[i][j] << "  " << inputrelo[i][j] << endl << "  "
+                 << inputimhi[i][j] << "  " << inputimlo[i][j] << endl;
+      }
+   }
+   bool verbose = (vrblvl > 1);
+   double cnvlapms,elapsedms,walltimesec;
+
+   // ConvolutionJobs jobs(dim);
+   // jobs.make(dim,nvr,idx,verbose);
+   ComplexConvolutionJobs cnvjobs(dim);
+   cnvjobs.make(dim,nvr,idx,verbose);
+
+   ComplexIncrementJobs incjobs(cnvjobs,verbose);
+
+   if(verbose)
+   {
+      for(int k=0; k<cnvjobs.get_depth(); k++)
+      {
+         cout << "jobs at layer " << k << " :" << endl;
+         for(int i=0; i<cnvjobs.get_layer_count(k); i++)
+            cout << cnvjobs.get_job(k,i) << endl;
+      }
+      cout << "dimension : " << dim << endl;
+      cout << "number of monomials : " << dim << endl;
+      cout << "number of convolution jobs : "
+           << cnvjobs.get_count() << endl;
+      cout << "number of layers : " << cnvjobs.get_depth() << endl;
+      cout << "frequency of layer counts :" << endl;
+      int checksum = 0;
+      for(int i=0; i<cnvjobs.get_depth(); i++)
+      {
+         cout << i << " : " << cnvjobs.get_layer_count(i) << endl;
+         checksum = checksum + cnvjobs.get_layer_count(i); 
+      }
+      cout << "layer count sum : " << checksum << endl;
+   }
+   GPU_cmplx2vectorized_mon_evaldiff
+      (szt,dim,dim,deg,nvr,idx,cffrehi,cffrelo,cffimhi,cffimlo,
+       inputrehi,inputrelo,inputimhi,inputimlo,
+       outputrehi,outputrelo,outputimhi,outputimlo,cnvjobs,incjobs,
        &cnvlapms,&elapsedms,&walltimesec,vrblvl);
 
    *totcnvlapsedms += elapsedms;
