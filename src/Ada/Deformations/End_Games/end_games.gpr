@@ -30,7 +30,8 @@ project end_games is
 
     for Main use
     (
-       "ts_vlprs.adb"    -- tests extrapolation on generated series
+       "ts_vlprs.adb",    -- tests extrapolation on generated series
+       "ts_theta.adb"     -- tests the theta algorithm
     );
 
     package Compiler is

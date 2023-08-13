@@ -33,3 +33,7 @@ driver_for_winding_numbers       : driver for winding number calculations
 valipoco                         : validation of computed path directions
 postpoco                         : stand-alone routine for polyhedral end game
 ------------------------------------------------------------------------------
+double_theta_algorithm           : theta algorithm on real doubles
+test_theta_algorithm             : tests the theta algorithm
+ts_theta                         : call the main test on theta algorithm
+------------------------------------------------------------------------------

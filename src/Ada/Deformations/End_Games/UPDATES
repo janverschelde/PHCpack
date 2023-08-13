@@ -1,3 +1,6 @@
+Sun 13 Aug 2023 : new double_theta_algorithm, test_theta_algorithm, and
+  ts_theta.adb, updated end_games.gpr.
+
 Thu 10 Jun 2021 : added the exec_dir attribute to end_games.gpr.
 
 Wed 9 Jun 2021 : defined end_games.gpr to build the test procedures.
