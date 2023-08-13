@@ -47,11 +47,13 @@ package body Test_Theta_Algorithm is
   -- REQUIRED : nbr'first = 0, which corresponds to m = 1.
 
     cff : double_float;
+    kp1 : integer32;
 
   begin
     nbr(0) := 1.0;
     for k in 1..nbr'last loop
-      cff := 1.0/double_float(k*k);
+      kp1 := k+1;
+      cff := 1.0/double_float(kp1*kp1);
       nbr(k) := nbr(k-1) + cff;
     end loop;
   end Double_Example3;
@@ -70,15 +72,7 @@ package body Test_Theta_Algorithm is
     dim : integer32 := 0;
  
   begin
-    if verbose then
-      put("adding "); put(seq(0)); put_line(" ...");
-    end if;
-    Double_Theta_Algorithm.Initialize(tab,dim,idx,seq(0),verbose);
-    if verbose then
-      put("adding "); put(seq(1)); put_line(" ...");
-    end if;
-    Double_Theta_Algorithm.Initialize(tab,dim,idx,seq(1),verbose);
-    for k in 2..seq'last loop
+    for k in seq'range loop
       if verbose then
         put("adding "); put(seq(k)); put_line(" ...");
       end if;
@@ -94,10 +88,10 @@ package body Test_Theta_Algorithm is
 
   procedure Main is
 
-    dim : integer32 := 0;
+    dim : constant integer32 := 17;
 
   begin
-    put("Give the dimension : "); get(dim);
+   -- put("Give the dimension : "); get(dim);
     declare
       table : Standard_Floating_VecVecs.VecVec(0..dim);
       tblix : Standard_Integer_Vectors.Vector(0..dim);
@@ -107,11 +101,11 @@ package body Test_Theta_Algorithm is
       put_line("running example 2 ...");
       Double_Example2(seq2);
       Double_Theta_Algorithm.Allocate(table,tblix,dim);
-      Double_Run_Theta(table,tblix,seq2);
-     -- put_line("running example 3 ...");
-     -- Double_Example3(seq3);
-     -- Double_Theta_Algorithm.Allocate(table,tblix,dim);
-     -- Double_Run_Theta(table,tblix,seq3);
+      Double_Run_Theta(table,tblix,seq2,false);
+      put_line("running example 3 ...");
+      Double_Example3(seq3);
+      Double_Theta_Algorithm.Allocate(table,tblix,dim);
+      Double_Run_Theta(table,tblix,seq3,false);
     end;
   end Main;
 

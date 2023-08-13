@@ -105,10 +105,10 @@ package Double_Theta_Algorithm is
 
   -- DESCRIPTION :
   --   Updates the defined columns in tab with the number nbr,
-  --   calling New_Column after Columns.
+  --   calling Initialize for the first two numbers, and
+  --   calling New_Column after Columns for the next numbers.
 
-  -- REQUIRED : tab'range = idx'range and
-  --   tab must be already initialized with the first two numbers.
+  -- REQUIRED : tab'range = idx'range.
 
   -- ON ENTRY :
   --   tab      table of extrapolated values;

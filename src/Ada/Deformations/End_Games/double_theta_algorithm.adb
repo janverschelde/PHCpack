@@ -187,8 +187,14 @@ package body Double_Theta_Algorithm is
                 nbr : in double_float;
                 verbose : in boolean := true ) is
   begin
-    Columns(tab,dim,idx,nbr,verbose);
-    New_Column(tab,dim,idx,verbose);
+    if dim = 0 then
+      Double_Theta_Algorithm.Initialize(tab,dim,idx,nbr,verbose);
+    elsif dim = 1 and idx(0) < 1 then
+      Double_Theta_Algorithm.Initialize(tab,dim,idx,nbr,verbose);
+    else
+      Columns(tab,dim,idx,nbr,verbose);
+      New_Column(tab,dim,idx,verbose);
+    end if;
   end Extrapolate;
 
 end Double_Theta_Algorithm;
