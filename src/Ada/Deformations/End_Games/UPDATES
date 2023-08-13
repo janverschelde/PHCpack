@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Sun 13 Aug 2023 : new double_theta_algorithm, test_theta_algorithm, and
   ts_theta.adb, updated end_games.gpr.
 
@@ -59,3 +60,66 @@ Fri 8 Feb 2013 : change in driver_for_winding_numbers.adb
 
 Mon 21 Jan 2013 : creation of this directory, moving all code involving
   end games from Continuation to this new directory End_Games.
+=======
+Sun 13 Aug 2023 : new double_theta_algorithm, test_theta_algorithm, and
+  ts_theta.adb, updated end_games.gpr.
+
+Thu 10 Jun 2021 : added the exec_dir attribute to end_games.gpr.
+
+Wed 9 Jun 2021 : defined end_games.gpr to build the test procedures.
+
+Sun 8 Nov 2020 : updated driver_for_winding_numbers.adb for the renaming of
+  drivers_for_poly_continuation into main_poly_continuation.
+
+Sun 21 Apr 2019 : reformatted code in driver_for_winding_numbers.adb.
+
+Mon 29 Feb 2016 : drivers_for_path_directions.adb changed for added
+  parameter in dobldobl_incfix_continuation.
+
+Sat 27 Feb 2016 : updates in drivers_for_path_directions.adb for changes in
+  increment-and-fix continuation in standard double precision.
+
+Wed 10 Feb 2016 : added silent procedure to standard_vlprs_algorithm
+  and improved the silent update in directions_of_standard_paths.adb.
+  Did the same for the dobldobl and quaddobl versions.
+
+Tue 12 Jan 2016 : small fix in directions_of_dobldobl_paths.ads and updated
+  directions_of_quaddobl_paths.adb.
+
+Sun 10 Jan 2016 : improved directions_of_{dobldobl,quaddobl}_paths and
+  directions_of_standard_paths.ads.
+
+Sat 9 Jan 2016 : move specs in directions_of_{dobldobl,quaddobl}_paths,
+  from the .adb to the .ads file.
+
+Fri 8 Jan 2016 : in directions_of_{dobldobl,quaddobl}_paths.adb, improved 
+  the output of the estimated winding numbers.  Made similar improvements
+  in {dobldobl,quaddobl}_vlprs_algorithm.adb.
+
+Wed 6 Jan 2016 : updated drivers_for_path_directions with routines in
+  double double and quad double precision.  Added extra parameter for the
+  estimated winding numbers in drivers_for_path_directions.
+
+Tue 5 Jan 2016 : moved specifications from directions_of_standard_paths.adb
+  into directions_of_standard_paths.ads, likewise did the same for
+  {standard,dobldobl,quaddobl,multprec}_winding_numbers.
+  Wrote better calculation of the accuracy of the extrapolated estimates
+  in directions_of_standard_paths.
+
+Sun 3 Jan 2016 : improved output for double double and quad double precision
+  in ts_vlprs.adb.
+
+Wed 18 Nov 2015 : in driver_for_winding_numbers, initialized deci to zero
+  as unpreset value of the precision in the creation of the homotopy.
+
+Thu 27 Jun 2013 : updated driver_for_winding_numbers.adb as needed for phc.
+
+Wed 12 Jun 2013 : changed more than half of the files in this directory
+  because of the introduction of natural32 and integer32 types.
+
+Fri 8 Feb 2013 : change in driver_for_winding_numbers.adb
+  for extra parameters "ls" in drivers_for_homotopy_creation.
+
+Mon 21 Jan 2013 : creation of this directory, moving all code involving
+  end games from Continuation to this new directory End_Games.
+>>>>>>> 6b07e56e13553ba3c9cac19584130197a6026835
