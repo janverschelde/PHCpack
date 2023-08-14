@@ -3,6 +3,7 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Standard_Mathematical_Functions;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
@@ -62,14 +63,18 @@ package body Test_Theta_Algorithm is
               ( tab : in Standard_Floating_VecVecs.VecVec;
                 idx : in out Standard_Integer_Vectors.Vector;
                 seq : in Standard_Floating_Vectors.Vector;
+                exa : in double_float := 0.0;
                 verbose : in boolean := true ) is
 
   -- DESCRIPTION :
-  --   Runs the theta algorithm on the sequence seq.
+  --   Runs the theta algorithm on the sequence seq,
+  --   defining the extrapolation table tab,
+  --   and computing the error using exa.
 
-  -- REQUIRED : tab'last = idx'last.
+  -- REQUIRED : tab'last = idx'last = seq'last.
 
     dim : integer32 := 0;
+    err : double_float;
  
   begin
     for k in seq'range loop
@@ -81,7 +86,12 @@ package body Test_Theta_Algorithm is
     put("computed "); put(dim,1); put_line(" columns :");
     for col in 0..dim-1 loop
       if col mod 2 = 0 then
-        put(tab(col)(idx(col))); new_line;
+        put(col,6); put(" : "); put(tab(col)(idx(col)));
+        if exa /= 0.0 then
+          err := abs(tab(col)(idx(col)) - exa);
+          put("  error : "); put(err,3);
+        end if;
+        new_line;
       end if;
     end loop;
   end Double_Run_Theta;
@@ -96,16 +106,22 @@ package body Test_Theta_Algorithm is
       table : Standard_Floating_VecVecs.VecVec(0..dim);
       tblix : Standard_Integer_Vectors.Vector(0..dim);
       seq2 : Standard_Floating_Vectors.Vector(0..dim);
+      exa2 : constant double_float
+           := Standard_Mathematical_Functions.LN(2.0);
       seq3 : Standard_Floating_Vectors.Vector(0..dim);
+      exa3 : constant double_float
+           := Standard_Mathematical_Functions.Pi**2/6.0;
     begin
       put_line("running example 2 ...");
       Double_Example2(seq2);
       Double_Theta_Algorithm.Allocate(table,tblix,dim);
-      Double_Run_Theta(table,tblix,seq2,false);
+      Double_Run_Theta(table,tblix,seq2,exa2,false);
+      put("log(2) : "); put(exa2); new_line;
       put_line("running example 3 ...");
       Double_Example3(seq3);
       Double_Theta_Algorithm.Allocate(table,tblix,dim);
-      Double_Run_Theta(table,tblix,seq3,false);
+      Double_Run_Theta(table,tblix,seq3,exa3,false);
+      put("pi^2/6 : "); put(exa3); new_line;
     end;
   end Main;
 
