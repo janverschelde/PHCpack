@@ -1,43 +1,47 @@
 with text_io;                            use text_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
-with Standard_Floating_Vectors;
-with Standard_Floating_Vectors_io;       use Standard_Floating_Vectors_io;
+with Double_Double_Vectors;
+with Double_Double_Vectors_io;           use Double_Double_Vectors_io;
 
-package body Double_Theta_Algorithm is
+package body Double_Double_Theta_Algorithm is
 
   procedure Allocate
-              ( tab : out Standard_Floating_VecVecs.VecVec;
+              ( tab : out Double_Double_VecVecs.VecVec;
                 idx : out Standard_Integer_Vectors.Vector;
                 dim : in integer32 ) is
+
+    zero : constant double_double := create(0.0);
+
   begin
     for i in idx'range loop
       idx(i) := -1;
     end loop;
     for i in tab'range loop
        declare
-         col : constant Standard_Floating_Vectors.Vector(0..dim)
-             := (0..dim => 0.0);
-         use Standard_Floating_Vectors;
+         col : constant Double_Double_Vectors.Vector(0..dim)
+             := (0..dim => zero);
+         use Double_Double_Vectors;
        begin
          if tab(i) = null then
-           tab(i) := new Standard_Floating_Vectors.Vector'(col);
+           tab(i) := new Double_Double_Vectors.Vector'(col);
          else -- the dimension may not match, must clear first
-           Standard_Floating_Vectors.Clear(tab(i));
-           tab(i) := new Standard_Floating_Vectors.Vector'(col);
+           Double_Double_Vectors.Clear(tab(i));
+           tab(i) := new Double_Double_Vectors.Vector'(col);
          end if;
        end;
     end loop;
   end Allocate;
 
   procedure Initialize
-              ( tab : in Standard_Floating_VecVecs.VecVec;
+              ( tab : in Double_Double_VecVecs.VecVec;
                 dim : in out integer32;
                 idx : in out Standard_Integer_Vectors.Vector;
-                nbr : in double_float;
+                nbr : in double_double;
                 verbose : in boolean := true ) is
 
-    d1 : double_float;
+    one : constant double_double := Double_Double_Numbers.create(1.0);
+    d1 : double_double;
 
   begin
     if dim = 0 then
@@ -55,14 +59,14 @@ package body Double_Theta_Algorithm is
       end if;
       if dim = 1 then
         dim := 2;
-        d1 := 1.0/(nbr - tab(0)(idx(0)-1));
+        d1 := one/(nbr - tab(0)(idx(0)-1));
         idx(1) := 0;
         tab(1)(idx(1)) := d1;
         if verbose then
            put_line("theta 1 : "); put_line(tab(1)(0..0));
         end if;
       else
-        d1 := 1.0/(nbr - tab(0)(idx(0)-1));
+        d1 := one/(nbr - tab(0)(idx(0)-1));
         idx(1) := idx(1) + 1;
         tab(1)(idx(1)) := d1;
         if verbose then
@@ -73,14 +77,16 @@ package body Double_Theta_Algorithm is
   end Initialize;
 
   procedure Columns 
-              ( tab : in Standard_Floating_VecVecs.VecVec;
+              ( tab : in Double_Double_VecVecs.VecVec;
                 dim : in integer32;
                 idx : in out Standard_Integer_Vectors.Vector;
-                nbr : in double_float;
+                nbr : in double_double;
                 verbose : in boolean := true ) is
 
-    d0,d1,d2,newtheta : double_float;
-    prvcol1,prvcol2 : Standard_Floating_Vectors.Link_to_Vector;
+    one : constant double_double := Double_Double_Numbers.create(1.0);
+    two : constant double_double := Double_Double_Numbers.create(2.0);
+    d0,d1,d2,newtheta : double_double;
+    prvcol1,prvcol2 : Double_Double_Vectors.Link_to_Vector;
 
   begin
     if verbose then
@@ -91,7 +97,7 @@ package body Double_Theta_Algorithm is
     if verbose then
       put_line("theta 0 : "); put_line(tab(0)(0..idx(0)));
     end if;
-    d1 := 1.0/(nbr - tab(0)(idx(0)-1));
+    d1 := one/(nbr - tab(0)(idx(0)-1));
     idx(1) := idx(1) + 1;
     tab(1)(idx(1)) := d1;
     if verbose then
@@ -103,11 +109,11 @@ package body Double_Theta_Algorithm is
       idx(col) := idx(col) + 1;
       if col mod 2 = 1 then
         d0 := prvcol1(idx(col)+1) - prvcol1(idx(col));
-        newtheta := prvcol2(idx(col)+1) + 1.0/d0;
+        newtheta := prvcol2(idx(col)+1) + one/d0;
       else
         d0 := prvcol2(idx(col)+2) - prvcol2(idx(col)+1);
         d1 := prvcol1(idx(col)+2) - prvcol1(idx(col)+1);
-        d2 := prvcol1(idx(col)+2) - 2.0*prvcol1(idx(col)+1)
+        d2 := prvcol1(idx(col)+2) - two*prvcol1(idx(col)+1)
             + prvcol1(idx(col));
         newtheta := prvcol2(idx(col)+1) + (d0*d1)/d2;
       end if;
@@ -120,13 +126,15 @@ package body Double_Theta_Algorithm is
   end Columns;
 
   procedure New_Column
-              ( tab : in Standard_Floating_VecVecs.VecVec;
+              ( tab : in Double_Double_VecVecs.VecVec;
                 dim : in out integer32;
                 idx : in out Standard_Integer_Vectors.Vector;
                 verbose : in boolean := true ) is
 
-    d0,d1,d2,newtheta : double_float;
-    lastcol1,lastcol2 : Standard_Floating_Vectors.Link_to_Vector;
+    one : constant double_double := Double_Double_Numbers.create(1.0);
+    two : constant double_double := Double_Double_Numbers.create(2.0);
+    d0,d1,d2,newtheta : double_double;
+    lastcol1,lastcol2 : Double_Double_Vectors.Link_to_Vector;
 
   begin
     if verbose then
@@ -146,7 +154,7 @@ package body Double_Theta_Algorithm is
         lastcol2 := tab(dim-2);
         d0 := lastcol2(2) - lastcol2(1);
         d1 := lastcol1(2) - lastcol1(1);
-        d2 := lastcol1(2) - 2.0*lastcol1(1) + lastcol1(0);
+        d2 := lastcol1(2) - two*lastcol1(1) + lastcol1(0);
         newtheta := lastcol2(1) + (d0*d1)/d2;
         idx(dim) := 0;
         tab(dim)(idx(dim)) := newtheta;
@@ -168,7 +176,7 @@ package body Double_Theta_Algorithm is
         lastcol1 := tab(dim-1);
         lastcol2 := tab(dim-2);
         d0 := lastcol1(1) - lastcol1(0);
-        newtheta := lastcol2(1) + 1.0/d0;
+        newtheta := lastcol2(1) + one/d0;
         idx(dim) := 0;
         tab(dim)(idx(dim)) := newtheta;
         if verbose then
@@ -181,10 +189,10 @@ package body Double_Theta_Algorithm is
   end New_Column;
 
   procedure Extrapolate
-              ( tab : in Standard_Floating_VecVecs.VecVec;
+              ( tab : in Double_Double_VecVecs.VecVec;
                 dim : in out integer32;
                 idx : in out Standard_Integer_Vectors.Vector;
-                nbr : in double_float;
+                nbr : in double_double;
                 verbose : in boolean := true ) is
   begin
     if dim = 0 then
@@ -197,4 +205,4 @@ package body Double_Theta_Algorithm is
     end if;
   end Extrapolate;
 
-end Double_Theta_Algorithm;
+end Double_Double_Theta_Algorithm;

@@ -1,4 +1,4 @@
-Polyhedral end games for polynomial homotopies in PHCv2.4.85
+Polyhedral end games for polynomial homotopies in PHCv2.4.86
 
 This directory was isolated in version 2.3.75 for clarity.
 New in release 2.3 is Newton's method with deflation for singularities
@@ -34,6 +34,9 @@ valipoco                         : validation of computed path directions
 postpoco                         : stand-alone routine for polyhedral end game
 ------------------------------------------------------------------------------
 double_theta_algorithm           : theta algorithm on real doubles
+double_double_theta_algorithm    : theta algorithm on real double doubles
+quad_double_theta_algorithm      : theta algorithm on real quad doubles
+octo_double_theta_algorithm      : theta algorithm on real octo doubles
 test_theta_algorithm             : tests the theta algorithm
-ts_theta                         : call the main test on theta algorithm
+ts_theta                         : calls the main test on the theta algorithm
 ------------------------------------------------------------------------------
