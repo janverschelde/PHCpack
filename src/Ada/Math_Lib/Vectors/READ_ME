@@ -130,6 +130,8 @@ pentdobl_complex_vecvecs_io        : i/o of complex vecvecs of penta doubles
 pentdobl_complex_vectors_cv        : convert to double and multiprecision
 octo_double_vectors                : vectors of octo double numbers
 octo_double_vectors_io             : input/output of octo double vectors
+octo_double_vecvecs                : vecvecs of octo double numbers
+octo_double_vecvecs_io             : input/output of octo double vecvecs
 octodobl_complex_vectors           : complex vectors of octo doubles
 octodobl_complex_vectors_io        : i/o of complex vectors of octo doubles
 octodobl_complex_vecvecs           : complex vevcecs of octo doubles
