@@ -1,4 +1,5 @@
 Tue 15 Aug 2023 : added another example to test_rho_algorithm.adb.
+  New double_double_rho_algorithm, updated test_rho_algorithm.adb.
 
 Mon 14 Aug 2023 : new (double, quad, octo}_double_theta_algorithm, with
   updated test_theta_algorithm.adb to run the theta algorithm in double 

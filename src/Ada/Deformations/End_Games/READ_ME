@@ -41,6 +41,7 @@ test_theta_algorithm             : tests the theta algorithm
 ts_theta                         : calls the main test on the theta algorithm
 ------------------------------------------------------------------------------
 double_rho_algorithm             : rho algorithm on real doubles
+double_double_rho_algorithm      : rho algorithm on real double doubles
 test_rho_algorithm               : tests the rho algorithm
 ts_rho                           : calls the main test on the rho algorithm
 ------------------------------------------------------------------------------
