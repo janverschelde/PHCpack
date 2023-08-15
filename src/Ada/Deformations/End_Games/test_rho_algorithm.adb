@@ -11,14 +11,14 @@ with Double_Rho_Algorithm;
 
 package body Test_Rho_Algorithm is
 
-  procedure Double_Example
+  procedure Double_Example3
               ( nbr : out Standard_Floating_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --   The vector nbr on return contains the sum of 1/k^2,
   --   for k from 1 to m, which converges to pi^2/6.
   --   This is example 3 of the Brezinski paper and
-  --   the example of the 1955 Wynn paper on the rho algorithm.
+  --   the example in Table 3 of the 1955 Wynn paper on the rho algorithm.
   --   The epsilon algorithm does not work on this example.
 
   -- REQUIRED : nbr'first = 0, which corresponds to m = 1.
@@ -33,7 +33,30 @@ package body Test_Rho_Algorithm is
       cff := 1.0/double_float(kp1*kp1);
       nbr(k) := nbr(k-1) + cff;
     end loop;
-  end Double_Example;
+  end Double_Example3;
+
+  procedure Double_Example4
+              ( nbr : out Standard_Floating_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   The vector nbr on return contains the sum of 1/(2*k*(2*k-1)),
+  --   for k from 1 to m, which converges to ln(2).
+  --   This is example in Table 4 of the 1955 Wynn paper
+  --   on the rho algorithm.
+
+  -- REQUIRED : nbr'first = 0, which corresponds to m = 1.
+
+    cff : double_float;
+    den : integer32;
+
+  begin
+    nbr(0) := 0.5;
+    for k in 1..nbr'last loop
+      den := 2*(k+1)*(2*k+1); -- 2*k*(2*k-1);
+      cff := 1.0/double_float(den);
+      nbr(k) := nbr(k-1) + cff;
+    end loop;
+  end Double_Example4;
 
   procedure Double_Run_Rho
               ( tab : in Standard_Floating_VecVecs.VecVec;
@@ -81,15 +104,23 @@ package body Test_Rho_Algorithm is
     declare
       table : Standard_Floating_VecVecs.VecVec(0..dim);
       tblix : Standard_Integer_Vectors.Vector(0..dim);
-      seq : Standard_Floating_Vectors.Vector(0..dim);
-      exa : constant double_float
-          := Standard_Mathematical_Functions.Pi**2/6.0;
+      seq3 : Standard_Floating_Vectors.Vector(0..dim);
+      exa3 : constant double_float
+           := Standard_Mathematical_Functions.Pi**2/6.0;
+      seq4 : Standard_Floating_Vectors.Vector(0..dim);
+      exa4 : constant double_float
+           := Standard_Mathematical_Functions.LN(2.0);
     begin
-      put_line("running an example ...");
-      Double_Example(seq);
+      put_line("running the Table 3 example ...");
+      Double_Example3(seq3);
       Double_Rho_Algorithm.Allocate(table,tblix,dim);
-      Double_Run_Rho(table,tblix,seq,exa,true);
-      put("pi^2/6 : "); put(exa); new_line;
+      Double_Run_Rho(table,tblix,seq3,exa3,true);
+      put("pi^2/6 : "); put(exa3); new_line;
+      put_line("running the Table 4 example ...");
+      Double_Example4(seq4);
+      Double_Rho_Algorithm.Allocate(table,tblix,dim);
+      Double_Run_Rho(table,tblix,seq4,exa4,true);
+      put(" ln(2) : "); put(exa4); new_line;
     end;
   end Main;
 
