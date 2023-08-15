@@ -40,3 +40,7 @@ octo_double_theta_algorithm      : theta algorithm on real octo doubles
 test_theta_algorithm             : tests the theta algorithm
 ts_theta                         : calls the main test on the theta algorithm
 ------------------------------------------------------------------------------
+double_rho_algorithm             : rho algorithm on real doubles
+test_rho_algorithm               : tests the rho algorithm
+ts_rho                           : calls the main test on the rho algorithm
+------------------------------------------------------------------------------

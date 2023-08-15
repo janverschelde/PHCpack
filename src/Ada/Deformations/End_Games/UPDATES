@@ -1,7 +1,8 @@
 Mon 14 Aug 2023 : new (double, quad, octo}_double_theta_algorithm, with
   updated test_theta_algorithm.adb to run the theta algorithm in double 
   double, quad double, and octo double precision.
-  Edit in double_theta_algorithm.adb.
+  Edit in double_theta_algorithm.adb.  New double_rho_algorithm,
+  test_rho_algorithm, ts_rho, updated end_games.gpr.
 
 Sun 13 Aug 2023 : new double_theta_algorithm, test_theta_algorithm, and
   ts_theta.adb, updated end_games.gpr.  Integrated Initialize in the
