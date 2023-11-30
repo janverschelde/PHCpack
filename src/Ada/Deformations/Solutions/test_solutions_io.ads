@@ -38,6 +38,11 @@ package Test_Solutions_io is
   -- Reads a list of solutions in deca double precision
   -- from standard input and writes it back to screen.
 
+  procedure HexaDobl_Read_Write;
+
+  -- Reads a list of solutions in hexa double precision
+  -- from standard input and writes it back to screen.
+
   procedure Main;
 
   -- DESCRIPTION :

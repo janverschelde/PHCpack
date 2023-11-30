@@ -7,7 +7,7 @@ which became part of the main phc -v validation module in release v2.3.07
 and upgraded with quad trees in v2.3.10.
 Double double and quad double solutions were introduced in v2.3.55.
 Solutions in triple, penta, octo, and deca double precision were added
-in version 2.4.80.
+in version 2.4.80.  Version 2.4.87 adds support for hexa double precision.
 
 There are three parts in this library:
 (1) definition of solutions with standard, double double, quad double,
@@ -38,6 +38,8 @@ octodobl_complex_solutions         : solutions with octo double complex
 octodobl_complex_solutions_io      : i/o for octo double complex solutions
 decadobl_complex_solutions         : solutions with deca double complex
 decadobl_complex_solutions_io      : i/o for deca double complex solutions
+hexadobl_complex_solutions         : solutions with hexa double complex
+hexadobl_complex_solutions_io      : i/o for hexa double complex solutions
 multprec_complex_solutions         : multprec solutions to families of systems
 multprec_complex_solutions_io      : input/output of multprec solutions
 ts_sols                            : test precision conversions of solutions
