@@ -1,4 +1,4 @@
-Solutions of systems and homotopies in PHCv2.4.86
+Solutions of systems and homotopies in PHCv2.4.87
 
 The second release introduced the solution vectors with multiprecision.
 Version 2.3 has an improved Maple interface.
@@ -40,9 +40,8 @@ decadobl_complex_solutions         : solutions with deca double complex
 decadobl_complex_solutions_io      : i/o for deca double complex solutions
 multprec_complex_solutions         : multprec solutions to families of systems
 multprec_complex_solutions_io      : input/output of multprec solutions
-ts_sols                            : plain test on i/o of solutions
-ts_ddsols                          : test double double complex solutions
-ts_qdsols                          : test quad double complex solutions
+ts_sols                            : test precision conversions of solutions
+ts_sols_io                         : test input/output of solution lists
 standard_solution_strings          : write solutions to strings and parse
 dobldobl_solution_strings          : double double solutions and strings
 quaddobl_solution_strings          : quad double solutions and strings

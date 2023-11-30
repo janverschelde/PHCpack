@@ -26,9 +26,8 @@ project solutions is
 
     for Main use
     (
-        "ts_sols.adb",         -- tests i/o of solutions
-        "ts_ddsols.adb",       -- tests double double complex solutions
-        "ts_qdsols.adb",       -- tests quad double complex solutions
+        "ts_sols.adb",         -- tests precision conversions of solutions
+        "ts_sols_io.adb",      -- tests i/o of solutions
         "ts_solstr.adb",       -- tests string representations
         "ts_getstart.adb",     -- tests the extract the start system
         "ts_solfilt.adb",      -- tests the solution filters
