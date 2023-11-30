@@ -1,4 +1,4 @@
-Vectors and vectors of vectors in PHCv2.4.86
+Vectors and vectors of vectors in PHCv2.4.87
 
 Because the directory Matrices became too big, 
 this directory was created new for PHCv2.3.33.
@@ -150,6 +150,7 @@ hexadobl_complex_vectors           : complex vectors of hexa doubles
 hexadobl_complex_vectors_io        : i/o of complex vectors of hexa doubles
 hexadobl_complex_vecvecs           : complex vecvecs of hexa doubles
 hexadobl_complex_vecvecs_io        : i/o of complex vecvecs of hexa doubles
+hexadobl_complex_vectors_cv        : convert to double and multiprecision
 ------------------------------------------------------------------------------
 valid_vector_checks                : valid if no component is NaN
 ------------------------------------------------------------------------------
