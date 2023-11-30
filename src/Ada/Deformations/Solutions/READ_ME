@@ -43,13 +43,15 @@ hexadobl_complex_solutions_io      : i/o for hexa double complex solutions
 multprec_complex_solutions         : multprec solutions to families of systems
 multprec_complex_solutions_io      : input/output of multprec solutions
 ts_sols                            : test precision conversions of solutions
-ts_sols_io                         : test input/output of solution lists
+test_solutions_io                  : tests input/output of solution lists
+ts_sols_io                         : main test on i/o of solution lists
 standard_solution_strings          : write solutions to strings and parse
 dobldobl_solution_strings          : double double solutions and strings
 quaddobl_solution_strings          : quad double solutions and strings
 multprec_solution_strings          : multprecision solutions and strings
 solution_string_splitters          : split coordinates of a solution string
-ts_solstr                          : test string representations
+test_solution_strings              : test string representations
+ts_solstr                          : main test string representations
 ------------------------------------------------------------------------------
 standard_system_and_solutions_io   : i/o of double systems and solutions
 dobldobl_system_and_solutions_io   : i/o of dobldobl system and solutions

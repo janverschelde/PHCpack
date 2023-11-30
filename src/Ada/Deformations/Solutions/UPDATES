@@ -2,7 +2,8 @@ Thu 30 Nov 2023 : moved ts_ddsols.adb and ts_qdsols.adb into a new test
   package test_solutions_io, with extensions for other precisions.
   Removed ts_ddsols.adb and ts_qdsols.adb, new ts_sols_io.adb.
   Updated solutions.gpr.  New hexadobl_complex_solutions and _io,
-  extended test_solutions_io.
+  extended test_solutions_io.  The code of ts_solstr.adb was made
+  into a new package test_solution_strings.
 
 Tue 13 Jul 2021 : updated standard_system_and_solutions_io, so phc -z -p
   without output file writes directly to screen.
