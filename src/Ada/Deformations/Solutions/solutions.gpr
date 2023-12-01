@@ -28,8 +28,9 @@ project solutions is
     (
         "ts_sols.adb",         -- tests precision conversions of solutions
         "ts_sols_io.adb",      -- tests i/o of solutions
+        "ts_syssols_io.adb",   -- tests i/o of system with solutions
         "ts_solstr.adb",       -- tests string representations
-        "ts_getstart.adb",     -- tests the extract the start system
+        "ts_getstart.adb",     -- tests the extraction of the start system
         "ts_solfilt.adb",      -- tests the solution filters
         "ts_grepsols.adb",     -- tests the selection of solutions
         "ts_mapsols_io.adb",   -- tests the Maple output format

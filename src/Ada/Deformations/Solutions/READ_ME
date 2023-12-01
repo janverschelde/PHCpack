@@ -60,7 +60,10 @@ quaddobl_system_and_solutions_io   : i/o of quaddobl system and solutions
 pentdobl_system_and_solutions_io   : i/o of pentdobl system and solutions
 octodobl_system_and_solutions_io   : i/o of octodobl system and solutions
 decadobl_system_and_solutions_io   : i/o of decadobl system and solutions
+hexadobl_system_and_solutions_io   : i/o of hexadobl system and solutions
 multprec_system_and_solutions_io   : i/o of multprec systems and solutions
+test_system_and_solutions_io       : test on reading systems with solutions
+ts_syssols_io                      : main test on i/o of systems and solutions
 prompt_for_systems                 : scan, read, and prompt for system
 prompt_for_solutions               : scan, read, and prompt for solutions
 ts_getstart                        : test to extract the start system
