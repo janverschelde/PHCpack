@@ -1,3 +1,6 @@
+Thu 30 Nov 2023 : defined polynomials, Laurent polynomials, and systems
+  with hexa double coefficients, new ts_hapol.adb, extended polynomials.gpr.
+
 Mon 30 May 2022 : updated ts_rwspol.adb for a compiler warning.
 
 Tue 15 Jun 2021 : extended multprec_complex_polynomials_io for the

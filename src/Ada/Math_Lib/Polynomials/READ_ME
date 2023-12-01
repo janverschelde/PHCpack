@@ -1,4 +1,4 @@
-Multivariate polynomials and polynomial systems over rings in PHCv2.4.86
+Multivariate polynomials and polynomial systems over rings in PHCv2.4.87
 
 New in release 2 is the availability of multiprecision numbers.
 The data structures are entirely redefined using Ada 95 concepts.
@@ -9,7 +9,7 @@ Polynomials with double and quad double coefficients are new in v2.3.55.
 In v2.3.69, the algorithms to evaluate polynomials was moved to the new
 Functions directory.  Code for phc -g was added in version 2.3.80.
 Version 2.4.80 added polynomials in triple, penta, octo, and deca double
-precision.
+precision.  Support for hexa double precision was added in 2.3.87.
 
 This library is organized in three parts:
 1) generic packages: polynomials and systems
@@ -234,6 +234,20 @@ decadobl_complex_laur_systems     : systems of decadobl complex Laurentials
 decadobl_complex_laur_systems_io  : i/o for decadobl complex Laurent systems
 decadobl_polynomial_convertors    : converting decadobl with double/multprec
 test_decadobl_polynomials         : tests on decadobl polynomials
+ts_dapol                          : main test on decadobl polynomials
+hexa_double_polynomials           : polynomials with hexa double coeffs
+hexa_double_poly_systems          : poly systems with hexa double coeffs
+hexadobl_complex_polynomials      : polynomials with hexadobl complex coeffs
+hexadobl_complex_polynomials_io   : i/o for hexadobl complex polynomials
+hexadobl_complex_laurentials      : hexadobl complex Laurent polynomials
+hexadobl_complex_laurentials_io   : i/o for hexadobl complex Laurentials
+hexadobl_complex_poly_systems     : systems of hexadobl complex polynomials
+hexadobl_complex_poly_systems_io  : basic output for da complex poly systems
+hexadobl_complex_jaco_matrices    : Jacobian matrices for hexadobl complex
+hexadobl_complex_laur_systems     : systems of hexadobl complex Laurentials
+hexadobl_complex_laur_systems_io  : i/o for hexadobl complex Laurent systems
+hexadobl_polynomial_convertors    : converting hexadobl with double/multprec
+test_hexadobl_polynomials         : tests on hexadobl polynomials
 ts_dapol                          : main test on decadobl polynomials
 -------------------------------------------------------------------------------
 tripdobl_random_polynomials       : random polynomials in tripdobl precision

@@ -26,6 +26,7 @@ project polynomials is
         "ts_pdpol.adb",      -- tests pentdobl polynomials
         "ts_odpol.adb",      -- tests octodobl polynomials
         "ts_dapol.adb",      -- tests decadobl polynomials
+        "ts_hapol.adb",      -- tests hexadobl polynomials
         "ts_hessian.adb",    -- tests Hessian matrices
         "ts_poly.adb",       -- tests polynomials and polynomial systems
         "ts_rpol.adb",       -- tests polynomials with real coefficients
