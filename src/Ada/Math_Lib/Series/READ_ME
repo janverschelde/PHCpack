@@ -1,4 +1,4 @@
-Truncated power series with complex coefficients for PHCv2.4.85
+Truncated power series with complex coefficients for PHCv2.4.87
 
 Similar to Taylor series approximations for general functions,
 we can approximate roots of polynomials in a parameter by series.
@@ -19,7 +19,7 @@ series vectors are instantiated.  The third design applies generics
 and defines series over any ring extended with division.
 
 In v2.4.80, series in triple, penta, octo, and deca double precision
-were added.
+were added.  Support for hexa double precision was added in v2.4.87.
 
 Run "gprbuild series.gpr" to make all test programs.
 On windows, type "gprbuild series.gpr -Xos=windows"
@@ -42,6 +42,7 @@ quaddobl_complex_series            : series with quaddobl complex coefficients
 pentdobl_complex_series            : series with pentdobl complex coefficients
 octodobl_complex_series            : series with octodobl complex coefficients
 decadobl_complex_series            : series with decadobl complex coefficients
+hexadobl_complex_series            : series with hexadobl complex coefficients
 standard_complex_series_io         : i/o for standard complex series
 dobldobl_complex_series_io         : i/o for double double complex series
 tripdobl_complex_series_io         : i/o for triple double complex series
@@ -49,6 +50,7 @@ quaddobl_complex_series_io         : i/o for quad double complex series
 pentdobl_complex_series_io         : i/o for penta double complex series
 octodobl_complex_series_io         : i/o for octo double complex series
 decadobl_complex_series_io         : i/o for deca double complex series
+hexadobl_complex_series_io         : i/o for hexa double complex series
 standard_complex_random_series     : generators for random standard series
 dobldobl_complex_random_series     : generators for random dobldobl series
 tripdobl_complex_random_series     : generators for random tripdobl series
@@ -56,6 +58,7 @@ quaddobl_complex_random_series     : generators for random quaddobl series
 pentdobl_complex_random_series     : generators for random pentdobl series
 octodobl_complex_random_series     : generators for random octodobl series
 decadobl_complex_random_series     : generators for random decadobl series
+hexadobl_complex_random_series     : generators for random hexadobl series
 standard_complex_algebraic_series  : sqrt and n-th root of standard series
 dobldobl_complex_algebraic_series  : sqrt and n-th root of dobldobl series
 tripdobl_complex_algebraic_series  : sqrt and n-th root of tripdobl series
@@ -63,6 +66,7 @@ quaddobl_complex_algebraic_series  : sqrt and n-th root of quaddobl series
 pentdobl_complex_algebraic_series  : sqrt and n-th root of pentdobl series
 octodobl_complex_algebraic_series  : sqrt and n-th root of octodobl series
 decadobl_complex_algebraic_series  : sqrt and n-th root of decadobl series
+hexadobl_complex_algebraic_series  : sqrt and n-th root of hexadobl series
 standard_complex_series_norms      : conjugates and norms of standard series
 dobldobl_complex_series_norms      : conjugates and norms of dobldobl series
 tripdobl_complex_series_norms      : conjugates and norms of tripdobl series
@@ -70,6 +74,7 @@ quaddobl_complex_series_norms      : conjugates and norms of quaddobl series
 pentdobl_complex_series_norms      : conjugates and norms of pentdobl series
 octodobl_complex_series_norms      : conjugates and norms of octodobl series
 decadobl_complex_series_norms      : conjugates and norms of decadobl series
+hexadobl_complex_series_norms      : conjugates and norms of hexadobl series
 standard_complex_series_functions  : evaluate and shift standard series
 dobldobl_complex_series_functions  : evaluate and shift dobldobl series
 tripdobl_complex_series_functions  : evaluate and shift tripdobl series
@@ -77,13 +82,10 @@ quaddobl_complex_series_functions  : evaluate and shift quaddobl series
 pentdobl_complex_series_functions  : evaluate and shift pentdobl series
 octodobl_complex_series_functions  : evaluate and shift octodobl series
 decadobl_complex_series_functions  : evaluate and shift decadobl series
+hexadobl_complex_series_functions  : evaluate and shift hexadobl series
 standard_complex_series_transforms : coefficient modulus transformations
 dobldobl_complex_series_transforms : dd coefficient modulus transformations
-tripdobl_complex_series_transforms : td coefficient modulus transformations
 quaddobl_complex_series_transforms : qd coefficient modulus transformations
-pentdobl_complex_series_transforms : pd coefficient modulus transformations
-octodobl_complex_series_transforms : od coefficient modulus transformations
-decadobl_complex_series_transforms : da coefficient modulus transformations
 test_standard_complex_series       : tests series with double complex coeffs
 test_dobldobl_complex_series       : tests series in double double precision
 test_tripdobl_complex_series       : tests series in triple double precision
@@ -91,6 +93,7 @@ test_quaddobl_complex_series       : tests series in quad double precision
 test_pentdobl_complex_series       : tests series in penta double precision
 test_octodobl_complex_series       : tests series in octo double precision
 test_decadobl_complex_series       : tests series in deca double precision
+test_hexadobl_complex_series       : tests series in hexa double precision
 ts_cseries                         : main test on 3rd version of series
 ------------------------------------------------------------------------------
 standard_complex_series_ring       : ring of series in double precision

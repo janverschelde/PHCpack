@@ -1,3 +1,8 @@
+Fri 1 Dec 2023 : new hexadobl_complex_series, hexadobl_complex_series_io,
+  hexadobl_complex_random_series, hexadobl_complex_algebraic_series,
+  hexadobl_complex_series_norms, test_hexadobl_complex_series,
+  updated ts_cseries.adb.
+
 Thu 10 Jun 2021 : added the exec_dir attribute to series.gpr.
 
 Tue 8 Jun 2021 : defined series.gpr to build the test procedures.
