@@ -102,7 +102,9 @@ procedure ts_cserinv is
 
   begin
     Standard_Complex_Singular_Values.SVD(wrk,n,p,s,e,u,v,job,info);
-    put_line("The singular values :"); put_line(s);
+    if verbose
+     then put_line("The singular values :"); put_line(s);
+    end if;
     res := Standard_Complex_Singular_Values.Rank(s);
     return res;
   end Rank;

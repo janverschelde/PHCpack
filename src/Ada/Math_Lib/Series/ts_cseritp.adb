@@ -605,7 +605,7 @@ procedure ts_cseritp is
     use Standard_Complex_Numbers;
     use Standard_Interpolating_CSeries;
 
-    mat : Standard_Complex_Matrix_Series.Matrix
+    mat : constant Standard_Complex_Matrix_Series.Matrix
         := Standard_Random_Series_Matrices.Random_Matrix_Series(deg,dim,0,1);
     sol : constant Standard_Complex_Vector_Series.Vector
         := Standard_Random_Series_Vectors.Random_Vector_Series(1,dim,deg);
@@ -613,7 +613,7 @@ procedure ts_cseritp is
         := Standard_Complex_Matrix_Series.Multiply(mat,sol);
     rnd : constant Standard_Complex_Numbers.Complex_Number
         := Standard_Random_Numbers.Random1;
-    t : Standard_Complex_Numbers.Complex_Number
+    t : constant Standard_Complex_Numbers.Complex_Number
       := Standard_Complex_Numbers.Create(0.01)*rnd;
     x : Standard_Complex_Vector_Series.Vector(deg);
     rnk : integer32;
@@ -650,7 +650,7 @@ procedure ts_cseritp is
     use DoblDobl_Complex_Numbers;
     use DoblDobl_Interpolating_CSeries;
 
-    mat : DoblDobl_Complex_Matrix_Series.Matrix
+    mat : constant DoblDobl_Complex_Matrix_Series.Matrix
         := DoblDobl_Random_Series_Matrices.Random_Matrix_Series(deg,dim,0,1);
     sol : constant DoblDobl_Complex_Vector_Series.Vector
         := DoblDobl_Random_Series_Vectors.Random_Vector_Series(1,dim,deg);
@@ -659,7 +659,7 @@ procedure ts_cseritp is
     rnd : constant DoblDobl_Complex_Numbers.Complex_Number
         := DoblDobl_Random_Numbers.Random1;
     val : constant double_double := create(0.01);
-    t : DoblDobl_Complex_Numbers.Complex_Number
+    t : constant DoblDobl_Complex_Numbers.Complex_Number
       := DoblDobl_Complex_Numbers.Create(val)*rnd;
     x : DoblDobl_Complex_Vector_Series.Vector(deg);
     rnk : integer32;
@@ -696,7 +696,7 @@ procedure ts_cseritp is
     use QuadDobl_Complex_Numbers;
     use QuadDobl_Interpolating_CSeries;
 
-    mat : QuadDobl_Complex_Matrix_Series.Matrix
+    mat : constant QuadDobl_Complex_Matrix_Series.Matrix
         := QuadDobl_Random_Series_Matrices.Random_Matrix_Series(deg,dim,0,1);
     sol : constant QuadDobl_Complex_Vector_Series.Vector
         := QuadDobl_Random_Series_Vectors.Random_Vector_Series(1,dim,deg);
@@ -705,7 +705,7 @@ procedure ts_cseritp is
     rnd : constant QuadDobl_Complex_Numbers.Complex_Number
         := QuadDobl_Random_Numbers.Random1;
     val : constant quad_double := create(0.01);
-    t : QuadDobl_Complex_Numbers.Complex_Number
+    t : constant QuadDobl_Complex_Numbers.Complex_Number
       := QuadDobl_Complex_Numbers.Create(val)*rnd;
     x : QuadDobl_Complex_Vector_Series.Vector(deg);
     rnk : integer32;
@@ -742,7 +742,7 @@ procedure ts_cseritp is
     rhs : constant Standard_Complex_Vector_Series.Vector
         := Standard_Special_Vector_Series(deg);
     sol : Standard_Complex_Vector_Series.Vector(deg);
-    t : Standard_Complex_Numbers.Complex_Number
+    t : constant Standard_Complex_Numbers.Complex_Number
       := Standard_Complex_Numbers.Create(0.01);
 
   begin
@@ -764,7 +764,7 @@ procedure ts_cseritp is
         := DoblDobl_Special_Vector_Series(deg);
     sol : DoblDobl_Complex_Vector_Series.Vector(deg);
     val : constant double_double := create(0.01);
-    t : DoblDobl_Complex_Numbers.Complex_Number
+    t : constant DoblDobl_Complex_Numbers.Complex_Number
       := DoblDobl_Complex_Numbers.Create(val);
 
   begin
@@ -786,7 +786,7 @@ procedure ts_cseritp is
         := QuadDobl_Special_Vector_Series(deg);
     sol : QuadDobl_Complex_Vector_Series.Vector(deg);
     val : constant quad_double := create(0.01);
-    t : QuadDobl_Complex_Numbers.Complex_Number
+    t : constant QuadDobl_Complex_Numbers.Complex_Number
       := QuadDobl_Complex_Numbers.Create(val);
 
   begin
