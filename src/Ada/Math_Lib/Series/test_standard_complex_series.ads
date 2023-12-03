@@ -29,11 +29,17 @@ package Test_Standard_Complex_Series is
   --   Generates a random series of the given degree
   --   and tests the square root computation.
 
-  procedure Standard_Random_Test_root ( degree : in integer32 );
+  procedure Standard_Random_Test_Root ( degree : in integer32 );
 
   -- DESCRIPTION :
   --   Generates a random series of the given degree
   --   and tests the square root computation.
+
+  procedure Standard_Random_Test_Poly_Root ( degree : in integer32 );
+
+  -- DESCRIPTION :
+  --   Tests the series expansion of the given degree 
+  --   of a root of a random polynomial.
 
   procedure Standard_Test_Conjugate ( degree : in integer32 );
 

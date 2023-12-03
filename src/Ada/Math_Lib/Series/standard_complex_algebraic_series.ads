@@ -1,4 +1,6 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Standard_Complex_Vectors;           use Standard_Complex_Vectors;
 with Standard_Complex_Series;            use Standard_Complex_Series;
 
 package Standard_Complex_Algebraic_Series is
@@ -25,5 +27,32 @@ package Standard_Complex_Algebraic_Series is
   --   starting at the i-th square root of the zero-th degree.
   --   The degree of the series on return equals c.deg.
   --   If verbose, then the Newton updates dx are written to screen.
+
+  function Poly_Eval ( p : Vector; z : Series ) return Series;
+
+  -- DESCRIPTION :
+  --   Returns the value of the polynomial with coefficients in p,
+  --   evaluated at the series z.
+
+  function Poly_Diff ( p : Vector; z : Series ) return Series;
+
+  -- DESCRIPTION :
+  --   Returns the value of the derivative of the polynomial 
+  --   with coefficients in p, evaluated at the series z.
+
+  function Poly_Root ( p : Vector; z0 : Complex_Number; c : Series; 
+                       verbose : boolean := false ) return Series;
+
+  -- DESCRIPTION :
+  --   Returns the series expansion z(t) of p(x) - c(t) = 0,
+  --   applying Newton iteration at a root of p.
+  --
+  -- ON ENTRY :
+  --   p        coefficient vector of a polynomial p in x,
+  --            p(i) is the coefficient of x^i of p;
+  --   z0       leading coefficient of the z(t): p(z0) = z0;
+  --   c        right hand side series for the equation,
+  --            c.deg is the degree of the series on return;
+  --   verbose  if true, then the Newton updates are written.
 
 end Standard_Complex_Algebraic_Series;
