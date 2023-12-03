@@ -2,8 +2,7 @@ with text_io;                            use text_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
-with penta_double_Numbers;              use penta_double_Numbers;
-with PentDobl_Complex_Numbers;           use PentDobl_Complex_Numbers;
+with penta_double_Numbers;               use penta_double_Numbers;
 with PentDobl_Complex_Numbers_Polar;
 with PentDobl_Complex_Series_io;         use PentDobl_Complex_Series_io;
 
@@ -66,5 +65,51 @@ package body PentDobl_Complex_Algebraic_Series is
     end loop;
     return res;
   end Root;
+
+  function Poly_Eval ( p : Vector; z : Series ) return Series is
+
+    res : Series(z.deg) := Create(p(p'last),z.deg);
+
+  begin
+    for i in reverse 0..p'last-1 loop
+      res := res*z;
+      res.cff(0) := res.cff(0) + p(i);
+    end loop;
+    return res;
+  end Poly_Eval;
+
+  function Poly_Diff ( p : Vector; z : Series ) return Series is
+
+    pdg : Complex_Number := Create(p'last);
+    res : Series(z.deg) := Create(pdg*p(p'last),z.deg);
+
+  begin
+    for i in reverse 1..p'last-1 loop
+      res := res*z;
+      pdg := Create(i);
+      res.cff(0) := res.cff(0) + pdg*p(i);
+    end loop;
+    return res;
+  end Poly_Diff;
+
+  function Poly_Root ( p : Vector; z0 : Complex_Number; c : Series; 
+                       verbose : boolean := false ) return Series is
+
+    res : Series(c.deg) := Create(z0,c.deg);
+    y,dy,dx : Series(c.deg);
+
+  begin
+    for i in 0..c.deg loop
+      y := Poly_Eval(p,res) - c;
+      dy := Poly_Diff(p,res);
+      dx := y/dy;
+      if verbose then
+        put("update dx at degree = "); put(i,1);
+        put_line(" :"); put(dx);
+      end if;
+      res := res - dx;
+    end loop;
+    return res;
+  end Poly_Root;
 
 end PentDobl_Complex_Algebraic_Series;

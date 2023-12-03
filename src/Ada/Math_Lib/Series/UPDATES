@@ -1,6 +1,8 @@
 Sat 2 Dec 2023 : modified ts_cseritp.adb and ts_cserinv.adb for compiler
   warnings.  Extended standard_complex_algebraic_series with a Poly_Root
-  function, tested in test_standard_complex_series.
+  function, tested in test_standard_complex_series.  Did the corresponding
+  versions for dobldobl, tripdobl, quaddobl, pentdobl, octodobl, decadobl,
+  and hexadobl.
 
 Fri 1 Dec 2023 : new hexadobl_complex_series, hexadobl_complex_series_io,
   hexadobl_complex_random_series, hexadobl_complex_algebraic_series,

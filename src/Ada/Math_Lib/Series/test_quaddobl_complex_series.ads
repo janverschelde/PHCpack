@@ -35,6 +35,12 @@ package Test_QuadDobl_Complex_Series is
   --   Generates a random series of the given degree
   --   and tests the square root computation.
 
+  procedure QuadDobl_Random_Test_Poly_Root ( degree : in integer32 );
+
+  -- DESCRIPTION :
+  --   Tests the series expansion of the given degree 
+  --   of a root of a random polynomial.
+
   procedure QuadDobl_Test_Conjugate ( degree : in integer32 );
 
   -- DESCRIPTION :

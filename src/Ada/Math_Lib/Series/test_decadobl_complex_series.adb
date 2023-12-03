@@ -8,7 +8,10 @@ with Deca_Double_Numbers;               use Deca_Double_Numbers;
 with Deca_Double_Numbers_io;            use Deca_Double_Numbers_io;
 with DecaDobl_Complex_Numbers;
 with DecaDobl_Complex_Numbers_io;       use DecaDobl_Complex_Numbers_io;
+with DecaDobl_Random_Numbers;
+with DecaDobl_Complex_Vectors;
 with DecaDobl_Complex_Vectors_io;
+with DecaDobl_Random_Vectors;
 with DecaDobl_Complex_Series;
 with DecaDobl_Complex_Series_io;        use DecaDobl_Complex_Series_io;
 with DecaDobl_Complex_Random_Series;
@@ -148,6 +151,68 @@ package body Test_DecaDobl_Complex_Series is
     put_line("The equation x**n - c :"); put(z);
   end DecaDobl_Random_Test_root;
 
+  function Eval ( c : DecaDobl_Complex_Vectors.Vector;
+                  x : DecaDobl_Complex_Numbers.Complex_Number )
+                return DecaDobl_Complex_Numbers.Complex_Number is
+
+  -- DESCRIPTION :
+  --   Returns the value of the polynomial with coefficients in c at x.
+
+    use DecaDobl_Complex_Numbers;
+
+    res : Complex_Number := c(c'last);
+
+  begin
+    for i in reverse 0..c'last-1 loop
+      res := res*x + c(i);
+    end loop;
+    return res;
+  end Eval;
+
+  procedure DecaDobl_Random_Test_Poly_Root ( degree : in integer32 ) is
+
+    use DecaDobl_Complex_Numbers;
+    use DecaDobl_Complex_Series;
+
+    c : constant Series(degree)
+      := DecaDobl_Complex_Random_Series.Random_Series(degree);
+    n : integer32 := 0;
+    ans : character;
+
+  begin
+    put("Give the degree of the polynomial : "); get(n);
+    declare
+      p : DecaDobl_Complex_Vectors.Vector(0..n)
+        := DecaDobl_Random_Vectors.Random_Vector(0,n);
+      z0 : constant Complex_Number := DecaDobl_Random_Numbers.Random1;
+      pz0 : constant Complex_Number := Eval(p,z0);
+      yz0 : Complex_Number;
+      z,y : Series(degree);
+      err : deca_double;
+    begin
+      put_line("A random root : "); put(z0); new_line;
+      p(0) := p(0) - pz0;
+      yz0 := Eval(p,z0);
+      put_line("Value at a random root : "); put(yz0);
+      new_line;
+      put("Extra output during the computation ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      new_line;
+      if ans = 'y'
+       then z := DecaDobl_Complex_Algebraic_Series.Poly_Root(p,z0,c,true);
+       else z := DecaDobl_Complex_Algebraic_Series.Poly_Root(p,z0,c);
+      end if;
+      put_line("The series expansion of the root : "); put(z);
+      y := DecaDobl_Complex_Algebraic_Series.Poly_Eval(p,z);
+      put_line("The polynomial at the series expansion :"); put(y);
+      put_line("The right hand side series :"); put(c);
+      y := y - c;
+      put_line("The error series :"); put(y);
+      err := DecaDobl_Complex_Series_Norms.Max_Norm(y);
+      put("Max norm of the error : "); put(err,2); new_line;
+    end;
+  end DecaDobl_Random_Test_Poly_Root; 
+
   procedure DecaDobl_Test_Conjugate ( degree : in integer32 ) is
 
     use DecaDobl_Complex_Series;
@@ -273,27 +338,28 @@ package body Test_DecaDobl_Complex_Series is
     put_line("  2. test arithmetic");
     put_line("  3. square root of a random series");
     put_line("  4. p-th root of a random series");
-    put_line("  5. test complex conjugate of a series");
-    put_line("  6. test the norm of a series");
-    put_line("  7. test shift of series parameter");
-    put_line("  8. test coefficient modulus transforms");
-    put("Type 0, 1, 2, 3, 4, 5, 6, 7, or 8 to select a test : ");
-    Ask_Alternative(ans,"012345678");
+    put_line("  5. series expansion of a root of a polynomial");
+    put_line("  6. test complex conjugate of a series");
+    put_line("  7. test the norm of a series");
+    put_line("  8. test shift of series parameter");
+    put_line("  9. test coefficient modulus transforms");
+    put("Type 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9 to select a test : ");
+    Ask_Alternative(ans,"0123456789");
     if ans /= '0' then
       new_line;
       put("Give the degree of the series : "); get(degree);
     end if;
-    new_line;
     case ans is 
       when '0' => DecaDobl_Construct;
       when '1' => DecaDobl_Test_Creation(degree);
       when '2' => DecaDobl_Test_Arithmetic(degree);
       when '3' => DecaDobl_Random_Test_Sqrt(degree);
       when '4' => DecaDobl_Random_Test_root(degree);
-      when '5' => DecaDobl_Test_Conjugate(degree);
-      when '6' => DecaDobl_Test_Norm(degree);
-      when '7' => DecaDobl_Test_Shift(degree);
-      when '8' => DecaDobl_Test_Transform(degree);
+      when '5' => DecaDobl_Random_Test_Poly_Root(degree);
+      when '6' => DecaDobl_Test_Conjugate(degree);
+      when '7' => DecaDobl_Test_Norm(degree);
+      when '8' => DecaDobl_Test_Shift(degree);
+      when '9' => DecaDobl_Test_Transform(degree);
       when others => null;
     end case;
   end Main;

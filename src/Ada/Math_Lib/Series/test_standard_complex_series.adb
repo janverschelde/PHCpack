@@ -172,7 +172,6 @@ package body Test_Standard_Complex_Series is
     use Standard_Complex_Numbers;
     use Standard_Complex_Series;
 
-
     c : constant Series(degree)
       := Standard_Complex_Random_Series.Random_Series(degree);
     n : integer32 := 0;
@@ -371,7 +370,6 @@ package body Test_Standard_Complex_Series is
       new_line;
       put("Give the degree of the series : "); get(degree);
     end if;
-    new_line;
     case ans is 
       when '0' => Standard_Construct;
       when '1' => Standard_Test_Creation(degree);
