@@ -1,3 +1,5 @@
+Mon 4 Dec 2023 : for compiler warnings, modified *_interpolating_cseries.adb.
+
 Sun 3 Dec 2023 : new hexadobl_complex_series_{ring, ring_io, vectors, 
   vectors_io, vecvecs}, hexadobl_complex_vector_{series, series_io},
   hexadobl_random_series_vectors, hexadobl_cseries_vector_norms,

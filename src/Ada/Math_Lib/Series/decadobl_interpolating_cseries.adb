@@ -19,7 +19,7 @@ package body DecaDobl_Interpolating_CSeries is
                   t : Complex_Number )
                 return DecaDobl_Complex_Vectors.Vector is
 
-    vec : DecaDobl_Complex_Vectors.Link_to_Vector := v.cff(0);
+    vec : constant DecaDobl_Complex_Vectors.Link_to_Vector := v.cff(0);
     res : DecaDobl_Complex_Vectors.Vector(vec'range) := vec.all;
     one : constant deca_double := create(1.0);
     pwt : Complex_Number := Create(one);
@@ -121,7 +121,7 @@ package body DecaDobl_Interpolating_CSeries is
                verbose : boolean := true ) return integer32 is
   begin
     for d in 0..m.deg loop
-      if Full_Rank(m,d)
+      if Full_Rank(m,d,verbose)
        then return d;
       end if;
     end loop;
@@ -133,7 +133,7 @@ package body DecaDobl_Interpolating_CSeries is
                   return DecaDobl_Complex_VecVecs.VecVec is
 
     res : DecaDobl_Complex_VecVecs.VecVec(t'range);
-    lv : DecaDobl_Complex_Vectors.Link_to_Vector := v.cff(0);
+    lv : constant DecaDobl_Complex_Vectors.Link_to_Vector := v.cff(0);
 
   begin
     for i in t'range loop
@@ -152,7 +152,7 @@ package body DecaDobl_Interpolating_CSeries is
                   return DecaDobl_Complex_VecMats.VecMat is
 
     res : DecaDobl_Complex_VecMats.VecMat(t'range);
-    lm : DecaDobl_Complex_Matrices.Link_to_Matrix := m.cff(0);
+    lm : constant DecaDobl_Complex_Matrices.Link_to_Matrix := m.cff(0);
 
   begin
     for i in t'range loop
@@ -305,8 +305,8 @@ package body DecaDobl_Interpolating_CSeries is
     dim : constant integer32 := rhs.cff(0)'last;
     t : constant DecaDobl_Complex_Vectors.Vector(0..mat.deg)
       := DecaDobl_Random_Vectors.Random_Vector(0,mat.deg);
-    m : DecaDobl_Complex_VecMats.VecMat(t'range) := Sample(mat,t);
-    v : DecaDobl_Complex_VecVecs.VecVec(t'range) := Sample(rhs,t);
+    m : constant DecaDobl_Complex_VecMats.VecMat(t'range) := Sample(mat,t);
+    v : constant DecaDobl_Complex_VecVecs.VecVec(t'range) := Sample(rhs,t);
     x : DecaDobl_Complex_VecVecs.VecVec(t'range);
     r : Deca_Double_Vectors.Vector(t'range);
     xt : DecaDobl_Complex_VecVecs.VecVec(1..dim);
@@ -361,7 +361,7 @@ package body DecaDobl_Interpolating_CSeries is
                 return DecaDobl_Complex_Matrices.Matrix is
 
     one : constant deca_double := create(1.0);
-    lm0 : DecaDobl_Complex_Matrices.Link_to_Matrix := m(0);
+    lm0 : constant DecaDobl_Complex_Matrices.Link_to_Matrix := m(0);
     dim : constant integer32 := lm0'last(1);
     res : DecaDobl_Complex_Matrices.Matrix(1..dim,1..dim);
     npw : constant natural := natural(pow);
@@ -597,8 +597,6 @@ package body DecaDobl_Interpolating_CSeries is
   -- DESCRIPTION :
   --   Writes the integer matrix to screen.
 
-    use DecaDobl_Complex_Numbers;
-
   begin
     for i in A'range(1) loop
       for j in A'range(2) loop
@@ -623,7 +621,7 @@ package body DecaDobl_Interpolating_CSeries is
     res : DecaDobl_Complex_Vector_Series.Vector(deg);
     A : DecaDobl_Complex_Matrices.Matrix(1..nrows,1..ncols)
       := Hermite_Laurent_Matrix(mat.cff(0..deg));
-    b : DecaDobl_Complex_Vectors.Vector(1..nrows)
+    b : constant DecaDobl_Complex_Vectors.Vector(1..nrows)
       := Hermite_Laurent_Vector(rhs.cff(0..deg));
     qraux : DecaDobl_Complex_Vectors.Vector(1..ncols)
           := (1..ncols => Create(zero));

@@ -18,7 +18,7 @@ package body Standard_Interpolating_CSeries is
                   t : Complex_Number )
                 return Standard_Complex_Vectors.Vector is
 
-    vec : Standard_Complex_Vectors.Link_to_Vector := v.cff(0);
+    vec : constant Standard_Complex_Vectors.Link_to_Vector := v.cff(0);
     res : Standard_Complex_Vectors.Vector(vec'range) := vec.all;
     pwt : Complex_Number := Create(1.0);
  
@@ -117,7 +117,7 @@ package body Standard_Interpolating_CSeries is
                verbose : boolean := true ) return integer32 is
   begin
     for d in 0..m.deg loop
-      if Full_Rank(m,d)
+      if Full_Rank(m,d,verbose)
        then return d;
       end if;
     end loop;
@@ -129,7 +129,7 @@ package body Standard_Interpolating_CSeries is
                   return Standard_Complex_VecVecs.VecVec is
 
     res : Standard_Complex_VecVecs.VecVec(t'range);
-    lv : Standard_Complex_Vectors.Link_to_Vector := v.cff(0);
+    lv : constant Standard_Complex_Vectors.Link_to_Vector := v.cff(0);
 
   begin
     for i in t'range loop
@@ -148,7 +148,7 @@ package body Standard_Interpolating_CSeries is
                   return Standard_Complex_VecMats.VecMat is
 
     res : Standard_Complex_VecMats.VecMat(t'range);
-    lm : Standard_Complex_Matrices.Link_to_Matrix := m.cff(0);
+    lm : constant Standard_Complex_Matrices.Link_to_Matrix := m.cff(0);
 
   begin
     for i in t'range loop
@@ -300,8 +300,8 @@ package body Standard_Interpolating_CSeries is
     dim : constant integer32 := rhs.cff(0)'last;
     t : constant Standard_Complex_Vectors.Vector(0..mat.deg)
       := Standard_Random_Vectors.Random_Vector(0,mat.deg);
-    m : Standard_Complex_VecMats.VecMat(t'range) := Sample(mat,t);
-    v : Standard_Complex_VecVecs.VecVec(t'range) := Sample(rhs,t);
+    m : constant Standard_Complex_VecMats.VecMat(t'range) := Sample(mat,t);
+    v : constant Standard_Complex_VecVecs.VecVec(t'range) := Sample(rhs,t);
     x : Standard_Complex_VecVecs.VecVec(t'range);
     r : Standard_Floating_Vectors.Vector(t'range);
     xt : Standard_Complex_VecVecs.VecVec(1..dim);
@@ -353,7 +353,7 @@ package body Standard_Interpolating_CSeries is
                   t : Complex_Number; pow,ord : integer32 )
                 return Standard_Complex_Matrices.Matrix is
 
-    lm0 : Standard_Complex_Matrices.Link_to_Matrix := m(0);
+    lm0 : constant Standard_Complex_Matrices.Link_to_Matrix := m(0);
     dim : constant integer32 := lm0'last(1);
     res : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
     npw : constant natural := natural(pow);
@@ -586,8 +586,6 @@ package body Standard_Interpolating_CSeries is
   -- DESCRIPTION :
   --   Writes the integer matrix to screen.
 
-    use Standard_Complex_Numbers;
-
   begin
     for i in A'range(1) loop
       for j in A'range(2) loop
@@ -611,7 +609,7 @@ package body Standard_Interpolating_CSeries is
     res : Standard_Complex_Vector_Series.Vector(deg);
     A : Standard_Complex_Matrices.Matrix(1..nrows,1..ncols)
       := Hermite_Laurent_Matrix(mat.cff(0..deg));
-    b : Standard_Complex_Vectors.Vector(1..nrows)
+    b : constant Standard_Complex_Vectors.Vector(1..nrows)
       := Hermite_Laurent_Vector(rhs.cff(0..deg));
     qraux : Standard_Complex_Vectors.Vector(1..ncols)
           := (1..ncols => Create(0.0));

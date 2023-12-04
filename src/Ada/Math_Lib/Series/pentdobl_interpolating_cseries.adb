@@ -19,7 +19,7 @@ package body PentDobl_Interpolating_CSeries is
                   t : Complex_Number )
                 return PentDobl_Complex_Vectors.Vector is
 
-    vec : PentDobl_Complex_Vectors.Link_to_Vector := v.cff(0);
+    vec : constant PentDobl_Complex_Vectors.Link_to_Vector := v.cff(0);
     res : PentDobl_Complex_Vectors.Vector(vec'range) := vec.all;
     one : constant penta_double := create(1.0);
     pwt : Complex_Number := Create(one);
@@ -121,7 +121,7 @@ package body PentDobl_Interpolating_CSeries is
                verbose : boolean := true ) return integer32 is
   begin
     for d in 0..m.deg loop
-      if Full_Rank(m,d)
+      if Full_Rank(m,d,verbose)
        then return d;
       end if;
     end loop;
@@ -133,7 +133,7 @@ package body PentDobl_Interpolating_CSeries is
                   return PentDobl_Complex_VecVecs.VecVec is
 
     res : PentDobl_Complex_VecVecs.VecVec(t'range);
-    lv : PentDobl_Complex_Vectors.Link_to_Vector := v.cff(0);
+    lv : constant PentDobl_Complex_Vectors.Link_to_Vector := v.cff(0);
 
   begin
     for i in t'range loop
@@ -152,7 +152,7 @@ package body PentDobl_Interpolating_CSeries is
                   return PentDobl_Complex_VecMats.VecMat is
 
     res : PentDobl_Complex_VecMats.VecMat(t'range);
-    lm : PentDobl_Complex_Matrices.Link_to_Matrix := m.cff(0);
+    lm : constant PentDobl_Complex_Matrices.Link_to_Matrix := m.cff(0);
 
   begin
     for i in t'range loop
@@ -305,8 +305,8 @@ package body PentDobl_Interpolating_CSeries is
     dim : constant integer32 := rhs.cff(0)'last;
     t : constant PentDobl_Complex_Vectors.Vector(0..mat.deg)
       := PentDobl_Random_Vectors.Random_Vector(0,mat.deg);
-    m : PentDobl_Complex_VecMats.VecMat(t'range) := Sample(mat,t);
-    v : PentDobl_Complex_VecVecs.VecVec(t'range) := Sample(rhs,t);
+    m : constant PentDobl_Complex_VecMats.VecMat(t'range) := Sample(mat,t);
+    v : constant PentDobl_Complex_VecVecs.VecVec(t'range) := Sample(rhs,t);
     x : PentDobl_Complex_VecVecs.VecVec(t'range);
     r : Penta_Double_Vectors.Vector(t'range);
     xt : PentDobl_Complex_VecVecs.VecVec(1..dim);
@@ -361,7 +361,7 @@ package body PentDobl_Interpolating_CSeries is
                 return PentDobl_Complex_Matrices.Matrix is
 
     one : constant penta_double := create(1.0);
-    lm0 : PentDobl_Complex_Matrices.Link_to_Matrix := m(0);
+    lm0 : constant PentDobl_Complex_Matrices.Link_to_Matrix := m(0);
     dim : constant integer32 := lm0'last(1);
     res : PentDobl_Complex_Matrices.Matrix(1..dim,1..dim);
     npw : constant natural := natural(pow);
@@ -597,8 +597,6 @@ package body PentDobl_Interpolating_CSeries is
   -- DESCRIPTION :
   --   Writes the integer matrix to screen.
 
-    use PentDobl_Complex_Numbers;
-
   begin
     for i in A'range(1) loop
       for j in A'range(2) loop
@@ -623,7 +621,7 @@ package body PentDobl_Interpolating_CSeries is
     res : PentDobl_Complex_Vector_Series.Vector(deg);
     A : PentDobl_Complex_Matrices.Matrix(1..nrows,1..ncols)
       := Hermite_Laurent_Matrix(mat.cff(0..deg));
-    b : PentDobl_Complex_Vectors.Vector(1..nrows)
+    b : constant PentDobl_Complex_Vectors.Vector(1..nrows)
       := Hermite_Laurent_Vector(rhs.cff(0..deg));
     qraux : PentDobl_Complex_Vectors.Vector(1..ncols)
           := (1..ncols => Create(zero));
