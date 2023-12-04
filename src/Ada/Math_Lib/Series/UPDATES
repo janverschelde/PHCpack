@@ -2,6 +2,10 @@ Sun 3 Dec 2023 : new hexadobl_complex_series_{ring, ring_io, vectors,
   vectors_io, vecvecs}, hexadobl_complex_vector_{series, series_io},
   hexadobl_random_series_vectors, hexadobl_cseries_vector_norms,
   test_hexadobl_vector_series; extended ts_cservec.adb.
+  New hexadobl_cseries_vector_functions, hexadobl_complex_matrix_series,
+  hexadobl_complex_matrix_series_io, hexadobl_random_series_matrices,
+  hexadobl_series_linear_solvers, hexadobl_series_least_squares,
+  test_hexadobl_matrix_series; extended ts_csermat.adb.
 
 Sat 2 Dec 2023 : modified ts_cseritp.adb and ts_cserinv.adb for compiler
   warnings.  Extended standard_complex_algebraic_series with a Poly_Root
