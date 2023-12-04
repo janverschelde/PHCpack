@@ -1,3 +1,5 @@
+Sun 3 Dec 2023 : new hexadobl_complex_vecmats and hexadobl_complex_vecmats_io.
+
 Fri 10 Dec 2021 : added definitions of matrices of hexa double numbers:
   new ts_hdmat, hexa_double_matrices, hexa_double_matrices_io,
   hexadobl_complex_matrices, hexadobl_complex_matrices_io,

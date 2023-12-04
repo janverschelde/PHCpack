@@ -113,6 +113,8 @@ hexa_double_matrices               : matrices of hexa double numbers
 hexa_double_matrices_io            : i/o of matrices of hexa double numbers
 hexadobl_complex_matrices          : matrices of complex hexa doubles
 hexadobl_complex_matrices_io       : i/o matrices of complex hexa doubles
+hexadobl_complex_vecmats           : generic_vecmats(hexa double complex)
+hexadobl_complex_vecmats_io        : generic_vecmats_io(hexa double complex)
 ------------------------------------------------------------------------------
 standard_random_matrices           : matrices of random standard numbers
 dobldobl_random_matrices           : matrices of random double doubles
