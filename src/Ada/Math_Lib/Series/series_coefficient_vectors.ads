@@ -12,6 +12,8 @@ with OctoDobl_Complex_VecVecs;
 with OctoDobl_Complex_VecMats;
 with DecaDobl_Complex_VecVecs;
 with DecaDobl_Complex_VecMats;
+with HexaDobl_Complex_VecVecs;
+with HexaDobl_Complex_VecMats;
 with Standard_Complex_Series_Vectors;
 with Standard_Complex_Vector_Series;
 with Standard_Complex_Matrix_Series;
@@ -33,6 +35,9 @@ with OctoDobl_Complex_Matrix_Series;
 with DecaDobl_Complex_Series_Vectors;
 with DecaDobl_Complex_Vector_Series;
 with DecaDobl_Complex_Matrix_Series;
+with HexaDobl_Complex_Series_Vectors;
+with HexaDobl_Complex_Vector_Series;
+with HexaDobl_Complex_Matrix_Series;
 
 package Series_Coefficient_Vectors is
 
@@ -63,6 +68,9 @@ package Series_Coefficient_Vectors is
   function DecaDobl_Series_Coefficients
              ( s : DecaDobl_Complex_Series_Vectors.Vector )
              return DecaDobl_Complex_VecVecs.VecVec;
+  function HexaDobl_Series_Coefficients
+             ( s : HexaDobl_Complex_Series_Vectors.Vector )
+             return HexaDobl_Complex_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Returns the coefficients of the series in the vector of vectors.
@@ -91,6 +99,9 @@ package Series_Coefficient_Vectors is
   function DecaDobl_Series_Coefficients
              ( s : DecaDobl_Complex_Vector_Series.Vector )
              return DecaDobl_Complex_VecVecs.VecVec;
+  function HexaDobl_Series_Coefficients
+             ( s : HexaDobl_Complex_Vector_Series.Vector )
+             return HexaDobl_Complex_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Returns he coefficients of the series in the vector of vectors.
@@ -121,6 +132,9 @@ package Series_Coefficient_Vectors is
   function DecaDobl_Series_Coefficients
              ( s : DecaDobl_Complex_Matrix_Series.Matrix )
              return DecaDobl_Complex_VecMats.VecMat;
+  function HexaDobl_Series_Coefficients
+             ( s : HexaDobl_Complex_Matrix_Series.Matrix )
+             return HexaDobl_Complex_VecMats.VecMat;
 
   -- DESCRIPTION :
   --   Returns a vector of matrices, of range 0..s.deg.

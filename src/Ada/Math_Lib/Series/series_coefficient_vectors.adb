@@ -12,6 +12,8 @@ with OctoDobl_Complex_Vectors;
 with OctoDobl_Complex_Matrices;
 with DecaDobl_Complex_Vectors;
 with DecaDobl_Complex_Matrices;
+with HexaDobl_Complex_Vectors;
+with HexaDobl_Complex_Matrices;
 
 package body Series_Coefficient_Vectors is
 
@@ -141,6 +143,24 @@ package body Series_Coefficient_Vectors is
     return res;
   end DecaDobl_Series_Coefficients;
 
+  function HexaDobl_Series_Coefficients
+             ( s : HexaDobl_Complex_Series_Vectors.Vector )
+             return HexaDobl_Complex_VecVecs.VecVec is
+
+    res : HexaDobl_Complex_VecVecs.VecVec(s'range);
+
+  begin
+    for k in s'range loop
+      declare
+        cff : constant HexaDobl_Complex_Vectors.Vector(0..s(k).deg)
+            := s(k).cff(0..s(k).deg);
+      begin
+        res(k) := new HexaDobl_Complex_Vectors.Vector'(cff);
+      end;
+    end loop;
+    return res;
+  end HexaDobl_Series_Coefficients;
+
   function Standard_Series_Coefficients
              ( s : Standard_Complex_Vector_Series.Vector )
              return Standard_Complex_VecVecs.VecVec is
@@ -266,6 +286,24 @@ package body Series_Coefficient_Vectors is
     end loop;
     return res;
   end DecaDobl_Series_Coefficients;
+
+  function HexaDobl_Series_Coefficients
+             ( s : HexaDobl_Complex_Vector_Series.Vector )
+             return HexaDobl_Complex_VecVecs.VecVec is
+
+    res : HexaDobl_Complex_VecVecs.VecVec(0..s.deg);
+
+  begin
+    for k in s.cff'range loop
+      declare
+        cf : constant HexaDobl_Complex_Vectors.Link_to_Vector := s.cff(k);
+        cp : constant HexaDobl_Complex_Vectors.Vector(cf'range) := cf.all;
+      begin
+        res(k) := new HexaDobl_Complex_Vectors.Vector'(cp);
+      end;
+    end loop;
+    return res;
+  end HexaDobl_Series_Coefficients;
 
   function Standard_Series_Coefficients
              ( s : Standard_Complex_Matrix_Series.Matrix )
@@ -406,5 +444,25 @@ package body Series_Coefficient_Vectors is
     end loop;
     return res;
   end DecaDobl_Series_Coefficients;
+
+  function HexaDobl_Series_Coefficients
+             ( s : HexaDobl_Complex_Matrix_Series.Matrix )
+             return HexaDobl_Complex_VecMats.VecMat is
+
+    res : HexaDobl_Complex_VecMats.VecMat(0..s.deg);
+
+    use HexaDobl_Complex_Matrices;
+
+  begin
+    for k in s.cff'range loop
+      declare
+        cf : constant Link_to_Matrix := s.cff(k);
+        cp : constant Matrix(cf'range(1),cf'range(2)) := cf.all;
+      begin
+        res(k) := new Matrix'(cp);
+      end;
+    end loop;
+    return res;
+  end HexaDobl_Series_Coefficients;
 
 end Series_Coefficient_Vectors;

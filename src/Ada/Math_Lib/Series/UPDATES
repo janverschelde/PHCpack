@@ -1,4 +1,7 @@
 Mon 4 Dec 2023 : for compiler warnings, modified *_interpolating_cseries.adb.
+  New hexadobl_interpolating_cseries, hexadobl_echelon_forms,
+  test_hexadobl_linearization, hexadobl_series_matrix_solvers;
+  extended series_coefficient_vectors, updated ts_cserlin.adb.
 
 Sun 3 Dec 2023 : new hexadobl_complex_series_{ring, ring_io, vectors, 
   vectors_io, vecvecs}, hexadobl_complex_vector_{series, series_io},
