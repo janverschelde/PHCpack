@@ -6,6 +6,7 @@ with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Penta_Double_Numbers;              use Penta_Double_Numbers;
 with Octo_Double_Numbers;               use Octo_Double_Numbers;
 with Deca_Double_Numbers;               use Deca_Double_Numbers;
+with Hexa_Double_Numbers;               use Hexa_Double_Numbers;
 
 package Binomial_Coefficients is
 
@@ -64,6 +65,13 @@ package Binomial_Coefficients is
   -- DESCRIPTION :
   --   Returns the binomial coefficient n choose k,
   --   computed with deca double arithmetic for even more accuracy
+  --   and to avoid integer arithmetic overflow.
+
+  function binomial ( n,k : integer32 ) return hexa_double;
+
+  -- DESCRIPTION :
+  --   Returns the binomial coefficient n choose k,
+  --   computed with hexa double arithmetic for even more accuracy
   --   and to avoid integer arithmetic overflow.
 
 end Binomial_Coefficients;

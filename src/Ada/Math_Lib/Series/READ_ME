@@ -340,6 +340,13 @@ decadobl_cseries_poly_systems      : systems of decadobl cseries polynomials
 decadobl_cseries_poly_systems_io   : output of decadobl cseries poly systems
 decadobl_cseries_poly_sysfun       : evaluating decadobl series poly systems
 decadobl_cseries_jaco_matrices     : differentiating decadobl series systems
+hexadobl_cseries_polynomials       : polynomials with hexadobl cseries coeffs
+hexadobl_cseries_polynomials_io    : output of hexadobl cseries polynomials
+hexadobl_cseries_poly_functions    : evaluating hexadobl cseries polynomials
+hexadobl_cseries_poly_systems      : systems of hexadobl cseries polynomials
+hexadobl_cseries_poly_systems_io   : output of hexadobl cseries poly systems
+hexadobl_cseries_poly_sysfun       : evaluating hexadobl series poly systems
+hexadobl_cseries_jaco_matrices     : differentiating hexadobl series systems
 complex_series_and_polynomials     : convertor functions
 complex_series_and_polynomials_io  : symbolic i/o of series
 standard_polynomial_cseries        : standard polynomial series
@@ -349,6 +356,7 @@ quaddobl_polynomial_cseries        : quaddobl polynomial series
 pentdobl_polynomial_cseries        : pentdobl polynomial series
 octodobl_polynomial_cseries        : octodobl polynomial series
 decadobl_polynomial_cseries        : decadobl polynomial series
+hexadobl_polynomial_cseries        : hexadobl polynomial series
 test_standard_cseries_polynomials  : tests standard cseries polynomials
 test_dobldobl_cseries_polynomials  : tests dobldobl cseries polynomials
 test_tripdobl_cseries_polynomials  : tests tripdobl cseries polynomials

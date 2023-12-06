@@ -28,6 +28,10 @@ with DecaDobl_Complex_Polynomials;
 with DecaDobl_Complex_Polynomials_io;
 with DecaDobl_Complex_Poly_Systems;
 with DecaDobl_Complex_Poly_Systems_io;
+with HexaDobl_Complex_Polynomials;
+with HexaDobl_Complex_Polynomials_io;
+with HexaDobl_Complex_Poly_Systems;
+with HexaDobl_Complex_Poly_Systems_io;
 with Complex_Series_and_Polynomials;       use Complex_Series_and_Polynomials;
 
 package body Complex_Series_and_Polynomials_io is
@@ -63,6 +67,11 @@ package body Complex_Series_and_Polynomials_io is
   end get;
 
   procedure get ( s : out DecaDobl_Complex_Series.Series ) is
+  begin
+    get(standard_input,s);
+  end get;
+
+  procedure get ( s : out HexaDobl_Complex_Series.Series ) is
   begin
     get(standard_input,s);
   end get;
@@ -165,6 +174,20 @@ package body Complex_Series_and_Polynomials_io is
     DecaDobl_Complex_Polynomials.Clear(p);
   end get;
 
+  procedure get ( file : in file_type;
+                  s : out HexaDobl_Complex_Series.Series ) is
+
+    p : HexaDobl_Complex_Polynomials.Poly;
+
+  begin
+    if Symbol_Table.Empty
+     then Symbol_Table.Init(1);
+    end if;
+    HexaDobl_Complex_Polynomials_io.get(file,p);
+    s := Polynomial_to_Series(p);
+    HexaDobl_Complex_Polynomials.Clear(p);
+  end get;
+
   procedure put ( s : in Standard_Complex_Series.Series ) is
   begin
     put(standard_output,s);
@@ -196,6 +219,11 @@ package body Complex_Series_and_Polynomials_io is
   end put;
 
   procedure put ( s : in DecaDobl_Complex_Series.Series ) is
+  begin
+    put(standard_output,s);
+  end put;
+
+  procedure put ( s : in HexaDobl_Complex_Series.Series ) is
   begin
     put(standard_output,s);
   end put;
@@ -268,6 +296,16 @@ package body Complex_Series_and_Polynomials_io is
   begin
     DecaDobl_Complex_Polynomials_io.put(file,p);
     DecaDobl_Complex_Polynomials.Clear(p);
+  end put;
+
+  procedure put ( file : in file_type;
+                  s : in HexaDobl_Complex_Series.Series ) is
+
+    p : HexaDobl_Complex_Polynomials.Poly := Series_to_Polynomial(s);
+
+  begin
+    HexaDobl_Complex_Polynomials_io.put(file,p);
+    HexaDobl_Complex_Polynomials.Clear(p);
   end put;
 
   procedure get ( lv : out Standard_Complex_Series_Vectors.Link_to_Vector;
@@ -494,6 +532,38 @@ package body Complex_Series_and_Polynomials_io is
     end loop;
   end get;
 
+  procedure get ( lv : out HexaDobl_Complex_Series_Vectors.Link_to_Vector;
+                  idx : in integer32 := 1; verbose : in boolean := false ) is
+
+    lp : HexaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+    use HexaDobl_Complex_Polynomials;
+    use HexaDobl_Complex_Series;
+
+  begin
+    HexaDobl_Complex_Poly_Systems_io.get(lp);
+    if verbose then
+      put_line("The series as polynomial system :");
+      HexaDobl_Complex_Poly_Systems_io.put(lp.all);
+      put("Number of variables : ");
+      put(integer32(Number_of_Unknowns(lp(lp'first))),1); new_line;
+    end if;
+    lv := new HexaDobl_Complex_Series_Vectors.Vector(lp'range);
+    for i in lp'range loop
+      if verbose 
+       then put("considering series "); put(i,1); put_line(" ...");
+      end if;
+      declare
+        s : constant Series := Polynomial_to_Series(lp(i),idx);
+      begin
+        if verbose
+         then put_line("The series :"); put(s); new_line;
+        end if;
+        lv(i) := new Series'(s);
+      end;
+    end loop;
+  end get;
+
   procedure put ( v : in Standard_Complex_Series_Vectors.Vector ) is
   begin
     put(standard_output,v);
@@ -525,6 +595,11 @@ package body Complex_Series_and_Polynomials_io is
   end put;
 
   procedure put ( v : in DecaDobl_Complex_Series_Vectors.Vector ) is
+  begin
+    put(standard_output,v);
+  end put;
+
+  procedure put ( v : in HexaDobl_Complex_Series_Vectors.Vector ) is
   begin
     put(standard_output,v);
   end put;
@@ -641,6 +716,22 @@ package body Complex_Series_and_Polynomials_io is
     end loop;
   end put;
 
+  procedure put ( file : in file_type;
+                  v : in HexaDobl_Complex_Series_Vectors.Vector ) is
+
+    use HexaDobl_Complex_Series;
+
+  begin
+    put(file,v'last,2); put(file,"  ");
+    put_line(file,"1");
+    for i in v'range loop
+      if v(i) /= null then
+        put(file,v(i).all);
+        new_line(file);
+      end if;
+    end loop;
+  end put;
+
   procedure get ( p : out Standard_CSeries_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false ) is
   begin
@@ -678,6 +769,12 @@ package body Complex_Series_and_Polynomials_io is
   end get;
 
   procedure get ( p : out DecaDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false ) is
+  begin
+    get(standard_input,p,idx,verbose);
+  end get;
+
+  procedure get ( p : out HexaDobl_CSeries_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false ) is
   begin
     get(standard_input,p,idx,verbose);
@@ -767,6 +864,18 @@ package body Complex_Series_and_Polynomials_io is
     DecaDobl_Complex_Polynomials.Clear(q);
   end get;
 
+  procedure get ( file : in file_type;
+                  p : out HexaDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false ) is
+
+    q : HexaDobl_Complex_Polynomials.Poly;
+
+  begin
+    HexaDobl_Complex_Polynomials_io.get(file,q);
+    p := Polynomial_to_Series_Polynomial(q,idx,verbose);
+    HexaDobl_Complex_Polynomials.Clear(q);
+  end get;
+
   procedure put ( p : in Standard_CSeries_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false ) is
   begin
@@ -804,6 +913,12 @@ package body Complex_Series_and_Polynomials_io is
   end put;
 
   procedure put ( p : in DecaDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false ) is
+  begin
+    put(standard_output,p,idx,verbose);
+  end put;
+
+  procedure put ( p : in HexaDobl_CSeries_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false ) is
   begin
     put(standard_output,p,idx,verbose);
@@ -891,6 +1006,18 @@ package body Complex_Series_and_Polynomials_io is
   begin
     DecaDobl_Complex_Polynomials_io.put(file,q);
     DecaDobl_Complex_Polynomials.Clear(q);
+  end put;
+
+  procedure put ( file : in file_type;
+                  p : in HexaDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false ) is
+
+    q : HexaDobl_Complex_Polynomials.Poly
+      := Series_Polynomial_to_Polynomial(p,idx,verbose);
+
+  begin
+    HexaDobl_Complex_Polynomials_io.put(file,q);
+    HexaDobl_Complex_Polynomials.Clear(q);
   end put;
 
   procedure get ( ls : out Standard_CSeries_Poly_Systems.Link_to_Poly_Sys;
@@ -998,6 +1125,21 @@ package body Complex_Series_and_Polynomials_io is
     end;
   end get;
 
+  procedure get ( ls : out HexaDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false ) is
+
+    lp : HexaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    HexaDobl_Complex_Poly_Systems_io.get(lp);
+    declare
+      s : constant HexaDobl_CSeries_Poly_Systems.Poly_Sys(lp'range)
+        := System_to_Series_System(lp.all,idx,verbose);
+    begin
+      ls := new HexaDobl_CSeries_Poly_Systems.Poly_Sys'(s);
+    end;
+  end get;
+
   procedure put ( s : in Standard_CSeries_Poly_Systems.Poly_Sys;
                   idx : in integer32 := 0; verbose : in boolean := false ) is
   begin
@@ -1035,6 +1177,12 @@ package body Complex_Series_and_Polynomials_io is
   end put;
 
   procedure put ( s : in DecaDobl_CSeries_Poly_Systems.Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false ) is
+  begin
+    put(standard_output,s,idx,verbose);
+  end put;
+
+  procedure put ( s : in HexaDobl_CSeries_Poly_Systems.Poly_Sys;
                   idx : in integer32 := 0; verbose : in boolean := false ) is
   begin
     put(standard_output,s,idx,verbose);
@@ -1122,6 +1270,18 @@ package body Complex_Series_and_Polynomials_io is
   begin
     DecaDobl_Complex_Poly_Systems_io.put(file,p);
     DecaDobl_Complex_Poly_Systems.Clear(p);
+  end put;
+
+  procedure put ( file : in file_type;
+                  s : in HexaDobl_CSeries_Poly_Systems.Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false ) is
+
+    p : HexaDobl_Complex_Poly_Systems.Poly_Sys(s'range)
+      := Series_System_to_System(s,idx,verbose);
+
+  begin
+    HexaDobl_Complex_Poly_Systems_io.put(file,p);
+    HexaDobl_Complex_Poly_Systems.Clear(p);
   end put;
 
 end Complex_Series_and_Polynomials_io;

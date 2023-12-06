@@ -1,7 +1,15 @@
+Tue 5 Dec 2023 : new hexadobl_polyomial_cseries, hexadobl_cseries_polynomials,
+  hexadobl_cseries_polynomials_io, hexadobl_cseries_poly_functions,
+  hexadobl_cseries_poly_systems, hexadobl_poly_systems_io,
+  hexadobl_cseries_poly_sysfun, hexadobl_jaco_matrices,
+  test_hexadobl_cseries_polynomials; extended binomial_coefficients,
+  complex_series_and_polynomials, complex_series_and_polynomials_io,
+  and ts_cserpol.adb.
+
 Mon 4 Dec 2023 : for compiler warnings, modified *_interpolating_cseries.adb.
   New hexadobl_interpolating_cseries, hexadobl_echelon_forms,
-  test_hexadobl_linearization, hexadobl_series_matrix_solvers;
-  extended series_coefficient_vectors, updated ts_cserlin.adb.
+  test_hexadobl_linearization; extended series_coefficient_vectors,
+  updated ts_cserlin.adb.
 
 Sun 3 Dec 2023 : new hexadobl_complex_series_{ring, ring_io, vectors, 
   vectors_io, vecvecs}, hexadobl_complex_vector_{series, series_io},

@@ -130,4 +130,21 @@ package body Binomial_Coefficients is
     return prod/quot;
   end binomial;
 
+  function binomial ( n,k : integer32 ) return hexa_double is
+
+    quot,prod : hexa_double := create(integer(1));
+    i_da : hexa_double;
+
+  begin
+    for i in 1..n-k loop
+      i_da := create(integer(i));
+      quot := i_da*quot;
+    end loop;
+    for i in k+1..n loop
+      i_da := create(integer(i));
+      prod := i_da*prod;
+    end loop;
+    return prod/quot;
+  end binomial;
+
 end Binomial_Coefficients;

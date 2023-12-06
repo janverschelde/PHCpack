@@ -14,6 +14,8 @@ with OctoDobl_Complex_Polynomials;
 with OctoDobl_Complex_Poly_Systems;
 with DecaDobl_Complex_Polynomials;
 with DecaDobl_Complex_Poly_Systems;
+with HexaDobl_Complex_Polynomials;
+with HexaDobl_Complex_Poly_Systems;
 with Standard_Complex_Series;
 with Standard_Complex_Series_Vectors;
 with Standard_Complex_Series_VecVecs;
@@ -63,6 +65,13 @@ with DecaDobl_Complex_Series_Matrices;
 with DecaDobl_CSeries_Polynomials;
 with DecaDobl_CSeries_Poly_Systems;
 with DecaDobl_CSeries_Jaco_Matrices;
+with HexaDobl_Complex_Series;
+with HexaDobl_Complex_Series_Vectors;
+with HexaDobl_Complex_Series_VecVecs;
+with HexaDobl_Complex_Series_Matrices;
+with HexaDobl_CSeries_Polynomials;
+with HexaDobl_CSeries_Poly_Systems;
+with HexaDobl_CSeries_Jaco_Matrices;
 
 package Complex_Series_and_Polynomials is
 
@@ -70,9 +79,9 @@ package Complex_Series_and_Polynomials is
 --   Exports functions to convert polynomials with complex coefficients
 --   into polynomials with series as coefficients, and vice versa.
 --   The conversion routines give immediate access to symbolic i/o.
---   Seven levels of precision are supported:
+--   Eight levels of precision are supported:
 --   double, double double, triple double, quad double,
---   penta double, octo double, and deca double precision.
+--   penta double, octo double, deca, and hexa double precision.
 
   function Series_to_Polynomial
              ( s : Standard_Complex_Series.Series )
@@ -95,12 +104,15 @@ package Complex_Series_and_Polynomials is
   function Series_to_Polynomial
              ( s : DecaDobl_Complex_Series.Series )
              return DecaDobl_Complex_Polynomials.Poly;
+  function Series_to_Polynomial
+             ( s : HexaDobl_Complex_Series.Series )
+             return HexaDobl_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns the representation of the series s as a polynomial
   --   in one variable with complex coefficients,
   --   in double, double double, triple double, quad double,
-  --   penta double, octo double, or deca double precision.
+  --   penta double, octo double, deca double, or hexa double precision.
   --   This conversion is useful for symbolic output of a series.
 
   function Polynomial_to_Series
@@ -131,12 +143,16 @@ package Complex_Series_and_Polynomials is
              ( p : DecaDobl_Complex_Polynomials.Poly;
                idx : integer32 := 1 )
              return DecaDobl_Complex_Series.Series;
+  function Polynomial_to_Series
+             ( p : HexaDobl_Complex_Polynomials.Poly;
+               idx : integer32 := 1 )
+             return HexaDobl_Complex_Series.Series;
 
   -- DESCRIPTION :
   --   Given in p a polynomial where the series variable has index idx,
   --   with complex coefficients, returns the series representation of p,
   --   in double, double double, triple double, quad double,
-  --   penta double, octo double, or deca double precision.
+  --   penta double, octo double, deca double, or hexa double precision.
   --   This conversion is useful for symbolic input of a series.
 
   -- REQUIRED : degree(p) <= Standard_Complex_Series.max_deg.
@@ -162,12 +178,15 @@ package Complex_Series_and_Polynomials is
   function Series_Vector_to_System
              ( v : DecaDobl_Complex_Series_Vectors.Vector )
              return DecaDobl_Complex_Poly_Systems.Poly_Sys;
+  function Series_Vector_to_System
+             ( v : HexaDobl_Complex_Series_Vectors.Vector )
+             return HexaDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   Returns the representation of all series in v as polynomials
   --   in one variable with complex coefficients,
   --   in double, double double, triple double, quad double,
-  --   penta double, octo double, or deca double precision.
+  --   penta double, octo double, deca double, or hexa double precision.
   --   This conversion is useful for symbolic output of a series.
 
   function System_to_Series_Vector
@@ -198,12 +217,16 @@ package Complex_Series_and_Polynomials is
              ( p : DecaDobl_Complex_Poly_Systems.Poly_Sys;
                idx : integer32 := 1 )
              return DecaDobl_Complex_Series_Vectors.Vector;
+  function System_to_Series_Vector
+             ( p : HexaDobl_Complex_Poly_Systems.Poly_Sys;
+               idx : integer32 := 1 )
+             return HexaDobl_Complex_Series_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Given in p a system where the series variable has index idx,
   --   with complex coefficients, returns the series representation of p,
   --   in double, double double, triple double, quad double,
-  --   penta double, octo double, or deca double precision.
+  --   penta double, octo double, deca double, or hexa double precision.
   --   This conversion is useful for symbolic input of a series.
 
   -- REQUIRED : degree(p(k)) <= Standard_Complex_Series.max_deg_
@@ -229,12 +252,15 @@ package Complex_Series_and_Polynomials is
   function Series_VecVec_to_System_Array
              ( v : DecaDobl_Complex_Series_VecVecs.VecVec )
              return DecaDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+  function Series_VecVec_to_System_Array
+             ( v : HexaDobl_Complex_Series_VecVecs.VecVec )
+             return HexaDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
 
   -- DESCRIPTION :
   --   Returns the representation of all series vectors in v 
   --   as polynomial systems in one variable with complex coefficients,
   --   in double, double double, triple double, quad double,
-  --   penta double, octo double, or deca double precision.
+  --   penta double, octo double, deca double, or hexa double precision.
   --   This conversion is useful for symbolic output of a series.
 
   function System_Array_to_Series_VecVec
@@ -265,12 +291,16 @@ package Complex_Series_and_Polynomials is
              ( p : DecaDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
                idx : integer32 := 1 )
              return DecaDobl_Complex_Series_VecVecs.VecVec;
+  function System_Array_to_Series_VecVec
+             ( p : HexaDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+               idx : integer32 := 1 )
+             return HexaDobl_Complex_Series_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Given in p a system array where the series variable has index idx,
   --   with complex coefficients, returns the series representation of p,
   --   in double, double double, triple double, quad double,
-  --   penta double, octo double, or deca double precision.
+  --   penta double, octo double, deca double, or hexa double precision.
   --   This conversion is useful for symbolic input of a series.
 
   -- REQUIRED : degree(p) <= Standard_Complex_Series.max_deg.
@@ -303,6 +333,10 @@ package Complex_Series_and_Polynomials is
              ( p : DecaDobl_Complex_Polynomials.Poly;
                idx : integer32 := 0; verbose : boolean := false )
              return DecaDobl_CSeries_Polynomials.Poly;
+  function Polynomial_to_Series_Polynomial
+             ( p : HexaDobl_Complex_Polynomials.Poly;
+               idx : integer32 := 0; verbose : boolean := false )
+             return HexaDobl_CSeries_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   By default, if idx is zero, then the coefficient of each term in p
@@ -341,6 +375,10 @@ package Complex_Series_and_Polynomials is
              ( s : DecaDobl_CSeries_Polynomials.Poly;
                idx : integer32 := 0; verbose : boolean := false )
              return DecaDobl_Complex_Polynomials.Poly;
+  function Series_Polynomial_to_Polynomial
+             ( s : HexaDobl_CSeries_Polynomials.Poly;
+               idx : integer32 := 0; verbose : boolean := false )
+             return HexaDobl_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Converts a polynomial s with coefficients as series
@@ -377,13 +415,17 @@ package Complex_Series_and_Polynomials is
              ( p : DecaDobl_Complex_Poly_Systems.Poly_Sys;
                idx : integer32 := 0; verbose : boolean := false )
              return DecaDobl_CSeries_Poly_Systems.Poly_Sys;
+  function System_to_Series_System
+             ( p : HexaDobl_Complex_Poly_Systems.Poly_Sys;
+               idx : integer32 := 0; verbose : boolean := false )
+             return HexaDobl_CSeries_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   Calls the Polynomial_to_Series_Polynomial to each p(i)
   --   and returns the corresponding system of polynomials
   --   which have as coefficients series with complex coefficients,
   --   in double, double double, triple double, quad double,
-  --   penta double, octo double, or deca double precision.
+  --   penta double, octo double, deca double, or hexa double precision.
 
   function Series_System_to_System
              ( s : Standard_CSeries_Poly_Systems.Poly_Sys;
@@ -413,12 +455,16 @@ package Complex_Series_and_Polynomials is
              ( s : DecaDobl_CSeries_Poly_Systems.Poly_Sys;
                idx : integer32 := 0; verbose : boolean := false )
              return DecaDobl_Complex_Poly_Systems.Poly_Sys;
+  function Series_System_to_System
+             ( s : HexaDobl_CSeries_Poly_Systems.Poly_Sys;
+               idx : integer32 := 0; verbose : boolean := false )
+             return HexaDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   Calls the Series_Polynomial_to_Polynomial to each p(i)
   --   and returns the corresponding system of series polynomials,
   --   in double, double double, triple double, quad double,
-  --   penta double, octo double, deca double precision.
+  --   penta double, octo double, deca double, hexa double precision.
 
   procedure Set_Degree ( v : in out Standard_Complex_Series_Vectors.Vector;
                          degree : in integer32 );
@@ -433,6 +479,8 @@ package Complex_Series_and_Polynomials is
   procedure Set_Degree ( v : in out OctoDobl_Complex_Series_Vectors.Vector;
                          degree : in integer32 );
   procedure Set_Degree ( v : in out DecaDobl_Complex_Series_Vectors.Vector;
+                         degree : in integer32 );
+  procedure Set_Degree ( v : in out HexaDobl_Complex_Series_Vectors.Vector;
                          degree : in integer32 );
 
   -- DESCRIPTION :
@@ -456,6 +504,8 @@ package Complex_Series_and_Polynomials is
                          degree : in integer32 );
   procedure Set_Degree ( m : in out DecaDobl_Complex_Series_Matrices.Matrix;
                          degree : in integer32 );
+  procedure Set_Degree ( m : in out HexaDobl_Complex_Series_Matrices.Matrix;
+                         degree : in integer32 );
 
   -- DESCRIPTION :
   --   Sets every series in the matrix m to the given degree,
@@ -474,6 +524,8 @@ package Complex_Series_and_Polynomials is
                          degree : in integer32 );
   procedure Set_Degree ( p : in out DecaDobl_CSeries_Polynomials.Poly;
                          degree : in integer32 );
+  procedure Set_Degree ( p : in out HexaDobl_CSeries_Polynomials.Poly;
+                         degree : in integer32 );
   procedure Set_Degree ( p : in out Standard_CSeries_Poly_Systems.Poly_Sys;
                          degree : in integer32 );
   procedure Set_Degree ( p : in out DoblDobl_CSeries_Poly_Systems.Poly_Sys;
@@ -488,6 +540,8 @@ package Complex_Series_and_Polynomials is
                          degree : in integer32 );
   procedure Set_Degree ( p : in out DecaDobl_CSeries_Poly_Systems.Poly_Sys;
                          degree : in integer32 );
+  procedure Set_Degree ( p : in out HexaDobl_CSeries_Poly_Systems.Poly_Sys;
+                         degree : in integer32 );
   procedure Set_Degree ( jm : in out Standard_CSeries_Jaco_Matrices.Jaco_Mat;
                          degree : in integer32 );
   procedure Set_Degree ( jm : in out DoblDobl_CSeries_Jaco_Matrices.Jaco_Mat;
@@ -501,6 +555,8 @@ package Complex_Series_and_Polynomials is
   procedure Set_Degree ( jm : in out OctoDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                          degree : in integer32 );
   procedure Set_Degree ( jm : in out DecaDobl_CSeries_Jaco_Matrices.Jaco_Mat;
+                         degree : in integer32 );
+  procedure Set_Degree ( jm : in out HexaDobl_CSeries_Jaco_Matrices.Jaco_Mat;
                          degree : in integer32 );
 
   -- DESCRIPTION :
@@ -521,6 +577,8 @@ package Complex_Series_and_Polynomials is
   procedure Filter ( s : in out OctoDobl_Complex_Series_Vectors.Vector;
                      tol : in double_float );
   procedure Filter ( s : in out DecaDobl_Complex_Series_Vectors.Vector;
+                     tol : in double_float );
+  procedure Filter ( s : in out HexaDobl_Complex_Series_Vectors.Vector;
                      tol : in double_float );
 
   -- DESCRIPTION :

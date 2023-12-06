@@ -28,6 +28,10 @@ with DecaDobl_Complex_Series;
 with DecaDobl_Complex_Series_Vectors;
 with DecaDobl_CSeries_Polynomials;
 with DecaDobl_CSeries_Poly_Systems;
+with HexaDobl_Complex_Series;
+with HexaDobl_Complex_Series_Vectors;
+with HexaDobl_CSeries_Polynomials;
+with HexaDobl_CSeries_Poly_Systems;
 
 package Complex_Series_and_Polynomials_io is
 
@@ -42,6 +46,7 @@ package Complex_Series_and_Polynomials_io is
   procedure get ( s : out PentDobl_Complex_Series.Series );
   procedure get ( s : out OctoDobl_Complex_Series.Series );
   procedure get ( s : out DecaDobl_Complex_Series.Series );
+  procedure get ( s : out HexaDobl_Complex_Series.Series );
   procedure get ( file : in file_type;
                   s : out Standard_Complex_Series.Series );
   procedure get ( file : in file_type;
@@ -56,6 +61,8 @@ package Complex_Series_and_Polynomials_io is
                   s : out OctoDobl_Complex_Series.Series );
   procedure get ( file : in file_type;
                   s : out DecaDobl_Complex_Series.Series );
+  procedure get ( file : in file_type;
+                  s : out HexaDobl_Complex_Series.Series );
 
   -- DESCRIPTION :
   --   Reads a polynomial in one variable and returns the
@@ -68,6 +75,7 @@ package Complex_Series_and_Polynomials_io is
   procedure put ( s : in PentDobl_Complex_Series.Series );
   procedure put ( s : in OctoDobl_Complex_Series.Series );
   procedure put ( s : in DecaDobl_Complex_Series.Series );
+  procedure put ( s : in HexaDobl_Complex_Series.Series );
   procedure put ( file : in file_type;
                   s : in Standard_Complex_Series.Series );
   procedure put ( file : in file_type;
@@ -82,6 +90,8 @@ package Complex_Series_and_Polynomials_io is
                   s : in OctoDobl_Complex_Series.Series );
   procedure put ( file : in file_type;
                   s : in DecaDobl_Complex_Series.Series );
+  procedure put ( file : in file_type;
+                  s : in HexaDobl_Complex_Series.Series );
 
   -- DESCRIPTION :
   --   Writes a polynomial in one variable,
@@ -101,6 +111,8 @@ package Complex_Series_and_Polynomials_io is
                   idx : in integer32 := 1; verbose : in boolean := false );
   procedure get ( lv : out DecaDobl_Complex_Series_Vectors.Link_to_Vector;
                   idx : in integer32 := 1; verbose : in boolean := false );
+  procedure get ( lv : out HexaDobl_Complex_Series_Vectors.Link_to_Vector;
+                  idx : in integer32 := 1; verbose : in boolean := false );
 
   -- DESCRIPTION :
   --   Asks the user first if the series are on file.
@@ -117,6 +129,7 @@ package Complex_Series_and_Polynomials_io is
   procedure put ( v : in PentDobl_Complex_Series_Vectors.Vector );
   procedure put ( v : in OctoDobl_Complex_Series_Vectors.Vector );
   procedure put ( v : in DecaDobl_Complex_Series_Vectors.Vector );
+  procedure put ( v : in HexaDobl_Complex_Series_Vectors.Vector );
   procedure put ( file : in file_type;
                   v : in Standard_Complex_Series_Vectors.Vector );
   procedure put ( file : in file_type;
@@ -131,6 +144,8 @@ package Complex_Series_and_Polynomials_io is
                   v : in OctoDobl_Complex_Series_Vectors.Vector );
   procedure put ( file : in file_type;
                   v : in DecaDobl_Complex_Series_Vectors.Vector );
+  procedure put ( file : in file_type;
+                  v : in HexaDobl_Complex_Series_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Writes the series as a system of v'length univariate polynomials
@@ -150,6 +165,8 @@ package Complex_Series_and_Polynomials_io is
   procedure get ( p : out OctoDobl_CSeries_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false );
   procedure get ( p : out DecaDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( p : out HexaDobl_CSeries_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false );
   procedure get ( file : in file_type;
                   p : out Standard_CSeries_Polynomials.Poly;
@@ -172,6 +189,9 @@ package Complex_Series_and_Polynomials_io is
   procedure get ( file : in file_type;
                   p : out DecaDobl_CSeries_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( file : in file_type;
+                  p : out HexaDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
 
   -- DESCRIPTION :
   --   If idx = 0, then all coefficients of p have degree zero.
@@ -193,6 +213,8 @@ package Complex_Series_and_Polynomials_io is
                   idx : in integer32 := 0; verbose : in boolean := false );
   procedure put ( p : in DecaDobl_CSeries_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( p : in HexaDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
   procedure put ( file : in file_type;
                   p : in Standard_CSeries_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false );
@@ -213,6 +235,9 @@ package Complex_Series_and_Polynomials_io is
                   idx : in integer32 := 0; verbose : in boolean := false );
   procedure put ( file : in file_type;
                   p : in DecaDobl_CSeries_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( file : in file_type;
+                  p : in HexaDobl_CSeries_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -236,6 +261,8 @@ package Complex_Series_and_Polynomials_io is
                   idx : in integer32 := 0; verbose : in boolean := false );
   procedure get ( ls : out DecaDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
                   idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( ls : out HexaDobl_CSeries_Poly_Systems.Link_to_Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
 
   -- DESCRIPTION :
   --   First asks the user whether the system is on file.
@@ -258,6 +285,8 @@ package Complex_Series_and_Polynomials_io is
                   idx : in integer32 := 0; verbose : in boolean := false );
   procedure put ( s : in DecaDobl_CSeries_Poly_Systems.Poly_Sys;
                   idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( s : in HexaDobl_CSeries_Poly_Systems.Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
   procedure put ( file : in file_type;
                   s : in Standard_CSeries_Poly_Systems.Poly_Sys;
                   idx : in integer32 := 0; verbose : in boolean := false );
@@ -278,6 +307,9 @@ package Complex_Series_and_Polynomials_io is
                   idx : in integer32 := 0; verbose : in boolean := false );
   procedure put ( file : in file_type;
                   s : in DecaDobl_CSeries_Poly_Systems.Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( file : in file_type;
+                  s : in HexaDobl_CSeries_Poly_Systems.Poly_Sys;
                   idx : in integer32 := 0; verbose : in boolean := false );
 
   -- DESCRIPTION :
