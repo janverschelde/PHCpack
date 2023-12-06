@@ -43,15 +43,16 @@ ts_extrapol                       : test on extrapolation
 ts_extrapts                       : points on skew line
 -------------------------------------------------------------------------------
 standard_newton_series            : Newton to compute series solutions
-standard_newton_matrix_series     : linearization in Newton on series matrices
 dobldobl_newton_series            : Newton on series in double double precision
+quaddobl_newton_series            : Newton on series in quad double precision
+standard_newton_matrix_series     : linearization in Newton on series matrices
 dobldobl_newton_matrix_series     : linearized Newton with double doubles
 tripdobl_newton_matrix_series     : linearized Newton with triple doubles
-quaddobl_newton_series            : Newton on series in quad double precision
 quaddobl_newton_matrix_series     : linearized Newton with quad doubles
 pentdobl_newton_matrix_series     : linearized Newton with penta doubles
 octodobl_newton_matrix_series     : linearized Newton with octo doubles
 decadobl_newton_matrix_series     : linearized Newton with deca doubles
+hexadobl_newton_matrix_series     : linearized Newton with hexa doubles
 test_sd_newton_matrix_series      : test Newton for series with doubles
 test_dd_newton_matrix_series      : test Newton for series with double doubles
 test_td_newton_matrix_series      : test Newton for series with triple doubles
@@ -59,6 +60,7 @@ test_qd_newton_matrix_series      : test Newton for series with quad doubles
 test_pd_newton_matrix_series      : test Newton for series with penta doubles
 test_od_newton_matrix_series      : test Newton for series with octo doubles
 test_da_newton_matrix_series      : test Newton for series with deca doubles
+test_hd_newton_matrix_series      : test Newton for series with hexa doubles
 ts_sernew                         : test on the Newton series packages
 series_and_solutions              : making series from solution vectors
 power_series_methods              : Newton's method on power series solutions

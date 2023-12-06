@@ -1,6 +1,8 @@
 Wed 6 Dec 2023 : new test_{sd,dd,qd}_newton_matrix_series with code taken
   from ts_sernew.adb.  New test_{td,pd,od,da}_newton_matrix_series for
   triple, penta, octo, and deca double precision; updated ts_sernew.adb.
+  New hexadobl_newton_matrix_series and test_hd_newton_matrix_series for
+  hexa double precision; updated ts_sernew.adb.
 
 Fri 18 Jun 2021 : extended main_pade_trackers, to prompt the user for the
   Laurent series option to run Newton's method at a series.
