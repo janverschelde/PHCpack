@@ -54,7 +54,11 @@ octodobl_newton_matrix_series     : linearized Newton with octo doubles
 decadobl_newton_matrix_series     : linearized Newton with deca doubles
 test_sd_newton_matrix_series      : test Newton for series with doubles
 test_dd_newton_matrix_series      : test Newton for series with double doubles
+test_td_newton_matrix_series      : test Newton for series with triple doubles
 test_qd_newton_matrix_series      : test Newton for series with quad doubles
+test_pd_newton_matrix_series      : test Newton for series with penta doubles
+test_od_newton_matrix_series      : test Newton for series with octo doubles
+test_da_newton_matrix_series      : test Newton for series with deca doubles
 ts_sernew                         : test on the Newton series packages
 series_and_solutions              : making series from solution vectors
 power_series_methods              : Newton's method on power series solutions
