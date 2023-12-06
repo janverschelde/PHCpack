@@ -1,4 +1,4 @@
-Univariate solvers and algebraic curves in PHCpack version 2.4.85
+Univariate solvers and algebraic curves in PHCpack version 2.4.87
 
 The numerical treatment of plane algebraic curves needs the solution of
 polynomial equations in one variable.  To solve univariate polynomials,
@@ -52,6 +52,9 @@ quaddobl_newton_matrix_series     : linearized Newton with quad doubles
 pentdobl_newton_matrix_series     : linearized Newton with penta doubles
 octodobl_newton_matrix_series     : linearized Newton with octo doubles
 decadobl_newton_matrix_series     : linearized Newton with deca doubles
+test_sd_newton_matrix_series      : test Newton for series with doubles
+test_dd_newton_matrix_series      : test Newton for series with double doubles
+test_qd_newton_matrix_series      : test Newton for series with quad doubles
 ts_sernew                         : test on the Newton series packages
 series_and_solutions              : making series from solution vectors
 power_series_methods              : Newton's method on power series solutions
