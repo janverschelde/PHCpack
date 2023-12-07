@@ -9,6 +9,7 @@ with Octo_Double_Numbers_io;             use Octo_Double_Numbers_io;
 with Deca_Double_Numbers_io;             use Deca_Double_Numbers_io;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
+with TripDobl_Complex_Numbers_io;        use TripDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Solutions_io;
@@ -26,13 +27,13 @@ with DecaDobl_Complex_Vectors;
 with DecaDobl_Complex_Solutions_io;
 with Complex_Series_and_Polynomials;
 with Complex_Series_and_Polynomials_io;
-with Standard_Newton_Matrix_Series; -- with Standard_Newton_Series;
-with DoblDobl_Newton_Matrix_Series; -- with DoblDobl_Newton_Series;
-with TripDobl_Newton_Matrix_Series; -- with TripDobl_Newton_Series;
-with QuadDobl_Newton_Matrix_Series; -- with QuadDobl_Newton_Series;
-with PentDobl_Newton_Matrix_Series; -- with PentDobl_Newton_Series;
-with OctoDobl_Newton_Matrix_Series; -- with OctoDobl_Newton_Series;
-with DecaDobl_Newton_Matrix_Series; -- with OctoDobl_Newton_Series;
+with Standard_Newton_Matrix_Series;
+with DoblDobl_Newton_Matrix_Series;
+with TripDobl_Newton_Matrix_Series;
+with QuadDobl_Newton_Matrix_Series;
+with PentDobl_Newton_Matrix_Series;
+with OctoDobl_Newton_Matrix_Series;
+with DecaDobl_Newton_Matrix_Series;
 
 package body Power_Series_Methods is
 
@@ -136,13 +137,62 @@ package body Power_Series_Methods is
 
   procedure Run_LU_Newton
              ( maxdeg,nbrit : in integer32;
+               p : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out TripDobl_Complex_Series_Vectors.Vector;
+               info : out integer32; verbose : in boolean := false;
+               vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_LU_Newton 5 ...");
+    end if;
+    Run_LU_Newton(standard_output,maxdeg,nbrit,p,s,info,verbose,vrblvl-1);
+  end Run_LU_Newton;
+
+  procedure Run_LU_Newton
+             ( file : in file_type; maxdeg,nbrit : in integer32;
+               p : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out TripDobl_Complex_Series_Vectors.Vector;
+               info : out integer32; verbose : in boolean := false;
+               vrblvl : in integer32 := 0 ) is
+
+    use TripDobl_Newton_Matrix_Series; -- use TripDobl_Newton_Series;
+
+    order : integer32 := 1;
+    tol : constant double_float := 1.0E-24;
+    eva : TripDobl_Complex_Series_Vectors.Vector(p'range);
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_LU_Newton 6 ...");
+    end if;
+    if not verbose then
+      LU_Newton_Steps(p,order,maxdeg,nbrit,s,info,vrblvl-1);
+    else
+      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,info,vrblvl-1);
+      if info /= 0 then
+        put(file,"info = "); put(file,info,1); new_line(file);
+      else
+        Complex_Series_and_Polynomials.Filter(s,tol);
+        put_line(file,"The updated power series solution :");
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := TripDobl_CSeries_Poly_SysFun.Eval(p,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
+        put_line(file,"The evaluated solution :");
+        Complex_Series_and_Polynomials_io.put(file,eva);
+        TripDobl_Complex_Series_Vectors.Clear(eva);
+      end if;
+    end if;
+  end Run_LU_Newton;
+
+  procedure Run_LU_Newton
+             ( maxdeg,nbrit : in integer32;
                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                info : out integer32; verbose : in boolean := false;
                vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 5 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 7 ...");
     end if;
     Run_LU_Newton(standard_output,maxdeg,nbrit,p,s,info,verbose,vrblvl-1);
   end Run_LU_Newton;
@@ -162,7 +212,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 6 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 8 ...");
     end if;
     if not verbose then
       LU_Newton_Steps(p,order,maxdeg,nbrit,s,info,vrblvl-1);
@@ -191,7 +241,7 @@ package body Power_Series_Methods is
                vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 7 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 9 ...");
     end if;
     Run_LU_Newton(standard_output,maxdeg,nbrit,p,s,rcond,verbose,vrblvl-1);
   end Run_LU_Newton;
@@ -211,7 +261,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 8 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 10 ...");
     end if;
     if not verbose then
       LU_Newton_Steps(p,order,maxdeg,nbrit,s,rcond,vrblvl-1);
@@ -239,7 +289,7 @@ package body Power_Series_Methods is
                vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 9 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 11 ...");
     end if;
     Run_LU_Newton(standard_output,maxdeg,nbrit,p,s,rcond,verbose,vrblvl-1);
   end Run_LU_Newton;
@@ -260,7 +310,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 10 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 12 ...");
     end if;
     if not verbose then
       LU_Newton_Steps(p,order,maxdeg,nbrit,s,rcond,vrblvl-1);
@@ -282,13 +332,62 @@ package body Power_Series_Methods is
 
   procedure Run_LU_Newton
              ( maxdeg,nbrit : in integer32;
+               p : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out TripDobl_Complex_Series_Vectors.Vector;
+               rcond : out triple_double; verbose : in boolean := false;
+               vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_LU_Newton 13 ...");
+    end if;
+    Run_LU_Newton(standard_output,maxdeg,nbrit,p,s,rcond,verbose,vrblvl-1);
+  end Run_LU_Newton;
+
+  procedure Run_LU_Newton
+             ( file : in file_type; maxdeg,nbrit : in integer32;
+               p : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out TripDobl_Complex_Series_Vectors.Vector;
+               rcond : out triple_double; verbose : in boolean := false;
+               vrblvl : in integer32 := 0 ) is
+
+    use TripDobl_Newton_Matrix_Series; -- use TripDobl_Newton_Series;
+
+    order : integer32 := 1;
+    tol : constant double_float := 1.0E-24;
+    eva : TripDobl_Complex_Series_Vectors.Vector(p'range);
+    one : constant triple_double := create(1.0);
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_LU_Newton 14 ...");
+    end if;
+    if not verbose then
+      LU_Newton_Steps(p,order,maxdeg,nbrit,s,rcond,vrblvl-1);
+    else
+      LU_Newton_Steps(file,p,order,maxdeg,nbrit,s,rcond,vrblvl-1);
+      put(file,"rcond : "); put(file,rcond,3); new_line(file);
+      if one + rcond /= one then
+        Complex_Series_and_Polynomials.Filter(s,tol);
+        put_line(file,"The updated power series solution :");
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := TripDobl_CSeries_Poly_SysFun.Eval(p,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
+        put_line(file,"The evaluated solution :");
+        Complex_Series_and_Polynomials_io.put(file,eva);
+        TripDobl_Complex_Series_Vectors.Clear(eva);
+      end if;
+    end if;
+  end Run_LU_Newton;
+
+  procedure Run_LU_Newton
+             ( maxdeg,nbrit : in integer32;
                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                rcond : out quad_double; verbose : in boolean := false;
                vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 11 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 15 ...");
     end if;
     Run_LU_Newton(standard_output,maxdeg,nbrit,p,s,rcond,verbose,vrblvl-1);
   end Run_LU_Newton;
@@ -309,7 +408,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 12 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 16 ...");
     end if;
     if not verbose then
       LU_Newton_Steps(p,order,maxdeg,nbrit,s,rcond,vrblvl-1);
@@ -342,7 +441,7 @@ package body Power_Series_Methods is
                vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 13 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 17 ...");
     end if;
     Run_LU_Newton
       (standard_output,maxdeg,nbrit,f,c,ejm,mlt,s,info,verbose,vrblvl-1);
@@ -366,7 +465,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 14 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 18 ...");
     end if;
     if not verbose then
       LU_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
@@ -398,7 +497,7 @@ package body Power_Series_Methods is
                vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 15 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 19 ...");
     end if;
     Run_LU_Newton
       (standard_output,maxdeg,nbrit,f,c,ejm,mlt,s,info,verbose,vrblvl-1);
@@ -422,7 +521,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 16 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 20 ...");
     end if;
     if not verbose then
       LU_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
@@ -445,6 +544,62 @@ package body Power_Series_Methods is
 
   procedure Run_LU_Newton
              ( maxdeg,nbrit : in integer32;
+               f : in TripDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+               c : in TripDobl_Complex_Series_VecVecs.VecVec;
+               ejm : in TripDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+               mlt : in TripDobl_CSeries_Jaco_Matrices.Mult_Factors;
+               s : in out TripDobl_Complex_Series_Vectors.Vector;
+               info : out integer32; verbose : in boolean := false;
+               vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_LU_Newton 21 ...");
+    end if;
+    Run_LU_Newton
+      (standard_output,maxdeg,nbrit,f,c,ejm,mlt,s,info,verbose,vrblvl-1);
+  end Run_LU_Newton;
+
+  procedure Run_LU_Newton
+             ( file : in file_type; maxdeg,nbrit : in integer32;
+               f : in TripDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+               c : in TripDobl_Complex_Series_VecVecs.VecVec;
+               ejm : in TripDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+               mlt : in TripDobl_CSeries_Jaco_Matrices.Mult_Factors;
+               s : in out TripDobl_Complex_Series_Vectors.Vector;
+               info : out integer32; verbose : in boolean := false;
+               vrblvl : in integer32 := 0 ) is
+
+    use TripDobl_Newton_Matrix_Series;
+
+    order : integer32 := 1;
+    tol : constant double_float := 1.0E-12;
+    eva : TripDobl_Complex_Series_Vectors.Vector(f'range);
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_LU_Newton 22 ...");
+    end if;
+    if not verbose then
+      LU_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
+    else
+      LU_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
+      if info /= 0 then
+        put(file,"info = "); put(file,info,1); new_line(file);
+      else
+        Complex_Series_and_Polynomials.Filter(s,tol);
+        put_line(file,"The updated power series solution :");
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := TripDobl_CSeries_Poly_SysFun.Eval(f,c,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
+        put_line(file,"The evaluated solution :");
+        Complex_Series_and_Polynomials_io.put(file,eva);
+        TripDobl_Complex_Series_Vectors.Clear(eva);
+      end if;
+    end if;
+  end Run_LU_Newton;
+
+  procedure Run_LU_Newton
+             ( maxdeg,nbrit : in integer32;
                f : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                c : in QuadDobl_Complex_Series_VecVecs.VecVec;
                ejm : in QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
@@ -454,7 +609,7 @@ package body Power_Series_Methods is
                vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 17 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 23 ...");
     end if;
     Run_LU_Newton
       (standard_output,maxdeg,nbrit,f,c,ejm,mlt,s,info,verbose,vrblvl-1);
@@ -478,7 +633,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 18 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 24 ...");
     end if;
     if not verbose then
       LU_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
@@ -569,7 +724,7 @@ package body Power_Series_Methods is
                verbose : in boolean := false;
                vrblvl : in integer32 := 0 ) is
 
-    use DoblDobl_Newton_Matrix_Series; -- use DoblDobl_Newton_Series;
+    use DoblDobl_Newton_Matrix_Series;
 
     order : integer32 := 1;
     info : integer32;
@@ -601,13 +756,63 @@ package body Power_Series_Methods is
 
   procedure Run_QR_Newton
              ( maxdeg,nbrit : in integer32;
+               p : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out TripDobl_Complex_Series_Vectors.Vector;
+               verbose : in boolean := false;
+               vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_QR_Newton 5 ...");
+    end if;
+    Run_QR_Newton(standard_output,maxdeg,nbrit,p,s,verbose,vrblvl-1);
+  end Run_QR_Newton;
+
+  procedure Run_QR_Newton
+             ( file : in file_type; maxdeg,nbrit : in integer32;
+               p : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+               s : in out TripDobl_Complex_Series_Vectors.Vector;
+               verbose : in boolean := false;
+               vrblvl : in integer32 := 0 ) is
+
+    use TripDobl_Newton_Matrix_Series;
+
+    order : integer32 := 1;
+    info : integer32;
+    tol : constant double_float := 1.0E-24;
+    eva : TripDobl_Complex_Series_Vectors.Vector(p'range);
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_QR_Newton 6 ...");
+    end if;
+    if not verbose then
+      QR_Newton_Steps(p,order,maxdeg,nbrit,s,info,vrblvl-1);
+    else
+      QR_Newton_Steps(file,p,order,maxdeg,nbrit,s,info,vrblvl-1);
+      if info /= 0 then
+        put(file,"info = "); put(file,info,1); new_line(file);
+      else
+        Complex_Series_and_Polynomials.Filter(s,tol);
+        put_line(file,"The updated power series solution :");
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := TripDobl_CSeries_Poly_SysFun.Eval(p,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
+        put_line(file,"The evaluated solution :");
+        Complex_Series_and_Polynomials_io.put(file,eva);
+        TripDobl_Complex_Series_Vectors.Clear(eva);
+      end if;
+    end if;
+  end Run_QR_Newton;
+
+  procedure Run_QR_Newton
+             ( maxdeg,nbrit : in integer32;
                p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out QuadDobl_Complex_Series_Vectors.Vector;
                verbose : in boolean := false;
                vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_QR_Newton 5 ...");
+     then put_line("-> in power_series_methods.Run_QR_Newton 7 ...");
     end if;
     Run_QR_Newton(standard_output,maxdeg,nbrit,p,s,verbose,vrblvl-1);
   end Run_QR_Newton;
@@ -628,7 +833,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_QR_Newton 6 ...");
+     then put_line("-> in power_series_methods.Run_QR_Newton 8 ...");
     end if;
     if not verbose then
       QR_Newton_Steps(p,order,maxdeg,nbrit,s,info,vrblvl-1);
@@ -662,7 +867,7 @@ package body Power_Series_Methods is
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_QR_Newton 7 ...");
+     then put_line("-> in power_series_methods.Run_QR_Newton 9 ...");
     end if;
     Run_QR_Newton(standard_output,maxdeg,nbrit,f,c,ejm,mlt,s,verbose,vrblvl-1);
   end Run_QR_Newton;
@@ -677,7 +882,7 @@ package body Power_Series_Methods is
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
 
-    use Standard_Newton_Matrix_Series; -- use Standard_Newton_Series;
+    use Standard_Newton_Matrix_Series;
 
     order : integer32 := 1;
     info : integer32;
@@ -686,7 +891,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_QR_Newton 8 ...");
+     then put_line("-> in power_series_methods.Run_QR_Newton 10 ...");
     end if;
     if not verbose then
       QR_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
@@ -718,7 +923,7 @@ package body Power_Series_Methods is
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_QR_Newton 9 ...");
+     then put_line("-> in power_series_methods.Run_QR_Newton 11 ...");
     end if;
     Run_QR_Newton(standard_output,maxdeg,nbrit,f,c,ejm,mlt,s,verbose,vrblvl-1);
   end Run_QR_Newton;
@@ -733,7 +938,7 @@ package body Power_Series_Methods is
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
 
-    use DoblDobl_Newton_Matrix_Series; -- use DoblDobl_Newton_Series;
+    use DoblDobl_Newton_Matrix_Series;
 
     order : integer32 := 1;
     info : integer32;
@@ -742,7 +947,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_QR_Newton 10 ...");
+     then put_line("-> in power_series_methods.Run_QR_Newton 12 ...");
     end if;
     if not verbose then
       QR_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
@@ -765,6 +970,62 @@ package body Power_Series_Methods is
 
   procedure Run_QR_Newton
               ( maxdeg,nbrit : in integer32;
+                f : in TripDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in TripDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in TripDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in TripDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                s : in out TripDobl_Complex_Series_Vectors.Vector;
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_QR_Newton 13 ...");
+    end if;
+    Run_QR_Newton(standard_output,maxdeg,nbrit,f,c,ejm,mlt,s,verbose,vrblvl-1);
+  end Run_QR_Newton;
+
+  procedure Run_QR_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                f : in TripDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
+                c : in TripDobl_Complex_Series_VecVecs.VecVec;
+                ejm : in TripDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
+                mlt : in TripDobl_CSeries_Jaco_Matrices.Mult_Factors;
+                s : in out TripDobl_Complex_Series_Vectors.Vector;
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
+
+    use TripDobl_Newton_Matrix_Series;
+
+    order : integer32 := 1;
+    info : integer32;
+    tol : constant double_float := 1.0E-24;
+    eva : TripDobl_Complex_Series_Vectors.Vector(f'range);
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_QR_Newton 14 ...");
+    end if;
+    if not verbose then
+      QR_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
+    else
+      QR_Newton_Steps(file,f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
+      if info /= 0 then
+        put(file,"info = "); put(file,info,1); new_line(file);
+      else
+        Complex_Series_and_Polynomials.Filter(s,tol);
+        put_line(file,"The updated power series solution :");
+        Complex_Series_and_Polynomials_io.put(file,s);
+        eva := TripDobl_CSeries_Poly_SysFun.Eval(f,c,s);
+        Complex_Series_and_Polynomials.Filter(eva,tol);
+        put_line(file,"The evaluated solution :");
+        Complex_Series_and_Polynomials_io.put(file,eva);
+        TripDobl_Complex_Series_Vectors.Clear(eva);
+      end if;
+    end if;
+  end Run_QR_Newton;
+
+  procedure Run_QR_Newton
+              ( maxdeg,nbrit : in integer32;
                 f : in QuadDobl_CSeries_Poly_SysFun.Eval_Coeff_Poly_Sys;
                 c : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 ejm : in QuadDobl_CSeries_Jaco_Matrices.Eval_Coeff_Jaco_Mat;
@@ -774,7 +1035,7 @@ package body Power_Series_Methods is
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_QR_Newton 11 ...");
+     then put_line("-> in power_series_methods.Run_QR_Newton 15 ...");
     end if;
     Run_QR_Newton(standard_output,maxdeg,nbrit,f,c,ejm,mlt,s,verbose,vrblvl-1);
   end Run_QR_Newton;
@@ -789,7 +1050,7 @@ package body Power_Series_Methods is
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
 
-    use QuadDobl_Newton_Matrix_Series; -- use QuadDobl_Newton_Series;
+    use QuadDobl_Newton_Matrix_Series;
 
     order : integer32 := 1;
     info : integer32;
@@ -798,7 +1059,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_QR_Newton 12 ...");
+     then put_line("-> in power_series_methods.Run_QR_Newton 16 ...");
     end if;
     if not verbose then
       QR_Newton_Steps(f,c,ejm,mlt,order,maxdeg,nbrit,s,info,vrblvl-1);
@@ -1272,6 +1533,54 @@ package body Power_Series_Methods is
 
   procedure Run_Echelon_Newton
               ( maxdeg,nbrit : in integer32;
+                p : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out TripDobl_Complex_Series_Vectors.Vector;
+                det : out TripDobl_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_Echelon_Newton 5 ...");
+    end if;
+    Run_Echelon_Newton(standard_output,maxdeg,nbrit,p,s,det,verbose,vrblvl-1);
+  end Run_Echelon_Newton;
+
+  procedure Run_Echelon_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                p : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+                s : in out TripDobl_Complex_Series_Vectors.Vector;
+                det : out TripDobl_Complex_Numbers.Complex_Number;
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
+
+    use TripDobl_Newton_Matrix_Series;
+
+    order : integer32 := 1;
+    tol : constant double_float := 1.0E-12;
+    eva : TripDobl_Complex_Series_Vectors.Vector(p'range);
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_Echelon_Newton 6 ...");
+    end if;
+    if not verbose then
+      Echelon_Newton_Steps(p,order,maxdeg,nbrit,s,det,vrblvl-1);
+    else
+      Echelon_Newton_Steps(file,p,order,maxdeg,nbrit,s,det,vrblvl-1);
+      put(file,"det : "); put(file,det); new_line(file);
+      Complex_Series_and_Polynomials.Filter(s,tol);
+      put_line(file,"The updated power series solution :");
+      Complex_Series_and_Polynomials_io.put(file,s);
+      eva := TripDobl_CSeries_Poly_SysFun.Eval(p,s);
+      Complex_Series_and_Polynomials.Filter(eva,tol);
+      put_line(file,"The evaluated solution :");
+      Complex_Series_and_Polynomials_io.put(file,eva);
+      TripDobl_Complex_Series_Vectors.Clear(eva);
+    end if;
+  end Run_Echelon_Newton;
+
+  procedure Run_Echelon_Newton
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 s : in out QuadDobl_Complex_Series_Vectors.Vector;
                 det : out QuadDobl_Complex_Numbers.Complex_Number;
@@ -1279,7 +1588,7 @@ package body Power_Series_Methods is
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_Echelon_Newton 5 ...");
+     then put_line("-> in power_series_methods.Run_Echelon_Newton 7 ...");
     end if;
     Run_Echelon_Newton(standard_output,maxdeg,nbrit,p,s,det,verbose,vrblvl-1);
   end Run_Echelon_Newton;
@@ -1300,7 +1609,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_Echelon_Newton 6 ...");
+     then put_line("-> in power_series_methods.Run_Echelon_Newton 8 ...");
     end if;
     if not verbose then
       Echelon_Newton_Steps(p,order,maxdeg,nbrit,s,det,vrblvl-1);
@@ -1331,7 +1640,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 19 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 25 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -1369,7 +1678,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 20 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 26 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -1396,6 +1705,44 @@ package body Power_Series_Methods is
 
   procedure Run_LU_Newton
               ( maxdeg,nbrit : in integer32;
+                p : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in TripDobl_Complex_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                pause : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
+
+    ans : character;
+    info : integer32;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_LU_Newton 27 ...");
+    end if;
+    for i in v'range loop
+      if verbose then
+        put("Running on solution "); put(i,1); put_line(" ...");
+        declare
+          lvi : constant TripDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          sol : TripDobl_Complex_Vectors.Vector(lvi'range);
+        begin
+          for k in sol'range loop
+            sol(k) := lvi(k).cff(0);
+          end loop;
+          TripDobl_Complex_Solutions_io.put_vector(sol);
+        end;
+      end if;
+      Run_LU_Newton(maxdeg,nbrit,p,v(i).all,info,verbose,vrblvl-1);
+      if verbose then
+        if pause then
+          put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+          exit when (ans /= 'y');
+        end if;
+      end if;
+    end loop;
+  end Run_LU_Newton;
+
+  procedure Run_LU_Newton
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
@@ -1407,7 +1754,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 21 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 28 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -1443,7 +1790,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 22 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 29 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -1474,7 +1821,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 23 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 30 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -1496,6 +1843,37 @@ package body Power_Series_Methods is
 
   procedure Run_LU_Newton
               ( file : in file_type; maxdeg,nbrit : in integer32;
+                p : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in TripDobl_Complex_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
+
+    info : integer32;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_LU_Newton 31 ...");
+    end if;
+    for i in v'range loop
+      if verbose then
+        put(file,"Running on solution ");
+        put(file,i,1); put_line(file," ...");
+        declare
+          lvi : constant TripDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          sol : TripDobl_Complex_Vectors.Vector(lvi'range);
+        begin
+          for k in sol'range loop
+            sol(k) := lvi(k).cff(0);
+          end loop;
+          TripDobl_Complex_Solutions_io.put_vector(file,sol);
+        end;
+      end if;
+      Run_LU_Newton(file,maxdeg,nbrit,p,v(i).all,info,verbose,vrblvl-1);
+    end loop;
+  end Run_LU_Newton;
+
+  procedure Run_LU_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
@@ -1505,7 +1883,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_LU_Newton 24 ...");
+     then put_line("-> in power_series_methods.Run_LU_Newton 32 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -1537,7 +1915,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_QR_Newton 13 ...");
+     then put_line("-> in power_series_methods.Run_QR_Newton 17 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -1574,7 +1952,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_QR_Newton 14 ...");
+     then put_line("-> in power_series_methods.Run_QR_Newton 18 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -1601,6 +1979,43 @@ package body Power_Series_Methods is
 
   procedure Run_QR_Newton
               ( maxdeg,nbrit : in integer32;
+                p : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in TripDobl_Complex_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                pause : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
+
+    ans : character;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_QR_Newton 19 ...");
+    end if;
+    for i in v'range loop
+      if verbose then
+        put("Running on solution "); put(i,1); put_line(" ...");
+        declare
+          lvi : constant TripDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          sol : TripDobl_Complex_Vectors.Vector(lvi'range);
+        begin
+          for k in sol'range loop
+            sol(k) := lvi(k).cff(0);
+          end loop;
+          TripDobl_Complex_Solutions_io.put_vector(sol);
+        end;
+      end if;
+      Run_QR_Newton(maxdeg,nbrit,p,v(i).all,verbose,vrblvl-1);
+      if verbose then
+        if pause then
+          put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+          exit when (ans /= 'y');
+        end if;
+      end if;
+    end loop;
+  end Run_QR_Newton;
+
+  procedure Run_QR_Newton
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
@@ -1611,7 +2026,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_QR_Newton 15 ...");
+     then put_line("-> in power_series_methods.Run_QR_Newton 20 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -1644,7 +2059,7 @@ package body Power_Series_Methods is
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_QR_Newton 16 ...");
+     then put_line("-> in power_series_methods.Run_QR_Newton 21 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -1672,7 +2087,7 @@ package body Power_Series_Methods is
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_QR_Newton 17 ...");
+     then put_line("-> in power_series_methods.Run_QR_Newton 22 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -1694,13 +2109,41 @@ package body Power_Series_Methods is
 
   procedure Run_QR_Newton
               ( file : in file_type; maxdeg,nbrit : in integer32;
+                p : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in TripDobl_Complex_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_QR_Newton 23 ...");
+    end if;
+    for i in v'range loop
+      if verbose then
+        put(file,"Running on solution ");
+        put(file,i,1); put_line(file," ...");
+        declare
+          lvi : constant TripDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          sol : TripDobl_Complex_Vectors.Vector(lvi'range);
+        begin
+          for k in sol'range loop
+            sol(k) := lvi(k).cff(0);
+          end loop;
+          TripDobl_Complex_Solutions_io.put_vector(file,sol);
+        end;
+      end if;
+      Run_QR_Newton(file,maxdeg,nbrit,p,v(i).all,verbose,vrblvl-1);
+    end loop;
+  end Run_QR_Newton;
+
+  procedure Run_QR_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_QR_Newton 18 ...");
+     then put_line("-> in power_series_methods.Run_QR_Newton 24 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -2216,7 +2659,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_Echelon_Newton 7 ...");
+     then put_line("-> in power_series_methods.Run_Echelon_Newton 9 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -2254,7 +2697,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_Echelon_Newton 8 ...");
+     then put_line("-> in power_series_methods.Run_Echelon_Newton 10 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -2281,6 +2724,44 @@ package body Power_Series_Methods is
 
   procedure Run_Echelon_Newton
               ( maxdeg,nbrit : in integer32;
+                p : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in TripDobl_Complex_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                pause : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
+
+    ans : character;
+    det : TripDobl_Complex_Numbers.Complex_Number;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_Echelon_Newton 11 ...");
+    end if;
+    for i in v'range loop
+      if verbose then
+        put("Running on solution "); put(i,1); put_line(" ...");
+        declare
+          lvi : constant TripDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          sol : TripDobl_Complex_Vectors.Vector(lvi'range);
+        begin
+          for k in sol'range loop
+            sol(k) := lvi(k).cff(0);
+          end loop;
+          TripDobl_Complex_Solutions_io.put_vector(sol);
+        end;
+      end if;
+      Run_Echelon_Newton(maxdeg,nbrit,p,v(i).all,det,verbose,vrblvl-1);
+      if verbose then
+        if pause then
+          put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+          exit when (ans /= 'y');
+        end if;
+      end if;
+    end loop;
+  end Run_Echelon_Newton;
+
+  procedure Run_Echelon_Newton
+              ( maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
@@ -2292,7 +2773,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_Echelon_Newton 9 ...");
+     then put_line("-> in power_series_methods.Run_Echelon_Newton 12 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -2328,7 +2809,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_Echelon_Newton 10 ...");
+     then put_line("-> in power_series_methods.Run_Echelon_Newton 13 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -2359,7 +2840,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_Echelon_Newton 11 ...");
+     then put_line("-> in power_series_methods.Run_Echelon_Newton 14 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -2381,6 +2862,37 @@ package body Power_Series_Methods is
 
   procedure Run_Echelon_Newton
               ( file : in file_type; maxdeg,nbrit : in integer32;
+                p : in TripDobl_CSeries_Poly_Systems.Poly_Sys;
+                v : in TripDobl_Complex_Series_VecVecs.VecVec;
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
+
+    det : TripDobl_Complex_Numbers.Complex_Number;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_Echelon_Newton 15 ...");
+    end if;
+    for i in v'range loop
+      if verbose then
+        put(file,"Running on solution ");
+        put(file,i,1); put_line(file," ...");
+        declare
+          lvi : constant TripDobl_Complex_Series_Vectors.Link_to_Vector := v(i);
+          sol : TripDobl_Complex_Vectors.Vector(lvi'range);
+        begin
+          for k in sol'range loop
+            sol(k) := lvi(k).cff(0);
+          end loop;
+          TripDobl_Complex_Solutions_io.put_vector(file,sol);
+        end;
+      end if;
+      Run_Echelon_Newton(file,maxdeg,nbrit,p,v(i).all,det,verbose,vrblvl-1);
+    end loop;
+  end Run_Echelon_Newton;
+
+  procedure Run_Echelon_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in QuadDobl_CSeries_Poly_Systems.Poly_Sys;
                 v : in QuadDobl_Complex_Series_VecVecs.VecVec;
                 verbose : in boolean := false;
@@ -2390,7 +2902,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_Echelon_Newton 12 ...");
+     then put_line("-> in power_series_methods.Run_Echelon_Newton 16 ...");
     end if;
     for i in v'range loop
       if verbose then

@@ -13,6 +13,8 @@ with OctoDobl_Complex_Vectors;
 with OctoDobl_Complex_Solutions;
 with DecaDobl_Complex_Vectors;
 with DecaDobl_Complex_Solutions;
+with HexaDobl_Complex_Vectors;
+with HexaDobl_Complex_Solutions;
 with Standard_Complex_Series_Vectors;
 with Standard_Complex_Series_VecVecs;
 with DoblDobl_Complex_Series_Vectors;
@@ -27,6 +29,8 @@ with OctoDobl_Complex_Series_Vectors;
 with OctoDobl_Complex_Series_VecVecs;
 with DecaDobl_Complex_Series_Vectors;
 with DecaDobl_Complex_Series_VecVecs;
+with HexaDobl_Complex_Series_Vectors;
+with HexaDobl_Complex_Series_VecVecs;
 
 package Series_and_Solutions is
 
@@ -55,6 +59,9 @@ package Series_and_Solutions is
   function Create ( sol : DecaDobl_Complex_Vectors.Vector;
                     idx : integer32 ) 
                   return DecaDobl_Complex_Series_Vectors.Vector;
+  function Create ( sol : HexaDobl_Complex_Vectors.Vector;
+                    idx : integer32 ) 
+                  return HexaDobl_Complex_Series_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Takes the coordinates of the vector sol and returns a vector of 
@@ -84,6 +91,9 @@ package Series_and_Solutions is
   function Create ( sol : DecaDobl_Complex_Solutions.Solution;
                     idx : integer32 ) 
                   return DecaDobl_Complex_Series_Vectors.Vector;
+  function Create ( sol : HexaDobl_Complex_Solutions.Solution;
+                    idx : integer32 ) 
+                  return HexaDobl_Complex_Series_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Takes the coordinates of the solution and returns a vector of 
@@ -113,6 +123,9 @@ package Series_and_Solutions is
   function Create ( sols : DecaDobl_Complex_Solutions.Solution_List;
                     idx : integer32 ) 
                   return DecaDobl_Complex_Series_VecVecs.VecVec;
+  function Create ( sols : HexaDobl_Complex_Solutions.Solution_List;
+                    idx : integer32 ) 
+                  return HexaDobl_Complex_Series_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Returns a vector of vectors of series.  The series are defined
