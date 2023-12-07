@@ -6,6 +6,7 @@ with QuadDobl_Complex_Numbers;
 with PentDobl_Complex_Numbers;
 with OctoDobl_Complex_Numbers;
 with DecaDobl_Complex_Numbers;
+with HexaDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
@@ -19,6 +20,8 @@ with PentDobl_Complex_Vectors;
 with OctoDobl_Complex_Vectors;
 with DecaDobl_Complex_Vectors;
 with DecaDobl_Complex_Vectors_cv;        use DecaDobl_Complex_Vectors_cv;
+with HexaDobl_Complex_Vectors;
+--with HexaDobl_Complex_Vectors_cv;        use HexaDobl_Complex_Vectors_cv;
 with Varbprec_VecVec_Conversions;
 with Standard_Complex_Series;
 with DoblDobl_Complex_Series;
@@ -27,6 +30,7 @@ with QuadDobl_Complex_Series;
 with PentDobl_Complex_Series;
 with OctoDobl_Complex_Series;
 with DecaDobl_Complex_Series;
+with HexaDobl_Complex_Series;
 with Exponent_Indices;
 
 package body System_Convolution_Circuits is
@@ -255,6 +259,38 @@ package body System_Convolution_Circuits is
     return true;
   end Is_Zero;
 
+  function Is_Zero ( d : HexaDobl_Complex_Polynomials.Degrees )
+                   return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if all entries of d are zero,
+  --   return false otherwise.
+
+  begin
+    for i in d'range loop
+      if d(i) /= 0
+       then return false;
+      end if;
+    end loop;
+    return true;
+  end Is_Zero;
+
+  function Is_Zero ( d : HexaDobl_CSeries_Polynomials.Degrees )
+                   return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if all entries of d are zero,
+  --   return false otherwise.
+
+  begin
+    for i in d'range loop
+      if d(i) /= 0
+       then return false;
+      end if;
+    end loop;
+    return true;
+  end Is_Zero;
+
   function Nonzero_Constant
              ( c : Standard_Complex_Numbers.Complex_Number )
              return integer32 is
@@ -371,6 +407,24 @@ package body System_Convolution_Circuits is
   --   Returns 1 if c is nonzero, 0 otherwise.
 
     use DecaDobl_Complex_Numbers;
+
+    cmplxzero : constant Complex_Number := Create(integer32(0));
+
+  begin
+    if c = cmplxzero
+     then return 0;
+     else return 1;
+    end if;
+  end Nonzero_Constant;
+
+  function Nonzero_Constant
+             ( c : HexaDobl_Complex_Numbers.Complex_Number )
+             return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns 1 if c is nonzero, 0 otherwise.
+
+    use HexaDobl_Complex_Numbers;
 
     cmplxzero : constant Complex_Number := Create(integer32(0));
 
@@ -540,6 +594,31 @@ package body System_Convolution_Circuits is
 
     use DecaDobl_Complex_Numbers;
     use DecaDobl_Complex_Series;
+
+    cmplxzero : constant Complex_Number := create(integer(0));
+
+  begin
+    if s = null then
+      return 0;
+    else
+      for k in s.cff'range loop
+        if s.cff(k) /= cmplxzero
+         then return 1;
+        end if;
+      end loop;
+      return 0;
+    end if;
+  end Nonzero_Constant;
+
+  function Nonzero_Constant
+             ( s : HexaDobl_Complex_Series.Link_to_Series )
+             return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns 1 if s /= null, 0 otherwise.
+
+    use HexaDobl_Complex_Numbers;
+    use HexaDobl_Complex_Series;
 
     cmplxzero : constant Complex_Number := create(integer(0));
 
@@ -998,6 +1077,69 @@ package body System_Convolution_Circuits is
   end Make_Convolution_Circuit;
 
   function Make_Convolution_Circuit
+             ( p : HexaDobl_Complex_Polynomials.Poly;
+               d : natural32 )
+             return HexaDobl_Speelpenning_Convolutions.Circuit is
+
+    use HexaDobl_Speelpenning_Convolutions;
+
+    deg : constant integer32 := integer32(d);
+    dim : constant integer32
+        := integer32(HexaDobl_Complex_Polynomials.Number_of_Unknowns(p));
+    zero : HexaDobl_Complex_Polynomials.Degrees
+         := new Standard_Natural_Vectors.Vector'(1..dim => 0);
+    cmplxzero : constant HexaDobl_Complex_Numbers.Complex_Number
+              := HexaDobl_Complex_Numbers.Create(integer32(0));
+    cst : constant HexaDobl_Complex_Numbers.Complex_Number
+        := HexaDobl_Complex_Polynomials.Coeff(p,zero);
+    nbr : constant integer32
+        := integer32(HexaDobl_Complex_Polynomials.Number_of_Terms(p))
+           - Nonzero_Constant(cst);
+    res : Circuit(nbr,dim,dim-1,dim-2);
+    idx : integer32 := 0;
+
+    procedure Visit_Term ( t : in HexaDobl_Complex_Polynomials.Term;
+                           continue : out boolean ) is
+
+      use HexaDobl_Complex_Polynomials;
+
+    begin
+      if not Is_Zero(t.dg) then
+        idx := idx + 1;
+        declare
+          cf : HexaDobl_Complex_Vectors.Vector(0..deg) := (0..deg => cmplxzero);
+          xp : Standard_Integer_Vectors.Vector(1..dim);
+        begin
+          cf(0) := t.cf;
+          res.cff(idx) := new HexaDobl_Complex_Vectors.Vector'(cf);
+          for i in t.dg'range loop
+            xp(i) := integer32(t.dg(i));
+          end loop;
+          res.xps(idx) := new Standard_Integer_Vectors.Vector'(xp);
+        end;
+      end if;
+      continue := true;
+    end Visit_Term;
+    procedure Visit_Terms is
+      new HexaDobl_Complex_Polynomials.Visiting_Iterator(Visit_Term);
+
+  begin
+    Visit_Terms(p);
+    res.idx := Exponent_Indices.Exponent_Index(res.xps);
+    res.fac := Exponent_Indices.Factor_Index(res.xps);
+    res.cst := new HexaDobl_Complex_Vectors.Vector'(0..deg => cmplxzero);
+    res.cst(0) := cst;
+    res.forward := Allocate_Coefficients(dim-1,deg);
+    res.backward := Allocate_Coefficients(dim-2,deg);
+    res.cross := Allocate_Coefficients(dim-2,deg);
+    res.wrk := Allocate_Coefficients(deg);
+    res.acc := Allocate_Coefficients(deg);
+    Standard_Natural_Vectors.Clear
+      (Standard_Natural_Vectors.Link_to_Vector(zero));
+    return res;
+  end Make_Convolution_Circuit;
+
+  function Make_Convolution_Circuit
              ( p : Standard_CSeries_Polynomials.Poly )
              return Standard_Speelpenning_Convolutions.Circuit is
 
@@ -1396,6 +1538,63 @@ package body System_Convolution_Circuits is
     return res;
   end Make_Convolution_Circuit;
 
+  function Make_Convolution_Circuit
+             ( p : HexaDobl_CSeries_Polynomials.Poly )
+             return HexaDobl_Speelpenning_Convolutions.Circuit is
+
+    use HexaDobl_Speelpenning_Convolutions;
+
+    dim : constant integer32
+        := integer32(HexaDobl_CSeries_Polynomials.Number_of_Unknowns(p));
+    zero : HexaDobl_CSeries_Polynomials.Degrees
+         := new Standard_Natural_Vectors.Vector'(1..dim => 0);
+    cst : constant HexaDobl_Complex_Series.Link_to_Series
+        := HexaDobl_CSeries_Polynomials.Coeff(p,zero);
+    nbr : constant integer32
+        := integer32(HexaDobl_CSeries_Polynomials.Number_of_Terms(p))
+           - Nonzero_Constant(cst);
+    res : Circuit(nbr,dim,dim-1,dim-2);
+    idx,deg : integer32 := 0;
+
+    procedure Visit_Term ( t : in HexaDobl_CSeries_Polynomials.Term;
+                           continue : out boolean ) is
+
+      use HexaDobl_CSeries_Polynomials;
+
+    begin
+      if not Is_Zero(t.dg) then
+        idx := idx + 1;
+        res.cff(idx) := new HexaDobl_Complex_Vectors.Vector'(t.cf.cff);
+        declare
+          xp : Standard_Integer_Vectors.Vector(1..dim);
+        begin
+          for i in t.dg'range loop
+            xp(i) := integer32(t.dg(i));
+          end loop;
+          res.xps(idx) := new Standard_Integer_Vectors.Vector'(xp);
+        end;
+      end if;
+      continue := true;
+    end Visit_Term;
+    procedure Visit_Terms is
+      new HexaDobl_CSeries_Polynomials.Visiting_Iterator(Visit_Term);
+
+  begin
+    Visit_Terms(p);
+    res.idx := Exponent_Indices.Exponent_Index(res.xps);
+    res.fac := Exponent_Indices.Factor_Index(res.xps);
+    res.cst := new HexaDobl_Complex_Vectors.Vector'(cst.cff);
+    deg := res.cff(1)'last;
+    res.forward := Allocate_Coefficients(dim-1,deg);
+    res.backward := Allocate_Coefficients(dim-2,deg);
+    res.cross := Allocate_Coefficients(dim-2,deg);
+    res.wrk := Allocate_Coefficients(deg);
+    res.acc := Allocate_Coefficients(deg);
+    Standard_Natural_Vectors.Clear
+      (Standard_Natural_Vectors.Link_to_Vector(zero));
+    return res;
+  end Make_Convolution_Circuit;
+
   function Make_Convolution_Circuits
              ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                d : natural32 )
@@ -1509,6 +1708,22 @@ package body System_Convolution_Circuits is
   end Make_Convolution_Circuits;
 
   function Make_Convolution_Circuits
+             ( p : HexaDobl_Complex_Poly_Systems.Poly_Sys;
+               d : natural32 )
+             return HexaDobl_Speelpenning_Convolutions.Circuits is
+
+    use HexaDobl_Speelpenning_Convolutions;
+
+    res : Circuits(p'range);
+
+  begin
+    for i in p'range loop
+      res(i) := new Circuit'(Make_Convolution_Circuit(p(i),d));
+    end loop;
+    return res;
+  end Make_Convolution_Circuits;
+
+  function Make_Convolution_Circuits
              ( p : Standard_CSeries_Poly_Systems.Poly_Sys )
              return Standard_Speelpenning_Convolutions.Circuits is
 
@@ -1603,6 +1818,21 @@ package body System_Convolution_Circuits is
              return DecaDobl_Speelpenning_Convolutions.Circuits is
 
     use DecaDobl_Speelpenning_Convolutions;
+
+    res : Circuits(p'range);
+
+  begin
+    for i in p'range loop
+      res(i) := new Circuit'(Make_Convolution_Circuit(p(i)));
+    end loop;
+    return res;
+  end Make_Convolution_Circuits;
+
+  function Make_Convolution_Circuits
+             ( p : HexaDobl_CSeries_Poly_Systems.Poly_Sys )
+             return HexaDobl_Speelpenning_Convolutions.Circuits is
+
+    use HexaDobl_Speelpenning_Convolutions;
 
     res : Circuits(p'range);
 
@@ -1721,6 +1951,23 @@ package body System_Convolution_Circuits is
              return DecaDobl_Speelpenning_Convolutions.System is
 
     use DecaDobl_Speelpenning_Convolutions;
+
+    neq : constant integer32 := p'last;
+    c : constant Circuits(p'range) := Make_Convolution_Circuits(p);
+    dim : constant integer32 := c(c'first).dim;
+    deg : constant integer32 := integer32(d);
+    res : constant System(neq,neq+1,dim,dim+1,deg) := Create(c,dim,deg);
+
+  begin
+    return res;
+  end Make_Convolution_System;
+
+  function Make_Convolution_System
+             ( p : HexaDobl_CSeries_Poly_Systems.Poly_Sys;
+               d : natural32 )
+             return HexaDobl_Speelpenning_Convolutions.System is
+
+    use HexaDobl_Speelpenning_Convolutions;
 
     neq : constant integer32 := p'last;
     c : constant Circuits(p'range) := Make_Convolution_Circuits(p);
@@ -1862,6 +2109,26 @@ package body System_Convolution_Circuits is
     neq : constant integer32 := p'last;
     nvr : constant natural32
         := DecaDobl_CSeries_Polynomials.Number_of_Unknowns(p(p'first));
+    dim : constant integer32 := integer32(nvr);
+    deg : constant integer32 := integer32(d);
+    s : constant System(neq,neq+1,dim,dim+1,deg)
+      := Make_Convolution_System(p,d);
+    res : constant Link_to_System := new System'(s);
+
+  begin
+    return res;
+  end Make_Convolution_System;
+
+  function Make_Convolution_System
+             ( p : HexaDobl_CSeries_Poly_Systems.Poly_Sys;
+               d : natural32 )
+             return HexaDobl_Speelpenning_Convolutions.Link_to_System is
+
+    use HexaDobl_Speelpenning_Convolutions;
+
+    neq : constant integer32 := p'last;
+    nvr : constant natural32
+        := HexaDobl_CSeries_Polynomials.Number_of_Unknowns(p(p'first));
     dim : constant integer32 := integer32(nvr);
     deg : constant integer32 := integer32(d);
     s : constant System(neq,neq+1,dim,dim+1,deg)

@@ -7,6 +7,7 @@ with Test_QuadDobl_Fabry;
 with Test_PentDobl_Fabry;
 with Test_OctoDobl_Fabry;
 with Test_DecaDobl_Fabry;
+with Test_HexaDobl_Fabry;
 
 procedure ts_fabry is
 
@@ -19,7 +20,7 @@ procedure ts_fabry is
   procedure Main is
 
   -- DESCRIPTION :
-  --   Prompts the user for the degree of the series,
+  --   Prompts for the degree of the series,
   --   and for the precision.  Launches the tests.
 
     prc : character;
@@ -29,23 +30,25 @@ procedure ts_fabry is
     put_line("Testing the Fabry ratio theorem ...");
     new_line;
     put_line("MENU for the working precision :");
-    put_line("  1. standard double precision");
-    put_line("  2. double double precision");
-    put_line("  3. triple double precision");
-    put_line("  4. quad double precision");
-    put_line("  5. penta double precision");
-    put_line("  6. octo double precision");
-    put_line("  7. deca double precision");
-    put("Type 1, 2, 3, 4, 5, 6, or 7 to select the precision : ");
-    Ask_Alternative(prc,"1234567");
+    put_line("  0. double precision");
+    put_line("  1. double double precision");
+    put_line("  2. triple double precision");
+    put_line("  3. quad double precision");
+    put_line("  4. penta double precision");
+    put_line("  5. octo double precision");
+    put_line("  6. deca double precision");
+    put_line("  7. hexa double precision");
+    put("Type 0, 1, 2, 3, 4, 5, 6, or 7 to select the precision : ");
+    Ask_Alternative(prc,"01234567");
     case prc is
-      when '1' => Test_Standard_Fabry.Main;
-      when '2' => Test_DoblDobl_Fabry.Main;
-      when '3' => Test_TripDobl_Fabry.Main;
-      when '4' => Test_QuadDobl_Fabry.Main;
-      when '5' => Test_PentDobl_Fabry.Main;
-      when '6' => Test_OctoDobl_Fabry.Main;
-      when '7' => Test_DecaDobl_Fabry.Main;
+      when '0' => Test_Standard_Fabry.Main;
+      when '1' => Test_DoblDobl_Fabry.Main;
+      when '2' => Test_TripDobl_Fabry.Main;
+      when '3' => Test_QuadDobl_Fabry.Main;
+      when '4' => Test_PentDobl_Fabry.Main;
+      when '5' => Test_OctoDobl_Fabry.Main;
+      when '6' => Test_DecaDobl_Fabry.Main;
+      when '7' => Test_HexaDobl_Fabry.Main;
       when others => null;
     end case;
   end Main;

@@ -7,6 +7,7 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Penta_Double_Numbers;               use Penta_Double_Numbers;
 with Octo_Double_Numbers;                use Octo_Double_Numbers;
 with Deca_Double_Numbers;                use Deca_Double_Numbers;
+with Hexa_Double_Numbers;                use Hexa_Double_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with TripDobl_Complex_Numbers;
@@ -14,6 +15,7 @@ with QuadDobl_Complex_Numbers;
 with PentDobl_Complex_Numbers;
 with OctoDobl_Complex_Numbers;
 with DecaDobl_Complex_Numbers;
+with HexaDobl_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors;
@@ -28,6 +30,8 @@ with OctoDobl_Complex_Vectors;
 with OctoDobl_Complex_VecVecs;
 with DecaDobl_Complex_Vectors;
 with DecaDobl_Complex_VecVecs;
+with HexaDobl_Complex_Vectors;
+with HexaDobl_Complex_VecVecs;
 
 package Convergence_Radius_Estimates is
 
@@ -49,6 +53,8 @@ package Convergence_Radius_Estimates is
   function Is_Zero ( z : OctoDobl_Complex_Numbers.Complex_Number )
                    return boolean;
   function Is_Zero ( z : DecaDobl_Complex_Numbers.Complex_Number )
+                   return boolean;
+  function Is_Zero ( z : HexaDobl_Complex_Numbers.Complex_Number )
                    return boolean;
 
   -- DESCRIPTION :
@@ -82,6 +88,10 @@ package Convergence_Radius_Estimates is
   procedure Fabry ( c : in DecaDobl_Complex_Vectors.Vector;
                     z : out DecaDobl_Complex_Numbers.Complex_Number;
                     e : out deca_double; fail : out boolean;
+                    offset : in integer32 := 0 );
+  procedure Fabry ( c : in HexaDobl_Complex_Vectors.Vector;
+                    z : out HexaDobl_Complex_Numbers.Complex_Number;
+                    e : out hexa_double; fail : out boolean;
                     offset : in integer32 := 0 );
 
   -- DESCRIPTION :
@@ -199,6 +209,19 @@ package Convergence_Radius_Estimates is
                     e : out deca_double; fail : out boolean;
                     offset : in integer32 := 0;
                     verbose : in boolean := true );
+  procedure Fabry ( c : in HexaDobl_Complex_VecVecs.VecVec;
+                    z : out HexaDobl_Complex_Numbers.Complex_Number;
+                    r : out hexa_double;
+                    e : out hexa_double; fail : out boolean;
+                    offset : in integer32 := 0;
+                    verbose : in boolean := true );
+  procedure Fabry ( file : in file_type;
+                    c : in HexaDobl_Complex_VecVecs.VecVec;
+                    z : out HexaDobl_Complex_Numbers.Complex_Number;
+                    r : out hexa_double;
+                    e : out hexa_double; fail : out boolean;
+                    offset : in integer32 := 0;
+                    verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Applies the ratio theorem of Fabry to return the smallest singular
@@ -275,12 +298,19 @@ package Convergence_Radius_Estimates is
               ( file : in file_type;
                 c : in DecaDobl_Complex_VecVecs.VecVec;
                 verbose : in boolean := true );
+  procedure Apply_Fabry
+              ( c : in HexaDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
+  procedure Apply_Fabry
+              ( file : in file_type;
+                c : in HexaDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Estimates the radius of convergence of the power series
   --   with the application of the theorem of Fabry,
   --   in double, double double, triple double, quad double,
-  --   penta double, octo double, or deca double precision,
+  --   penta double, octo double, deca double, or hexa double precision,
   --   writing output to screen or to file if verbose.
 
 end Convergence_Radius_Estimates;

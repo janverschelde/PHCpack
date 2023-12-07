@@ -5,6 +5,7 @@ with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Penta_Double_Numbers_io;            use Penta_Double_Numbers_io;
 with Octo_Double_Numbers_io;             use Octo_Double_Numbers_io;
 with Deca_Double_Numbers_io;             use Deca_Double_Numbers_io;
+with Hexa_Double_Numbers_io;             use Hexa_Double_Numbers_io;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with TripDobl_Complex_Numbers_io;        use TripDobl_Complex_Numbers_io;
@@ -12,6 +13,7 @@ with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with PentDobl_Complex_Numbers_io;        use PentDobl_Complex_Numbers_io;
 with OctoDobl_Complex_Numbers_io;        use OctoDobl_Complex_Numbers_io;
 with DecaDobl_Complex_Numbers_io;        use DecaDobl_Complex_Numbers_io;
+with HexaDobl_Complex_Numbers_io;        use HexaDobl_Complex_Numbers_io;
 with Standard_Complex_Numbers_Polar;
 with DoblDobl_Complex_Numbers_Polar;
 with TripDobl_Complex_Numbers_Polar;
@@ -19,6 +21,7 @@ with QuadDobl_Complex_Numbers_Polar;
 with PentDobl_Complex_Numbers_Polar;
 with OctoDobl_Complex_Numbers_Polar;
 with DecaDobl_Complex_Numbers_Polar;
+with HexaDobl_Complex_Numbers_Polar;
 
 package body Convergence_Radius_Estimates is
 
@@ -110,6 +113,20 @@ package body Convergence_Radius_Estimates is
     use DecaDobl_Complex_Numbers;
 
     one : constant deca_double := create(1.0);
+
+  begin
+    if REAL_PART(z) + one /= one
+     then return false;
+     else return (IMAG_PART(z) + one = one);
+    end if;
+  end Is_Zero;
+
+  function Is_Zero ( z : HexaDobl_Complex_Numbers.Complex_Number )
+                   return boolean is
+
+    use HexaDobl_Complex_Numbers;
+
+    one : constant hexa_double := create(1.0);
 
   begin
     if REAL_PART(z) + one /= one
@@ -280,6 +297,32 @@ package body Convergence_Radius_Estimates is
                     offset : in integer32 := 0 ) is
 
     use DecaDobl_Complex_Numbers;
+
+  begin
+    fail := Is_Zero(c(c'last-offset));
+    if not fail then
+      if offset = 0 then
+        z := c(c'last-1)/c(c'last);
+        if Is_Zero(c(c'last-1))
+         then e := create(1.0);
+         else e := AbsVal(z - c(c'last-2)/c(c'last-1));
+        end if;
+      else -- offset should be > 0, typically 2
+        z := c(c'last-1-offset)/c(c'last-offset);
+        if Is_Zero(c(c'last))
+         then e := create(1.0);
+         else e := AbsVal(z - c(c'last-1)/c(c'last));
+        end if;
+      end if;
+    end if;
+  end Fabry;
+
+  procedure Fabry ( c : in HexaDobl_Complex_Vectors.Vector;
+                    z : out HexaDobl_Complex_Numbers.Complex_Number;
+                    e : out hexa_double; fail : out boolean;
+                    offset : in integer32 := 0 ) is
+
+    use HexaDobl_Complex_Numbers;
 
   begin
     fail := Is_Zero(c(c'last-offset));
@@ -557,6 +600,44 @@ package body Convergence_Radius_Estimates is
           r := DecaDobl_Complex_Numbers_Polar.Radius(z);
         else
           rad := DecaDobl_Complex_Numbers_Polar.Radius(zk);
+          if rad < r
+           then z := zk; e := ek; r := rad;
+          end if;
+        end if;
+        fail := false;
+      end if;
+    end loop;
+  end Fabry;
+
+  procedure Fabry ( c : in HexaDobl_Complex_VecVecs.VecVec;
+                    z : out HexaDobl_Complex_Numbers.Complex_Number;
+                    r : out hexa_double;
+                    e : out hexa_double; fail : out boolean;
+                    offset : in integer32 := 0;
+                    verbose : in boolean := true ) is
+
+    use HexaDobl_Complex_Numbers;
+
+    zk : Complex_Number;
+    ek,rad : hexa_double;
+    kfail : boolean;
+
+  begin
+    fail := true;
+    for k in c'range loop
+      Fabry(c(k).all,zk,ek,kfail,offset);
+      if verbose then
+        if kfail
+         then put_line("zero last coefficient");
+         else put(zk); put("  error estimate : "); put(ek,3); new_line;
+        end if;
+      end if;
+      if not kfail then
+        if k = c'first then
+          z := zk; e := ek;
+          r := HexaDobl_Complex_Numbers_Polar.Radius(z);
+        else
+          rad := HexaDobl_Complex_Numbers_Polar.Radius(zk);
           if rad < r
            then z := zk; e := ek; r := rad;
           end if;
@@ -853,6 +934,47 @@ package body Convergence_Radius_Estimates is
     end loop;
   end Fabry;
 
+  procedure Fabry ( file : in file_type;
+                    c : in HexaDobl_Complex_VecVecs.VecVec;
+                    z : out HexaDobl_Complex_Numbers.Complex_Number;
+                    r : out hexa_double;
+                    e : out hexa_double; fail : out boolean;
+                    offset : in integer32 := 0;
+                    verbose : in boolean := true ) is
+
+    use HexaDobl_Complex_Numbers;
+
+    zk : Complex_Number;
+    ek,rad : hexa_double;
+    kfail : boolean;
+
+  begin
+    fail := true;
+    for k in c'range loop
+      Fabry(c(k).all,zk,ek,kfail,offset);
+      if verbose then
+        if kfail then
+          put_line(file,"zero last coefficient");
+        else
+          put(file,zk); put(file,"  error estimate : ");
+          put(file,ek,3); new_line(file);
+        end if;
+      end if;
+      if not kfail then
+        if k = c'first then
+          z := zk; e := ek;
+          r := HexaDobl_Complex_Numbers_Polar.Radius(z);
+        else
+          rad := HexaDobl_Complex_Numbers_Polar.Radius(zk);
+          if rad < r
+           then z := zk; e := ek; r := rad;
+          end if;
+        end if;
+        fail := false;
+      end if;
+    end loop;
+  end Fabry;
+
 -- WRAPPERS :
 
   procedure Apply_Fabry
@@ -1024,6 +1146,31 @@ package body Convergence_Radius_Estimates is
 
     z : DecaDobl_Complex_Numbers.Complex_Number;
     r,e : deca_double;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(file,c,z,r,e,fail,0,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( c : in HexaDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+    z : HexaDobl_Complex_Numbers.Complex_Number;
+    r,e : hexa_double;
+    fail : boolean;
+
+  begin
+    Convergence_Radius_Estimates.Fabry(c,z,r,e,fail,0,verbose);
+  end Apply_Fabry;
+
+  procedure Apply_Fabry
+              ( file : in file_type;
+                c : in HexaDobl_Complex_VecVecs.VecVec;
+                verbose : in boolean := true ) is
+
+    z : HexaDobl_Complex_Numbers.Complex_Number;
+    r,e : hexa_double;
     fail : boolean;
 
   begin

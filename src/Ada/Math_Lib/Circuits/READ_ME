@@ -106,6 +106,7 @@ quaddobl_newton_convolutions       : Newton with quaddobl convolutions
 pentdobl_newton_convolutions       : Newton with pentdobl convolutions
 octodobl_newton_convolutions       : Newton with octodobl convolutions
 decadobl_newton_convolutions       : Newton with decadobl convolutions
+hexadobl_newton_convolutions       : Newton with hexadobl convolutions
 newton_coefficient_convolutions    : Newton on coefficient convolutions
 convergence_radius_estimates       : applies ratio theorem of Fabry
 test_standard_fabry                : tests Fabry in double precision
@@ -115,6 +116,7 @@ test_quaddobl_fabry                : tests Fabry in quad double precision
 test_pentdobl_fabry                : tests Fabry in penta double precision
 test_octodobl_fabry                : tests Fabry in octo double precision
 test_decadobl_fabry                : tests Fabry in deca double precision
+test_hexadobl_fabry                : tests Fabry in hexa double precision
 ts_fabry                           : test on the Fabry ratio theorem
 ts_evalcnv                         : test on plain evaluation
 hessian_convolution_circuits       : Hessians on convolution circuits

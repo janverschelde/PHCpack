@@ -1,6 +1,9 @@
 Thu 7 Dec 2023 : new hexadobl_speelpenning_convolutions and
   test_hexadobl_speel_convolutions, extended series_polynomial_gradients,
-  and ts_speelser.adb.
+  and ts_speelser.adb.  Extended {system,homotopy}_convolution_circuits,
+  convergence_radius_estimates, added new hexadobl_newton_convolutions 
+  and test_hexadobl_fabry, extended ts_fabry.adb with version 
+  in hexa double precision.
 
 Thu 10 Jun 2021 : added the exec_dir attribute to circuits.gpr.
 
