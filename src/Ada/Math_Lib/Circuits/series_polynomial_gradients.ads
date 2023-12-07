@@ -22,6 +22,9 @@ with OctoDobl_CSeries_Poly_Systems;
 with DecaDobl_Complex_Series_Vectors;
 with DecaDobl_CSeries_Polynomials;
 with DecaDobl_CSeries_Poly_Systems;
+with HexaDobl_Complex_Series_Vectors;
+with HexaDobl_CSeries_Polynomials;
+with HexaDobl_CSeries_Poly_Systems;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with TripDobl_Speelpenning_Convolutions;
@@ -29,6 +32,7 @@ with QuadDobl_Speelpenning_Convolutions;
 with PentDobl_Speelpenning_Convolutions;
 with OctoDobl_Speelpenning_Convolutions;
 with DecaDobl_Speelpenning_Convolutions;
+with HexaDobl_Speelpenning_Convolutions;
 
 package Series_Polynomial_Gradients is
 
@@ -58,11 +62,14 @@ package Series_Polynomial_Gradients is
   function DecaDobl_Polynomial
              ( c : DecaDobl_Speelpenning_Convolutions.Circuit )
              return DecaDobl_CSeries_Polynomials.Poly;
+  function HexaDobl_Polynomial
+             ( c : HexaDobl_Speelpenning_Convolutions.Circuit )
+             return HexaDobl_CSeries_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Makes the series polynomial that is equivalent to the circuit,
   --   in double, double double, triple double, quad double, penta double,
-  --   octo double, or deca double precision.
+  --   octo double, deca double, or hexa double precision.
 
   function Standard_System
              ( c : Standard_Speelpenning_Convolutions.Circuits )
@@ -85,11 +92,14 @@ package Series_Polynomial_Gradients is
   function DecaDobl_System
              ( c : DecaDobl_Speelpenning_Convolutions.Circuits )
              return DecaDobl_CSeries_Poly_Systems.Poly_Sys;
+  function HexaDobl_System
+             ( c : HexaDobl_Speelpenning_Convolutions.Circuits )
+             return HexaDobl_CSeries_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   Makes the series polynomial system that is equivalent to the circuits,
   --   in double, double double, triple double, quad double, penta double,
-  --   octo double, or deca double precision.
+  --   octo double, deca double, or hexa double precision.
 
   function Standard_Product
              ( dim,deg : integer32 )
@@ -112,13 +122,16 @@ package Series_Polynomial_Gradients is
   function DecaDobl_Product
              ( dim,deg : integer32 )
              return DecaDobl_CSeries_Polynomials.Poly;
+  function HexaDobl_Product
+             ( dim,deg : integer32 )
+             return HexaDobl_CSeries_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns the product of the first dim variables,
   --   as a polynomial where the coefficients are truncated power series,
   --   truncated to degree deg, with standard double, double double,
-  --   triple double, quad double, penta double, octo double, or
-  --   deca double precision coefficients.
+  --   triple double, quad double, penta double, octo double, deca double,
+  --   or hexa double precision coefficients.
 
   function Standard_Product
              ( deg : integer32;
@@ -148,14 +161,18 @@ package Series_Polynomial_Gradients is
              ( deg : integer32;
                xp : Standard_Integer_Vectors.Vector )
              return DecaDobl_CSeries_Polynomials.Poly;
+  function HexaDobl_Product
+             ( deg : integer32;
+               xp : Standard_Integer_Vectors.Vector )
+             return HexaDobl_CSeries_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns the product of the first dim variables, dim = xp'last,
   --   using the exponent vector in xp,
   --   as a polynomial where the coefficients are truncated power series,
-  --   truncated to degree deg, with standard double, double double,
-  --   triple double, quad double, penta double, octo double, or
-  --   deca double precision coefficients.
+  --   truncated to degree deg, with double, double double,
+  --   triple double, quad double, penta double, octo double, deca double,
+  --   or hexa double precision coefficients.
 
   function Standard_Polynomial
              ( dim,deg : integer32;
@@ -234,14 +251,25 @@ package Series_Polynomial_Gradients is
                cff : DecaDobl_Complex_Series_Vectors.Vector;
                isxidx : boolean := true )
              return DecaDobl_CSeries_Polynomials.Poly;
+  function HexaDobl_Polynomial
+             ( dim,deg : integer32;
+               xps : Standard_Integer_VecVecs.VecVec;
+               isidx : boolean := true )
+             return HexaDobl_CSeries_Polynomials.Poly;
+  function HexaDobl_Polynomial
+             ( dim : integer32;
+               xps : Standard_Integer_VecVecs.VecVec;
+               cff : HexaDobl_Complex_Series_Vectors.Vector;
+               isxidx : boolean := true )
+             return HexaDobl_CSeries_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns the polynomial in dim variables, with exponents in xps,
   --   and optionally, the coefficients in cff,
   --   as a polynomial where the coefficients are truncated power series,
-  --   truncated to degree deg, with standard double, double double,
-  --   triple double, quad double, penta double, octo double, or
-  --   deca double precision coefficients.
+  --   truncated to degree deg, with double, double double,
+  --   triple double, quad double, penta double, octo double,
+  --   deca double, or hexa double precision coefficients.
   --   The isxidx indicates if xps is an exponent index vector or not.
   --   If not, then xps holds the actual values of the exponents,
   --   otherwise, if isxidx, then xps holds the indices of the
@@ -277,10 +305,14 @@ package Series_Polynomial_Gradients is
              ( p : DecaDobl_CSeries_Polynomials.Poly;
                x : DecaDobl_Complex_Series_Vectors.Vector )
              return DecaDobl_Complex_Series_Vectors.Vector;
+  function HexaDobl_Gradient
+             ( p : HexaDobl_CSeries_Polynomials.Poly;
+               x : HexaDobl_Complex_Series_Vectors.Vector )
+             return HexaDobl_Complex_Series_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Evaluates the gradient of p at x, for testing purposes,
   --   in double, double double, triple double, quad double,
-  --   penta double, octo double, or deca double precision.
+  --   penta double, octo double, deca double, or hexa double precision.
 
 end Series_Polynomial_Gradients;

@@ -1,4 +1,4 @@
-Algorithmic differentiation and arithmetic circuits in PHCv2.4.85
+Algorithmic differentiation and arithmetic circuits in PHCv2.4.87
 
 This directory was created new in v2.3.98, with code that had been building
 up in the directory Functions.  In Functions, polynomials are evaluated by
@@ -73,6 +73,7 @@ quaddobl_speelpenning_convolutions : Speelpenning with quad doubles
 pentdobl_speelpenning_convolutions : Speelpenning with penta doubles
 octodobl_speelpenning_convolutions : Speelpenning with octo doubles
 decadobl_speelpenning_convolutions : Speelpenning with deca doubles
+hexadobl_speelpenning_convolutions : Speelpenning with deca doubles
 series_polynomial_gradients        : collects test utilities
 random_convolution_circuits        : generation of random circuits for testing
 system_convolution_circuits        : make circuits from polynomials and systems
@@ -86,6 +87,7 @@ test_quaddobl_speel_convolutions   : test on reverse mode with quad doubles
 test_pentdobl_speel_convolutions   : test on reverse mode with penta doubles
 test_octodobl_speel_convolutions   : test on reverse mode with octo doubles
 test_decadobl_speel_convolutions   : test on reverse mode with deca doubles
+test_hexadobl_speel_convolutions   : test on reverse mode with hexa doubles
 ts_speelser                        : test reverse mode on power series
 standard_coefficient_convolutions  : better performing convolution computations
 dobldobl_coefficient_convolutions  : coefficient convolution in dd precision

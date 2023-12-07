@@ -14,6 +14,8 @@ with OctoDobl_Complex_Series;
 with OctoDobl_CSeries_Poly_Functions;
 with DecaDobl_Complex_Series;
 with DecaDobl_CSeries_Poly_Functions;
+with HexaDobl_Complex_Series;
+with HexaDobl_CSeries_Poly_Functions;
 
 package body Series_Polynomial_Gradients is
 
@@ -192,6 +194,31 @@ package body Series_Polynomial_Gradients is
     return res;
   end DecaDobl_Polynomial;
 
+  function HexaDobl_Polynomial
+             ( c : HexaDobl_Speelpenning_Convolutions.Circuit )
+             return HexaDobl_CSeries_Polynomials.Poly is
+
+    res : HexaDobl_CSeries_Polynomials.Poly
+        := HexaDobl_CSeries_Polynomials.Null_Poly;
+    trm : HexaDobl_CSeries_Polynomials.Term;
+
+  begin
+    for k in c.xps'range loop
+      trm.dg := new Standard_Natural_Vectors.Vector'(1..c.dim => 0);
+      for i in 1..c.dim loop
+        trm.dg(i) := natural32(c.xps(k)(i));
+      end loop;
+      trm.cf := HexaDobl_Complex_Series.Create(c.cff(k).all);
+      HexaDobl_CSeries_Polynomials.Add(res,trm);
+      HexaDobl_CSeries_Polynomials.Clear(trm);
+    end loop;
+    trm.dg := new Standard_Natural_Vectors.Vector'(1..c.dim => 0);
+    trm.cf := HexaDobl_Complex_Series.Create(c.cst.all);
+    HexaDobl_CSeries_Polynomials.Add(res,trm);
+    HexaDobl_CSeries_Polynomials.Clear(trm);
+    return res;
+  end HexaDobl_Polynomial;
+
   function Standard_System
              ( c : Standard_Speelpenning_Convolutions.Circuits )
              return Standard_CSeries_Poly_Systems.Poly_Sys is
@@ -283,6 +310,19 @@ package body Series_Polynomial_Gradients is
     return res;
   end DecaDobl_System;
 
+  function HexaDobl_System
+             ( c : HexaDobl_Speelpenning_Convolutions.Circuits )
+             return HexaDobl_CSeries_Poly_Systems.Poly_Sys is
+
+    res : HexaDobl_CSeries_Poly_Systems.Poly_Sys(c'range);
+
+  begin
+    for i in c'range loop
+      res(i) := HexaDobl_Polynomial(c(i).all);
+    end loop;
+    return res;
+  end HexaDobl_System;
+
   function Standard_Product
              ( dim,deg : in integer32 )
              return Standard_CSeries_Polynomials.Poly is
@@ -388,6 +428,21 @@ package body Series_Polynomial_Gradients is
     return res;
   end DecaDobl_Product;
 
+  function HexaDobl_Product
+             ( dim,deg : in integer32 )
+             return HexaDobl_CSeries_Polynomials.Poly is
+
+    res : HexaDobl_CSeries_Polynomials.Poly;
+    trm : HexaDobl_CSeries_Polynomials.Term;
+
+  begin
+    trm.dg := new Standard_Natural_Vectors.Vector'(1..dim => 1);
+    trm.cf := HexaDobl_Complex_Series.Create(1,deg);
+    res := HexaDobl_CSeries_Polynomials.Create(trm);
+    HexaDobl_CSeries_Polynomials.Clear(trm);
+    return res;
+  end HexaDobl_Product;
+
   function Standard_Product
              ( deg : in integer32;
                xp : Standard_Integer_Vectors.Vector )
@@ -520,6 +575,25 @@ package body Series_Polynomial_Gradients is
     DecaDobl_CSeries_Polynomials.Clear(trm);
     return res;
   end DecaDobl_Product;
+
+  function HexaDobl_Product
+             ( deg : in integer32;
+               xp : Standard_Integer_Vectors.Vector )
+             return HexaDobl_CSeries_Polynomials.Poly is
+
+    res : HexaDobl_CSeries_Polynomials.Poly;
+    trm : HexaDobl_CSeries_Polynomials.Term;
+
+  begin
+    trm.dg := new Standard_Natural_Vectors.Vector(1..xp'last);
+    for i in xp'range loop
+      trm.dg(i) := natural32(xp(i));
+    end loop;
+    trm.cf := HexaDobl_Complex_Series.Create(1,deg);
+    res := HexaDobl_CSeries_Polynomials.Create(trm);
+    HexaDobl_CSeries_Polynomials.Clear(trm);
+    return res;
+  end HexaDobl_Product;
 
   -- function Is_Zero ( s : Standard_Complex_Series.Link_to_Series )
   --                  return boolean is
@@ -962,6 +1036,65 @@ package body Series_Polynomial_Gradients is
     return res;
   end DecaDobl_Polynomial;
 
+  function HexaDobl_Polynomial
+             ( dim,deg : in integer32;
+               xps : Standard_Integer_VecVecs.VecVec;
+               isidx : boolean := true )
+             return HexaDobl_CSeries_Polynomials.Poly is
+
+    res : HexaDobl_CSeries_Polynomials.Poly
+        := HexaDobl_CSeries_Polynomials.Null_Poly;
+    trm : HexaDobl_CSeries_Polynomials.Term;
+
+  begin
+    for k in xps'range loop
+      trm.dg := new Standard_Natural_Vectors.Vector'(1..dim => 0);
+      if isidx then
+        for i in xps(k)'range loop
+          trm.dg(xps(k)(i)) := 1;
+        end loop;
+      else
+        for i in 1..dim loop
+          trm.dg(i) := natural32(xps(k)(i));
+        end loop;
+      end if;
+      trm.cf := HexaDobl_Complex_Series.Create(1,deg);
+      HexaDobl_CSeries_Polynomials.Add(res,trm);
+      HexaDobl_CSeries_Polynomials.Clear(trm);
+    end loop;
+    return res;
+  end HexaDobl_Polynomial;
+
+  function HexaDobl_Polynomial
+             ( dim : in integer32;
+               xps : Standard_Integer_VecVecs.VecVec;
+               cff : HexaDobl_Complex_Series_Vectors.Vector;
+               isxidx : boolean := true )
+             return HexaDobl_CSeries_Polynomials.Poly is
+
+    res : HexaDobl_CSeries_Polynomials.Poly
+        := HexaDobl_CSeries_Polynomials.Null_Poly;
+    trm : HexaDobl_CSeries_Polynomials.Term;
+
+  begin
+    for k in xps'range loop
+      trm.dg := new Standard_Natural_Vectors.Vector'(1..dim => 0);
+      if isxidx then
+        for i in xps(k)'range loop
+          trm.dg(xps(k)(i)) := 1;
+        end loop;
+      else
+        for i in 1..dim loop
+          trm.dg(i) := natural32(xps(k)(i));
+        end loop;
+      end if;
+      HexaDobl_Complex_Series.Copy(cff(k),trm.cf);
+      HexaDobl_CSeries_Polynomials.Add(res,trm);
+      HexaDobl_CSeries_Polynomials.Clear(trm);
+    end loop;
+    return res;
+  end HexaDobl_Polynomial;
+
   function Standard_Gradient
              ( p : Standard_CSeries_Polynomials.Poly;
                x : Standard_Complex_Series_Vectors.Vector )
@@ -1115,5 +1248,27 @@ package body Series_Polynomial_Gradients is
     end loop;
     return res;
   end DecaDobl_Gradient;
+
+  function HexaDobl_Gradient
+             ( p : HexaDobl_CSeries_Polynomials.Poly;
+               x : HexaDobl_Complex_Series_Vectors.Vector )
+             return HexaDobl_Complex_Series_Vectors.Vector is
+
+    res : HexaDobl_Complex_Series_Vectors.Vector(x'range);
+
+  begin
+    for k in x'range loop
+      declare
+        dpk : HexaDobl_CSeries_Polynomials.Poly
+            := HexaDobl_CSeries_Polynomials.Diff(p,k);
+        val : constant HexaDobl_Complex_Series.Link_to_Series
+            := HexaDobl_CSeries_Poly_Functions.Eval(dpk,x);
+      begin
+        HexaDobl_CSeries_Polynomials.Clear(dpk);
+        res(k) := val;
+      end;
+    end loop;
+    return res;
+  end HexaDobl_Gradient;
 
 end Series_Polynomial_Gradients;

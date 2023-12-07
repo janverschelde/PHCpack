@@ -1,3 +1,7 @@
+Thu 7 Dec 2023 : new hexadobl_speelpenning_convolutions and
+  test_hexadobl_speel_convolutions, extended series_polynomial_gradients,
+  and ts_speelser.adb.
+
 Thu 10 Jun 2021 : added the exec_dir attribute to circuits.gpr.
 
 Tue 8 Jun 2021 : defined circuits.gpr to build the test procedures.
