@@ -115,7 +115,9 @@ package Convergence_Radius_Estimates is
   --                if c(c'last-offset) /= zero;
   --   e            error estimate of the difference between
   --                |c(c'last-1)/c(c'last) - c(c'last-2)/c(c'last-1)|,
-  --                only if fail is false;
+  --                multiplied with (c'last-1), only if fail is false,
+  --                where the factor (c'last-1) takes into account the
+  --                logarithmic convergence to a singularity;
   --   fail         true if c(c'last-offset) equals zero, false otherwise.
 
   procedure Fabry ( c : in Standard_Complex_VecVecs.VecVec;
@@ -242,7 +244,8 @@ package Convergence_Radius_Estimates is
   --   z            the smallest quotient over all series in c,
   --                if fail is false;
   --   r            the radius of z if fail is false;
-  --   e            the difference between two consecutive ratios;
+  --   e            the difference between two consecutive ratios,
+  --                multiplied with (c'last-1), for logarithmic convergence,
   --                only if fail is false;
   --   fail         true if the last coefficient of all series in c is zero,
   --                false otherwise.

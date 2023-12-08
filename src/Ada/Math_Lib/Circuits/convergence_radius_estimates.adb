@@ -141,6 +141,7 @@ package body Convergence_Radius_Estimates is
                     offset : in integer32 := 0 ) is
 
     use Standard_Complex_Numbers;
+    nm1 : constant double_float := double_float(c'last - 1);
 
   begin
     fail := Is_Zero(c(c'last-offset));
@@ -149,13 +150,13 @@ package body Convergence_Radius_Estimates is
         z := c(c'last-1)/c(c'last);
         if Is_Zero(c(c'last-1))
          then e := 1.0;
-         else e := AbsVal(z - c(c'last-2)/c(c'last-1));
+         else e := AbsVal(z - c(c'last-2)/c(c'last-1))*nm1;
         end if;
       else -- offset should be > 0, typically 2
         z := c(c'last-1-offset)/c(c'last-offset);
         if Is_Zero(c(c'last))
          then e := 1.0;
-         else e := AbsVal(z - c(c'last-1)/c(c'last));
+         else e := AbsVal(z - c(c'last-1)/c(c'last))*nm1;
         end if;
       end if;
     end if;
@@ -167,6 +168,7 @@ package body Convergence_Radius_Estimates is
                     offset : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Numbers;
+    nm1 : constant double_float := double_float(c'last - 1);
 
   begin
     fail := Is_Zero(c(c'last-offset));
@@ -175,13 +177,13 @@ package body Convergence_Radius_Estimates is
         z := c(c'last-1)/c(c'last);
         if Is_Zero(c(c'last-1))
          then e := create(1.0);
-         else e := AbsVal(z - c(c'last-2)/c(c'last-1));
+         else e := AbsVal(z - c(c'last-2)/c(c'last-1))*nm1;
         end if;
       else -- offset should be > 0, typically 2
         z := c(c'last-1-offset)/c(c'last-offset);
         if Is_Zero(c(c'last))
          then e := create(1.0);
-         else e := AbsVal(z - c(c'last-1)/c(c'last));
+         else e := AbsVal(z - c(c'last-1)/c(c'last))*nm1;
         end if;
       end if;
     end if;
@@ -193,6 +195,7 @@ package body Convergence_Radius_Estimates is
                     offset : in integer32 := 0 ) is
 
     use TripDobl_Complex_Numbers;
+    nm1 : constant double_float := double_float(c'last - 1);
 
   begin
     fail := Is_Zero(c(c'last-offset));
@@ -201,13 +204,13 @@ package body Convergence_Radius_Estimates is
         z := c(c'last-1)/c(c'last);
         if Is_Zero(c(c'last-1))
          then e := create(1.0);
-         else e := AbsVal(z - c(c'last-2)/c(c'last-1));
+         else e := AbsVal(z - c(c'last-2)/c(c'last-1))*nm1;
         end if;
       else -- offset should be > 0, typically 2
         z := c(c'last-1-offset)/c(c'last-offset);
         if Is_Zero(c(c'last))
          then e := create(1.0);
-         else e := AbsVal(z - c(c'last-1)/c(c'last));
+         else e := AbsVal(z - c(c'last-1)/c(c'last))*nm1;
         end if;
       end if;
     end if;
@@ -219,6 +222,7 @@ package body Convergence_Radius_Estimates is
                     offset : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Numbers;
+    nm1 : constant double_float := double_float(c'last - 1);
 
   begin
     fail := Is_Zero(c(c'last-offset));
@@ -227,13 +231,13 @@ package body Convergence_Radius_Estimates is
         z := c(c'last-1)/c(c'last);
         if Is_Zero(c(c'last-1))
          then e := create(1.0);
-         else e := AbsVal(z - c(c'last-2)/c(c'last-1));
+         else e := AbsVal(z - c(c'last-2)/c(c'last-1))*nm1;
         end if;
       else -- offset should be > 0, typically 2
         z := c(c'last-1-offset)/c(c'last-offset);
         if Is_Zero(c(c'last))
          then e := create(1.0);
-         else e := AbsVal(z - c(c'last-1)/c(c'last));
+         else e := AbsVal(z - c(c'last-1)/c(c'last))*nm1;
         end if;
       end if;
     end if;
@@ -245,6 +249,7 @@ package body Convergence_Radius_Estimates is
                     offset : in integer32 := 0 ) is
 
     use PentDobl_Complex_Numbers;
+    nm1 : constant double_float := double_float(c'last - 1);
 
   begin
     fail := Is_Zero(c(c'last-offset));
@@ -253,13 +258,13 @@ package body Convergence_Radius_Estimates is
         z := c(c'last-1)/c(c'last);
         if Is_Zero(c(c'last-1))
          then e := create(1.0);
-         else e := AbsVal(z - c(c'last-2)/c(c'last-1));
+         else e := AbsVal(z - c(c'last-2)/c(c'last-1))*nm1;
         end if;
       else -- offset should be > 0, typically 2
         z := c(c'last-1-offset)/c(c'last-offset);
         if Is_Zero(c(c'last))
          then e := create(1.0);
-         else e := AbsVal(z - c(c'last-1)/c(c'last));
+         else e := AbsVal(z - c(c'last-1)/c(c'last))*nm1;
         end if;
       end if;
     end if;
@@ -271,6 +276,7 @@ package body Convergence_Radius_Estimates is
                     offset : in integer32 := 0 ) is
 
     use OctoDobl_Complex_Numbers;
+    nm1 : constant double_float := double_float(c'last - 1);
 
   begin
     fail := Is_Zero(c(c'last-offset));
@@ -279,13 +285,13 @@ package body Convergence_Radius_Estimates is
         z := c(c'last-1)/c(c'last);
         if Is_Zero(c(c'last-1))
          then e := create(1.0);
-         else e := AbsVal(z - c(c'last-2)/c(c'last-1));
+         else e := AbsVal(z - c(c'last-2)/c(c'last-1))*nm1;
         end if;
       else -- offset should be > 0, typically 2
         z := c(c'last-1-offset)/c(c'last-offset);
         if Is_Zero(c(c'last))
          then e := create(1.0);
-         else e := AbsVal(z - c(c'last-1)/c(c'last));
+         else e := AbsVal(z - c(c'last-1)/c(c'last))*nm1;
         end if;
       end if;
     end if;
@@ -297,6 +303,7 @@ package body Convergence_Radius_Estimates is
                     offset : in integer32 := 0 ) is
 
     use DecaDobl_Complex_Numbers;
+    nm1 : constant double_float := double_float(c'last - 1);
 
   begin
     fail := Is_Zero(c(c'last-offset));
@@ -305,13 +312,13 @@ package body Convergence_Radius_Estimates is
         z := c(c'last-1)/c(c'last);
         if Is_Zero(c(c'last-1))
          then e := create(1.0);
-         else e := AbsVal(z - c(c'last-2)/c(c'last-1));
+         else e := AbsVal(z - c(c'last-2)/c(c'last-1))*nm1;
         end if;
       else -- offset should be > 0, typically 2
         z := c(c'last-1-offset)/c(c'last-offset);
         if Is_Zero(c(c'last))
          then e := create(1.0);
-         else e := AbsVal(z - c(c'last-1)/c(c'last));
+         else e := AbsVal(z - c(c'last-1)/c(c'last))*nm1;
         end if;
       end if;
     end if;
@@ -323,6 +330,7 @@ package body Convergence_Radius_Estimates is
                     offset : in integer32 := 0 ) is
 
     use HexaDobl_Complex_Numbers;
+    nm1 : constant double_float := double_float(c'last - 1);
 
   begin
     fail := Is_Zero(c(c'last-offset));
@@ -331,13 +339,13 @@ package body Convergence_Radius_Estimates is
         z := c(c'last-1)/c(c'last);
         if Is_Zero(c(c'last-1))
          then e := create(1.0);
-         else e := AbsVal(z - c(c'last-2)/c(c'last-1));
+         else e := AbsVal(z - c(c'last-2)/c(c'last-1))*nm1;
         end if;
       else -- offset should be > 0, typically 2
         z := c(c'last-1-offset)/c(c'last-offset);
         if Is_Zero(c(c'last))
          then e := create(1.0);
-         else e := AbsVal(z - c(c'last-1)/c(c'last));
+         else e := AbsVal(z - c(c'last-1)/c(c'last))*nm1;
         end if;
       end if;
     end if;

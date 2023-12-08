@@ -1,3 +1,6 @@
+Fri 8 Dec 2023 : in convergence_radius_estimates, adjusted the error
+  estimate to take into account the logarithmic convergence.
+
 Thu 7 Dec 2023 : new hexadobl_speelpenning_convolutions and
   test_hexadobl_speel_convolutions, extended series_polynomial_gradients,
   and ts_speelser.adb.  Extended {system,homotopy}_convolution_circuits,
