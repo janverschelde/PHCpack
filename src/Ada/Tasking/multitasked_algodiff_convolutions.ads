@@ -16,6 +16,8 @@ with OctoDobl_Complex_VecVecs;
 with OctoDobl_Complex_VecMats;
 with DecaDobl_Complex_VecVecs;
 with DecaDobl_Complex_VecMats;
+with HexaDobl_Complex_VecVecs;
+with HexaDobl_Complex_VecMats;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with TripDobl_Speelpenning_Convolutions;
@@ -23,6 +25,7 @@ with QuadDobl_Speelpenning_Convolutions;
 with PentDobl_Speelpenning_Convolutions;
 with OctoDobl_Speelpenning_Convolutions;
 with DecaDobl_Speelpenning_Convolutions;
+with HexaDobl_Speelpenning_Convolutions;
 with Standard_Coefficient_Convolutions;
 with DoblDobl_Coefficient_Convolutions;
 with QuadDobl_Coefficient_Convolutions;
@@ -62,12 +65,15 @@ package Multitasked_AlgoDiff_Convolutions is
   function Allocate_Work_Space
              ( nbt,dim,deg : integer32 )
              return DecaDobl_Speelpenning_Convolutions.VecVecVec;
+  function Allocate_Work_Space
+             ( nbt,dim,deg : integer32 )
+             return HexaDobl_Speelpenning_Convolutions.VecVecVec;
 
   -- DESCRIPTION :
   --   Returns work space for nbt tasks to evaluate circuits of
   --   dimension dim at power series of degree deg,
-  --   in double, double double, triple double, quad double,
-  --   penta double, octo double, or deca double precision.
+  --   in double, double double, triple double, quad double, penta double,
+  --   octo double, deca double, or hexa double precision.
 
   procedure Standard_Multitasked_EvalDiff
               ( nbt : in integer32;
@@ -244,12 +250,21 @@ package Multitasked_AlgoDiff_Convolutions is
                 vy : in DecaDobl_Complex_VecVecs.VecVec;
                 vm : in DecaDobl_Complex_VecMats.VecMat;
                 output : in boolean := false );
+  procedure HexaDobl_Multitasked_EvalDiff
+              ( nbt : in integer32;
+                c : in HexaDobl_Speelpenning_Convolutions.Circuits;
+                x : in HexaDobl_Complex_VecVecs.VecVec;
+                mxe : in Standard_Integer_Vectors.Vector;
+                pwt : in HexaDobl_Speelpenning_Convolutions.Link_to_VecVecVec;
+                vy : in HexaDobl_Complex_VecVecs.VecVec;
+                vm : in HexaDobl_Complex_VecMats.VecMat;
+                output : in boolean := false );
 
   -- DESCRIPTION :
   --   Computes the power table at x.
   --   Evaluates and differentiates the convolution circuits in c at x
   --   with multitasking, in double, double double, triple double,
-  --   quad double, octo double, or deca double precision.
+  --   quad double, octo double, deca double, or hexa double precision.
 
   -- ON ENTRY :
   --   nbt      number of tasks;

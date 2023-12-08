@@ -15,6 +15,8 @@ with OctoDobl_Complex_Vectors;
 with OctoDobl_Complex_VecVecs;
 with DecaDobl_Complex_Vectors;
 with DecaDobl_Complex_VecVecs;
+with HexaDobl_Complex_Vectors;
+with HexaDobl_Complex_VecVecs;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with TripDobl_Complex_Poly_Systems;
@@ -23,6 +25,8 @@ with PentDobl_Complex_Poly_Systems;
 with OctoDobl_Complex_Poly_Systems;
 with DecaDobl_Complex_Poly_Systems;
 with DecaDobl_Complex_Solutions;
+with HexaDobl_Complex_Poly_Systems;
+with HexaDobl_Complex_Solutions;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with TripDobl_Speelpenning_Convolutions;
@@ -30,6 +34,7 @@ with QuadDobl_Speelpenning_Convolutions;
 with PentDobl_Speelpenning_Convolutions;
 with OctoDobl_Speelpenning_Convolutions;
 with DecaDobl_Speelpenning_Convolutions;
+with HexaDobl_Speelpenning_Convolutions;
 
 package Test_mtNewton_Convolutions is
 
@@ -37,7 +42,8 @@ package Test_mtNewton_Convolutions is
 --   Tests the development of Newton's method on power series
 --   with the reverse mode of algorithmic differentation
 --   and linearization to solve the matrix series equations,
---   in double, double double, and quad double arithmetic,
+--   in double, double double, triple double, quad double, penta double,
+--   octo double, deca double, and hexa double arithmetic,
 --   with multitasking for shared memory parallel computers.
 
   procedure Standard_Run
@@ -82,11 +88,17 @@ package Test_mtNewton_Convolutions is
                 scf : in DecaDobl_Complex_VecVecs.VecVec;
                 serelp,mltelp,speedup,efficiency : in out Duration;
                 output,estco : in boolean; verbose : in boolean := true );
+  procedure HexaDobl_Run
+              ( nbt,dim,maxit : in integer32;
+                s : in HexaDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in HexaDobl_Complex_VecVecs.VecVec;
+                serelp,mltelp,speedup,efficiency : in out Duration;
+                output,estco : in boolean; verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Runs Newton's method with nbt tasks,
-  --   in double, double double, triple double, quad double,
-  --   penta double, octo double, or deca double precision.
+  --   in double, double double, triple double, quad double, penta
+  --   double, octo double, deca double, or hexa double precision.
 
   -- ON ENTRY :
   --   nbt        the number of tasks;
@@ -138,12 +150,16 @@ package Test_mtNewton_Convolutions is
               ( p : in DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
 	        sol : in DecaDobl_Complex_Vectors.Vector;
 	        deg : in integer32 );
+  procedure HexaDobl_Run_Loop
+              ( p : in HexaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+	        sol : in HexaDobl_Complex_Vectors.Vector;
+	        deg : in integer32 );
 
   -- DESCRIPTION :
   --   Runs Newton's method on a solution sol of the system p,
   --   with power series of degree deg, in double, double double,
   --   triple double, quad double, penta double, octo double,
-  --   or deca double  precision.
+  --   deca double, or hexa double  precision.
 
   procedure Standard_Test;
 
@@ -186,6 +202,12 @@ package Test_mtNewton_Convolutions is
   -- DESCRIPTION :
   --   Prompts for a polynomial system with solutions
   --   and tests in deca double precision.
+
+  procedure HexaDobl_Test;
+
+  -- DESCRIPTION :
+  --   Prompts for a polynomial system with solutions
+  --   and tests in hexa double precision.
 
   procedure Standard_Random_Test ( dim,deg,nbr,pwr : in integer32 );
 
@@ -253,6 +275,17 @@ package Test_mtNewton_Convolutions is
   --   nbr      number of products;
   --   pwr      largest power of the variables.
 
+  procedure HexaDobl_Random_Test ( dim,deg,nbr,pwr : in integer32 );
+
+  -- DESCRIPTION :
+  --   Tests on a random Newton homotopy in hexa double precision.
+
+  -- ON ENTRY :
+  --   dim      dimension of the exponent vectors;
+  --   deg      degree of the power series;
+  --   nbr      number of products;
+  --   pwr      largest power of the variables.
+
   procedure Standard_Benchmark
               ( file : in file_type; nbruns,inc,maxit : in integer32;
                 nbtseq : in Standard_Integer_Vectors.Link_to_Vector;
@@ -295,10 +328,17 @@ package Test_mtNewton_Convolutions is
                 s : in DecaDobl_Speelpenning_Convolutions.Link_to_System;
                 x : in DecaDobl_Complex_VecVecs.Link_to_VecVec;
                 verbose : in boolean := false );
+  procedure HexaDobl_Benchmark
+              ( file : in file_type; nbruns,inc,maxit : in integer32;
+                nbtseq : in Standard_Integer_Vectors.Link_to_Vector;
+                s : in HexaDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in HexaDobl_Complex_VecVecs.Link_to_VecVec;
+                verbose : in boolean := false );
 
   -- DESCRIPTION :
   --   Runs a benchmark test in double, double double, triple double,
-  --   quad double, penta double, octo double, or deca double precision.
+  --   quad double, penta double, octo double, deca double,
+  --   or hexa double precision.
 
   -- ON ENTRY :
   --   file     must be opened for output;
@@ -333,20 +373,20 @@ package Test_mtNewton_Convolutions is
   --   pwr      largest power of the variables.
 
   procedure Benchmark
-              ( p : in DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-                sols : in DecaDobl_Complex_Solutions.Solution_List;
+              ( p : in HexaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in HexaDobl_Complex_Solutions.Solution_List;
                 dim,deg : in integer32 );
 
   -- DESCRIPTION :
   --   For the given polynomial system p and some solutions in sols,
-  --   prompts the user for the parameters of the benchmark runs
-  --   in all seven levels of precision.
+  --   prompts for the parameters of the benchmark runs in all levels
+  --   of precision.
   
   procedure Prompt_for_Dimensions
               ( dim,deg,nbr,pwr : in out integer32 );
 
   -- DESCRIPTION :
-  --   Prompts the user of the dimensions of the random input data.
+  --   Prompts for the dimensions of the random input data.
 
   procedure Main;
 

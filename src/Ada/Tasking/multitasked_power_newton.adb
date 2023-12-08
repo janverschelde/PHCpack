@@ -520,4 +520,78 @@ package body Multitasked_Power_Newton is
     DecaDobl_Complex_VecVecs.Clear(wks);
   end DecaDobl_Run;
 
+  procedure HexaDobl_Run
+              ( nbt,dim,maxit : in integer32;
+                s : in HexaDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in HexaDobl_Complex_VecVecs.VecVec;
+                tol : in double_float; estco : in boolean;
+                fail : out boolean; info,nbrit : out integer32;
+                rcond,absdx : out hexa_double; 
+                output : in boolean := false;
+                verbose : in boolean := true ) is
+
+    wks : HexaDobl_Complex_VecVecs.VecVec(1..nbt)
+        := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    qdtol : constant hexa_double := create(tol);
+
+  begin
+    if verbose then
+      if estco then
+        Multitasked_LU_Newton_Steps
+         (standard_output,nbt,s,scf,maxit,nbrit,qdtol,absdx,fail,
+          rcond,ipvt,wks,output);
+      else
+        Multitasked_LU_Newton_Steps
+         (standard_output,nbt,s,scf,maxit,nbrit,qdtol,absdx,fail,
+          info,ipvt,wks,output);
+      end if;
+    else
+      if estco then
+        Multitasked_LU_Newton_Steps
+         (nbt,s,scf,maxit,nbrit,qdtol,absdx,fail,rcond,ipvt,wks);
+      else
+        Multitasked_LU_Newton_Steps
+         (nbt,s,scf,maxit,nbrit,qdtol,absdx,fail,info,ipvt,wks);
+      end if;
+    end if;
+    HexaDobl_Complex_VecVecs.Clear(wks);
+  end HexaDobl_Run;
+
+  procedure HexaDobl_Run
+              ( file : in file_type; nbt,dim,maxit : in integer32;
+                s : in HexaDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in HexaDobl_Complex_VecVecs.VecVec;
+                tol : in double_float; estco : in boolean;
+                fail : out boolean; info,nbrit : out integer32;
+                rcond,absdx : out hexa_double; 
+                output : in boolean := false;
+                verbose : in boolean := true ) is
+
+    wks : HexaDobl_Complex_VecVecs.VecVec(1..nbt)
+        := Multitasked_Series_Linearization.Allocate_Work_Space(nbt,dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    qdtol : constant hexa_double := create(tol);
+
+  begin
+    if verbose then
+      if estco then
+        Multitasked_LU_Newton_Steps
+         (file,nbt,s,scf,maxit,nbrit,qdtol,absdx,fail,rcond,ipvt,wks,output);
+      else
+        Multitasked_LU_Newton_Steps
+         (file,nbt,s,scf,maxit,nbrit,qdtol,absdx,fail,info,ipvt,wks,output);
+      end if;
+    else
+      if estco then
+        Multitasked_LU_Newton_Steps
+         (nbt,s,scf,maxit,nbrit,qdtol,absdx,fail,rcond,ipvt,wks);
+      else
+        Multitasked_LU_Newton_Steps
+         (nbt,s,scf,maxit,nbrit,qdtol,absdx,fail,info,ipvt,wks);
+      end if;
+    end if;
+    HexaDobl_Complex_VecVecs.Clear(wks);
+  end HexaDobl_Run;
+
 end Multitasked_Power_Newton;

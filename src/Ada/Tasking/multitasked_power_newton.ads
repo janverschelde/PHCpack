@@ -7,6 +7,7 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Penta_Double_Numbers;               use Penta_Double_Numbers;
 with Octo_Double_Numbers;                use Octo_Double_Numbers;
 with Deca_Double_Numbers;                use Deca_Double_Numbers;
+with Hexa_Double_Numbers;                use Hexa_Double_Numbers;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_VecVecs;
 with TripDobl_Complex_VecVecs;
@@ -14,6 +15,7 @@ with QuadDobl_Complex_VecVecs;
 with PentDobl_Complex_VecVecs;
 with OctoDobl_Complex_VecVecs;
 with DecaDobl_Complex_VecVecs;
+with HexaDobl_Complex_VecVecs;
 with Standard_Speelpenning_Convolutions;
 with DoblDobl_Speelpenning_Convolutions;
 with TripDobl_Speelpenning_Convolutions;
@@ -21,13 +23,14 @@ with QuadDobl_Speelpenning_Convolutions;
 with PentDobl_Speelpenning_Convolutions;
 with OctoDobl_Speelpenning_Convolutions;
 with DecaDobl_Speelpenning_Convolutions;
+with HexaDobl_Speelpenning_Convolutions;
 
 package Multitasked_Power_Newton is
 
 -- DESCRIPTION :
 --   Applies Newton's method on power series to apply Fabry's theorem
 --   in double, double double, triple double, quad double, penta double,
---   octo double, and deca double precision,
+--   octo double, deca double, and hexa double precision,
 --   with multitasking for shared memory parallel computers.
 
   procedure Standard_Run
@@ -156,11 +159,29 @@ package Multitasked_Power_Newton is
                 rcond,absdx : out deca_double; 
                 output : in boolean := false;
                 verbose : in boolean := true );
+  procedure HexaDobl_Run
+              ( nbt,dim,maxit : in integer32;
+                s : in HexaDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in HexaDobl_Complex_VecVecs.VecVec;
+                tol : in double_float; estco : in boolean;
+                fail : out boolean; info,nbrit : out integer32;
+                rcond,absdx : out hexa_double; 
+                output : in boolean := false;
+                verbose : in boolean := true );
+  procedure HexaDobl_Run
+              ( file : in file_type; nbt,dim,maxit : in integer32;
+                s : in HexaDobl_Speelpenning_Convolutions.Link_to_System;
+                scf : in HexaDobl_Complex_VecVecs.VecVec;
+                tol : in double_float; estco : in boolean;
+                fail : out boolean; info,nbrit : out integer32;
+                rcond,absdx : out hexa_double; 
+                output : in boolean := false;
+                verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Runs Newton's method with nbt tasks 
-  --   in double, double double, triple double, quad double,
-  --   penta double, octo double, or deca double precision.
+  --   in double, double double, triple double, quad double, penta
+  --   double, octo double, deca double, or hexa double precision.
 
   -- ON ENTRY :
   --   file     optional output file;

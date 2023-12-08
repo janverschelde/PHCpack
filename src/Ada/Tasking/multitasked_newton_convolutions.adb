@@ -6,6 +6,7 @@ with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Penta_Double_Numbers_io;            use Penta_Double_Numbers_io;
 with Octo_Double_Numbers_io;             use Octo_Double_Numbers_io;
 with Deca_Double_Numbers_io;             use Deca_Double_Numbers_io;
+with Hexa_Double_Numbers_io;             use Hexa_Double_Numbers_io;
 with Standard_Newton_Convolutions;
 with DoblDobl_Newton_Convolutions;
 with TripDobl_Newton_Convolutions;
@@ -13,6 +14,7 @@ with QuadDobl_Newton_Convolutions;
 with PentDobl_Newton_Convolutions;
 with OctoDobl_Newton_Convolutions;
 with DecaDobl_Newton_Convolutions;
+with HexaDobl_Newton_Convolutions;
 with Multitasked_AlgoDiff_Convolutions;  use Multitasked_AlgoDiff_Convolutions;
 with Multitasked_Series_Linearization;   use Multitasked_Series_Linearization;
 
@@ -139,6 +141,23 @@ package body Multitasked_Newton_Convolutions is
     DecaDobl_Newton_Convolutions.Update(x,s.yv);
   end Multitasked_LU_Newton_Step;
 
+  procedure Multitasked_LU_Newton_Step
+              ( nbt : in integer32;
+                s : in HexaDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in HexaDobl_Complex_VecVecs.VecVec;
+                absdx : out hexa_double; info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in HexaDobl_Complex_VecVecs.VecVec;
+                output : in boolean := false ) is
+  begin
+    HexaDobl_Multitasked_EvalDiff(nbt,s.crc,x,s.mxe,s.pwt,s.vy,s.vm,output);
+    HexaDobl_Newton_Convolutions.Minus(s.vy);
+    Multitasked_Solve_by_lufac(nbt,s.vm,s.vy,ipvt,info,wrk,output);
+    HexaDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
+    absdx := HexaDobl_Newton_Convolutions.Max(s.yv);
+    HexaDobl_Newton_Convolutions.Update(x,s.yv);
+  end Multitasked_LU_Newton_Step;
+
 -- ONE NEWTON STEP WITH LU WITH CONDITION NUMBER ESTIMATE :
 
   procedure Multitasked_LU_Newton_Step
@@ -258,6 +277,23 @@ package body Multitasked_Newton_Convolutions is
     DecaDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
     absdx := DecaDobl_Newton_Convolutions.Max(s.yv);
     DecaDobl_Newton_Convolutions.Update(x,s.yv);
+  end Multitasked_LU_Newton_Step;
+
+  procedure Multitasked_LU_Newton_Step
+              ( nbt : in integer32;
+                s : in HexaDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in HexaDobl_Complex_VecVecs.VecVec;
+                absdx : out hexa_double; rcond : out hexa_double;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in HexaDobl_Complex_VecVecs.VecVec;
+                output : in boolean := false ) is
+  begin
+    HexaDobl_Multitasked_EvalDiff(nbt,s.crc,x,s.mxe,s.pwt,s.vy,s.vm,output);
+    HexaDobl_Newton_Convolutions.Minus(s.vy);
+    Multitasked_Solve_by_lufco(nbt,s.vm,s.vy,ipvt,rcond,wrk,output);
+    HexaDobl_Speelpenning_Convolutions.Delinearize(s.vy,s.yv);
+    absdx := HexaDobl_Newton_Convolutions.Max(s.yv);
+    HexaDobl_Newton_Convolutions.Update(x,s.yv);
   end Multitasked_LU_Newton_Step;
 
 -- SEVERAL NEWTON STEPS WITH LU WITHOUT CONDITION NUMBER ESTIMATE :
@@ -563,6 +599,49 @@ package body Multitasked_Newton_Convolutions is
     end loop;
   end Multitasked_LU_Newton_Steps;
 
+  procedure Multitasked_LU_Newton_Steps
+              ( nbt : in integer32;
+                s : in HexaDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in HexaDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+		tol : in hexa_double; absdx : out hexa_double; 
+		fail : out boolean; info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in HexaDobl_Complex_VecVecs.VecVec;
+                output : in boolean := false ) is
+  begin
+    fail := true; nbrit := maxit;
+    for k in 1..maxit loop
+      Multitasked_LU_Newton_Step(nbt,s,x,absdx,info,ipvt,wrk,output);
+      if absdx <= tol
+       then fail := false; nbrit := k; exit;
+      end if;
+    end loop;
+  end Multitasked_LU_Newton_Steps;
+
+  procedure Multitasked_LU_Newton_Steps
+              ( file : in file_type; nbt : in integer32;
+                s : in HexaDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in HexaDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+		tol : in hexa_double; absdx : out hexa_double; 
+		fail : out boolean; info : out integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in HexaDobl_Complex_VecVecs.VecVec;
+                output : in boolean := false ) is
+  begin
+    fail := true; nbrit := maxit;
+    for k in 1..maxit loop
+      put(file,"Step "); put(file,k,1); put_line(file," :");
+      Multitasked_LU_Newton_Step(nbt,s,x,absdx,info,ipvt,wrk,output);
+      put(file,"  info : "); put(file,info,1);
+      put(file,"  absdx : "); put(file,absdx,3); new_line(file);
+      if absdx <= tol
+       then fail := false; nbrit := k; exit;
+      end if;
+    end loop;
+  end Multitasked_LU_Newton_Steps;
+
 -- SEVERAL NEWTON STEPS WITH LU WITH CONDITION NUMBER ESTIMATE :
 
   procedure Multitasked_LU_Newton_Steps
@@ -852,6 +931,49 @@ package body Multitasked_Newton_Convolutions is
 		fail : out boolean; rcond : out deca_double;
                 ipvt : out Standard_Integer_Vectors.Vector;
                 wrk : in DecaDobl_Complex_VecVecs.VecVec;
+                output : in boolean := false ) is
+  begin
+    fail := true; nbrit := maxit;
+    for k in 1..maxit loop
+      put(file,"Step "); put(file,k,1); put_line(file," :");
+      Multitasked_LU_Newton_Step(nbt,s,x,absdx,rcond,ipvt,wrk,output);
+      put(file,"  rcond : "); put(file,rcond,3);
+      put(file,"  absdx : "); put(file,absdx,3); new_line(file);
+      if absdx <= tol
+       then fail := false; nbrit := k; exit;
+      end if;
+    end loop;
+  end Multitasked_LU_Newton_Steps;
+
+  procedure Multitasked_LU_Newton_Steps
+              ( nbt : in integer32;
+                s : in HexaDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in HexaDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+		tol : in hexa_double; absdx : out hexa_double; 
+		fail : out boolean; rcond : out hexa_double;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in HexaDobl_Complex_VecVecs.VecVec;
+                output : in boolean := false ) is
+  begin
+    fail := true; nbrit := maxit;
+    for k in 1..maxit loop
+      Multitasked_LU_Newton_Step(nbt,s,x,absdx,rcond,ipvt,wrk,output);
+      if absdx <= tol
+       then fail := false; nbrit := k; exit;
+      end if;
+    end loop;
+  end Multitasked_LU_Newton_Steps;
+
+  procedure Multitasked_LU_Newton_Steps
+              ( file : in file_type; nbt : in integer32;
+                s : in HexaDobl_Speelpenning_Convolutions.Link_to_System;
+                x : in HexaDobl_Complex_VecVecs.VecVec;
+                maxit : in integer32; nbrit : out integer32;
+		tol : in hexa_double; absdx : out hexa_double; 
+		fail : out boolean; rcond : out hexa_double;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                wrk : in HexaDobl_Complex_VecVecs.VecVec;
                 output : in boolean := false ) is
   begin
     fail := true; nbrit := maxit;
