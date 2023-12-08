@@ -1,3 +1,5 @@
+Fri 8 Dec 2023 : updated tasking.gpr for less obsolete files.
+
 Thu 17 Jun 2021 : added "with use_c2phc;" to ts_mtcelidx.adb to force the
   compilation of use_c2phc when building with the updated tasking.gpr.
 

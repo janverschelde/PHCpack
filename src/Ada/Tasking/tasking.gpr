@@ -31,10 +31,7 @@ project tasking is
             for Languages use ("Ada", "C", "C++");
             for Excluded_Source_Files use
                 (
-                    "corecount.c", "corecountwindows.c",
-                    "double_double.c", "relation_table.c", "cell_stack.c",
-                    "zero_index_tree.c", "index_tree_lp.c", "mixed_volume.c",
-                    "mv.c", "prepare_for_mv.c", "one_level_lp.c", "form_lp.c"
+                    "corecount.c", "corecountwindows.c"
                 );
         when "windows" =>
             for Source_Dirs use
