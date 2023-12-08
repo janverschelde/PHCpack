@@ -24,7 +24,6 @@ with QuadDobl_Complex_Poly_Systems;
 with PentDobl_Complex_Poly_Systems;
 with OctoDobl_Complex_Poly_Systems;
 with DecaDobl_Complex_Poly_Systems;
-with DecaDobl_Complex_Solutions;
 with HexaDobl_Complex_Poly_Systems;
 with HexaDobl_Complex_Solutions;
 with Standard_Speelpenning_Convolutions;

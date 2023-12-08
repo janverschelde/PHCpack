@@ -35,6 +35,7 @@ with PentDobl_Complex_Solutions;
 with PentDobl_System_and_Solutions_io;
 with OctoDobl_Complex_Solutions;
 with OctoDobl_System_and_Solutions_io;
+with DecaDobl_Complex_Solutions;
 with DecaDobl_System_and_Solutions_io;
 with HexaDobl_System_and_Solutions_io;
 with System_Convolution_Circuits;        use System_Convolution_Circuits;
@@ -1625,7 +1626,7 @@ package body Test_mtNewton_Convolutions is
     seri_elapsed,mult_elapsed,speedup,efficiency : Duration := 0.0;
 
   begin
-    put_line(file,"deca double precision");
+    put_line(file,"hexa double precision");
     HexaDobl_Complex_VecVecs.Copy(x.all,scf);
     HexaDobl_Run(1,s.dim,maxit,s,scf,seri_elapsed,mult_elapsed,
                  speedup,efficiency,false,false,verbose);
