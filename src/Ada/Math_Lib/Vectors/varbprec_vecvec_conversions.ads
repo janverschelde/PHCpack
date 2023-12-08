@@ -11,6 +11,7 @@ with QuadDobl_Complex_VecVecs;
 with PentDobl_Complex_VecVecs;
 with OctoDobl_Complex_VecVecs;
 with DecaDobl_Complex_VecVecs;
+with HexaDobl_Complex_VecVecs;
 with Multprec_Complex_VecVecs;
 
 package Varbprec_VecVec_Conversions is
@@ -94,6 +95,25 @@ package Varbprec_VecVec_Conversions is
 
   -- DESCRIPTION :
   --   Converts the coefficients in v from deca double
+  --   to a lower precision.
+
+  function hd2d ( v : HexaDobl_Complex_VecVecs.VecVec )
+                return Standard_Complex_VecVecs.VecVec;
+  function hd2dd ( v : HexaDobl_Complex_VecVecs.VecVec )
+                 return DoblDobl_Complex_VecVecs.VecVec;
+  function hd2td ( v : HexaDobl_Complex_VecVecs.VecVec )
+                 return TripDobl_Complex_VecVecs.VecVec;
+  function hd2qd ( v : HexaDobl_Complex_VecVecs.VecVec )
+                 return QuadDobl_Complex_VecVecs.VecVec;
+  function hd2pd ( v : HexaDobl_Complex_VecVecs.VecVec )
+                 return PentDobl_Complex_VecVecs.VecVec;
+  function hd2od ( v : HexaDobl_Complex_VecVecs.VecVec )
+                 return OctoDobl_Complex_VecVecs.VecVec;
+  function hd2da ( v : HexaDobl_Complex_VecVecs.VecVec )
+                 return DecaDobl_Complex_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Converts the coefficients in v from hexa double
   --   to a lower precision.
 
   procedure Set_Size ( mtx : in out Multprec_Floating_VecVecs.VecVec;
