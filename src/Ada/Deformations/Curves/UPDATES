@@ -1,3 +1,6 @@
+Thu 7 Dec 2023 : new hexadobl_newton_convolution_steps and
+  test_hexadobl_newtconvsteps, extended ts_sernewcnv.adb.
+
 Wed 6 Dec 2023 : new test_{sd,dd,qd}_newton_matrix_series with code taken
   from ts_sernew.adb.  New test_{td,pd,od,da}_newton_matrix_series for
   triple, penta, octo, and deca double precision; updated ts_sernew.adb.

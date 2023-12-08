@@ -76,6 +76,7 @@ quaddobl_newton_convolution_steps : quad double Newton convolution steps
 pentdobl_newton_convolution_steps : penta double Newton convolution steps
 octodobl_newton_convolution_steps : octo double Newton convolution steps
 decadobl_newton_convolution_steps : deca double Newton convolution steps
+hexadobl_newton_convolution_steps : hexa double Newton convolution steps
 test_standard_newtconvsteps       : tests double Newton convolution steps
 test_dobldobl_newtconvsteps       : tests dobldobl Newton convolution steps
 test_tripdobl_newtconvsteps       : tests tripdobl Newton convolution steps
@@ -83,6 +84,7 @@ test_quaddobl_newtconvsteps       : tests quaddobl Newton convolution steps
 test_pentdobl_newtconvsteps       : tests pentdobl Newton convolution steps
 test_octodobl_newtconvsteps       : tests octodobl Newton convolution steps
 test_decadobl_newtconvsteps       : tests decadobl Newton convolution steps
+test_hexadobl_newtconvsteps       : tests hexadobl Newton convolution steps
 ts_sernewcnv                      : test on Newton power series convolutions
 -------------------------------------------------------------------------------
 series_and_homotopies             : homotopies as systems with series coeffs
