@@ -11,6 +11,7 @@ with QuadDobl_Complex_Numbers;
 with PentDobl_Complex_Numbers;
 with OctoDobl_Complex_Numbers;
 with DecaDobl_Complex_Numbers;
+with HexaDobl_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_Vector_Norms;
@@ -337,5 +338,39 @@ package body Test_Series_Predictors is
       end if;
     end if;
   end DecaDobl_Homotopy_Reader;
+
+  procedure HexaDobl_Homotopy_Reader
+              ( nbeq,idxpar : out integer32;
+                sols : out HexaDobl_Complex_Solutions.Solution_List ) is
+
+    ans : character;
+    nvr : integer32;
+
+  begin
+    new_line;
+    put("Natural parameter homotopy ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Homotopy_Series_Readers.HexaDobl_Parameter_Reader(nbeq,nvr,idxpar,sols);
+    else
+      idxpar := 0;
+      new_line;
+      put("Random gamma ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+       -- Homotopy_Series_Readers.HexaDobl_Reader(nbeq,sols,tpow=>1);
+        Homotopy_Series_Readers.HexaDobl_Reader(nbeq,sols);
+      else
+        declare
+          one : constant hexa_double := create(1.0);
+          gamma : constant HexaDobl_Complex_Numbers.Complex_Number
+                := HexaDobl_Complex_Numbers.Create(one);
+        begin
+         -- Homotopy_Series_Readers.HexaDobl_Reader(nbeq,sols,1,gamma);
+          Homotopy_Series_Readers.HexaDobl_Reader(nbeq,sols,gamma);
+        end;
+      end if;
+    end if;
+  end HexaDobl_Homotopy_Reader;
 
 end Test_Series_Predictors;

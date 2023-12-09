@@ -7,6 +7,7 @@ with QuadDobl_Complex_Numbers;
 with PentDobl_Complex_Numbers;
 with OctoDobl_Complex_Numbers;
 with DecaDobl_Complex_Numbers;
+with HexaDobl_Complex_Numbers;
 with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
@@ -30,6 +31,9 @@ with OctoDobl_Complex_Series_Vectors;
 with DecaDobl_Complex_Poly_Systems;
 with DecaDobl_Complex_Solutions;
 with DecaDobl_Complex_Series_Vectors;
+with HexaDobl_Complex_Poly_Systems;
+with HexaDobl_Complex_Solutions;
+with HexaDobl_Complex_Series_Vectors;
 with Partitions_of_Sets_of_Unknowns;    use Partitions_of_Sets_of_Unknowns;
 
 package Homotopy_Series_Readers is
@@ -37,7 +41,7 @@ package Homotopy_Series_Readers is
 -- DESCRIPTION :
 --   Provides interactive procedures to setup of homotopies of series,
 --   in double, double double, triple double, quad double, penta double,
---   octo double, and deca double precision.
+--   octo double, deca double, and hexa double precision.
 --   The homotopy is an artificial parameter homotopy
 --   or a natural parameter homotopy.
 
@@ -62,13 +66,16 @@ package Homotopy_Series_Readers is
   procedure DecaDobl_Projective_Transformation
               ( target,start
                  : in out DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure HexaDobl_Projective_Transformation
+              ( target,start
+                 : in out HexaDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
 
   -- DESCRIPTION :
   --   Transforms the target and start system into homogeneous coordinates,
   --   adding one random linear equation to the target system and Z0 = 1 
   --   to the start system, adding 1 to every start solution,
   --   in double, double double, triple double, quad double,
-  --   octo double, or deca double precision.
+  --   octo double, deca double, or hexa double precision.
 
   -- ON ENTRY :
   --   target   target system in an artificial-parameter homotopy;
@@ -108,6 +115,10 @@ package Homotopy_Series_Readers is
               ( target : in out DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 start : in out DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 sols : in out DecaDobl_Complex_Solutions.Solution_List );
+  procedure HexaDobl_Projective_Transformation
+              ( target : in out HexaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out HexaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out HexaDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Transforms the target, start system, and its start solutions
@@ -155,13 +166,17 @@ package Homotopy_Series_Readers is
               ( target,start
                   : in out DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 m : in natural32; z : in Partition );
+  procedure HexaDobl_Multi_Projective_Transformation
+              ( target,start
+                  : in out HexaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                m : in natural32; z : in Partition );
 
   -- DESCRIPTION :
   --   Transforms the target and start system into m-homogeneous coordinates,
   --   adding m random linear equations to the target system and Zi = 1,
   --   for i in 1..m, to the start system, adding 1 to every start solution,
   --   in double, double double, triple double, quad double, penta double,
-  --   octo double, or deca double precision.
+  --   octo double, deca double, or hexa double precision.
 
   -- ON ENTRY :
   --   target   target system in an artificial-parameter homotopy;
@@ -209,6 +224,11 @@ package Homotopy_Series_Readers is
               ( target : in out DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 start : in out DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 sols : in out DecaDobl_Complex_Solutions.Solution_List;
+                m : in natural32; z : in Partition );
+  procedure HexaDobl_Multi_Projective_Transformation
+              ( target : in out HexaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                start : in out HexaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : in out HexaDobl_Complex_Solutions.Solution_List;
                 m : in natural32; z : in Partition );
 
   -- DESCRIPTION :
@@ -273,6 +293,12 @@ package Homotopy_Series_Readers is
                -- tpow : in natural32;
                 gamma : in DecaDobl_Complex_Numbers.Complex_Number;
                 homcrd,rabin : in boolean := false );
+  procedure HexaDobl_Reader
+              ( nbequ : out integer32;
+                sols : out HexaDobl_Complex_Solutions.Solution_List;
+               -- tpow : in natural32;
+                gamma : in HexaDobl_Complex_Numbers.Complex_Number;
+                homcrd,rabin : in boolean := false );
 
   -- DESCRIPTION :
   --   Prompts for a target system, a start system with start solutions.
@@ -326,6 +352,11 @@ package Homotopy_Series_Readers is
                 sols : out DecaDobl_Complex_Solutions.Solution_List;
                -- tpow : in natural32 := 2;
                 homcrd,rabin : in boolean := false );
+  procedure HexaDobl_Reader
+              ( nbequ : out integer32;
+                sols : out HexaDobl_Complex_Solutions.Solution_List;
+               -- tpow : in natural32 := 2;
+                homcrd,rabin : in boolean := false );
 
   -- DESCRIPTION :
   --   Prompts for a target system, a start system with start solutions.
@@ -363,11 +394,14 @@ package Homotopy_Series_Readers is
   procedure DecaDobl_Parameter_Reader
               ( nbequ,nbvar,idxpar : out integer32;
                 sols : out DecaDobl_Complex_Solutions.Solution_List );
+  procedure HexaDobl_Parameter_Reader
+              ( nbequ,nbvar,idxpar : out integer32;
+                sols : out HexaDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Prompts the user for a natural parameter homotopy and start solutions
-  --   in double, double double, triple double, quad double,
-  --   penta double, octo double, or deca double precision.
+  --   in double, double double, triple double, quad double, penta double,
+  --   octo double, deca double, or hexa double precision.
   --   Assumes there is only one natural parameter.
 
   -- ON RETURN :

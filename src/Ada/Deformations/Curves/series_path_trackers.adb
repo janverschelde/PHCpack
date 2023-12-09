@@ -16,6 +16,8 @@ with OctoDobl_Complex_Numbers;
 with OctoDobl_Complex_Numbers_cv;        use OctoDobl_Complex_Numbers_cv;
 with DecaDobl_Complex_Numbers;
 with DecaDobl_Complex_Numbers_cv;        use DecaDobl_Complex_Numbers_cv;
+with HexaDobl_Complex_Numbers;
+with HexaDobl_Complex_Numbers_cv;        use HexaDobl_Complex_Numbers_cv;
 with Characters_and_Numbers;
 with Numbers_io;                         use Numbers_io;
 with Symbol_Table;
@@ -52,6 +54,9 @@ with OctoDobl_System_and_Solutions_io;
 with DecaDobl_Complex_Poly_Systems;
 with DecaDobl_Complex_Poly_Systems_io;   use DecaDobl_Complex_Poly_Systems_io;
 with DecaDobl_System_and_Solutions_io;
+with HexaDobl_Complex_Poly_Systems;
+with HexaDobl_Complex_Poly_Systems_io;   use HexaDobl_Complex_Poly_Systems_io;
+with HexaDobl_System_and_Solutions_io;
 with Solution_Drops;
 with Standard_Homotopy;
 with Standard_Coefficient_Homotopy;
@@ -67,6 +72,8 @@ with OctoDobl_Homotopy;
 with OctoDobl_Coefficient_Homotopy;
 with DecaDobl_Homotopy;
 with DecaDobl_Coefficient_Homotopy;
+with HexaDobl_Homotopy;
+with HexaDobl_Coefficient_Homotopy;
 with Standard_Complex_Series_VecVecs;
 with DoblDobl_Complex_Series_VecVecs;
 with QuadDobl_Complex_Series_VecVecs;
@@ -1195,6 +1202,46 @@ package body Series_Path_Trackers is
     end if;
   end DecaDobl_Define_Homotopy;
 
+  procedure HexaDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                gamma : in Standard_Complex_Numbers.Complex_Number;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out HexaDobl_Complex_Solutions.Solution_List ) is
+
+    target,start : HexaDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    da_gamma : constant HexaDobl_Complex_Numbers.Complex_Number
+             := Standard_to_HexaDobl_Complex(gamma);
+
+    use Homotopy_Series_Readers;
+
+  begin
+    new_line;
+    put_line("Reading the target system ..."); get(target);
+    new_line;
+    put_line("Reading the start system and its solutions ...");
+    HexaDobl_System_and_Solutions_io.get(start,sols);
+    nvr := HexaDobl_Complex_Solutions.Head_Of(sols).n;
+    nbq := target'last;
+    mhom := Prompt_for_Homogenization(natural32(nvr));
+    if mhom = 0 then
+      HexaDobl_Homotopy.Create(target.all,start.all,2,da_gamma);
+    else
+      if mhom = 1 then
+        HexaDobl_Projective_Transformation(target,start,sols);
+        Add_Multihomogeneous_Symbols(1);
+        nvr := nvr + 1; nbq := nbq + 1;
+      else
+        Define_Partition(natural32(nvr),mhom,idz,z);
+        HexaDobl_Multi_Projective_Transformation(target,start,sols,mhom,z.all);
+        Add_Multihomogeneous_Symbols(mhom);
+        nvr := nvr + integer32(mhom); nbq := nbq + integer32(mhom);
+      end if;
+      HexaDobl_Homotopy.Create(target.all,start.all,1,da_gamma);
+      HexaDobl_Coefficient_Homotopy.Create(start.all,target.all,1,da_gamma);
+    end if;
+  end HexaDobl_Define_Homotopy;
+
   procedure Standard_Define_Homotopy
               ( nbq,nvr : out integer32;
                 pars : in Homotopy_Continuation_Parameters.Parameters;
@@ -1264,6 +1311,16 @@ package body Series_Path_Trackers is
   begin
     DecaDobl_Define_Homotopy(nbq,nvr,pars.gamma,mhom,z,idz,sols);
   end DecaDobl_Define_Homotopy;
+
+  procedure HexaDobl_Define_Homotopy
+              ( nbq,nvr : out integer32;
+                pars : in Homotopy_Continuation_Parameters.Parameters;
+                mhom : out natural32; z : out Link_to_Partition;
+                idz : out Standard_Natural_Vectors.Link_to_Vector;
+                sols : out HexaDobl_Complex_Solutions.Solution_List ) is
+  begin
+    HexaDobl_Define_Homotopy(nbq,nvr,pars.gamma,mhom,z,idz,sols);
+  end HexaDobl_Define_Homotopy;
 
   procedure Standard_Main ( vrb : in integer32 := 0 ) is
 

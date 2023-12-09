@@ -13,6 +13,8 @@ with OctoDobl_Complex_Series;
 with OctoDobl_Complex_Series_Functions;
 with DecaDobl_Complex_Series;
 with DecaDobl_Complex_Series_Functions;
+with HexaDobl_Complex_Series;
+with HexaDobl_Complex_Series_Functions;
 with Complex_Series_and_Polynomials;
 
 package body Series_and_Homotopies is
@@ -94,6 +96,18 @@ package body Series_and_Homotopies is
                   return DecaDobl_CSeries_Poly_Systems.Poly_Sys is
 
     res : constant DecaDobl_CSeries_Poly_Systems.Poly_Sys
+        := Complex_Series_and_Polynomials.System_to_Series_System
+             (h,idx,verbose);
+
+  begin
+    return res;
+  end Create;
+
+  function Create ( h : in HexaDobl_Complex_Poly_Systems.Poly_Sys;
+                    idx : in integer32; verbose : boolean := false )
+                  return HexaDobl_CSeries_Poly_Systems.Poly_Sys is
+
+    res : constant HexaDobl_CSeries_Poly_Systems.Poly_Sys
         := Complex_Series_and_Polynomials.System_to_Series_System
              (h,idx,verbose);
 

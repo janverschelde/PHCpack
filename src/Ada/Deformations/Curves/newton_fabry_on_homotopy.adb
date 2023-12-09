@@ -19,6 +19,7 @@ with QuadDobl_Fabry_on_Homotopy;
 with PentDobl_Fabry_on_Homotopy;
 with OctoDobl_Fabry_on_Homotopy;
 with DecaDobl_Fabry_on_Homotopy;
+with HexaDobl_Fabry_on_Homotopy;
 
 package body Newton_Fabry_on_Homotopy is
 
@@ -29,15 +30,16 @@ package body Newton_Fabry_on_Homotopy is
   begin
     new_line;
     put_line("MENU for the working precision :");
-    put_line("  1. double precision");
-    put_line("  2. double double precision");
-    put_line("  3. triple double precision");
-    put_line("  4. quad double precision");
-    put_line("  5. penta double precision");
-    put_line("  6. octo double precision");
-    put_line("  7. deca double precision");
-    put("Type 1, 2, 3, 4, 5, 6, or 7 to select a precision : ");
-    Ask_Alternative(res,"1234567");
+    put_line("  0. double precision");
+    put_line("  1. double double precision");
+    put_line("  2. triple double precision");
+    put_line("  3. quad double precision");
+    put_line("  4. penta double precision");
+    put_line("  5. octo double precision");
+    put_line("  6. deca double precision");
+    put_line("  7. hexa double precision");
+    put("Type 0, 1, 2, 3, 4, 5, 6, or 7 to select a precision : ");
+    Ask_Alternative(res,"01234567");
     return res;
   end Prompt_for_Precision;
 
@@ -49,13 +51,14 @@ package body Newton_Fabry_on_Homotopy is
       put_line("-> in newton_fabry_on_homotopy.Run_Newton_Fabry ...");
     end if;
     case precision is
-      when '1' => Standard_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
-      when '2' => DoblDobl_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
-      when '3' => TripDobl_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
-      when '4' => QuadDobl_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
-      when '5' => PentDobl_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
-      when '6' => OctoDobl_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
-      when '7' => DecaDobl_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
+      when '0' => Standard_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
+      when '1' => DoblDobl_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
+      when '2' => TripDobl_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
+      when '3' => QuadDobl_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
+      when '4' => PentDobl_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
+      when '5' => OctoDobl_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
+      when '6' => DecaDobl_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
+      when '7' => HexaDobl_Fabry_on_Homotopy.Main(nbtasks,vrblvl-1);
       when others => null;
     end case;
   end Run_Newton_Fabry;

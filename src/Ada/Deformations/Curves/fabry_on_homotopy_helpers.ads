@@ -8,6 +8,7 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Penta_Double_Numbers;               use Penta_Double_Numbers;
 with Octo_Double_Numbers;                use Octo_Double_Numbers;
 with Deca_Double_Numbers;                use Deca_Double_Numbers;
+with Hexa_Double_Numbers;                use Hexa_Double_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with TripDobl_Complex_Numbers;
@@ -15,6 +16,7 @@ with QuadDobl_Complex_Numbers;
 with PentDobl_Complex_Numbers;
 with OctoDobl_Complex_Numbers;
 with DecaDobl_Complex_Numbers;
+with HexaDobl_Complex_Numbers;
 
 package Fabry_on_Homotopy_Helpers is
 
@@ -87,6 +89,10 @@ package Fabry_on_Homotopy_Helpers is
   procedure Write_Report
               ( file : in file_type; rad,err : in deca_double;
                 zpt : in DecaDobl_Complex_Numbers.Complex_Number;
+                fail : in boolean );
+  procedure Write_Report
+              ( file : in file_type; rad,err : in hexa_double;
+                zpt : in HexaDobl_Complex_Numbers.Complex_Number;
                 fail : in boolean );
 
   -- DESCRIPTION :

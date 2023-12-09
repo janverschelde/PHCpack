@@ -9,6 +9,7 @@ with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Penta_Double_Numbers_io;            use Penta_Double_Numbers_io;
 with Octo_Double_Numbers_io;             use Octo_Double_Numbers_io;
 with Deca_Double_Numbers_io;             use Deca_Double_Numbers_io;
+with Hexa_Double_Numbers_io;             use Hexa_Double_Numbers_io;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with TripDobl_Complex_Numbers_io;        use TripDobl_Complex_Numbers_io;
@@ -16,6 +17,7 @@ with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with PentDobl_Complex_Numbers_io;        use PentDobl_Complex_Numbers_io;
 with OctoDobl_Complex_Numbers_io;        use OctoDobl_Complex_Numbers_io;
 with DecaDobl_Complex_Numbers_io;        use DecaDobl_Complex_Numbers_io;
+with HexaDobl_Complex_Numbers_io;        use HexaDobl_Complex_Numbers_io;
 
 package body Fabry_on_Homotopy_Helpers is
 
@@ -158,6 +160,20 @@ package body Fabry_on_Homotopy_Helpers is
   procedure Write_Report
               ( file : in file_type; rad,err : in deca_double;
                 zpt : in DecaDobl_Complex_Numbers.Complex_Number;
+                fail : in boolean ) is
+  begin
+    put(file,"the convergence radius : "); put(file,rad,3);
+    put(file,"   error estimate : "); put(file,err,3); new_line(file);
+    put(file,zpt); put_line(file,"  estimates nearest singularity");
+    if fail
+     then put_line(file,"Reported failure.");
+     else put_line(file,"Reported success.");
+    end if;
+  end Write_Report;
+
+  procedure Write_Report
+              ( file : in file_type; rad,err : in hexa_double;
+                zpt : in HexaDobl_Complex_Numbers.Complex_Number;
                 fail : in boolean ) is
   begin
     put(file,"the convergence radius : "); put(file,rad,3);

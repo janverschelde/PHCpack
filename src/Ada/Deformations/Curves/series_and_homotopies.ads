@@ -10,6 +10,7 @@ with QuadDobl_Complex_Numbers;
 with PentDobl_Complex_Numbers;
 with OctoDobl_Complex_Numbers;
 with DecaDobl_Complex_Numbers;
+with HexaDobl_Complex_Numbers;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Polynomials;
@@ -24,6 +25,8 @@ with OctoDobl_Complex_Polynomials;
 with OctoDobl_Complex_Poly_Systems;
 with DecaDobl_Complex_Polynomials;
 with DecaDobl_Complex_Poly_Systems;
+with HexaDobl_Complex_Polynomials;
+with HexaDobl_Complex_Poly_Systems;
 with Standard_CSeries_Polynomials;
 with Standard_CSeries_Poly_Systems;
 with DoblDobl_CSeries_Polynomials;
@@ -38,6 +41,8 @@ with OctoDobl_CSeries_Polynomials;
 with OctoDobl_CSeries_Poly_Systems;
 with DecaDobl_CSeries_Polynomials;
 with DecaDobl_CSeries_Poly_Systems;
+with HexaDobl_CSeries_Polynomials;
+with HexaDobl_CSeries_Poly_Systems;
 
 package Series_and_Homotopies is
 
@@ -45,7 +50,7 @@ package Series_and_Homotopies is
 --   A homotopy in one parameter is naturally encoded as a polynomial
 --   system with truncated power series as coefficients,
 --   in double, double double, triple double, quad double, penta double,
---   octo double, and deca double precision.
+--   octo double, deca double, and hexa double precision.
 
   function Create ( h : in Standard_Complex_Poly_Systems.Poly_Sys;
                     idx : in integer32; verbose : boolean := false )
@@ -68,6 +73,9 @@ package Series_and_Homotopies is
   function Create ( h : in DecaDobl_Complex_Poly_Systems.Poly_Sys;
                     idx : in integer32; verbose : boolean := false )
                   return DecaDobl_CSeries_Poly_Systems.Poly_Sys;
+  function Create ( h : in HexaDobl_Complex_Poly_Systems.Poly_Sys;
+                    idx : in integer32; verbose : boolean := false )
+                  return HexaDobl_CSeries_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   Given in h the output of Standard_Homotopy.Homotopy_System

@@ -1,5 +1,9 @@
 Thu 7 Dec 2023 : new hexadobl_newton_convolution_steps and
   test_hexadobl_newtconvsteps, extended ts_sernewcnv.adb.
+  New hexadobl_fabry_on_homotopy and hexadobl_homotopy_convolutions_io;
+  extended fabry_on_homotopy_helpers, newton_fabry_on_homotopy.adb,
+  series_and_homotopies, series_path_trackers, homotopy_series_readers,
+  and test_series_predictors.
 
 Wed 6 Dec 2023 : new test_{sd,dd,qd}_newton_matrix_series with code taken
   from ts_sernew.adb.  New test_{td,pd,od,da}_newton_matrix_series for
