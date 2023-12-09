@@ -7,6 +7,7 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Penta_Double_Numbers;               use Penta_Double_Numbers;
 with Octo_Double_Numbers;                use Octo_Double_Numbers;
 with Deca_Double_Numbers;                use Deca_Double_Numbers;
+with Hexa_Double_Numbers;                use Hexa_Double_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with TripDobl_Complex_Numbers;
@@ -14,6 +15,7 @@ with QuadDobl_Complex_Numbers;
 with PentDobl_Complex_Numbers;
 with OctoDobl_Complex_Numbers;
 with DecaDobl_Complex_Numbers;
+with HexaDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
 
 package body Projective_Transformations is
@@ -140,6 +142,25 @@ package body Projective_Transformations is
   --   This is a patch, as the Degree() function causes problems...
 
     use DecaDobl_Complex_Polynomials;
+
+    res : natural32 := 0;
+    trm : constant Term := Head(p);
+
+  begin
+    for i in trm.dg'range loop
+      res := res + trm.dg(i);
+    end loop;
+    return res;
+  end Head_Degree;
+
+  function Head_Degree
+             ( p : HexaDobl_Complex_Polynomials.Poly ) return natural32 is
+
+  -- DESCRIPTION :
+  --   Returns the degree of the head term.
+  --   This is a patch, as the Degree() function causes problems...
+
+    use HexaDobl_Complex_Polynomials;
 
     res : natural32 := 0;
     trm : constant Term := Head(p);
@@ -403,6 +424,42 @@ package body Projective_Transformations is
     return res;
   end Projective_Transformation;
 
+  function Projective_Transformation
+             ( p : HexaDobl_Complex_Polynomials.Poly )
+             return HexaDobl_Complex_Polynomials.Poly is
+
+    use HexaDobl_Complex_Polynomials;
+  
+    deg : constant natural32 := Head_Degree(p);
+    htd : Degrees
+        := new Standard_Natural_Vectors.Vector
+                 (1..integer32(Number_of_Unknowns(p))+1);
+    res : Poly := Null_Poly;
+
+    procedure Embed_Term ( t : in Term; continue : out boolean ) is
+
+      ht : Term;
+      sum : natural32 := 0;
+
+    begin
+      ht.cf := t.cf;
+      for i in t.dg'range loop
+        sum := sum + t.dg(i);
+        htd(i) := t.dg(i);
+      end loop;
+      htd(htd'last) := deg-sum;
+      ht.dg := htd;
+      Add(res,ht);
+      continue := true;
+    end Embed_Term;
+    procedure Embed_Terms is new Visiting_Iterator(Embed_Term);
+
+  begin
+    Embed_Terms(p);
+    Clear(htd);
+    return res;
+  end Projective_Transformation;
+
   procedure Projective_Transformation
               ( p : in out Standard_Complex_Polynomials.Poly ) is
 
@@ -473,6 +530,17 @@ package body Projective_Transformations is
               ( p : in out DecaDobl_Complex_Polynomials.Poly ) is
 
     use DecaDobl_Complex_Polynomials;
+  
+    res : constant Poly := Projective_Transformation(p);
+
+  begin
+    Clear(p); p := res;
+  end Projective_Transformation;
+
+  procedure Projective_Transformation
+              ( p : in out HexaDobl_Complex_Polynomials.Poly ) is
+
+    use HexaDobl_Complex_Polynomials;
   
     res : constant Poly := Projective_Transformation(p);
 
@@ -571,6 +639,19 @@ package body Projective_Transformations is
     return res;
   end Projective_Transformation;
 
+  function Projective_Transformation
+             ( p : HexaDobl_Complex_Poly_Systems.Poly_Sys )
+             return HexaDobl_Complex_Poly_Systems.Poly_Sys is
+
+    res : HexaDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+
+  begin
+    for k in p'range loop
+      res(k) := Projective_Transformation(p(k));
+    end loop;
+    return res;
+  end Projective_Transformation;
+
   procedure Projective_Transformation
               ( p : in out Standard_Complex_Poly_Systems.Poly_Sys ) is
   begin
@@ -621,6 +702,14 @@ package body Projective_Transformations is
 
   procedure Projective_Transformation
               ( p : in out DecaDobl_Complex_Poly_Systems.Poly_Sys ) is
+  begin
+    for k in p'range loop
+      Projective_Transformation(p(k));
+    end loop;
+  end Projective_Transformation;
+
+  procedure Projective_Transformation
+              ( p : in out HexaDobl_Complex_Poly_Systems.Poly_Sys ) is
   begin
     for k in p'range loop
       Projective_Transformation(p(k));
@@ -781,6 +870,28 @@ package body Projective_Transformations is
   end Projective_Transformation;
 
   function Projective_Transformation
+             ( s : HexaDobl_Complex_Solutions.Solution )
+             return HexaDobl_Complex_Solutions.Solution is
+
+    use HexaDobl_Complex_Numbers;
+    use HexaDobl_Complex_Solutions;
+
+    n : constant integer32 := s.n;
+    r : Solution(n+1);
+    one : constant hexa_double := create(1.0);
+
+  begin
+    r.v(1..n) := s.v(1..n);
+    r.v(n+1) := Create(one);
+    r.t := s.t;
+    r.m := s.m;
+    r.err := s.err;
+    r.rco := s.rco;
+    r.res := s.res;
+    return r;
+  end Projective_Transformation;
+
+  function Projective_Transformation
              ( sols : Standard_Complex_Solutions.Solution_List )
              return Standard_Complex_Solutions.Solution_List is
 
@@ -899,6 +1010,25 @@ package body Projective_Transformations is
              return DecaDobl_Complex_Solutions.Solution_List is
 
     use DecaDobl_Complex_Solutions;
+
+    res,res_last : Solution_List;
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Append(res,res_last,Projective_Transformation(ls.all));
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Projective_Transformation;
+
+  function Projective_Transformation
+             ( sols : HexaDobl_Complex_Solutions.Solution_List )
+             return HexaDobl_Complex_Solutions.Solution_List is
+
+    use HexaDobl_Complex_Solutions;
 
     res,res_last : Solution_List;
     tmp : Solution_List := sols;
@@ -1091,6 +1221,35 @@ package body Projective_Transformations is
               ( sols : in out DecaDobl_Complex_Solutions.Solution_List ) is
 
     use DecaDobl_Complex_Solutions;
+
+  begin
+    if Is_Null(sols) then
+      null;
+    else
+      declare
+        temp : Solution_List := sols;
+        n : constant integer32 := Head_Of(sols).n;
+        ls : Link_To_Solution;
+        s : Solution(n);
+        s2 : Solution(n+1);
+      begin
+        while not Is_Null(temp) loop
+          ls := Head_Of(temp);
+          s := ls.all;
+          s2 := Projective_Transformation(s);
+          Clear(ls);
+          ls := new Solution'(s2);
+          Set_Head(temp,ls);
+          temp := Tail_Of(temp);
+        end loop;
+      end;
+    end if;
+  end Projective_Transformation;
+
+  procedure Projective_Transformation 
+              ( sols : in out HexaDobl_Complex_Solutions.Solution_List ) is
+
+    use HexaDobl_Complex_Solutions;
 
   begin
     if Is_Null(sols) then

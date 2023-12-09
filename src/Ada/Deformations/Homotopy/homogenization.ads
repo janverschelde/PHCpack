@@ -13,6 +13,8 @@ with OctoDobl_Complex_Polynomials;
 with OctoDobl_Complex_Poly_Systems;
 with DecaDobl_Complex_Polynomials;
 with DecaDobl_Complex_Poly_Systems;
+with HexaDobl_Complex_Polynomials;
+with HexaDobl_Complex_Poly_Systems;
 
 package Homogenization is
 
@@ -61,6 +63,10 @@ package Homogenization is
              ( s1 : DecaDobl_Complex_Poly_Systems.Poly_Sys;
                s2 : DecaDobl_Complex_Poly_Systems.Poly_Sys )
              return DecaDobl_Complex_Poly_Systems.Poly_Sys;
+  function Add_Equations
+             ( s1 : HexaDobl_Complex_Poly_Systems.Poly_Sys;
+               s2 : HexaDobl_Complex_Poly_Systems.Poly_Sys )
+             return HexaDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   The resulting polynomial system is the concatenation of s1 and s2.
@@ -102,6 +108,10 @@ package Homogenization is
              ( s : DecaDobl_Complex_Poly_Systems.Poly_Sys;
                m : natural32; re : boolean )
              return DecaDobl_Complex_Poly_Systems.Poly_Sys;
+  function Add_Random_Hyperplanes
+             ( s : HexaDobl_Complex_Poly_Systems.Poly_Sys;
+               m : natural32; re : boolean )
+             return HexaDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   To the polynomial system s, m hyperplanes are added with
@@ -131,6 +141,9 @@ package Homogenization is
   function Add_Standard_Hyperplanes
              ( s : DecaDobl_Complex_Poly_Systems.Poly_Sys; m : natural32 )
              return DecaDobl_Complex_Poly_Systems.Poly_Sys;
+  function Add_Standard_Hyperplanes
+             ( s : HexaDobl_Complex_Poly_Systems.Poly_Sys; m : natural32 )
+             return HexaDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   If n = Number_Of_Unknowns(s(i)), for i in s'range,
