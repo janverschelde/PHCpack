@@ -1,3 +1,7 @@
+Sat 9 Dec 2023 : new hexadobl_random_polynomials, hexadobl_complex_poly_
+  randomizers, test_hexadobl_random_systems; extended random_polynomial_
+  systems and ts_randpoly.adb.
+
 Thu 30 Nov 2023 : defined polynomials, Laurent polynomials, and systems
   with hexa double coefficients, new ts_hapol.adb, extended polynomials.gpr.
 

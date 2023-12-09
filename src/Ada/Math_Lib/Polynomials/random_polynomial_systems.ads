@@ -7,6 +7,7 @@ with QuadDobl_Complex_Poly_Systems;
 with PentDobl_Complex_Poly_Systems;
 with OctoDobl_Complex_Poly_Systems;
 with DecaDobl_Complex_Poly_Systems;
+with HexaDobl_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems;
 
 package Random_Polynomial_Systems is
@@ -62,6 +63,10 @@ package Random_Polynomial_Systems is
              ( nvr,deg,mct,ctp : natural32; neq : integer32;
                verbose : boolean := false )
              return DecaDobl_Complex_Poly_Systems.Poly_Sys;
+  function HexaDobl_Generate
+             ( nvr,deg,mct,ctp : natural32; neq : integer32;
+               verbose : boolean := false )
+             return HexaDobl_Complex_Poly_Systems.Poly_Sys;
   function Multprec_Generate
              ( nvr,deg,mct,ctp : natural32; neq : integer32;
                verbose : boolean := false )
@@ -70,7 +75,7 @@ package Random_Polynomial_Systems is
   -- DESCRIPTION :
   --   Returns a randomly generated polynomial system, with double,
   --   double double, triple double, quad double, penta double, octo double,
-  --   deca double, or arbitrary precision coefficients.
+  --   deca double, hexa double, or arbitrary precision coefficients.
 
   -- ON ENTRY :
   --   nvr     number of variables;
@@ -104,6 +109,9 @@ package Random_Polynomial_Systems is
   procedure DecaDobl_Generate_and_Show
               ( n,d,m,c : in natural32; e : in integer32;
                 lp : out DecaDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure HexaDobl_Generate_and_Show
+              ( n,d,m,c : in natural32; e : in integer32;
+                lp : out HexaDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Multprec_Generate_and_Show
               ( n,d,m,c : in natural32; e : in integer32;
                 lp : out Multprec_Complex_Poly_Systems.Link_to_Poly_Sys );
@@ -114,7 +122,7 @@ package Random_Polynomial_Systems is
   --   the type of coefficients, then this procedure will generate a
   --   random polynomial with complex coefficients, in double, double double,
   --   triple double, quad double, penta double, octo double, deca double,
-  --   or arbitrary multiprecision.
+  --   hexa double, or arbitrary multiprecision.
   --   The procedure is interactive, the result is returned in lp.
 
 end Random_Polynomial_Systems;

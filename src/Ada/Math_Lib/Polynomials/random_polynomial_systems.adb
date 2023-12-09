@@ -28,6 +28,10 @@ with DecaDobl_Complex_Polynomials;
 with DecaDobl_Complex_Polynomials_io;    use DecaDobl_Complex_Polynomials_io;
 with DecaDobl_Complex_Poly_Systems_io;   use DecaDobl_Complex_Poly_Systems_io;
 with DecaDobl_Random_Polynomials;
+with HexaDobl_Complex_Polynomials;
+with HexaDobl_Complex_Polynomials_io;    use HexaDobl_Complex_Polynomials_io;
+with HexaDobl_Complex_Poly_Systems_io;   use HexaDobl_Complex_Poly_Systems_io;
+with HexaDobl_Random_Polynomials;
 with Multprec_Complex_Polynomials;
 with Multprec_Complex_Polynomials_io;    use Multprec_Complex_Polynomials_io;
 with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
@@ -139,6 +143,23 @@ package body Random_Polynomial_Systems is
 
   procedure Save_System_to_File
               ( s : in DecaDobl_Complex_Poly_Systems.Poly_Sys ) is
+
+    file : file_type;
+    ans : character;
+
+  begin
+    put("Do you want to write the system to file ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Read_Name_and_Create_File(file);
+      put_line(file,s);
+    else
+      put_line(s);
+    end if;
+  end Save_System_to_File;
+
+  procedure Save_System_to_File
+              ( s : in HexaDobl_Complex_Poly_Systems.Poly_Sys ) is
 
     file : file_type;
     ans : character;
@@ -395,6 +416,38 @@ package body Random_Polynomial_Systems is
     return res;
   end DecaDobl_Generate;
 
+  function HexaDobl_Generate
+             ( nvr,deg,mct,ctp : natural32; neq : integer32;
+               verbose : boolean := false )
+             return HexaDobl_Complex_Poly_Systems.Poly_Sys is
+
+    res : HexaDobl_Complex_Poly_Systems.Poly_Sys(1..neq);
+
+    use HexaDobl_Random_Polynomials;
+
+  begin
+    for i in 1..neq loop
+      declare
+        p : HexaDobl_Complex_Polynomials.Poly;
+      begin
+        if mct = 0
+         then p := Random_Dense_Poly(nvr,deg,ctp);
+         else p := Random_Sparse_Poly(nvr,deg,mct,ctp);
+        end if;
+        if verbose then
+          new_line;
+          put("-> p = ");
+          if ctp /= 1 and ctp /= 2
+           then put_line(p);
+           else put(p); new_line;
+          end if;
+        end if;
+        res(i) := p;
+      end;
+    end loop;
+    return res;
+  end HexaDobl_Generate;
+
   function Multprec_Generate
              ( nvr,deg,mct,ctp : natural32; neq : integer32;
                verbose : boolean := false )
@@ -552,6 +605,24 @@ package body Random_Polynomial_Systems is
     Save_System_to_File(sys);
     lp := new DecaDobl_Complex_Poly_Systems.Poly_Sys'(sys);
   end DecaDobl_Generate_and_Show;
+
+  procedure HexaDobl_Generate_and_Show
+              ( n,d,m,c : in natural32; e : in integer32;
+                lp : out HexaDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    sys : HexaDobl_Complex_Poly_Systems.Poly_Sys(1..e);
+    ans : character;
+    vrb : boolean;
+
+  begin
+    new_line;
+    put("Do you want intermediate output during generation ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    vrb := (ans = 'y');
+    sys := HexaDobl_Generate(n,d,m,c,e,vrb);
+    Save_System_to_File(sys);
+    lp := new HexaDobl_Complex_Poly_Systems.Poly_Sys'(sys);
+  end HexaDobl_Generate_and_Show;
 
   procedure Multprec_Generate_and_Show
               ( n,d,m,c : in natural32; e : in integer32;

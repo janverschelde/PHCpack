@@ -250,15 +250,24 @@ hexadobl_polynomial_convertors    : converting hexadobl with double/multprec
 test_hexadobl_polynomials         : tests on hexadobl polynomials
 ts_dapol                          : main test on decadobl polynomials
 -------------------------------------------------------------------------------
+tripdobl_complex_poly_randomizers : randomize coeffs of tripdobl polynomials
+quaddobl_complex_poly_randomizers : randomize coeffs of quaddobl polynomials
+pentdobl_complex_poly_randomizers : randomize coeffs of pentdobl polynomials
+octodobl_complex_poly_randomizers : randomize coeffs of octodobl polynomials
+decadobl_complex_poly_randomizers : randomize coeffs of decadobl polynomials
+hexadobl_complex_poly_randomizers : randomize coeffs of hexadobl polynomials
+-------------------------------------------------------------------------------
 tripdobl_random_polynomials       : random polynomials in tripdobl precision
 pentdobl_random_polynomials       : random polynomials in pentdobl precision
 octodobl_random_polynomials       : random polynomials in octodobl precision
 decadobl_random_polynomials       : random polynomials in decadobl precision
+hexadobl_random_polynomials       : random polynomials in hexadobl precision
 random_polynomial_systems         : interactive generation of random systems
 test_tripdobl_random_systems      : tests random tripdobl polynomial systems
 test_pentdobl_random_systems      : tests random pentdobl polynomial systems
 test_octodobl_random_systems      : tests random octodobl polynomial systems
 test_decadobl_random_systems      : tests random decadobl polynomial systems
+test_hexadobl_random_systems      : tests random hexadobl polynomial systems
 -------------------------------------------------------------------------------
 generic_hessian_matrices          : basic computation of Hessian matrix
 standard_complex_hessians         : Hessians in standard double precision
