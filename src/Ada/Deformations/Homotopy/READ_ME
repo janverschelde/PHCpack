@@ -62,6 +62,7 @@ quaddobl_coefficient_homotopy      : quad double coeff-parameter homotopy
 pentdobl_coefficient_homotopy      : penta double coeff-parameter homotopy
 octodobl_coefficient_homotopy      : octo double coeff-parameter homotopy
 decadobl_coefficient_homotopy      : deca double coeff-parameter homotopy
+hexadobl_coefficient_homotopy      : hexa double coeff-parameter homotopy
 test_standard_coeff_homotopy       : tests standard coefficient homotopies
 test_dobldobl_coeff_homotopy       : tests dobldobl coefficient homotopies
 test_tripdobl_coeff_homotopy       : tests tripdobl coefficient homotopies
@@ -69,6 +70,7 @@ test_quaddobl_coeff_homotopy       : tests quaddobl coefficient homotopies
 test_pentdobl_coeff_homotopy       : tests pentdobl coefficient homotopies
 test_octodobl_coeff_homotopy       : tests octodobl coefficient homotopies
 test_decadobl_coeff_homotopy       : tests decadobl coefficient homotopies
+test_hexadobl_coeff_homotopy       : tests hexadobl coefficient homotopies
 ts_evalhomt                        : main test on coefficient homotopies
 hyperplane_solution_scaling        : scale a solution and a hyperplane
 ts_scalplane                       : test on scaling last hyperplane

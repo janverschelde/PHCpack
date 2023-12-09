@@ -1,5 +1,6 @@
 Sat 9 Dec 2023 : new hexadobl_homotopy, test_hexadobl_poly_homotopy,
-  and extended ts_homotopy.adb.
+  and extended ts_homotopy.adb.  Extended ts_evalhomt.adb to test the
+  new hexadobl_coefficient_homotopy, test_hexadobl_coeff_homotopy.
 
 Thu 10 Jun 2021 : added the exec_dir attribute to homotopy.gpr.
 
