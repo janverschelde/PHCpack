@@ -1,4 +1,4 @@
-Sweeping for singularities and parameter continuation in PHCv2.4.85
+Sweeping for singularities and parameter continuation in PHCv2.4.87
 
 For clarity, this directory was isolated from Continuation in v2.3.75.
 The path trackers in this directory rely on natural parameter homotopies.
@@ -21,6 +21,7 @@ quaddobl_parameter_systems       : parameter homotopy with quad doubles
 pentdobl_parameter_systems       : parameter homotopy with penta doubles
 octodobl_parameter_systems       : parameter homotopy with octo doubles
 decadobl_parameter_systems       : parameter homotopy with deca doubles
+hexadobl_parameter_systems       : parameter homotopy with hexa doubles
 complex_convex_continuation      : interpolate start and target with complex
 parameter_homotopy_continuation  : drivers to path tracking
 ts_parcon                        : stand-alone calling program
