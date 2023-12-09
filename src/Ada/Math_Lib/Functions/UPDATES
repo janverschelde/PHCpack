@@ -1,3 +1,5 @@
+Sat 9 Dec 2023 : added hexadobl_complex_poly_{functions, sysfun}.
+
 Thu 10 Jun 2021 : added the exec_dir attribute to functions.gpr.
 
 Tue 8 Jun 2021 : defined functions.gpr to build the test procedures.

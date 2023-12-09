@@ -1,4 +1,4 @@
-Polynomial evaluation and differentiation algorithms in PHCv2.4.85
+Polynomial evaluation and differentiation algorithms in PHCv2.4.87
 
 This directory was created new in v2.3.69, collecting the former nested 
 Horner scheme algorithms of the directory polynomials, and with the new
@@ -51,6 +51,8 @@ octodobl_complex_poly_functions   : complex octo double polynomial functions
 octodobl_complex_poly_sysfun      : systems of octodobl complex functions
 decadobl_complex_poly_functions   : complex deca double polynomial functions
 decadobl_complex_poly_sysfun      : systems of decadobl complex functions
+hexadobl_complex_poly_functions   : complex hexa double polynomial functions
+hexadobl_complex_poly_sysfun      : systems of hexadobl complex functions
 multprec_complex_poly_functions   : evaluating multprec complex polynomials
 multprec_complex_laur_functions   : evaluating multprec complex Laurentials
 multprec_floating_poly_functions  : evaluating multprec floating polynomials

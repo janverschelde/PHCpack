@@ -1,4 +1,4 @@
-Homotopies, scaling and reduction in PHCv2.4.85
+Homotopies, scaling and reduction in PHCv2.4.87
 
 The Creators in the package Homotopy allow more accessibility constants for
 the Cheater's homotopy.  A multiprecision version of the homotopy package
@@ -39,6 +39,7 @@ ts_qdhom                           : compares eval & diff for dd & qd
 pentdobl_homotopy                  : homotopy for systems of penta doubles
 octodobl_homotopy                  : homotopy for systems of octo doubles
 decadobl_homotopy                  : homotopy for systems of deca doubles
+hexadobl_homotopy                  : homotopy for systems of hexa doubles
 test_standard_laur_homotopy        : tests standard Laurent homotopy
 test_standard_poly_homotopy        : tests standard polynomial homotopy
 test_dobldobl_poly_homotopy        : tests dobldobl polynomial homotopy
@@ -47,6 +48,7 @@ test_quaddobl_poly_homotopy        : tests quaddobl polynomial homotopy
 test_pentdobl_poly_homotopy        : tests pentdobl polynomial homotopy
 test_octodobl_poly_homotopy        : tests octodobl polynomial homotopy
 test_decadobl_poly_homotopy        : tests decadobl polynomial homotopy
+test_hexadobl_poly_homotopy        : tests hexadobl polynomial homotopy
 ts_homotopy                        : runs tests on homotopies
 multprec_homotopy                  : homotopy for multiprecision numbers
 drivers_for_homotopy_creation      : menu-driven homotopy construction

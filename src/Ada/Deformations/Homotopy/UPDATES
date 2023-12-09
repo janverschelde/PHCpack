@@ -1,3 +1,6 @@
+Sat 9 Dec 2023 : new hexadobl_homotopy, test_hexadobl_poly_homotopy,
+  and extended ts_homotopy.adb.
+
 Thu 10 Jun 2021 : added the exec_dir attribute to homotopy.gpr.
 
 Wed 9 Jun 2021 : defined homotopy.gpr to build the test procedures.
