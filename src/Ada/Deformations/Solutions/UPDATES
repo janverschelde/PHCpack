@@ -1,3 +1,5 @@
+Sat 9 Dec 2023 : extended solution_drops for hexa double precision.
+
 Thu 30 Nov 2023 : moved ts_ddsols.adb and ts_qdsols.adb into a new test
   package test_solutions_io, with extensions for other precisions.
   Removed ts_ddsols.adb and ts_qdsols.adb, new ts_sols_io.adb.
