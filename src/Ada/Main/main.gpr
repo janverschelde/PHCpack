@@ -35,9 +35,12 @@ project main is
             );
             for Excluded_Source_Files use
             (
-                "ts_use_syscon.c",
-                "corecount.c", "corecountwindows.c",
-                "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c"
+                "ts_use_syscon.c", "corecount.c", "corecountwindows.c",
+                "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c",
+                "ts_diahom.adb", "ts_elim.adb",
+                "ts_itrack.adb", "ts_ilocal.adb", "ts_inewt.adb",
+                "rewrite_polynomials.ads", "rewrite_polynomials.adb",
+                "ts_rwpoly.adb", "pieri_solver_trf.adb"
             );
             for Languages use ("Ada", "C++", "C");
         when "windows" =>
@@ -72,7 +75,11 @@ project main is
             for Excluded_Source_Files use
             (
                 "corecount.c",
-                "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c"
+                "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c",
+                "ts_diahom.adb", "ts_elim.adb",
+                "ts_itrack.adb", "ts_ilocal.adb", "ts_inewt.adb",
+                "rewrite_polynomials.ads", "rewrite_polynomials.adb",
+                "ts_rwpoly.adb", "pieri_solver_trf.adb"
             );
             for Languages use ("Ada", "C", "C++");
     end case;
@@ -121,5 +128,11 @@ project main is
         for Switches ("main.cpp") use ("-o demics");
 
     end Linker;
+
+    package Builder is
+
+       for Executable ("phctop.adb") use "phc";
+
+    end Builder;
 
 end main;

@@ -1,31 +1,6 @@
-Wed 22 Mar 2023 : after removing filter_and_split_solutions,
-  updated main.gpr and phclib.gpr.  Updated main.gpr and phclib.gpr
-  after removing the package multihomogenous_solutions.  After removing 
-  testfivehom1.adb and testnine.adb, updated main.gpr and phclib.gpr.
-  After fixing ts_elim and removing ts_reorder and ts_rewrite,
-  updated main.gpr and phclib.gpr once more.
-  Updated phclib.gpr after removal of ts_pieri_count.c.
-
-Tue 21 Mar 2023 : updated main.gpr and phclib.gpr after fixing ts_diahom,
-  and the removal of ts_intcas, ts_squeeze, and ts_sqem.
-  Updated main.gpr and phclib.gpr after removing premature intrinsic packages.
-  After removing intrinsic_diagonal_{homotopies, solvers},
-  and drivers_to_intrinsic_solvers, updated main.gpr and phclib.gpr.
-
-Mon 20 Mar 2023 : updated main.gpr and phclib.gpr for the fixing of the
-  rewrite_polynomials and ts_rwpoly.adb.  Updated main.gpr and phclib.gpr
-  for the removal of ts_ifactor.adb.  Updated main.gpr and phclib.gpr
-  for the removal of phc_factor.adb and factor.c.  Updated main.gpr and
-  phclib.gpr for the removal of ts_endgm.adb and ts_mulsam.adb.
-
-Sun 19 Mar 2023 : updated main.gpr and phclib.gpr for the removal of 
-  multiplicity_homotopies and ts_mulhom.  After fixing ts_ilocal.adb,
-  updated main.gpr and phclib.gpr.  Updated main.gpr and phclib.gpr
-  after fixing ts_inewt.adb and ts_itrack.adb.  After removing ts_sampar
-  and intrinsic_sampling_machine, updated main.gpr and phclib.gpr.
-
-Sat 18 Mar 2023 : updated phclib.gpr, removing excluded source files
-  of tests after moving C tests in the new folder C in Ada/Math_Lib/QD.
+Sun 10 Dec 2023 : extended main.gpr so the name of the executable is
+  not phctop, but simply phc, when using gprbuild.
+  In main.gpr, cleaned up the list of excluded source files.
 
 Mon 30 May 2022 : updated greeting_banners for version 2.4.86.
 

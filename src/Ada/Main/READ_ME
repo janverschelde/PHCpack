@@ -22,7 +22,7 @@ The are several parts in this library :
 3. PHCpack as server package and how to use it
 4. the top level procedure
 
-Run "gprbuild main.gpr" to make phctop, phc without -j.
+Run "gprbuild main.gpr" to make phc (without -j).
 On windows, type "gprbuild main.gpr -Xos=windows"
 at the PowerShell prompt.
 The "gprclean main.gpr" removes all files created by gprbuild.
