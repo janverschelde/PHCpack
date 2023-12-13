@@ -57,9 +57,10 @@ version 3 of the License.
 Downloading and Installing
 ==========================
 
-Executable versions of the program for various machine architectures
-and operating systems are available via
-<http://www.math.uic.edu/~jan/download.html>.
+For Linux, MacOS X, and Windows, 
+:index:`executable` versions of the program are available 
+via the releases made at :index:`github`,
+at <https://github.com/janverschelde/PHCpack>.
 
 For the :index:`Windows` operating systems, the 
 executable version of phc is in the file ``phc.exe``
@@ -88,7 +89,7 @@ can be typed at the command prompt:
    gunzip *phcv2_4p.tar.gz
    tar xpf *phcv2_4p.tar
 
-If all went well, typing ``./phc`` at the command prompt should bring
+If all went well, typing ``phc`` at the command prompt should bring
 up the welcome message and the screen with available options.
 
 The executable ``phc`` gives access to almost all the functionality
@@ -216,7 +217,7 @@ A good starting point could be the Python interface
 and in particular phcpy, with documentation at
 <http://www.math.uic.edu/~jan/phcpy_doc_html/index.html>.
 
-The main executable ``phc`` built by the code in PHCpack 
+The main :index:`executable` ``phc`` built by the code in PHCpack 
 is called at the command line with options to invoke specific tools
 and with file names as arguments in which the input and output data goes.
 In contrast, the scripting interface replaces the files with persistent
