@@ -61,7 +61,7 @@ There are four major layers in the code:
    solutions and homotopies, deflation;
 
 3. ``Root_Counts``: root counting methods and constructions of homotopies,
-   linear-product start start systems based on Bezout bounds,
+   linear-product start start systems based on Bézout bounds,
    mixed volumes and polyhedral homotopies;
 
 4. ``Components``: witness sets, cascades of homotopies, monodromy, 
@@ -573,8 +573,8 @@ and fields.  These abstract classes are useful to define composite
 generic types.  Multiprecision complex numbers are defined via the
 instantiation of a generic complex numbers package.
 
-Quad and Multiple Doubles
--------------------------
+Multiple Double Arithmetic
+--------------------------
 
 The directory ``QD`` provides 
 the :index:`double double` and :index:`quad double` arithmetic,
@@ -945,6 +945,21 @@ Padé approximants for the algebraic curves.
 The Padé approximants in turn lead to more accurate predictors
 and path trackers, exported by ``phc -u``.
 
+The distinction should be made between
+
+* :index:`apriori step size control`; and
+
+* :index:`aposteriori step size control`.
+
+The aposteriori step size control adjusts the step size based on
+the convergence of Newton's method, used as the corrector.
+The apriori step size control applies the ratio theorem of Fabry
+to detect the nearest singularity
+and a criterion based on the curvature of the paths to estimate
+the distance to the nearest solution path;
+combined with Padé approximants
+to predict the next point on the solution path.
+
 Polyhedral End Games
 --------------------
 
@@ -973,6 +988,12 @@ coordinate transformation) a solution of the initial form system.
 
 The polyhedral end games are implemented in double, double double,
 and quad double precision.
+
+Recent developments apply extrapolation methods on Taylor series
+developments of solution curves defined by polynomial homotopies.
+Therefore, in a future release, this folder may be renamed into
+``Extrapolators`` to make the distinction between the historical
+notion of end games.
 
 Path Trackers for Artificial-Parameter Homotopies
 -------------------------------------------------
@@ -1079,7 +1100,7 @@ The directory ``Product`` contains packages to construct start systems
 based on the degree structure of a polynomial system.
 There are two main categories of start systems.
 
-1. Total degree start systems.  The classical theorem of Bezout states
+1. Total degree start systems.  The classical theorem of Bézout
    that the product of the degrees of the polynomials in the system
    gives an upper bound on the number of isolated solutions.
    A total degree start system consists of a decoupled system,
@@ -1104,9 +1125,9 @@ By this enumeration, it is not necessary to compute the entire solution
 set of a start system in memory, as one can ask for the computation of
 a particular start solution.
 
-The generalized Bezout bounds are a special case of the polyhedral
+The generalized Bézout bounds are a special case of the polyhedral
 root counts.  In case the Newton polytopes can be written as the sum
-of simplices, the generalized Bezout bound matches the mixed volume.
+of simplices, the generalized Bézout bound matches the mixed volume.
 
 Binomials are Polynomials with Two Terms
 ----------------------------------------
@@ -1556,6 +1577,19 @@ memory even though only the value of the root count is returned
 in ``rc``.  The solutions are printed with the call to
 ``solcon_write_standard_solutions()``.
 
+The Library libPHCpack
+----------------------
+
+The C interface is availlable via the file ``libPHCpack``
+(with the extension ``.so`` on Linux, ``.dll`` on Windows,
+and ``.dylib`` on Mac OS X), made with
+
+::
+
+   gprbuild phclib.gpr
+
+where ``phclib.gpr`` is in the folder ``Main`` of the Ada source code.
+
 Message Passing
 ===============
 
@@ -1658,6 +1692,12 @@ illustrated in :numref:`figcircdiff8`.
     An arithmetic circuit to compute the gradient of the product
     of eight variables
     :math:`x_1`, :math:`x_2`, :math:`\ldots`, and :math:`x_8`.
+
+GPU acceleration capable of teraflop performance can compensate 
+the cost overhead of quad double arithmetic.
+Another overhead is caused by running Newton's method to
+compute Taylor series developments of the solution curves
+defined by polynomial homotopies.
 
 The Web Interface
 =================

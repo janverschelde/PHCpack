@@ -110,44 +110,25 @@ The :index:`source code` is under :index:`version control`
 at :index:`github`,
 at <https://github.com/janverschelde/PHCpack>.
 To compile the source code, the gnu-ada compiler is needed.
-Free binary versions of the :index:`gnu-ada compiler`
-are available at <http://libre.adacore.com>.
-One does not need to be superuser to install the gnu-ada compiler.
-The directory ``Objects`` in the
-source code provides makefiles for Linux, Mac OS X, and Windows
-operating systems.
+The main executable `phc` is built with
 
-When compiling from source, note that since version 2.4.35,
-the quad double library QDlib must be installed.
-Alternatively, one can also compile the QD library in a user
-account and then adjust the makefiles for the location of the
-header files and the archive qdlib.a.  
-The makefile for Windows provides an example
-of a compilation of the QD library under a user account.
-On Linux systems, the qdlib.a must have been compiled with
-the -fPIC option for the shared object file for the C extension
-module of phcpy.
+::
 
-Alternatively, the executable phc can be built without the
-dependency on the installed QDlib.  The makefile contains
-the instructions for the ``make phc_noqd`` compilation.
-For this compilation, a working version of the gnu-ada compiler
-should be available at the front of the execution path.
+   gprbuild main.gpr
 
-The software has been compiled with many versions of gcc 
-on Linux, Mac OS X, and Windows computers.
-While the software does not require any particular version of gcc,
-the C, C++, and Ada code must be compiled with the *same* version of gcc.
-One cannot link object code produced by, for example g++ 4.9.3,
-with other object code compiled by another version of gcc,
-for example gcc 4.9.2.
+where the ``main.gpr`` is available in the folder ``Ada/Main``
+of the source code.
+The same folder contains ``phclib.gpr`` with instructions to build
+the :index:`library` ``libPHCpack``.
 
-Last but certainly not least, programs can be build with
-the ``GPRbuild`` of the the GNAT Project Manager,
-a multi-language builder tool.
+The ``GPRbuild`` is a multi-language builder tool.
+of the GNAT Project Manager.
 The folders of the source contain each one file with the extension
 ``.gpr`` which defines the build-related characteristics of the
 main programs provided in the source folder.
+Every source code folder defines many test procedures which are
+built with ``GPRbuild`` as defined in the files 
+with the ``.gpr`` extension.
 
 Project History
 ===============
@@ -155,7 +136,7 @@ Project History
 The software originated in the development of new homotopy algorithms
 to solve polynomial systems.  The main novelty of the first release
 of the sources was the application of polyhedral homotopies in the
-blackbox solver.  Polyhedral homotopies are generically optimal for
+blackbox solver.  Polyhedral homotopies are *generically optimal* for
 sparse polynomial systems.  Although the number of solutions may grow
 exponentially in the number of equations, variables, and degrees,
 for systems where the coefficients are sufficiently generic,
@@ -211,10 +192,9 @@ in version 2.4.80.
 phcpy: An Application Programming Interface to PHCpack
 ======================================================
 
-Because code development on PHCpack has taken a very long time,
-looking at the code may be a bit too overwhelming at first.
-A good starting point could be the Python interface
-and in particular phcpy, with documentation at
+The modernization of PHCpack happened through the development
+of the Python package ``phcpy``.
+This package has its own documentation at
 <http://www.math.uic.edu/~jan/phcpy_doc_html/index.html>.
 
 The main :index:`executable` ``phc`` built by the code in PHCpack 
@@ -222,6 +202,18 @@ is called at the command line with options to invoke specific tools
 and with file names as arguments in which the input and output data goes.
 In contrast, the scripting interface replaces the files with persistent
 objects and instead of selecting options from menus, the user runs scripts.
+
+PHCpack.jl: an interface to Julia
+=================================
+
+The Julia interface ``PHCpack.jl`` is under development,
+jointly with Kylash Viswanathan.
+A preliminary version, which uses the executable ``phc``,
+is available at 
+<https://github.com/kviswa5/Julia-PHC-Interface>.
+
+The version of the Julia interface which uses ``libPHCpack``
+is available via the ``Julia`` folder of the source code of PHCpack.
 
 References
 ==========
