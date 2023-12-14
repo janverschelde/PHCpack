@@ -43,7 +43,6 @@ The Ada sources are organized in a tree of directories:
   |-- Math_Lib             : 1. general mathematical library
   |      |-- Numbers       : 1.1. number representations
   |      |-- QD            : 1.2. multiple double arithmetic
-  |      |-- QD/C          : 1.2.1 multiple double arithmetic in C
   |      |-- Vectors       : 1.3. vectors and vectors of vectors
   |      |-- Matrices      : 1.4. matrices and linear-system solvers
   |      |-- Divisors      : 1.5. common divisors, integer linear algebra

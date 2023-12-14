@@ -1,3 +1,5 @@
+Wed 13 Dec 2023 : updated greeting_banners for version 2.4.87.
+
 Sun 10 Dec 2023 : extended main.gpr so the name of the executable is
   not phctop, but simply phc, when using gprbuild.
   In main.gpr, cleaned up the list of excluded source files.
