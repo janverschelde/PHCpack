@@ -8,7 +8,7 @@ Reference Manual
 ****************
 
 The code is written in the following languages:
-Ada, C, C++ (NVIDIA CUDA), and Python.
+Ada, C, C++, NVIDIA CUDA, Python, and most recently Julia.
 The following description documents the organization and
 design decisions which led to the current state of the code.
 
@@ -17,7 +17,7 @@ and Windows computers.  Shared memory parallelism works
 on all three operating systems.
 The message passing with MPI has not been tested on Windows.
 The development of the accelerator code with NVIDIA CUDA 
-was done on Linux computers.
+was done on Linux computers and gaming laptops running Windows.
 
 The Python code was developed and tested on Linux and MacOS X,
 not on Windows.

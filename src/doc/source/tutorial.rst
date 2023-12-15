@@ -7,7 +7,7 @@ mainly for use at the command line.
 Interfaces for Maple, MATLAB (Octave), SageMath, and Python 
 provide a scripting environment.
 
-Input formats
+Input Formats
 =============
 
 A lot of examples are contained in the database of Demo systems,
@@ -106,21 +106,34 @@ of the antidiagonal require only the executable version phc.
 The other interfaces PHClib, PHCmpi, and phcpy are tied
 to the source code.
 
-The phc.py is an optional package, available in the distribution
+The ``phc.py`` (observe the dot between ``phc`` and ``py``) 
+is an optional package, available in the distribution
 of SageMath.  Another, perhaps more natural interface to SageMath,
 is to extend the Python interpreter of SageMath with phcpy.
 
-Calling the blackbox solver
-===========================
+Runs in a Jupyter notebook work with a Python or SageMath kernel,
+using the interpreter with phcpy installed.
+For Julia, use PHCpack.jl, either as standalone or in a Jupyter
+notebook with a Julia kernel.
 
-The blackbox solver works reasonably well to approximate all isolated
-solutions of a polynomial system.  On the system we saved earlier in
+The Blackbox Solvers
+====================
+
+Depending on whether the polynomial system has only isolated solutions,
+or whether also positive dimensional solution sets, select one of those
+two blackbox options:
+
+1. ``phc -b`` to approximate all isolated solutions;  or
+
+2. ``phc -B`` for a numerical irreducible decomposition.
+
+To use ``phc -b`` on the system we saved earlier in
 the file multilin, we invoke the blackbox solver typing
 at the command prompt
 
 ::
 
-    /tmp/phc -b multilin multilin.phc
+    phc -b multilin multilin.phc
 
 The output of the solver will be sent to the file multilin.phc.
 In case the input file did not yet contain any solutions, 
@@ -147,12 +160,13 @@ solution in the list occurs in the following format:
 
 This is the actual output of the root refiner.  As the residual
 at the end of the solution path and at the start of the root refinement
-is already 1.887E-14, one iteration of
+is already ``1.887E-14``, one iteration of
 Newton's method suffices to confirm the quality of the root.
 
 The next line in the output indicates that we reached the end of
-the path, at t=1, properly.  The multiplicity of the root is one,
-as indicated by m = 1.  Then we see the values for the five variables,
+the path, at ``t :  1.00000000000000E+00   0.00000000000000E+00``
+properly.  The multiplicity of the root is one,
+as indicated by ``m : 1``.  Then we see the values for the five variables,
 as pairs of two floating-point numbers: the real and imaginary part of
 each value.  The last line summarizes the numerical quality of the root.
 The value for err is the magnitude of the last correction term
@@ -187,7 +201,7 @@ with the option ``-B``, typing at the command prompt
 
 ::
 
-    /tmp/phc -B adjmin4 adjmin4.phc
+    phc -B adjmin4 adjmin4.phc
 
 The user is then prompted to enter the top dimension of the solution set,
 which by default equals the number of variables minus one.
@@ -201,10 +215,10 @@ in the numerical irreducible decomposition.
 To run in quad double precision on 16 threads,
 type ``phc -B4 -t16`` at the command prompt.
 
-Running the program in full mode
+Running the Program in Full Mode
 ================================
 
-If we just type in ``/tmp/phc`` without any option, we run the program
+If we just type in ``phc`` without any option, we run the program
 in full mode and will pass through all the main menus.
 A nice application is the verification of the counterexample of Bertrand
 Haas.  We type in haas when the program asks us for the name of
@@ -233,8 +247,16 @@ m-homogeneous start systems.  We can save the start system in the file
 multilin\_start (only used for backup).
 Now we continue just as before.
 
-Running the program in toolbox mode
-===================================
+Running Toolbox Mode
+====================
+
+The blackbox mode makes a selection of algorithms
+and runs them with default settings of the tolerances and parameters.
+In toolbox mode, defaults can be alterned and the stages in the solver
+are separated.
+
+For Isolated Solutions Only
+---------------------------
 
 Skipping the preconditioning stage (scaling and reduction),
 we can compute root counts and construct start systems via the option ``-r``,
@@ -247,12 +269,12 @@ is useful if we have to solve a slightly modified problem.
 For instance,
 suppose we change the coefficients of the system in multilin,
 then we can still use multilin_start to solve the system with
-modified coefficients, using the ``-p`` option.  In this way we use
-a cheater's homotopy, performing a kind of coefficient-parameter
-polynomial continuation.
+modified coefficients, using the ``-p`` option.  
+In this way we use a :index:`cheater's homotopy`, alternatively called
+:index:`coefficient-parameter polynomial continuation`.
 
-Dealing with components of solutions
-====================================
+Computing Components of Solutions
+---------------------------------
 
 Consider the system of adjacent minors, we previously saved 
 as ``adjmin4``.  We first must construct a suitable embedding
@@ -263,4 +285,4 @@ solver has no difficulty to solve this problem and appends the
 witness points to the file ``adjmin4e5``.  To compute the
 irreducible decomposition, we may use the monodromy breakup
 algorithm, selecting 2 from the menu that comes up when we
-can the program with the option ``-f``.
+run with the option ``-f``.
