@@ -1,4 +1,4 @@
-Thu 14 Dec 2023 : fixed 2.4.87 in greeting_banners.adb.
+Fri 15 Dec 2023 : fixed greeting_banners for correct date and version.
 
 Wed 13 Dec 2023 : updated greeting_banners for version 2.4.87.
 
