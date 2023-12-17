@@ -1,3 +1,5 @@
+Sun 17 Dec 2023 : extended polynomials.py for nonsquare polynomial systems.
+
 Sat 16 Dec 2023 : extended dimension.py, polynomials.py, solutions.py,
   and solver.py for double double and quad double precisions.
 
