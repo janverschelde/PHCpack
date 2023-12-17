@@ -154,7 +154,9 @@ def get_double_polynomial(idx, vrblvl=0):
     retval = phc(67, adx, poldata, ccc, vrb)
     if vrblvl > 0:
         print('-> the return value of get_double_polynomial :', retval)
-    result = int4a2str(poldata, True)
+    strpol = int4a2str(poldata, (vrblvl > 0))
+    pols = strpol.split(';')
+    result = pols[0] + ';'
     return result
 
 def get_double_double_polynomial(idx, vrblvl=0):
@@ -178,7 +180,9 @@ def get_double_double_polynomial(idx, vrblvl=0):
     retval = phc(106, adx, poldata, ccc, vrb)
     if vrblvl > 0:
         print('-> the return value of get_double_double_polynomial :', retval)
-    result = int4a2str(poldata, True)
+    strpol = int4a2str(poldata, (vrblvl > 0))
+    pols = strpol.split(';')
+    result = pols[0] + ';'
     return result
 
 def get_quad_double_polynomial(idx, vrblvl=0):
@@ -202,7 +206,9 @@ def get_quad_double_polynomial(idx, vrblvl=0):
     retval = phc(107, adx, poldata, ccc, vrb)
     if vrblvl > 0:
         print('-> the return value of get_quad_double_polynomial :', retval)
-    result = int4a2str(poldata, True)
+    strpol = int4a2str(poldata, (vrblvl > 0))
+    pols = strpol.split(';')
+    result = pols[0] + ';'
     return result
 
 def get_double_system(vrblvl=0):
@@ -294,6 +300,303 @@ def number_of_symbols(pols, vrblvl=0):
         print('-> number_of_symbols, return value :', retval)
         print('-> number_of_symbols, result :', slen[0])
     return slen[0]
+
+def clear_double_system(vrblvl=0):
+    """
+    Clears the system set in double precision.
+    """
+    if vrblvl > 0:
+        print('-> clear_double_system', end='')
+    phc = get_phcfun()
+    adim = pointer(c_int(0))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    retval = phc(27, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def clear_double_double_system(vrblvl=0):
+    """
+    Clears the system set in double double precision.
+    """
+    if vrblvl > 0:
+        print('-> clear_double_double_system', end='')
+    phc = get_phcfun()
+    adim = pointer(c_int(0))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    retval = phc(337, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def clear_quad_double_system(vrblvl=0):
+    """
+    Clears the system set in quad double precision.
+    """
+    if vrblvl > 0:
+        print('-> clear_quad_double_system', end='')
+    phc = get_phcfun()
+    adim = pointer(c_int(0))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    retval = phc(387, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def initialize_double_syspool(dim, vrblvl=0):
+    """
+    Initialize the systems pool in double precision with dim.
+    """
+    if vrblvl > 0:
+        print("-> initialize_double_syspool, dim = ", dim)
+    phc = get_phcfun()
+    adim = pointer(c_int(dim))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    retval = phc(300, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print('-> initialize_double_syspool, return value :', retval)
+    return retval
+
+def initialize_double_double_syspool(dim, vrblvl=0):
+    """
+    Initialize the systems pool in double double precision with dim.
+    """
+    if vrblvl > 0:
+        print("-> initialize_double_double_syspool, dim = ", dim)
+    phc = get_phcfun()
+    adim = pointer(c_int(dim))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    retval = phc(318, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print('-> initialize_double_double_syspool, return value :', retval)
+    return retval
+
+def initialize_quad_double_syspool(dim, vrblvl=0):
+    """
+    Initialize the systems pool in quad double precision with dim.
+    """
+    if vrblvl > 0:
+        print("-> initialize_quad_double_syspool, dim = ", dim)
+    phc = get_phcfun()
+    adim = pointer(c_int(dim))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    retval = phc(319, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print('-> initialize_quad_double_syspool, return value :', retval)
+    return retval
+
+def size_double_syspool(vrblvl=0):
+    """
+    Returns the size of the systems pool in double precision.
+    """
+    if vrblvl > 0:
+        print('-> size_double_syspool', end='')
+    phc = get_phcfun()
+    adim = pointer(c_int(0))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    retval = phc(301, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('number of systems in the pool :', adim[0])
+    return adim[0]
+
+def size_double_double_syspool(vrblvl=0):
+    """
+    Returns the size of the systems pool in double double precision.
+    """
+    if vrblvl > 0:
+        print('-> size_double_double_syspool', end='')
+    phc = get_phcfun()
+    adim = pointer(c_int(0))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    retval = phc(316, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('number of systems in the pool :', adim[0])
+    return adim[0]
+
+def size_quad_double_syspool(vrblvl=0):
+    """
+    Returns the size of the systems pool in quad double precision.
+    """
+    if vrblvl > 0:
+        print('-> size_quad_double_syspool,', end='')
+    phc = get_phcfun()
+    adim = pointer(c_int(0))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    retval = phc(317, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('number of systems in the pool :', adim[0])
+    return adim[0]
+
+def copy_to_double_syspool(idx, vrblvl=0):
+    """
+    Copies the system set in double precision to position idx
+    in the systems pool.
+    """
+    if vrblvl > 0:
+        print('-> copy_to_double_syspool, idx =', idx)
+    phc = get_phcfun()
+    adim = pointer(c_int(idx))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    retval = phc(304, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print('-> copy_to_double_syspool, return value :', retval)
+    return retval
+
+def copy_to_double_double_syspool(idx, vrblvl=0):
+    """
+    Copies the system set in double double precision to position idx
+    in the systems pool.
+    """
+    if vrblvl > 0:
+        print('-> copy_to_double_double_syspool, idx =', idx)
+    phc = get_phcfun()
+    adim = pointer(c_int(idx))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    retval = phc(608, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print('-> copy_to_double_double_syspool, return value :', retval)
+    return retval
+
+def copy_to_quad_double_syspool(idx, vrblvl=0):
+    """
+    Copies the system set in quad double precision to position idx
+    in the systems pool.
+    """
+    if vrblvl > 0:
+        print('-> copy_to_quad_double_syspool, idx =', idx)
+    phc = get_phcfun()
+    adim = pointer(c_int(idx))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    retval = phc(609, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print('-> copy_to_quad_double_syspool, return value :', retval)
+    return retval
+
+def copy_from_double_syspool(idx, vrblvl=0):
+    """
+    Copies the system in double precision at position idx
+    in the systems pool to the defined system in double precision.
+    """
+    if vrblvl > 0:
+        print('-> copy_from_double_syspool, idx =', idx)
+    phc = get_phcfun()
+    adim = pointer(c_int(idx))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    retval = phc(313, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print('-> copy_from_double_syspool, return value :', retval)
+    return retval
+
+def copy_from_double_double_syspool(idx, vrblvl=0):
+    """
+    Copies the system in double double precision at position idx
+    in the systems pool to the defined system in double double precision.
+    """
+    if vrblvl > 0:
+        print('-> copy_from_double_double_syspool, idx =', idx)
+    phc = get_phcfun()
+    adim = pointer(c_int(idx))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    retval = phc(314, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print('-> copy_from_double_double_syspool, return value :', retval)
+    return retval
+
+def copy_from_quad_double_syspool(idx, vrblvl=0):
+    """
+    Copies the system in quad double precision at position idx
+    in the systems pool to the defined system in quad double precision.
+    """
+    if vrblvl > 0:
+        print('-> copy_from_quad_double_syspool, idx =', idx)
+    phc = get_phcfun()
+    adim = pointer(c_int(idx))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    retval = phc(315, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print('-> copy_from_quad_double_syspool, return value :', retval)
+    return retval
+
+def clear_double_syspool(vrblvl=0):
+    """
+    Clears the systems pool in double precision.
+    """
+    if vrblvl > 0:
+        print('-> clear_double_syspool', end='')
+    phc = get_phcfun()
+    adim = pointer(c_int(0))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    retval = phc(697, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def clear_double_double_syspool(vrblvl=0):
+    """
+    Clears the systems pool in double double precision.
+    """
+    if vrblvl > 0:
+        print('-> clear_double_double_syspool', end='')
+    phc = get_phcfun()
+    adim = pointer(c_int(0))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    retval = phc(698, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def clear_quad_double_syspool(vrblvl=0):
+    """
+    Clears the systems pool in quad double precision.
+    """
+    if vrblvl > 0:
+        print('-> clear_quad_double_syspool', end='')
+    phc = get_phcfun()
+    adim = pointer(c_int(0))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    retval = phc(699, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
 
 def test_double_polynomial():
     """
@@ -405,8 +708,83 @@ def test_quad_double_system():
     for pol in pols:
         print(pol)
 
+def test_double_syspool():
+    """
+    Tests the systems pool in double precision.
+    """
+    lvl = 10
+    initialize_double_syspool(3, lvl)
+    dim = size_double_syspool(lvl)
+    print('The size of the systems pool :', dim)
+    pol1 = ['t - 1;']
+    set_double_system(1, pol1, lvl)
+    copy_to_double_syspool(1)
+    pol2 = ['t - 2;']
+    set_double_system(1, pol2, lvl)
+    copy_to_double_syspool(2)
+    pol3 = ['t - 3;']
+    set_double_system(1, pol3, lvl)
+    copy_to_double_syspool(3)
+    for i in range(1, dim+1):
+        clear_double_system(lvl)
+        copy_from_double_syspool(i)
+        pols = get_double_system(lvl)
+        print('system at', i, 'in the pool :', pols)
+    clear_double_syspool(lvl)
+
+def test_double_double_syspool():
+    """
+    Tests the systems pool in double double precision.
+    """
+    lvl = 10
+    initialize_double_double_syspool(3, lvl)
+    dim = size_double_double_syspool(lvl)
+    print('The size of the systems pool :', dim)
+    pol1 = ['t - 1/3;']
+    set_double_double_system(1, pol1, lvl)
+    copy_to_double_double_syspool(1)
+    pol2 = ['t - 2/3;']
+    set_double_double_system(1, pol2, lvl)
+    copy_to_double_double_syspool(2)
+    pol3 = ['t - 1;']
+    set_double_double_system(1, pol3, lvl)
+    copy_to_double_double_syspool(3)
+    for i in range(1, dim+1):
+        clear_double_double_system(lvl)
+        copy_from_double_double_syspool(i)
+        pols = get_double_double_system(lvl)
+        print('system at', i, 'in the pool :', pols)
+    clear_double_double_syspool(lvl)
+
+def test_quad_double_syspool():
+    """
+    Tests the systems pool in quad double precision.
+    """
+    lvl = 10
+    initialize_quad_double_syspool(3, lvl)
+    dim = size_quad_double_syspool(lvl)
+    print('The size of the systems pool :', dim)
+    pol1 = ['t - 1/3;']
+    set_quad_double_system(1, pol1, lvl)
+    copy_to_quad_double_syspool(1)
+    pol2 = ['t - 2/3;']
+    set_quad_double_system(1, pol2, lvl)
+    copy_to_quad_double_syspool(2)
+    pol3 = ['t - 1;']
+    set_quad_double_system(1, pol3, lvl)
+    copy_to_quad_double_syspool(3)
+    for i in range(1, dim+1):
+        clear_quad_double_system(lvl)
+        copy_from_quad_double_syspool(i)
+        pols = get_quad_double_system(lvl)
+        print('system at', i, 'in the pool :', pols)
+    clear_quad_double_syspool(lvl)
+
 if __name__=="__main__":
     # test_double_polynomial()
     # test_double_system()
-    test_double_double_system()
+    # test_double_double_system()
     # test_quad_double_system()
+    # test_double_syspool()
+    test_double_double_syspool()
+    # test_quad_double_syspool()
