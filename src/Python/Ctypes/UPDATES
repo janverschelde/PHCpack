@@ -1,3 +1,6 @@
+Sat 16 Dec 2023 : extended dimension.py, polynomials.py, solutions.py,
+  and solver.py for double double and quad double precisions.
+
 Sat 21 Jan 2023 : in version.py renamed the function getPHCmod into 
   get_phcfun which returned the function instead of the module.
   All other .py files were adjusted which led to close to perfect
