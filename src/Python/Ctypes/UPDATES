@@ -1,6 +1,7 @@
 Sun 17 Dec 2023 : extended polynomials.py for nonsquare polynomial systems.
   Extended polynomials.py with functions to store many polynomial systems.
   Extended solutions.py with functions to append solution strings.
+  In solver.py, doubled the size of the buffer for the root counter string.
 
 Sat 16 Dec 2023 : extended dimension.py, polynomials.py, solutions.py,
   and solver.py for double double and quad double precisions.
