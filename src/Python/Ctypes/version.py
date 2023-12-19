@@ -13,6 +13,7 @@ import ctypes
 import sys
 from ctypes import create_string_buffer
 from ctypes import c_int, c_double, pointer, sizeof
+from struct import unpack
 
 # relative location of the PHCpack library
 LOCATION = "../../lib"
@@ -75,13 +76,34 @@ def str2int4a(data, verbose=False):
     if verbose:
         print('-> str2int4a, size of the data is', dim)
     szd = 4*dim
-    result = create_string_buffer(szd)
+    result = create_string_buffer(b"", szd)
     for k in range(dim):
         result[4*k] = data[k].encode()
     if verbose:
         print('-> str2int4a returns', result)
     return result
 
+def test_byte_strings(verbose=False):
+    """
+    Tests the conversion of a string into a string buffer
+    and then backwards.
+    """
+    greeting = 'Hello World!'
+    if verbose:
+        print(greeting)
+    coded = str2int4a(greeting, verbose)
+    decoded = int4a2str(coded, verbose)
+    if verbose:
+        print(decoded)
+    if greeting == decoded:
+        if verbose:
+            print('Test passed.')
+        return 0
+    else:
+        if verbose:
+            print('Test failed!')
+        return 1
+    
 def int4a2nbr(data, verbose=False):
     """
     Given in data is a Python list of integers,
@@ -96,16 +118,57 @@ def int4a2nbr(data, verbose=False):
     szd = 4*dim
     if verbose:
         print('-> int4a2nbr size of result :', szd)
-    result = create_string_buffer(szd)
+    result = create_string_buffer(b"", szd)
     for k in range(dim):
         if data[k] < 256:
             result[4*k] = data[k] # no encode() because plain integer
+        elif data[k] < 65536:
+            result[4*k+1], result[4*k] = divmod(data[k], 256)
+        elif data[k] < 16777216:
+            result[4*k+2], rest = divmod(data[k], 65536)
+            result[4*k+1], result[4*k] = divmod(rest, 256)
         else:
-            result[4*k] = data[k] % 256
-            result[4*k+1] = data[k]//256
+            result[4*k+3], rest = divmod(data[k], 16777216)
+            result[4*k+2], rest = divmod(rest, 65536)
+            result[4*k+1], result[4*k] = divmod(rest, 256)
     if verbose:
         print('-> int4a2nbr returns', result)
     return result
+
+def nbr2int4a(data, verbose=False):
+    """
+    Given in data is a 32-bit integer array,
+    in a ctypes string buffer.
+    Returns the list of python integers.
+    """
+    if verbose:
+        print('-> nbr2int4a, data :', data)
+    fmt = str(len(data)//4) + 'I'
+    if verbose:
+        print('format :', fmt)
+    result = list(unpack(fmt, data))
+    if verbose:
+        print('-> nbr2int4a returns', result)
+    return result
+
+def test_integer_encodings(verbose=False):
+    """
+    Tests the encoding of a list of integers as a ctypes string buffer.
+    """
+    import struct
+    L = [12, 1033, 129129, 20123543]
+    print('L =', L)
+    b = int4a2nbr(L, verbose)
+    K = nbr2int4a(b, verbose)
+    print('K =', K)
+    if L == K:
+        if verbose:
+            print('Test passed.')
+        return 0;
+    else:
+        if verbose:
+            print('Test failed!')
+        return 1;
 
 def version(verbose=True):
     """
@@ -115,7 +178,7 @@ def version(verbose=True):
     """
     phc = get_phcfun()
     aaa = pointer(c_int(0))
-    name = create_string_buffer(30*4)
+    name = create_string_buffer(b"", 30*4)
     ccc = pointer(c_double(0.0))
     if verbose:
         retval = phc(999, aaa, name, ccc, 2)
@@ -136,3 +199,5 @@ def version(verbose=True):
 
 if __name__=="__main__":
     print(version(True))
+    test_byte_strings(True)
+    test_integer_encodings(True)
