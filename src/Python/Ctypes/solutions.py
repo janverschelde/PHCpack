@@ -2,7 +2,7 @@
 Exports functions on solutions.
 """
 from ctypes import c_int, c_double, pointer, create_string_buffer
-from version import get_phcfun, int4a2str
+from version import get_phcfun, int4a2nbr, int4a2str, str2int4a
 from polynomials import set_double_system
 from polynomials import set_double_double_system
 from polynomials import set_quad_double_system
@@ -20,7 +20,7 @@ def append_double_solution_string(nvr, sol, vrblvl=0):
         print('The solution string :')
         print(sol)
     phc = get_phcfun()
-    apars = int4a2nbr([nvr, len(sol)], vrblvl)
+    apars = int4a2nbr([nvr, len(sol)], (vrblvl > 0))
     bsol = str2int4a(sol)
     ccc = pointer(c_double(0.0))
     vrb = c_int(vrblvl)
@@ -72,9 +72,16 @@ def set_double_solutions(nvr, sols, vrblvl=0):
     Sets the solutions in double precision, with the strings in sols,
     where the number of variables equals nvr.
     """
+    if vrblvl > 0:
+        print('-> set_double_solutions, nvr =', nvr)
     clear_double_solutions(vrblvl)
     fail = 0
     for ind in range(0, len(sols)):
+        print('calling append_double_solution_string ...')
+        print('the solution :')
+        print(sols[ind])
+        print('nvr =', nvr) 
+        print('len(sol) =', len(sols[ind])) 
         fail = append_double_solution_string(nvr, sols[ind], vrblvl)
         if(fail != 0):
             print('Solution at position', ind, 'is not appended.')
@@ -112,7 +119,7 @@ def number_double_solutions(vrblvl=0):
     The vrblvl is the verbose level.
     """
     if vrblvl > 0:
-        print('-> number_double_solutions,', end='')
+        print('-> number_double_solutions', end='')
     phc = get_phcfun()
     aaa = pointer(c_int(0))
     bbb = pointer(c_int(0))

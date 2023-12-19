@@ -98,9 +98,13 @@ def int4a2nbr(data, verbose=False):
         print('-> int4a2nbr size of result :', szd)
     result = create_string_buffer(szd)
     for k in range(dim):
-        result[4*k] = data[k] # no encode() because plain integer
+        if data[k] < 256:
+            result[4*k] = data[k] # no encode() because plain integer
+        else:
+            result[4*k] = data[k] % 256
+            result[4*k+1] = data[k]//256
     if verbose:
-        print('-> int4anbr returns', result)
+        print('-> int4a2nbr returns', result)
     return result
 
 def version(verbose=True):

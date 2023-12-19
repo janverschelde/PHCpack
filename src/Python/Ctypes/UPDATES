@@ -1,3 +1,6 @@
+Mon 18 Dec 2023 : attempt to fix int4a2nbr() in version.py for numbers
+  larger than 255.  Updates in solutions.py.
+
 Sun 17 Dec 2023 : extended polynomials.py for nonsquare polynomial systems.
   Extended polynomials.py with functions to store many polynomial systems.
   Extended solutions.py with functions to append solution strings.
