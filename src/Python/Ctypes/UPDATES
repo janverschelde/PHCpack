@@ -1,3 +1,5 @@
+Wed 20 Dec 2023 : extended solver.py with trinomial system test.
+
 Tue 19 Dec 2023 : added tests to version.py and fixed the format
   conversions for all 32-bit natural numbers.  Fixed buffer size 
   in polynomials.py; initialized buffers in solutions.py and solver.py.

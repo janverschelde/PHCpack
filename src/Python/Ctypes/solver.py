@@ -6,6 +6,48 @@ from version import get_phcfun, int4a2nbr, int4a2str
 from polynomials import set_double_system
 from polynomials import set_double_double_system
 from polynomials import set_quad_double_system
+from volumes import stable_mixed_volume
+
+def random_trinomials():
+    """
+    Returns a system of two trinomials equations for testing.
+    A trinomial consists of three monomials in two variables.
+    Exponents are uniform between 0 and 5 and coefficients are
+    on the complex unit circle.
+    """
+    from random import randint as r
+    exponents = [(r(0, 5), r(0, 5)) for _ in range(0, 6)]
+    makemonf = lambda e: 'x^%d*y^%d' % e
+    monomials = [makemonf(e) for e in exponents]
+    from random import uniform as u
+    from math import cos, sin, pi
+    angles = [u(0, 2*pi) for _ in range(0, 6)]
+    makecff = lambda a: '(' + str(cos(a)) + '%+.14f' % sin(a) + '*i)'
+    cff = [makecff(a) for a in angles]
+    one = '+'.join(cff[i] + '*' + monomials[i] for i in range(0, 3)) + ';'
+    two = '+'.join(cff[i] + '*' + monomials[i] for i in range(3, 6)) + ';'
+    return [one, two]
+
+def real_random_trinomials(sys):
+    r"""
+    On input in sys are two random trinonials with complex coefficients,
+    in the format what **random_trinomials()** returns.
+    On return is a list of two real random trinomials with the same
+    monomial structure but with random real coefficients in [-1,+1].
+    """
+    from random import uniform as u
+    result = []
+    for pol in sys:
+        terms = pol.split(')')
+        rpol = ''
+        for i in range(1, len(terms)-1):
+            rterm = terms[i].split('+')
+            cff = '%+.17f' % u(-1, +1)
+            rpol = rpol + cff + rterm[0]
+        cff = '%+.17f' % u(-1, +1)
+        rpol = rpol + cff + terms[len(terms)-1]
+        result.append(rpol)
+    return result
 
 def write_double_solutions(vrblvl=0):
     """
@@ -124,6 +166,20 @@ def solve_quad_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     result = int4a2str(broco, vrb)
     return (roco, result)
 
+def test_trinomial_solve():
+    """
+    Generates a random trinomial system and solves it.
+    """
+    pols = random_trinomials()
+    print('two random trinomials :')
+    print(pols)
+    set_double_system(2, pols)
+    (mixvol, stable_mixvol) = stable_mixed_volume()
+    print('its mixed volume :', mixvol)
+    print('its stable mixed volume :', stable_mixvol)
+    nbr, roco = solve_double_system()
+    print('number of computed solutions :', nbr)
+
 def test_double_solve():
     """
     Solves a simple system in double precision.
@@ -161,6 +217,7 @@ def test_quad_double_solve():
     write_quad_double_solutions(lvl)
 
 if __name__=="__main__":
+    test_trinomial_solve()
     # test_double_solve()
     # test_double_double_solve()
-    test_quad_double_solve()
+    # test_quad_double_solve()
