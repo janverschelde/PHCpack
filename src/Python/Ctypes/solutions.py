@@ -181,7 +181,7 @@ def get_next_double_solution(idx, vrblvl=0):
     size = bbb[0]
     if vrblvl > 0:
         print('-> get_next_double_solution, size :', size)
-    soldata = create_string_buffer(4*size)
+    soldata = create_string_buffer(b"", 4*size)
     retval = phc(533, bbb, soldata, ccc, vrb)
     if vrblvl > 0:
         print("-> get_next_double_solution, return value :", retval)
@@ -205,7 +205,7 @@ def get_next_double_double_solution(idx, vrblvl=0):
     size = bbb[0]
     if vrblvl > 0:
         print('-> get_next_double_double_solution, size :', size)
-    soldata = create_string_buffer(4*size)
+    soldata = create_string_buffer(b"", 4*size)
     retval = phc(534, bbb, soldata, ccc, vrb)
     if vrblvl > 0:
         print("-> get_next_double_double_solution, return value :", retval)
@@ -229,7 +229,7 @@ def get_next_quad_double_solution(idx, vrblvl=0):
     size = bbb[0]
     if vrblvl > 0:
         print('-> get_next_quad_double_solution, size :', size)
-    soldata = create_string_buffer(4*size)
+    soldata = create_string_buffer(b"", 4*size)
     retval = phc(535, bbb, soldata, ccc, vrb)
     if vrblvl > 0:
         print("-> get_next_quad_double_solution, return value :", retval)

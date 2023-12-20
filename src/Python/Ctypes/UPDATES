@@ -1,5 +1,8 @@
 Tue 19 Dec 2023 : added tests to version.py and fixed the format
   conversions for all 32-bit natural numbers.
+  Fixed buffer size in polynomials.py; initialized buffers in
+  solutions.py and solver.py.  First working version of series.py
+  in double precision.
 
 Mon 18 Dec 2023 : attempt to fix int4a2nbr() in version.py for numbers
   larger than 255.  Updates in solutions.py.

@@ -150,7 +150,7 @@ def get_double_polynomial(idx, vrblvl=0):
         print('-> the return value of getting the size :', retval)
         print('-> size of the polynomial :', bsz[0])
     szd = bsz[0]
-    poldata = create_string_buffer(szd)
+    poldata = create_string_buffer(b"", 4*szd)
     retval = phc(67, adx, poldata, ccc, vrb)
     if vrblvl > 0:
         print('-> the return value of get_double_polynomial :', retval)
@@ -176,7 +176,7 @@ def get_double_double_polynomial(idx, vrblvl=0):
         print('-> the return value of getting the size :', retval)
         print('-> size of the polynomial :', bsz[0])
     szd = bsz[0]
-    poldata = create_string_buffer(szd)
+    poldata = create_string_buffer(b"", 4*szd)
     retval = phc(106, adx, poldata, ccc, vrb)
     if vrblvl > 0:
         print('-> the return value of get_double_double_polynomial :', retval)
@@ -202,7 +202,7 @@ def get_quad_double_polynomial(idx, vrblvl=0):
         print('-> the return value of getting the size :', retval)
         print('-> size of the polynomial :', bsz[0])
     szd = bsz[0]
-    poldata = create_string_buffer(szd)
+    poldata = create_string_buffer(b"", 4*szd)
     retval = phc(107, adx, poldata, ccc, vrb)
     if vrblvl > 0:
         print('-> the return value of get_quad_double_polynomial :', retval)
@@ -268,7 +268,7 @@ def string_of_symbols(maxlen=100, vrblvl=0):
         print('-> string_of_symbols, maxlen :', maxlen)
     phc = get_phcfun()
     slen = pointer(c_int(0))
-    ssym = create_string_buffer(maxlen*4)
+    ssym = create_string_buffer(b"", maxlen*4)
     ccc = pointer(c_double(0.0))
     vrb = c_int(vrblvl)
     retval = phc(295, slen, ssym, ccc, vrb)
@@ -607,7 +607,8 @@ def test_double_polynomial():
     set_double_dimension(2, lvl)
     dim = get_double_dimension(lvl)
     print('the dimension :', dim)
-    org = "x*y - 1;"
+    # org = "x*y - 1;"
+    org = ";"
     idx = 1
     set_double_polynomial(idx, dim, org, lvl)
     pol = get_double_polynomial(idx, lvl)
@@ -781,10 +782,10 @@ def test_quad_double_syspool():
     clear_quad_double_syspool(lvl)
 
 if __name__=="__main__":
-    # test_double_polynomial()
+    test_double_polynomial()
     # test_double_system()
     # test_double_double_system()
     # test_quad_double_system()
     # test_double_syspool()
-    test_double_double_syspool()
+    # test_double_double_syspool()
     # test_quad_double_syspool()
