@@ -99,11 +99,10 @@ def test_byte_strings(verbose=False):
         if verbose:
             print('Test passed.')
         return 0
-    else:
-        if verbose:
-            print('Test failed!')
-        return 1
-    
+    if verbose:
+        print('Test failed!')
+    return 1
+
 def int4a2nbr(data, verbose=False):
     """
     Given in data is a Python list of integers,
@@ -155,20 +154,18 @@ def test_integer_encodings(verbose=False):
     """
     Tests the encoding of a list of integers as a ctypes string buffer.
     """
-    import struct
-    L = [12, 1033, 129129, 20123543]
-    print('L =', L)
-    b = int4a2nbr(L, verbose)
-    K = nbr2int4a(b, verbose)
-    print('K =', K)
-    if L == K:
+    first = [12, 1033, 129129, 20123543]
+    print('L =', first)
+    bfirst = int4a2nbr(first, verbose)
+    second = nbr2int4a(bfirst, verbose)
+    print('K =', second)
+    if first == second:
         if verbose:
             print('Test passed.')
-        return 0;
-    else:
-        if verbose:
-            print('Test failed!')
-        return 1;
+        return 0
+    if verbose:
+        print('Test failed!')
+    return 1
 
 def version(verbose=True):
     """
@@ -197,7 +194,15 @@ def version(verbose=True):
         print(strres)
     return result
 
-if __name__=="__main__":
+def main():
+    """
+    Prints the version string and runs two tests.
+    """
     print(version(True))
-    test_byte_strings(True)
-    test_integer_encodings(True)
+    fail = test_byte_strings(True)
+    fail = fail + test_integer_encodings(True)
+    if fail == 0:
+        print('=> All tests passed.')
+
+if __name__=="__main__":
+    main()
