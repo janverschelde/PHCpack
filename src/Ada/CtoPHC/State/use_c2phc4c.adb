@@ -842,6 +842,8 @@ function use_c2phc4c ( job : integer32;
      -- reading solutions from file with given name
       when 916..918 => return use_solcon(job,a,b,c,vrblvl-1);
       when 920 => return Job_Handlers.Standard_Condition_Report(a,b,c,vrblvl-1);
+     -- get number of available CPUs
+      when 994 => return Job_Handlers.Get_Core_Count(a,vrblvl-1);
      -- get and set the gamma constant
       when 995 => return Job_Handlers.Get_Gamma_Constant(a,c,vrblvl-1);
       when 996 => return Job_Handlers.Set_Gamma_Constant(a,c,vrblvl-1);

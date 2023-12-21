@@ -1,3 +1,6 @@
+Thu 21 Dec 2023 : extended job_handlers and use_c2phc4c with a function
+  to return the number of available CPU cores.
+
 Mon 16 Jan 2023 : one edit in standard_polysys_interface.adb.
 
 Sun 3 Jul 2022 : bug fixed in job_handlers.adb by initialization.

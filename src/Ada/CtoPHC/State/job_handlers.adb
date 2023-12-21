@@ -53,6 +53,7 @@ with QuadDobl_PolySys_Container;
 with QuadDobl_LaurSys_Container;
 with QuadDobl_Solutions_Container;
 with Cells_Container;
+with Number_of_Cores;
 with PHCpack_Operations;
 
 package body Job_Handlers is
@@ -120,6 +121,25 @@ package body Job_Handlers is
       end if;
       return 998;
   end Set_Seed;
+
+  function Get_Core_Count ( a : C_intarrs.Pointer;
+                            vrblvl : integer32 := 0 ) return integer32 is
+
+    nbr : constant integer32 := Number_of_Cores;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in job_handlers.Get_Core_Count");
+    end if;
+    Assign(nbr,a);
+    return 0;
+  exception
+    when others =>
+      if vrblvl > 0
+       then put_line("Exception raised in job_handlers.Get_Core_Count.");
+      end if;
+      return 994;
+  end Get_Core_Count;
 
   function Standard_Polynomial_Solver
              ( a,b : C_intarrs.Pointer; vrblvl : integer32 := 0 )

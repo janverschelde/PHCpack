@@ -19,6 +19,7 @@ function use_c2phc4c ( job : integer32;
 --         = 999 : returns the version string of PHCpack,
 --                 in a are the characters of the string,
 --                 and in b[0] is the number of characters.
+--         = 994 : returns the number of available cores in a.
 --
 -- moving data from PHCpack_operations from and to containers :
 --

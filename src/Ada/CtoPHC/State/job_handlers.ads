@@ -34,6 +34,14 @@ package Job_Handlers is
   --   and uses its value to initialize the seed
   --   for the random number generator.
 
+  function Get_Core_Count ( a : C_intarrs.Pointer;
+                            vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Gets the number of available cores
+  --   and returns its value in the parameter a on return.
+  --   This is useful for running a computer at full speed.
+
   function Standard_Polynomial_Solver
              ( a,b : C_intarrs.Pointer; vrblvl : integer32 := 0 )
              return integer32;
