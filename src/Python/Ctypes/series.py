@@ -449,6 +449,203 @@ def quad_double_newton_at_series(pols, lser, idx=1, maxdeg=4, nbr=4, \
     clear_quad_double_syspool(vrblvl)
     return result
 
+def make_fractions(pols):
+    """
+    Given a list of string representations for the numerator and
+    denominator polynomials in its even and odd numbered indices,
+    returns a list of string representations for the fractions.
+    """
+    result = []
+    (nbr, idx) = (len(pols)//2, 0)
+    for k in range(nbr):
+        (num, den) = (pols[idx], pols[idx+1])
+        idx = idx + 2
+        frac = '(' + num[:-1] + ')/(' + den[:-1] + ')'
+        result.append(frac)
+    return result
+
+def rational_forms(pols):
+    """
+    Given a list of lists of string representations for the numerators
+    and denominators, returns the proper rational representations for
+    the Pade approximants.
+    """
+    result = []
+    for pol in pols:
+        result.append(make_fractions(pol))
+    return result
+
+def double_pade_approximants(pols, sols, idx=1, numdeg=2, dendeg=2, \
+    nbr=4, vrblvl=0):
+    r"""
+    Computes Pade approximants based on the series in double 
+    precision for the polynomials in *pols*, where the leading 
+    coefficients of the series are the solutions in *sols*.
+    On entry are the following seven parameters:
+
+    *pols*: a list of string representations of polynomials,
+
+    *sols*: a list of solutions of the polynomials in *pols*,
+
+    *idx*: index of the series parameter, by default equals 1,
+
+    *numdeg*: the degree of the numerator,
+
+    *dendeg*: the degree of the denominator,
+
+    *nbr*: number of steps with Newton's method,
+
+    *vrblvl*: is the verbose level.
+
+    On return is a list of lists of strings.  Each lists of strings
+    represents the series solution for the variables in the list *pols*.
+    """
+    nbsym = number_of_symbols(pols)
+    if vrblvl > 0:
+        print("the polynomials :")
+        for pol in pols:
+            print(pol)
+        print("Number of variables :", nbsym)
+    set_double_system(nbsym, pols, vrblvl)
+    set_double_solutions(nbsym, sols, vrblvl)
+    phc = get_phcfun()
+    apars = int4a2nbr([idx, numdeg, dendeg, nbr], (vrblvl > 0))
+    bbb = pointer(c_int(vrblvl))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> double_Pade_approximants calls phc ...')
+    retval = phc(704, apars, bbb, ccc, vrb)
+    fail = retval > 0
+    size = (-1 if fail else size_double_syspool(vrblvl))
+    if vrblvl > 0:
+        if size == -1:
+            print("An error occurred in the Pade constructor.")
+        else:
+            print("Computed %d Pade approximants." % size)
+    result = []
+    for k in range(1, size+1):
+        copy_from_double_syspool(k)
+        sersol = get_double_system(vrblvl)
+        substsersol = substitute_symbol(sersol, idx)
+        result.append(make_fractions(substsersol))
+    clear_double_syspool(vrblvl)
+    return result
+
+def double_double_pade_approximants(pols, sols, idx=1, numdeg=2, dendeg=2, \
+    nbr=4, vrblvl=0):
+    r"""
+    Computes Pade approximants based on the series in double double
+    precision for the polynomials in *pols*, where the leading 
+    coefficients of the series are the solutions in *sols*.
+    On entry are the following seven parameters:
+
+    *pols*: a list of string representations of polynomials,
+
+    *sols*: a list of solutions of the polynomials in *pols*,
+
+    *idx*: index of the series parameter, by default equals 1,
+
+    *numdeg*: the degree of the numerator,
+
+    *dendeg*: the degree of the denominator,
+
+    *nbr*: number of steps with Newton's method,
+
+    *vrblvl*: is the verbose level.
+
+    On return is a list of lists of strings.  Each lists of strings
+    represents the series solution for the variables in the list *pols*.
+    """
+    nbsym = number_of_symbols(pols)
+    if vrblvl > 0:
+        print("the polynomials :")
+        for pol in pols:
+            print(pol)
+        print("Number of variables :", nbsym)
+    set_double_double_system(nbsym, pols, vrblvl)
+    set_double_double_solutions(nbsym, sols, vrblvl)
+    phc = get_phcfun()
+    apars = int4a2nbr([idx, numdeg, dendeg, nbr], (vrblvl > 0))
+    bbb = pointer(c_int(vrblvl))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> double_double_Pade_approximants calls phc ...')
+    retval = phc(705, apars, bbb, ccc, vrb)
+    fail = retval > 0
+    size = (-1 if fail else size_double_double_syspool(vrblvl))
+    if vrblvl > 0:
+        if size == -1:
+            print("An error occurred in the Pade constructor.")
+        else:
+            print("Computed %d Pade approximants." % size)
+    result = []
+    for k in range(1, size+1):
+        copy_from_double_double_syspool(k)
+        sersol = get_double_double_system(vrblvl)
+        substsersol = substitute_symbol(sersol, idx)
+        result.append(make_fractions(substsersol))
+    clear_double_double_syspool(vrblvl)
+    return result
+
+def quad_double_pade_approximants(pols, sols, idx=1, numdeg=2, dendeg=2, \
+    nbr=4, vrblvl=0):
+    r"""
+    Computes Pade approximants based on the series in quad double
+    precision for the polynomials in *pols*, where the leading 
+    coefficients of the series are the solutions in *sols*.
+    On entry are the following seven parameters:
+
+    *pols*: a list of string representations of polynomials,
+
+    *sols*: a list of solutions of the polynomials in *pols*,
+
+    *idx*: index of the series parameter, by default equals 1,
+
+    *numdeg*: the degree of the numerator,
+
+    *dendeg*: the degree of the denominator,
+
+    *nbr*: number of steps with Newton's method,
+
+    *vrblvl*: is the verbose level.
+
+    On return is a list of lists of strings.  Each lists of strings
+    represents the series solution for the variables in the list *pols*.
+    """
+    nbsym = number_of_symbols(pols)
+    if vrblvl > 0:
+        print("the polynomials :")
+        for pol in pols:
+            print(pol)
+        print("Number of variables :", nbsym)
+    set_quad_double_system(nbsym, pols, vrblvl)
+    set_quad_double_solutions(nbsym, sols, vrblvl)
+    phc = get_phcfun()
+    apars = int4a2nbr([idx, numdeg, dendeg, nbr], (vrblvl > 0))
+    bbb = pointer(c_int(vrblvl))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> quad_double_Pade_approximants calls phc ...')
+    retval = phc(706, apars, bbb, ccc, vrb)
+    fail = retval > 0
+    size = (-1 if fail else size_quad_double_syspool(vrblvl))
+    if vrblvl > 0:
+        if size == -1:
+            print("An error occurred in the Pade constructor.")
+        else:
+            print("Computed %d Pade approximants." % size)
+    result = []
+    for k in range(1, size+1):
+        copy_from_quad_double_syspool(k)
+        sersol = get_quad_double_system(vrblvl)
+        substsersol = substitute_symbol(sersol, idx)
+        result.append(make_fractions(substsersol))
+    clear_quad_double_syspool(vrblvl)
+    return result
+
 def test_double_viviani_at_point(vrblvl=0):
     """
     Returns the system which stores the Viviani curve,
@@ -653,6 +850,78 @@ def test_quad_double_apollonius_at_series(vrblvl=0):
     fail2 = not len(nser1) == 3
     return fail1 + fail2
 
+def test_double_pade(vrblvl=0):
+    """
+    The function f(z) = ((1 + 1/2*z)/(1 + 2*z))^(1/2) is
+    a solution x(s) of (1-s)*(x^2 - 1) + s*(3*x^2 - 3/2) = 0
+    Tests the Pade approximants in double precision.
+    """
+    pol = ['(x^2 - 1)*(1-s) + (3*x^2 - 3/2)*s;']
+    variables = ['x', 's']
+    sol1 = make_solution(variables, [1, 0])
+    sol2 = make_solution(variables, [-1, 0])
+    sols = [sol1, sol2]
+    print("The solutions at the start :")
+    for sol in sols:
+        print(sol)
+    srs = double_newton_at_point(pol, sols, idx=2, vrblvl=vrblvl)
+    print('The series :')
+    for ser in srs:
+        print(ser)
+    pade = double_pade_approximants(pol, sols, idx=2, vrblvl=vrblvl)
+    print('the Pade approximants :')
+    for pad in pade:
+        print(pad)
+    return len(pade) != 2
+
+def test_double_double_pade(vrblvl=0):
+    """
+    The function f(z) = ((1 + 1/2*z)/(1 + 2*z))^(1/2) is
+    a solution x(s) of (1-s)*(x^2 - 1) + s*(3*x^2 - 3/2) = 0
+    Tests the Pade approximants in double double precision.
+    """
+    pol = ['(x^2 - 1)*(1-s) + (3*x^2 - 3/2)*s;']
+    variables = ['x', 's']
+    sol1 = make_solution(variables, [1, 0])
+    sol2 = make_solution(variables, [-1, 0])
+    sols = [sol1, sol2]
+    print("The solutions at the start :")
+    for sol in sols:
+        print(sol)
+    srs = double_double_newton_at_point(pol, sols, idx=2, vrblvl=vrblvl)
+    print('The series :')
+    for ser in srs:
+        print(ser)
+    pade = double_double_pade_approximants(pol, sols, idx=2, vrblvl=vrblvl)
+    print('the Pade approximants :')
+    for pad in pade:
+        print(pad)
+    return len(pade) != 2
+
+def test_quad_double_pade(vrblvl=0):
+    """
+    The function f(z) = ((1 + 1/2*z)/(1 + 2*z))^(1/2) is
+    a solution x(s) of (1-s)*(x^2 - 1) + s*(3*x^2 - 3/2) = 0
+    Tests the Pade approximants in quad double precision.
+    """
+    pol = ['(x^2 - 1)*(1-s) + (3*x^2 - 3/2)*s;']
+    variables = ['x', 's']
+    sol1 = make_solution(variables, [1, 0])
+    sol2 = make_solution(variables, [-1, 0])
+    sols = [sol1, sol2]
+    print("The solutions at the start :")
+    for sol in sols:
+        print(sol)
+    srs = quad_double_newton_at_point(pol, sols, idx=2, vrblvl=vrblvl)
+    print('The series :')
+    for ser in srs:
+        print(ser)
+    pade = quad_double_pade_approximants(pol, sols, idx=2, vrblvl=vrblvl)
+    print('the Pade approximants :')
+    for pad in pade:
+        print(pad)
+    return len(pade) != 2
+
 def main():
     """
     Runs some tests on series developments.
@@ -668,6 +937,9 @@ def main():
     fail = fail + test_double_apollonius_at_series(level)
     fail = fail + test_double_double_apollonius_at_series(level)
     fail = fail + test_quad_double_apollonius_at_series(level)
+    fail = fail + test_double_pade(level)
+    fail = fail + test_double_double_pade(level)
+    fail = fail + test_quad_double_pade(level)
     if fail == 0:
         print('=> All tests passed.')
     else:

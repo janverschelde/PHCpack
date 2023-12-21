@@ -1,3 +1,5 @@
+Thu 21 Dec 2023 : added Pade approximants to series.
+
 Wed 20 Dec 2023 : extended solver.py with trinomial system test.
   Extended solutions.py with the functions and class from phcpy.solutions.
   Improved version.py for pylint recommendations.
