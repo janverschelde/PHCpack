@@ -95,7 +95,7 @@ def set_double_double_Laurent_dimension(dim, vrblvl=0):
     vrb = c_int(vrblvl)
     if vrblvl > 0:
         print('-> set_double_double_Laurent_dimension calls phc', end='')
-    retval = phc(333, adim, bbb, ccc, vrb)
+    retval = phc(553, adim, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
     return retval
@@ -208,7 +208,7 @@ def get_double_double_Laurent_dimension(vrblvl=0):
     vrb = c_int(vrblvl)
     if vrblvl > 0:
         print('-> get_double_double_Laurent_dimension calls phc', end='')
-    retval = phc(332, adim, bbb, ccc, vrb)
+    retval = phc(552, adim, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
         print('the retrieved dimension :', adim[0])
