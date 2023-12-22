@@ -4,9 +4,11 @@ Exports the blackbox solver.
 from ctypes import c_int, c_double, pointer, create_string_buffer
 from version import get_phcfun, int4a2nbr, int4a2str
 from dimension import set_seed
-from polynomials import set_double_system
+from polynomials import set_double_system, set_double_Laurent_system
 from polynomials import set_double_double_system
+from polynomials import set_double_double_Laurent_system
 from polynomials import set_quad_double_system
+from polynomials import set_quad_double_Laurent_system
 from solutions import clear_double_solutions
 from solutions import clear_double_double_solutions
 from solutions import clear_quad_double_solutions
@@ -68,7 +70,7 @@ def solve_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     and vrblvl is the verbose level.
     """
     if vrblvl > 0:
-        print('-> solve_double_system, nbtasks :', nbtasks)
+        print('in solve_double_system, nbtasks :', nbtasks)
     phc = get_phcfun()
     vrb = (vrblvl > 0)
     apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
@@ -93,7 +95,7 @@ def solve_double_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     and vrblvl is the verbose level.
     """
     if vrblvl > 0:
-        print("-> solve_double_double_system, nbtasks :", nbtasks)
+        print("in solve_double_double_system, nbtasks :", nbtasks)
     phc = get_phcfun()
     vrb = (vrblvl > 0)
     apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
@@ -118,7 +120,7 @@ def solve_quad_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     and vrblvl is the verbose level.
     """
     if vrblvl > 0:
-        print("-> solve_quad_double_system, nbtasks :", nbtasks)
+        print("in solve_quad_double_system, nbtasks :", nbtasks)
     phc = get_phcfun()
     vrb = (vrblvl > 0)
     apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
@@ -128,6 +130,81 @@ def solve_quad_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     if vrblvl > 0:
         print('-> solve_quad_double_system calls phc', end='')
     retval = phc(702, apars, broco, ccc, vlvl)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    roco = int.from_bytes(apars[0], "big")
+    result = int4a2str(broco, vrb)
+    return (roco, result)
+
+def solve_double_Laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
+    """
+    Solves the Laurent system stored in double precision, where
+    nbtasks equals the number of tasks, no multitasking if zero,
+    mvfocus equals zero by default and all root counts are computed,
+    otherwise, the focus is on mixed volumes and polyhedral homotopies,
+    and vrblvl is the verbose level.
+    """
+    if vrblvl > 0:
+        print('in solve_double_Laurent_system, nbtasks :', nbtasks)
+    phc = get_phcfun()
+    vrb = (vrblvl > 0)
+    apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
+    broco = create_string_buffer(b"", 2048)
+    ccc = pointer(c_double(0.0))
+    vlvl = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> solve_double_Laurent_system calls phc', end='')
+    retval = phc(75, apars, broco, ccc, vlvl)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    roco = int.from_bytes(apars[0], "big")
+    result = int4a2str(broco, vrb)
+    return (roco, result)
+
+def solve_double_double_Laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
+    """
+    Solves the Laurent system stored in double double precision, where
+    nbtasks equals the number of tasks, no multitasking if zero,
+    mvfocus equals zero by default and all root counts are computed,
+    otherwise, the focus is on mixed volumes and polyhedral homotopies,
+    and vrblvl is the verbose level.
+    """
+    if vrblvl > 0:
+        print('in solve_double_double_Laurent_system, nbtasks :', nbtasks)
+    phc = get_phcfun()
+    vrb = (vrblvl > 0)
+    apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
+    broco = create_string_buffer(b"", 2048)
+    ccc = pointer(c_double(0.0))
+    vlvl = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> solve_double_double_Laurent_system calls phc', end='')
+    retval = phc(701, apars, broco, ccc, vlvl)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    roco = int.from_bytes(apars[0], "big")
+    result = int4a2str(broco, vrb)
+    return (roco, result)
+
+def solve_quad_double_Laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
+    """
+    Solves the Laurent system stored in quad double precision, where
+    nbtasks equals the number of tasks, no multitasking if zero,
+    mvfocus equals zero by default and all root counts are computed,
+    otherwise, the focus is on mixed volumes and polyhedral homotopies,
+    and vrblvl is the verbose level.
+    """
+    if vrblvl > 0:
+        print('in solve_quad_double_Laurent_system, nbtasks :', nbtasks)
+    phc = get_phcfun()
+    vrb = (vrblvl > 0)
+    apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
+    broco = create_string_buffer(b"", 2048)
+    ccc = pointer(c_double(0.0))
+    vlvl = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> solve_quad_double_Laurent_system calls phc', end='')
+    retval = phc(703, apars, broco, ccc, vlvl)
     if vrblvl > 0:
         print(', return value :', retval)
     roco = int.from_bytes(apars[0], "big")
@@ -208,6 +285,60 @@ def test_quad_double_solve(vrblvl=0):
     clear_quad_double_solutions(vrblvl)
     return len(sols) != 3 # is known bug!
 
+def test_double_Laurent_solve(vrblvl=0):
+    """
+    Solves a simple Laurent system in double precision.
+    The verbose level is given by vrblvl.
+    """
+    polynomials = ["x^(-3) + 2*x*y - x;", "x + y^(-2) - x^3;"]
+    set_double_Laurent_system(2, polynomials, vrblvl)
+    nbr, roco = solve_double_Laurent_system(vrblvl)
+    if vrblvl > 0:
+        print('number of solutions :', nbr)
+        print('root counts :\n', roco)
+        write_double_solutions(vrblvl)
+    sols = get_double_solutions(vrblvl)
+    if vrblvl > 0:
+        print('number of retrieved solutions :', len(sols))
+    clear_double_solutions(vrblvl)
+    return len(sols) != 10
+
+def test_double_double_Laurent_solve(vrblvl=0):
+    """
+    Solves a simple Laurent system in double double precision.
+    The verbose level is given by vrblvl.
+    """
+    polynomials = ["x^(-3) + 2*x*y - x;", "x + y^(-2) - x^3;"]
+    set_double_double_Laurent_system(2, polynomials, vrblvl)
+    nbr, roco = solve_double_double_Laurent_system(vrblvl)
+    if vrblvl > 0:
+        print('number of solutions :', nbr)
+        print('root counts :\n', roco)
+        write_double_double_solutions(vrblvl)
+    sols = get_double_double_solutions(vrblvl)
+    if vrblvl > 0:
+        print('number of retrieved solutions :', len(sols))
+    clear_double_double_solutions(vrblvl)
+    return len(sols) != 10
+
+def test_quad_double_Laurent_solve(vrblvl=0):
+    """
+    Solves a simple Laurent system in quad double precision.
+    The verbose level is given by vrblvl.
+    """
+    polynomials = ["x^(-3) + 2*x*y - x;", "x + y^(-2) - x^3;"]
+    set_quad_double_Laurent_system(2, polynomials, vrblvl)
+    nbr, roco = solve_quad_double_Laurent_system(vrblvl)
+    if vrblvl > 0:
+        print('number of solutions :', nbr)
+        print('root counts :\n', roco)
+        write_quad_double_solutions(vrblvl)
+    sols = get_quad_double_solutions(vrblvl)
+    if vrblvl > 0:
+        print('number of retrieved solutions :', len(sols))
+    clear_quad_double_solutions(vrblvl)
+    return len(sols) != 10
+
 def main():
     """
     Runs tests on the blackbox solver.
@@ -217,6 +348,9 @@ def main():
     fail = fail + test_double_solve(lvl)
     fail = fail + test_double_double_solve(lvl)
     fail = fail + test_quad_double_solve(lvl)
+    fail = fail + test_double_Laurent_solve(lvl)
+    fail = fail + test_double_double_Laurent_solve(lvl)
+    fail = fail + test_quad_double_Laurent_solve(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:

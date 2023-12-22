@@ -1,6 +1,7 @@
 Fri 22 Dec 2023 : fixed bugs in solutions.py and from solutions.py removed
   the imports of the polynomials and the solvers.
   Improved solver.py with better tests.  Improved tests in volumes.py.
+  Added solvers for Laurent systems to solver.py.
 
 Thu 21 Dec 2023 : added Pade approximants to series.
   Extended dimension with a function to get the number of available cores.
