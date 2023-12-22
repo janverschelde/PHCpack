@@ -3,13 +3,6 @@ Exports functions on solutions.
 """
 from ctypes import c_int, c_double, pointer, create_string_buffer
 from version import get_phcfun, int4a2nbr, int4a2str, str2int4a
-from polynomials import set_double_system
-from polynomials import set_double_double_system
-from polynomials import set_quad_double_system
-from solver import solve_double_system, write_double_solutions
-from solver import solve_double_double_system, write_double_double_solutions
-from solver import solve_quad_double_system, write_quad_double_solutions
-from solver import random_trinomials
 
 def diagnostics(sol):
     r"""
@@ -465,9 +458,11 @@ def append_double_solution_string(nvr, sol, vrblvl=0):
     bsol = str2int4a(sol)
     ccc = pointer(c_double(0.0))
     vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> append_double_solution_string calls phc', end='')
     retval = phc(208, apars, bsol, ccc, vrblvl)
     if vrblvl > 0:
-        print('-> append_double_solution_string, return value :', retval)
+        print(', return value :', retval)
     return retval
 
 def append_double_double_solution_string(nvr, sol, vrblvl=0):
@@ -484,9 +479,11 @@ def append_double_double_solution_string(nvr, sol, vrblvl=0):
     bsol = str2int4a(sol)
     ccc = pointer(c_double(0.0))
     vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> append_double_double_solution_string calls phc', end='')
     retval = phc(378, apars, bsol, ccc, vrblvl)
     if vrblvl > 0:
-        print('-> append_double_double_solution_string, return value :', retval)
+        print(', return value :', retval)
     return retval
 
 def append_quad_double_solution_string(nvr, sol, vrblvl=0):
@@ -503,9 +500,65 @@ def append_quad_double_solution_string(nvr, sol, vrblvl=0):
     bsol = str2int4a(sol)
     ccc = pointer(c_double(0.0))
     vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> append_quad_double_solution_string calls phc', end='')
     retval = phc(428, apars, bsol, ccc, vrblvl)
     if vrblvl > 0:
-        print('-> append_quad_double_solution_string, return value :', retval)
+        print(', return value :', retval)
+    return retval
+
+def clear_double_solutions(vrblvl=0):
+    """
+    Clears the solutions defined in double precision.
+    """
+    if vrblvl > 0:
+        print('in clear_double_solutions ...')
+    phc = get_phcfun()
+    aaa = pointer(c_int(0))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> clear_double_solutions calls phc', end='')
+    retval = phc(37, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def clear_double_double_solutions(vrblvl=0):
+    """
+    Clears the solutions defined in double double precision.
+    """
+    if vrblvl > 0:
+        print('in clear_double_double_solutions ...')
+    phc = get_phcfun()
+    aaa = pointer(c_int(0))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> clear_double_double_solutions calls phc', end='')
+    retval = phc(347, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def clear_quad_double_solutions(vrblvl=0):
+    """
+    Clears the solutions defined in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in clear_quad_double_solutions ...')
+    phc = get_phcfun()
+    aaa = pointer(c_int(0))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> clear_quad_double_solutions calls phc', end='')
+    retval = phc(397, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
     return retval
 
 def set_double_solutions(nvr, sols, vrblvl=0):
@@ -560,12 +613,14 @@ def number_double_solutions(vrblvl=0):
     The vrblvl is the verbose level.
     """
     if vrblvl > 0:
-        print('-> number_double_solutions', end='')
+        print('in number_double_solutions ...')
     phc = get_phcfun()
     aaa = pointer(c_int(0))
     bbb = pointer(c_int(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> number_double_solutions calls phc', end='')
     retval = phc(32, aaa, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
@@ -577,12 +632,14 @@ def number_double_double_solutions(vrblvl=0):
     The vrblvl is the verbose level.
     """
     if vrblvl > 0:
-        print('-> number_double_double_solutions', end='')
+        print('in number_double_double_solutions ...')
     phc = get_phcfun()
     aaa = pointer(c_int(0))
     bbb = pointer(c_int(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> number_double_double_solutions calls phc', end='')
     retval = phc(342, aaa, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
@@ -594,12 +651,14 @@ def number_quad_double_solutions(vrblvl=0):
     The vrblvl is the verbose level.
     """
     if vrblvl > 0:
-        print('-> number_quad_double_solutions', end='')
+        print('in number_quad_double_solutions ...')
     phc = get_phcfun()
     aaa = pointer(c_int(0))
     bbb = pointer(c_int(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> number_quad_double_solutions calls phc', end='')
     retval = phc(392, aaa, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
@@ -612,20 +671,25 @@ def get_next_double_solution(idx, vrblvl=0):
     The vrblvl is the verbose level.
     """
     if vrblvl > 0:
-        print('-> get_next_double_solution, idx =', idx)
+        print('in get_next_double_solution, idx :', idx)
     phc = get_phcfun()
     aaa = pointer(c_int(idx)) # at the given index
     bbb = pointer(c_int(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> get_next_double_solution calls phc', end='')
     retval = phc(525, aaa, bbb, ccc, vrb)
     size = bbb[0]
     if vrblvl > 0:
+        print(', return value :', retval)
         print('-> get_next_double_solution, size :', size)
     soldata = create_string_buffer(b"", 4*size)
+    if vrblvl > 0:
+        print('-> get_next_double_solution calls phc', end='')
     retval = phc(533, bbb, soldata, ccc, vrb)
     if vrblvl > 0:
-        print("-> get_next_double_solution, return value :", retval)
+        print(', return value :', retval)
     result = int4a2str(soldata, False)
     return result
 
@@ -636,20 +700,25 @@ def get_next_double_double_solution(idx, vrblvl=0):
     The vrblvl is the verbose level.
     """
     if vrblvl > 0:
-        print('-> get_next_double_double_solution, idx =', idx)
+        print('in get_next_double_double_solution, idx :', idx)
     phc = get_phcfun()
     aaa = pointer(c_int(idx)) # at the given index
     bbb = pointer(c_int(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> get_next_double_double_solution calls phc', end='')
     retval = phc(526, aaa, bbb, ccc, vrb)
     size = bbb[0]
     if vrblvl > 0:
+        print(', return value :', retval)
         print('-> get_next_double_double_solution, size :', size)
     soldata = create_string_buffer(b"", 4*size)
+    if vrblvl > 0:
+        print('-> get_next_double_double_solution calls phc', end='')
     retval = phc(534, bbb, soldata, ccc, vrb)
     if vrblvl > 0:
-        print("-> get_next_double_double_solution, return value :", retval)
+        print(", return value :", retval)
     result = int4a2str(soldata, False)
     return result
 
@@ -660,20 +729,25 @@ def get_next_quad_double_solution(idx, vrblvl=0):
     The vrblvl is the verbose level.
     """
     if vrblvl > 0:
-        print('-> get_next_quad_double_solution, idx =', idx)
+        print('in get_next_quad_double_solution, idx :', idx)
     phc = get_phcfun()
     aaa = pointer(c_int(idx)) # at the given index
     bbb = pointer(c_int(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> get_next_quad_double_solution calls phc', end='')
     retval = phc(527, aaa, bbb, ccc, vrb)
     size = bbb[0]
     if vrblvl > 0:
+        print(', return value :', retval)
         print('-> get_next_quad_double_solution, size :', size)
     soldata = create_string_buffer(b"", 4*size)
+    if vrblvl > 0:
+        print('-> get_next_quad_double_solution calls phc', end='')
     retval = phc(535, bbb, soldata, ccc, vrb)
     if vrblvl > 0:
-        print("-> get_next_quad_double_solution, return value :", retval)
+        print(', return value :', retval)
     result = int4a2str(soldata, False)
     return result
 
@@ -683,15 +757,17 @@ def move_double_solution_cursor(idx, vrblvl=0):
     in double precision.
     """
     if vrblvl > 0:
-        print('-> move_double_solution_cursor, idx =', idx)
+        print('in move_double_solution_cursor, idx :', idx)
     phc = get_phcfun()
     aaa = pointer(c_int(idx)) # at the given index
     bbb = pointer(c_int(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> move_double_solution_cursor calls phc', end='')
     retval = phc(454, aaa, bbb, ccc, vrb)
     if vrblvl > 0:
-        print("-> move_double_solution_cursor, return value :", retval)
+        print(', return value :', retval)
     return aaa[0]
 
 def move_double_double_solution_cursor(idx, vrblvl=0):
@@ -700,15 +776,17 @@ def move_double_double_solution_cursor(idx, vrblvl=0):
     in double double precision.
     """
     if vrblvl > 0:
-        print('-> move_double_double_solution_cursor, idx =', idx)
+        print('in move_double_double_solution_cursor, idx :', idx)
     phc = get_phcfun()
     aaa = pointer(c_int(idx)) # at the given index
     bbb = pointer(c_int(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> move_double_double_solution_cursor calls phc', end='')
     retval = phc(455, aaa, bbb, ccc, vrb)
     if vrblvl > 0:
-        print("-> move_double_double_solution_cursor, return value :", retval)
+        print(', return value :', retval)
     return aaa[0]
 
 def move_quad_double_solution_cursor(idx, vrblvl=0):
@@ -717,64 +795,18 @@ def move_quad_double_solution_cursor(idx, vrblvl=0):
     in quad double precision.
     """
     if vrblvl > 0:
-        print('-> move_quad_double_solution_cursor, idx =', idx)
+        print('in move_quad_double_solution_cursor, idx :', idx)
     phc = get_phcfun()
     aaa = pointer(c_int(idx)) # at the given index
     bbb = pointer(c_int(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> move_quad_double_solution_cursor calls phc', end='')
     retval = phc(456, aaa, bbb, ccc, vrb)
     if vrblvl > 0:
-        print("-> move_quad_double_solution_cursor, return value :", retval)
+        print(', return value :', retval)
     return aaa[0]
-
-def clear_double_solutions(vrblvl=0):
-    """
-    Clears the solutions defined in double precision.
-    """
-    if vrblvl > 0:
-        print('-> clear_double_solutions', end='')
-    phc = get_phcfun()
-    aaa = pointer(c_int(0))
-    bbb = pointer(c_int(0))
-    ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
-    retval = phc(37, aaa, bbb, ccc, vrb)
-    if vrblvl > 0:
-        print(', return value :', retval)
-    return retval
-
-def clear_double_double_solutions(vrblvl=0):
-    """
-    Clears the solutions defined in double double precision.
-    """
-    if vrblvl > 0:
-        print('-> clear_double_double_solutions', end='')
-    phc = get_phcfun()
-    aaa = pointer(c_int(0))
-    bbb = pointer(c_int(0))
-    ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
-    retval = phc(347, aaa, bbb, ccc, vrb)
-    if vrblvl > 0:
-        print(', return value :', retval)
-    return retval
-
-def clear_quad_double_solutions(vrblvl=0):
-    """
-    Clears the solutions defined in quad double precision.
-    """
-    if vrblvl > 0:
-        print('-> clear_quad_double_solutions', end='')
-    phc = get_phcfun()
-    aaa = pointer(c_int(0))
-    bbb = pointer(c_int(0))
-    ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
-    retval = phc(397, aaa, bbb, ccc, vrb)
-    if vrblvl > 0:
-        print(', return value :', retval)
-    return retval
 
 def get_double_solutions(vrblvl=0):
     """
@@ -782,24 +814,22 @@ def get_double_solutions(vrblvl=0):
     """
     nbrsols = number_double_solutions(vrblvl)
     if vrblvl > 0:
-        print("number of solutions retrieved :", nbrsols)
+        print('number of solutions retrieved :', nbrsols)
     result = []
     if nbrsols > 0:
         sol = get_next_double_solution(1, vrblvl)
         if vrblvl > 0:
-            print("the first solution :")
-            print(sol)
+            print('the first solution :\n', sol)
         result.append(sol)
         idx = 1
         for _ in range(1, nbrsols):
             idx = move_double_solution_cursor(idx, vrblvl)
             if vrblvl > 0:
-                print("the next index :", idx)
+                print('the next index :', idx)
             sol = get_next_double_solution(idx, vrblvl)
             if vrblvl > 0:
-                print("the solution at index", idx, ":")
-                print(sol)
-        result.append(sol)
+                print('the solution at index', idx, ':\n', sol)
+            result.append(sol)
     return result
 
 def get_double_double_solutions(vrblvl=0):
@@ -808,24 +838,22 @@ def get_double_double_solutions(vrblvl=0):
     """
     nbrsols = number_double_double_solutions(vrblvl)
     if vrblvl > 0:
-        print("number of solutions retrieved :", nbrsols)
+        print('number of solutions retrieved :', nbrsols)
     result = []
     if nbrsols > 0:
         sol = get_next_double_double_solution(1, vrblvl)
         if vrblvl > 0:
-            print("the first solution :")
-            print(sol)
+            print('the first solution :\n', sol)
         result.append(sol)
         idx = 1
         for _ in range(1, nbrsols):
             idx = move_double_double_solution_cursor(idx, vrblvl)
             if vrblvl > 0:
-                print("the next index :", idx)
+                print('the next index :', idx)
             sol = get_next_double_double_solution(idx, vrblvl)
             if vrblvl > 0:
-                print("the solution at index", idx, ":")
-                print(sol)
-        result.append(sol)
+                print('the solution at index', idx, ':\n', sol)
+            result.append(sol)
     return result
 
 def get_quad_double_solutions(vrblvl=0):
@@ -834,25 +862,77 @@ def get_quad_double_solutions(vrblvl=0):
     """
     nbrsols = number_quad_double_solutions(vrblvl)
     if vrblvl > 0:
-        print("number of solutions retrieved :", nbrsols)
+        print('number of solutions retrieved :', nbrsols)
     result = []
     if nbrsols > 0:
         sol = get_next_quad_double_solution(1, vrblvl)
         if vrblvl > 0:
-            print("the first solution :")
-            print(sol)
+            print('the first solution :\n', sol)
         result.append(sol)
         idx = 1
         for _ in range(1, nbrsols):
             idx = move_quad_double_solution_cursor(idx, vrblvl)
             if vrblvl > 0:
-                print("the next index :", idx)
+                print('the next index :', idx)
             sol = get_next_quad_double_solution(idx, vrblvl)
             if vrblvl > 0:
-                print("the solution at index", idx, ":")
-                print(sol)
-        result.append(sol)
+                print('the solution at index', idx, ':\n', sol)
+            result.append(sol)
     return result
+
+def write_double_solutions(vrblvl=0):
+    """
+    Writes the solutions stored in double precision.
+    """
+    if vrblvl > 0:
+        print('in write_double_solutions, vrblvl :', vrblvl)
+    phc = get_phcfun()
+    aaa = pointer(c_int(0))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> write_double_solutions calls phc', end='')
+    retval = phc(31, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def write_double_double_solutions(vrblvl=0):
+    """
+    Writes the solutions stored in double double precision.
+    """
+    if vrblvl > 0:
+        print('in write_double_double_solutions, vrblvl :', vrblvl)
+    phc = get_phcfun()
+    aaa = pointer(c_int(0))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> write_double_double_solutions calls phc', end='')
+    retval = phc(341, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def write_quad_double_solutions(vrblvl=0):
+    """
+    Writes the solutions stored in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in write_quad_double_solutions, vrblvl :', vrblvl)
+    phc = get_phcfun()
+    aaa = pointer(c_int(0))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> write_quad_double_solutions calls phc', end='')
+    retval = phc(391, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
 
 class DoubleSolution(object):
     """
@@ -942,102 +1022,81 @@ class DoubleSolution(object):
         """
         return self.dict['t']
 
-def test_double_solutions():
-    """
-    Solves a simple system and tests the operations
-    on the solutions in double precision.
-    """
-    lvl = 10
-    polynomials = ["x^3 + 2*x*y - x^2;", "x + y - x^3;"]
-    set_double_system(2, polynomials, lvl)
-    nbr, roco = solve_double_system(lvl)
-    print("number of solutions :", nbr)
-    print("root counts :\n", roco)
-    write_double_solutions(lvl)
-    sols = get_double_solutions(lvl)
-
-def test_double_double_solutions():
-    """
-    Solves a simple system and tests the operations
-    on the solutions in double double precision.
-    """
-    lvl = 10
-    polynomials = ["x^3 + 2*x*y - x^2;", "x + y - x^3;"]
-    set_double_double_system(2, polynomials, lvl)
-    nbr, roco = solve_double_double_system(lvl)
-    print("number of solutions :", nbr)
-    print("root counts :\n", roco)
-    write_double_double_solutions(lvl)
-    sols = get_double_double_solutions(lvl)
-
-def test_quad_double_solutions():
-    """
-    Solves a simple system and tests the operations
-    on the solutions in quad double precision.
-    """
-    lvl = 10
-    polynomials = ["x^3 + 2*x*y - x^2;", "x + y - x^3;"]
-    set_quad_double_system(2, polynomials, lvl)
-    nbr, roco = solve_quad_double_system(lvl)
-    print("number of solutions :", nbr)
-    print("root counts :\n", roco)
-    write_quad_double_solutions(lvl)
-    sols = get_quad_double_solutions(lvl)
-
-def test_double_functions():
+def test_double_functions(vrblvl=0):
     """
     Generates a random trinomial system,
     solves it, converts the solutions,
     and then sums the multiplicities.
+    The verbose level is given by vrblvl.
     """
-    pols = random_trinomials()
-    set_double_system(2, pols)
-    nbr, roco = solve_double_system()
-    sols = get_double_solutions()
+    pols = ['(x - 1)*(y - 1);', '(x + 1)*(y + 1);']
+    names = ['x', 'y']
+    sol1 = make_solution(names, [1, -1])
+    sol2 = make_solution(names, [-1, 1])
+    sols = [sol1, sol2]
     dsols = [strsol2dict(sol) for sol in sols]
     mult = 0
     s0d = strsol2dict(sols[0])
-    print('variables :', variables(s0d))
-    print(evaluate(pols, s0d))
+    if vrblvl > 0:
+        print('variables :', variables(s0d))
+        print(evaluate(pols, s0d))
     for sol in dsols:
         mult = mult + sol['m']
-    print('sum of multiplicities :', mult)
-    print('sum of values at the solutions :')
+    if vrblvl > 0:
+        print('sum of multiplicities :', mult)
+        print('sum of values at the solutions :')
+    errsum = 0
     for sol in dsols:
-        print(sum(evaluate(pols, sol)))
+        if vrblvl > 0:
+            print(sum(evaluate(pols, sol)))
+        errsum = errsum + abs(sum(evaluate(pols, sol)))
+    if vrblvl > 0:
+        print('error sum :', errsum)
+    return errsum > 1.0e-14
 
-def test_double_solution_class():
+def test_double_solution_class(vrblvl=0):
     """
     Tests the methods in the class DoubleSolution.
+    The verbose level is given by vrblvl.
     """
-    pols = random_trinomials()
-    set_double_system(2, pols)
-    nbr, roco = solve_double_system()
-    sols = get_double_solutions()
-    print('sols[0] :')
-    print(sols[0])
-    s = DoubleSolution(sols[0])
-    print('the first solution :')
-    print(s)
-    print('its coordinates :\n', s.coordinates())
-    print('its variable names :\n ', s.variables())
-    print('its numerical values :\n', s.numerals())
-    print('its diagnostics :\n', s.diagnostics())
-    print('its continuation parameter :', s.timevalue())
-    print('its multiplicity :', s.multiplicity())
-    print('the dictionary :\n', s.dictionary())
     mysol = DoubleSolution({'x': complex(1,2), 'y': complex(-7,0)})
-    print('my solution :')
-    print(mysol)
+    if vrblvl > 0:
+        print('my solution :')
+        print(mysol)
+    variables = ['x', 'y']
+    sol1 = make_solution(variables, [1, 1], err=0.01, rco= 1.2, res=0.01)
+    sol2 = make_solution(variables, [1, -1], err=0.1, rco= 1.1, res=0.03)
+    sols = [sol1, sol2]
+    s = DoubleSolution(sols[0])
+    if vrblvl > 0:
+        print('the first solution :')
+        print(s)
+        print('its coordinates :\n', s.coordinates())
+        print('its variable names :\n ', s.variables())
+        print('its numerical values :\n', s.numerals())
+        print('its diagnostics :\n', s.diagnostics())
+        print('its continuation parameter :', s.timevalue())
+        print('its multiplicity :', s.multiplicity())
+        print('the dictionary :\n', s.dictionary())
     (errtab, rcotab, restab) = condition_tables(sols)
-    print('The frequency tables for err, rco, and res:')
-    print(errtab)
-    print(rcotab)
-    print(restab)
+    if vrblvl > 0:
+        print('The frequency tables for err, rco, and res:')
+        print(errtab)
+        print(rcotab)
+        print(restab)
+    return 0
 
-if __name__=="__main__":
-    # test_double_functions()
-    test_double_solution_class()
-    # test_double_solutions()
-    # test_double_double_solutions()
-    # test_quad_double_solutions()
+def main():
+    """
+    Runs some tests on solutions.
+    """
+    lvl = 10
+    fail = test_double_functions(lvl)
+    fail = fail + test_double_solution_class(lvl)
+    if fail == 0:
+        print('=> All tests passed.')
+    else:
+        print('Number of failed tests :', fail)
+
+if __name__=='__main__':
+    main()
