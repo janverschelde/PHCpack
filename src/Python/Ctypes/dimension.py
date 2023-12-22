@@ -62,6 +62,63 @@ def set_quad_double_dimension(dim, vrblvl=0):
         print(', return value :', retval)
     return retval
 
+def set_double_Laurent_dimension(dim, vrblvl=0):
+    """
+    Sets the number of Laurent polynomials in double precision
+    to the value of the first parameter dim.
+    """
+    if vrblvl > 0:
+        print('in set_double_Laurent_dimension, dim :', dim)
+    phc = get_phcfun()
+    adim = pointer(c_int(dim))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> set_double_Laurent_dimension calls phc', end='')
+    retval = phc(123, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def set_double_double_Laurent_dimension(dim, vrblvl=0):
+    """
+    Sets the number of Laurent polynomials in double double precision
+    to the value of the first parameter dim.
+    """
+    if vrblvl > 0:
+        print('in set_double_double_Laurent_dimension, dim :', dim)
+    phc = get_phcfun()
+    adim = pointer(c_int(dim))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> set_double_double_Laurent_dimension calls phc', end='')
+    retval = phc(333, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def set_quad_double_Laurent_dimension(dim, vrblvl=0):
+    """
+    Sets the number of Laurent polynomials in quad double precision
+    to the value of the first parameter dim.
+    """
+    if vrblvl > 0:
+        print('in set_quad_double_Laurent_dimension, dim :', dim)
+    phc = get_phcfun()
+    adim = pointer(c_int(dim))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> set_quad_double_Laurent_dimension calls phc', end='')
+    retval = phc(563, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
 def get_double_dimension(vrblvl=0):
     """
     Returns the number of polynomials in double precision.
@@ -114,6 +171,63 @@ def get_quad_double_dimension(vrblvl=0):
     if vrblvl > 0:
         print('-> get_quad_double_dimension calls phc', end='')
     retval = phc(382, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the retrieved dimension :', adim[0])
+    return adim[0]
+
+def get_double_Laurent_dimension(vrblvl=0):
+    """
+    Returns the number of Laurent polynomials in double precision.
+    """
+    if vrblvl > 0:
+        print("in get_double_Laurent_dimension ...")
+    phc = get_phcfun()
+    adim = pointer(c_int(0))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> get_double_Laurent_dimension calls phc', end='')
+    retval = phc(122, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the retrieved dimension :', adim[0])
+    return adim[0]
+
+def get_double_double_Laurent_dimension(vrblvl=0):
+    """
+    Returns the number of Laurent polynomials in double double precision.
+    """
+    if vrblvl > 0:
+        print("in get_double_double_Laurent_dimension ...")
+    phc = get_phcfun()
+    adim = pointer(c_int(0))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> get_double_double_Laurent_dimension calls phc', end='')
+    retval = phc(332, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the retrieved dimension :', adim[0])
+    return adim[0]
+
+def get_quad_double_Laurent_dimension(vrblvl=0):
+    """
+    Returns the number of Laurent polynomials in quad double precision.
+    """
+    if vrblvl > 0:
+        print("in get_quad_double_Laurent_dimension ...")
+    phc = get_phcfun()
+    adim = pointer(c_int(0))
+    bbb = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> get_quad_double_Laurent_dimension calls phc', end='')
+    retval = phc(562, adim, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
         print('the retrieved dimension :', adim[0])
@@ -201,6 +315,27 @@ def test_dimension(vrblvl=0):
     if vrblvl > 0:
         print('the dimension :', dim)
     fail = fail + int(dim != 12345)
+    if vrblvl > 0:
+        print("testing in double precision for Laurent systems ...")
+    set_double_Laurent_dimension(12345, vrblvl)
+    dim = get_double_Laurent_dimension(vrblvl)
+    if vrblvl > 0:
+        print('the dimension :', dim)
+    fail = int(dim != 12345)
+    if vrblvl > 0:
+        print("testing in double double precision for Laurent systems ...")
+    set_double_double_Laurent_dimension(12345, vrblvl)
+    dim = get_double_double_Laurent_dimension(vrblvl)
+    if vrblvl > 0:
+        print('the dimension :', dim)
+    fail = int(dim != 12345)
+    if vrblvl > 0:
+        print("testing in quad double precision for Laurent systems ...")
+    set_quad_double_Laurent_dimension(12345, vrblvl)
+    dim = get_quad_double_Laurent_dimension(vrblvl)
+    if vrblvl > 0:
+        print('the dimension :', dim)
+    fail = int(dim != 12345)
     if vrblvl > 0:
         if fail == 0:
             print('=> All tests on set/get dimension passed.')
