@@ -1,3 +1,6 @@
+Sat 23 Dec 2023 : added is_square() to polynomials.py and wrapped the
+  solvers in one solve() function in solver.py.
+
 Fri 22 Dec 2023 : fixed bugs in solutions.py and from solutions.py removed
   the imports of the polynomials and the solvers.
   Improved solver.py with better tests.  Improved tests in volumes.py.

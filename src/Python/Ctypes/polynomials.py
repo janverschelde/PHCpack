@@ -608,6 +608,16 @@ def number_of_symbols(pols, vrblvl=0):
         print('-> number_of_symbols, result :', slen[0])
     return slen[0]
 
+def is_square(pols):
+    r"""
+    Given in the list *pols* are string representations of Laurent polynomials.
+    A system is square if it has as many unknowns as equations.
+    Returns True if the system is square, False otherwise.
+    """
+    nbrvar = number_of_symbols(pols)
+    nbreqs = len(pols)
+    return nbrvar == nbreqs
+
 def clear_double_system(vrblvl=0):
     """
     Clears the system set in double precision.
