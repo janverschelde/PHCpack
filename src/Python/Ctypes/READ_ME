@@ -13,6 +13,7 @@ polynomials             : set and get of polynomials
 solutions               : exports operations on solutions
 volumes                 : mixed volumes and stable mixed volumes
 solver                  : exports the blackbox solver
+examples                : runs some examples
 ---------------------------------------------------------------------------
 series                  : series expansions of solution curves
 ---------------------------------------------------------------------------
@@ -29,7 +30,9 @@ The directed acyclic graph shows the module dependencies:
       |        |         |               |
       +------------------+--> volumes    |
       |        |         |       |       |
-      +--------+---------+-------+-------+--> solver
+      +--------+---------+-------+-------+--> solver 
+      |        |                                |
+      +--------+--------------------------------+--> examples
 
 At the root is the version module.  If version.py works,
 then the interfacing with libPHCpack works.

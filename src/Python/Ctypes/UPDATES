@@ -1,5 +1,7 @@
 Sat 23 Dec 2023 : added is_square() to polynomials.py and wrapped the
   solvers in one solve() function in solver.py.
+  Enlarged numbers in the allocation for the 'roco' string in solver.py.
+  New module examples.py with demonstration systems.
 
 Fri 22 Dec 2023 : fixed bugs in solutions.py and from solutions.py removed
   the imports of the polynomials and the solvers.

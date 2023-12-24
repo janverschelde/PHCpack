@@ -76,7 +76,7 @@ def solve_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     phc = get_phcfun()
     vrb = (vrblvl > 0)
     apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
-    broco = create_string_buffer(b"", 2048)
+    broco = create_string_buffer(b"", 8096)
     ccc = pointer(c_double(0.0))
     vlvl = c_int(vrblvl)
     if vrblvl > 0:
@@ -101,7 +101,7 @@ def solve_double_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     phc = get_phcfun()
     vrb = (vrblvl > 0)
     apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
-    broco = create_string_buffer(b"", 2048)
+    broco = create_string_buffer(b"", 8096)
     ccc = pointer(c_double(0.0))
     vlvl = c_int(vrblvl)
     if vrblvl > 0:
@@ -126,7 +126,7 @@ def solve_quad_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     phc = get_phcfun()
     vrb = (vrblvl > 0)
     apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
-    broco = create_string_buffer(b"", 2048)
+    broco = create_string_buffer(b"", 8096)
     ccc = pointer(c_double(0.0))
     vlvl = c_int(vrblvl)
     if vrblvl > 0:
@@ -151,7 +151,7 @@ def solve_double_Laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
     phc = get_phcfun()
     vrb = (vrblvl > 0)
     apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
-    broco = create_string_buffer(b"", 2048)
+    broco = create_string_buffer(b"", 8096)
     ccc = pointer(c_double(0.0))
     vlvl = c_int(vrblvl)
     if vrblvl > 0:
@@ -176,7 +176,7 @@ def solve_double_double_Laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
     phc = get_phcfun()
     vrb = (vrblvl > 0)
     apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
-    broco = create_string_buffer(b"", 2048)
+    broco = create_string_buffer(b"", 8096)
     ccc = pointer(c_double(0.0))
     vlvl = c_int(vrblvl)
     if vrblvl > 0:
@@ -201,7 +201,7 @@ def solve_quad_double_Laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
     phc = get_phcfun()
     vrb = (vrblvl > 0)
     apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
-    broco = create_string_buffer(b"", 2048)
+    broco = create_string_buffer(b"", 8096)
     ccc = pointer(c_double(0.0))
     vlvl = c_int(vrblvl)
     if vrblvl > 0:
