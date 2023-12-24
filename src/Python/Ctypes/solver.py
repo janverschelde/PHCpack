@@ -75,8 +75,11 @@ def solve_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
         print('in solve_double_system, nbtasks :', nbtasks)
     phc = get_phcfun()
     vrb = (vrblvl > 0)
-    apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
+    apars = create_string_buffer(b"", 8)
     broco = create_string_buffer(b"", 8096)
+    bpars = int4a2nbr([0, nbtasks, mvfocus], vrb)
+    for i in range(12):
+        broco[i] = bpars[i]
     ccc = pointer(c_double(0.0))
     vlvl = c_int(vrblvl)
     if vrblvl > 0:
@@ -100,8 +103,11 @@ def solve_double_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
         print("in solve_double_double_system, nbtasks :", nbtasks)
     phc = get_phcfun()
     vrb = (vrblvl > 0)
-    apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
+    apars = create_string_buffer(b"", 8)
     broco = create_string_buffer(b"", 8096)
+    bpars = int4a2nbr([0, nbtasks, mvfocus], vrb)
+    for i in range(12):
+        broco[i] = bpars[i]
     ccc = pointer(c_double(0.0))
     vlvl = c_int(vrblvl)
     if vrblvl > 0:
@@ -125,8 +131,11 @@ def solve_quad_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
         print("in solve_quad_double_system, nbtasks :", nbtasks)
     phc = get_phcfun()
     vrb = (vrblvl > 0)
-    apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
+    apars = create_string_buffer(b"", 8)
     broco = create_string_buffer(b"", 8096)
+    bpars = int4a2nbr([0, nbtasks, mvfocus], vrb)
+    for i in range(12):
+        broco[i] = bpars[i]
     ccc = pointer(c_double(0.0))
     vlvl = c_int(vrblvl)
     if vrblvl > 0:
@@ -150,8 +159,11 @@ def solve_double_Laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
         print('in solve_double_Laurent_system, nbtasks :', nbtasks)
     phc = get_phcfun()
     vrb = (vrblvl > 0)
-    apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
+    apars = create_string_buffer(b"", 8)
     broco = create_string_buffer(b"", 8096)
+    bpars = int4a2nbr([0, nbtasks, mvfocus], vrb)
+    for i in range(12):
+        broco[i] = bpars[i]
     ccc = pointer(c_double(0.0))
     vlvl = c_int(vrblvl)
     if vrblvl > 0:
@@ -175,8 +187,11 @@ def solve_double_double_Laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
         print('in solve_double_double_Laurent_system, nbtasks :', nbtasks)
     phc = get_phcfun()
     vrb = (vrblvl > 0)
-    apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
+    apars = create_string_buffer(b"", 8)
     broco = create_string_buffer(b"", 8096)
+    bpars = int4a2nbr([0, nbtasks, mvfocus], vrb)
+    for i in range(12):
+        broco[i] = bpars[i]
     ccc = pointer(c_double(0.0))
     vlvl = c_int(vrblvl)
     if vrblvl > 0:
@@ -200,8 +215,11 @@ def solve_quad_double_Laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
         print('in solve_quad_double_Laurent_system, nbtasks :', nbtasks)
     phc = get_phcfun()
     vrb = (vrblvl > 0)
-    apars = int4a2nbr([1, nbtasks, mvfocus], vrb)
+    apars = create_string_buffer(b"", 8)
     broco = create_string_buffer(b"", 8096)
+    bpars = int4a2nbr([0, nbtasks, mvfocus], vrb)
+    for i in range(12):
+        broco[i] = bpars[i]
     ccc = pointer(c_double(0.0))
     vlvl = c_int(vrblvl)
     if vrblvl > 0:

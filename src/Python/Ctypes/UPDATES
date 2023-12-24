@@ -1,3 +1,5 @@
+Sun 24 Dec 2023 : fixed parameters in solver.py for multithreading.
+
 Sat 23 Dec 2023 : added is_square() to polynomials.py and wrapped the
   solvers in one solve() function in solver.py.
   Enlarged numbers in the allocation for the 'roco' string in solver.py.
