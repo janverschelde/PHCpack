@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Vectors;           use Standard_Complex_Vectors;
 with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
@@ -377,39 +378,43 @@ package Standard_Root_Refiners is
                ( p : in Poly_Sys; sols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean );
+                 deflate : in out boolean; verbose : in integer32 := 0 );
 
   procedure Silent_Root_Refiner
                ( p : in Standard_Complex_Poly_SysFun.Evaluator;
                  j : in Standard_Complex_Jaco_Matrices.Evaluator;
                  sols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
-                 numit : in out natural32; max : in natural32 );
+                 numit : in out natural32; max : in natural32;
+                 verbose : in integer32 := 0 );
 
   procedure Silent_Root_Refiner
                ( p : in Poly_Sys; sols,refsols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean );
+                 deflate : in out boolean; verbose : in integer32 := 0 );
 
   procedure Silent_Root_Refiner
                ( p : in Laur_Sys; sols,refsols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
-                 numit : in out natural32; max : in natural32 );
+                 numit : in out natural32; max : in natural32;
+                 verbose : in integer32 := 0 );
 
   procedure Silent_Root_Refiner
                ( p : in Standard_Complex_Poly_SysFun.Evaluator;
                  j : in Standard_Complex_Jaco_Matrices.Evaluator;
                  sols,refsols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
-                 numit : in out natural32; max : in natural32 );
+                 numit : in out natural32; max : in natural32;
+                 verbose : in integer32 := 0 );
 
   procedure Reporting_Root_Refiner
                ( file : in file_type;
                  p : in Poly_Sys; sols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean; wout : in boolean );
+                 deflate : in out boolean; wout : in boolean;
+                 verbose : in integer32 := 0 );
 
   procedure Reporting_Root_Refiner
                ( file : in file_type;
@@ -418,28 +423,29 @@ package Standard_Root_Refiners is
                  sols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 wout : in boolean );
+                 wout : in boolean; verbose : in integer32 := 0 );
 
   procedure Reporting_Root_Refiner
                ( file : in file_type;
                  p : in Poly_Sys; sols,refsols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean; wout : in boolean );
+                 deflate : in out boolean; wout : in boolean;
+                 verbose : in integer32 := 0 );
 
   procedure Reporting_Root_Refiner
                ( file : in file_type;
                  p : in Laur_Sys; sols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 wout : in boolean );
+                 wout : in boolean; verbose : in integer32 := 0 );
 
   procedure Reporting_Root_Refiner
                ( file : in file_type;
                  p : in Laur_Sys; sols,refsols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 wout : in boolean );
+                 wout : in boolean; verbose : in integer32 := 0 );
 
   procedure Reporting_Root_Refiner
                ( file : in file_type;
@@ -448,7 +454,7 @@ package Standard_Root_Refiners is
                  sols,refsols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 wout : in boolean );
+                 wout : in boolean; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   The list of solutions sols is refined w.r.t. the system p.
@@ -469,7 +475,8 @@ package Standard_Root_Refiners is
   --   numit     the number of iterations, to be initialized with zero;
   --   max       maximum number of iterations per zero;
   --   deflate   if true, apply deflation to singular solutions;
-  --   wout      has to be true when intermediate output is wanted.
+  --   wout      has to be true when intermediate output is wanted;
+  --   verbose   is the verbose level.
 
   -- ON RETURN :
   --   sols      a list of computed solutions;
@@ -485,7 +492,8 @@ package Standard_Root_Refiners is
                  sols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean; wout : in boolean );
+                 deflate : in out boolean; wout : in boolean;
+                 verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Refines the roots in sols for the system p, computing mixed residuals
@@ -502,7 +510,8 @@ package Standard_Root_Refiners is
   --   numit     the number of iterations, to be initialized with zero;
   --   max       maximum number of iterations per zero;
   --   deflate   if true, apply deflation to singular solutions;
-  --   wout      has to be true when intermediate output is wanted.
+  --   wout      has to be true when intermediate output is wanted;
+  --   verbose   is the verbose level.
 
   -- ON RETURN :
   --   sols      a list of computed solutions;

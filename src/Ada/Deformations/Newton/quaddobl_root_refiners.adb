@@ -1,5 +1,4 @@
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with QuadDobl_Complex_Numbers;
@@ -672,7 +671,8 @@ package body QuadDobl_Root_Refiners is
                ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
-                 numit : in out natural32; max : in natural32 ) is
+                 numit : in out natural32; max : in natural32;
+                 verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
@@ -691,6 +691,10 @@ package body QuadDobl_Root_Refiners is
     cnt : natural32 := 0;
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("Silent_Root_Refiner 1 ...");
+    end if;
     QuadDobl_Random_Vectors.Random_Vector(seed,h1);
     QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     while not Is_Null(solsptr) loop
@@ -714,7 +718,8 @@ package body QuadDobl_Root_Refiners is
                ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
-                 numit : in out natural32; max : in natural32 ) is
+                 numit : in out natural32; max : in natural32;
+                 verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
@@ -734,6 +739,10 @@ package body QuadDobl_Root_Refiners is
     cnt : natural32 := 0;
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("Silent_Root_Refiner 2 ...");
+    end if;
     QuadDobl_Random_Vectors.Random_Vector(seed,h1);
     QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     while not Is_Null(solsptr) loop
@@ -760,7 +769,8 @@ package body QuadDobl_Root_Refiners is
                ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
-                 numit : in out natural32; max : in natural32 ) is
+                 numit : in out natural32; max : in natural32;
+                 verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Laur_SysFun;
     use QuadDobl_Complex_Laur_JacoMats;
@@ -779,6 +789,10 @@ package body QuadDobl_Root_Refiners is
     cnt : natural32 := 0;
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("Silent_Root_Refiner 3 ...");
+    end if;
     QuadDobl_Random_Vectors.Random_Vector(seed,h1);
     QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     while not Is_Null(solsptr) loop
@@ -802,7 +816,8 @@ package body QuadDobl_Root_Refiners is
                ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
-                 numit : in out natural32; max : in natural32 ) is
+                 numit : in out natural32; max : in natural32;
+                 verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Laur_SysFun;
     use QuadDobl_Complex_Laur_JacoMats;
@@ -822,6 +837,10 @@ package body QuadDobl_Root_Refiners is
     cnt : natural32 := 0;
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("Silent_Root_Refiner 4 ...");
+    end if;
     QuadDobl_Random_Vectors.Random_Vector(seed,h1);
     QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     while not Is_Null(solsptr) loop
@@ -850,7 +869,7 @@ package body QuadDobl_Root_Refiners is
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 wout : in boolean ) is
+                 wout : in boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
@@ -874,6 +893,10 @@ package body QuadDobl_Root_Refiners is
     len : constant natural32 := Length_Of(s);
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("Reporting_Root_Refiner 1 ...");
+    end if;
     QuadDobl_Random_Vectors.Random_Vector(seed,h1);
     QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
@@ -916,7 +939,7 @@ package body QuadDobl_Root_Refiners is
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 wout : in boolean ) is
+                 wout : in boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
@@ -941,6 +964,10 @@ package body QuadDobl_Root_Refiners is
     len : constant natural32 := Length_Of(s);
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("Reporting_Root_Refiner 2 ...");
+    end if;
     QuadDobl_Random_Vectors.Random_Vector(seed,h1);
     QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
@@ -986,7 +1013,7 @@ package body QuadDobl_Root_Refiners is
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 wout : in boolean ) is
+                 wout : in boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Laur_SysFun;
     use QuadDobl_Complex_Laur_JacoMats;
@@ -1010,6 +1037,10 @@ package body QuadDobl_Root_Refiners is
     len : constant natural32 := Length_Of(s);
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("Reporting_Root_Refiner 3 ...");
+    end if;
     QuadDobl_Random_Vectors.Random_Vector(seed,h1);
     QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
@@ -1052,7 +1083,7 @@ package body QuadDobl_Root_Refiners is
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 wout : in boolean ) is
+                 wout : in boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Laur_SysFun;
     use QuadDobl_Complex_Laur_JacoMats;
@@ -1077,6 +1108,10 @@ package body QuadDobl_Root_Refiners is
     len : constant natural32 := Length_Of(s);
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("Reporting_Root_Refiner 4 ...");
+    end if;
     QuadDobl_Random_Vectors.Random_Vector(seed,h1);
     QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
@@ -1258,7 +1293,7 @@ package body QuadDobl_Root_Refiners is
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean ) is
+                 deflate : in out boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
@@ -1291,6 +1326,10 @@ package body QuadDobl_Root_Refiners is
     cnt : natural32 := 0;
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("Silent_Root_Refiner 5 ...");
+    end if;
     QuadDobl_Random_Vectors.Random_Vector(seed,h1);
     QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
@@ -1352,7 +1391,7 @@ package body QuadDobl_Root_Refiners is
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean ) is
+                 deflate : in out boolean; verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
@@ -1386,6 +1425,10 @@ package body QuadDobl_Root_Refiners is
     cnt : natural32 := 0;
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("Silent_Root_Refiner 6 ...");
+    end if;
     QuadDobl_Random_Vectors.Random_Vector(seed,h1);
     QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
@@ -1452,7 +1495,8 @@ package body QuadDobl_Root_Refiners is
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean; wout : in boolean ) is
+                 deflate : in out boolean; wout : in boolean;
+                 verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
@@ -1489,6 +1533,10 @@ package body QuadDobl_Root_Refiners is
     len : constant natural32 := Length_Of(s);
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("Reporting_Root_Refiner 5 ...");
+    end if;
     QuadDobl_Random_Vectors.Random_Vector(seed,h1);
     QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
@@ -1569,7 +1617,8 @@ package body QuadDobl_Root_Refiners is
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean; wout : in boolean ) is
+                 deflate : in out boolean; wout : in boolean;
+                 verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
@@ -1607,6 +1656,10 @@ package body QuadDobl_Root_Refiners is
     len : constant natural32 := Length_Of(s);
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("Reporting_Root_Refiner 6 ...");
+    end if;
     QuadDobl_Random_Vectors.Random_Vector(seed,h1);
     QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
@@ -1694,7 +1747,8 @@ package body QuadDobl_Root_Refiners is
                  sols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean; wout : in boolean ) is
+                 deflate : in out boolean; wout : in boolean;
+                 verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
@@ -1731,6 +1785,10 @@ package body QuadDobl_Root_Refiners is
     len : constant natural32 := Length_Of(sols);
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("Reporting_Root_Refiner 7 ...");
+    end if;
     QuadDobl_Random_Vectors.Random_Vector(seed,h1);
     QuadDobl_Random_Vectors.Random_Vector(seed,h2);
     if deflate then

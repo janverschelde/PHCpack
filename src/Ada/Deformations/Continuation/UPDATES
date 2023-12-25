@@ -1,5 +1,7 @@
 Mon 25 Dec 2023 : added verbose level to *_blackbox_refiners.a* and
   adjusted calls in *_blackbox_continuations.adb.
+  After adding verbose level in {standard,dobldobl,quaddobl}_root_refiners,
+  adjusted calls in *_blackbox_refiners.adb.
 
 Thu 10 Jun 2021 : added the exec_dir attribute to continuation.gpr.
 

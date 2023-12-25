@@ -36,7 +36,7 @@ package body Standard_BlackBox_Refiners is
       Standard_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,default_deflate,wout);
       Silent_Root_Refiner
-        (p,sols,ref_sols,epsxa,epsfa,tolsing,nb,maxit,vardeflate);
+        (p,sols,ref_sols,epsxa,epsfa,tolsing,nb,maxit,vardeflate,verbose-1);
       Clear(sols);
       sols := ref_sols;
     end if;
@@ -59,7 +59,8 @@ package body Standard_BlackBox_Refiners is
     if not Is_Null(sols) then
       Standard_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
-      Silent_Root_Refiner(p,sols,ref_sols,epsxa,epsfa,tolsing,nb,maxit);
+      Silent_Root_Refiner
+        (p,sols,ref_sols,epsxa,epsfa,tolsing,nb,maxit,verbose-1);
       Clear(sols);
       sols := ref_sols;
     end if;
@@ -85,7 +86,8 @@ package body Standard_BlackBox_Refiners is
       Standard_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,default_deflate,wout);
       Reporting_Root_Refiner
-        (file,p,sols,ref_sols,epsxa,epsfa,tolsing,nb,maxit,vardeflate,wout);
+        (file,p,sols,ref_sols,epsxa,epsfa,tolsing,nb,maxit,
+         vardeflate,wout,verbose-1);
     end if;
     Clear(sols);
     sols := ref_sols;
@@ -110,7 +112,7 @@ package body Standard_BlackBox_Refiners is
       Standard_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
       Reporting_Root_Refiner
-        (file,p,sols,ref_sols,epsxa,epsfa,tolsing,nb,maxit,wout);
+        (file,p,sols,ref_sols,epsxa,epsfa,tolsing,nb,maxit,wout,verbose-1);
     end if;
     Clear(sols);
     sols := ref_sols;

@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with QuadDobl_Complex_Vectors;
@@ -457,22 +458,26 @@ package QuadDobl_Root_Refiners is
                ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
-                 numit : in out natural32; max : in natural32 );
+                 numit : in out natural32; max : in natural32;
+                 verbose : in integer32 := 0 );
   procedure Silent_Root_Refiner
                ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
-                 numit : in out natural32; max : in natural32 );
+                 numit : in out natural32; max : in natural32;
+                 verbose : in integer32 := 0 );
   procedure Silent_Root_Refiner
                ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
-                 numit : in out natural32; max : in natural32 );
+                 numit : in out natural32; max : in natural32;
+                 verbose : in integer32 := 0 );
   procedure Silent_Root_Refiner
                ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
-                 numit : in out natural32; max : in natural32 );
+                 numit : in out natural32; max : in natural32;
+                 verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Applies Newton's method to refine roots of p in s.
@@ -492,7 +497,8 @@ package QuadDobl_Root_Refiners is
   --            the Jacobian matrix at the root for consideration
   --            as a singular solution;
   --   numit    number of iterations, must be zero on entry,
-  --   max      maximum number of iterations allowed.
+  --   max      maximum number of iterations allowed;
+  --   verbose  is the verbose level.
 
   -- ON RETURN :
   --   s        updated approximate solutions;
@@ -505,28 +511,28 @@ package QuadDobl_Root_Refiners is
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 wout : in boolean );
+                 wout : in boolean; verbose : in integer32 := 0 );
   procedure Reporting_Root_Refiner
                ( file : in file_type;
                  p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 wout : in boolean );
+                 wout : in boolean; verbose : in integer32 := 0 );
   procedure Reporting_Root_Refiner
                ( file : in file_type;
                  p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 wout : in boolean );
+                 wout : in boolean; verbose : in integer32 := 0 );
   procedure Reporting_Root_Refiner
                ( file : in file_type;
                  p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 wout : in boolean );
+                 wout : in boolean; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Applies Newton's method to refine roots of p in s.
@@ -549,7 +555,8 @@ package QuadDobl_Root_Refiners is
   --   numit    number of iterations, must be zero on entry,
   --   max      maximum number of iterations allowed;
   --   wout     if true, then information about each Newton update
-  --            is written to file.
+  --            is written to file;
+  --   verbose  is the verbose level.
 
   -- ON RETURN :
   --   s        updated approximate solutions;
@@ -563,13 +570,13 @@ package QuadDobl_Root_Refiners is
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean );
+                 deflate : in out boolean; verbose : in integer32 := 0 );
   procedure Silent_Root_Refiner
                ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean );
+                 deflate : in out boolean; verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Applies Newton's method to refine roots of p in s,
@@ -590,7 +597,8 @@ package QuadDobl_Root_Refiners is
   --            matrix at the root for consideration as singular solution;
   --   numit    number of iterations, must be zero on entry,
   --   max      maximum number of iterations allowed;
-  --   deflate  to ask for deflation of the singular solutions.
+  --   deflate  to ask for deflation of the singular solutions;
+  --   verbose  is the verbose level.
 
   -- ON RETURN :
   --   s        updated approximate solutions;
@@ -604,14 +612,16 @@ package QuadDobl_Root_Refiners is
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean; wout : in boolean );
+                 deflate : in out boolean; wout : in boolean;
+                 verbose : in integer32 := 0 );
   procedure Reporting_Root_Refiner
                ( file : in file_type;
                  p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean; wout : in boolean );
+                 deflate : in out boolean; wout : in boolean;
+                 verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Applies Newton's method to refine roots of p in s,
@@ -635,7 +645,8 @@ package QuadDobl_Root_Refiners is
   --   max      maximum number of iterations allowed;
   --   deflate  to ask for deflation of the singular solutions;
   --   wout     if true, then information about each Newton update
-  --            is written to file.
+  --            is written to file;
+  --   verbose  is the verbose level.
 
   -- ON RETURN :
   --   s        updated approximate solutions;
@@ -652,7 +663,8 @@ package QuadDobl_Root_Refiners is
                  sols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean; wout : in boolean );
+                 deflate : in out boolean; wout : in boolean;
+                 verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Refines the roots in sols for the system p, computing mixed residuals
@@ -669,7 +681,8 @@ package QuadDobl_Root_Refiners is
   --   numit     the number of iterations, to be initialized with zero;
   --   max       maximum number of iterations per zero;
   --   deflate   if true, apply deflation to singular solutions;
-  --   wout      has to be true when intermediate output is wanted.
+  --   wout      has to be true when intermediate output is wanted;
+  --   verbose   is the verbose level.
 
   -- ON RETURN :
   --   sols      a list of computed solutions;

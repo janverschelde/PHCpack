@@ -29,7 +29,7 @@ package body QuadDobl_BlackBox_Refiners is
       QuadDobl_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
       Silent_Root_Refiner
-        (p,sols,ref_sols,epsxa,epsfa,tolsing,nb,maxit,deflate);
+        (p,sols,ref_sols,epsxa,epsfa,tolsing,nb,maxit,deflate,verbose-1);
       Clear(sols);
       sols := ref_sols;
     end if;
@@ -52,7 +52,8 @@ package body QuadDobl_BlackBox_Refiners is
     if Length_Of(sols) > 0 then
       QuadDobl_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
-      Silent_Root_Refiner(p,sols,ref_sols,epsxa,epsfa,tolsing,nb,maxit);
+      Silent_Root_Refiner
+        (p,sols,ref_sols,epsxa,epsfa,tolsing,nb,maxit,verbose-1);
       Clear(sols);
       sols := ref_sols;
     end if;
@@ -77,7 +78,8 @@ package body QuadDobl_BlackBox_Refiners is
       QuadDobl_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
       Reporting_Root_Refiner
-        (file,p,sols,ref_sols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+        (file,p,sols,ref_sols,epsxa,epsfa,tolsing,
+         nb,5,deflate,false,verbose-1);
       Clear(sols);
       sols := ref_sols;
     end if;
@@ -101,7 +103,8 @@ package body QuadDobl_BlackBox_Refiners is
     if Length_Of(sols) > 0 then
       QuadDobl_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
-      Reporting_Root_Refiner(file,p,sols,epsxa,epsfa,tolsing,nb,maxit,false);
+      Reporting_Root_Refiner
+        (file,p,sols,epsxa,epsfa,tolsing,nb,maxit,false,verbose-1);
       Clear(sols);
       sols := ref_sols;
     end if;
@@ -193,7 +196,8 @@ package body QuadDobl_BlackBox_Refiners is
       nb := 0;
       if not Is_Null(sinsols) then
         Silent_Root_Refiner
-          (p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
+          (p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,
+           nb,maxit,deflate,verbose-1);
         Push(ref_sinsols,regsols);
       end if;
       Clear(sols); Clear(vansols); Clear(sinsols); Clear(tarsols);
@@ -230,7 +234,8 @@ package body QuadDobl_BlackBox_Refiners is
         (vansols,tolsing,sinsols,regsols);
       if not Is_Null(sinsols) then
         Reporting_Root_Refiner
-          (file,p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,nb,maxit,deflate);
+          (file,p,sinsols,ref_sinsols,epsxa,epsfa,tolsing,
+           nb,maxit,deflate,verbose-1);
         Push(ref_sinsols,regsols);
       end if;
       Clear(sols); Clear(vansols); Clear(sinsols); Clear(tarsols);

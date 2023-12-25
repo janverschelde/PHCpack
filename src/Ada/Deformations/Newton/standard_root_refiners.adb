@@ -1,5 +1,4 @@
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
@@ -1033,7 +1032,7 @@ package body Standard_Root_Refiners is
                ( p : in Poly_Sys; sols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean ) is
+                 deflate : in out boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Jaco_Matrices;
 
@@ -1061,6 +1060,10 @@ package body Standard_Root_Refiners is
     cnt : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in standard_root_refiners.");
+      put_line("Silent_Root_Refiner 1 ...");
+    end if;
     Standard_Random_Vectors.Random_Vector(seed,h1);
     Standard_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
@@ -1130,7 +1133,8 @@ package body Standard_Root_Refiners is
                  j : in Standard_Complex_Jaco_Matrices.Evaluator;
                  sols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
-                 numit : in out natural32; max : in natural32 ) is
+                 numit : in out natural32; max : in natural32;
+                 verbose : in integer32 := 0 ) is
 
     numb : natural32;
     fail,infty : boolean;
@@ -1141,6 +1145,10 @@ package body Standard_Root_Refiners is
     pl : Point_List;
 
   begin
+    if verbose > 0 then
+      put("-> in standard_root_refiners.");
+      put_line("Silent_Root_Refiner 2 ...");
+    end if;
     Standard_Random_Vectors.Random_Vector(seed,h1);
     Standard_Random_Vectors.Random_Vector(seed,h2);
     for i in sa'range loop
@@ -1163,7 +1171,7 @@ package body Standard_Root_Refiners is
                ( p : in Poly_Sys; sols,refsols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean ) is
+                 deflate : in out boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Jaco_Matrices;
 
@@ -1192,6 +1200,10 @@ package body Standard_Root_Refiners is
     cnt : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in standard_root_refiners.");
+      put_line("Silent_Root_Refiner 3 ...");
+    end if;
     Standard_Random_Vectors.Random_Vector(seed,h1);
     Standard_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
@@ -1263,7 +1275,8 @@ package body Standard_Root_Refiners is
   procedure Silent_Root_Refiner
                ( p : in Laur_Sys; sols,refsols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
-                 numit : in out natural32; max : in natural32 ) is
+                 numit : in out natural32; max : in natural32;
+                 verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Laur_Jacomats;
 
@@ -1283,6 +1296,10 @@ package body Standard_Root_Refiners is
     cnt : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in standard_root_refiners.");
+      put_line("Silent_Root_Refiner 4 ...");
+    end if;
     Standard_Random_Vectors.Random_Vector(seed,h1);
     Standard_Random_Vectors.Random_Vector(seed,h2);
     cnt := 1;
@@ -1315,7 +1332,8 @@ package body Standard_Root_Refiners is
                  j : in Standard_Complex_Jaco_Matrices.Evaluator;
                  sols,refsols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
-                 numit : in out natural32; max : in natural32 ) is
+                 numit : in out natural32; max : in natural32;
+                 verbose : in integer32 := 0 ) is
 
     numb : natural32;
     fail,infty : boolean;
@@ -1327,6 +1345,10 @@ package body Standard_Root_Refiners is
     pl : Point_List;
 
   begin
+    if verbose > 0 then
+      put("-> in standard_root_refiners.");
+      put_line("Silent_Root_Refiner 5 ...");
+    end if;
     Standard_Random_Vectors.Random_Vector(seed,h1);
     Standard_Random_Vectors.Random_Vector(seed,h2);
     for i in sa'range loop
@@ -1353,7 +1375,8 @@ package body Standard_Root_Refiners is
                  p : in Poly_Sys; sols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean; wout : in boolean ) is
+                 deflate : in out boolean; wout : in boolean;
+                 verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Jaco_Matrices;
 
@@ -1388,6 +1411,10 @@ package body Standard_Root_Refiners is
     cnt : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in standard_root_refiners.");
+      put_line("Reporting_Root_Refiner 1 ...");
+    end if;
     Standard_Random_Vectors.Random_Vector(seed,h1);
     Standard_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
@@ -1499,7 +1526,7 @@ package body Standard_Root_Refiners is
                  sols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 wout : in boolean ) is
+                 wout : in boolean; verbose : in integer32 := 0 ) is
 
     n : constant integer32 := Head_Of(sols).n;
     numb : natural32;
@@ -1513,6 +1540,10 @@ package body Standard_Root_Refiners is
     pl : Point_List;
 
   begin
+    if verbose > 0 then
+      put("-> in standard_root_refiners.");
+      put_line("Reporting_Root_Refiner 2 ...");
+    end if;
     Standard_Random_Vectors.Random_Vector(seed,h1);
     Standard_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
@@ -1550,7 +1581,8 @@ package body Standard_Root_Refiners is
                  p : in Poly_Sys; sols,refsols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean; wout : in boolean ) is
+                 deflate : in out boolean; wout : in boolean;
+                 verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Jaco_Matrices;
 
@@ -1586,6 +1618,10 @@ package body Standard_Root_Refiners is
     cnt : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in standard_root_refiners.");
+      put_line("Reporting_Root_Refiner 3 ...");
+    end if;
     Standard_Random_Vectors.Random_Vector(seed,h1);
     Standard_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
@@ -1692,7 +1728,7 @@ package body Standard_Root_Refiners is
                  p : in Laur_Sys; sols,refsols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 wout : in boolean ) is
+                 wout : in boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Laur_Jacomats;
 
@@ -1719,6 +1755,10 @@ package body Standard_Root_Refiners is
     cnt : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in standard_root_refiners.");
+      put_line("Reporting_Root_Refiner 4 ...");
+    end if;
     Standard_Random_Vectors.Random_Vector(seed,h1);
     Standard_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
@@ -1775,7 +1815,7 @@ package body Standard_Root_Refiners is
                  p : in Laur_Sys; sols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 wout : in boolean ) is
+                 wout : in boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Laur_Jacomats;
 
@@ -1801,6 +1841,10 @@ package body Standard_Root_Refiners is
     cnt : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in standard_root_refiners.");
+      put_line("Reporting_Root_Refiner 5 ...");
+    end if;
     Standard_Random_Vectors.Random_Vector(seed,h1);
     Standard_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
@@ -1856,7 +1900,7 @@ package body Standard_Root_Refiners is
                  sols,refsols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 wout : in boolean ) is
+                 wout : in boolean; verbose : in integer32 := 0 ) is
 
     n : constant integer32 := Head_Of(sols).n;
     numb : natural32;
@@ -1871,6 +1915,10 @@ package body Standard_Root_Refiners is
     pl : Point_List;
 
   begin
+    if verbose > 0 then
+      put("-> in standard_root_refiners.");
+      put_line("Reporting_Root_Refiner 6 ...");
+    end if;
     Standard_Random_Vectors.Random_Vector(seed,h1);
     Standard_Random_Vectors.Random_Vector(seed,h2);
     new_line(file);
@@ -1913,7 +1961,8 @@ package body Standard_Root_Refiners is
                  sols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in out boolean; wout : in boolean ) is
+                 deflate : in out boolean; wout : in boolean;
+                 verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Jaco_Matrices;
 
@@ -1948,6 +1997,10 @@ package body Standard_Root_Refiners is
     cnt : natural32;
 
   begin
+    if verbose > 0 then
+      put("-> in standard_root_refiners.");
+      put_line("Reporting_Root_Refiner 7 ...");
+    end if;
     Standard_Random_Vectors.Random_Vector(seed,h1);
     Standard_Random_Vectors.Random_Vector(seed,h2);
     if deflate then
