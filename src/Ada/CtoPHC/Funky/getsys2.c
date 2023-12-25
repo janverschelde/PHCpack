@@ -10,8 +10,8 @@
 /* extern void adainit(); */
 /* extern void adafinal(); */
 
-extern _ada_getsys3 ( int n, int m, int moncnt[n],
-                      int ns, int s[ns], int nc, double c[nc] );
+extern void _ada_getsys3 ( int n, int m, int moncnt[n],
+                           int ns, int s[ns], int nc, double c[nc] );
 
 int getsys2 ( int n, int m, int moncnt[n],
               int ns, int s[ns], int nc, double c[nc] )
