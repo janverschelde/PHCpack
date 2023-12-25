@@ -188,7 +188,7 @@ package body Standard_BlackBox_Continuations is
     print_times(outfile,timer,"continuation");
     pocotime := Elapsed_User_Time(timer);
     flush(outfile);
-    Reporting_Black_Box_Refine(outfile,p.all,sols,deflate);
+    Reporting_Black_Box_Refine(outfile,p.all,sols,deflate,verbose-1);
   end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
@@ -242,7 +242,7 @@ package body Standard_BlackBox_Continuations is
     Scale(2,scalecoeff.all,sols);
     Clear(sp);
     flush(outfile);
-    Reporting_Black_Box_Refine(outfile,p.all,sols,deflate);
+    Reporting_Black_Box_Refine(outfile,p.all,sols,deflate,verbose-1);
   end Black_Box_Polynomial_Continuation;
 
 -- STABLE POLYNOMIAL CONTINUATION :
@@ -393,7 +393,7 @@ package body Standard_BlackBox_Continuations is
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
     end loop;
-    Silent_Black_Box_Refine(p,sols,deflate);
+    Silent_Black_Box_Refine(p,sols,deflate,verbose-1);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
   end Black_Box_Stable_Poly_Continuation;
@@ -427,7 +427,7 @@ package body Standard_BlackBox_Continuations is
       tmp := Tail_Of(tmp);
     end loop;
     flush(file);
-    Reporting_Black_Box_Refine(file,p,sols,deflate);
+    Reporting_Black_Box_Refine(file,p,sols,deflate,verbose-1);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"stable continuation");
@@ -527,7 +527,7 @@ package body Standard_BlackBox_Continuations is
     Continuation_Parameters.Tune(0);
     tstart(timer);
     Cont(sols,proj,target=>target);
-    Silent_Black_Box_Refine(p,sols,deflate);
+    Silent_Black_Box_Refine(p,sols,deflate,verbose-1);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
     Standard_Homotopy.Clear;
@@ -557,7 +557,7 @@ package body Standard_BlackBox_Continuations is
     Continuation_Parameters.Tune(0);
     tstart(timer);
     Silent_Multitasking_Path_Tracker(sols,nt);
-    Silent_Black_Box_Refine(nt,p,sols,deflate);
+    Silent_Black_Box_Refine(nt,p,sols,deflate,verbose-1);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
     Standard_Homotopy.Clear;
@@ -603,7 +603,7 @@ package body Standard_BlackBox_Continuations is
     flush(file);
     declare
     begin
-      Reporting_Black_Box_Refine(file,p,sols,deflate);
+      Reporting_Black_Box_Refine(file,p,sols,deflate,verbose-1);
    -- exception
    --   when others => 
    --     put_line("exception when calling Reporting_Black_Box_Refine...");
@@ -650,7 +650,7 @@ package body Standard_BlackBox_Continuations is
     flush(file);
     start_moment := Ada.Calendar.Clock;
     tstart(timer);
-    Reporting_Black_Box_Refine(file,nt,p,sols,deflate);
+    Reporting_Black_Box_Refine(file,nt,p,sols,deflate,verbose-1);
     tstop(timer);
     ended_moment := Ada.Calendar.Clock;
     new_line(file);
@@ -880,7 +880,7 @@ package body Standard_BlackBox_Continuations is
     Continuation_Parameters.Tune(0);
     tstart(timer);
     Cont(sols,proj,target=>target);
-    Silent_Black_Box_Refine(p,sols);
+    Silent_Black_Box_Refine(p,sols,verbose-1);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
     Standard_Laurent_Homotopy.Clear;
@@ -918,7 +918,7 @@ package body Standard_BlackBox_Continuations is
     Continuation_Parameters.Tune(0);
     tstart(timer);
     Silent_Multitasking_Laurent_Path_Tracker(sols,nt);
-    Silent_Black_Box_Refine(nt,p,sols);
+    Silent_Black_Box_Refine(nt,p,sols,verbose-1);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
     Standard_Laurent_Homotopy.Clear;
@@ -964,7 +964,7 @@ package body Standard_BlackBox_Continuations is
     Tune_Continuation_Parameters(file);
     tstart(timer);
     Cont(file,sols,proj,target=>target);
-    Reporting_Black_Box_Refine(file,p,sols);
+    Reporting_Black_Box_Refine(file,p,sols,verbose-1);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
     Standard_Laurent_Homotopy.Clear;
@@ -1013,7 +1013,7 @@ package body Standard_BlackBox_Continuations is
     flush(file);
     start_moment := Ada.Calendar.Clock;
     tstart(timer);
-    Reporting_Black_Box_Refine(file,nt,p,sols);
+    Reporting_Black_Box_Refine(file,nt,p,sols,verbose-1);
     tstop(timer);
     ended_moment := Ada.Calendar.Clock;
     new_line(file);

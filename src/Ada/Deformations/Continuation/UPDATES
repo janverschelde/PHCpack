@@ -1,3 +1,6 @@
+Mon 25 Dec 2023 : added verbose level to *_blackbox_refiners.a* and
+  adjusted calls in *_blackbox_continuations.adb.
+
 Thu 10 Jun 2021 : added the exec_dir attribute to continuation.gpr.
 
 Wed 9 Jun 2021 : defined continuation.gpr to build the test procedures.

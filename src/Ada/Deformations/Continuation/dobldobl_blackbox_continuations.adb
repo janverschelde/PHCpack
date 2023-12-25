@@ -190,7 +190,7 @@ package body DoblDobl_BlackBox_Continuations is
     print_times(outfile,timer,"continuation");
     pocotime := Elapsed_User_Time(timer);
     flush(outfile);
-    Reporting_Black_Box_Refine(outfile,p.all,sols);
+    Reporting_Black_Box_Refine(outfile,p.all,sols,verbose-1);
   end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
@@ -243,7 +243,7 @@ package body DoblDobl_BlackBox_Continuations is
     Scale(2,scalecoeff.all,sols);
     Clear(sp);
     flush(outfile);
-    Reporting_Black_Box_Refine(outfile,p.all,sols);
+    Reporting_Black_Box_Refine(outfile,p.all,sols,verbose-1);
   end Black_Box_Polynomial_Continuation;
 
 -- STABLE POLYNOMIAL CONTINUATION :
@@ -395,7 +395,7 @@ package body DoblDobl_BlackBox_Continuations is
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
     end loop;
-    Silent_Black_Box_Refine(p,sols);
+    Silent_Black_Box_Refine(p,sols,verbose-1);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
   end Black_Box_Stable_Poly_Continuation;
@@ -429,7 +429,7 @@ package body DoblDobl_BlackBox_Continuations is
       tmp := Tail_Of(tmp);
     end loop;
     flush(file);
-    Reporting_Black_Box_Refine(file,p,sols);
+    Reporting_Black_Box_Refine(file,p,sols,verbose-1);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"stable continuation");
@@ -526,7 +526,7 @@ package body DoblDobl_BlackBox_Continuations is
     Cont(sols,target=>target);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
-    Silent_Black_Box_Refine(p,sols);
+    Silent_Black_Box_Refine(p,sols,verbose-1);
     DoblDobl_Homotopy.Clear;
     DoblDobl_Coefficient_Homotopy.Clear;
   --exception  
@@ -556,7 +556,7 @@ package body DoblDobl_BlackBox_Continuations is
     Silent_Multitasking_Path_Tracker(sols,nt);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
-    Silent_Black_Box_Refine(p,sols);
+    Silent_Black_Box_Refine(p,sols,verbose-1);
     DoblDobl_Homotopy.Clear;
     DoblDobl_Coefficient_Homotopy.Clear;
   end Black_Box_Polynomial_Continuation;
@@ -601,7 +601,7 @@ package body DoblDobl_BlackBox_Continuations is
     flush(file);
     declare
     begin
-      Reporting_Black_Box_Refine(file,p,sols);
+      Reporting_Black_Box_Refine(file,p,sols,verbose-1);
    -- exception
    --   when others => 
    --     put_line("exception when calling Reporting_Black_Box_Refine...");
@@ -651,7 +651,7 @@ package body DoblDobl_BlackBox_Continuations is
     new_line(file);
     Write_Elapsed_Time(file,start_moment,ended_moment);
     flush(file);
-    Reporting_Black_Box_Refine(file,nt,p,sols);
+    Reporting_Black_Box_Refine(file,nt,p,sols,verbose-1);
     DoblDobl_Homotopy.Clear;
     DoblDobl_Coefficient_Homotopy.Clear;
   end Black_Box_Polynomial_Continuation;
@@ -868,7 +868,7 @@ package body DoblDobl_BlackBox_Continuations is
     Cont(sols,target=>target);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
-    Silent_Black_Box_Refine(p,sols);
+    Silent_Black_Box_Refine(p,sols,verbose-1);
     DoblDobl_Laurent_Homotopy.Clear;
   end Black_Box_Polynomial_Continuation;
 
@@ -906,7 +906,7 @@ package body DoblDobl_BlackBox_Continuations is
     Silent_Multitasking_Laurent_Path_Tracker(sols,nt);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
-    Silent_Black_Box_Refine(p,sols);
+    Silent_Black_Box_Refine(p,sols,verbose-1);
     DoblDobl_Laurent_Homotopy.Clear;
   end Black_Box_Polynomial_Continuation;
 
@@ -953,7 +953,7 @@ package body DoblDobl_BlackBox_Continuations is
     Cont(file,sols,target=>target);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
-    Reporting_Black_Box_Refine(file,p,sols);
+    Reporting_Black_Box_Refine(file,p,sols,verbose-1);
     DoblDobl_Laurent_Homotopy.Clear;
   end Black_Box_Polynomial_Continuation;
 
@@ -1003,7 +1003,7 @@ package body DoblDobl_BlackBox_Continuations is
     new_line(file);
     Write_Elapsed_Time(file,start_moment,ended_moment);
     flush(file);
-    Reporting_Black_Box_Refine(file,nt,p,sols);
+    Reporting_Black_Box_Refine(file,nt,p,sols,verbose-1);
     DoblDobl_Laurent_Homotopy.Clear;
   end Black_Box_Polynomial_Continuation;
 

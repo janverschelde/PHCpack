@@ -15,54 +15,67 @@ package DoblDobl_BlackBox_Refiners is
 --   3) on polynomial or Laurent systems.
 
   procedure Silent_Black_Box_Refine
-              ( p : in Poly_Sys; sols : in out Solution_List );
+              ( p : in Poly_Sys; sols : in out Solution_List;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Refines the solution given in sols of the polynomial system p,
   --   without output written to file.
+  --   The verbose level value is given by verbose.
 
   procedure Silent_Black_Box_Refine
               ( nt : in integer32;
-                p : in Poly_Sys; sols : in out Solution_List );
+                p : in Poly_Sys; sols : in out Solution_List;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Refines the solution given in sols of the polynomial system p,
   --   without output written to file, with nt tasks.
+  --   The verbose level value is given by verbose.
 
   procedure Silent_Black_Box_Refine
-              ( p : in Laur_Sys; sols : in out Solution_List );
+              ( p : in Laur_Sys; sols : in out Solution_List;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Refines the solution given in sols of the Laurent system p,
   --   without output written to file.
+  --   The verbose level value is given by verbose.
 
   procedure Reporting_Black_Box_Refine
               ( file : in file_type;
-                p : in Poly_Sys; sols : in out Solution_List );
+                p : in Poly_Sys; sols : in out Solution_List;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Refines the solutions in sols of the system polynomial p.
+  --   The verbose level value is given by verbose.
 
   procedure Reporting_Black_Box_Refine
               ( file : in file_type; nt : in integer32;
-                p : in Poly_Sys; sols : in out Solution_List );
+                p : in Poly_Sys; sols : in out Solution_List;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Refines the solutions in sols of the polynomial system p
-  --   with nt tasks.
+  --   with nt tasks.  The verbose level value is given by verbose.
 
   procedure Reporting_Black_Box_Refine
               ( file : in file_type;
-                p : in Laur_Sys; sols : in out Solution_List );
+                p : in Laur_Sys; sols : in out Solution_List;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Refines the solutions in sols of the Laurent system p.
+  --   The verbose level value is given by verbose.
 
   procedure Reporting_Black_Box_Refine
               ( file : in file_type; nt : in integer32;
-                p : in Laur_Sys; sols : in out Solution_List );
+                p : in Laur_Sys; sols : in out Solution_List;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Refines the solutions in sols of the Laurent system p with nt tasks.
+  --   The verbose level value is given by verbose.
 
 end DoblDobl_BlackBox_Refiners;

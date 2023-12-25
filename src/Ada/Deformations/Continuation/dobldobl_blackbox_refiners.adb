@@ -14,7 +14,8 @@ package body DoblDobl_BlackBox_Refiners is
 -- WITHOUT MULTITASKING :
 
   procedure Silent_Black_Box_Refine
-              ( p : in Poly_Sys; sols : in out Solution_List ) is
+              ( p : in Poly_Sys; sols : in out Solution_List;
+                verbose : in integer32 := 0 ) is
 
     epsxa,epsfa,tolsing : double_float;
     ref_sols : Solution_List;
@@ -22,6 +23,10 @@ package body DoblDobl_BlackBox_Refiners is
     deflate,wout : boolean;
 
   begin
+    if verbose > 0 then
+      put("-> in dobldobl_blackbox_refiners.");
+      put_line("Silent_Black_Box_Refine 1 ...");
+    end if;
     if Length_Of(sols) > 0 then
       DoblDobl_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
@@ -33,7 +38,8 @@ package body DoblDobl_BlackBox_Refiners is
   end Silent_Black_Box_Refine;
 
   procedure Silent_Black_Box_Refine
-              ( p : in Laur_Sys; sols : in out Solution_List ) is
+              ( p : in Laur_Sys; sols : in out Solution_List;
+                verbose : in integer32 := 0 ) is
 
     epsxa,epsfa,tolsing : double_float;
     ref_sols : Solution_List;
@@ -41,6 +47,10 @@ package body DoblDobl_BlackBox_Refiners is
     deflate,wout : boolean;
 
   begin
+    if verbose > 0 then
+      put("-> in dobldobl_blackbox_refiners.");
+      put_line("Silent_Black_Box_Refine 2 ...");
+    end if;
     if Length_Of(sols) > 0 then
       DoblDobl_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
@@ -52,7 +62,8 @@ package body DoblDobl_BlackBox_Refiners is
 
   procedure Reporting_Black_Box_Refine
               ( file : in file_type;
-                p : in Poly_Sys; sols : in out Solution_List ) is
+                p : in Poly_Sys; sols : in out Solution_List;
+                verbose : in integer32 := 0 ) is
 
     epsxa,epsfa,tolsing : double_float;
     ref_sols : Solution_List;
@@ -60,6 +71,10 @@ package body DoblDobl_BlackBox_Refiners is
     deflate,wout : boolean;
 
   begin
+    if verbose > 0 then
+      put("-> in dobldobl_blackbox_refiners.");
+      put_line("Reporting_Black_Box_Refine 1 ...");
+    end if;
     if Length_Of(sols) > 0 then
       DoblDobl_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
@@ -72,7 +87,8 @@ package body DoblDobl_BlackBox_Refiners is
 
   procedure Reporting_Black_Box_Refine
               ( file : in file_type;
-                p : in Laur_Sys; sols : in out Solution_List ) is
+                p : in Laur_Sys; sols : in out Solution_List;
+                verbose : in integer32 := 0 ) is
 
     epsxa,epsfa,tolsing : double_float;
     ref_sols : Solution_List;
@@ -80,6 +96,10 @@ package body DoblDobl_BlackBox_Refiners is
     deflate,wout : boolean;
 
   begin
+    if verbose > 0 then
+      put("-> in dobldobl_blackbox_refiners.");
+      put_line("Reporting_Black_Box_Refine 2 ...");
+    end if;
     if Length_Of(sols) > 0 then
       DoblDobl_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
@@ -115,7 +135,8 @@ package body DoblDobl_BlackBox_Refiners is
 
   procedure Reporting_Black_Box_Refine
               ( file : in file_type; nt : in integer32;
-                p : in Laur_Sys; sols : in out Solution_List ) is
+                p : in Laur_Sys; sols : in out Solution_List;
+                verbose : in integer32 := 0 ) is
 
     epsxa,epsfa,tolsing : double_float;
     maxit,nb : natural32 := 0;
@@ -123,6 +144,10 @@ package body DoblDobl_BlackBox_Refiners is
     ref_sols : Solution_List;
 
   begin
+    if verbose > 0 then
+      put("-> in dobldobl_blackbox_refiners.");
+      put_line("Reporting_Black_Box_Refine 3 ...");
+    end if;
     if Length_Of(sols) > 0 then
       DoblDobl_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
@@ -138,7 +163,8 @@ package body DoblDobl_BlackBox_Refiners is
 
   procedure Silent_Black_Box_Refine
               ( nt : in integer32;
-                p : in Poly_Sys; sols : in out Solution_List ) is
+                p : in Poly_Sys; sols : in out Solution_List;
+                verbose : in integer32 := 0 ) is
 
     epsxa,epsfa,tolsing : double_float;
     maxit,nb : natural32 := 0;
@@ -148,6 +174,10 @@ package body DoblDobl_BlackBox_Refiners is
     target : constant Complex_Number := Create(ddtarget);
 
   begin
+    if verbose > 0 then
+      put("-> in dobldobl_blackbox_refiners.");
+      put_line("Silent_Black_Box_Refine 3 ...");
+    end if;
     if Length_Of(sols) > 0 then
       DoblDobl_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
@@ -171,7 +201,8 @@ package body DoblDobl_BlackBox_Refiners is
 
   procedure Reporting_Black_Box_Refine
               ( file : in file_type; nt : in integer32;
-                p : in Poly_Sys; sols : in out Solution_List ) is
+                p : in Poly_Sys; sols : in out Solution_List;
+                verbose : in integer32 := 0 ) is
 
     epsxa,epsfa,tolsing : double_float;
     maxit,nb : natural32 := 0;
@@ -181,6 +212,10 @@ package body DoblDobl_BlackBox_Refiners is
     target : constant Complex_Number := Create(ddtarget);
 
   begin
+    if verbose > 0 then
+      put("-> in dobldobl_blackbox_refiners.");
+      put_line("Reporting_Black_Box_Refine 4 ...");
+    end if;
     if Length_Of(sols) > 0 then
       DoblDobl_Default_Root_Refining_Parameters
         (epsxa,epsfa,tolsing,maxit,deflate,wout);
