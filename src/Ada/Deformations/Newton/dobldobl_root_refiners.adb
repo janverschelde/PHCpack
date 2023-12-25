@@ -1479,10 +1479,12 @@ package body DoblDobl_Root_Refiners is
           Silent_Deflate(max,f,jf,ls,order,
                          tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
          -- reinstate Newton after deflation
-          Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
-          if fail and backup.res < ls.res then
-            ls.all := backup;
+          if (ls.err > epsxa) and (ls.res > epsfa) then
             Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+            if fail and backup.res < ls.res then
+              ls.all := backup;
+              Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+            end if;
           end if;
         else
           Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
@@ -1591,13 +1593,15 @@ package body DoblDobl_Root_Refiners is
           Reporting_Deflate(file,wout,max,f,jf,ls,order,
                             tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
          -- reinstate Newton after deflation
-          if wout
-           then Reporting_Newton(file,f,jf,ls.all,epsxa,epsfa,nb,max,fail);
-           else Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
-          end if;
-          if fail and backup.res < ls.res then
-            ls.all := backup;
-            Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+          if (ls.err > epsxa) and (ls.res > epsfa) then
+            if wout
+             then Reporting_Newton(file,f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+             else Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+            end if;
+            if fail and backup.res < ls.res then
+              ls.all := backup;
+              Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+            end if;
           end if;
         elsif wout then
           Reporting_Newton(file,f,jf,ls.all,epsxa,epsfa,nb,max,fail);
@@ -1714,13 +1718,15 @@ package body DoblDobl_Root_Refiners is
           Reporting_Deflate(file,wout,max,f,jf,ls,order,
                             tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
          -- reinstate Newton after deflation
-          if wout
-           then Reporting_Newton(file,f,jf,ls.all,epsxa,epsfa,nb,max,fail);
-           else Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
-          end if;
-          if fail and backup.res < ls.res then
-            ls.all := backup;
-            Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+          if (ls.err > epsxa) and (ls.res > epsfa) then
+            if wout
+             then Reporting_Newton(file,f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+             else Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+            end if;
+            if fail and backup.res < ls.res then
+              ls.all := backup;
+              Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+            end if;
           end if;
         elsif wout then
           Reporting_Newton(file,f,jf,ls.all,epsxa,epsfa,nb,max,fail);
@@ -1843,13 +1849,16 @@ package body DoblDobl_Root_Refiners is
           Reporting_Deflate(file,wout,max,f,jf,ls,order,
                             tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
          -- reinstate Newton after deflation
-          if wout
-           then Reporting_Newton(file,f,abh,jf,ls.all,epsxa,epsfa,nb,max,fail);
-           else Silent_Newton(f,abh,jf,ls.all,epsxa,epsfa,nb,max,fail);
-          end if;
-          if fail and backup.res < ls.res then
-            ls.all := backup;
-            Silent_Newton(f,abh,jf,ls.all,epsxa,epsfa,nb,max,fail);
+          if (ls.err > epsxa) and (ls.res > epsfa) then
+            if wout then
+              Reporting_Newton(file,f,abh,jf,ls.all,epsxa,epsfa,nb,max,fail);
+            else
+              Silent_Newton(f,abh,jf,ls.all,epsxa,epsfa,nb,max,fail);
+            end if;
+            if fail and backup.res < ls.res then
+              ls.all := backup;
+              Silent_Newton(f,abh,jf,ls.all,epsxa,epsfa,nb,max,fail);
+            end if;
           end if;
         elsif wout then
           Reporting_Newton(file,f,abh,jf,ls.all,epsxa,epsfa,nb,max,fail);

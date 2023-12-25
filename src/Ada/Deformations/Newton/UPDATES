@@ -1,5 +1,6 @@
 Mon 25 Dec 2023 : {standard,dobldobl,quaddobl}_root_refiners.a*,
-  added the verbose level.
+  added the verbose level.  Fixed {dobldobl,quaddobl}_root_refiners.adb,
+  reinstating after deflation only if tolerances are not reached.
 
 Thu 17 Jun 2021 : removed the obsolete standard_floating_newton_steps.
 
