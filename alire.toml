@@ -1,0 +1,11 @@
+name = "phcpack"
+version = "2.4.88"
+description = "Polynomial Homotopy Continuation"
+long-description = "PHCpack is research software to solve systems of polynomial equations with homotopy continuation."
+licenses = "GPL-3.0-only"
+authors = ["Jan Verschelde"]
+maintainers = ["Jan <janv@uic.edu>"]
+maintainers-logins = ["janverschelde"]
+website = "https://github.com/janverschelde/PHCpack"
+project-files = ["phclib.gpr", "main.gpr"]
+executables = ["phc"]

@@ -49,3 +49,18 @@ and for phcpy at
 
 To try phcpy in a python or SageMath kernel of a jupyter notebook,
 visit <http://www.phcpack.org>.
+
+An alire (<https://alire.ada.dev>) workspace is provided.
+
+The default configuration is for windows.
+To change manually, replace the occurrences of the string "windows" 
+by "linux" in the files in the config folder.
+
+Type 'alr build' to build and 'alr clean' to clean.
+
+To test the libPHCpack, first do
+cp lib/libPHCpack.* src/lib
+and then navigate to the src/Julia folder and do
+julia showVersion.jl
+or navigate to the src/Python/Ctypes folder and do
+python version.py

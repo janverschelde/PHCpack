@@ -1,0 +1,210 @@
+with "config/phcpack_config.gpr";
+
+library project phclib is
+
+   -- type OS_type is ("linux", "windows", "macosx");
+   -- os : OS_type := external("os", "linux");
+
+   -- case os is
+   --     when "linux" | "macosx" =>
+   --         for Source_Dirs use
+   --         (
+   --             ".", "../System", "../System/Unix_Timer",
+   --             "../Math_Lib/Numbers", "../Math_Lib/QD",
+   --             "../Math_Lib/Vectors", "../Math_Lib/Matrices",
+   --             "../Math_Lib/Reduction", "../Math_Lib/Divisors",
+   --             "../Math_Lib/Polynomials", "../Math_Lib/Functions",
+   --             "../Math_Lib/Supports", "../Math_Lib/Series",
+   --             "../Math_Lib/Circuits", "../Math_Lib/Laurent",
+   --             "../Deformations/Solutions", "../Deformations/Homotopy",
+   --             "../Deformations/Newton", "../Deformations/Curves",
+   --             "../Deformations/End_Games",
+   --             "../Deformations/Trackers", "../Deformations/Sweep",
+   --             "../Deformations/Continuation",
+   --             "../Root_Counts/Product", "../Root_Counts/Binomials",
+   --             "../Root_Counts/Implift", "../Root_Counts/Stalift",
+   --             "../Root_Counts/Dynlift", "../Root_Counts/Symmetry",
+   --             "../Root_Counts/MixedVol", "../Root_Counts/Puiseux",
+   --             "../Root_Counts/DEMiCs",
+   --             "../Schubert/SAGBI", "../Schubert/Pieri",
+   --             "../Schubert/Induction",
+   --             "../Components/Samplers", "../Components/Interpolators",
+   --             "../Components/Factorization", "../Components/Decomposition",
+   --             "../Components/Solver", "../Components/Tropical",
+   --             "../CtoPHC/Types", "../CtoPHC/Structures",
+   --             "../CtoPHC/Funky", "../CtoPHC/State", "../Tasking",
+   --             "../../Feedback"
+   --         );
+   --         for Excluded_Source_Files use
+   --         (
+   --             "ts_use_syscon.c",
+   --             "corecount.c", "corecountwindows.c",
+   --             "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c",
+   --           -- to avoid multiple mains ...
+   --             "ts_divide.c", "ts_explore_Cpoles.c" ,
+   --             "ts_feedback.c", "ts_cosupoly.c", "ts_cosupsys.c",
+   --             "ts_c2str.c", "ts_c2ada.c", "ts_dcmplx.c",
+   --             "ts_explore_poles.c", "ts_dc_determinant.c", 
+   --             "ts_use_syspool.c", "ts_use_celcon.c", "ts_pieri_solver.c",
+   --             "root_count.c", "main.cpp", "ts_c2phc.c",
+   --             "ts_hermite.c", "ts_dc_inverse.c", "ts_phc_sol_rw.c",
+   --             "pass_poly.c", "ts_use_solpool.c", "ts_realization.c",
+   --             "read_input.c", "ts_use_c2fac.c",
+   --             "ts_multiply.c", "ts_interpolation.c", "ts_getsys.c",
+   --             "ts_c2phc.c", "ts_use_solcon.c", "ts_poly_inverse.c",
+   --             "ts_phc_sys_rw.c" , "ts_use_c2pieri.c", 
+   --             "ts_inputData.cpp", "ts_outputData.cpp", "getsys2.c"
+   --         );
+   --         for Languages use ("Ada", "C++", "C");
+
+   case phcpack_config.Alire_Host_OS is  
+
+     when "windows" =>
+
+       for Source_Dirs use
+       (
+         "src/Ada/Main", "src/Ada/System", "src/Ada/System/Basic_Timer",
+         "src/Ada/Math_Lib/Numbers", "src/Ada/Math_Lib/QD",
+         "src/Ada/Math_Lib/Vectors", "src/Ada/Math_Lib/Matrices",
+         "src/Ada/Math_Lib/Reduction", "src/Ada/Math_Lib/Divisors",
+         "src/Ada/Math_Lib/Polynomials", "src/Ada/Math_Lib/Functions",
+         "src/Ada/Math_Lib/Supports", "src/Ada/Math_Lib/Series",
+         "src/Ada/Math_Lib/Circuits", "src/Ada/Math_Lib/Laurent",
+         "src/Ada/Deformations/Solutions", "src/Ada/Deformations/Homotopy",
+         "src/Ada/Deformations/Newton", "src/Ada/Deformations/Curves",
+         "src/Ada/Deformations/End_Games",
+         "src/Ada/Deformations/Trackers", "src/Ada/Deformations/Sweep",
+         "src/Ada/Deformations/Continuation",
+         "src/Ada/Root_Counts/Product", "src/Ada/Root_Counts/Binomials",
+         "src/Ada/Root_Counts/Implift", "src/Ada/Root_Counts/Stalift",
+         "src/Ada/Root_Counts/Dynlift", "src/Ada/Root_Counts/Symmetry",
+         "src/Ada/Root_Counts/MixedVol", "src/Ada/Root_Counts/Puiseux",
+         "src/Ada/Root_Counts/DEMiCs",
+         "src/Ada/Schubert/SAGBI", "src/Ada/Schubert/Pieri",
+         "src/Ada/Schubert/Induction",
+         "src/Ada/Components/Samplers", "src/Ada/Components/Interpolators",
+         "src/Ada/Components/Factorization", "src/Ada/Components/Decomposition",
+         "src/Ada/Components/Solver", "src/Ada/Components/Tropical",
+         "src/Ada/CtoPHC/Types", "src/Ada/CtoPHC/Structures",
+         "src/Ada/CtoPHC/Funky", "src/Ada/CtoPHC/State", "src/Ada/Tasking",
+         "src/Feedback"
+       );
+       for Excluded_Source_Files use
+       (
+         "ts_use_syscon.c", "corecount.c",
+         "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c",
+        -- to avoid multiple mains ...
+         "ts_divide.c", "ts_explore_Cpoles.c" ,
+         "ts_feedback.c", "ts_cosupoly.c", "ts_cosupsys.c",
+         "ts_c2str.c", "ts_c2ada.c", "ts_dcmplx.c",
+         "ts_explore_poles.c", "ts_dc_determinant.c", 
+         "ts_use_syspool.c", "ts_use_celcon.c", "ts_pieri_solver.c",
+         "root_count.c", "main.cpp", "ts_c2phc.c",
+         "ts_hermite.c", "ts_dc_inverse.c", "ts_phc_sol_rw.c",
+         "pass_poly.c", "ts_use_solpool.c", "ts_realization.c",
+         "read_input.c", "ts_use_c2fac.c",
+         "ts_multiply.c", "ts_interpolation.c", "ts_getsys.c",
+         "ts_c2phc.c", "ts_use_solcon.c", "ts_poly_inverse.c",
+         "ts_phc_sys_rw.c" , "ts_use_c2pieri.c", 
+         "ts_inputData.cpp", "ts_outputData.cpp", "getsys2.c"
+       );
+       for Languages use ("Ada", "C", "C++");
+
+     when others =>
+
+       for Source_Dirs use
+       (
+         "src/Ada/Main", "src/Ada/System", "src/Ada/System/Unix_Timer",
+         "src/Ada/Math_Lib/Numbers", "src/Ada/Math_Lib/QD",
+         "src/Ada/Math_Lib/Vectors", "src/Ada/Math_Lib/Matrices",
+         "src/Ada/Math_Lib/Reduction", "src/Ada/Math_Lib/Divisors",
+         "src/Ada/Math_Lib/Polynomials", "src/Ada/Math_Lib/Functions",
+         "src/Ada/Math_Lib/Supports", "src/Ada/Math_Lib/Series",
+         "src/Ada/Math_Lib/Circuits", "src/Ada/Math_Lib/Laurent",
+         "src/Ada/Deformations/Solutions", "src/Ada/Deformations/Homotopy",
+         "src/Ada/Deformations/Newton", "src/Ada/Deformations/Curves",
+         "src/Ada/Deformations/End_Games",
+         "src/Ada/Deformations/Trackers", "src/Ada/Deformations/Sweep",
+         "src/Ada/Deformations/Continuation",
+         "src/Ada/Root_Counts/Product", "src/Ada/Root_Counts/Binomials",
+         "src/Ada/Root_Counts/Implift", "src/Ada/Root_Counts/Stalift",
+         "src/Ada/Root_Counts/Dynlift", "src/Ada/Root_Counts/Symmetry",
+         "src/Ada/Root_Counts/MixedVol", "src/Ada/Root_Counts/Puiseux",
+         "src/Ada/Root_Counts/DEMiCs",
+         "src/Ada/Schubert/SAGBI", "src/Ada/Schubert/Pieri",
+         "src/Ada/Schubert/Induction",
+         "src/Ada/Components/Samplers", "src/Ada/Components/Interpolators",
+         "src/Ada/Components/Factorization", "src/Ada/Components/Decomposition",
+         "src/Ada/Components/Solver", "src/Ada/Components/Tropical",
+         "src/Ada/CtoPHC/Types", "src/Ada/CtoPHC/Structures",
+         "src/Ada/CtoPHC/Funky", "src/Ada/CtoPHC/State", "src/Ada/Tasking",
+         "src/Feedback"
+       );
+       for Excluded_Source_Files use
+       (
+         "ts_use_syscon.c",
+         "corecount.c", "corecountwindows.c",
+         "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c",
+        -- to avoid multiple mains ...
+         "ts_divide.c", "ts_explore_Cpoles.c" ,
+         "ts_feedback.c", "ts_cosupoly.c", "ts_cosupsys.c",
+         "ts_c2str.c", "ts_c2ada.c", "ts_dcmplx.c",
+         "ts_explore_poles.c", "ts_dc_determinant.c", 
+         "ts_use_syspool.c", "ts_use_celcon.c", "ts_pieri_solver.c",
+         "root_count.c", "main.cpp", "ts_c2phc.c",
+         "ts_hermite.c", "ts_dc_inverse.c", "ts_phc_sol_rw.c",
+         "pass_poly.c", "ts_use_solpool.c", "ts_realization.c",
+         "read_input.c", "ts_use_c2fac.c",
+         "ts_multiply.c", "ts_interpolation.c", "ts_getsys.c",
+         "ts_c2phc.c", "ts_use_solcon.c", "ts_poly_inverse.c",
+         "ts_phc_sys_rw.c" , "ts_use_c2pieri.c", 
+         "ts_inputData.cpp", "ts_outputData.cpp", "getsys2.c"
+      );
+      for Languages use ("Ada", "C++", "C");
+
+    end case;
+
+    for Object_Dir use "obj";
+    for Exec_Dir use "bin";
+
+    for Library_Dir use "lib";
+    for Library_Name use "PHCpack";
+    for Library_Kind use "dynamic";
+    for Library_Interface use 
+    (
+       "standard_integer_numbers",
+       "c_integer_arrays", "c_double_arrays",
+       "phctop", "use_c2phc"
+    );
+    for Library_Standalone use "encapsulated";
+
+    package Compiler is
+
+       -- for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+        for Default_Switches ("Ada") use ("-O3", "-gnatv", "-gnatp", "-gnatf");
+
+        for Switches ("use_c2phc.adb") use ("-c");
+
+        for Switches ("simplex.cpp") use 
+        (
+            "-Dcompilewgpp=1", "-Dcompile4phc=1"
+        );
+        for Switches ("mvc.cpp") use
+        (
+            "-Dcompilewgpp=1", "-Dcompile4phc=1"
+        );
+        for Switches ("demicsrun.cpp") use 
+        (
+            "-Dcompilewgpp=1", "-Dcompile4phc"
+        );
+        for Switches ("outputData.cpp") use ("-Dcompilewgpp=1");
+
+    end Compiler;
+
+    package Binder is
+
+       for Default_Switches ("Ada") use ("-n", "-Lada");
+
+    end Binder;
+
+end phclib;
