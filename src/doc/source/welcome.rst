@@ -54,8 +54,8 @@ the GNU General Public :index:`License`
 as published by the Free Software Foundation; 
 version 3 of the License.
 
-Downloading and Installing
-==========================
+Downloading and Extracting the Executable
+=========================================
 
 For Linux, MacOS X, and Windows, 
 :index:`executable` versions of the program are available 
@@ -129,6 +129,18 @@ main programs provided in the source folder.
 Every source code folder defines many test procedures which are
 built with ``GPRbuild`` as defined in the files 
 with the ``.gpr`` extension.
+
+An alire <https://alire.ada.dev> workspace is provided,
+with manifest in ``alire.toml``.
+The default configuration is for windows.
+To change this default, in the files of the ``config`` folder,
+change the strings ``"windows"`` into ``"linux"`` or ``"macosx"``.
+
+Type ``alr build`` to build and ``alr clean`` to clean.
+
+On Linux and Mac OS X, for the ``libPHCpack`` it is best
+to select a native GNAT compiler,
+which can be obtained from the package managers of the OS.
 
 Project History
 ===============
