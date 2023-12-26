@@ -133,8 +133,10 @@ project main is
 
       case phcpack_config.Alire_Host_OS is
         when "windows" => null;
-        when others =>
+        when "linux" =>
           for Switches ("phctop.adb") use ("-static-libstdc++");
+        when others =>
+          for Switches ("phctop.adb") use ("-static-libgcc");
       end case;
 
     end Linker;
