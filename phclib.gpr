@@ -2,61 +2,6 @@ with "config/phcpack_config.gpr";
 
 library project phclib is
 
-   -- type OS_type is ("linux", "windows", "macosx");
-   -- os : OS_type := external("os", "linux");
-
-   -- case os is
-   --     when "linux" | "macosx" =>
-   --         for Source_Dirs use
-   --         (
-   --             ".", "../System", "../System/Unix_Timer",
-   --             "../Math_Lib/Numbers", "../Math_Lib/QD",
-   --             "../Math_Lib/Vectors", "../Math_Lib/Matrices",
-   --             "../Math_Lib/Reduction", "../Math_Lib/Divisors",
-   --             "../Math_Lib/Polynomials", "../Math_Lib/Functions",
-   --             "../Math_Lib/Supports", "../Math_Lib/Series",
-   --             "../Math_Lib/Circuits", "../Math_Lib/Laurent",
-   --             "../Deformations/Solutions", "../Deformations/Homotopy",
-   --             "../Deformations/Newton", "../Deformations/Curves",
-   --             "../Deformations/End_Games",
-   --             "../Deformations/Trackers", "../Deformations/Sweep",
-   --             "../Deformations/Continuation",
-   --             "../Root_Counts/Product", "../Root_Counts/Binomials",
-   --             "../Root_Counts/Implift", "../Root_Counts/Stalift",
-   --             "../Root_Counts/Dynlift", "../Root_Counts/Symmetry",
-   --             "../Root_Counts/MixedVol", "../Root_Counts/Puiseux",
-   --             "../Root_Counts/DEMiCs",
-   --             "../Schubert/SAGBI", "../Schubert/Pieri",
-   --             "../Schubert/Induction",
-   --             "../Components/Samplers", "../Components/Interpolators",
-   --             "../Components/Factorization", "../Components/Decomposition",
-   --             "../Components/Solver", "../Components/Tropical",
-   --             "../CtoPHC/Types", "../CtoPHC/Structures",
-   --             "../CtoPHC/Funky", "../CtoPHC/State", "../Tasking",
-   --             "../../Feedback"
-   --         );
-   --         for Excluded_Source_Files use
-   --         (
-   --             "ts_use_syscon.c",
-   --             "corecount.c", "corecountwindows.c",
-   --             "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c",
-   --           -- to avoid multiple mains ...
-   --             "ts_divide.c", "ts_explore_Cpoles.c" ,
-   --             "ts_feedback.c", "ts_cosupoly.c", "ts_cosupsys.c",
-   --             "ts_c2str.c", "ts_c2ada.c", "ts_dcmplx.c",
-   --             "ts_explore_poles.c", "ts_dc_determinant.c", 
-   --             "ts_use_syspool.c", "ts_use_celcon.c", "ts_pieri_solver.c",
-   --             "root_count.c", "main.cpp", "ts_c2phc.c",
-   --             "ts_hermite.c", "ts_dc_inverse.c", "ts_phc_sol_rw.c",
-   --             "pass_poly.c", "ts_use_solpool.c", "ts_realization.c",
-   --             "read_input.c", "ts_use_c2fac.c",
-   --             "ts_multiply.c", "ts_interpolation.c", "ts_getsys.c",
-   --             "ts_c2phc.c", "ts_use_solcon.c", "ts_poly_inverse.c",
-   --             "ts_phc_sys_rw.c" , "ts_use_c2pieri.c", 
-   --             "ts_inputData.cpp", "ts_outputData.cpp", "getsys2.c"
-   --         );
-   --         for Languages use ("Ada", "C++", "C");
-
    case phcpack_config.Alire_Host_OS is  
 
      when "windows" =>
