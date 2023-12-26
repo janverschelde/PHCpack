@@ -59,8 +59,13 @@ by "linux" in the files in the config folder.
 Type 'alr build' to build and 'alr clean' to clean.
 
 To test the libPHCpack, first do
+
 cp lib/libPHCpack.* src/lib
+
 and then navigate to the src/Julia folder and do
+
 julia showVersion.jl
+
 or navigate to the src/Python/Ctypes folder and do
+
 python version.py
