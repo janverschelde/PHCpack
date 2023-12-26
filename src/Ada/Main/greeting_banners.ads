@@ -5,7 +5,7 @@ package Greeting_Banners is
 --   Exports the version string.
 
   welcome : constant string :=
-    "Welcome to PHC (Polynomial Homotopy Continuation) v2.4.87 15 Dec 2023";
+    "Welcome to PHC (Polynomial Homotopy Continuation) v2.4.88 26 Dec 2023";
 
   compban : constant string :=
     "a numerical irreducible decomposition for solution sets";

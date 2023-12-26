@@ -1,4 +1,4 @@
-Ada source code of Polynomial Homotopy Continuation version 2.4.86
+Ada source code of Polynomial Homotopy Continuation version 2.4.88
 
 The same hierarchical structure as in the original version is preserved,
 with the addition of numerical Schubert calculus in release 2,
@@ -35,6 +35,7 @@ was introduced in v2.4.80 extending the Math_Lib/QD folder.
 The Laurent folder was added to the mathematical library in v2.4.85 and
 in CtoPHC, code was redistributed into new folders Types and Structures.
 Version 2.4.85 added .gpr files to build with gprbuild.
+An alire workspace is provided in version 2.4.88.
 
 The Ada sources are organized in a tree of directories:
 
