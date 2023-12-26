@@ -25,7 +25,7 @@ def set_double_polynomial(idx, nvr, pol, vrblvl=0):
         print('in set_double_polynomial, pol :', pol, end='')
         print(', idx :', idx, ', nvr :', nvr)
     phc = get_phcfun()
-    vrb = (vrblvl > 0)
+    vrb = vrblvl > 0
     apars = int4a2nbr([len(pol), nvr, idx], vrb)
     bpol = str2int4a(pol)
     ccc = pointer(c_double(0.0))
@@ -49,7 +49,7 @@ def set_double_double_polynomial(idx, nvr, pol, vrblvl=0):
         print('in set_double_double_polynomial, pol :', pol, end='')
         print(', idx :', idx, ', nvr :', nvr)
     phc = get_phcfun()
-    vrb = (vrblvl > 0)
+    vrb = vrblvl > 0
     apars = int4a2nbr([len(pol), nvr, idx], vrb)
     bpol = str2int4a(pol)
     ccc = pointer(c_double(0.0))
@@ -73,7 +73,7 @@ def set_quad_double_polynomial(idx, nvr, pol, vrblvl=0):
         print('in set_quad_double_polynomial, pol :', pol, end='')
         print(', idx :', idx, ', nvr :', nvr)
     phc = get_phcfun()
-    vrb = (vrblvl > 0)
+    vrb = vrblvl > 0
     apars = int4a2nbr([len(pol), nvr, idx], vrb)
     bpol = str2int4a(pol)
     ccc = pointer(c_double(0.0))
@@ -97,7 +97,7 @@ def set_double_Laurent_polynomial(idx, nvr, pol, vrblvl=0):
         print('in set_double_Laurent_polynomial, pol :', pol, end='')
         print(', idx :', idx, ', nvr :', nvr)
     phc = get_phcfun()
-    vrb = (vrblvl > 0)
+    vrb = vrblvl > 0
     apars = int4a2nbr([len(pol), nvr, idx], vrb)
     bpol = str2int4a(pol)
     ccc = pointer(c_double(0.0))
@@ -121,7 +121,7 @@ def set_double_double_Laurent_polynomial(idx, nvr, pol, vrblvl=0):
         print('in set_double_double_Laurent_polynomial, pol :', pol, end='')
         print(', idx :', idx, ', nvr :', nvr)
     phc = get_phcfun()
-    vrb = (vrblvl > 0)
+    vrb = vrblvl > 0
     apars = int4a2nbr([len(pol), nvr, idx], vrb)
     bpol = str2int4a(pol)
     ccc = pointer(c_double(0.0))
@@ -145,7 +145,7 @@ def set_quad_double_Laurent_polynomial(idx, nvr, pol, vrblvl=0):
         print('in set_quad_double_Laurent_polynomial, pol :', pol, end='')
         print(', idx :', idx, ', nvr :', nvr)
     phc = get_phcfun()
-    vrb = (vrblvl > 0)
+    vrb = vrblvl > 0
     apars = int4a2nbr([len(pol), nvr, idx], vrb)
     bpol = str2int4a(pol)
     ccc = pointer(c_double(0.0))
@@ -171,7 +171,7 @@ def set_double_system(nvr, pols, vrblvl=0):
     result = 0
     for k in range(dim):
         if vrblvl > 0:
-            print('-> set_double_system, pols[%d] = %s' % (k, pols[k]))
+            print(f"-> set_double_system, pols[{k}] = {pols[k]}")
         retval = set_double_polynomial(k+1, nvr, pols[k], vrblvl)
         if vrblvl > 0:
             print('-> set_double_polynomial returns', retval)
@@ -192,7 +192,7 @@ def set_double_double_system(nvr, pols, vrblvl=0):
     result = 0
     for k in range(dim):
         if vrblvl > 0:
-            print('-> set_double_double_system, pols[%d] = %s' % (k, pols[k]))
+            print(f"-> set_double_double_system, pols[{k}] = {pols[k]}")
         retval = set_double_double_polynomial(k+1, nvr, pols[k], vrblvl)
         if vrblvl > 0:
             print('-> set_double_double_polynomial returns', retval)
@@ -213,7 +213,7 @@ def set_quad_double_system(nvr, pols, vrblvl=0):
     result = 0
     for k in range(dim):
         if vrblvl > 0:
-            print('-> set_quad_double_system, pols[%d] = %s' % (k, pols[k]))
+            print(f"-> set_quad_double_system, pols[{k}] = {pols[k]}")
         retval = set_quad_double_polynomial(k+1, nvr, pols[k], vrblvl)
         if vrblvl > 0:
             print('-> set_quad_double_polynomial returns', retval)
@@ -235,7 +235,7 @@ def set_double_Laurent_system(nvr, pols, vrblvl=0):
     result = 0
     for k in range(dim):
         if vrblvl > 0:
-            print('-> set_double_Laurent_system, pols[%d] = %s' % (k, pols[k]))
+            print(f"-> set_double_Laurent_system, pols[{k}] = {pols[k]}")
         retval = set_double_Laurent_polynomial(k+1, nvr, pols[k], vrblvl)
         if vrblvl > 0:
             print('-> set_double_Laurent_polynomial returns', retval)
@@ -258,8 +258,7 @@ def set_double_double_Laurent_system(nvr, pols, vrblvl=0):
     result = 0
     for k in range(dim):
         if vrblvl > 0:
-            print('-> set_double_double_Laurent_system, pols[%d] = %s'
-                % (k, pols[k]))
+            print(f"-> set_double_double_Laurent_system, pols[{k}] = {pols[k]}")
         retval = set_double_double_Laurent_polynomial(k+1, nvr, pols[k], vrblvl)
         if vrblvl > 0:
             print('-> set_double_double_Laurent_polynomial returns', retval)
@@ -281,8 +280,7 @@ def set_quad_double_Laurent_system(nvr, pols, vrblvl=0):
     result = 0
     for k in range(dim):
         if vrblvl > 0:
-            print('-> set_quad_double_Laurent_system, pols[%d] = %s'\
-                % (k, pols[k]))
+            print(f"-> set_quad_double_Laurent_system, pols[{k}] = {pols[k]}")
         retval = set_quad_double_Laurent_polynomial(k+1, nvr, pols[k], vrblvl)
         if vrblvl > 0:
             print('-> set_quad_double_Laurent_polynomial returns', retval)
@@ -580,8 +578,8 @@ def string_of_symbols(maxlen=100, vrblvl=0):
     if vrblvl > 0:
         print(', return value :', retval)
         print('number of characters :', slen[0])
-    vars = int4a2str(ssym, (vrblvl > 0))
-    result = vars[0:slen[0]].split(' ')
+    variables = int4a2str(ssym, (vrblvl > 0))
+    result = variables[0:slen[0]].split(' ')
     return result
 
 def number_of_symbols(pols, vrblvl=0):

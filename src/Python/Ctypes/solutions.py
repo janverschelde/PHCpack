@@ -1,6 +1,8 @@
 """
 Exports functions on solutions.
 """
+from math import log10, floor
+from ast import literal_eval
 from ctypes import c_int, c_double, pointer, create_string_buffer
 from version import get_phcfun, int4a2nbr, int4a2str, str2int4a
 
@@ -10,7 +12,6 @@ def diagnostics(sol):
     from the PHCpack string solution in *sol* and
     returns a triplet of three floats.
     """
-    from ast import literal_eval
     banner = sol.split("==")
     data = banner[1]
     diag = data.split("=")
@@ -32,20 +33,19 @@ def map_double(freqtab, nbr):
     floor(-log10(nbr)) 
     """
     if nbr > 1.0:
-       freqtab[0] = freqtab[0] + 1
+        freqtab[0] = freqtab[0] + 1
     else:
-       from math import log10, floor
-       tol = 10.0**(-len(freqtab)+1)
-       if nbr < tol:
-          freqtab[len(freqtab)-1] = freqtab[len(freqtab)-1] + 1
-       else:
-          idx = floor(-log10(nbr))
-          if idx < 0:
-             freqtab[0] = freqtab[0] + 1
-          elif idx >= len(freqtab):
-             freqtab[len(freqtab)-1] = freqtab[len(freqtab)-1] + 1
-          else:
-             freqtab[idx] = freqtab[idx] + 1
+        tol = 10.0**(-len(freqtab)+1)
+        if nbr < tol:
+            freqtab[len(freqtab)-1] = freqtab[len(freqtab)-1] + 1
+        else:
+            idx = floor(-log10(nbr))
+            if idx < 0:
+                freqtab[0] = freqtab[0] + 1
+            elif idx >= len(freqtab):
+                freqtab[len(freqtab)-1] = freqtab[len(freqtab)-1] + 1
+            else:
+                freqtab[idx] = freqtab[idx] + 1
 
 def condition_tables(sols):
     """
@@ -65,7 +65,7 @@ def condition_tables(sols):
         map_double(errtab, err)
         map_double(rcotab, rco)
         map_double(restab, res)
-    return (errtab, rcotab, restab);
+    return (errtab, rcotab, restab)
 
 def str2complex(scn):
     r"""
@@ -73,7 +73,6 @@ def str2complex(scn):
     the real and imaginary part separated by spaces.
     On return is the Python complex number.
     """
-    from ast import literal_eval
     stripped = scn.strip()
     realimag = stripped.split(' ')
     realpart = realimag[0].replace('E', 'e')
@@ -153,7 +152,6 @@ def endmultiplicity(sol):
     and the multiplicity as (t,m)
     for the PHCpack solution string *sol*.
     """
-    from ast import literal_eval
     data = sol.split("the solution for t :")
     tstr = data[0]
     line = tstr.split('\n')
@@ -237,8 +235,8 @@ def evaluate_polynomial(pol, dsol):
     rpol = rpol.replace('E', 'e')
     rpol = rpol.replace('^', '**')
     for varname in varsd:
-        xre = '%+.17f' % dsol[varname].real
-        xim = '%+.17f' % dsol[varname].imag
+        xre = f"{dsol[varname].real:+.17f}"
+        xim = f"{dsol[varname].imag:+.17f}"
         value = '(' + xre + xim + 'j)'
         rpol = rpol.replace(varname, value)
     result = rpol[:-1]
@@ -293,26 +291,26 @@ def make_solution(names, values, \
     else:
         print('wrong type for the value of the continuation parameter t')
         return ""
-    result = 't : %.15E  %.15E\n' % (tre, tim)
-    mstr = 'm : %d\n' % multiplicity
+    result = f"t : {tre:.15E} {tim:.15E}\n"
+    mstr = f"m : {multiplicity}\n"
     result = result + mstr
     result = result + 'the solution for t :\n'
     for idx, name in enumerate(names):
         result = result + ' ' + name + ' : '
         if isinstance(values[idx], complex):
-            c_re = '%.15E' % values[idx].real
-            c_im = '%.15E' % values[idx].imag
+            c_re = f"{values[idx].real:.15E}"
+            c_im = f"{values[idx].imag:.15E}"
             result = result + c_re + '  ' + c_im + '\n'
         elif isinstance(values[idx], float):
-            flt = '%.15E' % values[idx]
+            flt = f"{values[idx]:.15E}"
             result = result + flt + '  ' + '0.0' + '\n'
         elif isinstance(values[idx], int):
-            i = '%.15E' % values[idx]
+            i = f"{values[idx]:.15E}"
             result = result + i + '  ' + '0.0' + '\n'
         else:
             print('wrong type for coordinate value')
             return result
-    lastline = '== err :  %.3E = rco :  %.3E = res :  %.3E =' % (err, rco, res)
+    lastline = f"== err : {err:.3E} = rco : {rco:.3E} = res : {res:.3E} ="
     result = result + lastline
     return result
 
@@ -460,7 +458,7 @@ def append_double_solution_string(nvr, sol, vrblvl=0):
     vrb = c_int(vrblvl)
     if vrblvl > 0:
         print('-> append_double_solution_string calls phc', end='')
-    retval = phc(208, apars, bsol, ccc, vrblvl)
+    retval = phc(208, apars, bsol, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
     return retval
@@ -481,7 +479,7 @@ def append_double_double_solution_string(nvr, sol, vrblvl=0):
     vrb = c_int(vrblvl)
     if vrblvl > 0:
         print('-> append_double_double_solution_string calls phc', end='')
-    retval = phc(378, apars, bsol, ccc, vrblvl)
+    retval = phc(378, apars, bsol, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
     return retval
@@ -502,7 +500,7 @@ def append_quad_double_solution_string(nvr, sol, vrblvl=0):
     vrb = c_int(vrblvl)
     if vrblvl > 0:
         print('-> append_quad_double_solution_string calls phc', end='')
-    retval = phc(428, apars, bsol, ccc, vrblvl)
+    retval = phc(428, apars, bsol, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
     return retval
@@ -570,14 +568,14 @@ def set_double_solutions(nvr, sols, vrblvl=0):
         print('-> set_double_solutions, nvr =', nvr)
     clear_double_solutions(vrblvl)
     fail = 0
-    for ind in range(0, len(sols)):
+    for (ind, sol) in enumerate(sols):
         print('calling append_double_solution_string ...')
         print('the solution :')
-        print(sols[ind])
-        print('nvr =', nvr) 
-        print('len(sol) =', len(sols[ind])) 
-        fail = append_double_solution_string(nvr, sols[ind], vrblvl)
-        if(fail != 0):
+        print(sol)
+        print('nvr =', nvr)
+        print('len(sol) =', len(sol))
+        fail = append_double_solution_string(nvr, sol, vrblvl)
+        if fail != 0:
             print('Solution at position', ind, 'is not appended.')
     return fail
 
@@ -588,9 +586,9 @@ def set_double_double_solutions(nvr, sols, vrblvl=0):
     """
     clear_double_double_solutions(vrblvl)
     fail = 0
-    for ind in range(0, len(sols)):
-        fail = append_double_double_solution_string(nvr, sols[ind], vrblvl)
-        if(fail != 0):
+    for (ind, sol) in enumerate(sols):
+        fail = append_double_double_solution_string(nvr, sol, vrblvl)
+        if fail != 0:
             print('Solution at position', ind, 'is not appended.')
     return fail
 
@@ -601,9 +599,9 @@ def set_quad_double_solutions(nvr, sols, vrblvl=0):
     """
     clear_quad_double_solutions(vrblvl)
     fail = 0
-    for ind in range(0, len(sols)):
-        fail = append_quad_double_solution_string(nvr, sols[ind], vrblvl)
-        if(fail != 0):
+    for (ind, sol) in enumerate(sols):
+        fail = append_quad_double_solution_string(nvr, sol, vrblvl)
+        if fail != 0:
             print('Solution at position', ind, 'is not appended.')
     return fail
 
@@ -934,7 +932,7 @@ def write_quad_double_solutions(vrblvl=0):
         print(', return value :', retval)
     return retval
 
-class DoubleSolution(object):
+class DoubleSolution():
     """
     Wraps the functions on solution strings.
     """
@@ -1063,21 +1061,21 @@ def test_double_solution_class(vrblvl=0):
     if vrblvl > 0:
         print('my solution :')
         print(mysol)
-    variables = ['x', 'y']
-    sol1 = make_solution(variables, [1, 1], err=0.01, rco= 1.2, res=0.01)
-    sol2 = make_solution(variables, [1, -1], err=0.1, rco= 1.1, res=0.03)
+    names = ['x', 'y']
+    sol1 = make_solution(names, [1, 1], err=0.01, rco= 1.2, res=0.01)
+    sol2 = make_solution(names, [1, -1], err=0.1, rco= 1.1, res=0.03)
     sols = [sol1, sol2]
-    s = DoubleSolution(sols[0])
+    sol = DoubleSolution(sols[0])
     if vrblvl > 0:
         print('the first solution :')
-        print(s)
-        print('its coordinates :\n', s.coordinates())
-        print('its variable names :\n ', s.variables())
-        print('its numerical values :\n', s.numerals())
-        print('its diagnostics :\n', s.diagnostics())
-        print('its continuation parameter :', s.timevalue())
-        print('its multiplicity :', s.multiplicity())
-        print('the dictionary :\n', s.dictionary())
+        print(sol)
+        print('its coordinates :\n', sol.coordinates())
+        print('its variable names :\n ', sol.variables())
+        print('its numerical values :\n', sol.numerals())
+        print('its diagnostics :\n', sol.diagnostics())
+        print('its continuation parameter :', sol.timevalue())
+        print('its multiplicity :', sol.multiplicity())
+        print('the dictionary :\n', sol.dictionary())
     (errtab, rcotab, restab) = condition_tables(sols)
     if vrblvl > 0:
         print('The frequency tables for err, rco, and res:')

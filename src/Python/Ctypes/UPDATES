@@ -1,3 +1,6 @@
+Tue 26 Dec 2023 : following suggestions of pylint, updated examples.py,
+  polynomials.py, and solutions.py.
+
 Sun 24 Dec 2023 : fixed parameters in solver.py for multithreading.
 
 Sat 23 Dec 2023 : added is_square() to polynomials.py and wrapped the

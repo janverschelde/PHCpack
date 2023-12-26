@@ -4,7 +4,7 @@ polynomial strings of some well known examples.
 The test solves all systems and tests on the number of solutions.
 Running the tests can take some time.
 """
-from dimension import set_seed, get_core_count
+from dimension import set_seed
 from solver import solve
 
 def binomials():
