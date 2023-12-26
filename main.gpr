@@ -93,43 +93,49 @@ project main is
 
     for Main use
     (
-        "phctop.adb"    -- the main program
+      "phctop.adb"    -- the main program
     );
 
     package Compiler is
 
        -- for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
-        for Default_Switches ("Ada") use ("-O3", "-gnatv", "-gnatp", "-gnatf");
+      for Default_Switches ("Ada") use ("-O3", "-gnatv", "-gnatp", "-gnatf");
 
-        for Switches ("use_c2phc.adb") use ("-c");
+      for Switches ("use_c2phc.adb") use ("-c");
 
-        for Switches ("simplex.cpp") use 
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc=1"
-        );
-        for Switches ("mvc.cpp") use
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc=1"
-        );
-        for Switches ("demicsrun.cpp") use 
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc"
-        );
-        for Switches ("outputData.cpp") use ("-Dcompilewgpp=1");
+      for Switches ("simplex.cpp") use 
+      (
+        "-Dcompilewgpp=1", "-Dcompile4phc=1"
+      );
+      for Switches ("mvc.cpp") use
+      (
+        "-Dcompilewgpp=1", "-Dcompile4phc=1"
+      );
+      for Switches ("demicsrun.cpp") use 
+      (
+        "-Dcompilewgpp=1", "-Dcompile4phc"
+      );
+      for Switches ("outputData.cpp") use ("-Dcompilewgpp=1");
 
     end Compiler;
 
     package Binder is
 
-        for Switches ("use_c2phc.adb") use ("-n");
+      for Switches ("use_c2phc.adb") use ("-n");
 
-        for Switches ("pieri_solver.adb") use ("-n");
+      for Switches ("pieri_solver.adb") use ("-n");
 
     end Binder;
 
     package Linker is
 
-        for Switches ("main.cpp") use ("-o demics");
+      for Switches ("main.cpp") use ("-o demics");
+
+      case phcpack_config.Alire_Host_OS is
+        when "windows" => null;
+        when others =>
+          for Switches ("phctop.adb") use ("-static-libstdc++");
+      end case;
 
     end Linker;
 
