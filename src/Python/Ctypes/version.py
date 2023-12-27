@@ -167,7 +167,7 @@ def test_integer_encodings(verbose=False):
         print('Test failed!')
     return 1
 
-def version(verbose=True):
+def version_string(verbose=True):
     """
     Returns the version string of PHCpack.
     If verbose, then the conversions between strings and integer arrays
@@ -185,11 +185,11 @@ def version(verbose=True):
         print('return value :', retval)
         print('a :', aaa[0])
         print('sizeof(name) :', sizeof(name))
-    result = int4a2str(name, True)
+    result = int4a2str(name, verbose=verbose)
     if verbose:
         print(result)
         print('version checks conversions ...')
-        int4aresult = str2int4a(result, True)
+        int4aresult = str2int4a(result, verbose=verbose)
         strres = int4a2str(int4aresult)
         print(strres)
     return result
@@ -198,7 +198,7 @@ def main():
     """
     Prints the version string and runs two tests.
     """
-    print(version(True))
+    print(version_string(True))
     fail = test_byte_strings(True)
     fail = fail + test_integer_encodings(True)
     if fail == 0:

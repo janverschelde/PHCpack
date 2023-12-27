@@ -1,3 +1,6 @@
+Wed 27 Dec 2024 : renamed the name of the function version in version.py 
+  into version_string and fixed the verbosity when verbose is False.
+
 Tue 26 Dec 2023 : following suggestions of pylint, updated examples.py,
   polynomials.py, and solutions.py.
 
