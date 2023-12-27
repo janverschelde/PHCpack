@@ -1,4 +1,78 @@
-Sun 15 Jan 2023 : new folder Ctypes.
+Wed 27 Dec 2023 : renamed the name of the function version in version.py 
+  into version_string and fixed the verbosity when verbose is False.
+  Renamed the folder Ctypes into PHCpy, in preparation for packaging.  
+  The UPDATES of the old Ctypes are merged here.
+
+Tue 26 Dec 2023 : following suggestions of pylint, updated examples.py,
+  polynomials.py, and solutions.py.
+
+Sun 24 Dec 2023 : fixed parameters in solver.py for multithreading.
+
+Sat 23 Dec 2023 : added is_square() to polynomials.py and wrapped the
+  solvers in one solve() function in solver.py.
+  Enlarged numbers in the allocation for the 'roco' string in solver.py.
+  New module examples.py with demonstration systems.
+
+Fri 22 Dec 2023 : fixed bugs in solutions.py and from solutions.py removed
+  the imports of the polynomials and the solvers.
+  Improved solver.py with better tests.  Improved tests in volumes.py.
+  Added solvers for Laurent systems to solver.py.
+
+Thu 21 Dec 2023 : added Pade approximants to series.
+  Extended dimension with a function to get the number of available cores.
+  Extended dimension for Laurent polynomials.
+  Extended polynomials for Laurent polynomials and systems.
+
+Wed 20 Dec 2023 : extended solver.py with trinomial system test.
+  Extended solutions.py with the functions and class from phcpy.solutions.
+  Improved version.py for pylint recommendations.
+  Extended series.py with newton starting at series.
+
+Tue 19 Dec 2023 : added tests to version.py and fixed the format
+  conversions for all 32-bit natural numbers.  Fixed buffer size 
+  in polynomials.py; initialized buffers in solutions.py and solver.py.
+  First working version of series.py in double precision.
+  Extended series.py to double double and quad double precision.
+
+Mon 18 Dec 2023 : attempt to fix int4a2nbr() in version.py for numbers
+  larger than 255.  Updates in solutions.py.
+
+Sun 17 Dec 2023 : extended polynomials.py for nonsquare polynomial systems.
+  Extended polynomials.py with functions to store many polynomial systems.
+  Extended solutions.py with functions to append solution strings.
+  In solver.py, doubled the size of the buffer for the root counter string.
+
+Sat 16 Dec 2023 : extended dimension.py, polynomials.py, solutions.py,
+  and solver.py for double double and quad double precisions.
+
+Sat 21 Jan 2023 : in version.py renamed the function getPHCmod into 
+  get_phcfun which returned the function instead of the module.
+  All other .py files were adjusted which led to close to perfect
+  pylint scores.
+
+Fri 20 Jan 2023 : extended solutions.py to write all solutions
+  stored in double precision.
+
+Thu 19 Jan 2023 : started solutions.py ...  Ran pylint on all .py files
+  and convert camel case to snake case of function names.
+
+Wed 18 Jan 2023 : edits to version.py, dimension.py, polynomials.py,
+  volumes.py and solver.py for pylint warnings, for improved ratings.
+
+Tue 17 Jan 2023 : in solver.py, used int.from_bytes() on a[0] to get the
+  number of solutions returned as an integer.
+
+Mon 16 Jan 2023 : extended version.py with int4a2str and str2int4a functions.
+  Extended version.py with int4a2nbr function, improved dimension.py,
+  and added a new module polynomials.  New volumes.py to export functions
+  to compute mixed volumes and stable mixed volumes.
+  The blackbox solver is wrapped in the new solver.py module.
+
+Sun 15 Jan 2023 : made version.py platform independent, as it works for
+  windows, macos X (both Intel and M1), and linux (of course).
+  Extended version.py with the function getPHCmod() to give access to
+  the shared object or dynamic library in a platform independent manner.
+  New dimension.py to get the number of polynomials in double precision.
 
 Mon 30 May 2022 : prepared files for version 1.1.2 of phcpy.
 

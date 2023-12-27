@@ -1,0 +1,2 @@
+This folder holds the libPHCpack.* file(s),
+with extension .so for linux, .dll for windows, and .dylib for macos.
