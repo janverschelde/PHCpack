@@ -1449,7 +1449,7 @@ static PyObject *py2c_syscon_standard_drop_variable_by_index
  * DESCRIPTION :
  *   Replaces the system in the standard double precision container 
  *   with the same system that has its k-th variable dropped.
- *   The index k of the vaiable is given as an input parameter.
+ *   The index k of the variable is given as an input parameter.
  *   On return is the failure code, which equals zero if all went well.  */
 
 static PyObject *py2c_syson_standard_drop_variable_by_name
@@ -1470,7 +1470,7 @@ static PyObject *py2c_syscon_dobldobl_drop_variable_by_index
  * DESCRIPTION :
  *   Replaces the system in the double double precision container 
  *   with the same system that has its k-th variable dropped.
- *   The index k of the vaiable is given as an input parameter.
+ *   The index k of the variable is given as an input parameter.
  *   On return is the failure code, which equals zero if all went well.  */
 
 static PyObject *py2c_syscon_dobldobl_drop_variable_by_name
@@ -1491,7 +1491,7 @@ static PyObject *py2c_syscon_quaddobl_drop_variable_by_index
  * DESCRIPTION :
  *   Replaces the system in the quad double precision container 
  *   with the same system that has its k-th variable dropped.
- *   The index k of the vaiable is given as an input parameter.
+ *   The index k of the variable is given as an input parameter.
  *   On return is the failure code, which equals zero if all went well.  */
 
 static PyObject *py2c_syscon_quaddobl_drop_variable_by_name
