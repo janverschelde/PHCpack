@@ -1127,7 +1127,7 @@ static PyObject *py2c_syscon_initialize_number_of_standard_polynomials
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Initialzes the container for polynomials with coefficients in
+ *   Initializes the container for polynomials with coefficients in
  *   standard double precision.  The input argument is an integer,
  *   the number of polynomials in the container.
  *   The failure code is returned, which equals zero if all went well. */
@@ -1136,7 +1136,7 @@ static PyObject *py2c_syscon_initialize_number_of_dobldobl_polynomials
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Initialzes the container for polynomials with coefficients in
+ *   Initializes the container for polynomials with coefficients in
  *   double double precision.  The input argument is an integer,
  *   the number of polynomials in the container.
  *   The failure code is returned, which equals zero if all went well. */
@@ -1145,7 +1145,7 @@ static PyObject *py2c_syscon_initialize_number_of_quaddobl_polynomials
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Initialzes the container for polynomials with coefficients in
+ *   Initializes the container for polynomials with coefficients in
  *   quad double precision.  The input argument is an integer,
  *   the number of polynomials in the container.
  *   The failure code is returned, which equals zero if all went well. */
@@ -1154,7 +1154,7 @@ static PyObject *py2c_syscon_initialize_number_of_multprec_polynomials
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Initialzes the container for polynomials with coefficients in
+ *   Initializes the container for polynomials with coefficients in
  *   arbitrary multiprecision.  The input argument is an integer,
  *   the number of polynomials in the container.
  *   The failure code is returned, which equals zero if all went well. */
@@ -1163,7 +1163,7 @@ static PyObject *py2c_syscon_initialize_number_of_standard_Laurentials
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Initialzes the container for Laurent polynomials with coefficients
+ *   Initializes the container for Laurent polynomials with coefficients
  *   in standard double precision.  The input argument is an integer,
  *   the number of polynomials in the container.
  *   The failure code is returned, which equals zero if all went well. */
@@ -1172,7 +1172,7 @@ static PyObject *py2c_syscon_initialize_number_of_dobldobl_Laurentials
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Initialzes the container for Laurent polynomials with coefficients
+ *   Initializes the container for Laurent polynomials with coefficients
  *   in double double precision.  The input argument is an integer,
  *   the number of polynomials in the container.
  *   The failure code is returned, which equals zero if all went well. */
@@ -1181,7 +1181,7 @@ static PyObject *py2c_syscon_initialize_number_of_quaddobl_Laurentials
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Initialzes the container for Laurent polynomials with coefficients
+ *   Initializes the container for Laurent polynomials with coefficients
  *   in quad double precision.  The input argument is an integer,
  *   the number of polynomials in the container.
  *   The failure code is returned, which equals zero if all went well. */
@@ -1190,7 +1190,7 @@ static PyObject *py2c_syscon_initialize_number_of_multprec_Laurentials
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Initialzes the container for Laurent polynomials with coefficients
+ *   Initializes the container for Laurent polynomials with coefficients
  *   in arbitrary multiprecision.  The input argument is an integer,
  *   the number of polynomials in the container.
  *   The failure code is returned, which equals zero if all went well. */
@@ -1449,7 +1449,7 @@ static PyObject *py2c_syscon_standard_drop_variable_by_index
  * DESCRIPTION :
  *   Replaces the system in the standard double precision container 
  *   with the same system that has its k-th variable dropped.
- *   The index k of the vaiable is given as an input parameter.
+ *   The index k of the variable is given as an input parameter.
  *   On return is the failure code, which equals zero if all went well.  */
 
 static PyObject *py2c_syson_standard_drop_variable_by_name
@@ -1470,7 +1470,7 @@ static PyObject *py2c_syscon_dobldobl_drop_variable_by_index
  * DESCRIPTION :
  *   Replaces the system in the double double precision container 
  *   with the same system that has its k-th variable dropped.
- *   The index k of the vaiable is given as an input parameter.
+ *   The index k of the variable is given as an input parameter.
  *   On return is the failure code, which equals zero if all went well.  */
 
 static PyObject *py2c_syscon_dobldobl_drop_variable_by_name
@@ -1491,7 +1491,7 @@ static PyObject *py2c_syscon_quaddobl_drop_variable_by_index
  * DESCRIPTION :
  *   Replaces the system in the quad double precision container 
  *   with the same system that has its k-th variable dropped.
- *   The index k of the vaiable is given as an input parameter.
+ *   The index k of the variable is given as an input parameter.
  *   On return is the failure code, which equals zero if all went well.  */
 
 static PyObject *py2c_syscon_quaddobl_drop_variable_by_name
