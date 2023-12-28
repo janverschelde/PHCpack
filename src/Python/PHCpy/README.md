@@ -3,7 +3,8 @@ PHCpy is the latest development of phcpy.
 Ctypes allows to import dynamically linked libraries into a Python session.
 
 For the Python scripts to work, the file libPHCpack,
-for the proper platform (extension .so, .dylib, or .dll) must be present.
+for the proper platform (extension .so, .dylib, or .dll) must be present
+in the phcpy folder.
 
 | file name              | description                                   |
 |------------------------|-----------------------------------------------|
@@ -35,3 +36,6 @@ The directed acyclic graph shows the module dependencies:
 At the root is the version module.  If version.py works,
 then the interfacing with libPHCpack works.
 Four other modules are needed for the blackbox solver.
+
+To install, type
+pip install .

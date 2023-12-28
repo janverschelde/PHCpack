@@ -18,7 +18,7 @@ from struct import unpack
 # relative location of the PHCpack library
 LOCATION = "."
 
-def get_phcfun():
+def get_phcfun_fromlib():
     """
     Returns the proper function according to the platform.
     For the correct execution, the file libPHCpack,
@@ -38,6 +38,17 @@ def get_phcfun():
         return phcpack._ada_use_c2phc
     print('The platform', sys.platform, 'is not supported.')
     return None
+
+def get_phcfun():
+    """
+    Returns phcpy.phc, or if that not works,
+    returns get_phcfun_fromlib()
+    """
+    try:
+        import phcpy
+        return phcpy.phc
+    except:
+        return get_phcfun_fromlib()
 
 def int4a2str(data, verbose=False):
     """

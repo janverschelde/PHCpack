@@ -77,7 +77,8 @@ def get_site_location(verbose=False):
 
 def set_phcfun(verbose=False):
     """
-    Sets the variable phc to the function in libPHCpack.
+    Sets the variable phc to the function in libPHCpack
+    and loads the modules.
     """
     CWD = getcwd()
     if verbose:
@@ -93,8 +94,10 @@ def set_phcfun(verbose=False):
     try: 
         from version import version_string
         print(version_string(verbose=False) + ' works!')
-        from version import get_phcfun
-        result = get_phcfun()
+        from version import get_phcfun_fromlib
+        result = get_phcfun_fromlib()
+        from phcpy import version, dimension, polynomials, solutions
+        from phcpy import solver, examples, series
         chdir(CWD)
         return result
     except:
