@@ -16,7 +16,7 @@ from ctypes import c_int, c_double, pointer, sizeof
 from struct import unpack
 
 # relative location of the PHCpack library
-LOCATION = "../../lib"
+LOCATION = "."
 
 def get_phcfun():
     """

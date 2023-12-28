@@ -1,3 +1,6 @@
+Thu 28 Dec 2023 : in PHCpy simplified the folder structure, removing src,
+  and added setup.py.
+
 Wed 27 Dec 2023 : renamed the name of the function version in version.py 
   into version_string and fixed the verbosity when verbose is False.
   Renamed the folder Ctypes into PHCpy, in preparation for packaging.  
