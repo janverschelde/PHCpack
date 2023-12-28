@@ -1,5 +1,7 @@
 Thu 28 Dec 2023 : in PHCpy simplified the folder structure, removing src,
-  and added setup.py.
+  and added setup.py.  Added two functions to __init__.py: one to locate
+  the folder with the site-packages and another to get the phc function.
+  Then 'pip install .' works on a miniconda python on Linux and Windows.
 
 Wed 27 Dec 2023 : renamed the name of the function version in version.py 
   into version_string and fixed the verbosity when verbose is False.

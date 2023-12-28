@@ -60,11 +60,48 @@ def cite():
     David Lippa, Dillon Niederhut, and David Shupe, pages 58-64, 2019.
     """)
 
-try:
-    from version import version_string
-    print(version_string(verbose=False) + ' works!')
-except:
-    print('Is the libPHCpack not suited for this platform?')
+from os import getcwd, chdir
+from site import getsitepackages
+
+def get_site_location(verbose=False):
+    """
+    Returns the location for site packages,
+    handling the differences between linux and windows.
+    """
+    sites = getsitepackages()
+    if verbose:
+        print('sites :', sites)
+    bools = ['site-packages' in x for x in sites]
+    idx = bools.index(True)
+    return sites[idx]
+
+def set_phcfun(verbose=False):
+    """
+    Sets the variable phc to the function in libPHCpack.
+    """
+    CWD = getcwd()
+    if verbose:
+        print('CWD =', CWD)
+    LOCATION = get_site_location(verbose) + '/phcpy' 
+    if verbose:
+        print('LOCATION :')
+        print(LOCATION)
+    chdir(LOCATION)
+    if verbose:
+        print('os.getcwd :')
+        print(getcwd())
+    try: 
+        from version import version_string
+        print(version_string(verbose=False) + ' works!')
+        from version import get_phcfun
+        result = get_phcfun()
+        chdir(CWD)
+        return result
+    except:
+        print('Is the libPHCpack not suited for this platform?')
+        return None
+
+phc = set_phcfun()
 
 # The version number is defined as a data attribute.
 __version__ = '1.1.3'
