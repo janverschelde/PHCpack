@@ -1,6 +1,7 @@
 Fri 29 Dec 2023 : fixed the imports in the modules of phcpy so that the
   import phcpy works from a Python script.  Added the circle problem of
   Apollonius and the testimport.py to the tests folder.
+  Added fourbar.py to the tests folder of PHCpy.
 
 Thu 28 Dec 2023 : in PHCpy simplified the folder structure, removing src,
   and added setup.py.  Added two functions to __init__.py: one to locate
