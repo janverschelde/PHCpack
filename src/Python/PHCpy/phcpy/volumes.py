@@ -2,8 +2,8 @@
 Exports functions to compute mixed volumes and stable mixed volumes.
 """
 from ctypes import c_int, c_double, pointer
-from version import get_phcfun
-from polynomials import set_double_system
+from phcpy.version import get_phcfun
+from phcpy.polynomials import set_double_system
 
 def mixed_volume(demics=True, vrblvl=0):
     """

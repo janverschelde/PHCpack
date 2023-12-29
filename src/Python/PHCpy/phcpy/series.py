@@ -4,31 +4,31 @@ polynomial homotopies using Newton's method.
 """
 
 from ctypes import c_int, c_double, pointer
-from version import get_phcfun, int4a2nbr, nbr2int4a
-from polynomials import string_of_symbols, number_of_symbols
-from polynomials import set_double_system, get_double_system
-from polynomials import set_double_double_system, get_double_double_system
-from polynomials import set_quad_double_system, get_quad_double_system
-from polynomials import copy_from_double_syspool, copy_to_double_syspool
-from polynomials import initialize_double_syspool, size_double_syspool
-from polynomials import clear_double_syspool
-from polynomials import initialize_double_double_syspool
-from polynomials import copy_from_double_double_syspool
-from polynomials import copy_to_double_double_syspool
-from polynomials import size_double_double_syspool
-from polynomials import clear_double_double_syspool
-from polynomials import initialize_quad_double_syspool
-from polynomials import copy_from_quad_double_syspool
-from polynomials import copy_to_quad_double_syspool
-from polynomials import size_quad_double_syspool
-from polynomials import clear_quad_double_syspool
-from solutions import make_solution
-from solutions import set_double_solutions
-from solutions import set_double_double_solutions
-from solutions import set_quad_double_solutions
-from solver import write_double_solutions
-from solver import write_double_double_solutions
-from solver import write_quad_double_solutions
+from phcpy.version import get_phcfun, int4a2nbr, nbr2int4a
+from phcpy.polynomials import string_of_symbols, number_of_symbols
+from phcpy.polynomials import set_double_system, get_double_system
+from phcpy.polynomials import set_double_double_system, get_double_double_system
+from phcpy.polynomials import set_quad_double_system, get_quad_double_system
+from phcpy.polynomials import copy_from_double_syspool, copy_to_double_syspool
+from phcpy.polynomials import initialize_double_syspool, size_double_syspool
+from phcpy.polynomials import clear_double_syspool
+from phcpy.polynomials import initialize_double_double_syspool
+from phcpy.polynomials import copy_from_double_double_syspool
+from phcpy.polynomials import copy_to_double_double_syspool
+from phcpy.polynomials import size_double_double_syspool
+from phcpy.polynomials import clear_double_double_syspool
+from phcpy.polynomials import initialize_quad_double_syspool
+from phcpy.polynomials import copy_from_quad_double_syspool
+from phcpy.polynomials import copy_to_quad_double_syspool
+from phcpy.polynomials import size_quad_double_syspool
+from phcpy.polynomials import clear_quad_double_syspool
+from phcpy.solutions import make_solution
+from phcpy.solutions import set_double_solutions
+from phcpy.solutions import set_double_double_solutions
+from phcpy.solutions import set_quad_double_solutions
+from phcpy.solver import write_double_solutions
+from phcpy.solver import write_double_double_solutions
+from phcpy.solver import write_quad_double_solutions
 
 def replace_symbol(pol, idx):
     """

@@ -1,3 +1,6 @@
+Fri 29 Dec 2023 : fixed the imports in the modules of phcpy so that the
+  import phcpy works from a Python script.
+
 Thu 28 Dec 2023 : in PHCpy simplified the folder structure, removing src,
   and added setup.py.  Added two functions to __init__.py: one to locate
   the folder with the site-packages and another to get the phc function.

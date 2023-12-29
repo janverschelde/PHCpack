@@ -92,12 +92,10 @@ def set_phcfun(verbose=False):
         print('os.getcwd :')
         print(getcwd())
     try: 
-        from version import version_string
+        from phcpy.version import version_string
         print(version_string(verbose=False) + ' works!')
-        from version import get_phcfun_fromlib
+        from phcpy.version import get_phcfun_fromlib
         result = get_phcfun_fromlib()
-        from phcpy import version, dimension, polynomials, solutions
-        from phcpy import solver, examples, series
         chdir(CWD)
         return result
     except:
@@ -105,6 +103,8 @@ def set_phcfun(verbose=False):
         return None
 
 phc = set_phcfun()
+from phcpy import version, dimension, polynomials, solutions
+from phcpy import solver, examples, series
 
 # The version number is defined as a data attribute.
 __version__ = '1.1.3'

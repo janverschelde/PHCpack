@@ -2,16 +2,16 @@
 Exports the definition of polynomial systems.
 """
 from ctypes import c_int, c_double, pointer, create_string_buffer
-from version import get_phcfun, int4a2nbr, str2int4a, int4a2str
-from dimension import set_double_dimension, get_double_dimension
-from dimension import set_double_double_dimension, get_double_double_dimension
-from dimension import set_quad_double_dimension, get_quad_double_dimension
-from dimension import set_double_Laurent_dimension
-from dimension import get_double_Laurent_dimension
-from dimension import set_double_double_Laurent_dimension
-from dimension import get_double_double_Laurent_dimension
-from dimension import set_quad_double_Laurent_dimension
-from dimension import get_quad_double_Laurent_dimension
+from phcpy.version import get_phcfun, int4a2nbr, str2int4a, int4a2str
+from phcpy.dimension import set_double_dimension, get_double_dimension
+from phcpy.dimension import set_double_double_dimension, get_double_double_dimension
+from phcpy.dimension import set_quad_double_dimension, get_quad_double_dimension
+from phcpy.dimension import set_double_Laurent_dimension
+from phcpy.dimension import get_double_Laurent_dimension
+from phcpy.dimension import set_double_double_Laurent_dimension
+from phcpy.dimension import get_double_double_Laurent_dimension
+from phcpy.dimension import set_quad_double_Laurent_dimension
+from phcpy.dimension import get_quad_double_Laurent_dimension
 
 def set_double_polynomial(idx, nvr, pol, vrblvl=0):
     """

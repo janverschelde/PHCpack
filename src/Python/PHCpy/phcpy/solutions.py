@@ -4,7 +4,7 @@ Exports functions on solutions.
 from math import log10, floor
 from ast import literal_eval
 from ctypes import c_int, c_double, pointer, create_string_buffer
-from version import get_phcfun, int4a2nbr, int4a2str, str2int4a
+from phcpy.version import get_phcfun, int4a2nbr, int4a2str, str2int4a
 
 def diagnostics(sol):
     r"""
