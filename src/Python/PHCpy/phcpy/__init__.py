@@ -38,6 +38,14 @@ volumes
     which provides generically sharp root counts.
 examples
     contains some interesting examples from the research literature.
+families
+    polynomial system often occur in families and are defined for any
+    number of equations and variables, e.g.: the cyclic n-roots system.
+tuning
+    parameters and numerical tolerances of the trackers which apply 
+    aposteriori step size control are tuned in the tuning module.
+homotopies
+    a homotopy connects the target system to a start system.
 
 The main() of every module provides some basic examples and tests.
 """
@@ -105,6 +113,7 @@ def set_phcfun(verbose=False):
 phc = set_phcfun()
 from phcpy import version, dimension, polynomials, solutions
 from phcpy import solver, examples, series
+from phcpy import families, tuning, homotopies
 
 # The version number is defined as a data attribute.
 __version__ = '1.1.3'

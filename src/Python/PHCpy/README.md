@@ -16,6 +16,9 @@ in the phcpy folder.
 | solver                 | exports the blackbox solver                   |
 | examples               | runs some examples                            |
 | series                 | series expansions of solution curves          |
+| families               | families of systems, for any dimension        |
+| tuning                 | tuning for aposteriori step control trackers  |
+| homotopies             | constructing start systems for homotopies     |
 
 The directed acyclic graph shows the module dependencies:
 
