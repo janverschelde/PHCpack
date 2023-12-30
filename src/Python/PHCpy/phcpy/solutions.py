@@ -252,6 +252,22 @@ def evaluate(pols, dsol):
         result.append(evaluate_polynomial(pol, dsol))
     return result
 
+def verify(pols, sols, vrblvl=0):
+    r"""
+    Verifies whether the solutions in *sols*
+    satisfy the polynomials of the system in *pols*.
+    """
+    dictsols = [strsol2dict(sol) for sol in sols]
+    checksum = 0
+    for (idx, sol) in enumerate(dictsols):
+        sumeval = sum(evaluate(pols, sol))
+        if vrblvl > 0:
+            print('sum at solution', idx, ':', sumeval)
+        checksum = checksum + sumeval
+    if vrblvl > 0:
+        print('the total check sum :', checksum)
+    return checksum
+
 def make_solution(names, values, \
     err=0.0, rco=1.0, res=0.0, tval=0, multiplicity=1):
     r"""
