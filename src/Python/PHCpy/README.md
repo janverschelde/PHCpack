@@ -19,6 +19,7 @@ in the phcpy folder.
 | families               | families of systems, for any dimension        |
 | tuning                 | tuning for aposteriori step control trackers  |
 | homotopies             | constructing start systems for homotopies     |
+| schubert               | homotopies for enumerative geometry           |
 
 The directed acyclic graph shows the module dependencies:
 
