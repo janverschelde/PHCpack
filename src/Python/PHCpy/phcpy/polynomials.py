@@ -616,6 +616,26 @@ def is_square(pols):
     nbreqs = len(pols)
     return nbrvar == nbreqs
 
+def degree_of_double_polynomial(idx, vrblvl=0):
+    """
+    Returns the degree of the polynomial with double precision
+    coefficients stored at position idx.
+    """
+    if vrblvl > 0:
+        print('in degree_of_double_polynomial, idx :', idx)
+    phc = get_phcfun()
+    aidx = pointer(c_int(idx))
+    bdeg = pointer(c_int(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int(vrblvl)
+    if vrblvl > 0:
+        print('-> clear_double_system calls phc', end='')
+    retval = phc(119, aidx, bdeg, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('-> degree of polynomial :', bdeg[0])
+    return bdeg[0]
+
 def clear_double_system(vrblvl=0):
     """
     Clears the system set in double precision.
@@ -964,7 +984,7 @@ def test_double_polynomial(vrblvl=0):
     print('the retrieved polynomial :', pol)
     smb = string_of_symbols(100, vrblvl)
     print('the list of symbols :', smb)
-    return len(smb) != 2
+    return int(len(smb) != 2)
 
 def test_double_double_polynomial(vrblvl=0):
     """
@@ -982,7 +1002,7 @@ def test_double_double_polynomial(vrblvl=0):
     print('the retrieved polynomial :', pol)
     smb = string_of_symbols(100, vrblvl)
     print('the list of symbols :', smb)
-    return len(smb) != 2
+    return int(len(smb) != 2)
 
 def test_quad_double_polynomial(vrblvl=0):
     """
@@ -1000,7 +1020,7 @@ def test_quad_double_polynomial(vrblvl=0):
     print('the retrieved polynomial :', pol)
     smb = string_of_symbols(100, vrblvl)
     print('the list of symbols :', smb)
-    return len(smb) != 2
+    return int(len(smb) != 2)
 
 def test_double_Laurent_polynomial(vrblvl=0):
     """
@@ -1018,7 +1038,7 @@ def test_double_Laurent_polynomial(vrblvl=0):
     print('the retrieved polynomial :', pol)
     smb = string_of_symbols(100, vrblvl)
     print('the list of symbols :', smb)
-    return len(smb) != 2
+    return int(len(smb) != 2)
 
 def test_double_double_Laurent_polynomial(vrblvl=0):
     """
@@ -1036,7 +1056,7 @@ def test_double_double_Laurent_polynomial(vrblvl=0):
     print('the retrieved polynomial :', pol)
     smb = string_of_symbols(100, vrblvl)
     print('the list of symbols :', smb)
-    return len(smb) != 2
+    return int(len(smb) != 2)
 
 def test_quad_double_Laurent_polynomial(vrblvl=0):
     """
@@ -1054,7 +1074,7 @@ def test_quad_double_Laurent_polynomial(vrblvl=0):
     print('the retrieved polynomial :', pol)
     smb = string_of_symbols(100, vrblvl)
     print('the list of symbols :', smb)
-    return len(smb) != 2
+    return int(len(smb) != 2)
 
 def test_double_system(vrblvl=0):
     """
@@ -1076,7 +1096,7 @@ def test_double_system(vrblvl=0):
     print('the retrieved polynomials :')
     for pol in pols:
         print(pol)
-    return len(pols) != 3
+    return int(len(pols) != 3)
 
 def test_double_double_system(vrblvl=0):
     """
@@ -1098,7 +1118,7 @@ def test_double_double_system(vrblvl=0):
     print('the retrieved polynomials :')
     for pol in pols:
         print(pol)
-    return len(pols) != 3
+    return int(len(pols) != 3)
 
 def test_quad_double_system(vrblvl=0):
     """
@@ -1120,7 +1140,7 @@ def test_quad_double_system(vrblvl=0):
     print('the retrieved polynomials :')
     for pol in pols:
         print(pol)
-    return len(pols) != 3
+    return int(len(pols) != 3)
 
 def test_double_Laurent_system(vrblvl=0):
     """
@@ -1142,7 +1162,7 @@ def test_double_Laurent_system(vrblvl=0):
     print('the retrieved polynomials :')
     for pol in pols:
         print(pol)
-    return len(pols) != 3
+    return int(len(pols) != 3)
 
 def test_double_double_Laurent_system(vrblvl=0):
     """
@@ -1186,7 +1206,7 @@ def test_quad_double_Laurent_system(vrblvl=0):
     print('the retrieved polynomials :')
     for pol in pols:
         print(pol)
-    return len(pols) != 3
+    return int(len(pols) != 3)
 
 def test_double_syspool(vrblvl=0):
     """
@@ -1211,7 +1231,7 @@ def test_double_syspool(vrblvl=0):
         pols = get_double_system(vrblvl)
         print('system at', i, 'in the pool :', pols)
     clear_double_syspool(vrblvl)
-    return dim != 3
+    return int(dim != 3)
 
 def test_double_double_syspool(vrblvl=0):
     """
@@ -1236,7 +1256,7 @@ def test_double_double_syspool(vrblvl=0):
         pols = get_double_double_system(vrblvl)
         print('system at', i, 'in the pool :', pols)
     clear_double_double_syspool(vrblvl)
-    return dim != 3
+    return int(dim != 3)
 
 def test_quad_double_syspool(vrblvl=0):
     """
@@ -1261,7 +1281,21 @@ def test_quad_double_syspool(vrblvl=0):
         pols = get_quad_double_system(vrblvl)
         print('system at', i, 'in the pool :', pols)
     clear_quad_double_syspool(vrblvl)
-    return dim != 3
+    return int(dim != 3)
+
+def test_degree_of_double_polynomial(vrblvl=0):
+    """
+    Tests the degree of a polynomial in double precision.
+    """
+    pols = ['x^2*y + y^2 + 1;', 'x^2 + y^2 - 1;']
+    set_double_system(len(pols), pols, vrblvl)
+    degsum = 0
+    for (idx, pol) in enumerate(pols):
+        print('index :', idx)
+        deg = degree_of_double_polynomial(idx+1, vrblvl)
+        print('degree of', pol, ':', deg)
+        degsum = degsum + deg 
+    return int(degsum != 5)
 
 def main():
     """
@@ -1283,6 +1317,7 @@ def main():
     fail = fail + test_double_syspool(lvl)
     fail = fail + test_double_double_syspool(lvl)
     fail = fail + test_quad_double_syspool(lvl)
+    fail = fail + test_degree_of_double_polynomial(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:

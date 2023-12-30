@@ -1,3 +1,5 @@
+Sat 30 Dec 2023 : extended schubert.py with the Littlewood-Richardson rule.
+
 Fri 29 Dec 2023 : fixed the imports in the modules of phcpy so that the
   import phcpy works from a Python script.  Added the circle problem of
   Apollonius and the testimport.py to the tests folder.
