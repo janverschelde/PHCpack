@@ -4,10 +4,10 @@ with Communications_with_User;
 with Timing_Package;                    use Timing_Package;
 with Characters_and_Numbers;            use Characters_and_Numbers;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
--- with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
+with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Multprec_Natural_Numbers;          use Multprec_Natural_Numbers;
--- with Multprec_Natural_Numbers_io;       use Multprec_Natural_Numbers_io;
--- with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Multprec_Natural_Numbers_io;       use Multprec_Natural_Numbers_io;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Double_Double_Numbers;             use Double_Double_Numbers;
 with Quad_Double_Numbers;               use Quad_Double_Numbers;
@@ -15,7 +15,7 @@ with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
--- with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
+with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
 with Standard_Natural_VecVecs;
 with Standard_Natural_Matrices;
 with Standard_Complex_VecMats;
@@ -30,7 +30,7 @@ with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Brackets;                          use Brackets;
--- with Brackets_io;                       use Brackets_io;
+with Brackets_io;                       use Brackets_io;
 with Checker_Moves;
 with Checker_Localization_Patterns;
 with Intersection_Posets;               use Intersection_Posets;
@@ -127,27 +127,32 @@ package body Schubert_Interface is
       put_line("Schubert_Intersection_Conditions ...");
     end if;
     Get_Dimensions(a,n,k,nbc,otp);
-   -- new_line;
-   -- put_line("The dimensions : ");
-   -- put("  n = "); put(n,1);
-   -- put("  k = "); put(k,1);
-   -- put("  c = "); put(nbc,1);
-   -- if otp
-   --  then put_line("  output wanted");
-   --  else put_line("  in silent mode");
-   -- end if;
+    if vrblvl > 0 then
+      put_line("The dimensions : ");
+      put("  n = "); put(n,1);
+      put("  k = "); put(k,1);
+      put("  c = "); put(nbc,1);
+      if otp
+       then put_line("  output wanted");
+       else put_line("  in silent mode");
+      end if;
+    end if;
     declare
       cond : constant Array_of_Brackets(1..nbc) := Get_Conditions(b,k,nbc);
     begin
-     -- put_line("The brackets : ");
-     -- for i in cond'range loop
-     --   put(cond(i).all);
-     -- end loop;
-     -- new_line;
+      if vrblvl > 0 then
+        put_line("The brackets : ");
+        for i in cond'range loop
+          put(cond(i).all);
+        end loop;
+        new_line;
+      end if;
       Create_Intersection_Poset(n,nbc,cond,not otp,rc);
     end;
     nrc := Multprec_Natural_Numbers.Create(rc);
-   -- put("The formal root count : "); put(nrc,1); new_line;
+    if vrblvl > 0
+     then put("The formal root count : "); put(nrc,1); new_line;
+    end if;
     Assign(double_float(nrc),c);
     return 0;
   exception

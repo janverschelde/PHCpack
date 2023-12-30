@@ -1,3 +1,6 @@
+Sat 30 Dec 2023 : in schubert_interface.adb, used the verbose level to
+  expose the commented out debugging information.
+
 Thu 21 Dec 2023 : extended job_handlers and use_c2phc4c with a function
   to return the number of available CPU cores.
 
