@@ -141,25 +141,25 @@ def adjacent_minors(rows, cols):
             result.append(equ + ';')
     return result
 
-#def pieri_problem(mdim, pdim, real=True):
-#    """
-#    Returns a system that expresses the intersection of pdim-planes
-#    with mdim*pdim general mdim-planes in (mdim+pdim)-space.
-#    When real is True, the generated mdim-planes are osculating
-#    a rational normal curve and all solutions are expected to be real.
-#    If real is False, then random complex planes are generated.
-#    For reality of solutions of polynomial systems, see the book by
-#    Frank Sottile: Real Solutions to Equations from Geometry,
-#    volume 57 of University Lecture Series, AMS, 2011.
-#    """
-#    from phcpy.schubert import make_pieri_system
-#    from phcpy.schubert import real_osculating_planes
-#    from phcpy.schubert import random_complex_matrices
-#    if real:
-#        planes = real_osculating_planes(mdim, pdim, 0)
-#    else:
-#        planes = random_complex_matrices(mdim*pdim, mdim, pdim)
-#    return make_pieri_system(mdim, pdim, 0, planes)
+def pieri_problem(mdim, pdim, real=True):
+    """
+    Returns a system that expresses the intersection of pdim-planes
+    with mdim*pdim general mdim-planes in (mdim+pdim)-space.
+    When real is True, the generated mdim-planes are osculating
+    a rational normal curve and all solutions are expected to be real.
+    If real is False, then random complex planes are generated.
+    For reality of solutions of polynomial systems, see the book by
+    Frank Sottile: Real Solutions to Equations from Geometry,
+    volume 57 of University Lecture Series, AMS, 2011.
+    """
+    from phcpy.schubert import make_pieri_system
+    from phcpy.schubert import real_osculating_planes
+    from phcpy.schubert import random_complex_matrices
+    if real:
+        planes = real_osculating_planes(mdim, pdim, 0)
+    else:
+        planes = random_complex_matrices(mdim*pdim, mdim, pdim)
+    return make_pieri_system(mdim, pdim, 0, planes)
 
 def recpol(nbplayers, player, ind, acc):
     """
@@ -338,9 +338,9 @@ def test():
     print('\nadjacent 2-by-2 minors of a 3-by-5 matrix :\n')
     for pol in adjacent_minors(3, 5):
         print(pol)
-    # print('\nintersection of 6 general 3-planes with 2-planes :\n')
-    # for pol in pieri_problem(3, 2):
-    #     print(pol)
+    print('\nintersection of 6 general 3-planes with 2-planes :\n')
+    for pol in pieri_problem(3, 2):
+        print(pol)
     print('\nNash equilibria for game with 4 players and 2 strategies :\n')
     for pol in generic_nash_system(4):
         print(pol)
