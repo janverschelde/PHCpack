@@ -46,6 +46,8 @@ tuning
     aposteriori step size control are tuned in the tuning module.
 homotopies
     a homotopy connects the target system to a start system.
+trackers
+    path trackers with aposteriori step size control.
 schubert
     numerical Schubert calculus defines homotopies for enumerative geometry.
 
@@ -115,7 +117,7 @@ def set_phcfun(verbose=False):
 phc = set_phcfun()
 from phcpy import version, dimension, polynomials, solutions
 from phcpy import solver, examples, series
-from phcpy import families, tuning, homotopies, schubert
+from phcpy import families, tuning, homotopies, trackers, schubert
 
 # The version number is defined as a data attribute.
 __version__ = '1.1.3'

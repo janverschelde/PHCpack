@@ -17,7 +17,7 @@ setup(
         'phcpy/polynomials', 'phcpy/solutions', 'phcpy/solver', \
         'phcpy/examples', 'phcpy/series', \
         'phcpy/families', 'phcpy/homotopies', 'phcpy/tuning', \
-        'phcpy/schubert' ],
+        'phcpy/trackers', 'phcpy/schubert' ],
     license = 'GNU GENERAL PUBLIC LICENSE version 3' ,
     package_data = {'phcpy':['libPHCpack.so', 'libPHCpack.dll', \
         'libPHCpack.dylib']} ,

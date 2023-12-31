@@ -2,6 +2,7 @@ Sat 30 Dec 2023 : extended schubert.py with the Littlewood-Richardson rule.
   Added function to make Pieri problems to schubert.py which completes
   the families module.  Added the verify function to the solutions module
   and added the running of the Pieri homotopies to the schubert module.
+  New module trackers with aposteriori step size control.
 
 Fri 29 Dec 2023 : fixed the imports in the modules of phcpy so that the
   import phcpy works from a Python script.  Added the circle problem of
