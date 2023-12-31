@@ -3,7 +3,8 @@ abstract project Phcpack_Config is
    Crate_Version := "2.4.88";
    Crate_Name := "phcpack";
 
-   Alire_Host_OS := "windows";
+  -- Alire_Host_OS := "windows";
+   Alire_Host_OS := "linux";
 
    Alire_Host_Arch := "x86_64";
 
