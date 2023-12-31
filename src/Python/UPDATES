@@ -1,6 +1,7 @@
 Sun 31 Dec 2023 : moved the tuning module into the trackers module.
   In version.py, dimension.py, polynomials.py, solutions.py, series.py,
   solver.py, volumes.py, and homotopies.py: replaced c_int by c_int32.
+  Basic version of the curves module for apriori step size control.
 
 Sat 30 Dec 2023 : extended schubert.py with the Littlewood-Richardson rule.
   Added function to make Pieri problems to schubert.py which completes

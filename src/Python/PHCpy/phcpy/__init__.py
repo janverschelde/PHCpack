@@ -113,8 +113,8 @@ def set_phcfun(verbose=False):
 
 phc = set_phcfun()
 from phcpy import version, dimension, polynomials, solutions
-from phcpy import solver, examples, series
-from phcpy import families, homotopies, trackers, schubert
+from phcpy import solver, examples, series, families
+from phcpy import homotopies, trackers, schubert, curves
 
 # The version number is defined as a data attribute.
 __version__ = '1.1.3'
