@@ -12,7 +12,7 @@ string buffer representation of the 32-bit integer array version.
 import ctypes
 import sys
 from ctypes import create_string_buffer
-from ctypes import c_int, c_double, pointer, sizeof
+from ctypes import c_int32, c_double, pointer, sizeof
 from struct import unpack
 
 # relative location of the PHCpack library
@@ -185,7 +185,7 @@ def version_string(verbose=True):
     are verified via the ctypes string buffer types.
     """
     phc = get_phcfun()
-    aaa = pointer(c_int(0))
+    aaa = pointer(c_int32(0))
     name = create_string_buffer(b"", 30*4)
     ccc = pointer(c_double(0.0))
     if verbose:

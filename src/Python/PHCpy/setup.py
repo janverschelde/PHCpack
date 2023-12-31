@@ -13,11 +13,10 @@ setup(
     url = 'https://github.com/janverschelde/PHCpack' ,
     version = '1.1.3' ,
     packages = ['phcpy'] ,
-    py_modules = ['phcpy/version', 'phcpy/dimension', \
-        'phcpy/polynomials', 'phcpy/solutions', 'phcpy/solver', \
-        'phcpy/examples', 'phcpy/series', \
-        'phcpy/families', 'phcpy/homotopies', 'phcpy/tuning', \
-        'phcpy/trackers', 'phcpy/schubert' ],
+    py_modules = ['phcpy/version', 'phcpy/dimension', 'phcpy/polynomials', \
+        'phcpy/solutions', 'phcpy/volumes', 'phcpy/solver', \
+        'phcpy/examples', 'phcpy/series', 'phcpy/families', \
+        'phcpy/homotopies', 'phcpy/trackers', 'phcpy/schubert' ],
     license = 'GNU GENERAL PUBLIC LICENSE version 3' ,
     package_data = {'phcpy':['libPHCpack.so', 'libPHCpack.dll', \
         'libPHCpack.dylib']} ,

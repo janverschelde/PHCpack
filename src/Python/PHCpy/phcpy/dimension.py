@@ -2,7 +2,7 @@
 Exports the dimension of the system of polynomials.
 Needs the version module.
 """
-from ctypes import c_int, c_double, pointer
+from ctypes import c_int32, c_double, pointer
 from phcpy.version import get_phcfun
 
 def set_double_dimension(dim, vrblvl=0):
@@ -13,10 +13,10 @@ def set_double_dimension(dim, vrblvl=0):
     if vrblvl > 0:
         print('in set_double_dimension, dim :', dim)
     phc = get_phcfun()
-    adim = pointer(c_int(dim))
-    bbb = pointer(c_int(0))
+    adim = pointer(c_int32(dim))
+    bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> set_double_dimension calls phc', end='')
     retval = phc(23, adim, bbb, ccc, vrb)
@@ -32,10 +32,10 @@ def set_double_double_dimension(dim, vrblvl=0):
     if vrblvl > 0:
         print('in set_double_double_dimension, dim :', dim)
     phc = get_phcfun()
-    adim = pointer(c_int(dim))
-    bbb = pointer(c_int(0))
+    adim = pointer(c_int32(dim))
+    bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> set_double_double_dimension calls phc', end='')
     retval = phc(333, adim, bbb, ccc, vrb)
@@ -51,10 +51,10 @@ def set_quad_double_dimension(dim, vrblvl=0):
     if vrblvl > 0:
         print('in set_quad_double_dimension, dim :', dim)
     phc = get_phcfun()
-    adim = pointer(c_int(dim))
-    bbb = pointer(c_int(0))
+    adim = pointer(c_int32(dim))
+    bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> set_quad_double_dimension calls phc', end='')
     retval = phc(383, adim, bbb, ccc, vrb)
@@ -70,10 +70,10 @@ def set_double_Laurent_dimension(dim, vrblvl=0):
     if vrblvl > 0:
         print('in set_double_Laurent_dimension, dim :', dim)
     phc = get_phcfun()
-    adim = pointer(c_int(dim))
-    bbb = pointer(c_int(0))
+    adim = pointer(c_int32(dim))
+    bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> set_double_Laurent_dimension calls phc', end='')
     retval = phc(123, adim, bbb, ccc, vrb)
@@ -89,10 +89,10 @@ def set_double_double_Laurent_dimension(dim, vrblvl=0):
     if vrblvl > 0:
         print('in set_double_double_Laurent_dimension, dim :', dim)
     phc = get_phcfun()
-    adim = pointer(c_int(dim))
-    bbb = pointer(c_int(0))
+    adim = pointer(c_int32(dim))
+    bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> set_double_double_Laurent_dimension calls phc', end='')
     retval = phc(553, adim, bbb, ccc, vrb)
@@ -108,10 +108,10 @@ def set_quad_double_Laurent_dimension(dim, vrblvl=0):
     if vrblvl > 0:
         print('in set_quad_double_Laurent_dimension, dim :', dim)
     phc = get_phcfun()
-    adim = pointer(c_int(dim))
-    bbb = pointer(c_int(0))
+    adim = pointer(c_int32(dim))
+    bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> set_quad_double_Laurent_dimension calls phc', end='')
     retval = phc(563, adim, bbb, ccc, vrb)
@@ -126,10 +126,10 @@ def get_double_dimension(vrblvl=0):
     if vrblvl > 0:
         print("in get_double_dimension ...")
     phc = get_phcfun()
-    adim = pointer(c_int(0))
-    bbb = pointer(c_int(0))
+    adim = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> get_double_dimension calls phc', end='')
     retval = phc(22, adim, bbb, ccc, vrb)
@@ -145,10 +145,10 @@ def get_double_double_dimension(vrblvl=0):
     if vrblvl > 0:
         print("in get_double_double_dimension ...")
     phc = get_phcfun()
-    adim = pointer(c_int(0))
-    bbb = pointer(c_int(0))
+    adim = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> get_double_double_dimension calls phc', end='')
     retval = phc(332, adim, bbb, ccc, vrb)
@@ -164,10 +164,10 @@ def get_quad_double_dimension(vrblvl=0):
     if vrblvl > 0:
         print("in get_quad_double_dimension ...")
     phc = get_phcfun()
-    adim = pointer(c_int(0))
-    bbb = pointer(c_int(0))
+    adim = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> get_quad_double_dimension calls phc', end='')
     retval = phc(382, adim, bbb, ccc, vrb)
@@ -183,10 +183,10 @@ def get_double_Laurent_dimension(vrblvl=0):
     if vrblvl > 0:
         print("in get_double_Laurent_dimension ...")
     phc = get_phcfun()
-    adim = pointer(c_int(0))
-    bbb = pointer(c_int(0))
+    adim = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> get_double_Laurent_dimension calls phc', end='')
     retval = phc(122, adim, bbb, ccc, vrb)
@@ -202,10 +202,10 @@ def get_double_double_Laurent_dimension(vrblvl=0):
     if vrblvl > 0:
         print("in get_double_double_Laurent_dimension ...")
     phc = get_phcfun()
-    adim = pointer(c_int(0))
-    bbb = pointer(c_int(0))
+    adim = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> get_double_double_Laurent_dimension calls phc', end='')
     retval = phc(552, adim, bbb, ccc, vrb)
@@ -221,10 +221,10 @@ def get_quad_double_Laurent_dimension(vrblvl=0):
     if vrblvl > 0:
         print("in get_quad_double_Laurent_dimension ...")
     phc = get_phcfun()
-    adim = pointer(c_int(0))
-    bbb = pointer(c_int(0))
+    adim = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> get_quad_double_Laurent_dimension calls phc', end='')
     retval = phc(562, adim, bbb, ccc, vrb)
@@ -240,10 +240,10 @@ def set_seed(seed, vrblvl=0):
     if vrblvl > 0:
         print('in set_seed, seed :', seed)
     phc = get_phcfun()
-    aseed = pointer(c_int(seed))
-    bbb = pointer(c_int(0))
+    aseed = pointer(c_int32(seed))
+    bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> set_seed calls phc', end='')
     retval = phc(998, aseed, bbb, ccc, vrb)
@@ -258,10 +258,10 @@ def get_seed(vrblvl=0):
     if vrblvl > 0:
         print('in get_seed ...')
     phc = get_phcfun()
-    aseed = pointer(c_int(0))
-    bbb = pointer(c_int(0))
+    aseed = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> get_seed calls phc', end='')
     retval = phc(997, aseed, bbb, ccc, vrb)
@@ -277,10 +277,10 @@ def get_core_count(vrblvl=0):
     if vrblvl > 0:
         print('in get_core_count ...')
     phc = get_phcfun()
-    acores = pointer(c_int(0))
-    bbb = pointer(c_int(0))
+    acores = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> get_core_count calls phc', end='')
     retval = phc(994, acores, bbb, ccc, vrb)

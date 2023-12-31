@@ -2,8 +2,7 @@
 Exports functions to compute series of solution curves defined by
 polynomial homotopies using Newton's method.
 """
-
-from ctypes import c_int, c_double, pointer
+from ctypes import c_int32, c_double, pointer
 from phcpy.version import get_phcfun, int4a2nbr, nbr2int4a
 from phcpy.polynomials import string_of_symbols, number_of_symbols
 from phcpy.polynomials import set_double_system, get_double_system
@@ -87,9 +86,9 @@ def double_newton_at_point(pols, sols, idx=1, maxdeg=4, nbr=4, vrblvl=0):
     write_double_solutions(vrblvl)
     phc = get_phcfun()
     apars = int4a2nbr([idx, maxdeg, nbr], (vrblvl > 0))
-    bbb = pointer(c_int(vrblvl))
+    bbb = pointer(c_int32(vrblvl))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> double_newton_at_point calls phc ...')
         print('apars =', nbr2int4a(apars))
@@ -149,9 +148,9 @@ def double_double_newton_at_point(pols, sols, idx=1, maxdeg=4, nbr=4, vrblvl=0):
     write_double_double_solutions(vrblvl)
     phc = get_phcfun()
     apars = int4a2nbr([idx, maxdeg, nbr], (vrblvl > 0))
-    bbb = pointer(c_int(vrblvl))
+    bbb = pointer(c_int32(vrblvl))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> double_double_newton_series calls phc ...')
         print('apars =', nbr2int4a(apars))
@@ -211,9 +210,9 @@ def quad_double_newton_at_point(pols, sols, idx=1, maxdeg=4, nbr=4, vrblvl=0):
     write_quad_double_solutions(vrblvl)
     phc = get_phcfun()
     apars = int4a2nbr([idx, maxdeg, nbr], (vrblvl > 0))
-    bbb = pointer(c_int(vrblvl))
+    bbb = pointer(c_int32(vrblvl))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> quad_double_newton_at_point calls phc ...')
         print('apars =', nbr2int4a(apars))
@@ -303,9 +302,9 @@ def double_newton_at_series(pols, lser, idx=1, maxdeg=4, nbr=4, \
     set_double_system(nbsym, pols)
     phc = get_phcfun()
     apars = int4a2nbr([idx, maxdeg, nbr], (vrblvl > 0))
-    bbb = pointer(c_int(vrblvl))
+    bbb = pointer(c_int32(vrblvl))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> double_newton_at_series calls phc ...')
         print('apars =', nbr2int4a(apars))
@@ -366,9 +365,9 @@ def double_double_newton_at_series(pols, lser, idx=1, maxdeg=4, nbr=4, \
     set_double_double_system(nbsym, pols)
     phc = get_phcfun()
     apars = int4a2nbr([idx, maxdeg, nbr], (vrblvl > 0))
-    bbb = pointer(c_int(vrblvl))
+    bbb = pointer(c_int32(vrblvl))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> double_double_newton_at_series calls phc ...')
         print('apars =', nbr2int4a(apars))
@@ -429,9 +428,9 @@ def quad_double_newton_at_series(pols, lser, idx=1, maxdeg=4, nbr=4, \
     set_quad_double_system(nbsym, pols)
     phc = get_phcfun()
     apars = int4a2nbr([idx, maxdeg, nbr], (vrblvl > 0))
-    bbb = pointer(c_int(vrblvl))
+    bbb = pointer(c_int32(vrblvl))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> quad_double_newton_at_series calls phc ...')
         print('apars =', nbr2int4a(apars))
@@ -510,9 +509,9 @@ def double_pade_approximants(pols, sols, idx=1, numdeg=2, dendeg=2, \
     set_double_solutions(nbsym, sols, vrblvl)
     phc = get_phcfun()
     apars = int4a2nbr([idx, numdeg, dendeg, nbr], (vrblvl > 0))
-    bbb = pointer(c_int(vrblvl))
+    bbb = pointer(c_int32(vrblvl))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> double_Pade_approximants calls phc ...')
     retval = phc(704, apars, bbb, ccc, vrb)
@@ -567,9 +566,9 @@ def double_double_pade_approximants(pols, sols, idx=1, numdeg=2, dendeg=2, \
     set_double_double_solutions(nbsym, sols, vrblvl)
     phc = get_phcfun()
     apars = int4a2nbr([idx, numdeg, dendeg, nbr], (vrblvl > 0))
-    bbb = pointer(c_int(vrblvl))
+    bbb = pointer(c_int32(vrblvl))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> double_double_Pade_approximants calls phc ...')
     retval = phc(705, apars, bbb, ccc, vrb)
@@ -624,9 +623,9 @@ def quad_double_pade_approximants(pols, sols, idx=1, numdeg=2, dendeg=2, \
     set_quad_double_solutions(nbsym, sols, vrblvl)
     phc = get_phcfun()
     apars = int4a2nbr([idx, numdeg, dendeg, nbr], (vrblvl > 0))
-    bbb = pointer(c_int(vrblvl))
+    bbb = pointer(c_int32(vrblvl))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> quad_double_Pade_approximants calls phc ...')
     retval = phc(706, apars, bbb, ccc, vrb)

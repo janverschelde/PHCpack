@@ -2,7 +2,7 @@
 A homotopy is a family of polynomial systems which connects a given target
 system to a start system.  This module exports several start systems.
 """
-from ctypes import c_int, c_double, pointer
+from ctypes import c_int32, c_double, pointer
 from phcpy.version import get_phcfun
 from phcpy.polynomials import set_double_system, string_of_symbols
 from phcpy.polynomials import degree_of_double_polynomial
@@ -24,10 +24,10 @@ def total_degree(pols, vrblvl=0):
             print(pol)
     set_double_system(len(pols), pols, vrblvl)
     phc = get_phcfun()
-    deg = pointer(c_int(0))
-    bbb = pointer(c_int(0))
+    deg = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> total_degree calls phc', end='')
     retval = phc(28, deg, bbb, ccc, vrb)

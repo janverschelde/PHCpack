@@ -1,7 +1,7 @@
 """
 Exports the blackbox solver for isolated solutions of square systems.
 """
-from ctypes import c_int, c_double, pointer, create_string_buffer
+from ctypes import c_int32, c_double, pointer, create_string_buffer
 from phcpy.version import get_phcfun, int4a2nbr, int4a2str
 from phcpy.dimension import set_seed, get_core_count
 from phcpy.polynomials import set_double_system, set_double_Laurent_system
@@ -81,7 +81,7 @@ def solve_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     for i in range(12):
         broco[i] = bpars[i]
     ccc = pointer(c_double(0.0))
-    vlvl = c_int(vrblvl)
+    vlvl = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> solve_double_system calls phc', end='')
     retval = phc(77, apars, broco, ccc, vlvl)
@@ -109,7 +109,7 @@ def solve_double_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     for i in range(12):
         broco[i] = bpars[i]
     ccc = pointer(c_double(0.0))
-    vlvl = c_int(vrblvl)
+    vlvl = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> solve_double_double_system calls phc', end='')
     retval = phc(700, apars, broco, ccc, vlvl)
@@ -137,7 +137,7 @@ def solve_quad_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     for i in range(12):
         broco[i] = bpars[i]
     ccc = pointer(c_double(0.0))
-    vlvl = c_int(vrblvl)
+    vlvl = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> solve_quad_double_system calls phc', end='')
     retval = phc(702, apars, broco, ccc, vlvl)
@@ -165,7 +165,7 @@ def solve_double_Laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
     for i in range(12):
         broco[i] = bpars[i]
     ccc = pointer(c_double(0.0))
-    vlvl = c_int(vrblvl)
+    vlvl = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> solve_double_Laurent_system calls phc', end='')
     retval = phc(75, apars, broco, ccc, vlvl)
@@ -193,7 +193,7 @@ def solve_double_double_Laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
     for i in range(12):
         broco[i] = bpars[i]
     ccc = pointer(c_double(0.0))
-    vlvl = c_int(vrblvl)
+    vlvl = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> solve_double_double_Laurent_system calls phc', end='')
     retval = phc(701, apars, broco, ccc, vlvl)
@@ -221,7 +221,7 @@ def solve_quad_double_Laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
     for i in range(12):
         broco[i] = bpars[i]
     ccc = pointer(c_double(0.0))
-    vlvl = c_int(vrblvl)
+    vlvl = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> solve_quad_double_Laurent_system calls phc', end='')
     retval = phc(703, apars, broco, ccc, vlvl)

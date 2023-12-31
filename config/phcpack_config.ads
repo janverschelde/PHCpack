@@ -8,8 +8,8 @@ package Phcpack_Config is
    Crate_Version : constant String := "2.4.88";
    Crate_Name : constant String := "phcpack";
 
-  -- Alire_Host_OS : constant String := "windows";
-   Alire_Host_OS : constant String := "linux";
+   Alire_Host_OS : constant String := "windows";
+  -- Alire_Host_OS : constant String := "linux";
 
    Alire_Host_Arch : constant String := "x86_64";
 

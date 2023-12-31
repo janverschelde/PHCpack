@@ -5,8 +5,8 @@
 #define CRATE_VERSION "2.4.88"
 #define CRATE_NAME "phcpack"
 
-// #define ALIRE_HOST_OS "windows"
-#define ALIRE_HOST_OS "linux"
+#define ALIRE_HOST_OS "windows"
+// #define ALIRE_HOST_OS "linux"
 
 #define ALIRE_HOST_ARCH "x86_64"
 

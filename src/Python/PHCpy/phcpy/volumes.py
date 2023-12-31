@@ -1,7 +1,7 @@
 """
 Exports functions to compute mixed volumes and stable mixed volumes.
 """
-from ctypes import c_int, c_double, pointer
+from ctypes import c_int32, c_double, pointer
 from phcpy.version import get_phcfun
 from phcpy.polynomials import set_double_system
 
@@ -15,10 +15,10 @@ def mixed_volume(demics=True, vrblvl=0):
     if vrblvl > 0:
         print('in mixed_volume, demics flag :', demics)
     phc = get_phcfun()
-    mixvol = pointer(c_int(0))
-    bbb = pointer(c_int(0))
+    mixvol = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> mixed_volume calls phc', end='')
     if demics:
@@ -40,10 +40,10 @@ def stable_mixed_volume(demics=True, vrblvl=0):
     if vrblvl > 0:
         print('in stable_mixed_volume, demics flag :', demics)
     phc = get_phcfun()
-    mixvol = pointer(c_int(0))
-    stablemv = pointer(c_int(0))
+    mixvol = pointer(c_int32(0))
+    stablemv = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int(vrblvl)
+    vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> stable_mixed_volume calls phc', end='')
     if demics:
