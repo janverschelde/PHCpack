@@ -23,6 +23,9 @@ from phcpy.solutions import get_quad_double_solutions
 from phcpy.solutions import clear_double_solutions, verify
 from phcpy.solutions import clear_double_double_solutions
 from phcpy.solutions import clear_quad_double_solutions
+from phcpy.solutions import get_next_double_solution
+from phcpy.solutions import get_next_double_double_solution
+from phcpy.solutions import get_next_quad_double_solution
 from phcpy.homotopies import total_degree_start_system
 
 def show_parameters(vrblvl=0):
@@ -847,6 +850,261 @@ def quad_double_track(target, start, startsols, \
     clear_quad_double_track_data(vrblvl)
     return (usedgamma, sols)
 
+def initialize_double_tracker(target, start, fixedgamma=True, \
+    regamma=0.0, imgamma=0.0, vrblvl=0):
+    r"""
+    Initializes a path tracker with a generator for a *target*
+    and *start* system given in standard double precision.
+    If *fixedgamma*, then gamma will be a fixed default value,
+    otherwise, a random complex constant for gamma is generated,
+    but only if *regamma* and *imgamma* are both equal to 0.0.
+    If not *fixedgamma* and moreover: *regamma* and *imgamma* are not
+    both zero, then the complex number with real part in *regamma*
+    and imaginary part in *imgamma* will be the gamma constant.
+    """
+    if vrblvl > 0:
+        print('in initialize_double_tracker', end='')
+        print(', fixedgamma :', fixedgamma, end='')
+        print(', regamma :', regamma, end='')
+        print(', imgamma :', imgamma)
+        print('the target system :')
+        for pol in target:
+            print(pol)
+        print('the start system :')
+        for pol in start:
+            print(pol)
+    set_double_target_system(target, vrblvl)
+    set_double_start_system(start, vrblvl)
+    phc = get_phcfun()
+    afix = pointer(c_int32(int(fixedgamma)))
+    bbb = pointer(c_int32(0))
+    c_gamma = (c_double*2)()
+    c_gamma[0] = c_double(regamma)
+    c_gamma[1] = c_double(imgamma)
+    ptr_gamma = pointer(c_gamma)
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> initialize_double_tracker calls phc', end='')
+    retval = phc(500, afix, bbb, ptr_gamma, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def initialize_double_double_tracker(target, start, fixedgamma=True, \
+    regamma=0.0, imgamma=0.0, vrblvl=0):
+    r"""
+    Initializes a path tracker with a generator for a *target*
+    and *start* system given in double double precision.
+    If *fixedgamma*, then gamma will be a fixed default value,
+    otherwise, a random complex constant for gamma is generated,
+    but only if *regamma* and *imgamma* are both equal to 0.0.
+    If not *fixedgamma* and moreover: *regamma* and *imgamma* are not
+    both zero, then the complex number with real part in *regamma*
+    and imaginary part in *imgamma* will be the gamma constant.
+    """
+    if vrblvl > 0:
+        print('in initialize_double_double_tracker', end='')
+        print(', fixedgamma :', fixedgamma, end='')
+        print(', regamma :', regamma, end='')
+        print(', imgamma :', imgamma)
+        print('the target system :')
+        for pol in target:
+            print(pol)
+        print('the start system :')
+        for pol in start:
+            print(pol)
+    set_double_double_target_system(target, vrblvl)
+    set_double_double_start_system(start, vrblvl)
+    phc = get_phcfun()
+    afix = pointer(c_int32(int(fixedgamma)))
+    bbb = pointer(c_int32(0))
+    c_gamma = (c_double*2)()
+    c_gamma[0] = c_double(regamma)
+    c_gamma[1] = c_double(imgamma)
+    ptr_gamma = pointer(c_gamma)
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> initialize_double_double_tracker calls phc', end='')
+    retval = phc(501, afix, bbb, ptr_gamma, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def initialize_quad_double_tracker(target, start, fixedgamma=True, \
+    regamma=0.0, imgamma=0.0, vrblvl=0):
+    r"""
+    Initializes a path tracker with a generator for a *target*
+    and *start* system given in quad double precision.
+    If *fixedgamma*, then gamma will be a fixed default value,
+    otherwise, a random complex constant for gamma is generated,
+    but only if *regamma* and *imgamma* are both equal to 0.0.
+    If not *fixedgamma* and moreover: *regamma* and *imgamma* are not
+    both zero, then the complex number with real part in *regamma*
+    and imaginary part in *imgamma* will be the gamma constant.
+    """
+    if vrblvl > 0:
+        print('in initialize_quad_double_tracker', end='')
+        print(', fixedgamma :', fixedgamma, end='')
+        print(', regamma :', regamma, end='')
+        print(', imgamma :', imgamma)
+        print('the target system :')
+        for pol in target:
+            print(pol)
+        print('the start system :')
+        for pol in start:
+            print(pol)
+    set_quad_double_target_system(target, vrblvl)
+    set_quad_double_start_system(start, vrblvl)
+    phc = get_phcfun()
+    afix = pointer(c_int32(int(fixedgamma)))
+    bbb = pointer(c_int32(0))
+    c_gamma = (c_double*2)()
+    c_gamma[0] = c_double(regamma)
+    c_gamma[1] = c_double(imgamma)
+    ptr_gamma = pointer(c_gamma)
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> initialize_quad_double_tracker calls phc', end='')
+    retval = phc(502, afix, bbb, ptr_gamma, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def initialize_double_solution(nvr, sol, vrblvl=0):
+    r"""
+    A double precision path tracker with a generator is
+    initialized with a start solution *sol* in a number of
+    variables equal to the value of *nvr*.
+    """
+    if vrblvl > 0:
+        print('in initialize_double_solution, nvr :', nvr)
+        print('the solution :')
+        print(sol)
+    set_double_solutions(nvr, [sol], vrblvl)
+    phc = get_phcfun()
+    aidx = pointer(c_int32(1))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> initialize_double_solution calls phc', end='')
+    retval = phc(503, aidx, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def initialize_double_double_solution(nvr, sol, vrblvl=0):
+    r"""
+    A double double precision path tracker with a generator is
+    initialized with a start solution *sol* in a number of
+    variables equal to the value of *nvr*.
+    """
+    if vrblvl > 0:
+        print('in initialize_double_double_solution, nvr :', nvr)
+        print('the solution :')
+        print(sol)
+    set_double_double_solutions(nvr, [sol], vrblvl)
+    phc = get_phcfun()
+    aidx = pointer(c_int32(1))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> initialize_double_double_solution calls phc', end='')
+    retval = phc(504, aidx, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def initialize_quad_double_solution(nvr, sol, vrblvl=0):
+    r"""
+    A quad double precision path tracker with a generator is
+    initialized with a start solution *sol* in a number of
+    variables equal to the value of *nvr*.
+    """
+    if vrblvl > 0:
+        print('in initialize_quad_double_solution, nvr :', nvr)
+        print('the solution :')
+        print(sol)
+    set_quad_double_solutions(nvr, [sol], vrblvl)
+    phc = get_phcfun()
+    aidx = pointer(c_int32(1))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> initialize_quad_double_solution calls phc', end='')
+    retval = phc(505, aidx, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def next_double_solution(vrblvl=0):
+    r"""
+    Returns the next solution on a path tracked with
+    double precision arithmetic, provided the functions
+    **initialize_double_tracker()** and
+    **initialize_double_solution()** have been executed properly.
+    """
+    if vrblvl > 0:
+        print('in next_double_solution ...')
+    phc = get_phcfun()
+    aidx = pointer(c_int32(1))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> next_double_solution calls phc', end='')
+    retval = phc(506, aidx, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    sol = get_next_double_solution(1, vrblvl)
+    return sol
+
+def next_double_double_solution(vrblvl=0):
+    r"""
+    Returns the next solution on a path tracked with
+    double double precision arithmetic, provided the functions
+    **initialize_double_double_tracker()** and
+    **initialize_double_double_solution()** have been executed properly.
+    """
+    if vrblvl > 0:
+        print('in next_double_double_solution ...')
+    phc = get_phcfun()
+    aidx = pointer(c_int32(1))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> next_double_double_solution calls phc', end='')
+    retval = phc(507, aidx, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    sol = get_next_double_double_solution(1, vrblvl)
+    return sol
+
+def next_quad_double_solution(vrblvl=0):
+    r"""
+    Returns the next solution on a path tracked with
+    quad double precision arithmetic, provided the functions
+    **initialize_quad_double_tracker()** and
+    **initialize_quad_double_solution()** have been executed properly.
+    """
+    if vrblvl > 0:
+        print('in next_quad_double_solution ...')
+    phc = get_phcfun()
+    aidx = pointer(c_int32(1))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> next_quad_double_solution calls phc', end='')
+    retval = phc(508, aidx, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    sol = get_next_quad_double_solution(1, vrblvl)
+    return sol
+
 def test_double_track(vrblvl=0):
     """
     Tests tracking the mickey mouse example of two quadrics,
@@ -958,6 +1216,81 @@ def test_quad_double_track(vrblvl=0):
             print('The error is too large.')
     return 1
 
+def test_next_double_track(vrblvl=0):
+    """
+    Tests the step-by-step tracking on the mickey mouse example
+    of two quadrics, in double precision.
+    """
+    mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
+    start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
+    print('the start system :')
+    for pol in start:
+        print(pol)
+    print('the start solutions :')
+    for (idx, sol) in enumerate(startsols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    initialize_double_tracker(mickey, start, vrblvl)
+    initialize_double_solution(2, startsols[0], vrblvl)
+    while True:
+        sol = next_double_solution(vrblvl)
+        print('the next solution :')
+        print(sol)
+        answer = input('continue ? (y/n) ')
+        if(answer != 'y'):
+            break
+    return 0
+
+def test_next_double_double_track(vrblvl=0):
+    """
+    Tests the step-by-step tracking on the mickey mouse example
+    of two quadrics, in double double precision.
+    """
+    mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
+    start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
+    print('the start system :')
+    for pol in start:
+        print(pol)
+    print('the start solutions :')
+    for (idx, sol) in enumerate(startsols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    initialize_double_double_tracker(mickey, start, vrblvl)
+    initialize_double_double_solution(2, startsols[0], vrblvl)
+    while True:
+        sol = next_double_double_solution(vrblvl)
+        print('the next solution :')
+        print(sol)
+        answer = input('continue ? (y/n) ')
+        if(answer != 'y'):
+            break
+    return 0
+
+def test_next_quad_double_track(vrblvl=0):
+    """
+    Tests the step-by-step tracking on the mickey mouse example
+    of two quadrics, in quad double precision.
+    """
+    mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
+    start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
+    print('the start system :')
+    for pol in start:
+        print(pol)
+    print('the start solutions :')
+    for (idx, sol) in enumerate(startsols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    initialize_quad_double_tracker(mickey, start, vrblvl)
+    initialize_quad_double_solution(2, startsols[0], vrblvl)
+    while True:
+        sol = next_quad_double_solution(vrblvl)
+        print('the next solution :')
+        print(sol)
+        answer = input('continue ? (y/n) ')
+        if(answer != 'y'):
+            break
+    return 0
+
 def test_tuning(vrblvl=0):
     """
     Runs some tests on tuning the parameters.
@@ -983,6 +1316,9 @@ def main():
     fail = fail + test_double_track(lvl)
     fail = fail + test_double_double_track(lvl)
     fail = fail + test_quad_double_track(lvl)
+    fail = fail + test_next_double_track(lvl)
+    fail = fail + test_next_double_double_track(lvl)
+    fail = fail + test_next_quad_double_track(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:

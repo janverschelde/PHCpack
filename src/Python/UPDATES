@@ -1,5 +1,5 @@
 Mon 1 Jan 2024 : extended trackers.py with trackers in double double
-  and quad double precision.
+  and quad double precision.  Added step-by-step track to trackers.py.
 
 Sun 31 Dec 2023 : moved the tuning module into the trackers module.
   In version.py, dimension.py, polynomials.py, solutions.py, series.py,
