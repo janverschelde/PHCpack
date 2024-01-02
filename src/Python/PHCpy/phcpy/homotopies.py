@@ -3,7 +3,7 @@ A homotopy is a family of polynomial systems which connects a given target
 system to a start system.  This module exports several start systems.
 """
 from ctypes import c_int32, c_double, pointer, create_string_buffer
-from version import int4a2str, str2int4a
+from phcpy.version import int4a2str, str2int4a
 from phcpy.version import get_phcfun
 from phcpy.polynomials import set_double_system, string_of_symbols
 from phcpy.polynomials import get_double_system

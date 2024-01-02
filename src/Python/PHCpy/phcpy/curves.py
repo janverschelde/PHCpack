@@ -1,17 +1,29 @@
 """
 The module curves exports functions to approximate algebraic space curves
-with rational expressions, in particular Pade approximants,
+with rational expressions, also known as Pade approximants,
 for use in a path tracker with apriori step size control.
 """
 from ctypes import c_int32, c_double, pointer
-from phcpy.version import get_phcfun
+from phcpy.version import get_phcfun, str2int4a
 from phcpy.solutions import verify
+from phcpy.solutions import get_double_solutions, clear_double_solutions
+from phcpy.solutions import get_double_double_solutions
+from phcpy.solutions import clear_double_double_solutions
+from phcpy.solutions import get_quad_double_solutions
+from phcpy.solutions import clear_quad_double_solutions
 from phcpy.homotopies import total_degree_start_system
 from phcpy.trackers import set_double_target_system
 from phcpy.trackers import set_double_start_system
 from phcpy.trackers import set_double_start_solutions
-from phcpy.trackers import get_double_solutions
+from phcpy.trackers import set_double_double_target_system
+from phcpy.trackers import set_double_double_start_system
+from phcpy.trackers import set_double_double_start_solutions
+from phcpy.trackers import set_quad_double_target_system
+from phcpy.trackers import set_quad_double_start_system
+from phcpy.trackers import set_quad_double_start_solutions
 from phcpy.trackers import set_double_homotopy
+from phcpy.trackers import set_double_double_homotopy
+from phcpy.trackers import set_quad_double_homotopy
 
 def set_default_parameters(vrblvl=0):
     """
@@ -331,7 +343,8 @@ def write_parameters(vrblvl=0):
     print("11. maximum number of corrector steps          :", pars[10])
     print("12. maximum steps on a path                    :", pars[11])
 
-def double_track(target, start, startsols, vrblvl=0):
+def double_track(target, start, startsols, filename="", \
+    mhom=0, partition=None, vrblvl=0):
     r"""
     Does path tracking in double precision.
     On input are a target system, a start system with solutions.
@@ -340,9 +353,20 @@ def double_track(target, start, startsols, vrblvl=0):
     The *start* is a list of strings representing the polynomials
     of the start system, with known solutions in sols.
     The *startsols* is a list of strings representing start solutions.
+    The first optional argument is the *filename*
+    for writing extra diagnostics during the tracking.
+    By default *mhom* is zero and all happens in the original coordinates,
+    if *mhom* equals one, then 1-homogeneous coordinates are used, and
+    if *mhom* is two or higher, then multi-homogenization applies and
+    *partition* contains the index representation of the partition of
+    the set of variables.  This index representation is a list of as many
+    indices as the number of variables, defining which set of the partition
+    each variables belongs to.
     On return is a tuple, with first the gamma used in the homotopy
     and then second, the string representations of the solutions
     computed at the end of the paths.
+    Note: for mhom > 0 to work, the target, start system and solution
+    must be provided in homogeneneous coordinates.
     """
     if vrblvl > 0:
         print('in double_track, with target :')
@@ -363,21 +387,173 @@ def double_track(target, start, startsols, vrblvl=0):
     phc = get_phcfun()
     apars = (c_int32 * 6)()
     apars[0] = c_int32(0)
-    apars[1] = c_int32(0)
+    apars[1] = c_int32(len(filename))
     apars[2] = c_int32(vrblvl)
-    apars[3] = c_int32(0)
+    apars[3] = c_int32(mhom)
     apars[4] = c_int32(0)
-    apars[5] = c_int32(len(target))
+    if mhom < 2:
+        apars[5] = c_int32(len(target))
+    else:
+        apars[5] = c_int32(len(partition))
     pars = pointer(apars)
-    bbb = pointer(c_int32(0))
-    ccc = pointer(c_double(0.0))
+    bname = str2int4a(filename, (vrblvl > 0))
+    if mhom < 2:
+        ccc = pointer(c_double(0.0))
+    else:
+        cpart = (c_double * len(partition))()
+        for (idx, nbr) in enumerate(partition):
+            cpart[idx] = c_double(nbr)
+        ccc = pointer(cpart)
     vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> double_track calls phc', end='')
-    retval = phc(739, pars, bbb, ccc, vrb)
+    retval = phc(739, pars, bname, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
     sols = get_double_solutions(vrblvl)
+    clear_double_solutions(vrblvl)
+    return (usedgamma, sols)
+
+def double_double_track(target, start, startsols, filename="", \
+    mhom=0, partition=None, vrblvl=0):
+    r"""
+    Does path tracking in double double precision.
+    On input are a target system, a start system with solutions.
+    The *target* is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The *start* is a list of strings representing the polynomials
+    of the start system, with known solutions in sols.
+    The *startsols* is a list of strings representing start solutions.
+    The first optional argument is the *filename*
+    for writing extra diagnostics during the tracking.
+    By default *mhom* is zero and all happens in the original coordinates,
+    if *mhom* equals one, then 1-homogeneous coordinates are used, and
+    if *mhom* is two or higher, then multi-homogenization applies and
+    *partition* contains the index representation of the partition of
+    the set of variables.  This index representation is a list of as many
+    indices as the number of variables, defining which set of the partition
+    each variables belongs to.
+    On return is a tuple, with first the gamma used in the homotopy
+    and then second, the string representations of the solutions
+    computed at the end of the paths.
+    Note: for mhom > 0 to work, the target, start system and solution
+    must be provided in homogeneneous coordinates.
+    """
+    if vrblvl > 0:
+        print('in double_double_track, with target :')
+        for pol in target:
+            print(pol)
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    set_double_double_target_system(target, vrblvl)
+    set_double_double_start_system(start, vrblvl)
+    set_double_double_start_solutions(len(target), startsols, vrblvl)
+    usedgamma = get_gamma_constant(vrblvl)
+    usedgamma = set_double_double_homotopy(usedgamma, pwt=1, vrblvl=vrblvl)
+    phc = get_phcfun()
+    apars = (c_int32 * 6)()
+    apars[0] = c_int32(1)
+    apars[1] = c_int32(len(filename))
+    apars[2] = c_int32(vrblvl)
+    apars[3] = c_int32(mhom)
+    apars[4] = c_int32(0)
+    if mhom < 2:
+        apars[5] = c_int32(len(target))
+    else:
+        apars[5] = c_int32(len(partition))
+    pars = pointer(apars)
+    bname = str2int4a(filename, (vrblvl > 0))
+    if mhom < 2:
+        ccc = pointer(c_double(0.0))
+    else:
+        cpart = (c_double * len(partition))()
+        for (idx, nbr) in enumerate(partition):
+            cpart[idx] = c_double(nbr)
+        ccc = pointer(cpart)
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> double_double_track calls phc', end='')
+    retval = phc(739, pars, bname, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    sols = get_double_double_solutions(vrblvl)
+    clear_double_double_solutions(vrblvl)
+    return (usedgamma, sols)
+
+def quad_double_track(target, start, startsols, filename="", \
+    mhom=0, partition=None, vrblvl=0):
+    r"""
+    Does path tracking in quad double precision.
+    On input are a target system, a start system with solutions.
+    The *target* is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The *start* is a list of strings representing the polynomials
+    of the start system, with known solutions in sols.
+    The *startsols* is a list of strings representing start solutions.
+    The first optional argument is the *filename*
+    for writing extra diagnostics during the tracking.
+    By default *mhom* is zero and all happens in the original coordinates,
+    if *mhom* equals one, then 1-homogeneous coordinates are used, and
+    if *mhom* is two or higher, then multi-homogenization applies and
+    *partition* contains the index representation of the partition of
+    the set of variables.  This index representation is a list of as many
+    indices as the number of variables, defining which set of the partition
+    each variables belongs to.
+    On return is a tuple, with first the gamma used in the homotopy
+    and then second, the string representations of the solutions
+    computed at the end of the paths.
+    Note: for mhom > 0 to work, the target, start system and solution
+    must be provided in homogeneneous coordinates.
+    """
+    if vrblvl > 0:
+        print('in quad_double_track, with target :')
+        for pol in target:
+            print(pol)
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    set_quad_double_target_system(target, vrblvl)
+    set_quad_double_start_system(start, vrblvl)
+    set_quad_double_start_solutions(len(target), startsols, vrblvl)
+    usedgamma = get_gamma_constant(vrblvl)
+    usedgamma = set_quad_double_homotopy(usedgamma, pwt=1, vrblvl=vrblvl)
+    phc = get_phcfun()
+    apars = (c_int32 * 6)()
+    apars[0] = c_int32(2)
+    apars[1] = c_int32(len(filename))
+    apars[2] = c_int32(vrblvl)
+    apars[3] = c_int32(mhom)
+    apars[4] = c_int32(0)
+    if mhom < 2:
+        apars[5] = c_int32(len(target))
+    else:
+        apars[5] = c_int32(len(partition))
+    pars = pointer(apars)
+    bname = str2int4a(filename, (vrblvl > 0))
+    if mhom < 2:
+        ccc = pointer(c_double(0.0))
+    else:
+        cpart = (c_double * len(partition))()
+        for (idx, nbr) in enumerate(partition):
+            cpart[idx] = c_double(nbr)
+        ccc = pointer(cpart)
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> quad_double_track calls phc', end='')
+    retval = phc(739, pars, bname, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    sols = get_quad_double_solutions(vrblvl)
+    clear_quad_double_solutions(vrblvl)
     return (usedgamma, sols)
 
 def test_tuning(vrblvl=0):
@@ -427,7 +603,8 @@ def test_tuning(vrblvl=0):
 
 def test_double_track(vrblvl=0):
     """
-    Runs on the mickey mouse example of two quadrics.
+    Runs on the mickey mouse example of two quadrics,
+    in double precision.
     """
     mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
     start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
@@ -459,6 +636,78 @@ def test_double_track(vrblvl=0):
             print('The error is too large.')
     return 1
 
+def test_double_double_track(vrblvl=0):
+    """
+    Runs on the mickey mouse example of two quadrics,
+    in double double precision.
+    """
+    mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
+    start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
+    print('the start system :')
+    for pol in start:
+        print(pol)
+    print('the start solutions :')
+    for (idx, sol) in enumerate(startsols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    gamma, sols = double_double_track(mickey, start, startsols, \
+        vrblvl=vrblvl)
+    print('the solutions :')
+    for (idx, sol) in enumerate(sols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    err = verify(mickey, sols, vrblvl)
+    if vrblvl > 0:
+        print('the error sum :', err)
+    if len(sols) == 4 and abs(err.real + err.imag) < 1.0e-10:
+        if vrblvl > 0:
+            print('Found 4 solutions and error is okay.')
+        return 0
+    if len(sols) != 4:
+        if vrblvl > 0:
+            print('Number of solutions is not 4 :', len(sols))
+        return 1
+    if abs(err.real + err.imag) >= 1.0e-10:
+        if vrblvl > 0:
+            print('The error is too large.')
+    return 1
+
+def test_quad_double_track(vrblvl=0):
+    """
+    Runs on the mickey mouse example of two quadrics,
+    in quad double precision.
+    """
+    mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
+    start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
+    print('the start system :')
+    for pol in start:
+        print(pol)
+    print('the start solutions :')
+    for (idx, sol) in enumerate(startsols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    gamma, sols = quad_double_track(mickey, start, startsols, \
+        vrblvl=vrblvl)
+    print('the solutions :')
+    for (idx, sol) in enumerate(sols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    err = verify(mickey, sols, vrblvl)
+    if vrblvl > 0:
+        print('the error sum :', err)
+    if len(sols) == 4 and abs(err.real + err.imag) < 1.0e-10:
+        if vrblvl > 0:
+            print('Found 4 solutions and error is okay.')
+        return 0
+    if len(sols) != 4:
+        if vrblvl > 0:
+            print('Number of solutions is not 4 :', len(sols))
+        return 1
+    if abs(err.real + err.imag) >= 1.0e-10:
+        if vrblvl > 0:
+            print('The error is too large.')
+    return 1
+
 def main():
     """
     Runs some tests on tuning and tracking.
@@ -466,6 +715,8 @@ def main():
     lvl = 10
     fail = test_tuning(lvl)
     fail = fail + test_double_track(lvl)
+    fail = fail + test_double_double_track(lvl)
+    fail = fail + test_quad_double_track(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:

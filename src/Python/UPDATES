@@ -1,3 +1,7 @@
+Tue 2 Jan 2024 : fixed homotopies.py to import version as phcpy.version.
+  Extended curves.py with double double and quad double versions of the
+  trackers and added the filename parameter to the track functions.
+
 Mon 1 Jan 2024 : extended trackers.py with trackers in double double
   and quad double precision.  Added step-by-step track to trackers.py.
   Added the script showpaths.py to PHCpy/tests.
