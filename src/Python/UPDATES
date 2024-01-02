@@ -1,6 +1,7 @@
 Mon 1 Jan 2024 : extended trackers.py with trackers in double double
   and quad double precision.  Added step-by-step track to trackers.py.
   Added the script showpaths.py to PHCpy/tests.
+  Added m-homogeneous Bezout numbers and start systems to homotopies.py.
 
 Sun 31 Dec 2023 : moved the tuning module into the trackers module.
   In version.py, dimension.py, polynomials.py, solutions.py, series.py,
