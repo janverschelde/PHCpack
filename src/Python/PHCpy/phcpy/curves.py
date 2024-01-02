@@ -4,11 +4,19 @@ with rational expressions, also known as Pade approximants,
 for use in a path tracker with apriori step size control.
 """
 from ctypes import c_int32, c_double, pointer
+from math import sqrt
 from phcpy.version import get_phcfun, str2int4a
-from phcpy.solutions import verify
+from phcpy.polynomials import number_of_symbols
+from phcpy.solutions import make_solution
+from phcpy.solutions import set_double_solutions, verify
+from phcpy.solutions import get_next_double_solution
+from phcpy.solutions import get_next_double_double_solution
+from phcpy.solutions import get_next_quad_double_solution
 from phcpy.solutions import get_double_solutions, clear_double_solutions
+from phcpy.solutions import set_double_double_solutions
 from phcpy.solutions import get_double_double_solutions
 from phcpy.solutions import clear_double_double_solutions
+from phcpy.solutions import set_quad_double_solutions
 from phcpy.solutions import get_quad_double_solutions
 from phcpy.solutions import clear_quad_double_solutions
 from phcpy.homotopies import total_degree_start_system
@@ -343,6 +351,26 @@ def write_parameters(vrblvl=0):
     print("11. maximum number of corrector steps          :", pars[10])
     print("12. maximum steps on a path                    :", pars[11])
 
+def reset_parameters(precision=0, vrblvl=0):
+    """
+    Resets the homotopy continuation parameters for the step-by-step
+    path trackers, using the value of the precision, 0 for double,
+    1 for double double, or 2 for quad double.
+    """
+    if vrblvl > 0:
+        print('in reset_parameters, with precision :', precision)
+    phc = get_phcfun()
+    aprc = pointer(c_int32(precision))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> reset_parameters calls phc', end='')
+    retval = phc(740, aprc, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
 def double_track(target, start, startsols, filename="", \
     mhom=0, partition=None, vrblvl=0):
     r"""
@@ -556,6 +584,1726 @@ def quad_double_track(target, start, startsols, filename="", \
     clear_quad_double_solutions(vrblvl)
     return (usedgamma, sols)
 
+def initialize_double_artificial_homotopy(target, start, \
+    homogeneous=False, vrblvl=0):
+    """
+    Initializes the homotopy with the target and start system for a
+    step-by-step run of the series-Pade tracker, in double precision.
+    If homogeneous, then path tracking happens in projective space,
+    otherwise the original affine coordinates are used.
+    If vrblvl > 0, then extra output is written.
+    Returns the failure code of the homotopy initializer.
+    """
+    if vrblvl > 0:
+        print('in initialize_double_artificial_homotopy, homogeneous :', \
+            homogeneous)
+        print('the target system :')
+        for pol in target:
+            print(pol)
+        print('the start system :')
+        for pol in start:
+            print(pol)
+    set_double_target_system(target, vrblvl)
+    set_double_start_system(start, vrblvl)
+    phc = get_phcfun()
+    aprc = pointer(c_int32(0))
+    bpars = (c_int32 * 2)()
+    bpars[0] = c_int32(vrblvl)
+    bpars[1] = c_int32(int(homogeneous))
+    bpar = pointer(bpars)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> initialize_double_artificial_homotopy calls phc', end='')
+    retval = phc(860, aprc, bpar, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def initialize_double_double_artificial_homotopy(target, start, \
+    homogeneous=False, vrblvl=0):
+    """
+    Initializes the homotopy with the target and start system for a
+    step-by-step run of the series-Pade tracker, in double double precision.
+    If homogeneous, then path tracking happens in projective space,
+    otherwise the original affine coordinates are used.
+    If vrblvl > 0, then extra output is written.
+    Returns the failure code of the homotopy initializer.
+    """
+    if vrblvl > 0:
+        print('in initialize_double_double_artificial_homotopy', end='')
+        print(', homogeneous :', homogeneous)
+        print('the target system :')
+        for pol in target:
+            print(pol)
+        print('the start system :')
+        for pol in start:
+            print(pol)
+    set_double_double_target_system(target, vrblvl)
+    set_double_double_start_system(start, vrblvl)
+    phc = get_phcfun()
+    aprc = pointer(c_int32(1))
+    bpars = (c_int32 * 2)()
+    bpars[0] = c_int32(vrblvl)
+    bpars[1] = c_int32(int(homogeneous))
+    bpar = pointer(bpars)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> initialize_double_double_artificial_homotopy calls phc', \
+            end='')
+    retval = phc(860, aprc, bpar, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def initialize_quad_double_artificial_homotopy(target, start, \
+    homogeneous=False, vrblvl=0):
+    """
+    Initializes the homotopy with the target and start system for a
+    step-by-step run of the series-Pade tracker, in quad double precision.
+    If homogeneous, then path tracking happens in projective space,
+    otherwise the original affine coordinates are used.
+    If vrblvl > 0, then extra output is written.
+    Returns the failure code of the homotopy initializer.
+    """
+    if vrblvl > 0:
+        print('in initialize_quad_double_artificial_homotopy', end='')
+        print(', homogeneous :', homogeneous)
+        print('the target system :')
+        for pol in target:
+            print(pol)
+        print('the start system :')
+        for pol in start:
+            print(pol)
+    set_quad_double_target_system(target, vrblvl)
+    set_quad_double_start_system(start, vrblvl)
+    phc = get_phcfun()
+    aprc = pointer(c_int32(2))
+    bpars = (c_int32 * 2)()
+    bpars[0] = c_int32(vrblvl)
+    bpars[1] = c_int32(int(homogeneous))
+    bpar = pointer(bpars)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> initialize_quad_double_artificial_homotopy calls phc', \
+            end='')
+    retval = phc(860, aprc, bpar, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def initialize_double_parameter_homotopy(hom, idx, vrblvl=0):
+    """
+    Initializes the homotopy with the polynomials in hom for a
+    step-by-step run of the series-Pade tracker, in double precision.
+    The value idx gives the index of the continuation parameter
+    and is the index of one of the variables in the homotopy hom.
+    If vrblvl > 0, then extra output is written.
+    Returns the failure code of the homotopy initializer.
+    """
+    if vrblvl > 0:
+        print('in initialize_double_parameter_homotopy, idx :', idx)
+        print('the natural parameter homotopy :')
+        for pol in hom:
+            print(pol)
+    set_double_target_system(hom, vrblvl)
+    phc = get_phcfun()
+    aprc = pointer(c_int32(0))
+    bpars = (c_int32 * 2)()
+    bpars[0] = c_int32(idx)
+    bpars[1] = c_int32(vrblvl)
+    bpar = pointer(bpars)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> initialize_double_parameter_homotopy calls phc', end='')
+    retval = phc(878, aprc, bpar, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def initialize_double_double_parameter_homotopy(hom, idx, vrblvl=0):
+    """
+    Initializes the homotopy with the polynomials in hom for a
+    step-by-step run of the series-Pade tracker, in double double precision.
+    The value idx gives the index of the continuation parameter
+    and is the index of one of the variables in the homotopy hom.
+    If vrblvl > 0, then extra output is written.
+    Returns the failure code of the homotopy initializer.
+    """
+    if vrblvl > 0:
+        print('in initialize_double_double_parameter_homotopy, idx :', idx)
+        print('the natural parameter homotopy :')
+        for pol in hom:
+            print(pol)
+    set_double_double_target_system(hom, vrblvl)
+    phc = get_phcfun()
+    aprc = pointer(c_int32(1))
+    bpars = (c_int32 * 2)()
+    bpars[0] = c_int32(idx)
+    bpars[1] = c_int32(vrblvl)
+    bpar = pointer(bpars)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> initialize_double_double_parameter_homotopy calls phc', \
+            end='')
+    retval = phc(878, aprc, bpar, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def initialize_quad_double_parameter_homotopy(hom, idx, vrblvl=0):
+    """
+    Initializes the homotopy with the polynomials in hom for a
+    step-by-step run of the series-Pade tracker, in quad double precision.
+    The value idx gives the index of the continuation parameter
+    and is the index of one of the variables in the homotopy hom.
+    If vrblvl > 0, then extra output is written.
+    Returns the failure code of the homotopy initializer.
+    """
+    if vrblvl > 0:
+        print('in initialize_quad_double_parameter_homotopy, idx :', idx)
+        print('the natural parameter homotopy :')
+        for pol in hom:
+            print(pol)
+    set_quad_double_target_system(hom, vrblvl)
+    phc = get_phcfun()
+    aprc = pointer(c_int32(2))
+    bpars = (c_int32 * 2)()
+    bpars[0] = c_int32(idx)
+    bpars[1] = c_int32(vrblvl)
+    bpar = pointer(bpars)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> initialize_quad_double_parameter_homotopy calls phc', end='')
+    retval = phc(878, aprc, bpar, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def set_double_solution(nvr, sol, vrblvl=0):
+    r"""
+    Sets the start solution in *sol* for the step-by-step run of
+    the series-Pade tracker, in double precision.
+    The number of variables is in *nvr*.
+    If vrblvl > 0, then extra output is written.
+    """
+    if vrblvl > 0:
+        print('in initialize_double_solution, nvr :', nvr)
+        print('the solution :')
+        print(sol)
+    set_double_solutions(nvr, [sol])
+    phc = get_phcfun()
+    apars = (c_int32 * 2)()
+    apars[0] = c_int32(0)
+    apars[1] = c_int32(1)
+    apar = pointer(apars)
+    bvrb = pointer(c_int32(vrblvl))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> set_double_solution calls phc', end='')
+    retval = phc(861, apar, bvrb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def set_double_double_solution(nvr, sol, vrblvl=0):
+    r"""
+    Sets the start solution in *sol* for the step-by-step run of
+    the series-Pade tracker, in double double precision.
+    The number of variables is in *nvr*.
+    If vrblvl > 0, then extra output is written.
+    """
+    if vrblvl > 0:
+        print('in set_double_double_solution, nvr :', nvr)
+        print('the solution :')
+        print(sol)
+    set_double_double_solutions(nvr, [sol])
+    phc = get_phcfun()
+    apars = (c_int32 * 2)()
+    apars[0] = c_int32(1)
+    apars[1] = c_int32(1)
+    apar = pointer(apars)
+    bvrb = pointer(c_int32(vrblvl))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> set_double_double_solution calls phc', end='')
+    retval = phc(861, apar, bvrb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def set_quad_double_solution(nvr, sol, vrblvl=0):
+    r"""
+    Sets the start solution in *sol* for the step-by-step run of
+    the series-Pade tracker, in quad double precision.
+    The number of variables is in *nvr*.
+    If vrblvl > 0, then extra output is written.
+    """
+    if vrblvl > 0:
+        print('in set_quad_double_solution, nvr :', nvr)
+        print('the solution :')
+        print(sol)
+    set_quad_double_solutions(nvr, [sol])
+    phc = get_phcfun()
+    apars = (c_int32 * 2)()
+    apars[0] = c_int32(2)
+    apars[1] = c_int32(1)
+    apar = pointer(apars)
+    bvrb = pointer(c_int32(vrblvl))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> set_quad_double_solution calls phc', end='')
+    retval = phc(861, apar, bvrb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def get_double_solution(vrblvl=0):
+    """
+    Returns the current solution on the path, in double precision,
+    which starts at the solution set with set_double_solution().
+    If vrblvl > 0, then extra output is written.
+    """
+    if vrblvl > 0:
+        print('in get_double_solution ...')
+    phc = get_phcfun()
+    apars = (c_int32 * 2)()
+    apars[0] = c_int32(0)
+    apars[1] = c_int32(1)
+    apar = pointer(apars)
+    bvrb = pointer(c_int32(vrblvl))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> get_double_solution calls phc', end='')
+    retval = phc(863, apar, bvrb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    sol = get_next_double_solution(1, vrblvl)  
+    return sol
+
+def get_double_double_solution(vrblvl=0):
+    """
+    Returns the current solution on the path, in double double precision,
+    which starts at the solution set with set_double_double_solution().
+    If vrblvl > 0, then extra output is written.
+    """
+    if vrblvl > 0:
+        print('in get_double_double_solution ...')
+    phc = get_phcfun()
+    apars = (c_int32 * 2)()
+    apars[0] = c_int32(1)
+    apars[1] = c_int32(1)
+    apar = pointer(apars)
+    bvrb = pointer(c_int32(vrblvl))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> get_double_double_solution calls phc', end='')
+    retval = phc(863, apar, bvrb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    sol = get_next_double_double_solution(1, vrblvl)  
+    return sol
+
+def get_quad_double_solution(vrblvl=0):
+    """
+    Returns the current solution on the path, in quad double precision,
+    which starts at the solution set with set_quad_double_solution().
+    If vrblvl > 0, then extra output is written.
+    """
+    if vrblvl > 0:
+        print('in get_quad_double_solution ...')
+    phc = get_phcfun()
+    apars = (c_int32 * 2)()
+    apars[0] = c_int32(2)
+    apars[1] = c_int32(1)
+    apar = pointer(apars)
+    bvrb = pointer(c_int32(vrblvl))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> get_quad_double_solution calls phc', end='')
+    retval = phc(863, apar, bvrb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    sol = get_next_quad_double_solution(1, vrblvl)  
+    return sol
+
+def double_predict_correct(vrblvl=0):
+    """
+    Performs one predictor and one corrector step on the set homotopy
+    and the set solution, in double precision.
+    If vrblvl > 0, then extra output is written.
+    """
+    if vrblvl > 0:
+        print('in double_predict_correct ...')
+    phc = get_phcfun()
+    apar = pointer(c_int32(0))
+    bvrb = pointer(c_int32(vrblvl))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> double_predict_correct calls phc', end='')
+    retval = phc(862, apar, bvrb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def double_double_predict_correct(vrblvl=0):
+    """
+    Performs one predictor and one corrector step on the set homotopy
+    and the set solution, in double double precision.
+    If vrblvl > 0, then extra output is written.
+    """
+    if vrblvl > 0:
+        print('in double_double_predict_correct ...')
+    phc = get_phcfun()
+    apar = pointer(c_int32(1))
+    bvrb = pointer(c_int32(vrblvl))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> double_double_predict_correct calls phc', end='')
+    retval = phc(862, apar, bvrb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def quad_double_predict_correct(vrblvl=0):
+    """
+    Performs one predictor and one corrector step on the set homotopy
+    and the set solution, in quad double precision.
+    If vrblvl > 0, then extra output is written.
+    """
+    if vrblvl > 0:
+        print('in quad_double_predict_correct ...')
+    phc = get_phcfun()
+    apar = pointer(c_int32(2))
+    bvrb = pointer(c_int32(vrblvl))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> quad_double_predict_correct calls phc', end='')
+    retval = phc(862, apar, bvrb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def double_t_value(vrblvl=0):
+    """
+    Returns the current t value in the tracker in double precision.
+    """
+    if vrblvl > 0:
+        print('in double_t_value ...')
+    phc = get_phcfun()
+    apar = pointer(c_int32(0))
+    bvrb = pointer(c_int32(0))
+    ctval = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> double_t_value calls phc', end='')
+    retval = phc(867, apar, bvrb, ctval, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the t value :', ctval[0])
+    return ctval[0]
+
+def double_double_t_value(vrblvl=0):
+    """
+    Returns the current t value in the tracker in double double precision.
+    """
+    if vrblvl > 0:
+        print('in double_double_t_value ...')
+    phc = get_phcfun()
+    apar = pointer(c_int32(1))
+    bvrb = pointer(c_int32(0))
+    ctval = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> double_double_t_value calls phc', end='')
+    retval = phc(867, apar, bvrb, ctval, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the t value :', ctval[0])
+    return ctval[0]
+
+def quad_double_t_value(vrblvl=0):
+    """
+    Returns the current t value in the tracker in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in quad_double_t_value ...')
+    phc = get_phcfun()
+    apar = pointer(c_int32(2))
+    bvrb = pointer(c_int32(0))
+    ctval = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> quad_double_t_value calls phc', end='')
+    retval = phc(867, apar, bvrb, ctval, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the t value :', ctval[0])
+    return ctval[0]
+
+def double_step_size(vrblvl=0):
+    """
+    Returns the step size in the tracker in double precision.
+    """
+    if vrblvl > 0:
+        print('in double_step_size ...')
+    phc = get_phcfun()
+    apar = pointer(c_int32(0))
+    bvrb = pointer(c_int32(0))
+    cstep = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> double_step_size calls phc', end='')
+    retval = phc(868, apar, bvrb, cstep, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the step size :', cstep[0])
+    return cstep[0]
+
+def double_double_step_size(vrblvl=0):
+    """
+    Returns the step size in the tracker in double double precision.
+    """
+    if vrblvl > 0:
+        print('in double_double_step_size ...')
+    phc = get_phcfun()
+    apar = pointer(c_int32(1))
+    bvrb = pointer(c_int32(0))
+    cstep = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> double_double_step_size calls phc', end='')
+    retval = phc(868, apar, bvrb, cstep, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the step size :', cstep[0])
+    return cstep[0]
+
+def quad_double_step_size(vrblvl=0):
+    """
+    Returns the step size in the tracker in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in quad_double_step_size ...')
+    phc = get_phcfun()
+    apar = pointer(c_int32(2))
+    bvrb = pointer(c_int32(0))
+    cstep = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> quad_double_step_size calls phc', end='')
+    retval = phc(868, apar, bvrb, cstep, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the step size :', cstep[0])
+    return cstep[0]
+
+def double_pole_step(vrblvl=0):
+    """
+    Returns the pole step in the tracker in double precision.
+    """
+    if vrblvl > 0:
+        print('in double_pole_step ...')
+    phc = get_phcfun()
+    apar = pointer(c_int32(0))
+    bvrb = pointer(c_int32(0))
+    cstep = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> double_pole_step calls phc', end='')
+    retval = phc(886, apar, bvrb, cstep, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the step size :', cstep[0])
+    return cstep[0]
+
+def double_double_pole_step(vrblvl=0):
+    """
+    Returns the pole step in the tracker in double double precision.
+    """
+    if vrblvl > 0:
+        print('in double_double_pole_step ...')
+    phc = get_phcfun()
+    apar = pointer(c_int32(1))
+    bvrb = pointer(c_int32(0))
+    cstep = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> double_double_pole_step calls phc', end='')
+    retval = phc(886, apar, bvrb, cstep, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the step size :', cstep[0])
+    return cstep[0]
+
+def quad_double_pole_step(vrblvl=0):
+    """
+    Returns the pole step in the tracker in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in quad_double_pole_step ...')
+    phc = get_phcfun()
+    apar = pointer(c_int32(2))
+    bvrb = pointer(c_int32(0))
+    cstep = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> quad_double_pole_step calls phc', end='')
+    retval = phc(886, apar, bvrb, cstep, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the step size :', cstep[0])
+    return cstep[0]
+
+def double_estimated_distance(vrblvl=0):
+    """
+    Returns the estimated distance to the closest solution computed
+    by the tracker in double precision.
+    """
+    if vrblvl > 0:
+        print('in double_estimated_distance ...')
+    phc = get_phcfun()
+    apar = pointer(c_int32(0))
+    bvrb = pointer(c_int32(0))
+    cdist = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> double_estimated_distance calls phc', end='')
+    retval = phc(887, apar, bvrb, cdist, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the estimated distance :', cdist[0])
+    return cdist[0]
+
+def double_double_estimated_distance(vrblvl=0):
+    """
+    Returns the estimated distance to the closest solution computed
+    by the tracker in double double precision.
+    """
+    if vrblvl > 0:
+        print('in double_double_estimated_distance ...')
+    phc = get_phcfun()
+    apar = pointer(c_int32(1))
+    bvrb = pointer(c_int32(0))
+    cdist = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> double_double_estimated_distance calls phc', end='')
+    retval = phc(887, apar, bvrb, cdist, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the estimated distance :', cdist[0])
+    return cdist[0]
+
+def quad_double_estimated_distance(vrblvl=0):
+    """
+    Returns the estimated distance to the closest solution computed
+    by the tracker in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in quad_double_estimated_distance ...')
+    phc = get_phcfun()
+    apar = pointer(c_int32(2))
+    bvrb = pointer(c_int32(0))
+    cdist = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> quad_double_estimated_distance calls phc', end='')
+    retval = phc(887, apar, bvrb, cdist, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the estimated distance :', cdist[0])
+    return cdist[0]
+
+def double_hessian_step(vrblvl=0):
+    """
+    Returns the Hessian step in the tracker in double precision.
+    """
+    if vrblvl > 0:
+        print('in double_hessian_step ...')
+    phc = get_phcfun()
+    apar = pointer(c_int32(0))
+    bvrb = pointer(c_int32(0))
+    cstep = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> double_hessian_step calls phc', end='')
+    retval = phc(888, apar, bvrb, cstep, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the step size :', cstep[0])
+    return cstep[0]
+
+def double_double_hessian_step(vrblvl=0):
+    """
+    Returns the Hessian step in the tracker in double double precision.
+    """
+    if vrblvl > 0:
+        print('in double_double_hessian_step ...')
+    phc = get_phcfun()
+    apar = pointer(c_int32(1))
+    bvrb = pointer(c_int32(0))
+    cstep = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> double_double_hessian_step calls phc', end='')
+    retval = phc(888, apar, bvrb, cstep, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the step size :', cstep[0])
+    return cstep[0]
+
+def quad_double_hessian_step(vrblvl=0):
+    """
+    Returns the Hessian step in the tracker in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in quad_double_hessian_step ...')
+    phc = get_phcfun()
+    apar = pointer(c_int32(2))
+    bvrb = pointer(c_int32(0))
+    cstep = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> quad_double_hessian_step calls phc', end='')
+    retval = phc(888, apar, bvrb, cstep, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the step size :', cstep[0])
+    return cstep[0]
+
+def double_pole_radius(vrblvl=0):
+    """
+    Returns the smallest pole radius,
+    used in the predictor in double precision.
+    """
+    if vrblvl > 0:
+        print('in double_pole_radius ...')
+    phc = get_phcfun()
+    aprc = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    crad = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> double_pole_radius calls phc', end='')
+    retval = phc(885, aprc, bbb, crad, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the pole radius :', crad[0])
+    return crad[0]
+
+def double_double_pole_radius(vrblvl=0):
+    """
+    Returns the smallest pole radius,
+    used in the predictor in double double precision.
+    """
+    if vrblvl > 0:
+        print('in double_double_pole_radius ...')
+    phc = get_phcfun()
+    aprc = pointer(c_int32(1))
+    bbb = pointer(c_int32(0))
+    crad = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> double_double_pole_radius calls phc', end='')
+    retval = phc(885, aprc, bbb, crad, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the pole radius :', crad[0])
+    return crad[0]
+
+def quad_double_pole_radius(vrblvl=0):
+    """
+    Returns the smallest pole radius,
+    used in the predictor in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in quad_double_pole_radius ...')
+    phc = get_phcfun()
+    aprc = pointer(c_int32(2))
+    bbb = pointer(c_int32(0))
+    crad = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> quad_double_pole_radius calls phc', end='')
+    retval = phc(885, aprc, bbb, crad, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the pole radius :', crad[0])
+    return crad[0]
+
+def double_closest_pole(vrblvl=0):
+    """
+    Returns a tuple with the real and imaginary part of the closest pole
+    used in the predictor in double precision.
+    """
+    if vrblvl > 0:
+        print('in double_closest_pole ...')
+    phc = get_phcfun()
+    aprc = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    pole = (c_double * 2)()
+    cpole = pointer(pole)
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> double_closest_pole calls phc', end='')
+    retval = phc(866, aprc, bbb, cpole, vrb)
+    vals = cpole[:2]
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the closest pole :', (vals[0][0], vals[0][1]))
+    return (vals[0][0], vals[0][1])
+
+def double_double_closest_pole(vrblvl=0):
+    """
+    Returns a tuple with the real and imaginary part of the closest pole
+    used in the predictor in double double precision.
+    """
+    if vrblvl > 0:
+        print('in double_double_closest_pole ...')
+    phc = get_phcfun()
+    aprc = pointer(c_int32(1))
+    bbb = pointer(c_int32(0))
+    pole = (c_double * 2)()
+    cpole = pointer(pole)
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> double_double_closest_pole calls phc', end='')
+    retval = phc(866, aprc, bbb, cpole, vrb)
+    vals = cpole[:2]
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the closest pole :', (vals[0][0], vals[0][1]))
+    return (vals[0][0], vals[0][1])
+
+def quad_double_closest_pole(vrblvl=0):
+    """
+    Returns a tuple with the real and imaginary part of the closest pole
+    used in the predictor in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in quad_double_closest_pole ...')
+    phc = get_phcfun()
+    aprc = pointer(c_int32(2))
+    bbb = pointer(c_int32(0))
+    pole = (c_double * 2)()
+    cpole = pointer(pole)
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> quad_double_closest_pole calls phc', end='')
+    retval = phc(866, aprc, bbb, cpole, vrb)
+    vals = cpole[:2]
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the closest pole :', (vals[0][0], vals[0][1]))
+    return (vals[0][0], vals[0][1])
+
+def double_series_coefficients(dim, vrblvl = 0):
+    """
+    Returns a list of lists with the coefficients of the series
+    computed by the predictor in double precision.
+    On entry in dim is the number of variables.
+    """
+    if vrblvl > 0:
+        print('in double_series_coefficients, dim :', dim)
+    deg = get_degree_of_numerator(vrblvl) + get_degree_of_denominator(vrblvl)
+    phc = get_phcfun()
+    apars = (c_int32 * 3)()
+    apars[0] = 0
+    apars[1] = 0
+    apars[2] = 0
+    apar = pointer(apars)
+    bvrb = pointer(c_int32(vrblvl))
+    coef = (c_double * 2)()
+    ccff = pointer(coef)
+    vrb = c_int32(vrblvl)
+    result = []
+    for row in range(1, dim+1):
+        cfs = []
+        for col in range(deg+1):
+            apars[1] = row
+            apars[2] = col
+            if vrblvl > 0:
+                print('-> double_series_coefficients calls phc', end='')
+            retval = phc(869, apar, bvrb, ccff, vrb)
+            if vrblvl > 0:
+                print(', return value :', retval)
+            vals = ccff[:2]
+            rcf = vals[0][0]
+            icf = vals[0][1]
+            if vrblvl > 0:
+                print('coefficients :', rcf, icf)
+            cfs.append(complex(rcf, icf))
+        result.append(cfs)
+    return result
+
+def double_double_series_coefficients(dim, vrblvl = 0):
+    """
+    Returns a list of lists with the coefficients of the series
+    computed by the predictor in double double precision.
+    The double coefficients are the highest parts of the double doubles.
+    On entry in dim is the number of variables.
+    """
+    if vrblvl > 0:
+        print('in double_double_series_coefficients, dim :', dim)
+    deg = get_degree_of_numerator(vrblvl) + get_degree_of_denominator(vrblvl)
+    phc = get_phcfun()
+    apars = (c_int32 * 3)()
+    apars[0] = 1
+    apars[1] = 0
+    apars[2] = 0
+    apar = pointer(apars)
+    bvrb = pointer(c_int32(vrblvl))
+    coef = (c_double * 2)()
+    ccff = pointer(coef)
+    vrb = c_int32(vrblvl)
+    result = []
+    for row in range(1, dim+1):
+        cfs = []
+        for col in range(deg+1):
+            apars[1] = row
+            apars[2] = col
+            if vrblvl > 0:
+                print('-> double_double_series_coefficients calls phc', end='')
+            retval = phc(869, apar, bvrb, ccff, vrb)
+            if vrblvl > 0:
+                print(', return value :', retval)
+            vals = ccff[:2]
+            rcf = vals[0][0]
+            icf = vals[0][1]
+            if vrblvl > 0:
+                print('coefficients :', rcf, icf)
+            cfs.append(complex(rcf, icf))
+        result.append(cfs)
+    return result
+
+def quad_double_series_coefficients(dim, vrblvl = 0):
+    """
+    Returns a list of lists with the coefficients of the series
+    computed by the predictor in quad double precision.
+    The double coefficients are the highest parts of the quad doubles.
+    On entry in dim is the number of variables.
+    """
+    if vrblvl > 0:
+        print('in quad_double_series_coefficients, dim :', dim)
+    deg = get_degree_of_numerator(vrblvl) + get_degree_of_denominator(vrblvl)
+    phc = get_phcfun()
+    apars = (c_int32 * 3)()
+    apars[0] = 2
+    apars[1] = 0
+    apars[2] = 0
+    apar = pointer(apars)
+    bvrb = pointer(c_int32(vrblvl))
+    coef = (c_double * 2)()
+    ccff = pointer(coef)
+    vrb = c_int32(vrblvl)
+    result = []
+    for row in range(1, dim+1):
+        cfs = []
+        for col in range(deg+1):
+            apars[1] = row
+            apars[2] = col
+            if vrblvl > 0:
+                print('-> quad_double_series_coefficients calls phc', end='')
+            retval = phc(869, apar, bvrb, ccff, vrb)
+            if vrblvl > 0:
+                print(', return value :', retval)
+            vals = ccff[:2]
+            rcf = vals[0][0]
+            icf = vals[0][1]
+            if vrblvl > 0:
+                print('coefficients :', rcf, icf)
+            cfs.append(complex(rcf, icf))
+        result.append(cfs)
+    return result
+
+def double_pade_coefficients(idx, vrblvl=0):
+    """
+    Returns a tuple of lists with the coefficients of the Pade approximants
+    computed by the predictor in double precision.
+    The first list in the tuple holds the coefficients of the numerator,
+    the second list in the tuple holds the denominator coefficients.
+    On entry in idx is the index of a variable.
+    """
+    if vrblvl > 0:
+        print('in double_pade_coefficients, idx :', idx)
+    numdeg = get_degree_of_numerator()
+    dendeg = get_degree_of_denominator()
+    phc = get_phcfun()
+    apars = (c_int32 * 4)()
+    apars[0] = 0 # precision
+    apars[1] = 1
+    apars[2] = 0
+    apars[3] = 0
+    apar = pointer(apars)
+    bvrb = pointer(c_int32(vrblvl))
+    coef = (c_double * 2)()
+    ccff = pointer(coef)
+    vrb = c_int32(vrblvl)
+    numcfs = []
+    for col in range(numdeg+1):
+        apars[1] = 1
+        apars[2] = idx
+        apars[3] = col
+        if vrblvl > 0:
+            print('-> double_pade_coefficients calls phc', end='')
+        retval = phc(870, apar, bvrb, ccff, vrb)
+        if vrblvl > 0:
+            print(', return value :', retval)
+        vals = ccff[:2]
+        rcf = vals[0][0]
+        icf = vals[0][1]
+        if vrblvl > 0:
+            print('coefficients :', rcf, icf)
+        numcfs.append(complex(rcf, icf))
+    dencfs = []
+    for col in range(dendeg+1):
+        apars[1] = 0
+        apars[2] = idx
+        apars[3] = col
+        if vrblvl > 0:
+            print('-> double_pade_coefficients calls phc', end='')
+        retval = phc(870, apar, bvrb, ccff, vrb)
+        if vrblvl > 0:
+            print(', return value :', retval)
+        vals = ccff[:2]
+        rcf = vals[0][0]
+        icf = vals[0][1]
+        if vrblvl > 0:
+            print('coefficients :', rcf, icf)
+        dencfs.append(complex(rcf, icf))
+    return (numcfs, dencfs)
+
+def double_double_pade_coefficients(idx, vrblvl=0):
+    """
+    Returns a tuple of lists with the coefficients of the Pade approximants
+    computed by the predictor in double double precision.
+    The first list in the tuple holds the coefficients of the numerator,
+    the second list in the tuple holds the denominator coefficients.
+    On entry in idx is the index of a variable.
+    The double coefficients on return are the highest parts
+    of the double doubles.
+    """
+    if vrblvl > 0:
+        print('in double_double_pade_coefficients, idx :', idx)
+    numdeg = get_degree_of_numerator()
+    dendeg = get_degree_of_denominator()
+    phc = get_phcfun()
+    apars = (c_int32 * 4)()
+    apars[0] = 1 # precision
+    apars[1] = 1
+    apars[2] = 0
+    apars[3] = 0
+    apar = pointer(apars)
+    bvrb = pointer(c_int32(vrblvl))
+    coef = (c_double * 2)()
+    ccff = pointer(coef)
+    vrb = c_int32(vrblvl)
+    numcfs = []
+    for col in range(numdeg+1):
+        apars[1] = 1
+        apars[2] = idx
+        apars[3] = col
+        if vrblvl > 0:
+            print('-> double_double_pade_coefficients calls phc', end='')
+        retval = phc(870, apar, bvrb, ccff, vrb)
+        if vrblvl > 0:
+            print(', return value :', retval)
+        vals = ccff[:2]
+        rcf = vals[0][0]
+        icf = vals[0][1]
+        if vrblvl > 0:
+            print('coefficients :', rcf, icf)
+        numcfs.append(complex(rcf, icf))
+    dencfs = []
+    for col in range(dendeg+1):
+        apars[1] = 0
+        apars[2] = idx 
+        apars[3] = col
+        if vrblvl > 0:
+            print('-> double_double_pade_coefficients calls phc', end='')
+        retval = phc(870, apar, bvrb, ccff, vrb)
+        if vrblvl > 0:
+            print(', return value :', retval)
+        vals = ccff[:2]
+        rcf = vals[0][0]
+        icf = vals[0][1]
+        if vrblvl > 0:
+            print('coefficients :', rcf, icf)
+        dencfs.append(complex(rcf, icf))
+    return (numcfs, dencfs)
+
+def quad_double_pade_coefficients(idx, vrblvl=0):
+    """
+    Returns a tuple of lists with the coefficients of the Pade approximants
+    computed by the predictor in quad double precision.
+    The first list in the tuple holds the coefficients of the numerator,
+    the second list in the tuple holds the denominator coefficients.
+    On entry in idx is the index of a variable.
+    The double coefficients on return are the highest parts
+    of the quad doubles.
+    """
+    if vrblvl > 0:
+        print('in quad_double_pade_coefficients, idx :', idx)
+    numdeg = get_degree_of_numerator()
+    dendeg = get_degree_of_denominator()
+    phc = get_phcfun()
+    apars = (c_int32 * 4)()
+    apars[0] = 2 # precision
+    apars[1] = 1
+    apars[2] = 0
+    apars[3] = 0
+    apar = pointer(apars)
+    bvrb = pointer(c_int32(vrblvl))
+    coef = (c_double * 2)()
+    ccff = pointer(coef)
+    vrb = c_int32(vrblvl)
+    numcfs = []
+    for col in range(numdeg+1):
+        apars[1] = 1
+        apars[2] = idx
+        apars[3] = col
+        if vrblvl > 0:
+            print('-> quad_double_pade_coefficients calls phc', end='')
+        retval = phc(870, apar, bvrb, ccff, vrb)
+        if vrblvl > 0:
+            print(', return value :', retval)
+        vals = ccff[:2]
+        rcf = vals[0][0]
+        icf = vals[0][1]
+        if vrblvl > 0:
+            print('coefficients :', rcf, icf)
+        numcfs.append(complex(rcf, icf))
+    dencfs = []
+    for col in range(dendeg+1):
+        apars[1] = 0
+        apars[2] = idx
+        apars[3] = col
+        if vrblvl > 0:
+            print('-> quad_double_pade_coefficients calls phc', end='')
+        retval = phc(870, apar, bvrb, ccff, vrb)
+        if vrblvl > 0:
+            print(', return value :', retval)
+        vals = ccff[:2]
+        rcf = vals[0][0]
+        icf = vals[0][1]
+        if vrblvl > 0:
+            print('coefficients :', rcf, icf)
+        dencfs.append(complex(rcf, icf))
+    return (numcfs, dencfs)
+
+def double_pade_vector(dim, vrblvl=0):
+    """
+    Returns the list of all coefficients over all dim variables,
+    computed by the predictor in double precision.
+    """
+    result = []
+    for i in range(1, dim+1):
+        result.append(double_pade_coefficients(i, vrblvl))
+    return result
+
+def double_double_pade_vector(dim, vrblvl=0):
+    """
+    Returns the list of all coefficients over all dim variables,
+    computed by the predictor in double double precision.
+    """
+    result = []
+    for i in range(1, dim+1):
+        result.append(double_double_pade_coefficients(i, vrblvl))
+    return result
+
+def quad_double_pade_vector(dim, vrblvl=0):
+    """
+    Returns the list of all coefficients over all dim variables,
+    computed by the predictor in quad double precision.
+    """
+    result = []
+    for i in range(1, dim+1):
+        result.append(quad_double_pade_coefficients(i, vrblvl))
+    return result
+
+def double_poles(dim, vrblvl=0):
+    """
+    Returns a list of lists of all poles of the vector of length dim,
+    computed by the predictor in double precision.
+    """
+    if vrblvl > 0:
+        print('in double_poles, dim :', dim)
+    phc = get_phcfun()
+    apars = (c_int32 * 3)()
+    apars[0] = 0 # precision
+    apars[1] = 0
+    apars[2] = 0
+    apar = pointer(apars)
+    bvrb = pointer(c_int32(vrblvl))
+    coef = (c_double * 2)()
+    ccff = pointer(coef)
+    vrb = c_int32(vrblvl)
+    dendeg = get_degree_of_denominator()
+    result = []
+    for i in range(1, dim+1):
+        poles = []
+        for j in range(1, dendeg+1):
+            apars[1] = i
+            apars[2] = j
+            if vrblvl > 0:
+                 print('-> double_poles calls phc', end='')
+            retval = phc(871, apar, bvrb, ccff, vrb)
+            if vrblvl > 0:
+                print(', return value :', retval)
+            vals = ccff[:2]
+            repole = vals[0][0]
+            impole = vals[0][1]
+            if vrblvl > 0:
+                print('pole coordinates :', repole, impole)
+            poles.append(complex(repole, impole))
+        result.append(poles)
+    return result
+
+def double_double_poles(dim, vrblvl=0):
+    """
+    Returns a list of lists of all poles of the vector of length dim,
+    computed by the predictor in double double precision.
+    The doubles on return are the highest parts of the double doubles.
+    """
+    if vrblvl > 0:
+        print('in double_double_poles, dim :', dim)
+    phc = get_phcfun()
+    apars = (c_int32 * 3)()
+    apars[0] = 1 # precision
+    apars[1] = 0
+    apars[2] = 0
+    apar = pointer(apars)
+    bvrb = pointer(c_int32(vrblvl))
+    coef = (c_double * 2)()
+    ccff = pointer(coef)
+    vrb = c_int32(vrblvl)
+    dendeg = get_degree_of_denominator()
+    result = []
+    for i in range(1, dim+1):
+        poles = []
+        for j in range(1, dendeg+1):
+            apars[1] = i
+            apars[2] = j
+            if vrblvl > 0:
+                 print('-> double_double_poles calls phc', end='')
+            retval = phc(871, apar, bvrb, ccff, vrb)
+            if vrblvl > 0:
+                print(', return value :', retval)
+            vals = ccff[:2]
+            repole = vals[0][0]
+            impole = vals[0][1]
+            if vrblvl > 0:
+                print('pole coordinates :', repole, impole)
+            poles.append(complex(repole, impole))
+        result.append(poles)
+    return result
+
+def quad_double_poles(dim, vrblvl=0):
+    """
+    Returns a list of lists of all poles of the vector of length dim,
+    computed by the predictor in quad double precision.
+    The doubles on return are the highest parts of the quad doubles.
+    """
+    if vrblvl > 0:
+        print('in quad_double_poles, dim :', dim)
+    phc = get_phcfun()
+    apars = (c_int32 * 3)()
+    apars[0] = 2 # precision
+    apars[1] = 0
+    apars[2] = 0
+    apar = pointer(apars)
+    bvrb = pointer(c_int32(vrblvl))
+    coef = (c_double * 2)()
+    ccff = pointer(coef)
+    vrb = c_int32(vrblvl)
+    dendeg = get_degree_of_denominator()
+    result = []
+    for i in range(1, dim+1):
+        poles = []
+        for j in range(1, dendeg+1):
+            apars[1] = i
+            apars[2] = j
+            if vrblvl > 0:
+                 print('-> quad_double_poles calls phc', end='')
+            retval = phc(871, apar, bvrb, ccff, vrb)
+            if vrblvl > 0:
+                print(', return value :', retval)
+            vals = ccff[:2]
+            repole = vals[0][0]
+            impole = vals[0][1]
+            if vrblvl > 0:
+                print('pole coordinates :', repole, impole)
+            poles.append(complex(repole, impole))
+        result.append(poles)
+    return result
+
+def symbolic_pade_approximant(cff):
+    """
+    Given in cff are the coefficients of numerator and denominator
+    of a Pade approximant, given as a tuple of two lists.
+    On return is the string representation of the Pade approximant,
+    using 't' as the variable.
+    """
+    (nq, dq) = cff
+    num = ['+' + str(nq[k]) + ('*t**%d' % k) for k in range(len(nq))]
+    numerator = ''.join(num)
+    den = ['+' + str(nq[k]) + ('*t**%d' % k) for k in range(len(dq))]
+    denominator = ''.join(den)
+    result = '(' + numerator + ')/(' + denominator + ')'
+    return result
+
+def symbolic_pade_vector(cff):
+    """
+    Given in cff are the coefficients of numerator and denominator
+    of a Pade vector, given as a list of tuples of two lists each.
+    On return is the string representation of the Pade approximant,
+    using 't' as the variable.
+    """
+    result = []
+    for coefficients in cff:
+        result.append(symbolic_pade_approximant(coefficients))
+    return result
+
+def clear_double_data(vrblvl=0):
+    """
+    Clears the data used by the tracker in double precision.
+    """
+    if vrblvl > 0:
+        print('in clear_double_data ...')
+    phc = get_phcfun()
+    aprc = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> clear_double_data calls phc', end='')
+    retval = phc(864, aprc, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def clear_double_double_data(vrblvl=0):
+    """
+    Clears the data used by the tracker in double double precision.
+    """
+    if vrblvl > 0:
+        print('in clear_double_double_data ...')
+    phc = get_phcfun()
+    aprc = pointer(c_int32(1))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> clear_double_double_data calls phc', end='')
+    retval = phc(864, aprc, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def clear_quad_double_data(vrblvl=0):
+    """
+    Clears the data used by the tracker in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in clear_quad_double_data ...')
+    phc = get_phcfun()
+    aprc = pointer(c_int32(2))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> clear_quad_double_data calls phc', end='')
+    retval = phc(864, aprc, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def next_double_track(target, start, sols, homogeneous=False, \
+    vrblvl=0):
+    r"""
+    Runs the series-Pade tracker step by step in double precision,
+    for an artificial-parameter homotopy.
+    On input are a target system and a start system with solutions.
+    The *target* is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The *start* is a list of strings representing the polynomials
+    of the start system, with known solutions in *sols*.
+    The *sols* is a list of strings representing start solutions.
+    The function is interactive, prompting the user each time
+    before performing the next predictor-corrector step.
+    If *vrblvl* > 0, then extra output is written.
+    If *homogeneous*, then path tracking happens in projective space,
+    otherwise the original affine coordinates are used.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    """
+    if vrblvl > 0:
+        print('in next_double_track, homogeneous :', homogeneous)
+        print('the target system :')
+        for pol in target:
+            print(pol)
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    result = []
+    dim = number_of_symbols(start, vrblvl)
+    initialize_double_artificial_homotopy(target, start, homogeneous, vrblvl)
+    (idx, tval) = (0, 0.0)
+    fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
+    for sol in sols:
+        idx = idx + 1
+        set_double_solution(dim, sol, vrblvl)
+        while(True):
+            answer = input('next predictor-corrector step ? (y/n) ')
+            if(answer != 'y'):
+                result.append(sol)
+                break
+            else:
+                double_predict_correct(vrblvl)
+                polestep = double_pole_step(vrblvl)
+                estidist = double_estimated_distance(vrblvl)
+                curvstep = double_hessian_step(vrblvl)
+                print(fmt % (polestep, estidist, curvstep))
+                previoustval = tval
+                tval = double_t_value(vrblvl)
+                step = double_step_size(vrblvl)
+                frp = double_pole_radius()
+                print("t : %.3e, step : %.3e, frp : %.3e" % (tval, step, frp))
+                cfp = double_closest_pole(vrblvl)
+                print('For the previous t value', previoustval, ':')
+                print('1) closest pole : ', cfp)
+                print('2) the series:', double_series_coefficients(dim))
+                print('3) Pade vector:', double_pade_vector(dim))
+                print('4) poles:', double_poles(dim))
+                sol = get_double_solution(vrblvl)
+                print(sol)
+    gamma = get_gamma_constant(vrblvl)
+    clear_double_solutions(vrblvl)
+    clear_double_data(vrblvl)
+    return (gamma, result)
+
+def next_double_double_track(target, start, sols, homogeneous=False, \
+    vrblvl=0):
+    r"""
+    Runs the series-Pade tracker step by step in double double precision,
+    for an artificial-parameter homotopy.
+    On input are a target system and a start system with solutions.
+    The *target* is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The *start* is a list of strings representing the polynomials
+    of the start system, with known solutions in *sols*.
+    The *sols* is a list of strings representing start solutions.
+    The function is interactive, prompting the user each time
+    before performing the next predictor-corrector step.
+    If *vrblvl* > 0, then extra output is written.
+    If *homogeneous*, then path tracking happens in projective space,
+    otherwise the original affine coordinates are used.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    """
+    if vrblvl > 0:
+        print('in next_double_double_track, homogeneous :', homogeneous)
+        print('the target system :')
+        for pol in target:
+            print(pol)
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    result = []
+    dim = number_of_symbols(start, vrblvl)
+    initialize_double_double_artificial_homotopy(target, start, \
+        homogeneous, vrblvl)
+    (idx, tval) = (0, 0.0)
+    fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
+    for sol in sols:
+        idx = idx + 1
+        set_double_double_solution(dim, sol, vrblvl)
+        while(True):
+            answer = input('next predictor-corrector step ? (y/n) ')
+            if(answer != 'y'):
+                result.append(sol)
+                break
+            else:
+                double_double_predict_correct(vrblvl)
+                polestep = double_double_pole_step(vrblvl)
+                estidist = double_double_estimated_distance(vrblvl)
+                curvstep = double_double_hessian_step(vrblvl)
+                print(fmt % (polestep, estidist, curvstep))
+                previoustval = tval
+                tval = double_double_t_value(vrblvl)
+                step = double_double_step_size(vrblvl)
+                frp = double_double_pole_radius()
+                print("t : %.3e, step : %.3e, frp : %.3e" % (tval, step, frp))
+                cfp = double_double_closest_pole(vrblvl)
+                print('For the previous t value', previoustval, ':')
+                print('1) closest pole : ', cfp)
+                print('2) the series:', double_double_series_coefficients(dim))
+                print('3) Pade vector:', double_double_pade_vector(dim))
+                print('4) poles:', double_double_poles(dim))
+                sol = get_double_double_solution(vrblvl)
+                print(sol)
+    gamma = get_gamma_constant(vrblvl)
+    clear_double_double_solutions(vrblvl)
+    clear_double_double_data(vrblvl)
+    return (gamma, result)
+
+def next_quad_double_track(target, start, sols, homogeneous=False, \
+    vrblvl=0):
+    r"""
+    Runs the series-Pade tracker step by step in quad double precision,
+    for an artificial-parameter homotopy.
+    On input are a target system and a start system with solutions.
+    The *target* is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The *start* is a list of strings representing the polynomials
+    of the start system, with known solutions in *sols*.
+    The *sols* is a list of strings representing start solutions.
+    The function is interactive, prompting the user each time
+    before performing the next predictor-corrector step.
+    If *vrblvl* > 0, then extra output is written.
+    If *homogeneous*, then path tracking happens in projective space,
+    otherwise the original affine coordinates are used.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    """
+    if vrblvl > 0:
+        print('in next_quad_double_track, homogeneous :', homogeneous)
+        print('the target system :')
+        for pol in target:
+            print(pol)
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    result = []
+    dim = number_of_symbols(start, vrblvl)
+    initialize_quad_double_artificial_homotopy(target, start, \
+        homogeneous, vrblvl)
+    (idx, tval) = (0, 0.0)
+    fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
+    for sol in sols:
+        idx = idx + 1
+        set_quad_double_solution(dim, sol, vrblvl)
+        while(True):
+            answer = input('next predictor-corrector step ? (y/n) ')
+            if(answer != 'y'):
+                result.append(sol)
+                break
+            else:
+                quad_double_predict_correct(vrblvl)
+                polestep = quad_double_pole_step(vrblvl)
+                estidist = quad_double_estimated_distance(vrblvl)
+                curvstep = quad_double_hessian_step(vrblvl)
+                print(fmt % (polestep, estidist, curvstep))
+                previoustval = tval
+                tval = quad_double_t_value(vrblvl)
+                step = quad_double_step_size(vrblvl)
+                frp = quad_double_pole_radius()
+                print("t : %.3e, step : %.3e, frp : %.3e" % (tval, step, frp))
+                cfp = quad_double_closest_pole(vrblvl)
+                print('For the previous t value', previoustval, ':')
+                print('1) closest pole : ', cfp)
+                print('2) the series:', quad_double_series_coefficients(dim))
+                print('3) Pade vector:', quad_double_pade_vector(dim))
+                print('4) poles:', quad_double_poles(dim))
+                sol = get_quad_double_solution(vrblvl)
+                print(sol)
+    gamma = get_gamma_constant(vrblvl)
+    clear_quad_double_solutions(vrblvl)
+    clear_quad_double_data(vrblvl)
+    return (gamma, result)
+
+def next_double_loop(hom, idx, sols, vrblvl=0):
+    """
+    Runs the series-Pade tracker step by step in double precision.
+    On input is a natural parameter homotopy with solutions.
+    The *hom* is a list of strings representing the polynomials
+    of the natural parameter homotopy.
+    The *idx* is the index of the variable in hom which is
+    the continuation parameter.
+    The *sols* is a list of strings representing start solutions.
+    The start solutions do *not* contain the value of the continuation
+    parameter, which is assumed to be equal to zero.
+    The function is interactive, prompting the user each time
+    before performing the next predictor-corrector step.
+    If vrblvl > 0, then extra output is written.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    """
+    result = []
+    dim = number_of_symbols(hom) - 1
+    initialize_double_parameter_homotopy(hom, idx, vrblvl)
+    (idx, tval) = (0, 0.0)
+    fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
+    for sol in sols:
+        idx = idx + 1
+        print('tracking solution path', idx, '...')
+        set_double_solution(dim, sol, vrblvl)
+        while(True):
+            answer = input('next predictor-corrector step ? (y/n) ')
+            if(answer != 'y'):
+                result.append(sol)
+                break
+            else:
+                double_predict_correct(vrblvl)
+                polestep = double_pole_step(vrblvl)
+                estidist = double_estimated_distance(vrblvl)
+                curvstep = double_hessian_step(vrblvl)
+                print(fmt % (polestep, estidist, curvstep))
+                previoustval = tval
+                tval = double_t_value(vrblvl)
+                step = double_step_size(vrblvl)
+                frp = double_pole_radius(vrblvl)
+                print('t : %.3e, step : %.3e, frp : %.3e' % (tval, step, frp))
+                cfp = double_closest_pole(vrblvl)
+                print('For the previous t value', previoustval, ':')
+                print('1) closest pole : ', cfp)
+                print('2) the series:', double_series_coefficients(dim))
+                print('3) Pade vector:', double_pade_vector(dim))
+                print('4) poles:', double_poles(dim))
+                sol = get_double_solution(vrblvl)
+                print(sol)
+    gamma = get_gamma_constant(vrblvl)
+    clear_double_solutions(vrblvl)
+    clear_double_data(vrblvl)
+    return (gamma, result)
+
+def next_double_double_loop(hom, idx, sols, vrblvl=0):
+    """
+    Runs the series-Pade tracker step by step in double double precision.
+    On input is a natural parameter homotopy with solutions.
+    The *hom* is a list of strings representing the polynomials
+    of the natural parameter homotopy.
+    The *idx* is the index of the variable in hom which is
+    the continuation parameter.
+    The *sols* is a list of strings representing start solutions.
+    The start solutions do *not* contain the value of the continuation
+    parameter, which is assumed to be equal to zero.
+    The function is interactive, prompting the user each time
+    before performing the next predictor-corrector step.
+    If vrblvl > 0, then extra output is written.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    """
+    result = []
+    dim = number_of_symbols(hom) - 1
+    initialize_double_double_parameter_homotopy(hom, idx, vrblvl)
+    (idx, tval) = (0, 0.0)
+    fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
+    for sol in sols:
+        idx = idx + 1
+        print('tracking solution path', idx, '...')
+        set_double_double_solution(dim, sol, vrblvl)
+        while(True):
+            answer = input('next predictor-corrector step ? (y/n) ')
+            if(answer != 'y'):
+                result.append(sol)
+                break
+            else:
+                double_double_predict_correct(vrblvl)
+                polestep = double_double_pole_step(vrblvl)
+                estidist = double_double_estimated_distance(vrblvl)
+                curvstep = double_double_hessian_step(vrblvl)
+                print(fmt % (polestep, estidist, curvstep))
+                previoustval = tval
+                tval = double_double_t_value(vrblvl)
+                step = double_double_step_size(vrblvl)
+                frp = double_double_pole_radius(vrblvl)
+                print('t : %.3e, step : %.3e, frp : %.3e' % (tval, step, frp))
+                cfp = double_double_closest_pole(vrblvl)
+                print('For the previous t value', previoustval, ':')
+                print('1) closest pole : ', cfp)
+                print('2) the series:', double_double_series_coefficients(dim))
+                print('3) Pade vector:', double_double_pade_vector(dim))
+                print('4) poles:', double_double_poles(dim))
+                sol = get_double_double_solution(vrblvl)
+                print(sol)
+    gamma = get_gamma_constant(vrblvl)
+    clear_double_double_solutions(vrblvl)
+    clear_double_double_data(vrblvl)
+    return (gamma, result)
+
+def next_quad_double_loop(hom, idx, sols, vrblvl=0):
+    """
+    Runs the series-Pade tracker step by step in quad double precision.
+    On input is a natural parameter homotopy with solutions.
+    The *hom* is a list of strings representing the polynomials
+    of the natural parameter homotopy.
+    The *idx* is the index of the variable in hom which is
+    the continuation parameter.
+    The *sols* is a list of strings representing start solutions.
+    The start solutions do *not* contain the value of the continuation
+    parameter, which is assumed to be equal to zero.
+    The function is interactive, prompting the user each time
+    before performing the next predictor-corrector step.
+    If vrblvl > 0, then extra output is written.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    """
+    result = []
+    dim = number_of_symbols(hom) - 1
+    initialize_quad_double_parameter_homotopy(hom, idx, vrblvl)
+    (idx, tval) = (0, 0.0)
+    fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
+    for sol in sols:
+        idx = idx + 1
+        print('tracking solution path', idx, '...')
+        set_quad_double_solution(dim, sol, vrblvl)
+        while(True):
+            answer = input('next predictor-corrector step ? (y/n) ')
+            if(answer != 'y'):
+                result.append(sol)
+                break
+            else:
+                quad_double_predict_correct(vrblvl)
+                polestep = quad_double_pole_step(vrblvl)
+                estidist = quad_double_estimated_distance(vrblvl)
+                curvstep = quad_double_hessian_step(vrblvl)
+                print(fmt % (polestep, estidist, curvstep))
+                previoustval = tval
+                tval = quad_double_t_value(vrblvl)
+                step = quad_double_step_size(vrblvl)
+                frp = quad_double_pole_radius(vrblvl)
+                print('t : %.3e, step : %.3e, frp : %.3e' % (tval, step, frp))
+                cfp = quad_double_closest_pole(vrblvl)
+                print('For the previous t value', previoustval, ':')
+                print('1) closest pole : ', cfp)
+                print('2) the series:', quad_double_series_coefficients(dim))
+                print('3) Pade vector:', quad_double_pade_vector(dim))
+                print('4) poles:', quad_double_poles(dim))
+                sol = get_quad_double_solution(vrblvl)
+                print(sol)
+    gamma = get_gamma_constant(vrblvl)
+    clear_quad_double_solutions(vrblvl)
+    clear_quad_double_data(vrblvl)
+    return (gamma, result)
+
 def test_tuning(vrblvl=0):
     """
     Tests the tuning of the parameters.
@@ -708,6 +2456,165 @@ def test_quad_double_track(vrblvl=0):
             print('The error is too large.')
     return 1
 
+def test_next_double_track(vrblvl=0):
+    """
+    Runs on the mickey mouse example of two quadrics,
+    with a step-by-step tracker in double precision.
+    """
+    mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
+    start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
+    print('the start system :')
+    for pol in start:
+        print(pol)
+    print('the start solutions :')
+    for (idx, sol) in enumerate(startsols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    gamma, sols = next_double_track(mickey, start, startsols, \
+        vrblvl=vrblvl)
+    print('the solutions :')
+    for (idx, sol) in enumerate(sols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    err = verify(mickey, sols, vrblvl)
+    if vrblvl > 0:
+        print('the error sum :', err)
+    if len(sols) == 4 and abs(err.real + err.imag) < 1.0e-10:
+        if vrblvl > 0:
+            print('Found 4 solutions and error is okay.')
+        return 0
+    if len(sols) != 4:
+        if vrblvl > 0:
+            print('Number of solutions is not 4 :', len(sols))
+        return 1
+    if abs(err.real + err.imag) >= 1.0e-10:
+        if vrblvl > 0:
+            print('The error is too large.')
+    return 1
+
+def test_next_double_double_track(vrblvl=0):
+    """
+    Runs on the mickey mouse example of two quadrics,
+    with a step-by-step tracker in double double precision.
+    """
+    mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
+    start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
+    print('the start system :')
+    for pol in start:
+        print(pol)
+    print('the start solutions :')
+    for (idx, sol) in enumerate(startsols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    gamma, sols = next_double_double_track(mickey, start, startsols, \
+        vrblvl=vrblvl)
+    print('the solutions :')
+    for (idx, sol) in enumerate(sols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    err = verify(mickey, sols, vrblvl)
+    if vrblvl > 0:
+        print('the error sum :', err)
+    if len(sols) == 4 and abs(err.real + err.imag) < 1.0e-10:
+        if vrblvl > 0:
+            print('Found 4 solutions and error is okay.')
+        return 0
+    if len(sols) != 4:
+        if vrblvl > 0:
+            print('Number of solutions is not 4 :', len(sols))
+        return 1
+    if abs(err.real + err.imag) >= 1.0e-10:
+        if vrblvl > 0:
+            print('The error is too large.')
+    return 1
+
+def test_next_quad_double_track(vrblvl=0):
+    """
+    Runs on the mickey mouse example of two quadrics,
+    with a step-by-step tracker in quad double precision.
+    """
+    mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
+    start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
+    print('the start system :')
+    for pol in start:
+        print(pol)
+    print('the start solutions :')
+    for (idx, sol) in enumerate(startsols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    gamma, sols = next_quad_double_track(mickey, start, startsols, \
+        vrblvl=vrblvl)
+    print('the solutions :')
+    for (idx, sol) in enumerate(sols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    err = verify(mickey, sols, vrblvl)
+    if vrblvl > 0:
+        print('the error sum :', err)
+    if len(sols) == 4 and abs(err.real + err.imag) < 1.0e-10:
+        if vrblvl > 0:
+            print('Found 4 solutions and error is okay.')
+        return 0
+    if len(sols) != 4:
+        if vrblvl > 0:
+            print('Number of solutions is not 4 :', len(sols))
+        return 1
+    if abs(err.real + err.imag) >= 1.0e-10:
+        if vrblvl > 0:
+            print('The error is too large.')
+    return 1
+
+def test_double_hyperbola(vrblvl=0):
+    """
+    Tests the step-by-step Pade tracker on a hyperbola,
+    in double precision.
+    """
+    par = 0.1
+    xtp = ['x^2 - (t - 0.5)^2 - 0.01;']
+    solx = sqrt(4*par**2+1)/2
+    print('\nvalue of the first start solution :', solx)
+    sol1 = make_solution(['x'], [solx])
+    print('the first start solution :\n', sol1)
+    sol2 = make_solution(['x'], [-solx])
+    print('the second start solution :\n', sol2)
+    print('tracking in double precision ...')
+    next_double_loop(xtp, 2, [sol1, sol2], vrblvl)
+    return 0
+
+def test_double_double_hyperbola(vrblvl=0):
+    """
+    Tests the step-by-step Pade tracker on a hyperbola,
+    in double double precision.
+    """
+    par = 0.1
+    xtp = ['x^2 - (t - 0.5)^2 - 0.01;']
+    solx = sqrt(4*par**2+1)/2
+    print('\nvalue of the first start solution :', solx)
+    sol1 = make_solution(['x'], [solx])
+    print('the first start solution :\n', sol1)
+    sol2 = make_solution(['x'], [-solx])
+    print('the second start solution :\n', sol2)
+    print('tracking in double double precision ...')
+    next_double_double_loop(xtp, 2, [sol1, sol2], vrblvl)
+    return 0
+
+def test_quad_double_hyperbola(vrblvl=0):
+    """
+    Tests the step-by-step Pade tracker on a hyperbola,
+    in quad double precision.
+    """
+    par = 0.1
+    xtp = ['x^2 - (t - 0.5)^2 - 0.01;']
+    solx = sqrt(4*par**2+1)/2
+    print('\nvalue of the first start solution :', solx)
+    sol1 = make_solution(['x'], [solx])
+    print('the first start solution :\n', sol1)
+    sol2 = make_solution(['x'], [-solx])
+    print('the second start solution :\n', sol2)
+    print('tracking in quad double precision ...')
+    next_quad_double_loop(xtp, 2, [sol1, sol2], vrblvl)
+    return 0
+
 def main():
     """
     Runs some tests on tuning and tracking.
@@ -717,6 +2624,12 @@ def main():
     fail = fail + test_double_track(lvl)
     fail = fail + test_double_double_track(lvl)
     fail = fail + test_quad_double_track(lvl)
+    fail = fail + test_next_double_track(lvl)
+    fail = fail + test_next_double_double_track(lvl)
+    fail = fail + test_next_quad_double_track(lvl)
+    fail = fail + test_double_hyperbola(lvl)
+    fail = fail + test_double_double_hyperbola(lvl)
+    fail = fail + test_quad_double_hyperbola(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:
