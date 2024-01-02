@@ -10,6 +10,7 @@ from ctypes import c_int32, c_double, pointer
 from random import uniform
 from cmath import exp, pi
 from phcpy.version import get_phcfun
+from phcpy.polynomials import number_of_symbols
 from phcpy.polynomials import set_double_system
 from phcpy.polynomials import set_double_double_system
 from phcpy.polynomials import get_double_double_system
@@ -154,7 +155,8 @@ def set_double_target_system(pols, vrblvl=0):
         print('in set_double_target_system, with pols :')
         for pol in pols:
             print(pol)
-    set_double_system(len(pols), pols, vrblvl)
+    nvr = number_of_symbols(pols, vrblvl)
+    set_double_system(nvr, pols, vrblvl)
     phc = get_phcfun()
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
@@ -178,7 +180,8 @@ def set_double_double_target_system(pols, vrblvl=0):
         print('in set_double_double_target_system, with pols :')
         for pol in pols:
             print(pol)
-    set_double_double_system(len(pols), pols, vrblvl)
+    nvr = number_of_symbols(pols, vrblvl)
+    set_double_double_system(nvr, pols, vrblvl)
     phc = get_phcfun()
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
@@ -202,7 +205,8 @@ def set_quad_double_target_system(pols, vrblvl=0):
         print('in set_quad_double_target_system, with pols :')
         for pol in pols:
             print(pol)
-    set_quad_double_system(len(pols), pols, vrblvl)
+    nvr = number_of_symbols(pols, vrblvl)
+    set_quad_double_system(nvr, pols, vrblvl)
     phc = get_phcfun()
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
@@ -226,7 +230,8 @@ def set_double_start_system(pols, vrblvl=0):
         print('in set_double_start_system, with pols :')
         for pol in pols:
             print(pol)
-    set_double_system(len(pols), pols, vrblvl)
+    nvr = number_of_symbols(pols, vrblvl)
+    set_double_system(nvr, pols, vrblvl)
     phc = get_phcfun()
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
@@ -250,7 +255,8 @@ def set_double_double_start_system(pols, vrblvl=0):
         print('in set_double_double_start_system, with pols :')
         for pol in pols:
             print(pol)
-    set_double_double_system(len(pols), pols, vrblvl)
+    nvr = number_of_symbols(pols, vrblvl)
+    set_double_double_system(nvr, pols, vrblvl)
     phc = get_phcfun()
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
@@ -274,7 +280,8 @@ def set_quad_double_start_system(pols, vrblvl=0):
         print('in set_quad_double_start_system, with pols :')
         for pol in pols:
             print(pol)
-    set_quad_double_system(len(pols), pols, vrblvl)
+    nvr = number_of_symbols(pols, vrblvl)
+    set_quad_double_system(nvr, pols, vrblvl)
     phc = get_phcfun()
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
@@ -719,7 +726,8 @@ def double_track(target, start, startsols, gamma=0, pwt=2, tasks=0, vrblvl=0):
             print(sol)
     set_double_target_system(target, vrblvl)
     set_double_start_system(start, vrblvl)
-    set_double_start_solutions(len(target), startsols, vrblvl)
+    nvr = number_of_symbols(start)
+    set_double_start_solutions(nvr, startsols, vrblvl)
     usedgamma = set_double_homotopy(gamma, pwt, vrblvl)
     phc = get_phcfun()
     nbtasks = pointer(c_int32(tasks))
@@ -776,7 +784,8 @@ def double_double_track(target, start, startsols, \
             print(sol)
     set_double_double_target_system(target, vrblvl)
     set_double_double_start_system(start, vrblvl)
-    set_double_double_start_solutions(len(target), startsols, vrblvl)
+    nvr = number_of_symbols(start)
+    set_double_double_start_solutions(nvr, startsols, vrblvl)
     usedgamma = set_double_double_homotopy(gamma, pwt, vrblvl)
     phc = get_phcfun()
     nbtasks = pointer(c_int32(tasks))
@@ -833,7 +842,8 @@ def quad_double_track(target, start, startsols, \
             print(sol)
     set_quad_double_target_system(target, vrblvl)
     set_quad_double_start_system(start, vrblvl)
-    set_quad_double_start_solutions(len(target), startsols, vrblvl)
+    nvr = number_of_symbols(start)
+    set_quad_double_start_solutions(nvr, startsols, vrblvl)
     usedgamma = set_quad_double_homotopy(gamma, pwt, vrblvl)
     phc = get_phcfun()
     nbtasks = pointer(c_int32(tasks))
@@ -1239,6 +1249,7 @@ def test_next_double_track(vrblvl=0):
         answer = input('continue ? (y/n) ')
         if(answer != 'y'):
             break
+    clear_double_solutions(vrblvl)
     return 0
 
 def test_next_double_double_track(vrblvl=0):
@@ -1264,6 +1275,8 @@ def test_next_double_double_track(vrblvl=0):
         answer = input('continue ? (y/n) ')
         if(answer != 'y'):
             break
+    clear_double_solutions(vrblvl)
+    clear_double_double_solutions(vrblvl)
     return 0
 
 def test_next_quad_double_track(vrblvl=0):
@@ -1289,6 +1302,8 @@ def test_next_quad_double_track(vrblvl=0):
         answer = input('continue ? (y/n) ')
         if(answer != 'y'):
             break
+    clear_double_solutions(vrblvl)
+    clear_quad_double_solutions(vrblvl)
     return 0
 
 def test_tuning(vrblvl=0):
