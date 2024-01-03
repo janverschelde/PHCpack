@@ -186,6 +186,98 @@ def m_homogeneous_start_system(pols, partition, checkin=True, vrblvl=0):
             print(sol)
     return (startsys, startsols)
 
+def linear_product_root_count(pols, checkin=True, vrblvl=0):
+    r"""
+    Given in *pols* a list of string representations of polynomials,
+    returns a linear-product root count based on a supporting
+    set structure of the polynomials in *pols*.  This root count is
+    an upper bound for the number of isolated solutions.
+    """
+    if vrblvl > 0:
+        print('in linear_product_root_count ...')
+        print('the polynomials :')
+        for pol in pols:
+            print(pol)
+    if checkin:
+        errmsg = 'Root counts are defined only for square systems,'
+        if not solve_checkin(pols, errmsg):
+            return None
+    dim = len(pols)
+    set_double_system(dim, pols, vrblvl)
+    phc = get_phcfun()
+    roco = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> linear_product_root_count calls phc', end='')
+    retval = phc(110, roco, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    if vrblvl > 0:
+        print('-> linear_product_root_count calls phc', end='')
+    retval = phc(112, roco, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('linear product root count :', roco[0])
+    lprc = roco[0]
+    strsets = create_string_buffer(b"", 4*1024)
+    if vrblvl > 0:
+        print('-> linear_product_root_count calls phc', end='')
+    retval = phc(116, roco, strsets, ccc, vrb)
+    sets = int4a2str(strsets, verbose=(vrblvl > 0))
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('supporting set structure :')
+        print(sets)
+    return (lprc, sets)
+
+def random_linear_product_system(pols, checkin=True, tosolve=True, vrblvl=0):
+    r"""
+    Given in *pols* a list of string representations of polynomials,
+    returns a random linear-product system based on a supporting
+    set structure and its solutions as well (if *tosolve*).
+    If *checkin*, then the list *pols* is tested to see if *pols* defines
+    a square polynomial system.  If the input system is not square,
+    then an error message is printed and None is returned.
+    """
+    if vrblvl > 0:
+        print('in random_linear_product_system ...')
+        print('the polynomials :')
+        for pol in pols:
+            print(pol)
+    if checkin:
+        errmsg = 'Root counts are defined only for square systems,'
+        if not solve_checkin(pols, errmsg):
+            return None
+    dim = len(pols)
+    set_double_system(dim, pols, vrblvl)
+    phc = get_phcfun()
+    roco = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> random_linear_product_system calls phc', end='')
+    retval = phc(110, roco, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    if vrblvl > 0:
+        print('-> random_linear_product_system calls phc', end='')
+    retval = phc(113, roco, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    result = get_double_system()
+    if not tosolve:
+        return result
+    if vrblvl > 0:
+        print('-> random_linear_product_system calls phc', end='')
+    retval = phc(114, roco, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    sols = get_double_solutions()
+    return (result, sols)
+
 def test_total_degree(vrblvl=0):
     """
     Tests the total degree and the start system.
@@ -212,9 +304,29 @@ def test_m_homogeneous_degree(vrblvl=0):
     fail = int(deg != 9)
     deg = m_partition_bezout_number(pols, partition, vrblvl=vrblvl)
     fail = fail + int(deg != 9)
-    print('********************************************************')
     q, qsols = m_homogeneous_start_system(pols, partition, vrblvl=vrblvl)
     fail = fail + int(len(qsols) != 9)
+    return fail
+
+def test_linear_product_root_count(vrblvl=0):
+    """
+    Tests the linear product root count.
+    """
+    pols = noon3()
+    lprc, sets = linear_product_root_count(pols, vrblvl=vrblvl)
+    print('linear product root count of noon3 :', lprc)
+    print('the supporting set structure :')
+    print(sets)
+    fail = int(lprc != 21)
+    prodsys, prodsols = random_linear_product_system(pols, vrblvl=vrblvl)
+    print('a random linear-product system :')
+    for pol in prodsys:
+        print(pol)
+    print('the solutions :')
+    for (idx, sol) in enumerate(prodsols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    fail = fail + int(len(prodsols) != 21)
     return fail
 
 def main():
@@ -224,6 +336,7 @@ def main():
     lvl = 10
     fail = test_total_degree(lvl)
     fail = fail + test_m_homogeneous_degree(lvl)
+    fail = fail + test_linear_product_root_count(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:
