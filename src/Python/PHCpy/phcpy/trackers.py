@@ -144,6 +144,186 @@ def get_condition_level(vrblvl=0):
     """
     return int(get_parameter_value(1, vrblvl))
 
+def copy_double_target_system(vrblvl=0):
+    """
+    Copies the system set in double precision to the target
+    in an artificial-parameter homotopy in double precision.
+    The verbose level is given by vrblvl.
+    """
+    if vrblvl > 0:
+        print('in copy_double_target_system ...')
+    phc = get_phcfun()
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> copyt_double_target_system calls phc', end='')
+    retval = phc(2, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def copy_double_double_target_system(vrblvl=0):
+    """
+    Copies the system set in double double precision to the target
+    in an artificial-parameter homotopy in double double precision.
+    The verbose level is given by vrblvl.
+    """
+    if vrblvl > 0:
+        print('in copy_double_double_target_system ...')
+    phc = get_phcfun()
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> set_double_double_target_system calls phc', end='')
+    retval = phc(252, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def copy_quad_double_target_system(vrblvl=0):
+    """
+    Copies the system set in quad double precision to the target
+    in an artificial-parameter homotopy in quad double precision.
+    The verbose level is given by vrblvl.
+    """
+    if vrblvl > 0:
+        print('in copy_quad_double_target_system ...')
+    phc = get_phcfun()
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> copy_quad_double_target_system calls phc', end='')
+    retval = phc(262, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def copy_double_start_system(vrblvl=0):
+    """
+    Copies the system set in double precision to the start
+    in an artificial-parameter homotopy in double precision.
+    The verbose level is given by vrblvl.
+    """
+    if vrblvl > 0:
+        print('in copy_double_start_system ...')
+    phc = get_phcfun()
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> copy_double_start_system calls phc', end='')
+    retval = phc(4, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def copy_double_double_start_system(vrblvl=0):
+    """
+    Copies the system set in double double precision to the start
+    in an artificial-parameter homotopy in double double precision.
+    The verbose level is given by vrblvl.
+    """
+    if vrblvl > 0:
+        print('in copy_double_double_start_system ...')
+    phc = get_phcfun()
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> copy_double_double_start_system calls phc', end='')
+    retval = phc(254, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def copy_quad_double_start_system(vrblvl=0):
+    """
+    Copies the system set in quad double precision to the start
+    in an artificial-parameter homotopy in quad double precision.
+    The verbose level is given by vrblvl.
+    """
+    if vrblvl > 0:
+        print('in copy_quad_double_start_system ...')
+    phc = get_phcfun()
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> copy_quad_double_start_system calls phc', end='')
+    retval = phc(264, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def copy_double_start_solutions(vrblvl=0):
+    """
+    Copies the solutions set in double precision to the start
+    solutions in an artificial-parameter homotopy in double precision.
+    The verbose level is given by vrblvl.
+    """
+    if vrblvl > 0:
+        print('in copy_double_start_solutions ...')
+    phc = get_phcfun()
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> copy_double_start_solutions calls phc', end='')
+    retval = phc(8, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def copy_double_double_start_solutions(vrblvl=0):
+    """
+    Copies the solutions set in double double precision to the start
+    solutions in an artificial-parameter homotopy in double double precision.
+    The verbose level is given by vrblvl.
+    """
+    if vrblvl > 0:
+        print('in copy_double_double_start_solutions ...')
+    phc = get_phcfun()
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> copy_double_double_start_solutions calls phc', end='')
+    retval = phc(258, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def copy_quad_double_start_solutions(vrblvl=0):
+    """
+    Copies the solutions set in quad double precision to the start
+    solutions in an artificial-parameter homotopy in quad double precision.
+    The verbose level is given by vrblvl.
+    """
+    if vrblvl > 0:
+        print('in copy_quad_double_start_solutions ...')
+    phc = get_phcfun()
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> copy_quad_double_start_solutions calls phc', end='')
+    retval = phc(268, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
 def set_double_target_system(pols, vrblvl=0):
     """
     Sets the target system in an artificial parameter homotopy
@@ -157,17 +337,7 @@ def set_double_target_system(pols, vrblvl=0):
             print(pol)
     nvr = number_of_symbols(pols, vrblvl)
     set_double_system(nvr, pols, vrblvl)
-    phc = get_phcfun()
-    aaa = pointer(c_int32(0))
-    bbb = pointer(c_int32(0))
-    ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
-    if vrblvl > 0:
-        print('-> set_double_target_system calls phc', end='')
-    retval = phc(2, aaa, bbb, ccc, vrb)
-    if vrblvl > 0:
-        print(', return value :', retval)
-    return retval
+    return copy_double_target_system(vrblvl)
 
 def set_double_double_target_system(pols, vrblvl=0):
     """
@@ -182,17 +352,7 @@ def set_double_double_target_system(pols, vrblvl=0):
             print(pol)
     nvr = number_of_symbols(pols, vrblvl)
     set_double_double_system(nvr, pols, vrblvl)
-    phc = get_phcfun()
-    aaa = pointer(c_int32(0))
-    bbb = pointer(c_int32(0))
-    ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
-    if vrblvl > 0:
-        print('-> set_double_double_target_system calls phc', end='')
-    retval = phc(252, aaa, bbb, ccc, vrb)
-    if vrblvl > 0:
-        print(', return value :', retval)
-    return retval
+    return copy_double_double_target_system(vrblvl)
 
 def set_quad_double_target_system(pols, vrblvl=0):
     """
@@ -207,17 +367,7 @@ def set_quad_double_target_system(pols, vrblvl=0):
             print(pol)
     nvr = number_of_symbols(pols, vrblvl)
     set_quad_double_system(nvr, pols, vrblvl)
-    phc = get_phcfun()
-    aaa = pointer(c_int32(0))
-    bbb = pointer(c_int32(0))
-    ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
-    if vrblvl > 0:
-        print('-> set_quad_double_target_system calls phc', end='')
-    retval = phc(262, aaa, bbb, ccc, vrb)
-    if vrblvl > 0:
-        print(', return value :', retval)
-    return retval
+    return copy_quad_double_target_system(vrblvl)
 
 def set_double_start_system(pols, vrblvl=0):
     """
@@ -232,17 +382,7 @@ def set_double_start_system(pols, vrblvl=0):
             print(pol)
     nvr = number_of_symbols(pols, vrblvl)
     set_double_system(nvr, pols, vrblvl)
-    phc = get_phcfun()
-    aaa = pointer(c_int32(0))
-    bbb = pointer(c_int32(0))
-    ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
-    if vrblvl > 0:
-        print('-> set_double_start_system calls phc', end='')
-    retval = phc(4, aaa, bbb, ccc, vrb)
-    if vrblvl > 0:
-        print(', return value :', retval)
-    return retval
+    return copy_double_start_system(vrblvl)
 
 def set_double_double_start_system(pols, vrblvl=0):
     """
@@ -257,17 +397,7 @@ def set_double_double_start_system(pols, vrblvl=0):
             print(pol)
     nvr = number_of_symbols(pols, vrblvl)
     set_double_double_system(nvr, pols, vrblvl)
-    phc = get_phcfun()
-    aaa = pointer(c_int32(0))
-    bbb = pointer(c_int32(0))
-    ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
-    if vrblvl > 0:
-        print('-> set_double_double_start_system calls phc', end='')
-    retval = phc(254, aaa, bbb, ccc, vrb)
-    if vrblvl > 0:
-        print(', return value :', retval)
-    return retval
+    return copy_double_double_start_system(vrblvl)
 
 def set_quad_double_start_system(pols, vrblvl=0):
     """
@@ -282,17 +412,7 @@ def set_quad_double_start_system(pols, vrblvl=0):
             print(pol)
     nvr = number_of_symbols(pols, vrblvl)
     set_quad_double_system(nvr, pols, vrblvl)
-    phc = get_phcfun()
-    aaa = pointer(c_int32(0))
-    bbb = pointer(c_int32(0))
-    ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
-    if vrblvl > 0:
-        print('-> set_quad_double_start_system calls phc', end='')
-    retval = phc(264, aaa, bbb, ccc, vrb)
-    if vrblvl > 0:
-        print(', return value :', retval)
-    return retval
+    return copy_quad_double_start_system(vrblvl)
 
 def set_double_start_solutions(nvr, sols, vrblvl=0):
     """
@@ -306,21 +426,11 @@ def set_double_start_solutions(nvr, sols, vrblvl=0):
         print('in set_double_start_solutions, with nvr :', nvr)
         print('the solutions :')
         for (idx, sol) in enumerate(sols):
-            print('Solution', idx, ':')
+            print('Solution', idx+1, ':')
             print(sol)
     clear_double_solutions(vrblvl)
     set_double_solutions(nvr, sols, vrblvl)
-    phc = get_phcfun()
-    aaa = pointer(c_int32(0))
-    bbb = pointer(c_int32(0))
-    ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
-    if vrblvl > 0:
-        print('-> set_double_start_solutions calls phc', end='')
-    retval = phc(8, aaa, bbb, ccc, vrb)
-    if vrblvl > 0:
-        print(', return value :', retval)
-    return retval
+    return copy_double_start_solutions(vrblvl)
 
 def set_double_double_start_solutions(nvr, sols, vrblvl=0):
     """
@@ -334,25 +444,11 @@ def set_double_double_start_solutions(nvr, sols, vrblvl=0):
         print('in set_double_double_start_solutions, with nvr :', nvr)
         print('the solutions :')
         for (idx, sol) in enumerate(sols):
-            print('Solution', idx, ':')
+            print('Solution', idx+1, ':')
             print(sol)
     clear_double_double_solutions(vrblvl)
     set_double_double_solutions(nvr, sols, vrblvl)
-    startsols = get_double_double_solutions(vrblvl)
-    for (idx, sol) in enumerate(startsols):
-        print('Start solution', idx+1, ':')
-        print(sol)
-    phc = get_phcfun()
-    aaa = pointer(c_int32(0))
-    bbb = pointer(c_int32(0))
-    ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
-    if vrblvl > 0:
-        print('-> set_double_double_start_solutions calls phc', end='')
-    retval = phc(258, aaa, bbb, ccc, vrb)
-    if vrblvl > 0:
-        print(', return value :', retval)
-    return retval
+    return copy_double_double_start_solutions(vrblvl)
 
 def set_quad_double_start_solutions(nvr, sols, vrblvl=0):
     """
@@ -366,20 +462,11 @@ def set_quad_double_start_solutions(nvr, sols, vrblvl=0):
         print('in set_quad_double_start_solutions, with nvr :', nvr)
         print('the solutions :')
         for (idx, sol) in enumerate(sols):
-            print('Solution', idx, ':')
+            print('Solution', idx+1, ':')
             print(sol)
+    clear_quad_double_solutions(vrblvl)
     set_quad_double_solutions(nvr, sols, vrblvl)
-    phc = get_phcfun()
-    aaa = pointer(c_int32(0))
-    bbb = pointer(c_int32(0))
-    ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
-    if vrblvl > 0:
-        print('-> set_quad_double_start_solutions calls phc', end='')
-    retval = phc(268, aaa, bbb, ccc, vrb)
-    if vrblvl > 0:
-        print(', return value :', retval)
-    return retval
+    return copy_quad_double_start_solutions(vrblvl)
 
 def get_double_target_solutions(vrblvl=0):
     """
@@ -402,7 +489,7 @@ def get_double_target_solutions(vrblvl=0):
     if vrblvl > 0:
         print('the target solutions :')
         for (idx, sol) in enumerate(sols):
-            print('Solution', idx, ':')
+            print('Solution', idx+1, ':')
             print(sol)
     return sols
 
@@ -428,7 +515,7 @@ def get_double_double_target_solutions(vrblvl=0):
     if vrblvl > 0:
         print('the target solutions :')
         for (idx, sol) in enumerate(sols):
-            print('Solution', idx, ':')
+            print('Solution', idx+1, ':')
             print(sol)
     return sols
 
@@ -454,7 +541,7 @@ def get_quad_double_target_solutions(vrblvl=0):
     if vrblvl > 0:
         print('the target solutions :')
         for (idx, sol) in enumerate(sols):
-            print('Solution', idx, ':')
+            print('Solution', idx+1, ':')
             print(sol)
     return sols
 
@@ -689,6 +776,60 @@ def clear_quad_double_track_data(vrblvl=0):
         print(', return value :', retval)
     return retval
 
+def do_double_track(tasks=0, vrblvl=0):
+    """
+    Calls the path trackers in double precision with a number
+    of tasks equal to tasks (no multithreading if zero).
+    The verbose level is given by vrblvl.
+    """
+    phc = get_phcfun()
+    nbtasks = pointer(c_int32(tasks))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> do_double_track calls phc', end='')
+    retval = phc(16, nbtasks, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def do_double_double_track(tasks=0, vrblvl=0):
+    """
+    Calls the path trackers in double double precision with a number
+    of tasks equal to tasks (no multithreading if zero).
+    The verbose level is given by vrblvl.
+    """
+    phc = get_phcfun()
+    nbtasks = pointer(c_int32(tasks))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> do_double_double_track calls phc', end='')
+    retval = phc(236, nbtasks, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def do_quad_double_track(tasks=0, vrblvl=0):
+    """
+    Calls the path trackers in quad double precision with a number
+    of tasks equal to tasks (no multithreading if zero).
+    The verbose level is given by vrblvl.
+    """
+    phc = get_phcfun()
+    nbtasks = pointer(c_int32(tasks))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> do_quad_double_track calls phc', end='')
+    retval = phc(246, nbtasks, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
 def double_track(target, start, startsols, gamma=0, pwt=2, tasks=0, vrblvl=0):
     r"""
     Track paths in double precision.
@@ -729,16 +870,7 @@ def double_track(target, start, startsols, gamma=0, pwt=2, tasks=0, vrblvl=0):
     nvr = number_of_symbols(start)
     set_double_start_solutions(nvr, startsols, vrblvl)
     usedgamma = set_double_homotopy(gamma, pwt, vrblvl)
-    phc = get_phcfun()
-    nbtasks = pointer(c_int32(tasks))
-    bbb = pointer(c_int32(0))
-    ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
-    if vrblvl > 0:
-        print('-> double_track calls phc', end='')
-    retval = phc(16, nbtasks, bbb, ccc, vrb)
-    if vrblvl > 0:
-        print(', return value :', retval)
+    do_double_track(tasks, vrblvl)
     sols = get_double_target_solutions(vrblvl)
     clear_double_solutions(vrblvl)
     clear_double_homotopy(vrblvl)
@@ -787,16 +919,7 @@ def double_double_track(target, start, startsols, \
     nvr = number_of_symbols(start)
     set_double_double_start_solutions(nvr, startsols, vrblvl)
     usedgamma = set_double_double_homotopy(gamma, pwt, vrblvl)
-    phc = get_phcfun()
-    nbtasks = pointer(c_int32(tasks))
-    bbb = pointer(c_int32(0))
-    ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
-    if vrblvl > 0:
-        print('-> double_double_track calls phc', end='')
-    retval = phc(236, nbtasks, bbb, ccc, vrb)
-    if vrblvl > 0:
-        print(', return value :', retval)
+    do_double_double_track(tasks, vrblvl)
     sols = get_double_double_target_solutions(vrblvl)
     clear_double_double_solutions(vrblvl)
     clear_double_double_homotopy(vrblvl)
@@ -845,16 +968,7 @@ def quad_double_track(target, start, startsols, \
     nvr = number_of_symbols(start)
     set_quad_double_start_solutions(nvr, startsols, vrblvl)
     usedgamma = set_quad_double_homotopy(gamma, pwt, vrblvl)
-    phc = get_phcfun()
-    nbtasks = pointer(c_int32(tasks))
-    bbb = pointer(c_int32(0))
-    ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
-    if vrblvl > 0:
-        print('-> quad_double_track calls phc', end='')
-    retval = phc(246, nbtasks, bbb, ccc, vrb)
-    if vrblvl > 0:
-        print(', return value :', retval)
+    do_quad_double_track(tasks, vrblvl)
     sols = get_quad_double_target_solutions(vrblvl)
     clear_quad_double_homotopy(vrblvl)
     clear_quad_double_track_data(vrblvl)

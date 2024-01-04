@@ -1,3 +1,6 @@
+Thu 4 Jan 2024 : in trackers.py added new functions with code that is
+  factored out of the track functions for better modularity.
+
 Wed 3 Jan 2024 : added test showpoles.py to PHCpy/tests.
   Extended homotopies.py with linear-product root counts and systems.
   Add a first version of sets.py to represent witness sets.
