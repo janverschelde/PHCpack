@@ -1,11 +1,15 @@
 """
-Exports the definition of polynomial systems.
+Exports the definition of polynomial systems, in double, double double,
+and quad double precision.  Also polynomials with negative exponents,
+the so-called Laurent polynomials, are supported.
 """
 from ctypes import c_int32, c_double, pointer, create_string_buffer
 from phcpy.version import get_phcfun, int4a2nbr, str2int4a, int4a2str
 from phcpy.dimension import set_double_dimension, get_double_dimension
-from phcpy.dimension import set_double_double_dimension, get_double_double_dimension
-from phcpy.dimension import set_quad_double_dimension, get_quad_double_dimension
+from phcpy.dimension import set_double_double_dimension
+from phcpy.dimension import get_double_double_dimension
+from phcpy.dimension import set_quad_double_dimension
+from phcpy.dimension import get_quad_double_dimension
 from phcpy.dimension import set_double_Laurent_dimension
 from phcpy.dimension import get_double_Laurent_dimension
 from phcpy.dimension import set_double_double_Laurent_dimension
@@ -629,7 +633,7 @@ def degree_of_double_polynomial(idx, vrblvl=0):
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl)
     if vrblvl > 0:
-        print('-> clear_double_system calls phc', end='')
+        print('-> degree_of_double_system calls phc', end='')
     retval = phc(119, aidx, bdeg, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
@@ -686,6 +690,24 @@ def clear_quad_double_system(vrblvl=0):
     if vrblvl > 0:
         print('-> clear_quad_double_system calls phc', end='')
     retval = phc(387, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def clear_symbol_table(vrblvl=0):
+    """
+    Clears the table of symbols used to represent polynomials.
+    """
+    if vrblvl > 0:
+        print('in clear_symbol_table ...')
+    phc = get_phcfun()
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> clear_symbol_table calls phc', end='')
+    retval = phc(29, aaa, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
     return retval
