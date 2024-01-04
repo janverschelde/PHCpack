@@ -4,12 +4,15 @@ positive dimensional solution sets of polynomial systems.
 The embed functions add slack variables and random hyperplanes.
 The number of slack variables equals the number of random hyperplanes,
 which in turn equals the dimension of the solution set.
+The drop functions remove the added slack variables from the polynomials
+and the coordinates of the solutions.
 Given a witness set and a point, a homotopy membership determines whether
 the point belongs to the solution set represented by the witness set.
 """
-from ctypes import c_int32, c_double, pointer
-from phcpy.version import get_phcfun
-from phcpy.polynomials import number_of_symbols
+from ctypes import c_int32, c_double, pointer, create_string_buffer
+from phcpy.version import get_phcfun, str2int4a
+from phcpy.polynomials import number_of_symbols, string_of_symbols
+from phcpy.polynomials import clear_symbol_table
 from phcpy.polynomials import set_double_system, get_double_system
 from phcpy.polynomials import set_double_double_system
 from phcpy.polynomials import get_double_double_system
@@ -22,8 +25,14 @@ from phcpy.polynomials import get_double_double_Laurent_system
 from phcpy.polynomials import set_quad_double_Laurent_system
 from phcpy.polynomials import get_quad_double_Laurent_system
 from phcpy.solutions import set_double_solutions
+from phcpy.solutions import get_double_solutions
+from phcpy.solutions import clear_double_solutions
 from phcpy.solutions import set_double_double_solutions
+from phcpy.solutions import get_double_double_solutions
+from phcpy.solutions import clear_double_double_solutions
 from phcpy.solutions import set_quad_double_solutions
+from phcpy.solutions import get_quad_double_solutions
+from phcpy.solutions import clear_quad_double_solutions
 from phcpy.solver import solve
 
 def double_embed(nvr, topdim, pols, vrblvl=0):
@@ -422,6 +431,197 @@ def set_quad_double_Laurent_witness_set(nvr, dim, pols, sols, vrblvl=0):
         print(', return value :', retval)
     return retval
 
+def drop_variable_from_table(name, vrblvl=0):
+    """
+    Drops a variable with the given name from the symbol table.
+    The verbose level is given by the value of vrblvl.
+    """
+    if vrblvl > 0:
+        print('in drop_variable_from_table, name :', name);
+    phc = get_phcfun()
+    anbc = pointer(c_int32(len(name)))
+    bvar = str2int4a(name, (vrblvl > 0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> drop_variable_from_table calls phc', end='')
+    retval = phc(296, anbc, bvar, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def drop_variable_from_double_polynomials(pols, svar, vrblvl=0):
+    r"""
+    Removes the variable with symbol in the string *svar*
+    from the list *pols* of strings that represent polynomials
+    in several variables, with coefficients in double precision.
+    Note that the system in *pols* must be square.
+    """
+    if vrblvl > 0:
+        print('in drop_variable_from_double_polynomials, svar :', svar)
+        print('the polynomials :')
+        for pol in pols:
+            print(pol)
+    set_double_system(len(pols), pols, vrblvl)
+    phc = get_phcfun()
+    anbc = pointer(c_int32(len(svar)))
+    bvar = str2int4a(svar, (vrblvl > 0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> drop_variable_from_double_polynomials calls phc', end='')
+    retval = phc(309, anbc, bvar, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    drop_variable_from_table(svar, vrblvl)
+    return get_double_system(vrblvl)
+
+def drop_variable_from_double_double_polynomials(pols, svar, vrblvl=0):
+    r"""
+    Removes the variable with symbol in the string *svar*
+    from the list *pols* of strings that represent polynomials
+    in several variables, with coefficients in double double precision.
+    Note that the system in *pols* must be square.
+    """
+    if vrblvl > 0:
+        print('in drop_variable_from_double_double_polynomials, svar :', svar)
+        print('the polynomials :')
+        for pol in pols:
+            print(pol)
+    set_double_double_system(len(pols), pols, vrblvl)
+    phc = get_phcfun()
+    anbc = pointer(c_int32(len(svar)))
+    bvar = str2int4a(svar, (vrblvl > 0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> drop_variable_from_double_double_polynomials calls phc', \
+            end='')
+    retval = phc(310, anbc, bvar, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    drop_variable_from_table(svar, vrblvl)
+    return get_double_double_system(vrblvl)
+
+def drop_variable_from_quad_double_polynomials(pols, svar, vrblvl=0):
+    r"""
+    Removes the variable with symbol in the string *svar*
+    from the list *pols* of strings that represent polynomials
+    in several variables, with coefficients in quad double precision.
+    Note that the system in *pols* must be square.
+    """
+    if vrblvl > 0:
+        print('in drop_variable_from_quad_double_polynomials, svar :', svar)
+        print('the polynomials :')
+        for pol in pols:
+            print(pol)
+    set_quad_double_system(len(pols), pols, vrblvl)
+    phc = get_phcfun()
+    anbc = pointer(c_int32(len(svar)))
+    bvar = str2int4a(svar, (vrblvl > 0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> drop_variable_from_quad_double_polynomials calls phc', \
+            end='')
+    retval = phc(311, anbc, bvar, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    drop_variable_from_table(svar, vrblvl)
+    return get_quad_double_system(vrblvl)
+
+def drop_coordinate_from_double_solutions(sols, nvr, svar, vrblvl=0):
+    r"""
+    Removes the variable with symbol in the string *svar*
+    from the list *sols* of strings that represent solutions
+    in *nvr* variables, in double precision.
+    """
+    if vrblvl > 0:
+        print('in drop_coordinate_from_double_solutions', end='')
+        print(', nvr :', nvr, end='')
+        print(', svar :', svar)
+        print('the solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    clear_symbol_table(vrblvl)
+    clear_double_solutions(vrblvl)
+    set_double_solutions(nvr, sols)
+    phc = get_phcfun()
+    anbc = pointer(c_int32(len(svar)))
+    bvar = str2int4a(svar, (vrblvl > 0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> drop_coordinate_from_double_solutions calls phc', end='')
+    retval = phc(146, anbc, bvar, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    drop_variable_from_table(svar, vrblvl)
+    return get_double_solutions(vrblvl)
+
+def drop_coordinate_from_double_double_solutions(sols, nvr, svar, vrblvl=0):
+    r"""
+    Removes the variable with symbol in the string *svar*
+    from the list *sols* of strings that represent solutions
+    in *nvr* variables, in double double precision.
+    """
+    if vrblvl > 0:
+        print('in drop_coordinate_from_double_double_solutions', end='')
+        print(', nvr :', nvr, end='')
+        print(', svar :', svar)
+        print('the solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    clear_symbol_table(vrblvl)
+    clear_double_double_solutions(vrblvl)
+    set_double_double_solutions(nvr, sols)
+    phc = get_phcfun()
+    anbc = pointer(c_int32(len(svar)))
+    bvar = str2int4a(svar, (vrblvl > 0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> drop_coordinate_from_double_double_solutions calls phc', \
+            end='')
+    retval = phc(349, anbc, bvar, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    drop_variable_from_table(svar, vrblvl)
+    return get_double_double_solutions(vrblvl)
+
+def drop_coordinate_from_quad_double_solutions(sols, nvr, svar, vrblvl=0):
+    r"""
+    Removes the variable with symbol in the string *svar*
+    from the list *sols* of strings that represent solutions
+    in *nvr* variables, in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in drop_coordinate_from_quad_double_solutions', end='')
+        print(', nvr :', nvr, end='')
+        print(', svar :', svar)
+        print('the solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    clear_symbol_table(vrblvl)
+    clear_quad_double_solutions(vrblvl)
+    set_quad_double_solutions(nvr, sols)
+    phc = get_phcfun()
+    anbc = pointer(c_int32(len(svar)))
+    bvar = str2int4a(svar, (vrblvl > 0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> drop_coordinate_from_quad_double_solutions calls phc', \
+            end='')
+    retval = phc(399, anbc, bvar, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    drop_variable_from_table(svar, vrblvl)
+    return get_quad_double_solutions(vrblvl)
+
 def double_membertest(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, tasks=0, vrblvl=0):
     r"""
@@ -778,6 +978,103 @@ def test_quad_double_member(vrblvl=0):
     fail = fail + int(ismbr != False)
     return fail
 
+def test_double_drop(vrblvl=0):
+    """
+    Tests the removal of a slack variable in double precision.
+    """
+    twisted = ['x^2 - y;', 'x^3 - z;']
+    twistede1 = double_embed(3, 1, twisted, vrblvl=vrblvl)
+    # trick needed to move zz1 to the end
+    twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
+    print('the embedded system :')
+    for pol in twistede1:
+        print(pol)
+    clear_double_solutions(vrblvl)
+    sols = solve(twistede1, verbose_level=vrblvl)
+    print('the solutions :')
+    for (idx, sol) in enumerate(sols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    print('the symbols :', string_of_symbols())
+    name = 'zz1'
+    dropped = drop_variable_from_double_polynomials(twistede1, name, vrblvl)
+    print('the polynomials after the drop :')
+    for pol in dropped:
+        print(pol)
+    print('the symbols :', string_of_symbols())
+    dropsols = drop_coordinate_from_double_solutions(sols, 4, name, vrblvl)
+    print('the solutions after the drop :')
+    for (idx, sol) in enumerate(dropsols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    return 0
+
+def test_double_double_drop(vrblvl=0):
+    """
+    Tests the removal of a slack variable in double double precision.
+    """
+    twisted = ['x^2 - y;', 'x^3 - z;']
+    twistede1 = double_double_embed(3, 1, twisted, vrblvl=vrblvl)
+    # trick needed to move zz1 to the end
+    twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
+    print('the embedded system :')
+    for pol in twistede1:
+        print(pol)
+    clear_double_double_solutions(vrblvl)
+    sols = solve(twistede1, tasks=1, precision='dd', verbose_level=vrblvl)
+    print('the solutions :')
+    for (idx, sol) in enumerate(sols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    print('the symbols :', string_of_symbols())
+    name = 'zz1'
+    dropped = drop_variable_from_double_double_polynomials(twistede1, \
+        name, vrblvl)
+    print('the polynomials after the drop :')
+    for pol in dropped:
+        print(pol)
+    print('the symbols :', string_of_symbols())
+    dropsols = drop_coordinate_from_double_double_solutions(sols, 4, \
+        name, vrblvl)
+    print('the solutions after the drop :')
+    for (idx, sol) in enumerate(dropsols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    return 0
+
+def test_quad_double_drop(vrblvl=0):
+    """
+    Tests the removal of a slack variable in quad double precision.
+    """
+    twisted = ['x^2 - y;', 'x^3 - z;']
+    twistede1 = quad_double_embed(3, 1, twisted, vrblvl=vrblvl)
+    # trick needed to move zz1 to the end
+    twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
+    print('the embedded system :')
+    for pol in twistede1:
+        print(pol)
+    clear_quad_double_solutions()
+    sols = solve(twistede1, precision='qd', verbose_level=vrblvl)
+    print('the solutions :')
+    for (idx, sol) in enumerate(sols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    print('the symbols :', string_of_symbols())
+    name = 'zz1'
+    dropped = drop_variable_from_quad_double_polynomials(twistede1, \
+        name, vrblvl)
+    print('after the drop :')
+    for pol in dropped:
+        print(pol)
+    print('the symbols :', string_of_symbols())
+    dropsols = drop_coordinate_from_quad_double_solutions(sols, 4, \
+        name, vrblvl)
+    print('the solutions after the drop :')
+    for (idx, sol) in enumerate(dropsols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    return 0
+
 def main():
     """
     Runs some tests.
@@ -792,6 +1089,9 @@ def main():
     fail = fail + test_double_member(lvl)
     fail = fail + test_double_double_member(lvl)
     fail = fail + test_quad_double_member(lvl)
+    fail = fail + test_double_drop(lvl)
+    fail = fail + test_double_double_drop(lvl)
+    fail = fail + test_quad_double_drop(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:
