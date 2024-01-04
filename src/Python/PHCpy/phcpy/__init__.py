@@ -47,6 +47,9 @@ trackers
     path trackers with aposteriori step size control.
 schubert
     numerical Schubert calculus defines homotopies for enumerative geometry.
+sets
+    positive dimensional solution sets are represented by system with
+    slack variables and a set of generic points.
 
 The main() of every module provides some basic examples and tests.
 """
@@ -115,6 +118,7 @@ phc = set_phcfun()
 from phcpy import version, dimension, polynomials, solutions
 from phcpy import solver, examples, series, families
 from phcpy import homotopies, trackers, schubert, curves
+from phcpy import sets
 
 # The version number is defined as a data attribute.
 __version__ = '1.1.3'

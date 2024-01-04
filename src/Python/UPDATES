@@ -1,5 +1,6 @@
 Wed 3 Jan 2024 : added test showpoles.py to PHCpy/tests.
   Extended homotopies.py with linear-product root counts and systems.
+  Add a first version of sets.py to represent witness sets.
 
 Tue 2 Jan 2024 : fixed homotopies.py to import version as phcpy.version.
   Extended curves.py with double double and quad double versions of the

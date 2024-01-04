@@ -21,6 +21,7 @@ in the phcpy folder.
 | trackers               | aposteriori step size control path trackers   |
 | curves                 | apriori step size control path trackers       |
 | schubert               | homotopies for enumerative geometry           |
+| sets                   | tools for positive dimensional solution sets  |
 
 The directed acyclic graph shows the module dependencies:
 
