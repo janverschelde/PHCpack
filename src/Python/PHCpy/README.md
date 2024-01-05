@@ -22,6 +22,7 @@ in the phcpy folder.
 | curves                 | apriori step size control path trackers       |
 | schubert               | homotopies for enumerative geometry           |
 | sets                   | tools for positive dimensional solution sets  |
+| cascades               | generic points on all solution components     |
 
 The directed acyclic graph shows the module dependencies:
 

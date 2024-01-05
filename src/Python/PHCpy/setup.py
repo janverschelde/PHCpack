@@ -1,6 +1,6 @@
 """
-To install phcpy, the file libPHCpack must be placed
-to the same location where the modules of phcpy are installed.
+To install phcpy, the file libPHCpack must be in the folder phcpy,
+in the same location where the modules of phcpy are installed.
 """
 
 from distutils.core import setup
@@ -17,7 +17,7 @@ setup(
         'phcpy/solutions', 'phcpy/volumes', 'phcpy/solver', \
         'phcpy/examples', 'phcpy/series', 'phcpy/families', \
         'phcpy/homotopies', 'phcpy/trackers', 'phcpy/curves', \
-        'phcpy/schubert', 'phcpy/sets' ],
+        'phcpy/schubert', 'phcpy/sets', 'phcpy/cascades' ],
     license = 'GNU GENERAL PUBLIC LICENSE version 3' ,
     package_data = {'phcpy':['libPHCpack.so', 'libPHCpack.dll', \
         'libPHCpack.dylib']} ,
