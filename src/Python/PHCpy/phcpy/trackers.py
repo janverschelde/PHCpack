@@ -324,6 +324,66 @@ def copy_quad_double_start_solutions(vrblvl=0):
         print(', return value :', retval)
     return retval
 
+def copy_double_target_solutions(vrblvl=0):
+    """
+    Copies the solutions set in double precision to the target
+    solutions in an artificial-parameter homotopy in double precision.
+    The verbose level is given by vrblvl.
+    """
+    if vrblvl > 0:
+        print('in copy_double_target_solutions ...')
+    phc = get_phcfun()
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> copy_double_target_solutions calls phc', end='')
+    retval = phc(6, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def copy_double_double_target_solutions(vrblvl=0):
+    """
+    Copies the solutions set in double double precision to the target
+    solutions in an artificial-parameter homotopy in double precision.
+    The verbose level is given by vrblvl.
+    """
+    if vrblvl > 0:
+        print('in copy_double_double_target_solutions ...')
+    phc = get_phcfun()
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> copy_double_double_target_solutions calls phc', end='')
+    retval = phc(256, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def copy_quad_double_target_solutions(vrblvl=0):
+    """
+    Copies the solutions set in quad double precision to the target
+    solutions in an artificial-parameter homotopy in double precision.
+    The verbose level is given by vrblvl.
+    """
+    if vrblvl > 0:
+        print('in copy_quad_double_target_solutions ...')
+    phc = get_phcfun()
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> copy_quad_double_target_solutions calls phc', end='')
+    retval = phc(266, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
 def set_double_target_system(pols, vrblvl=0):
     """
     Sets the target system in an artificial parameter homotopy

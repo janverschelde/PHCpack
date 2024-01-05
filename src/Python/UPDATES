@@ -1,5 +1,5 @@
 Fri 5 Jan 2024 : added double double and quad double versions of the
-  functions in cascades.py.
+  functions in cascades.py.  Added copy functions to trackers.py.
 
 Thu 4 Jan 2024 : in trackers.py added new functions with code that is
   factored out of the track functions for better modularity.
