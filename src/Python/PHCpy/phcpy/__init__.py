@@ -30,9 +30,6 @@ solutions
     strings into Python dictionaries, e.g. for evaluation.
 solver
     exports the blackbox solver of PHCpack.
-series
-    allows to compute series developments of solution curves
-    defined by polynomial homotopies.
 volumes
     exports functions to compute mixed volumes and stable mixed volumes,
     which provides generically sharp root counts.
@@ -41,10 +38,17 @@ examples
 families
     polynomial system often occur in families and are defined for any
     number of equations and variables, e.g.: the cyclic n-roots system.
+starters
+    constructors of start systems for artificial parameter homotopies.
 homotopies
     a homotopy connects the target system to a start system.
 trackers
     path trackers with aposteriori step size control.
+series
+    allows to compute series developments of solution curves
+    defined by polynomial homotopies.
+curves
+    exports apriori step size control path trackers.
 schubert
     numerical Schubert calculus defines homotopies for enumerative geometry.
 sets
@@ -118,9 +122,9 @@ def set_phcfun(verbose=False):
 
 phc = set_phcfun()
 from phcpy import version, dimension, polynomials, solutions
-from phcpy import solver, examples, series, families
-from phcpy import homotopies, trackers, schubert, curves
-from phcpy import sets, cascades
+from phcpy import solver, volumes, examples, families
+from phcpy import starters, homotopies, trackers, series, curves
+from phcpy import schubert, sets, cascades
 
 # The version number is defined as a data attribute.
 __version__ = '1.1.3'

@@ -19,19 +19,19 @@ from phcpy.solutions import clear_double_double_solutions
 from phcpy.solutions import set_quad_double_solutions
 from phcpy.solutions import get_quad_double_solutions
 from phcpy.solutions import clear_quad_double_solutions
-from phcpy.homotopies import total_degree_start_system
-from phcpy.trackers import set_double_target_system
-from phcpy.trackers import set_double_start_system
-from phcpy.trackers import set_double_start_solutions
-from phcpy.trackers import set_double_double_target_system
-from phcpy.trackers import set_double_double_start_system
-from phcpy.trackers import set_double_double_start_solutions
-from phcpy.trackers import set_quad_double_target_system
-from phcpy.trackers import set_quad_double_start_system
-from phcpy.trackers import set_quad_double_start_solutions
-from phcpy.trackers import set_double_homotopy
-from phcpy.trackers import set_double_double_homotopy
-from phcpy.trackers import set_quad_double_homotopy
+from phcpy.starters import total_degree_start_system
+from phcpy.homotopies import set_double_target_system
+from phcpy.homotopies import set_double_start_system
+from phcpy.homotopies import set_double_start_solutions
+from phcpy.homotopies import set_double_double_target_system
+from phcpy.homotopies import set_double_double_start_system
+from phcpy.homotopies import set_double_double_start_solutions
+from phcpy.homotopies import set_quad_double_target_system
+from phcpy.homotopies import set_quad_double_start_system
+from phcpy.homotopies import set_quad_double_start_solutions
+from phcpy.homotopies import set_double_homotopy
+from phcpy.homotopies import set_double_double_homotopy
+from phcpy.homotopies import set_quad_double_homotopy
 
 def set_default_parameters(vrblvl=0):
     """
@@ -1934,7 +1934,7 @@ def clear_quad_double_data(vrblvl=0):
     return retval
 
 def next_double_track(target, start, sols, homogeneous=False, \
-    vrblvl=0):
+    interactive=False, vrblvl=0):
     r"""
     Runs the series-Pade tracker step by step in double precision,
     for an artificial-parameter homotopy.
@@ -1944,8 +1944,7 @@ def next_double_track(target, start, sols, homogeneous=False, \
     The *start* is a list of strings representing the polynomials
     of the start system, with known solutions in *sols*.
     The *sols* is a list of strings representing start solutions.
-    The function is interactive, prompting the user each time
-    before performing the next predictor-corrector step.
+    Prompts for each predictor-corrector step, if *interactive*.
     If *vrblvl* > 0, then extra output is written.
     If *homogeneous*, then path tracking happens in projective space,
     otherwise the original affine coordinates are used.
@@ -1954,6 +1953,7 @@ def next_double_track(target, start, sols, homogeneous=False, \
     """
     if vrblvl > 0:
         print('in next_double_track, homogeneous :', homogeneous)
+        print('interactive :', interactive)
         print('the target system :')
         for pol in target:
             print(pol)
@@ -1965,44 +1965,55 @@ def next_double_track(target, start, sols, homogeneous=False, \
             print('Solution', idx+1, ':')
             print(sol)
     result = []
-    dim = number_of_symbols(start, vrblvl)
-    initialize_double_artificial_homotopy(target, start, homogeneous, vrblvl)
-    (idx, tval) = (0, 0.0)
+    dim = number_of_symbols(start, vrblvl-1)
+    initialize_double_artificial_homotopy(target, start, homogeneous, vrblvl-1)
     fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
-    for sol in sols:
-        idx = idx + 1
-        set_double_solution(dim, sol, vrblvl)
-        while(True):
-            answer = input('next predictor-corrector step ? (y/n) ')
-            if(answer != 'y'):
-                result.append(sol)
-                break
+    for (idx, sol) in enumerate(sols):
+        tval = 0.0
+        if vrblvl > 0:
+            print('tracking solution path', idx+1, '...')
+        set_double_solution(dim, sol, vrblvl-1)
+        for step in range(1, 101):
+            if interactive:
+                answer = input('next predictor-corrector step ? (y/n) ')
+                if answer != 'y':
+                    result.append(sol)
+                    break
             else:
-                double_predict_correct(vrblvl)
-                polestep = double_pole_step(vrblvl)
-                estidist = double_estimated_distance(vrblvl)
-                curvstep = double_hessian_step(vrblvl)
+                if tval >= 1.0:
+                    result.append(sol)
+                    break
+            double_predict_correct(vrblvl-1)
+            polestep = double_pole_step(vrblvl-1)
+            estidist = double_estimated_distance(vrblvl-1)
+            curvstep = double_hessian_step(vrblvl-1)
+            if vrblvl > 0:
+                print('step', step, end=', ')
                 print(fmt % (polestep, estidist, curvstep))
-                previoustval = tval
-                tval = double_t_value(vrblvl)
-                step = double_step_size(vrblvl)
-                frp = double_pole_radius()
+            previoustval = tval
+            tval = double_t_value(vrblvl-1)
+            step = double_step_size(vrblvl-1)
+            frp = double_pole_radius(vrblvl-1)
+            if vrblvl > 0:
                 print("t : %.3e, step : %.3e, frp : %.3e" % (tval, step, frp))
-                cfp = double_closest_pole(vrblvl)
+            cfp = double_closest_pole(vrblvl-1)
+            if vrblvl > 0:
                 print('For the previous t value', previoustval, ':')
                 print('1) closest pole : ', cfp)
-                print('2) the series:', double_series_coefficients(dim))
-                print('3) Pade vector:', double_pade_vector(dim))
-                print('4) poles:', double_poles(dim))
-                sol = get_double_solution(vrblvl)
+                print('2) the series:', \
+                    double_series_coefficients(dim, vrblvl-1))
+                print('3) Pade vector:', double_pade_vector(dim, vrblvl-1))
+                print('4) poles:', double_poles(dim, vrblvl-1))
+            sol = get_double_solution(vrblvl-1)
+            if vrblvl > 0:
                 print(sol)
-    gamma = get_gamma_constant(vrblvl)
-    clear_double_solutions(vrblvl)
-    clear_double_data(vrblvl)
+    gamma = get_gamma_constant(vrblvl-1)
+    clear_double_solutions(vrblvl-1)
+    clear_double_data(vrblvl-1)
     return (gamma, result)
 
 def next_double_double_track(target, start, sols, homogeneous=False, \
-    vrblvl=0):
+    interactive=False, vrblvl=0):
     r"""
     Runs the series-Pade tracker step by step in double double precision,
     for an artificial-parameter homotopy.
@@ -2012,8 +2023,7 @@ def next_double_double_track(target, start, sols, homogeneous=False, \
     The *start* is a list of strings representing the polynomials
     of the start system, with known solutions in *sols*.
     The *sols* is a list of strings representing start solutions.
-    The function is interactive, prompting the user each time
-    before performing the next predictor-corrector step.
+    Prompts for each predictor-corrector step, if *interactive*.
     If *vrblvl* > 0, then extra output is written.
     If *homogeneous*, then path tracking happens in projective space,
     otherwise the original affine coordinates are used.
@@ -2022,6 +2032,7 @@ def next_double_double_track(target, start, sols, homogeneous=False, \
     """
     if vrblvl > 0:
         print('in next_double_double_track, homogeneous :', homogeneous)
+        print('interactive :', interactive)
         print('the target system :')
         for pol in target:
             print(pol)
@@ -2033,45 +2044,57 @@ def next_double_double_track(target, start, sols, homogeneous=False, \
             print('Solution', idx+1, ':')
             print(sol)
     result = []
-    dim = number_of_symbols(start, vrblvl)
+    dim = number_of_symbols(start, vrblvl-1)
     initialize_double_double_artificial_homotopy(target, start, \
-        homogeneous, vrblvl)
-    (idx, tval) = (0, 0.0)
+        homogeneous, vrblvl-1)
+    gamma = get_gamma_constant(vrblvl-1)
     fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
-    for sol in sols:
-        idx = idx + 1
-        set_double_double_solution(dim, sol, vrblvl)
-        while(True):
-            answer = input('next predictor-corrector step ? (y/n) ')
-            if(answer != 'y'):
-                result.append(sol)
-                break
+    for (idx, sol) in enumerate(sols):
+        tval = 0.0
+        if vrblvl > 0:
+            print('tracking solution path', idx+1, '...')
+        set_double_double_solution(dim, sol, vrblvl-1)
+        for step in range(1, 101):
+            if interactive:
+                answer = input('next predictor-corrector step ? (y/n) ')
+                if answer != 'y':
+                    result.append(sol)
+                    break
             else:
-                double_double_predict_correct(vrblvl)
-                polestep = double_double_pole_step(vrblvl)
-                estidist = double_double_estimated_distance(vrblvl)
-                curvstep = double_double_hessian_step(vrblvl)
+                if tval >= 1.0:
+                    result.append(sol)
+                    break
+            double_double_predict_correct(vrblvl-1)
+            polestep = double_double_pole_step(vrblvl-1)
+            estidist = double_double_estimated_distance(vrblvl-1)
+            curvstep = double_double_hessian_step(vrblvl-1)
+            if vrblvl > 0:
+                print('step', step, end=', ')
                 print(fmt % (polestep, estidist, curvstep))
-                previoustval = tval
-                tval = double_double_t_value(vrblvl)
-                step = double_double_step_size(vrblvl)
-                frp = double_double_pole_radius()
+            previoustval = tval
+            tval = double_double_t_value(vrblvl-1)
+            step = double_double_step_size(vrblvl-1)
+            frp = double_double_pole_radius(vrblvl-1)
+            if vrblvl > 0:
                 print("t : %.3e, step : %.3e, frp : %.3e" % (tval, step, frp))
-                cfp = double_double_closest_pole(vrblvl)
+            cfp = double_double_closest_pole(vrblvl-1)
+            if vrblvl > 0:
                 print('For the previous t value', previoustval, ':')
                 print('1) closest pole : ', cfp)
-                print('2) the series:', double_double_series_coefficients(dim))
-                print('3) Pade vector:', double_double_pade_vector(dim))
-                print('4) poles:', double_double_poles(dim))
-                sol = get_double_double_solution(vrblvl)
+                print('2) the series:', \
+                    double_double_series_coefficients(dim, vrblvl-1))
+                print('3) Pade vector:', \
+                    double_double_pade_vector(dim, vrblvl-1))
+                print('4) poles:', double_double_poles(dim, vrblvl-1))
+            sol = get_double_double_solution(vrblvl-1)
+            if vrblvl > 0:
                 print(sol)
-    gamma = get_gamma_constant(vrblvl)
-    clear_double_double_solutions(vrblvl)
-    clear_double_double_data(vrblvl)
+    clear_double_double_solutions(vrblvl-1)
+    clear_double_double_data(vrblvl-1)
     return (gamma, result)
 
 def next_quad_double_track(target, start, sols, homogeneous=False, \
-    vrblvl=0):
+    interactive=False, vrblvl=0):
     r"""
     Runs the series-Pade tracker step by step in quad double precision,
     for an artificial-parameter homotopy.
@@ -2081,8 +2104,7 @@ def next_quad_double_track(target, start, sols, homogeneous=False, \
     The *start* is a list of strings representing the polynomials
     of the start system, with known solutions in *sols*.
     The *sols* is a list of strings representing start solutions.
-    The function is interactive, prompting the user each time
-    before performing the next predictor-corrector step.
+    Prompts for each predictor-corrector step, if *interactive*.
     If *vrblvl* > 0, then extra output is written.
     If *homogeneous*, then path tracking happens in projective space,
     otherwise the original affine coordinates are used.
@@ -2091,6 +2113,7 @@ def next_quad_double_track(target, start, sols, homogeneous=False, \
     """
     if vrblvl > 0:
         print('in next_quad_double_track, homogeneous :', homogeneous)
+        print('interactive :', interactive)
         print('the target system :')
         for pol in target:
             print(pol)
@@ -2102,44 +2125,55 @@ def next_quad_double_track(target, start, sols, homogeneous=False, \
             print('Solution', idx+1, ':')
             print(sol)
     result = []
-    dim = number_of_symbols(start, vrblvl)
+    dim = number_of_symbols(start, vrblvl-1)
     initialize_quad_double_artificial_homotopy(target, start, \
-        homogeneous, vrblvl)
-    (idx, tval) = (0, 0.0)
+        homogeneous, vrblvl-1)
+    gamma = get_gamma_constant(vrblvl-1)
     fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
-    for sol in sols:
-        idx = idx + 1
-        set_quad_double_solution(dim, sol, vrblvl)
-        while(True):
-            answer = input('next predictor-corrector step ? (y/n) ')
-            if(answer != 'y'):
-                result.append(sol)
-                break
+    for (idx, sol) in enumerate(sols):
+        tval = 0.0
+        if vrblvl > 0:
+            print('tracking solution path', idx+1, '...')
+        set_quad_double_solution(dim, sol, vrblvl-1)
+        for step in range(1, 101):
+            if interactive:
+                answer = input('next predictor-corrector step ? (y/n) ')
+                if answer != 'y':
+                    result.append(sol)
+                    break
             else:
-                quad_double_predict_correct(vrblvl)
-                polestep = quad_double_pole_step(vrblvl)
-                estidist = quad_double_estimated_distance(vrblvl)
-                curvstep = quad_double_hessian_step(vrblvl)
-                print(fmt % (polestep, estidist, curvstep))
-                previoustval = tval
-                tval = quad_double_t_value(vrblvl)
-                step = quad_double_step_size(vrblvl)
-                frp = quad_double_pole_radius()
+                if tval >= 1.0:
+                    result.append(sol)
+                    break
+            quad_double_predict_correct(vrblvl-1)
+            polestep = quad_double_pole_step(vrblvl-1)
+            estidist = quad_double_estimated_distance(vrblvl-1)
+            curvstep = quad_double_hessian_step(vrblvl-1)
+            print(fmt % (polestep, estidist, curvstep))
+            previoustval = tval
+            tval = quad_double_t_value(vrblvl-1)
+            step = quad_double_step_size(vrblvl-1)
+            frp = quad_double_pole_radius(vrblvl-1)
+            if vrblvl > 0:
+                print('step', step, end=', ')
                 print("t : %.3e, step : %.3e, frp : %.3e" % (tval, step, frp))
-                cfp = quad_double_closest_pole(vrblvl)
+            cfp = quad_double_closest_pole(vrblvl-1)
+            if vrblvl > 0:
                 print('For the previous t value', previoustval, ':')
                 print('1) closest pole : ', cfp)
-                print('2) the series:', quad_double_series_coefficients(dim))
-                print('3) Pade vector:', quad_double_pade_vector(dim))
-                print('4) poles:', quad_double_poles(dim))
-                sol = get_quad_double_solution(vrblvl)
+                print('2) the series:', \
+                    quad_double_series_coefficients(dim, vrblvl-1))
+                print('3) Pade vector:', \
+                    quad_double_pade_vector(dim, vrblvl-1))
+                print('4) poles:', quad_double_poles(dim, vrblvl-1))
+            sol = get_quad_double_solution(vrblvl-1)
+            if vrblvl > 0:
                 print(sol)
-    gamma = get_gamma_constant(vrblvl)
-    clear_quad_double_solutions(vrblvl)
-    clear_quad_double_data(vrblvl)
+    clear_quad_double_solutions(vrblvl-1)
+    clear_quad_double_data(vrblvl-1)
     return (gamma, result)
 
-def next_double_loop(hom, idx, sols, vrblvl=0):
+def next_double_loop(hom, idx, sols, interactive=False, vrblvl=0):
     """
     Runs the series-Pade tracker step by step in double precision.
     On input is a natural parameter homotopy with solutions.
@@ -2150,51 +2184,71 @@ def next_double_loop(hom, idx, sols, vrblvl=0):
     The *sols* is a list of strings representing start solutions.
     The start solutions do *not* contain the value of the continuation
     parameter, which is assumed to be equal to zero.
-    The function is interactive, prompting the user each time
-    before performing the next predictor-corrector step.
+    Prompts before each predictor-corrector step, if *interactive*.
     If vrblvl > 0, then extra output is written.
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
+    if vrblvl > 0:
+        print('in next_double_loop, idx :', idx, end='')
+        print(', interactive :', interactive)
+        print('the homotopy :')
+        for pol in hom:
+            print(pol)
+        print('the solutions :')
+        for (solidx, sol) in enumerate(sols):
+            print('Solution', solidx+1, ':')
+            print(sol)
     result = []
     dim = number_of_symbols(hom) - 1
-    initialize_double_parameter_homotopy(hom, idx, vrblvl)
-    (idx, tval) = (0, 0.0)
+    initialize_double_parameter_homotopy(hom, idx, vrblvl-1)
+    gamma = get_gamma_constant(vrblvl-1)
     fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
-    for sol in sols:
-        idx = idx + 1
-        print('tracking solution path', idx, '...')
-        set_double_solution(dim, sol, vrblvl)
-        while(True):
-            answer = input('next predictor-corrector step ? (y/n) ')
-            if(answer != 'y'):
-                result.append(sol)
-                break
+    for (solidx, sol) in enumerate(sols):
+        tval = 0.0
+        if vrblvl > 0:
+            print('tracking solution path', solidx+1, '...')
+        set_double_solution(dim, sol, vrblvl-1)
+        for step in range(1, 101):
+            if interactive:
+                answer = input('next predictor-corrector step ? (y/n) ')
+                if(answer != 'y'):
+                    result.append(sol)
+                    break
             else:
-                double_predict_correct(vrblvl)
-                polestep = double_pole_step(vrblvl)
-                estidist = double_estimated_distance(vrblvl)
-                curvstep = double_hessian_step(vrblvl)
+                if tval >= 1.0:
+                    result.append(sol)
+                    break
+            double_predict_correct(vrblvl-1)
+            polestep = double_pole_step(vrblvl-1)
+            estidist = double_estimated_distance(vrblvl-1)
+            curvstep = double_hessian_step(vrblvl-1)
+            if vrblvl > 0:
+                print('step', step, end=', ')
                 print(fmt % (polestep, estidist, curvstep))
-                previoustval = tval
-                tval = double_t_value(vrblvl)
-                step = double_step_size(vrblvl)
-                frp = double_pole_radius(vrblvl)
-                print('t : %.3e, step : %.3e, frp : %.3e' % (tval, step, frp))
-                cfp = double_closest_pole(vrblvl)
+            previoustval = tval
+            tval = double_t_value(vrblvl-1)
+            step = double_step_size(vrblvl-1)
+            frp = double_pole_radius(vrblvl-1)
+            if vrblvl > 0:
+                print('t : %.3e, step : %.3e, frp : %.3e' \
+                    % (tval, step, frp))
+            cfp = double_closest_pole(vrblvl-1)
+            if vrblvl > 0:
                 print('For the previous t value', previoustval, ':')
                 print('1) closest pole : ', cfp)
-                print('2) the series:', double_series_coefficients(dim))
-                print('3) Pade vector:', double_pade_vector(dim))
-                print('4) poles:', double_poles(dim))
-                sol = get_double_solution(vrblvl)
+                print('2) the series:', \
+                    double_series_coefficients(dim, vrblvl-1))
+                print('3) Pade vector:', double_pade_vector(dim, vrblvl-1))
+                print('4) poles:', double_poles(dim, vrblvl-1))
+            sol = get_double_solution(vrblvl-1)
+            if vrblvl > 0:
                 print(sol)
-    gamma = get_gamma_constant(vrblvl)
-    clear_double_solutions(vrblvl)
-    clear_double_data(vrblvl)
+    clear_double_solutions(vrblvl-1)
+    clear_double_data(vrblvl-1)
     return (gamma, result)
 
-def next_double_double_loop(hom, idx, sols, vrblvl=0):
+def next_double_double_loop(hom, idx, sols, interactive=False, vrblvl=0):
     """
     Runs the series-Pade tracker step by step in double double precision.
     On input is a natural parameter homotopy with solutions.
@@ -2205,51 +2259,70 @@ def next_double_double_loop(hom, idx, sols, vrblvl=0):
     The *sols* is a list of strings representing start solutions.
     The start solutions do *not* contain the value of the continuation
     parameter, which is assumed to be equal to zero.
-    The function is interactive, prompting the user each time
-    before performing the next predictor-corrector step.
+    Prompts before each predictor-corrector step, if *interactive*.
     If vrblvl > 0, then extra output is written.
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
+    if vrblvl > 0:
+        print('in next_double_double_loop, idx :', idx, end='')
+        print(', interactive :', interactive)
+        print('the homotopy :')
+        for pol in hom:
+            print(pol)
+        print('the solutions :')
+        for (solidx, sol) in enumerate(sols):
+            print('Solution', solidx+1, ':')
+            print(sol)
     result = []
     dim = number_of_symbols(hom) - 1
-    initialize_double_double_parameter_homotopy(hom, idx, vrblvl)
-    (idx, tval) = (0, 0.0)
+    initialize_double_double_parameter_homotopy(hom, idx, vrblvl-1)
+    gamma = get_gamma_constant(vrblvl-1)
     fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
-    for sol in sols:
-        idx = idx + 1
-        print('tracking solution path', idx, '...')
-        set_double_double_solution(dim, sol, vrblvl)
-        while(True):
-            answer = input('next predictor-corrector step ? (y/n) ')
-            if(answer != 'y'):
-                result.append(sol)
-                break
+    for (solidx, sol) in enumerate(sols):
+        tval = 0.0
+        if vrblvl > 0:
+            print('tracking solution path', solidx+1, '...')
+        set_double_double_solution(dim, sol, vrblvl-1)
+        for step in range(1, 101):
+            if interactive:
+                answer = input('next predictor-corrector step ? (y/n) ')
+                if answer != 'y':
+                    result.append(sol)
+                    break
             else:
-                double_double_predict_correct(vrblvl)
-                polestep = double_double_pole_step(vrblvl)
-                estidist = double_double_estimated_distance(vrblvl)
-                curvstep = double_double_hessian_step(vrblvl)
+                if tval >= 1.0:
+                    result.append(sol)
+                    break
+            double_double_predict_correct(vrblvl-1)
+            polestep = double_double_pole_step(vrblvl-1)
+            estidist = double_double_estimated_distance(vrblvl-1)
+            curvstep = double_double_hessian_step(vrblvl-1)
+            if vrblvl > 0:
+                print('step', step, end=', ')
                 print(fmt % (polestep, estidist, curvstep))
-                previoustval = tval
-                tval = double_double_t_value(vrblvl)
-                step = double_double_step_size(vrblvl)
-                frp = double_double_pole_radius(vrblvl)
+            previoustval = tval
+            tval = double_double_t_value(vrblvl-1)
+            step = double_double_step_size(vrblvl-1)
+            frp = double_double_pole_radius(vrblvl-1)
+            if vrblvl > 0:
                 print('t : %.3e, step : %.3e, frp : %.3e' % (tval, step, frp))
-                cfp = double_double_closest_pole(vrblvl)
+            cfp = double_double_closest_pole(vrblvl-1)
+            if vrblvl > 0:
                 print('For the previous t value', previoustval, ':')
                 print('1) closest pole : ', cfp)
-                print('2) the series:', double_double_series_coefficients(dim))
-                print('3) Pade vector:', double_double_pade_vector(dim))
-                print('4) poles:', double_double_poles(dim))
-                sol = get_double_double_solution(vrblvl)
+                print('2) the series:', \
+                    double_double_series_coefficients(dim, vrblvl-1))
+                print('3) Pade vector:', \
+                    double_double_pade_vector(dim, vrblvl-1))
+                print('4) poles:', double_double_poles(dim, vrblvl-1))
+                sol = get_double_double_solution(vrblvl-1)
                 print(sol)
-    gamma = get_gamma_constant(vrblvl)
-    clear_double_double_solutions(vrblvl)
-    clear_double_double_data(vrblvl)
+    clear_double_double_solutions(vrblvl-1)
+    clear_double_double_data(vrblvl-1)
     return (gamma, result)
 
-def next_quad_double_loop(hom, idx, sols, vrblvl=0):
+def next_quad_double_loop(hom, idx, sols, interactive=False, vrblvl=0):
     """
     Runs the series-Pade tracker step by step in quad double precision.
     On input is a natural parameter homotopy with solutions.
@@ -2260,54 +2333,76 @@ def next_quad_double_loop(hom, idx, sols, vrblvl=0):
     The *sols* is a list of strings representing start solutions.
     The start solutions do *not* contain the value of the continuation
     parameter, which is assumed to be equal to zero.
-    The function is interactive, prompting the user each time
-    before performing the next predictor-corrector step.
+    Prompts before each predictor-corrector step, if *interactive*.
     If vrblvl > 0, then extra output is written.
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
+    if vrblvl > 0:
+        print('in next_quad_double_loop, idx :', idx, end='')
+        print(', interactive :', interactive)
+        print('the homotopy :')
+        for pol in hom:
+            print(pol)
+        print('the solutions :')
+        for (solidx, sol) in enumerate(sols):
+            print('Solution', solidx+1, ':')
+            print(sol)
     result = []
     dim = number_of_symbols(hom) - 1
-    initialize_quad_double_parameter_homotopy(hom, idx, vrblvl)
-    (idx, tval) = (0, 0.0)
+    initialize_quad_double_parameter_homotopy(hom, idx, vrblvl-1)
+    gamma = get_gamma_constant(vrblvl-1)
     fmt = 'pole step : %.3e, estimated distance : %.3e, Hessian step : %.3e'
-    for sol in sols:
-        idx = idx + 1
-        print('tracking solution path', idx, '...')
-        set_quad_double_solution(dim, sol, vrblvl)
-        while(True):
-            answer = input('next predictor-corrector step ? (y/n) ')
-            if(answer != 'y'):
-                result.append(sol)
-                break
+    for (solidx, sol) in enumerate(sols):
+        tval = 0.0
+        if vrblvl > 0:
+            print('tracking solution path', solidx+1, '...')
+        set_quad_double_solution(dim, sol, vrblvl-1)
+        for step in range(1, 101):
+            if interactive:
+                answer = input('next predictor-corrector step ? (y/n) ')
+                if answer != 'y':
+                    result.append(sol)
+                    break
             else:
-                quad_double_predict_correct(vrblvl)
-                polestep = quad_double_pole_step(vrblvl)
-                estidist = quad_double_estimated_distance(vrblvl)
-                curvstep = quad_double_hessian_step(vrblvl)
+                if tval >= 1.0:
+                    result.append(sol)
+                    break
+            quad_double_predict_correct(vrblvl-1)
+            polestep = quad_double_pole_step(vrblvl-1)
+            estidist = quad_double_estimated_distance(vrblvl-1)
+            curvstep = quad_double_hessian_step(vrblvl-1)
+            if vrblvl > 0:
+                print('step', step, ':')
                 print(fmt % (polestep, estidist, curvstep))
-                previoustval = tval
-                tval = quad_double_t_value(vrblvl)
-                step = quad_double_step_size(vrblvl)
-                frp = quad_double_pole_radius(vrblvl)
+            previoustval = tval
+            tval = quad_double_t_value(vrblvl-1)
+            step = quad_double_step_size(vrblvl-1)
+            frp = quad_double_pole_radius(vrblvl-1)
+            if vrblvl > 0:
                 print('t : %.3e, step : %.3e, frp : %.3e' % (tval, step, frp))
-                cfp = quad_double_closest_pole(vrblvl)
+            cfp = quad_double_closest_pole(vrblvl-1)
+            if vrblvl > 0:
                 print('For the previous t value', previoustval, ':')
                 print('1) closest pole : ', cfp)
-                print('2) the series:', quad_double_series_coefficients(dim))
-                print('3) Pade vector:', quad_double_pade_vector(dim))
-                print('4) poles:', quad_double_poles(dim))
-                sol = get_quad_double_solution(vrblvl)
+                print('2) the series:', \
+                    quad_double_series_coefficients(dim, vrblvl-1))
+                print('3) Pade vector:', \
+                    quad_double_pade_vector(dim, vrblvl-1))
+                print('4) poles:', quad_double_poles(dim, vrblvl-1))
+            sol = get_quad_double_solution(vrblvl-1)
+            if vrblvl > 0:
                 print(sol)
-    gamma = get_gamma_constant(vrblvl)
-    clear_quad_double_solutions(vrblvl)
-    clear_quad_double_data(vrblvl)
+    clear_quad_double_solutions(vrblvl-1)
+    clear_quad_double_data(vrblvl-1)
     return (gamma, result)
 
 def test_tuning(vrblvl=0):
     """
     Tests the tuning of the parameters.
     """
+    if vrblvl > 0:
+        print('in test_tuning ...')
     set_gamma_constant(complex(1.2, 3.4), vrblvl)
     gamma = get_gamma_constant(vrblvl)
     print('the gamma constant :', gamma)
@@ -2354,6 +2449,8 @@ def test_double_track(vrblvl=0):
     Runs on the mickey mouse example of two quadrics,
     in double precision.
     """
+    if vrblvl > 0:
+        print('in test_double_track ...')
     mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
     start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
     print('the start system :')
@@ -2389,6 +2486,8 @@ def test_double_double_track(vrblvl=0):
     Runs on the mickey mouse example of two quadrics,
     in double double precision.
     """
+    if vrblvl > 0:
+        print('in test_double_double_track ...')
     mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
     start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
     print('the start system :')
@@ -2425,6 +2524,8 @@ def test_quad_double_track(vrblvl=0):
     Runs on the mickey mouse example of two quadrics,
     in quad double precision.
     """
+    if vrblvl > 0:
+        print('in test_quad_double_track ...')
     mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
     start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
     print('the start system :')
@@ -2461,22 +2562,26 @@ def test_next_double_track(vrblvl=0):
     Runs on the mickey mouse example of two quadrics,
     with a step-by-step tracker in double precision.
     """
+    if vrblvl > 0:
+        print('in test_next_double_track ...')
     mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
-    start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
-    print('the start system :')
-    for pol in start:
-        print(pol)
-    print('the start solutions :')
-    for (idx, sol) in enumerate(startsols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl-1)
+    if vrblvl > 0:
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
     gamma, sols = next_double_track(mickey, start, startsols, \
-        vrblvl=vrblvl)
-    print('the solutions :')
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
-    err = verify(mickey, sols, vrblvl)
+        interactive=False, vrblvl=vrblvl-1)
+    if vrblvl > 0:
+        print('the solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    err = verify(mickey, sols, vrblvl-1)
     if vrblvl > 0:
         print('the error sum :', err)
     if len(sols) == 4 and abs(err.real + err.imag) < 1.0e-10:
@@ -2497,6 +2602,8 @@ def test_next_double_double_track(vrblvl=0):
     Runs on the mickey mouse example of two quadrics,
     with a step-by-step tracker in double double precision.
     """
+    if vrblvl > 0:
+        print('in test_next_double_double_track ...')
     mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
     start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
     print('the start system :')
@@ -2533,6 +2640,8 @@ def test_next_quad_double_track(vrblvl=0):
     Runs on the mickey mouse example of two quadrics,
     with a step-by-step tracker in quad double precision.
     """
+    if vrblvl > 0:
+        print('in test_next_quad_double_track ...')
     mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
     start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
     print('the start system :')
@@ -2569,6 +2678,8 @@ def test_double_hyperbola(vrblvl=0):
     Tests the step-by-step Pade tracker on a hyperbola,
     in double precision.
     """
+    if vrblvl > 0:
+        print('in test_double_hyperbola ...')
     par = 0.1
     xtp = ['x^2 - (t - 0.5)^2 - 0.01;']
     solx = sqrt(4*par**2+1)/2
@@ -2578,14 +2689,36 @@ def test_double_hyperbola(vrblvl=0):
     sol2 = make_solution(['x'], [-solx])
     print('the second start solution :\n', sol2)
     print('tracking in double precision ...')
-    next_double_loop(xtp, 2, [sol1, sol2], vrblvl)
-    return 0
+    (gamma, sols) = next_double_loop(xtp, 2, [sol1, sol2], \
+        interactive=False, vrblvl=vrblvl)
+    print('the solutions :')
+    for (idx, sol) in enumerate(sols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    endxtp = [xtp[0].replace('t', '1.0')]
+    err = verify(endxtp, sols, vrblvl)
+    if vrblvl > 0:
+        print('the error sum :', err)
+    if len(sols) == 2 and abs(err.real + err.imag) < 1.0e-10:
+        if vrblvl > 0:
+            print('Found 2 solutions and error is okay.')
+        return 0
+    if len(sols) != 2:
+        if vrblvl > 0:
+            print('Number of solutions is not 2 :', len(sols))
+        return 1
+    if abs(err.real + err.imag) >= 1.0e-10:
+        if vrblvl > 0:
+            print('The error is too large.')
+    return 1
 
 def test_double_double_hyperbola(vrblvl=0):
     """
     Tests the step-by-step Pade tracker on a hyperbola,
     in double double precision.
     """
+    if vrblvl > 0:
+        print('in test_double_double_hyperbola ...')
     par = 0.1
     xtp = ['x^2 - (t - 0.5)^2 - 0.01;']
     solx = sqrt(4*par**2+1)/2
@@ -2595,14 +2728,32 @@ def test_double_double_hyperbola(vrblvl=0):
     sol2 = make_solution(['x'], [-solx])
     print('the second start solution :\n', sol2)
     print('tracking in double double precision ...')
-    next_double_double_loop(xtp, 2, [sol1, sol2], vrblvl)
-    return 0
+    (gamma, sols) = next_double_double_loop(xtp, 2, [sol1, sol2], \
+        interactive=False, vrblvl=vrblvl)
+    endxtp = [xtp[0].replace('t', '1.0')]
+    err = verify(endxtp, sols, vrblvl)
+    if vrblvl > 0:
+        print('the error sum :', err)
+    if len(sols) == 2 and abs(err.real + err.imag) < 1.0e-10:
+        if vrblvl > 0:
+            print('Found 2 solutions and error is okay.')
+        return 0
+    if len(sols) != 2:
+        if vrblvl > 0:
+            print('Number of solutions is not 2 :', len(sols))
+        return 1
+    if abs(err.real + err.imag) >= 1.0e-10:
+        if vrblvl > 0:
+            print('The error is too large.')
+    return 1
 
 def test_quad_double_hyperbola(vrblvl=0):
     """
     Tests the step-by-step Pade tracker on a hyperbola,
     in quad double precision.
     """
+    if vrblvl > 0:
+        print('in test_quad_double_hyperbola ...')
     par = 0.1
     xtp = ['x^2 - (t - 0.5)^2 - 0.01;']
     solx = sqrt(4*par**2+1)/2
@@ -2612,14 +2763,30 @@ def test_quad_double_hyperbola(vrblvl=0):
     sol2 = make_solution(['x'], [-solx])
     print('the second start solution :\n', sol2)
     print('tracking in quad double precision ...')
-    next_quad_double_loop(xtp, 2, [sol1, sol2], vrblvl)
-    return 0
+    (gamma, sols) = next_quad_double_loop(xtp, 2, [sol1, sol2], \
+        interactive=False, vrblvl=vrblvl)
+    endxtp = [xtp[0].replace('t', '1.0')]
+    err = verify(endxtp, sols, vrblvl)
+    if vrblvl > 0:
+        print('the error sum :', err)
+    if len(sols) == 2 and abs(err.real + err.imag) < 1.0e-10:
+        if vrblvl > 0:
+            print('Found 2 solutions and error is okay.')
+        return 0
+    if len(sols) != 2:
+        if vrblvl > 0:
+            print('Number of solutions is not 2 :', len(sols))
+        return 1
+    if abs(err.real + err.imag) >= 1.0e-10:
+        if vrblvl > 0:
+            print('The error is too large.')
+    return 1
 
 def main():
     """
     Runs some tests on tuning and tracking.
     """
-    lvl = 10
+    lvl = 1
     fail = test_tuning(lvl)
     fail = fail + test_double_track(lvl)
     fail = fail + test_double_double_track(lvl)

@@ -6,18 +6,18 @@ lower dimensional components of the solution set of the original system.
 from ctypes import c_int32, c_double, pointer
 from phcpy.version import get_phcfun
 from phcpy.solutions import filter_zero_coordinates
-from phcpy.trackers import copy_double_start_system
-from phcpy.trackers import copy_double_start_solutions
-from phcpy.trackers import copy_double_double_start_system
-from phcpy.trackers import copy_double_double_start_solutions
-from phcpy.trackers import copy_quad_double_start_system
-from phcpy.trackers import copy_quad_double_start_solutions
+from phcpy.homotopies import copy_double_start_system
+from phcpy.homotopies import copy_double_start_solutions
+from phcpy.homotopies import copy_double_double_start_system
+from phcpy.homotopies import copy_double_double_start_solutions
+from phcpy.homotopies import copy_quad_double_start_system
+from phcpy.homotopies import copy_quad_double_start_solutions
+from phcpy.homotopies import get_double_target_solutions
+from phcpy.homotopies import get_double_double_target_solutions
+from phcpy.homotopies import get_quad_double_target_solutions
 from phcpy.trackers import do_double_track
 from phcpy.trackers import do_double_double_track
 from phcpy.trackers import do_quad_double_track
-from phcpy.trackers import get_double_target_solutions
-from phcpy.trackers import get_double_double_target_solutions
-from phcpy.trackers import get_quad_double_target_solutions
 from phcpy.solver import solve
 from phcpy.sets import set_double_witness_set
 from phcpy.sets import set_double_double_witness_set
