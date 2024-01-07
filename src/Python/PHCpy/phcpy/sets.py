@@ -793,12 +793,101 @@ def quad_double_membertest(wsys, gpts, dim, point, \
         print('onsys :', onsys, '  onset :', onset)
     return (onset == 1)
 
+def double_hypersurface_set(nvr, hpol, vrblvl=0):
+    r"""
+    Given in *hpol* the string representation of a polynomial
+    in *nvar* variables (ending with a semicolon),
+    on return is an embedded system and its solutions
+    which represents a witness set for *hpol*.
+    The number of solutions on return should equal
+    the degree of the polynomial in *hpol*.
+    """
+    if vrblvl > 0:
+        print('in double_hypersurface_set, nvr :', nvr)
+        print('the polynomial :', hpol)
+    phc = get_phcfun()
+    nbc = (c_int32 * 2)()
+    nbc[0] = nvr
+    nbc[1] = len(hpol) 
+    anbc = pointer(nbc)
+    bpol = str2int4a(hpol, (vrblvl-1 > 0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> double_hypersurface_set calls phc', end='')
+    retval = phc(270, anbc, bpol, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    wsys = get_double_system(vrblvl-1)
+    sols = get_double_solutions(vrblvl-1)
+    return (wsys, sols)
+
+def double_double_hypersurface_set(nvr, hpol, vrblvl=0):
+    r"""
+    Given in *hpol* the string representation of a polynomial
+    in *nvar* variables (ending with a semicolon),
+    on return is an embedded system and its solutions
+    which represents a witness set for *hpol*.
+    The number of solutions on return should equal
+    the degree of the polynomial in *hpol*.
+    """
+    if vrblvl > 0:
+        print('in double_double_hypersurface_set, nvr :', nvr)
+        print('the polynomial :', hpol)
+    phc = get_phcfun()
+    nbc = (c_int32 * 2)()
+    nbc[0] = nvr
+    nbc[1] = len(hpol) 
+    anbc = pointer(nbc)
+    bpol = str2int4a(hpol, (vrblvl-1 > 0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> double_double_hypersurface_set calls phc', end='')
+    retval = phc(259, anbc, bpol, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    wsys = get_double_double_system(vrblvl-1)
+    sols = get_double_double_solutions(vrblvl-1)
+    return (wsys, sols)
+
+def quad_double_hypersurface_set(nvr, hpol, vrblvl=0):
+    r"""
+    Given in *hpol* the string representation of a polynomial
+    in *nvar* variables (ending with a semicolon),
+    on return is an embedded system and its solutions
+    which represents a witness set for *hpol*.
+    The number of solutions on return should equal
+    the degree of the polynomial in *hpol*.
+    """
+    if vrblvl > 0:
+        print('in quad_double_hypersurface_set, nvr :', nvr)
+        print('the polynomial :', hpol)
+    phc = get_phcfun()
+    nbc = (c_int32 * 2)()
+    nbc[0] = nvr
+    nbc[1] = len(hpol) 
+    anbc = pointer(nbc)
+    bpol = str2int4a(hpol, (vrblvl-1 > 0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> quad_double_hypersurface_set calls phc', end='')
+    retval = phc(269, anbc, bpol, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    wsys = get_quad_double_system(vrblvl-1)
+    sols = get_quad_double_solutions(vrblvl-1)
+    return (wsys, sols)
+
 def test_double_twisted(vrblvl=0):
     """
     Tests the computation of a witness set for the twisted cubic
     in double precision.  As the degree of the twisted cubic is three,
     the number of witness points must equal three as well.
     """
+    if vrblvl > 0:
+        print('in test_double_twisted ...')
     twisted = ['x^2 - y;', 'x^3 - z;']
     twistede1 = double_embed(3, 1, twisted, vrblvl)
     # trick to order the variables in the solutions
@@ -818,6 +907,8 @@ def test_double_double_twisted(vrblvl=0):
     in double double precision.  As the degree of the twisted cubic
     is three, the number of witness points must equal three as well.
     """
+    if vrblvl > 0:
+        print('in test_double_double_twisted ...')
     twisted = ['x^2 - y;', 'x^3 - z;']
     twistede1 = double_double_embed(3, 1, twisted, vrblvl)
     # trick to order the variables in the solutions
@@ -837,6 +928,8 @@ def test_quad_double_twisted(vrblvl=0):
     in quad double precision.  As the degree of the twisted cubic
     is three, the number of witness points must equal three as well.
     """
+    if vrblvl > 0:
+        print('in test_quad_double_twisted ...')
     twisted = ['x^2 - y;', 'x^3 - z;']
     twistede1 = quad_double_embed(3, 1, twisted, vrblvl)
     # trick to order the variables in the solutions
@@ -857,6 +950,8 @@ def test_double_Laurent_twisted(vrblvl=0):
     As the degree of the twisted cubic is three,
     the number of witness points must equal three as well.
     """
+    if vrblvl > 0:
+        print('in test_double_Laurent_twisted ...')
     twisted = ['x^2*y^(-1) - 1;', 'x^3*z^(-1) - 1;']
     twistede1 = double_Laurent_embed(3, 1, twisted, vrblvl)
     # trick to order the variables in the solutions
@@ -879,6 +974,8 @@ def test_double_double_Laurent_twisted(vrblvl=0):
     As the degree of the twisted cubic is three,
     the number of witness points must equal three as well.
     """
+    if vrblvl > 0:
+        print('in test_double_double_Laurent_twisted ...')
     twisted = ['x^2*y^(-1) - 1;', 'x^3*z^(-1) - 1;']
     twistede1 = double_double_Laurent_embed(3, 1, twisted, vrblvl)
     # trick to order the variables in the solutions
@@ -901,6 +998,8 @@ def test_quad_double_Laurent_twisted(vrblvl=0):
     As the degree of the twisted cubic is three,
     the number of witness points must equal three as well.
     """
+    if vrblvl > 0:
+        print('in test_quad_double_Laurent_twisted ...')
     twisted = ['x^2*y^(-1) - 1;', 'x^3*z^(-1) - 1;']
     twistede1 = quad_double_Laurent_embed(3, 1, twisted, vrblvl)
     # trick to order the variables in the solutions
@@ -920,6 +1019,8 @@ def test_double_member(vrblvl=0):
     """
     Tests the membership in double precision.
     """
+    if vrblvl > 0:
+        print('in test_double_member ...')
     twisted = ['x^2 - y;', 'x^3 - z;']
     twistede1 = double_embed(3, 1, twisted, vrblvl=vrblvl)
     twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
@@ -938,6 +1039,8 @@ def test_double_double_member(vrblvl=0):
     """
     Tests the membership in double double precision.
     """
+    if vrblvl > 0:
+        print('in test_double_double_member ...')
     twisted = ['x^2 - y;', 'x^3 - z;']
     twistede1 = double_double_embed(3, 1, twisted, vrblvl=vrblvl)
     twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
@@ -958,6 +1061,8 @@ def test_quad_double_member(vrblvl=0):
     """
     Tests the membership in quad double precision.
     """
+    if vrblvl > 0:
+        print('in test_quad_double_member ...')
     twisted = ['x^2 - y;', 'x^3 - z;']
     twistede1 = quad_double_embed(3, 1, twisted, vrblvl=vrblvl)
     twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
@@ -982,6 +1087,8 @@ def test_double_drop(vrblvl=0):
     """
     Tests the removal of a slack variable in double precision.
     """
+    if vrblvl > 0:
+        print('in test_double_drop ...')
     twisted = ['x^2 - y;', 'x^3 - z;']
     twistede1 = double_embed(3, 1, twisted, vrblvl=vrblvl)
     # trick needed to move zz1 to the end
@@ -1013,6 +1120,8 @@ def test_double_double_drop(vrblvl=0):
     """
     Tests the removal of a slack variable in double double precision.
     """
+    if vrblvl > 0:
+        print('in test_double_double_drop ...')
     twisted = ['x^2 - y;', 'x^3 - z;']
     twistede1 = double_double_embed(3, 1, twisted, vrblvl=vrblvl)
     # trick needed to move zz1 to the end
@@ -1046,6 +1155,8 @@ def test_quad_double_drop(vrblvl=0):
     """
     Tests the removal of a slack variable in quad double precision.
     """
+    if vrblvl > 0:
+        print('in test_quad_double_drop ...')
     twisted = ['x^2 - y;', 'x^3 - z;']
     twistede1 = quad_double_embed(3, 1, twisted, vrblvl=vrblvl)
     # trick needed to move zz1 to the end
@@ -1075,6 +1186,60 @@ def test_quad_double_drop(vrblvl=0):
         print(sol)
     return 0
 
+def test_double_hypersurface_set(vrblvl=0):
+    """
+    Tests the construction of a witness set of a hypersurface
+    in double precision.
+    """
+    if vrblvl > 0:
+        print('in test_double_hypersurface_set ...')
+    hyp = 'x*y*z + 3*x^2 - 1;'
+    (pols, sols) = double_hypersurface_set(3, hyp, vrblvl)
+    print('the polynomials :')
+    for pol in pols:
+        print(pol)
+    print('the generic points :')
+    for (idx, sol) in enumerate(sols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    return int(len(sols) != 3)
+
+def test_double_double_hypersurface_set(vrblvl=0):
+    """
+    Tests the construction of a witness set of a hypersurface
+    in double double precision.
+    """
+    if vrblvl > 0:
+        print('in test_double_double_hypersurface_set ...')
+    hyp = 'x*y*z + 3*x^2 - 1;'
+    (pols, sols) = double_double_hypersurface_set(3, hyp, vrblvl)
+    print('the polynomials :')
+    for pol in pols:
+        print(pol)
+    print('the generic points :')
+    for (idx, sol) in enumerate(sols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    return int(len(sols) != 3)
+
+def test_quad_double_hypersurface_set(vrblvl=0):
+    """
+    Tests the construction of a witness set of a hypersurface
+    in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in test_quad_double_hypersurface_set ...')
+    hyp = 'x*y*z + 3*x^2 - 1;'
+    (pols, sols) = quad_double_hypersurface_set(3, hyp, vrblvl)
+    print('the polynomials :')
+    for pol in pols:
+        print(pol)
+    print('the generic points :')
+    for (idx, sol) in enumerate(sols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    return int(len(sols) != 3)
+
 def main():
     """
     Runs some tests.
@@ -1092,6 +1257,9 @@ def main():
     fail = fail + test_double_drop(lvl)
     fail = fail + test_double_double_drop(lvl)
     fail = fail + test_quad_double_drop(lvl)
+    fail = fail + test_double_hypersurface_set(lvl)
+    fail = fail + test_double_double_hypersurface_set(lvl)
+    fail = fail + test_quad_double_hypersurface_set(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:
