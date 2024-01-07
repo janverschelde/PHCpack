@@ -6,12 +6,12 @@ lower dimensional components of the solution set of the original system.
 from ctypes import c_int32, c_double, pointer
 from phcpy.version import get_phcfun
 from phcpy.solutions import filter_zero_coordinates
-from phcpy.homotopies import copy_double_start_system
-from phcpy.homotopies import copy_double_start_solutions
-from phcpy.homotopies import copy_double_double_start_system
-from phcpy.homotopies import copy_double_double_start_solutions
-from phcpy.homotopies import copy_quad_double_start_system
-from phcpy.homotopies import copy_quad_double_start_solutions
+from phcpy.homotopies import copy_double_system_into_start
+from phcpy.homotopies import copy_double_solutions_into_start
+from phcpy.homotopies import copy_double_double_system_into_start
+from phcpy.homotopies import copy_double_double_solutions_into_start
+from phcpy.homotopies import copy_quad_double_system_into_start
+from phcpy.homotopies import copy_quad_double_solutions_into_start
 from phcpy.homotopies import get_double_target_solutions
 from phcpy.homotopies import get_double_double_target_solutions
 from phcpy.homotopies import get_quad_double_target_solutions
@@ -113,8 +113,8 @@ def double_cascade_step(dim, embsys, esols, tasks=0, vrblvl=0):
             print('Solution', idx+1, ':')
             print(sol)
     set_double_witness_set(len(embsys), dim, embsys, esols, vrblvl)
-    copy_double_start_system(vrblvl)
-    copy_double_start_solutions(vrblvl)
+    copy_double_system_into_start(vrblvl)
+    copy_double_solutions_into_start(vrblvl)
     set_double_cascade_homotopy(vrblvl)
     do_double_track(tasks, vrblvl)
     sols = get_double_target_solutions(vrblvl)
@@ -143,8 +143,8 @@ def double_double_cascade_step(dim, embsys, esols, tasks=0, vrblvl=0):
             print('Solution', idx+1, ':')
             print(sol)
     set_double_double_witness_set(len(embsys), dim, embsys, esols, vrblvl)
-    copy_double_double_start_system(vrblvl)
-    copy_double_double_start_solutions(vrblvl)
+    copy_double_double_system_into_start(vrblvl)
+    copy_double_double_solutions_into_start(vrblvl)
     set_double_double_cascade_homotopy(vrblvl)
     do_double_double_track(tasks, vrblvl)
     sols = get_double_double_target_solutions(vrblvl)
@@ -173,8 +173,8 @@ def quad_double_cascade_step(dim, embsys, esols, tasks=0, vrblvl=0):
             print('Solution', idx+1, ':')
             print(sol)
     set_quad_double_witness_set(len(embsys), dim, embsys, esols, vrblvl)
-    copy_quad_double_start_system(vrblvl)
-    copy_quad_double_start_solutions(vrblvl)
+    copy_quad_double_system_into_start(vrblvl)
+    copy_quad_double_solutions_into_start(vrblvl)
     set_quad_double_cascade_homotopy(vrblvl)
     do_quad_double_track(tasks, vrblvl)
     sols = get_quad_double_target_solutions(vrblvl)
@@ -417,46 +417,56 @@ def test_double_cascade(vrblvl=0):
     solution set x = 1.  In the cascade step we compute
     the candidate witness points on the twisted cubic.
     """
+    if vrblvl > 0:
+        print('in test_double_cascade ...')
     pols = ['(x - 1)*(y-x^2);', \
             '(x - 1)*(z-x^3);', \
             '(x^2 - 1)*(y-x^2);' ]
-    for pol in pols:
-        print(pol)
+    if vrblvl > 0:
+        for pol in pols:
+            print(pol)
     (embpols, sols0, sols1) = double_top_cascade(3, 2, pols, 1.0e-8, \
         vrblvl=vrblvl)
-    print('the embedded system :')
-    for pol in embpols:
-        print(pol)
-    print('the generic points :')
-    for (idx, sol) in enumerate(sols0):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the embedded system :')
+        for pol in embpols:
+            print(pol)
+        print('the generic points :')
+        for (idx, sol) in enumerate(sols0):
+            print('Solution', idx+1, ':')
+            print(sol)
     fail = int(len(sols0) != 1)
-    if fail != 0:
-        print('Failure: expected one generic point!')
-    else:
-        print('As expected, got one generic point.')
-    input('hit enter to continue...')
-    print('solutions with nonzero slack variables :')
-    for (idx, sol) in enumerate(sols1):
-        print('Solution', idx+1, ':')
-        print(sol)
-    input('hit enter to continue...')
-    print('... running cascade step ...')
+    if vrblvl > 0:
+        if fail != 0:
+            print('Failure: expected one generic point!')
+        else:
+            print('As expected, got one generic point.')
+    # input('hit enter to continue...')
+    if vrblvl > 0:
+        print('solutions with nonzero slack variables :')
+        for (idx, sol) in enumerate(sols1):
+            print('Solution', idx+1, ':')
+            print(sol)
+    # input('hit enter to continue...')
+    if vrblvl > 0:
+        print('... running cascade step ...')
     (wp1, ws0, ws1) = double_cascade_filter(2, embpols, sols1, 1.0e-8, \
         vrblvl=vrblvl)
-    print('the 1-dimensional embedding :')
-    for pol in wp1:
-        print(pol)
-    print('the candidate witness points :')
-    for (idx, sol) in enumerate(ws0):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the 1-dimensional embedding :')
+        for pol in wp1:
+            print(pol)
+        print('the candidate witness points :')
+        for (idx, sol) in enumerate(ws0):
+            print('Solution', idx+1, ':')
+            print(sol)
     if len(ws0) != 4:
-        print('Failure: expected four candidate generic points.')
+        if vrblvl > 0:
+            print('Failure: expected four candidate generic points.')
         fail = fail + 1
     else:
-        print('As expected, got four candidate generic points.')
+        if vrblvl > 0:
+            print('As expected, got four candidate generic points.')
     return fail
 
 def test_double_double_cascade(vrblvl=0):
@@ -466,43 +476,52 @@ def test_double_double_cascade(vrblvl=0):
     solution set x = 1.  In the cascade step we compute
     the candidate witness points on the twisted cubic.
     """
+    if vrblvl > 0:
+        print('in test_double_double_cascade ...')
     pols = ['(x - 1)*(y-x^2);', \
             '(x - 1)*(z-x^3);', \
             '(x^2 - 1)*(y-x^2);' ]
-    for pol in pols:
-        print(pol)
+    if vrblvl > 0:
+        for pol in pols:
+            print(pol)
     (embpols, sols0, sols1) = double_double_top_cascade(3, 2, pols, \
         1.0e-8, vrblvl=vrblvl)
-    print('the embedded system :')
-    for pol in embpols:
-        print(pol)
-    print('the generic points :')
-    for (idx, sol) in enumerate(sols0):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the embedded system :')
+        for pol in embpols:
+            print(pol)
+        print('the generic points :')
+        for (idx, sol) in enumerate(sols0):
+            print('Solution', idx+1, ':')
+            print(sol)
     fail = int(len(sols0) != 1)
-    if fail != 0:
-        print('Failure: expected one generic point!')
-    else:
-        print('As expected, got one generic point.')
-    input('hit enter to continue...')
-    print('solutions with nonzero slack variables :')
-    for (idx, sol) in enumerate(sols1):
-        print('Solution', idx+1, ':')
-        print(sol)
-    input('hit enter to continue...')
-    print('... running cascade step ...')
+    if vrblvl > 0:
+        if fail != 0:
+            print('Failure: expected one generic point!')
+        else:
+            print('As expected, got one generic point.')
+    # input('hit enter to continue...')
+    if vrblvl > 0:
+        print('solutions with nonzero slack variables :')
+        for (idx, sol) in enumerate(sols1):
+            print('Solution', idx+1, ':')
+            print(sol)
+    # input('hit enter to continue...')
+    if vrblvl > 0:
+        print('... running cascade step ...')
     (wp1, ws0, ws1) = double_double_cascade_filter(2, embpols, sols1, \
         1.0e-8, nbtasks=1, vrblvl=vrblvl)
-    print('the 1-dimensional embedding :')
-    for pol in wp1:
-        print(pol)
-    print('the candidate witness points :')
-    for (idx, sol) in enumerate(ws0):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the 1-dimensional embedding :')
+        for pol in wp1:
+            print(pol)
+        print('the candidate witness points :')
+        for (idx, sol) in enumerate(ws0):
+            print('Solution', idx+1, ':')
+            print(sol)
     if len(ws0) != 4:
-        print('Failure: expected four candidate generic points.')
+        if vrblvl > 0:
+            print('Failure: expected four candidate generic points.')
         fail = fail + 1
     else:
         print('As expected, got four candidate generic points.')
@@ -515,43 +534,52 @@ def test_quad_double_cascade(vrblvl=0):
     solution set x = 1.  In the cascade step we compute
     the candidate witness points on the twisted cubic.
     """
+    if vrblvl > 0:
+        print('in test_quad_double_cascade ...')
     pols = ['(x - 1)*(y-x^2);', \
             '(x - 1)*(z-x^3);', \
             '(x^2 - 1)*(y-x^2);' ]
-    for pol in pols:
-        print(pol)
+    if vrblvl > 0:
+        for pol in pols:
+            print(pol)
     (embpols, sols0, sols1) = quad_double_top_cascade(3, 2, pols, \
         1.0e-8, vrblvl=vrblvl)
-    print('the embedded system :')
-    for pol in embpols:
-        print(pol)
-    print('the generic points :')
-    for (idx, sol) in enumerate(sols0):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the embedded system :')
+        for pol in embpols:
+            print(pol)
+        print('the generic points :')
+        for (idx, sol) in enumerate(sols0):
+            print('Solution', idx+1, ':')
+            print(sol)
     fail = int(len(sols0) != 1)
-    if fail != 0:
-        print('Failure: expected one generic point!')
-    else:
-        print('As expected, got one generic point.')
-    input('hit enter to continue...')
-    print('solutions with nonzero slack variables :')
-    for (idx, sol) in enumerate(sols1):
-        print('Solution', idx+1, ':')
-        print(sol)
-    input('hit enter to continue...')
-    print('... running cascade step ...')
+    if vrblvl > 0:
+        if fail != 0:
+            print('Failure: expected one generic point!')
+        else:
+            print('As expected, got one generic point.')
+    # input('hit enter to continue...')
+    if vrblvl > 0:
+        print('solutions with nonzero slack variables :')
+        for (idx, sol) in enumerate(sols1):
+            print('Solution', idx+1, ':')
+            print(sol)
+    # input('hit enter to continue...')
+    if vrblvl > 0:
+        print('... running cascade step ...')
     (wp1, ws0, ws1) = quad_double_cascade_filter(2, embpols, sols1, \
         1.0e-8, nbtasks=1, vrblvl=vrblvl)
-    print('the 1-dimensional embedding :')
-    for pol in wp1:
-        print(pol)
-    print('the candidate witness points :')
-    for (idx, sol) in enumerate(ws0):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the 1-dimensional embedding :')
+        for pol in wp1:
+            print(pol)
+        print('the candidate witness points :')
+        for (idx, sol) in enumerate(ws0):
+            print('Solution', idx+1, ':')
+            print(sol)
     if len(ws0) != 4:
-        print('Failure: expected four candidate generic points.')
+        if vrblvl > 0:
+            print('Failure: expected four candidate generic points.')
         fail = fail + 1
     else:
         print('As expected, got four candidate generic points.')

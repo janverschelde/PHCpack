@@ -1,6 +1,8 @@
 Sat 6 Jan 2024 : renamed homotopies.py into starters.py, moved functions
   to define homotopies from trackers.py into the new homotopies module.
   Improved tests in trackers.py and curves.py, updated cascades.py.
+  Completed copy functions in homotopies.py, renamings caused updates
+  in the functions of cascades.
 
 Fri 5 Jan 2024 : added double double and quad double versions of the
   functions in cascades.py.  Added copy functions to trackers.py.
