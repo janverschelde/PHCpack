@@ -55,7 +55,9 @@ sets
     positive dimensional solution sets are represented by system with
     slack variables and a set of generic points.
 cascades
-   homotopies to compute candidate generic points on all components.
+    homotopies to compute candidate generic points on all components.
+diagonal
+    intersecting positive dimensional solution sets by diagonal homotopies.
 
 The main() of every module provides some basic examples and tests.
 """
@@ -124,7 +126,7 @@ phc = set_phcfun()
 from phcpy import version, dimension, polynomials, solutions
 from phcpy import solver, volumes, examples, families
 from phcpy import starters, homotopies, trackers, series, curves
-from phcpy import schubert, sets, cascades
+from phcpy import schubert, sets, cascades, diagonal
 
 # The version number is defined as a data attribute.
 __version__ = '1.1.3'

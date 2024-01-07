@@ -3,7 +3,8 @@ Sat 6 Jan 2024 : renamed homotopies.py into starters.py, moved functions
   Improved tests in trackers.py and curves.py, updated cascades.py.
   Completed copy functions in homotopies.py, renamings caused updates
   in the functions of cascades.  Extended sets.py with functions to
-  compute witness sets of hypersurfaces.
+  compute witness sets of hypersurfaces.  Added diagonal.py to
+  intersect positive dimensional solution sets with diagonal homotopies.
 
 Fri 5 Jan 2024 : added double double and quad double versions of the
   functions in cascades.py.  Added copy functions to trackers.py.
