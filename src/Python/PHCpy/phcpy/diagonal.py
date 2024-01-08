@@ -72,8 +72,7 @@ def top_diagonal_dimension(kdm, dim1, dim2):
     """
     if dim1 + dim2 < kdm:
         return dim2
-    else:
-        return kdm - dim1
+    return kdm - dim1
 
 def set_double_diagonal_homotopy(dim1, dim2, vrblvl=0):
     """
@@ -85,7 +84,7 @@ def set_double_diagonal_homotopy(dim1, dim2, vrblvl=0):
     if vrblvl > 0:
         print('in set_double_diagonal_homotopy, dim1 :', dim1, end='')
         print(', dim2 :', dim2)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aaa = pointer(c_int32(dim1))
     bbb = pointer(c_int32(dim2))
     ccc = pointer(c_double(0.0))
@@ -108,7 +107,7 @@ def set_double_double_diagonal_homotopy(dim1, dim2, vrblvl=0):
         print('in set_double_double_diagonal_homotopy, dim1 :', \
             dim1, end='')
         print(', dim2 :', dim2)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aaa = pointer(c_int32(dim1))
     bbb = pointer(c_int32(dim2))
     ccc = pointer(c_double(0.0))
@@ -131,7 +130,7 @@ def set_quad_double_diagonal_homotopy(dim1, dim2, vrblvl=0):
         print('in set_quad_double_diagonal_homotopy, dim1 :', \
             dim1, end='')
         print(', dim2 :', dim2)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aaa = pointer(c_int32(dim1))
     bbb = pointer(c_int32(dim2))
     ccc = pointer(c_double(0.0))
@@ -164,7 +163,7 @@ def diagonal_symbols_doubler(nbr, dim, symbols, vrblvl=0):
     symseq = ' '.join(symbols)
     if vrblvl > 0:
         print('the sequence of symbols :', symseq)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     pars = (c_int32 * 3)()
     pars[0] = nbr
     pars[1] = dim
@@ -206,7 +205,7 @@ def double_diagonal_homotopy(dim1, sys1, esols1, \
         print('names of variables :', symbols)
     set_double_system(len(sys1), sys1, vrblvl)
     set_double_solutions(len(sys1), esols1, vrblvl)
-    if(dim1 >= dim2):
+    if dim1 >= dim2:
         copy_double_system_into_target(vrblvl)
         copy_double_solutions_into_target(vrblvl)
     else:
@@ -214,13 +213,13 @@ def double_diagonal_homotopy(dim1, sys1, esols1, \
         copy_double_solutions_into_start(vrblvl)
     set_double_system(len(sys2), sys2, vrblvl)
     set_double_solutions(len(sys2), esols2, vrblvl)
-    if(dim1 >= dim2):
+    if dim1 >= dim2:
         copy_double_system_into_start(vrblvl)
         copy_double_solutions_into_start(vrblvl)
     else:
         copy_double_system_into_target(vrblvl)
         copy_double_solutions_into_target(vrblvl)
-    if(dim1 >= dim2):
+    if dim1 >= dim2:
         set_double_diagonal_homotopy(dim1, dim2, vrblvl)
     else:
         set_double_diagonal_homotopy(dim2, dim1, vrblvl)
@@ -252,7 +251,7 @@ def double_double_diagonal_homotopy(dim1, sys1, esols1, \
         print('names of variables :', symbols)
     set_double_double_system(len(sys1), sys1, vrblvl)
     set_double_double_solutions(len(sys1), esols1, vrblvl)
-    if(dim1 >= dim2):
+    if dim1 >= dim2:
         copy_double_double_system_into_target(vrblvl)
         copy_double_double_solutions_into_target(vrblvl)
     else:
@@ -260,13 +259,13 @@ def double_double_diagonal_homotopy(dim1, sys1, esols1, \
         copy_double_double_solutions_into_start(vrblvl)
     set_double_double_system(len(sys2), sys2, vrblvl)
     set_double_double_solutions(len(sys2), esols2, vrblvl)
-    if(dim1 >= dim2):
+    if dim1 >= dim2:
         copy_double_double_system_into_start(vrblvl)
         copy_double_double_solutions_into_start(vrblvl)
     else:
         copy_double_double_system_into_target(vrblvl)
         copy_double_double_solutions_into_target(vrblvl)
-    if(dim1 >= dim2):
+    if dim1 >= dim2:
         set_double_double_diagonal_homotopy(dim1, dim2, vrblvl)
     else:
         set_double_double_diagonal_homotopy(dim2, dim1, vrblvl)
@@ -298,7 +297,7 @@ def quad_double_diagonal_homotopy(dim1, sys1, esols1, \
         print('names of variables :', symbols)
     set_quad_double_system(len(sys1), sys1, vrblvl)
     set_quad_double_solutions(len(sys1), esols1, vrblvl)
-    if(dim1 >= dim2):
+    if dim1 >= dim2:
         copy_quad_double_system_into_target(vrblvl)
         copy_quad_double_solutions_into_target(vrblvl)
     else:
@@ -306,13 +305,13 @@ def quad_double_diagonal_homotopy(dim1, sys1, esols1, \
         copy_quad_double_solutions_into_start(vrblvl)
     set_quad_double_system(len(sys2), sys2, vrblvl)
     set_quad_double_solutions(len(sys2), esols2, vrblvl)
-    if(dim1 >= dim2):
+    if dim1 >= dim2:
         copy_quad_double_system_into_start(vrblvl)
         copy_quad_double_solutions_into_start(vrblvl)
     else:
         copy_quad_double_system_into_target(vrblvl)
         copy_quad_double_solutions_into_target(vrblvl)
-    if(dim1 >= dim2):
+    if dim1 >= dim2:
         set_quad_double_diagonal_homotopy(dim1, dim2, vrblvl)
     else:
         set_quad_double_diagonal_homotopy(dim2, dim1, vrblvl)
@@ -328,8 +327,8 @@ def double_diagonal_cascade_solutions(dim1, dim2, vrblvl=0):
     if vrblvl > 0:
         print('in double_diagonal_cascade_solutions, dim1 :', dim1, end='')
         print(', dim2 :', dim2)
-    phc = get_phcfun()
-    if dim1 >= dim2: 
+    phc = get_phcfun(vrblvl)
+    if dim1 >= dim2:
         adim1 = pointer(c_int32(dim1))
         bdim2 = pointer(c_int32(dim2))
     else:
@@ -355,8 +354,8 @@ def double_double_diagonal_cascade_solutions(dim1, dim2, vrblvl=0):
         print('in double_double_diagonal_cascade_solutions, dim1 :', \
             dim1, end='')
         print(', dim2 :', dim2)
-    phc = get_phcfun()
-    if dim1 >= dim2: 
+    phc = get_phcfun(vrblvl)
+    if dim1 >= dim2:
         adim1 = pointer(c_int32(dim1))
         bdim2 = pointer(c_int32(dim2))
     else:
@@ -382,62 +381,8 @@ def quad_double_diagonal_cascade_solutions(dim1, dim2, vrblvl=0):
         print('in quad_double_diagonal_cascade_solutions, dim1 :', \
             dim1, end='')
         print(', dim2 :', dim2)
-    phc = get_phcfun()
-    if dim1 >= dim2: 
-        adim1 = pointer(c_int32(dim1))
-        bdim2 = pointer(c_int32(dim2))
-    else:
-        adim1 = pointer(c_int32(dim2))
-        bdim2 = pointer(c_int32(dim1))
-    ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
-    if vrblvl > 0:
-        print('-> quad_double_diagonal_cascade_solutions calls phc', end='')
-    retval = phc(298, adim1, bdim2, ccc, vrb)
-    if vrblvl > 0:
-        print(', return value :', retval)
-    return retval
-
-def double_double_diagonal_cascade_solutions(dim1, dim2, vrblvl=0):
-    """
-    Defines the start solutions in the cascade to start the diagonal
-    homotopy to intersect a set of dimension *dim1* with another set
-    of dimension *dim2*, in double double precision.  For this to work,
-    double_double_diagonal_homotopy must have been executed successfully.
-    """
-    if vrblvl > 0:
-        print('in double_double_diagonal_cascade_solutions, dim1 :', \
-            dim1, end='')
-        print(', dim2 :', dim2)
-    phc = get_phcfun()
-    if dim1 >= dim2: 
-        adim1 = pointer(c_int32(dim1))
-        bdim2 = pointer(c_int32(dim2))
-    else:
-        adim1 = pointer(c_int32(dim2))
-        bdim2 = pointer(c_int32(dim1))
-    ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
-    if vrblvl > 0:
-        print('-> double_double_diagonal_cascade_solutions calls phc', end='')
-    retval = phc(297, adim1, bdim2, ccc, vrb)
-    if vrblvl > 0:
-        print(', return value :', retval)
-    return retval
-
-def quad_double_diagonal_cascade_solutions(dim1, dim2, vrblvl=0):
-    """
-    Defines the start solutions in the cascade to start the diagonal
-    homotopy to intersect a set of dimension *dim1* with another set
-    of dimension *dim2*, in quad double precision.  For this to work,
-    quad_double_diagonal_homotopy must have been executed successfully.
-    """
-    if vrblvl > 0:
-        print('in quad_double_diagonal_cascade_solutions, dim1 :', \
-            dim1, end='')
-        print(', dim2 :', dim2)
-    phc = get_phcfun()
-    if dim1 >= dim2: 
+    phc = get_phcfun(vrblvl)
+    if dim1 >= dim2:
         adim1 = pointer(c_int32(dim1))
         bdim2 = pointer(c_int32(dim2))
     else:
@@ -534,7 +479,7 @@ def extrinsic_top_diagonal_dimension(ambdim1, ambdim2, setdim1, setdim2, \
         print(', ambdim2 :', ambdim2, end='')
         print(', setdim1 :', setdim1, end='')
         print(', setdim2 :', setdim2)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     alpha = (c_int32 * 2)()
     alpha[0] = ambdim1
     alpha[1] = ambdim2
@@ -563,7 +508,7 @@ def double_collapse_diagonal(ksl, dim, vrblvl=0):
     if vrblvl > 0:
         print('in double_collapse_diagonal, ksl :', ksl, end='')
         print(', dim :', dim)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     alpha = (c_int32 * 2)()
     alpha[0] = ksl
     alpha[1] = dim
@@ -588,7 +533,7 @@ def double_double_collapse_diagonal(ksl, dim, vrblvl=0):
     if vrblvl > 0:
         print('in double_double_collapse_diagonal, ksl :', ksl, end='')
         print(', dim :', dim)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     alpha = (c_int32 * 2)()
     alpha[0] = ksl
     alpha[1] = dim
@@ -613,7 +558,7 @@ def quad_double_collapse_diagonal(ksl, dim, vrblvl=0):
     if vrblvl > 0:
         print('in quad_double_collapse_diagonal, ksl :', ksl, end='')
         print(', dim :', dim)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     alpha = (c_int32 * 2)()
     alpha[0] = ksl
     alpha[1] = dim
@@ -684,7 +629,7 @@ def double_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2,
                 print('Solution', idx+1, ':')
                 print(sol)
         endsolsf1 = filter_vanishing(endsols, 1.0e-8)
-        if vrblvl > 0: 
+        if vrblvl > 0:
             print('computed', len(endsolsf1), 'solutions')
         slack = 'zz' + str(k)
         nbvar = len(topsys)
@@ -763,7 +708,7 @@ def double_double_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2,
                 print('Solution', idx+1, ':')
                 print(sol)
         endsolsf1 = filter_vanishing(endsols, 1.0e-8)
-        if vrblvl > 0: 
+        if vrblvl > 0:
             print('computed', len(endsolsf1), 'solutions')
         slack = 'zz' + str(k)
         nbvar = len(topsys)
@@ -842,7 +787,7 @@ def quad_double_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2,
                 print('Solution', idx+1, ':')
                 print(sol)
         endsolsf1 = filter_vanishing(endsols, 1.0e-8)
-        if vrblvl > 0: 
+        if vrblvl > 0:
             print('computed', len(endsolsf1), 'solutions')
         slack = 'zz' + str(k)
         nbvar = len(topsys)
