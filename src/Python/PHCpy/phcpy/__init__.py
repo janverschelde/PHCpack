@@ -83,39 +83,43 @@ def cite():
 from os import getcwd, chdir
 from site import getsitepackages
 
-def get_site_location(verbose=False):
+def get_site_location(vrblvl=0):
     """
     Returns the location for site packages,
     handling the differences between linux and windows.
     """
+    if vrblvl > 0:
+        print('in get_site_location ...')
     sites = getsitepackages()
-    if verbose:
+    if vrblvl > 0:
         print('sites :', sites)
     bools = ['site-packages' in x for x in sites]
     idx = bools.index(True)
     return sites[idx]
 
-def set_phcfun(verbose=False):
+def set_phcfun(vrblvl=0):
     """
     Sets the variable phc to the function in libPHCpack
     and loads the modules.
     """
+    if vrblvl > 0:
+        print('in set_phcfun ...')
     CWD = getcwd()
-    if verbose:
+    if vrblvl > 0:
         print('CWD =', CWD)
-    LOCATION = get_site_location(verbose) + '/phcpy' 
-    if verbose:
+    LOCATION = get_site_location(vrblvl) + '/phcpy' 
+    if vrblvl > 0:
         print('LOCATION :')
         print(LOCATION)
     chdir(LOCATION)
-    if verbose:
+    if vrblvl > 0:
         print('os.getcwd :')
         print(getcwd())
     try: 
         from phcpy.version import version_string
-        print(version_string(verbose=False) + ' works!')
+        print(version_string(vrblvl=0) + ' works!')
         from phcpy.version import get_phcfun_fromlib
-        result = get_phcfun_fromlib()
+        result = get_phcfun_fromlib(vrblvl=0)
         chdir(CWD)
         return result
     except:

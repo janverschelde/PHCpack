@@ -6,12 +6,15 @@ from ast import literal_eval
 from ctypes import c_int32, c_double, pointer, create_string_buffer
 from phcpy.version import get_phcfun, int4a2nbr, int4a2str, str2int4a
 
-def diagnostics(sol):
+def diagnostics(sol, vrblvl=0):
     r"""
     Extracts the diagnostics (err, rco, res)
     from the PHCpack string solution in *sol* and
     returns a triplet of three floats.
     """
+    if vrblvl > 0:
+        print('in diagnostics, sol :')
+        print(sol)
     banner = sol.split("==")
     data = banner[1]
     diag = data.split("=")
@@ -24,7 +27,7 @@ def diagnostics(sol):
     # print 'err =', val_err, 'rco =', val_rco, 'res =', val_res
     return (val_err, val_rco, val_res)
 
-def map_double(freqtab, nbr):
+def map_double(freqtab, nbr, vrblvl=0):
     """
     On input in freqtab is a list of integer numbers and nbr is a double.
     The list freqtab represents a frequency table of magnitudes.
@@ -32,6 +35,9 @@ def map_double(freqtab, nbr):
     The counter in freqtab that will be updated is at position
     floor(-log10(nbr)) 
     """
+    if vrblvl > 0:
+        print('in map_double, nbr :', nbr)
+        print('freqtab :', freqtab)
     if nbr > 1.0:
         freqtab[0] = freqtab[0] + 1
     else:
@@ -47,7 +53,7 @@ def map_double(freqtab, nbr):
             else:
                 freqtab[idx] = freqtab[idx] + 1
 
-def condition_tables(sols):
+def condition_tables(sols, vrblvl=0):
     """
     The input in sols is a list of PHCpack string solutions.
     A condition table is triplet of three frequency tables,
@@ -57,6 +63,11 @@ def condition_tables(sols):
     Small numbers are mapped to the right of the table,
     large numbers are mapped to the left of the table.
     """
+    if vrblvl > 0:
+        print('in condition_tables, sols :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     errtab = [0 for _ in range(16)]
     rcotab = [0 for _ in range(16)]
     restab = [0 for _ in range(16)]
@@ -67,19 +78,21 @@ def condition_tables(sols):
         map_double(restab, res)
     return (errtab, rcotab, restab)
 
-def str2complex(scn):
+def str2complex(scn, vrblvl=0):
     r"""
     The string *scn* contains a complex number,
     the real and imaginary part separated by spaces.
     On return is the Python complex number.
     """
+    if vrblvl > 0:
+        print('in str2complex, scn :', scn)
     stripped = scn.strip()
     realimag = stripped.split(' ')
     realpart = realimag[0].replace('E', 'e')
     imagpart = realimag[len(realimag)-1].replace('E', 'e')
     return complex(literal_eval(realpart), literal_eval(imagpart))
 
-def string_complex(scn):
+def string_complex(scn, vrblvl=0):
     r"""
     The string *scn* contains a complex number,
     the real and imaginary part separated by spaces.
@@ -87,6 +100,8 @@ def string_complex(scn):
     in Python format.  The use of this function is for when
     the coordinates are calculated in higher precision.
     """
+    if vrblvl > 0:
+        print('in string_complex, scn :', scn)
     stripped = scn.strip()
     realimag = stripped.split(' ')
     realpart = realimag[0].replace('E', 'e')
@@ -97,7 +112,7 @@ def string_complex(scn):
         result = '(' + realpart + '+' + imagpart + 'j)'
     return result
 
-def coordinates(sol):
+def coordinates(sol, vrblvl=0):
     r"""
     Returns the coordinates of the solution
     in the PHCpack solution string *sol*,
@@ -107,6 +122,9 @@ def coordinates(sol):
     coordinates of the solution.  The entries in the list
     names correspond to the entries in the list values.
     """
+    if vrblvl > 0:
+        print('in coordinates, sol :')
+        print(sol)
     banner = sol.split("==")
     data = banner[0]
     nums = data.split("the solution for t :")
@@ -121,7 +139,7 @@ def coordinates(sol):
             vals.append(str2complex(xval[1]))
     return (vard, vals)
 
-def string_coordinates(sol):
+def string_coordinates(sol, vrblvl=0):
     r"""
     Returns the coordinates of the solution
     in the PHCpack solution string *sol*,
@@ -132,6 +150,9 @@ def string_coordinates(sol):
     represented as strings.  This function is useful for
     when the coordinates are computed in higher precision.
     """
+    if vrblvl > 0:
+        print('in string_coordinates, sol:')
+        print(sol)
     banner = sol.split("==")
     data = banner[0]
     nums = data.split("the solution for t :")
@@ -146,12 +167,15 @@ def string_coordinates(sol):
             vals.append(string_complex(xval[1]))
     return (vard, vals)
 
-def endmultiplicity(sol):
+def endmultiplicity(sol, vrblvl=0):
     r"""
     Returns the value of t at the end
     and the multiplicity as (t,m)
     for the PHCpack solution string *sol*.
     """
+    if vrblvl > 0:
+        print('in endmultiplicity, sol :')
+        print(sol)
     data = sol.split("the solution for t :")
     tstr = data[0]
     line = tstr.split('\n')
@@ -161,7 +185,7 @@ def endmultiplicity(sol):
     mval = literal_eval(mstr[1].lstrip())
     return (tval, mval)
 
-def strsol2dict(sol, precision='d'):
+def strsol2dict(sol, precision='d', vrblvl=0):
     r"""
     Converts the solution in the string *sol*
     into a dictionary format.
@@ -170,6 +194,9 @@ def strsol2dict(sol, precision='d'):
     If the precision is not 'd', then the coordinates of the solution
     are returned as Python complex number string representations.
     """
+    if vrblvl > 0:
+        print('in strsol2dict, precision :', precision, 'sol :')
+        print(sol)
     result = {}
     (tval, mult) = endmultiplicity(sol)
     result['t'] = tval
@@ -186,7 +213,7 @@ def strsol2dict(sol, precision='d'):
         result[name] = val[idx]
     return result
 
-def formdictlist(sols, precision='d'):
+def formdictlist(sols, precision='d', vrblvl=0):
     r"""
     Given in *sols* is a list of strings.
     Each string in *sols* represents a solution,
@@ -200,13 +227,22 @@ def formdictlist(sols, precision='d'):
     If the precision is not 'd', then the coordinates of the solution
     are returned as Python complex number string representations.
     """
-    return [strsol2dict(sol, precision) for sol in sols]
+    if vrblvl > 0:
+        print('in formdictlist, precision :', precision)
+        print('sols :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    return [strsol2dict(sol, precision, vrblvl) for sol in sols]
 
-def variables(dsol):
+def variables(dsol, vrblvl=0):
     r"""
     Given the dictionary format of a solution in *dsol*,
     returns the list of variables.
     """
+    if vrblvl > 0:
+        print('in veriables, dsol :')
+        print(dsol)
     solkeys = list(dsol.keys())
     solkeys.remove('t')
     solkeys.remove('m')
@@ -215,21 +251,29 @@ def variables(dsol):
     solkeys.remove('res')
     return solkeys
 
-def numerals(dsol):
+def numerals(dsol, vrblvl=0):
     r"""
     Given the dictionary format of a solution *dsol*,
     returns the list of numeric values of the variables in the solution.
     """
-    names = variables(dsol)
+    if vrblvl > 0:
+        print('in numerals, dsol :')
+        print(dsol)
+    names = variables(dsol, vrblvl)
     return [dsol[name] for name in names]
 
-def evaluate_polynomial(pol, dsol):
+def evaluate_polynomial(pol, dsol, vrblvl=0):
     r"""
     Evaluates the polynomial *pol* at the solution
     dictionary *dsol* by string substitution.
     """
+    if vrblvl > 0:
+        print('in evaluate_polynomial, pol :')
+        print(pol)
+        print('dsol :')
+        print(dsol)
     j = complex(0, 1) # needed for eval(result) in test()
-    varsd = variables(dsol)
+    varsd = variables(dsol, vrblvl)
     rpol = pol
     rpol = rpol.replace('i', 'j')
     rpol = rpol.replace('E', 'e')
@@ -242,14 +286,20 @@ def evaluate_polynomial(pol, dsol):
     result = rpol[:-1]
     return eval(result)
 
-def evaluate(pols, dsol):
+def evaluate(pols, dsol, vrblvl=0):
     r"""
     Evaluates a list of polynomials given as string in *pols*
     at the solution in dictionary format in *dsol*.
     """
+    if vrblvl > 0:
+        print('in evaluate, pols :')
+        for pol in pols:
+            print(pol)
+        print('dsol :')
+        print(dsol)
     result = []
     for pol in pols:
-        result.append(evaluate_polynomial(pol, dsol))
+        result.append(evaluate_polynomial(pol, dsol, vrblvl))
     return result
 
 def verify(pols, sols, vrblvl=0):
@@ -257,10 +307,18 @@ def verify(pols, sols, vrblvl=0):
     Verifies whether the solutions in *sols*
     satisfy the polynomials of the system in *pols*.
     """
-    dictsols = [strsol2dict(sol) for sol in sols]
+    if vrblvl > 0:
+        print('in verify, pols :')
+        for pol in pols:
+            print(pol)
+        print('sols :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    dictsols = [strsol2dict(sol, vrblvl) for sol in sols]
     checksum = 0
     for (idx, sol) in enumerate(dictsols):
-        sumeval = sum(evaluate(pols, sol))
+        sumeval = sum(evaluate(pols, sol, vrblvl))
         if vrblvl > 0:
             print('sum at solution', idx, ':', sumeval)
         checksum = checksum + sumeval
@@ -269,7 +327,7 @@ def verify(pols, sols, vrblvl=0):
     return checksum
 
 def make_solution(names, values, \
-    err=0.0, rco=1.0, res=0.0, tval=0, multiplicity=1):
+    err=0.0, rco=1.0, res=0.0, tval=0, multiplicity=1, vrblvl=0):
     r"""
     Makes the string representation in PHCpack format
     with in *names* a list of strings for the variables names
@@ -298,6 +356,9 @@ def make_solution(names, values, \
     make_solution returns the tuple of arguments given
     on input to **make_solution()**.
     """
+    if vrblvl > 0:
+        print('in make_solution, names :', names)
+        print('values :', values)
     if isinstance(tval, complex):
         (tre, tim) = (tval.real, tval.imag)
     elif isinstance(tval, float):
@@ -330,19 +391,23 @@ def make_solution(names, values, \
     result = result + lastline
     return result
 
-def is_real(sol, tol):
+def is_real(sol, tol, vrblvl=0):
     r"""
     Returns True if the solution in *sol* is real with respect
     to the given tolerance *tol*: if the absolute value of the imaginary
     part of all coordinates are less than *tol*.
     """
-    (_, vals) = coordinates(sol)
+    if vrblvl > 0:
+        print('in is_real, tol :', tol)
+        print('sol :')
+        print(sol)
+    (_, vals) = coordinates(sol, vrblvl)
     for value in vals:
         if abs(value.imag) > tol:
             return False
     return True
 
-def filter_real(sols, tol, oper):
+def filter_real(sols, tol, oper, vrblvl=0):
     r"""
     Filters the real solutions in *sols*.
     The input parameters are
@@ -360,9 +425,15 @@ def filter_real(sols, tol, oper):
        if *oper* == 'remove' then solutions that are considered real
        are in the list on return.
     """
+    if vrblvl > 0:
+        print('in filter_real, tol :', tol, ', oper :', oper)
+        print('sols :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     result = []
     for sol in sols:
-        isreal = is_real(sol, tol)
+        isreal = is_real(sol, tol, vrblvl)
         if oper == 'select':
             if isreal:
                 result.append(sol)
@@ -371,7 +442,7 @@ def filter_real(sols, tol, oper):
                 result.append(sol)
     return result
 
-def filter_regular(sols, tol, oper):
+def filter_regular(sols, tol, oper, vrblvl=0):
     r"""
     Filters solutions in *sols* for the estimate of
     the inverse of the condition number.
@@ -391,9 +462,15 @@ def filter_regular(sols, tol, oper):
        if *oper* == 'remove' then solutions with value rco <= *tol*
        are in the list on return.
     """
+    if vrblvl > 0:
+        print('in filter_regular, tol :', tol, ', oper :', oper)
+        print('sols :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     result = []
     for sol in sols:
-        rco = diagnostics(sol)[1]
+        rco = diagnostics(sol, vrblvl)[1]
         if oper == 'select':
             if rco > tol:
                 result.append(sol)
@@ -402,7 +479,7 @@ def filter_regular(sols, tol, oper):
                 result.append(sol)
     return result
 
-def filter_zero_coordinates(sols, varname, tol, oper):
+def filter_zero_coordinates(sols, varname, tol, oper, vrblvl=0):
     r"""
     Filters the solutions in *sols* for variables
     that have a value less than the tolerance.
@@ -425,9 +502,16 @@ def filter_zero_coordinates(sols, varname, tol, oper):
        variable v that is less than *tol* are removed and
        not in the list on return.
     """
+    if vrblvl > 0:
+        print('in filter_zero_coordinates, tol :', tol)
+        print(', varname :', varname, end='')
+        print(', oper :', oper)
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     result = []
     for sol in sols:
-        dsol = strsol2dict(sol)
+        dsol = strsol2dict(sol, vrblvl)
         if oper == 'select':
             if abs(dsol[varname]) < tol:
                 result.append(sol)
@@ -436,7 +520,7 @@ def filter_zero_coordinates(sols, varname, tol, oper):
                 result.append(sol)
     return result
 
-def is_vanishing(sol, tol):
+def is_vanishing(sol, tol, vrblvl=0):
     r"""
     Given in *sol* is a solution string and
     *tol* is the tolerance on the residual.
@@ -444,17 +528,26 @@ def is_vanishing(sol, tol):
     is less than or equal to *tol*.
     Returns False otherwise.
     """
-    dgn = diagnostics(sol)
+    if vrblvl > 0:
+        print('in is_vanishing, tol :', tol)
+        print('sol :')
+        print(sol)
+    dgn = diagnostics(sol, vrblvl)
     return dgn[2] <= tol
 
-def filter_vanishing(sols, tol):
+def filter_vanishing(sols, tol, vrblvl=0):
     r"""
     Returns the list of solutions in *sols* that have a residual
     less than or equal to the given tolerance in *tol*.
     """
+    if vrblvl > 0:
+        print('in filter_vanishing, tol :', tol)
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     result = []
     for sol in sols:
-        if is_vanishing(sol, tol):
+        if is_vanishing(sol, tol, vrblvl):
             result.append(sol)
     return result
 
@@ -467,9 +560,9 @@ def append_double_solution_string(nvr, sol, vrblvl=0):
         print('-> append_double_solution_string, nvr =', nvr)
         print('The solution string :')
         print(sol)
-    phc = get_phcfun()
-    apars = int4a2nbr([nvr, len(sol)], (vrblvl > 0))
-    bsol = str2int4a(sol)
+    phc = get_phcfun(vrblvl)
+    apars = int4a2nbr([nvr, len(sol)], vrblvl=vrblvl-1)
+    bsol = str2int4a(sol, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl)
     if vrblvl > 0:
@@ -488,9 +581,9 @@ def append_double_double_solution_string(nvr, sol, vrblvl=0):
         print('-> append_double_double_solution_string, nvr =', nvr)
         print('The solution string :')
         print(sol)
-    phc = get_phcfun()
-    apars = int4a2nbr([nvr, len(sol)], vrblvl)
-    bsol = str2int4a(sol)
+    phc = get_phcfun(vrblvl)
+    apars = int4a2nbr([nvr, len(sol)], vrblvl=vrblvl-1)
+    bsol = str2int4a(sol, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl)
     if vrblvl > 0:
@@ -509,9 +602,9 @@ def append_quad_double_solution_string(nvr, sol, vrblvl=0):
         print('-> append_quad_double_solution_string, nvr =', nvr)
         print('The solution string :')
         print(sol)
-    phc = get_phcfun()
-    apars = int4a2nbr([nvr, len(sol)], vrblvl)
-    bsol = str2int4a(sol)
+    phc = get_phcfun(vrblvl)
+    apars = int4a2nbr([nvr, len(sol)], vrblvl=vrblvl-1)
+    bsol = str2int4a(sol, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl)
     if vrblvl > 0:
@@ -527,7 +620,7 @@ def clear_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print('in clear_double_solutions ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -545,7 +638,7 @@ def clear_double_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print('in clear_double_double_solutions ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -563,7 +656,7 @@ def clear_quad_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print('in clear_quad_double_solutions ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -581,7 +674,7 @@ def set_double_solutions(nvr, sols, vrblvl=0):
     where the number of variables equals nvr.
     """
     if vrblvl > 0:
-        print('-> set_double_solutions, nvr =', nvr)
+        print('-> set_double_solutions, nvr :', nvr)
     clear_double_solutions(vrblvl)
     fail = 0
     for (ind, sol) in enumerate(sols):
@@ -600,6 +693,8 @@ def set_double_double_solutions(nvr, sols, vrblvl=0):
     Sets the solutions in double double precision, with the strings in sols,
     where the number of variables equals nvr.
     """
+    if vrblvl > 0:
+        print('in set_double_double_solutions, nvr :', nvr)
     clear_double_double_solutions(vrblvl)
     fail = 0
     for (ind, sol) in enumerate(sols):
@@ -613,6 +708,8 @@ def set_quad_double_solutions(nvr, sols, vrblvl=0):
     Sets the solutions in quad double precision, with the strings in sols,
     where the number of variables equals nvr.
     """
+    if vrblvl > 0:
+        print('in set_quad_double_solutions, nvr :', nvr)
     clear_quad_double_solutions(vrblvl)
     fail = 0
     for (ind, sol) in enumerate(sols):
@@ -628,7 +725,7 @@ def number_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print('in number_double_solutions ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -647,7 +744,7 @@ def number_double_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print('in number_double_double_solutions ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -666,7 +763,7 @@ def number_quad_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print('in number_quad_double_solutions ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -686,7 +783,7 @@ def get_next_double_solution(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in get_next_double_solution, idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aaa = pointer(c_int32(idx)) # at the given index
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -704,7 +801,7 @@ def get_next_double_solution(idx, vrblvl=0):
     retval = phc(533, bbb, soldata, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    result = int4a2str(soldata, False)
+    result = int4a2str(soldata, vrblvl=vrblvl-1)
     return result
 
 def get_next_double_double_solution(idx, vrblvl=0):
@@ -715,7 +812,7 @@ def get_next_double_double_solution(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in get_next_double_double_solution, idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aaa = pointer(c_int32(idx)) # at the given index
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -733,7 +830,7 @@ def get_next_double_double_solution(idx, vrblvl=0):
     retval = phc(534, bbb, soldata, ccc, vrb)
     if vrblvl > 0:
         print(", return value :", retval)
-    result = int4a2str(soldata, False)
+    result = int4a2str(soldata, vrblvl=vrblvl-1)
     return result
 
 def get_next_quad_double_solution(idx, vrblvl=0):
@@ -744,7 +841,7 @@ def get_next_quad_double_solution(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in get_next_quad_double_solution, idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aaa = pointer(c_int32(idx)) # at the given index
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -762,7 +859,7 @@ def get_next_quad_double_solution(idx, vrblvl=0):
     retval = phc(535, bbb, soldata, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    result = int4a2str(soldata, False)
+    result = int4a2str(soldata, vrblvl=vrblvl-1)
     return result
 
 def move_double_solution_cursor(idx, vrblvl=0):
@@ -772,7 +869,7 @@ def move_double_solution_cursor(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in move_double_solution_cursor, idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aaa = pointer(c_int32(idx)) # at the given index
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -791,7 +888,7 @@ def move_double_double_solution_cursor(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in move_double_double_solution_cursor, idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aaa = pointer(c_int32(idx)) # at the given index
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -810,7 +907,7 @@ def move_quad_double_solution_cursor(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in move_quad_double_solution_cursor, idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aaa = pointer(c_int32(idx)) # at the given index
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -826,6 +923,8 @@ def get_double_solutions(vrblvl=0):
     """
     Returns the solution strings in double precision.
     """
+    if vrblvl > 0:
+        print('in get_double_solutions ...')
     nbrsols = number_double_solutions(vrblvl)
     if vrblvl > 0:
         print('number of solutions retrieved :', nbrsols)
@@ -850,6 +949,8 @@ def get_double_double_solutions(vrblvl=0):
     """
     Returns the solution strings in double double precision.
     """
+    if vrblvl > 0:
+        print('in get_double_double_solutions ...')
     nbrsols = number_double_double_solutions(vrblvl)
     if vrblvl > 0:
         print('number of solutions retrieved :', nbrsols)
@@ -874,6 +975,8 @@ def get_quad_double_solutions(vrblvl=0):
     """
     Returns the solution strings in quad double precision.
     """
+    if vrblvl > 0:
+        print('in get_quad_double_solutions ...')
     nbrsols = number_quad_double_solutions(vrblvl)
     if vrblvl > 0:
         print('number of solutions retrieved :', nbrsols)
@@ -900,7 +1003,7 @@ def write_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print('in write_double_solutions, vrblvl :', vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -918,7 +1021,7 @@ def write_double_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print('in write_double_double_solutions, vrblvl :', vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -936,7 +1039,7 @@ def write_quad_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print('in write_quad_double_solutions, vrblvl :', vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -1043,17 +1146,19 @@ def test_double_functions(vrblvl=0):
     and then sums the multiplicities.
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in test_double_functions ...')
     pols = ['(x - 1)*(y - 1);', '(x + 1)*(y + 1);']
     names = ['x', 'y']
-    sol1 = make_solution(names, [1, -1])
-    sol2 = make_solution(names, [-1, 1])
+    sol1 = make_solution(names, [1, -1], vrblvl=vrblvl)
+    sol2 = make_solution(names, [-1, 1], vrblvl=vrblvl)
     sols = [sol1, sol2]
     dsols = [strsol2dict(sol) for sol in sols]
     mult = 0
-    s0d = strsol2dict(sols[0])
+    s0d = strsol2dict(sols[0], vrblvl=vrblvl)
     if vrblvl > 0:
         print('variables :', variables(s0d))
-        print(evaluate(pols, s0d))
+        print(evaluate(pols, s0d, vrblvl))
     for sol in dsols:
         mult = mult + sol['m']
     if vrblvl > 0:
@@ -1062,8 +1167,8 @@ def test_double_functions(vrblvl=0):
     errsum = 0
     for sol in dsols:
         if vrblvl > 0:
-            print(sum(evaluate(pols, sol)))
-        errsum = errsum + abs(sum(evaluate(pols, sol)))
+            print(sum(evaluate(pols, sol, vrblvl)))
+        errsum = errsum + abs(sum(evaluate(pols, sol, vrblvl)))
     if vrblvl > 0:
         print('error sum :', errsum)
     return errsum > 1.0e-14

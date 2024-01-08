@@ -14,7 +14,7 @@ def mixed_volume(demics=True, vrblvl=0):
     """
     if vrblvl > 0:
         print('in mixed_volume, demics flag :', demics)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     mixvol = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -39,7 +39,7 @@ def stable_mixed_volume(demics=True, vrblvl=0):
     """
     if vrblvl > 0:
         print('in stable_mixed_volume, demics flag :', demics)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     mixvol = pointer(c_int32(0))
     stablemv = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -59,6 +59,8 @@ def test_mixed_volume(vrblvl=0):
     Computes the mixed volume of a simple example.
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in test_mixed_volume ...')
     polynomials = ["x^3 + 2*x*y - 1;", "x + y - 1;"]
     set_double_system(2, polynomials, vrblvl)
     mvl = mixed_volume(True, vrblvl)
@@ -74,6 +76,8 @@ def test_stable_mixed_volume(vrblvl=0):
     Computes the stable mixed volume of a simple example.
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in test_stable_mixed_volume ...')
     polynomials = ["x^3 + 2*x*y - x^2*y;", "x + y - x^3;"]
     set_double_system(2, polynomials, vrblvl)
     mvl, smv = stable_mixed_volume(True, vrblvl)

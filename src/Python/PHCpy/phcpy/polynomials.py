@@ -28,10 +28,9 @@ def set_double_polynomial(idx, nvr, pol, vrblvl=0):
     if vrblvl > 0:
         print('in set_double_polynomial, pol :', pol, end='')
         print(', idx :', idx, ', nvr :', nvr)
-    phc = get_phcfun()
-    vrb = vrblvl > 0
-    apars = int4a2nbr([len(pol), nvr, idx], vrb)
-    bpol = str2int4a(pol)
+    phc = get_phcfun(vrblvl)
+    apars = int4a2nbr([len(pol), nvr, idx], vrblvl=vrblvl-1)
+    bpol = str2int4a(pol, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
     vlvl = c_int32(vrblvl)
     if vrblvl > 0:
@@ -52,10 +51,9 @@ def set_double_double_polynomial(idx, nvr, pol, vrblvl=0):
     if vrblvl > 0:
         print('in set_double_double_polynomial, pol :', pol, end='')
         print(', idx :', idx, ', nvr :', nvr)
-    phc = get_phcfun()
-    vrb = vrblvl > 0
-    apars = int4a2nbr([len(pol), nvr, idx], vrb)
-    bpol = str2int4a(pol)
+    phc = get_phcfun(vrblvl)
+    apars = int4a2nbr([len(pol), nvr, idx], vrblvl=vrblvl-1)
+    bpol = str2int4a(pol, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
     vlvl = c_int32(vrblvl)
     if vrblvl > 0:
@@ -76,10 +74,9 @@ def set_quad_double_polynomial(idx, nvr, pol, vrblvl=0):
     if vrblvl > 0:
         print('in set_quad_double_polynomial, pol :', pol, end='')
         print(', idx :', idx, ', nvr :', nvr)
-    phc = get_phcfun()
-    vrb = vrblvl > 0
-    apars = int4a2nbr([len(pol), nvr, idx], vrb)
-    bpol = str2int4a(pol)
+    phc = get_phcfun(vrblvl)
+    apars = int4a2nbr([len(pol), nvr, idx], vrblvl=vrblvl-1)
+    bpol = str2int4a(pol, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
     vlvl = c_int32(vrblvl)
     if vrblvl > 0:
@@ -100,10 +97,9 @@ def set_double_Laurent_polynomial(idx, nvr, pol, vrblvl=0):
     if vrblvl > 0:
         print('in set_double_Laurent_polynomial, pol :', pol, end='')
         print(', idx :', idx, ', nvr :', nvr)
-    phc = get_phcfun()
-    vrb = vrblvl > 0
-    apars = int4a2nbr([len(pol), nvr, idx], vrb)
-    bpol = str2int4a(pol)
+    phc = get_phcfun(vrblvl)
+    apars = int4a2nbr([len(pol), nvr, idx], vrblvl=vrblvl-1)
+    bpol = str2int4a(pol, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
     vlvl = c_int32(vrblvl)
     if vrblvl > 0:
@@ -124,10 +120,9 @@ def set_double_double_Laurent_polynomial(idx, nvr, pol, vrblvl=0):
     if vrblvl > 0:
         print('in set_double_double_Laurent_polynomial, pol :', pol, end='')
         print(', idx :', idx, ', nvr :', nvr)
-    phc = get_phcfun()
-    vrb = vrblvl > 0
-    apars = int4a2nbr([len(pol), nvr, idx], vrb)
-    bpol = str2int4a(pol)
+    phc = get_phcfun(vrblvl)
+    apars = int4a2nbr([len(pol), nvr, idx], vrblvl=vrblvl-1)
+    bpol = str2int4a(pol, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
     vlvl = c_int32(vrblvl)
     if vrblvl > 0:
@@ -148,10 +143,9 @@ def set_quad_double_Laurent_polynomial(idx, nvr, pol, vrblvl=0):
     if vrblvl > 0:
         print('in set_quad_double_Laurent_polynomial, pol :', pol, end='')
         print(', idx :', idx, ', nvr :', nvr)
-    phc = get_phcfun()
-    vrb = vrblvl > 0
-    apars = int4a2nbr([len(pol), nvr, idx], vrb)
-    bpol = str2int4a(pol)
+    phc = get_phcfun(vrblvl)
+    apars = int4a2nbr([len(pol), nvr, idx], vrblvl=vrblvl-1)
+    bpol = str2int4a(pol, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
     vlvl = c_int32(vrblvl)
     if vrblvl > 0:
@@ -298,7 +292,7 @@ def get_double_polynomial(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in get_double_polynomial idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adx = pointer(c_int32(idx))
     bsz = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -316,7 +310,7 @@ def get_double_polynomial(idx, vrblvl=0):
     retval = phc(67, adx, poldata, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    strpol = int4a2str(poldata, (vrblvl > 0))
+    strpol = int4a2str(poldata, vrblvl=vrblvl-1)
     pols = strpol.split(';')
     result = pols[0] + ';'
     return result
@@ -328,7 +322,7 @@ def get_double_double_polynomial(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in get_double_double_polynomial idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adx = pointer(c_int32(idx))
     bsz = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -346,7 +340,7 @@ def get_double_double_polynomial(idx, vrblvl=0):
     retval = phc(106, adx, poldata, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    strpol = int4a2str(poldata, (vrblvl > 0))
+    strpol = int4a2str(poldata, vrblvl=vrblvl-1)
     pols = strpol.split(';')
     result = pols[0] + ';'
     return result
@@ -358,7 +352,7 @@ def get_quad_double_polynomial(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in get_quad_double_polynomial idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adx = pointer(c_int32(idx))
     bsz = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -376,7 +370,7 @@ def get_quad_double_polynomial(idx, vrblvl=0):
     retval = phc(107, adx, poldata, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    strpol = int4a2str(poldata, (vrblvl > 0))
+    strpol = int4a2str(poldata, vrblvl=vrblvl-1)
     pols = strpol.split(';')
     result = pols[0] + ';'
     return result
@@ -388,7 +382,7 @@ def get_double_Laurent_polynomial(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in get_double_Laurent_polynomial idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adx = pointer(c_int32(idx))
     bsz = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -406,7 +400,7 @@ def get_double_Laurent_polynomial(idx, vrblvl=0):
     retval = phc(128, adx, poldata, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    strpol = int4a2str(poldata, (vrblvl > 0))
+    strpol = int4a2str(poldata, vrblvl=vrblvl-1)
     pols = strpol.split(';')
     result = pols[0] + ';'
     return result
@@ -418,7 +412,7 @@ def get_double_double_Laurent_polynomial(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in get_double_double_Laurent_polynomial idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adx = pointer(c_int32(idx))
     bsz = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -436,7 +430,7 @@ def get_double_double_Laurent_polynomial(idx, vrblvl=0):
     retval = phc(559, adx, poldata, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    strpol = int4a2str(poldata, (vrblvl > 0))
+    strpol = int4a2str(poldata, vrblvl=vrblvl-1)
     pols = strpol.split(';')
     result = pols[0] + ';'
     return result
@@ -448,7 +442,7 @@ def get_quad_double_Laurent_polynomial(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in get_quad_double_Laurent_polynomial idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adx = pointer(c_int32(idx))
     bsz = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -466,7 +460,7 @@ def get_quad_double_Laurent_polynomial(idx, vrblvl=0):
     retval = phc(569, adx, poldata, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    strpol = int4a2str(poldata, (vrblvl > 0))
+    strpol = int4a2str(poldata, vrblvl=vrblvl-1)
     pols = strpol.split(';')
     result = pols[0] + ';'
     return result
@@ -571,7 +565,7 @@ def string_of_symbols(maxlen=100, vrblvl=0):
     """
     if vrblvl > 0:
         print('in string_of_symbols, maxlen :', maxlen)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     slen = pointer(c_int32(0))
     ssym = create_string_buffer(b"", maxlen*4)
     ccc = pointer(c_double(0.0))
@@ -582,7 +576,7 @@ def string_of_symbols(maxlen=100, vrblvl=0):
     if vrblvl > 0:
         print(', return value :', retval)
         print('number of characters :', slen[0])
-    variables = int4a2str(ssym, (vrblvl > 0))
+    variables = int4a2str(ssym, vrblvl=vrblvl-1)
     result = variables[0:slen[0]].split(' ')
     return result
 
@@ -597,7 +591,7 @@ def number_of_symbols(pols, vrblvl=0):
         for pol in pols:
             print(pol)
     inpols = ''.join(pols)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     slen = pointer(c_int32(len(inpols)))
     bpol = str2int4a(inpols)
     ccc = pointer(c_double(0.0))
@@ -627,7 +621,7 @@ def degree_of_double_polynomial(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in degree_of_double_polynomial, idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aidx = pointer(c_int32(idx))
     bdeg = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -646,7 +640,7 @@ def clear_double_system(vrblvl=0):
     """
     if vrblvl > 0:
         print('in clear_double_system ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adim = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -664,7 +658,7 @@ def clear_double_double_system(vrblvl=0):
     """
     if vrblvl > 0:
         print('in clear_double_double_system ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adim = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -682,7 +676,7 @@ def clear_quad_double_system(vrblvl=0):
     """
     if vrblvl > 0:
         print('in clear_quad_double_system ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adim = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -700,7 +694,7 @@ def clear_symbol_table(vrblvl=0):
     """
     if vrblvl > 0:
         print('in clear_symbol_table ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -718,7 +712,7 @@ def initialize_double_syspool(dim, vrblvl=0):
     """
     if vrblvl > 0:
         print('in initialize_double_syspool, dim :', dim)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adim = pointer(c_int32(dim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -736,7 +730,7 @@ def initialize_double_double_syspool(dim, vrblvl=0):
     """
     if vrblvl > 0:
         print('in initialize_double_double_syspool, dim :', dim)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adim = pointer(c_int32(dim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -754,7 +748,7 @@ def initialize_quad_double_syspool(dim, vrblvl=0):
     """
     if vrblvl > 0:
         print('in initialize_quad_double_syspool, dim :', dim)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adim = pointer(c_int32(dim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -772,7 +766,7 @@ def size_double_syspool(vrblvl=0):
     """
     if vrblvl > 0:
         print('in size_double_syspool ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adim = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -791,7 +785,7 @@ def size_double_double_syspool(vrblvl=0):
     """
     if vrblvl > 0:
         print('in size_double_double_syspool ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adim = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -810,7 +804,7 @@ def size_quad_double_syspool(vrblvl=0):
     """
     if vrblvl > 0:
         print('in size_quad_double_syspool ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adim = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -830,7 +824,7 @@ def copy_to_double_syspool(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_to_double_syspool, idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adim = pointer(c_int32(idx))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -849,7 +843,7 @@ def copy_to_double_double_syspool(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_to_double_double_syspool, idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adim = pointer(c_int32(idx))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -868,7 +862,7 @@ def copy_to_quad_double_syspool(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_to_quad_double_syspool, idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adim = pointer(c_int32(idx))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -887,7 +881,7 @@ def copy_from_double_syspool(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_from_double_syspool, idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adim = pointer(c_int32(idx))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -906,7 +900,7 @@ def copy_from_double_double_syspool(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_from_double_double_syspool, idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adim = pointer(c_int32(idx))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -925,7 +919,7 @@ def copy_from_quad_double_syspool(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_from_quad_double_syspool, idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adim = pointer(c_int32(idx))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -943,7 +937,7 @@ def clear_double_syspool(vrblvl=0):
     """
     if vrblvl > 0:
         print('in clear_double_syspool ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adim = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -961,7 +955,7 @@ def clear_double_double_syspool(vrblvl=0):
     """
     if vrblvl > 0:
         print('in clear_double_double_syspool ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adim = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -979,7 +973,7 @@ def clear_quad_double_syspool(vrblvl=0):
     """
     if vrblvl > 0:
         print('in clear_quad_double_syspool ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl)
     adim = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -996,6 +990,8 @@ def test_double_polynomial(vrblvl=0):
     Tests the setting and getting of a polynomial, in double precision.
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in test_double_polynomial ...')
     set_double_dimension(2, vrblvl)
     dim = get_double_dimension(vrblvl)
     print('the dimension :', dim)
@@ -1014,6 +1010,8 @@ def test_double_double_polynomial(vrblvl=0):
     in double double precision.
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in test_double_double_polynomial ...')
     set_double_double_dimension(2, vrblvl)
     dim = get_double_double_dimension(vrblvl)
     print('the dimension :', dim)
@@ -1032,6 +1030,8 @@ def test_quad_double_polynomial(vrblvl=0):
     in quad double precision.
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in test_quad_double_polynomial ...')
     set_quad_double_dimension(2, vrblvl)
     dim = get_quad_double_dimension(vrblvl)
     print('the dimension :', dim)
@@ -1050,6 +1050,8 @@ def test_double_Laurent_polynomial(vrblvl=0):
     in double precision.
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in test_double_Laurent_polynomial ...')
     set_double_Laurent_dimension(2, vrblvl)
     dim = get_double_Laurent_dimension(vrblvl)
     print('the dimension :', dim)
@@ -1068,6 +1070,8 @@ def test_double_double_Laurent_polynomial(vrblvl=0):
     in double double precision.
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in test_double_double_Laurent_polynomial ...')
     set_double_double_Laurent_dimension(2, vrblvl)
     dim = get_double_double_Laurent_dimension(vrblvl)
     print('the dimension :', dim)
@@ -1086,6 +1090,8 @@ def test_quad_double_Laurent_polynomial(vrblvl=0):
     in quad double precision.
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in test_quad_double_Laurent_polynomial ...')
     set_quad_double_Laurent_dimension(2, vrblvl)
     dim = get_quad_double_Laurent_dimension(vrblvl)
     print('the dimension :', dim)
@@ -1104,6 +1110,8 @@ def test_double_system(vrblvl=0):
     in double precision.
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in test_double_system ...')
     polynomials = ["x^3 + 2*x*y - 1;", "x + y - 1;", "x - 1;"]
     dim = number_of_symbols(polynomials, vrblvl)
     print('number of symbols :', dim)
@@ -1126,6 +1134,8 @@ def test_double_double_system(vrblvl=0):
     in double double precision.
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in test_double_double_system ...')
     polynomials = ["x^3 + 2*x*y - 1;", "x + y - 1/3;", "x - 1;"]
     dim = number_of_symbols(polynomials, vrblvl)
     print('number of symbols :', dim)
@@ -1148,6 +1158,8 @@ def test_quad_double_system(vrblvl=0):
     in quad double precision.
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in test_quad_double_system ...')
     polynomials = ["x^3 + 2*x*y - 1;", "x + y - 1/3;", "y - 1;"]
     dim = number_of_symbols(polynomials, vrblvl)
     print('number of symbols :', dim)
@@ -1170,6 +1182,8 @@ def test_double_Laurent_system(vrblvl=0):
     in double precision.
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in test_double_Laurent_system ...')
     polynomials = ["x^(-3) + 2*x*y - 1;", "x + y^(-1) - 1;", "x - 1;"]
     dim = number_of_symbols(polynomials, vrblvl)
     print('number of symbols :', dim)
@@ -1192,6 +1206,8 @@ def test_double_double_Laurent_system(vrblvl=0):
     in double double precision.
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('test_double_double_Laurent_system ...')
     polynomials = ["x^(-3) + 2*x*y - 1;", "x + y**(-1) - 1/3;", "x - 1;"]
     dim = number_of_symbols(polynomials, vrblvl)
     print('number of symbols :', dim)
@@ -1214,6 +1230,8 @@ def test_quad_double_Laurent_system(vrblvl=0):
     in quad double precision.
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in test_quad_double_Laurent_system ...')
     polynomials = ["x^(-3) + 2*x*y - 1;", "x + y**(-1) - 1/3;", "y - 1;"]
     dim = number_of_symbols(polynomials, vrblvl)
     print('number of symbols :', dim)
@@ -1235,6 +1253,8 @@ def test_double_syspool(vrblvl=0):
     Tests the systems pool in double precision.
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in test_double_syspool ...')
     initialize_double_syspool(3, vrblvl)
     dim = size_double_syspool(vrblvl)
     print('The size of the systems pool :', dim)
@@ -1260,6 +1280,8 @@ def test_double_double_syspool(vrblvl=0):
     Tests the systems pool in double double precision.
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in test_double_double_syspool ...')
     initialize_double_double_syspool(3, vrblvl)
     dim = size_double_double_syspool(vrblvl)
     print('The size of the systems pool :', dim)
@@ -1285,6 +1307,8 @@ def test_quad_double_syspool(vrblvl=0):
     Tests the systems pool in quad double precision.
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in test_quad_double_syspool ...')
     initialize_quad_double_syspool(3, vrblvl)
     dim = size_quad_double_syspool(vrblvl)
     print('The size of the systems pool :', dim)
@@ -1310,6 +1334,8 @@ def test_degree_of_double_polynomial(vrblvl=0):
     Tests the degree of a polynomial in double precision.
     """
     pols = ['x^2*y + y^2 + 1;', 'x^2 + y^2 - 1;']
+    if vrblvl > 0:
+        print('in test_degree_of_double_polynomial ...')
     set_double_system(len(pols), pols, vrblvl)
     degsum = 0
     for (idx, pol) in enumerate(pols):

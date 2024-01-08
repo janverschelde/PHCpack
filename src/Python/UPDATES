@@ -1,3 +1,7 @@
+Sun 7 Jan 2024 : in version.py, replaced verbose by vrblvl,
+  updated __init__.py, dimension.py, polynomials.py, solutions.py,
+  and volumes.py.
+
 Sat 6 Jan 2024 : renamed homotopies.py into starters.py, moved functions
   to define homotopies from trackers.py into the new homotopies module.
   Improved tests in trackers.py and curves.py, updated cascades.py.
