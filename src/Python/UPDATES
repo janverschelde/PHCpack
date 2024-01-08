@@ -1,3 +1,6 @@
+Mon 8 Jan 2024 : start of a new module factor, to factor positive dimensional
+  solution sets into irreducible components.
+
 Sun 7 Jan 2024 : in version.py, replaced verbose by vrblvl,
   updated __init__.py, dimension.py, polynomials.py, solutions.py,
   and volumes.py.  Improved diagonal.py for pylint warnings.

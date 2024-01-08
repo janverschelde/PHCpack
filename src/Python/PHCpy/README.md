@@ -25,6 +25,7 @@ in the phcpy folder.
 | sets           | representing positive dimensional solution sets  |
 | cascades       | generic points on all solution components        |
 | diagonal       | intersecting positive dimensional solutions sets |
+| factor         | factor sets in irreducible components            |
 
 The directed acyclic graph shows the dependencies of
 the first seven modules:
