@@ -28,8 +28,8 @@ def total_degree(pols, vrblvl=0):
         print('in total degree, pols :')
         for pol in pols:
             print(pol)
-    set_double_system(len(pols), pols, vrblvl)
-    phc = get_phcfun()
+    set_double_system(len(pols), pols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     deg = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -59,8 +59,8 @@ def total_degree_start_system(pols, checkin=True, vrblvl=0):
         if not solve_checkin(pols, errmsg):
             return None
     dim = len(pols)
-    set_double_system(dim, pols, vrblvl)
-    svars = string_of_symbols(200, vrblvl)
+    set_double_system(dim, pols, vrblvl-1)
+    svars = string_of_symbols(200, vrblvl-1)
     degrees = [degree_of_double_polynomial(k+1) for k in range(dim)]
     result = []
     for ind in range(dim):
@@ -83,8 +83,8 @@ def m_homogeneous_bezout_number(pols, vrblvl=0):
         for pol in pols:
             print(pol)
     dim = len(pols)
-    set_double_system(dim, pols, vrblvl)
-    phc = get_phcfun()
+    set_double_system(dim, pols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     deg = pointer(c_int32(0))
     pbuffer = create_string_buffer(b"", 4*256)
     ccc = pointer(c_double(0.0))
@@ -95,7 +95,7 @@ def m_homogeneous_bezout_number(pols, vrblvl=0):
     if vrblvl > 0:
         print(', return value :', retval)
         print('an m-homogeneous Bezout number :', deg[0])
-    partition = int4a2str(pbuffer, (vrblvl > 0))
+    partition = int4a2str(pbuffer, vrblvl=vrblvl-1)
     if vrblvl > 0:
         print('the partition :', partition)
     return (deg[0], partition)
@@ -115,10 +115,10 @@ def m_partition_bezout_number(pols, partition, vrblvl=0):
             print(pol)
         print('the partition :', partition)
     dim = len(pols)
-    set_double_system(dim, pols, vrblvl)
-    phc = get_phcfun()
+    set_double_system(dim, pols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     deg = pointer(c_int32(len(partition)))
-    pbuffer = str2int4a(partition, (vrblvl > 0))
+    pbuffer = str2int4a(partition, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl)
     if vrblvl > 0:
@@ -154,10 +154,10 @@ def m_homogeneous_start_system(pols, partition, checkin=True, vrblvl=0):
         if not solve_checkin(pols, errmsg):
             return None
     dim = len(pols)
-    set_double_system(dim, pols, vrblvl)
-    phc = get_phcfun()
+    set_double_system(dim, pols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     deg = pointer(c_int32(len(partition)))
-    pbuffer = str2int4a(partition, (vrblvl > 0))
+    pbuffer = str2int4a(partition, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl)
     if vrblvl > 0:
@@ -166,7 +166,7 @@ def m_homogeneous_start_system(pols, partition, checkin=True, vrblvl=0):
     if vrblvl > 0:
         print(', return value :', retval)
         print('the m-homogeneous Bezout number :', deg[0])
-    startsys = get_double_system(vrblvl)
+    startsys = get_double_system(vrblvl-1)
     if vrblvl > 0:
         print('the start system :')
         for pol in startsys:
@@ -181,7 +181,7 @@ def m_homogeneous_start_system(pols, partition, checkin=True, vrblvl=0):
     retval = phc(114, aaa, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    startsols = get_double_solutions(vrblvl)
+    startsols = get_double_solutions(vrblvl-1)
     if vrblvl > 0:
         print('the start solutions :')
         for (idx, sol) in enumerate(startsols):
@@ -206,8 +206,8 @@ def linear_product_root_count(pols, checkin=True, vrblvl=0):
         if not solve_checkin(pols, errmsg):
             return None
     dim = len(pols)
-    set_double_system(dim, pols, vrblvl)
-    phc = get_phcfun()
+    set_double_system(dim, pols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     roco = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -228,7 +228,7 @@ def linear_product_root_count(pols, checkin=True, vrblvl=0):
     if vrblvl > 0:
         print('-> linear_product_root_count calls phc', end='')
     retval = phc(116, roco, strsets, ccc, vrb)
-    sets = int4a2str(strsets, verbose=(vrblvl > 0))
+    sets = int4a2str(strsets, vrblvl=vrblvl-1)
     if vrblvl > 0:
         print(', return value :', retval)
         print('supporting set structure :')
@@ -254,8 +254,8 @@ def random_linear_product_system(pols, checkin=True, tosolve=True, vrblvl=0):
         if not solve_checkin(pols, errmsg):
             return None
     dim = len(pols)
-    set_double_system(dim, pols, vrblvl)
-    phc = get_phcfun()
+    set_double_system(dim, pols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     roco = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -285,23 +285,29 @@ def test_total_degree(vrblvl=0):
     """
     Tests the total degree and the start system.
     """
+    if vrblvl > 0:
+        print('in test_total_degree ...')
     pols = noon3()
     totdeg = total_degree(pols, vrblvl)
-    print('the total degree of noon3 :', totdeg)
+    if vrblvl > 0:
+        print('the total degree of noon3 :', totdeg)
     (start, startsols) = total_degree_start_system(pols, vrblvl)
-    print('the start system :')
-    for pol in start:
-        print(pol)
-    print('the start solutions :')
-    for (idx, sol) in enumerate(startsols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
     return int(len(startsols) != 27)
 
 def test_m_homogeneous_degree(vrblvl=0):
     """
     Tests m-homogeneous Bezout number.
     """
+    if vrblvl > 0:
+        print('in test_m_homogeneous_degree ...')
     pols = game4two()
     deg, partition = m_homogeneous_bezout_number(pols, vrblvl)
     fail = int(deg != 9)
@@ -315,20 +321,24 @@ def test_linear_product_root_count(vrblvl=0):
     """
     Tests the linear product root count.
     """
+    if vrblvl > 0:
+        print('in test_linear_product_root_count ...')
     pols = noon3()
     lprc, sets = linear_product_root_count(pols, vrblvl=vrblvl)
-    print('linear product root count of noon3 :', lprc)
-    print('the supporting set structure :')
-    print(sets)
+    if vrblvl > 0:
+        print('linear product root count of noon3 :', lprc)
+        print('the supporting set structure :')
+        print(sets)
     fail = int(lprc != 21)
     prodsys, prodsols = random_linear_product_system(pols, vrblvl=vrblvl)
-    print('a random linear-product system :')
-    for pol in prodsys:
-        print(pol)
-    print('the solutions :')
-    for (idx, sol) in enumerate(prodsols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('a random linear-product system :')
+        for pol in prodsys:
+            print(pol)
+        print('the solutions :')
+        for (idx, sol) in enumerate(prodsols):
+            print('Solution', idx+1, ':')
+            print(sol)
     fail = fail + int(len(prodsols) != 21)
     return fail
 
@@ -336,7 +346,7 @@ def main():
     """
     Runs some tests.
     """
-    lvl = 10
+    lvl = 1
     fail = test_total_degree(lvl)
     fail = fail + test_m_homogeneous_degree(lvl)
     fail = fail + test_linear_product_root_count(lvl)
