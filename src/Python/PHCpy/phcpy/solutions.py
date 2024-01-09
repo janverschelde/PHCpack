@@ -318,7 +318,7 @@ def verify(pols, sols, vrblvl=0):
         for (idx, sol) in enumerate(sols):
             print('Solution', idx+1, ':')
             print(sol)
-    dictsols = [strsol2dict(sol, vrblvl) for sol in sols]
+    dictsols = [strsol2dict(sol, vrblvl=vrblvl) for sol in sols]
     checksum = 0
     for (idx, sol) in enumerate(dictsols):
         sumeval = sum(evaluate(pols, sol, vrblvl))
@@ -514,7 +514,7 @@ def filter_zero_coordinates(sols, varname, tol, oper, vrblvl=0):
             print(sol)
     result = []
     for sol in sols:
-        dsol = strsol2dict(sol, vrblvl)
+        dsol = strsol2dict(sol, vrblvl=vrblvl)
         if oper == 'select':
             if abs(dsol[varname]) < tol:
                 result.append(sol)
@@ -1151,7 +1151,7 @@ def test_double_functions(vrblvl=0):
     sol1 = make_solution(names, [1, -1], vrblvl=vrblvl)
     sol2 = make_solution(names, [-1, 1], vrblvl=vrblvl)
     sols = [sol1, sol2]
-    dsols = [strsol2dict(sol) for sol in sols]
+    dsols = [strsol2dict(sol, vrblvl=vrblvl) for sol in sols]
     mult = 0
     s0d = strsol2dict(sols[0], vrblvl=vrblvl)
     if vrblvl > 0:
