@@ -40,7 +40,7 @@ def set_default_parameters(vrblvl=0):
     """
     if vrblvl > 0:
         print('in set_default_parameters ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -60,7 +60,7 @@ def set_parameter_value(idx, value, vrblvl=0):
     if vrblvl > 0:
         print('in set_parameter_value, idx :', idx, end='')
         print(', value :', value)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aidx = pointer(c_int32(idx))
     bval = pointer(c_int32(0))
     cpar = (c_double * 2)()
@@ -90,7 +90,7 @@ def get_parameter_value(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in set_parameter_value, idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aidx = pointer(c_int32(idx))
     bval = pointer(c_int32(0))
     cpar = (c_double * 2)()
@@ -359,7 +359,7 @@ def reset_parameters(precision=0, vrblvl=0):
     """
     if vrblvl > 0:
         print('in reset_parameters, with precision :', precision)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aprc = pointer(c_int32(precision))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -412,7 +412,7 @@ def double_track(target, start, startsols, filename="", \
     set_double_start_solutions(len(target), startsols, vrblvl)
     usedgamma = get_gamma_constant(vrblvl)
     usedgamma = set_double_homotopy(usedgamma, pwt=1, vrblvl=vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 6)()
     apars[0] = c_int32(0)
     apars[1] = c_int32(len(filename))
@@ -483,7 +483,7 @@ def double_double_track(target, start, startsols, filename="", \
     set_double_double_start_solutions(len(target), startsols, vrblvl)
     usedgamma = get_gamma_constant(vrblvl)
     usedgamma = set_double_double_homotopy(usedgamma, pwt=1, vrblvl=vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 6)()
     apars[0] = c_int32(1)
     apars[1] = c_int32(len(filename))
@@ -554,7 +554,7 @@ def quad_double_track(target, start, startsols, filename="", \
     set_quad_double_start_solutions(len(target), startsols, vrblvl)
     usedgamma = get_gamma_constant(vrblvl)
     usedgamma = set_quad_double_homotopy(usedgamma, pwt=1, vrblvl=vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 6)()
     apars[0] = c_int32(2)
     apars[1] = c_int32(len(filename))
@@ -605,7 +605,7 @@ def initialize_double_artificial_homotopy(target, start, \
             print(pol)
     set_double_target_system(target, vrblvl)
     set_double_start_system(start, vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aprc = pointer(c_int32(0))
     bpars = (c_int32 * 2)()
     bpars[0] = c_int32(vrblvl)
@@ -641,7 +641,7 @@ def initialize_double_double_artificial_homotopy(target, start, \
             print(pol)
     set_double_double_target_system(target, vrblvl)
     set_double_double_start_system(start, vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aprc = pointer(c_int32(1))
     bpars = (c_int32 * 2)()
     bpars[0] = c_int32(vrblvl)
@@ -678,7 +678,7 @@ def initialize_quad_double_artificial_homotopy(target, start, \
             print(pol)
     set_quad_double_target_system(target, vrblvl)
     set_quad_double_start_system(start, vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aprc = pointer(c_int32(2))
     bpars = (c_int32 * 2)()
     bpars[0] = c_int32(vrblvl)
@@ -709,7 +709,7 @@ def initialize_double_parameter_homotopy(hom, idx, vrblvl=0):
         for pol in hom:
             print(pol)
     set_double_target_system(hom, vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aprc = pointer(c_int32(0))
     bpars = (c_int32 * 2)()
     bpars[0] = c_int32(idx)
@@ -739,7 +739,7 @@ def initialize_double_double_parameter_homotopy(hom, idx, vrblvl=0):
         for pol in hom:
             print(pol)
     set_double_double_target_system(hom, vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aprc = pointer(c_int32(1))
     bpars = (c_int32 * 2)()
     bpars[0] = c_int32(idx)
@@ -770,7 +770,7 @@ def initialize_quad_double_parameter_homotopy(hom, idx, vrblvl=0):
         for pol in hom:
             print(pol)
     set_quad_double_target_system(hom, vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aprc = pointer(c_int32(2))
     bpars = (c_int32 * 2)()
     bpars[0] = c_int32(idx)
@@ -797,7 +797,7 @@ def set_double_solution(nvr, sol, vrblvl=0):
         print('the solution :')
         print(sol)
     set_double_solutions(nvr, [sol])
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 2)()
     apars[0] = c_int32(0)
     apars[1] = c_int32(1)
@@ -824,7 +824,7 @@ def set_double_double_solution(nvr, sol, vrblvl=0):
         print('the solution :')
         print(sol)
     set_double_double_solutions(nvr, [sol])
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 2)()
     apars[0] = c_int32(1)
     apars[1] = c_int32(1)
@@ -851,7 +851,7 @@ def set_quad_double_solution(nvr, sol, vrblvl=0):
         print('the solution :')
         print(sol)
     set_quad_double_solutions(nvr, [sol])
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 2)()
     apars[0] = c_int32(2)
     apars[1] = c_int32(1)
@@ -874,7 +874,7 @@ def get_double_solution(vrblvl=0):
     """
     if vrblvl > 0:
         print('in get_double_solution ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 2)()
     apars[0] = c_int32(0)
     apars[1] = c_int32(1)
@@ -898,7 +898,7 @@ def get_double_double_solution(vrblvl=0):
     """
     if vrblvl > 0:
         print('in get_double_double_solution ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 2)()
     apars[0] = c_int32(1)
     apars[1] = c_int32(1)
@@ -922,7 +922,7 @@ def get_quad_double_solution(vrblvl=0):
     """
     if vrblvl > 0:
         print('in get_quad_double_solution ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 2)()
     apars[0] = c_int32(2)
     apars[1] = c_int32(1)
@@ -946,7 +946,7 @@ def double_predict_correct(vrblvl=0):
     """
     if vrblvl > 0:
         print('in double_predict_correct ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apar = pointer(c_int32(0))
     bvrb = pointer(c_int32(vrblvl))
     ccc = pointer(c_double(0.0))
@@ -966,7 +966,7 @@ def double_double_predict_correct(vrblvl=0):
     """
     if vrblvl > 0:
         print('in double_double_predict_correct ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apar = pointer(c_int32(1))
     bvrb = pointer(c_int32(vrblvl))
     ccc = pointer(c_double(0.0))
@@ -986,7 +986,7 @@ def quad_double_predict_correct(vrblvl=0):
     """
     if vrblvl > 0:
         print('in quad_double_predict_correct ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apar = pointer(c_int32(2))
     bvrb = pointer(c_int32(vrblvl))
     ccc = pointer(c_double(0.0))
@@ -1004,7 +1004,7 @@ def double_t_value(vrblvl=0):
     """
     if vrblvl > 0:
         print('in double_t_value ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apar = pointer(c_int32(0))
     bvrb = pointer(c_int32(0))
     ctval = pointer(c_double(0.0))
@@ -1023,7 +1023,7 @@ def double_double_t_value(vrblvl=0):
     """
     if vrblvl > 0:
         print('in double_double_t_value ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apar = pointer(c_int32(1))
     bvrb = pointer(c_int32(0))
     ctval = pointer(c_double(0.0))
@@ -1042,7 +1042,7 @@ def quad_double_t_value(vrblvl=0):
     """
     if vrblvl > 0:
         print('in quad_double_t_value ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apar = pointer(c_int32(2))
     bvrb = pointer(c_int32(0))
     ctval = pointer(c_double(0.0))
@@ -1061,7 +1061,7 @@ def double_step_size(vrblvl=0):
     """
     if vrblvl > 0:
         print('in double_step_size ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apar = pointer(c_int32(0))
     bvrb = pointer(c_int32(0))
     cstep = pointer(c_double(0.0))
@@ -1080,7 +1080,7 @@ def double_double_step_size(vrblvl=0):
     """
     if vrblvl > 0:
         print('in double_double_step_size ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apar = pointer(c_int32(1))
     bvrb = pointer(c_int32(0))
     cstep = pointer(c_double(0.0))
@@ -1099,7 +1099,7 @@ def quad_double_step_size(vrblvl=0):
     """
     if vrblvl > 0:
         print('in quad_double_step_size ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apar = pointer(c_int32(2))
     bvrb = pointer(c_int32(0))
     cstep = pointer(c_double(0.0))
@@ -1118,7 +1118,7 @@ def double_pole_step(vrblvl=0):
     """
     if vrblvl > 0:
         print('in double_pole_step ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apar = pointer(c_int32(0))
     bvrb = pointer(c_int32(0))
     cstep = pointer(c_double(0.0))
@@ -1137,7 +1137,7 @@ def double_double_pole_step(vrblvl=0):
     """
     if vrblvl > 0:
         print('in double_double_pole_step ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apar = pointer(c_int32(1))
     bvrb = pointer(c_int32(0))
     cstep = pointer(c_double(0.0))
@@ -1156,7 +1156,7 @@ def quad_double_pole_step(vrblvl=0):
     """
     if vrblvl > 0:
         print('in quad_double_pole_step ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apar = pointer(c_int32(2))
     bvrb = pointer(c_int32(0))
     cstep = pointer(c_double(0.0))
@@ -1176,7 +1176,7 @@ def double_estimated_distance(vrblvl=0):
     """
     if vrblvl > 0:
         print('in double_estimated_distance ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apar = pointer(c_int32(0))
     bvrb = pointer(c_int32(0))
     cdist = pointer(c_double(0.0))
@@ -1196,7 +1196,7 @@ def double_double_estimated_distance(vrblvl=0):
     """
     if vrblvl > 0:
         print('in double_double_estimated_distance ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apar = pointer(c_int32(1))
     bvrb = pointer(c_int32(0))
     cdist = pointer(c_double(0.0))
@@ -1216,7 +1216,7 @@ def quad_double_estimated_distance(vrblvl=0):
     """
     if vrblvl > 0:
         print('in quad_double_estimated_distance ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apar = pointer(c_int32(2))
     bvrb = pointer(c_int32(0))
     cdist = pointer(c_double(0.0))
@@ -1235,7 +1235,7 @@ def double_hessian_step(vrblvl=0):
     """
     if vrblvl > 0:
         print('in double_hessian_step ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apar = pointer(c_int32(0))
     bvrb = pointer(c_int32(0))
     cstep = pointer(c_double(0.0))
@@ -1254,7 +1254,7 @@ def double_double_hessian_step(vrblvl=0):
     """
     if vrblvl > 0:
         print('in double_double_hessian_step ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apar = pointer(c_int32(1))
     bvrb = pointer(c_int32(0))
     cstep = pointer(c_double(0.0))
@@ -1273,7 +1273,7 @@ def quad_double_hessian_step(vrblvl=0):
     """
     if vrblvl > 0:
         print('in quad_double_hessian_step ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apar = pointer(c_int32(2))
     bvrb = pointer(c_int32(0))
     cstep = pointer(c_double(0.0))
@@ -1293,7 +1293,7 @@ def double_pole_radius(vrblvl=0):
     """
     if vrblvl > 0:
         print('in double_pole_radius ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aprc = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     crad = pointer(c_double(0.0))
@@ -1313,7 +1313,7 @@ def double_double_pole_radius(vrblvl=0):
     """
     if vrblvl > 0:
         print('in double_double_pole_radius ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aprc = pointer(c_int32(1))
     bbb = pointer(c_int32(0))
     crad = pointer(c_double(0.0))
@@ -1333,7 +1333,7 @@ def quad_double_pole_radius(vrblvl=0):
     """
     if vrblvl > 0:
         print('in quad_double_pole_radius ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aprc = pointer(c_int32(2))
     bbb = pointer(c_int32(0))
     crad = pointer(c_double(0.0))
@@ -1353,7 +1353,7 @@ def double_closest_pole(vrblvl=0):
     """
     if vrblvl > 0:
         print('in double_closest_pole ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aprc = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     pole = (c_double * 2)()
@@ -1375,7 +1375,7 @@ def double_double_closest_pole(vrblvl=0):
     """
     if vrblvl > 0:
         print('in double_double_closest_pole ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aprc = pointer(c_int32(1))
     bbb = pointer(c_int32(0))
     pole = (c_double * 2)()
@@ -1397,7 +1397,7 @@ def quad_double_closest_pole(vrblvl=0):
     """
     if vrblvl > 0:
         print('in quad_double_closest_pole ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aprc = pointer(c_int32(2))
     bbb = pointer(c_int32(0))
     pole = (c_double * 2)()
@@ -1421,7 +1421,7 @@ def double_series_coefficients(dim, vrblvl = 0):
     if vrblvl > 0:
         print('in double_series_coefficients, dim :', dim)
     deg = get_degree_of_numerator(vrblvl) + get_degree_of_denominator(vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 3)()
     apars[0] = 0
     apars[1] = 0
@@ -1461,7 +1461,7 @@ def double_double_series_coefficients(dim, vrblvl = 0):
     if vrblvl > 0:
         print('in double_double_series_coefficients, dim :', dim)
     deg = get_degree_of_numerator(vrblvl) + get_degree_of_denominator(vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 3)()
     apars[0] = 1
     apars[1] = 0
@@ -1501,7 +1501,7 @@ def quad_double_series_coefficients(dim, vrblvl = 0):
     if vrblvl > 0:
         print('in quad_double_series_coefficients, dim :', dim)
     deg = get_degree_of_numerator(vrblvl) + get_degree_of_denominator(vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 3)()
     apars[0] = 2
     apars[1] = 0
@@ -1543,7 +1543,7 @@ def double_pade_coefficients(idx, vrblvl=0):
         print('in double_pade_coefficients, idx :', idx)
     numdeg = get_degree_of_numerator()
     dendeg = get_degree_of_denominator()
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 4)()
     apars[0] = 0 # precision
     apars[1] = 1
@@ -1602,7 +1602,7 @@ def double_double_pade_coefficients(idx, vrblvl=0):
         print('in double_double_pade_coefficients, idx :', idx)
     numdeg = get_degree_of_numerator()
     dendeg = get_degree_of_denominator()
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 4)()
     apars[0] = 1 # precision
     apars[1] = 1
@@ -1661,7 +1661,7 @@ def quad_double_pade_coefficients(idx, vrblvl=0):
         print('in quad_double_pade_coefficients, idx :', idx)
     numdeg = get_degree_of_numerator()
     dendeg = get_degree_of_denominator()
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 4)()
     apars[0] = 2 # precision
     apars[1] = 1
@@ -1743,7 +1743,7 @@ def double_poles(dim, vrblvl=0):
     """
     if vrblvl > 0:
         print('in double_poles, dim :', dim)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 3)()
     apars[0] = 0 # precision
     apars[1] = 0
@@ -1782,7 +1782,7 @@ def double_double_poles(dim, vrblvl=0):
     """
     if vrblvl > 0:
         print('in double_double_poles, dim :', dim)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 3)()
     apars[0] = 1 # precision
     apars[1] = 0
@@ -1821,7 +1821,7 @@ def quad_double_poles(dim, vrblvl=0):
     """
     if vrblvl > 0:
         print('in quad_double_poles, dim :', dim)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 3)()
     apars[0] = 2 # precision
     apars[1] = 0
@@ -1885,7 +1885,7 @@ def clear_double_data(vrblvl=0):
     """
     if vrblvl > 0:
         print('in clear_double_data ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aprc = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -1903,7 +1903,7 @@ def clear_double_double_data(vrblvl=0):
     """
     if vrblvl > 0:
         print('in clear_double_double_data ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aprc = pointer(c_int32(1))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -1921,7 +1921,7 @@ def clear_quad_double_data(vrblvl=0):
     """
     if vrblvl > 0:
         print('in clear_quad_double_data ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aprc = pointer(c_int32(2))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))

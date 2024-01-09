@@ -476,7 +476,8 @@ def get_double_system(vrblvl=0):
     result = []
     for k in range(1, dim+1):
         pol = get_double_polynomial(k, vrblvl)
-        print('-> get_double_system, pol :', pol)
+        if vrblvl > 0:
+            print('get_double_system retrieved pol :', pol)
         result.append(pol)
     return result
 
@@ -491,7 +492,8 @@ def get_double_double_system(vrblvl=0):
     result = []
     for k in range(1, dim+1):
         pol = get_double_double_polynomial(k, vrblvl)
-        print('-> get_double_double_system, pol :', pol)
+        if vrblvl > 0:
+            print('-> get_double_double_system retrieved pol :', pol)
         result.append(pol)
     return result
 
@@ -506,7 +508,8 @@ def get_quad_double_system(vrblvl=0):
     result = []
     for k in range(1, dim+1):
         pol = get_quad_double_polynomial(k, vrblvl)
-        print('-> get_quad_double_system, pol :', pol)
+        if vrblvl > 0:
+            print('get_quad_double_system retrieved pol :', pol)
         result.append(pol)
     return result
 
@@ -521,7 +524,8 @@ def get_double_Laurent_system(vrblvl=0):
     result = []
     for k in range(1, dim+1):
         pol = get_double_Laurent_polynomial(k, vrblvl)
-        print('-> get_double_Laurent_system, pol :', pol)
+        if vrblvl > 0:
+            print('get_double_Laurent_system retrieved pol :', pol)
         result.append(pol)
     return result
 
@@ -536,7 +540,8 @@ def get_double_double_Laurent_system(vrblvl=0):
     result = []
     for k in range(1, dim+1):
         pol = get_double_double_Laurent_polynomial(k, vrblvl)
-        print('-> get_double_double_Laurent_system, pol :', pol)
+        if vrblvl > 0:
+            print('get_double_double_Laurent_system retrieved pol :', pol)
         result.append(pol)
     return result
 
@@ -551,7 +556,8 @@ def get_quad_double_Laurent_system(vrblvl=0):
     result = []
     for k in range(1, dim+1):
         pol = get_quad_double_Laurent_polynomial(k, vrblvl)
-        print('-> get_quad_double_Laurent_system, pol :', pol)
+        if vrblvl > 0:
+            print('get_quad_double_Laurent_system retrieved pol :', pol)
         result.append(pol)
     return result
 
@@ -1349,7 +1355,7 @@ def main():
     """
     Runs tests on the set/get polynomials.
     """
-    lvl = 10
+    lvl = 1
     fail = test_double_polynomial(lvl)
     fail = fail + test_double_double_polynomial(lvl)
     fail = fail + test_quad_double_polynomial(lvl)

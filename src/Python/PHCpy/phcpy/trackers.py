@@ -48,7 +48,7 @@ def show_parameters(vrblvl=0):
     """
     if vrblvl > 0:
         print('in show_parameters ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -69,7 +69,7 @@ def autotune_parameters(difficulty_level, digits_of_precision, vrblvl=0):
     if vrblvl > 0:
         print('in autotune_parameters, difficulty :', difficulty_level, end='')
         print(', digits :', digits_of_precision)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(difficulty_level))
     bbb = pointer(c_int32(digits_of_precision))
     ccc = pointer(c_double(0.0))
@@ -88,7 +88,7 @@ def interactive_tune(vrblvl=0):
     """
     if vrblvl > 0:
         print('in interactive_tune ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -108,7 +108,7 @@ def set_parameter_value(idx, value, vrblvl=0):
     if vrblvl > 0:
         print('in set_parameter_value, idx :', idx, end='')
         print(', value :', value)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(idx))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(value))
@@ -127,7 +127,7 @@ def get_parameter_value(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in get_parameter_value, idx :', idx)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(idx))
     bbb = pointer(c_int32(0))
     value = pointer(c_double(0.0))
@@ -163,7 +163,7 @@ def clear_double_track_data(vrblvl=0):
     """
     if vrblvl > 0:
          print('in clear_double_track_data ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -182,7 +182,7 @@ def clear_double_double_track_data(vrblvl=0):
     """
     if vrblvl > 0:
          print('in clear_double_double_track_data ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -201,7 +201,7 @@ def clear_quad_double_track_data(vrblvl=0):
     """
     if vrblvl > 0:
          print('in clear_quad_double_track_data ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -219,7 +219,7 @@ def do_double_track(tasks=0, vrblvl=0):
     of tasks equal to tasks (no multithreading if zero).
     The verbose level is given by vrblvl.
     """
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     nbtasks = pointer(c_int32(tasks))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -237,7 +237,7 @@ def do_double_double_track(tasks=0, vrblvl=0):
     of tasks equal to tasks (no multithreading if zero).
     The verbose level is given by vrblvl.
     """
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     nbtasks = pointer(c_int32(tasks))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -255,7 +255,7 @@ def do_quad_double_track(tasks=0, vrblvl=0):
     of tasks equal to tasks (no multithreading if zero).
     The verbose level is given by vrblvl.
     """
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     nbtasks = pointer(c_int32(tasks))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -436,7 +436,7 @@ def initialize_double_tracker(target, start, fixedgamma=True, \
             print(pol)
     set_double_target_system(target, vrblvl)
     set_double_start_system(start, vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     afix = pointer(c_int32(int(fixedgamma)))
     bbb = pointer(c_int32(0))
     c_gamma = (c_double*2)()
@@ -476,7 +476,7 @@ def initialize_double_double_tracker(target, start, fixedgamma=True, \
             print(pol)
     set_double_double_target_system(target, vrblvl)
     set_double_double_start_system(start, vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     afix = pointer(c_int32(int(fixedgamma)))
     bbb = pointer(c_int32(0))
     c_gamma = (c_double*2)()
@@ -516,7 +516,7 @@ def initialize_quad_double_tracker(target, start, fixedgamma=True, \
             print(pol)
     set_quad_double_target_system(target, vrblvl)
     set_quad_double_start_system(start, vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     afix = pointer(c_int32(int(fixedgamma)))
     bbb = pointer(c_int32(0))
     c_gamma = (c_double*2)()
@@ -542,7 +542,7 @@ def initialize_double_solution(nvr, sol, vrblvl=0):
         print('the solution :')
         print(sol)
     set_double_solutions(nvr, [sol], vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aidx = pointer(c_int32(1))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -565,7 +565,7 @@ def initialize_double_double_solution(nvr, sol, vrblvl=0):
         print('the solution :')
         print(sol)
     set_double_double_solutions(nvr, [sol], vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aidx = pointer(c_int32(1))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -588,7 +588,7 @@ def initialize_quad_double_solution(nvr, sol, vrblvl=0):
         print('the solution :')
         print(sol)
     set_quad_double_solutions(nvr, [sol], vrblvl)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aidx = pointer(c_int32(1))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -609,7 +609,7 @@ def next_double_solution(vrblvl=0):
     """
     if vrblvl > 0:
         print('in next_double_solution ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aidx = pointer(c_int32(1))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -631,7 +631,7 @@ def next_double_double_solution(vrblvl=0):
     """
     if vrblvl > 0:
         print('in next_double_double_solution ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aidx = pointer(c_int32(1))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -653,7 +653,7 @@ def next_quad_double_solution(vrblvl=0):
     """
     if vrblvl > 0:
         print('in next_quad_double_solution ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aidx = pointer(c_int32(1))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))

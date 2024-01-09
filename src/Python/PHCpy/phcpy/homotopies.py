@@ -10,7 +10,7 @@ target functions in a homotopy.  There are twelve copy functions:
         _{system, solutions}_{from, into}_{start, target}
 
 which take no input arguments (other than the verbose level),
-and have no return arugments (other than the return value of the call).
+and have no return arguments (other than the return value of the call).
 Those copy functions are auxiliary to the set functions to define
 the homotopies.
 """
@@ -46,7 +46,7 @@ def copy_double_system_from_target(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_double_system_from_target ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -66,7 +66,7 @@ def copy_double_system_into_target(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_double_system_into_target ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -86,7 +86,7 @@ def copy_double_double_system_from_target(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_double_double_system_from_target ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -106,7 +106,7 @@ def copy_double_double_system_into_target(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_double_double_system_into_target ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -126,7 +126,7 @@ def copy_quad_double_system_from_target(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_quad_double_system_from_target ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -146,7 +146,7 @@ def copy_quad_double_system_into_target(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_quad_double_system_into_target ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -166,7 +166,7 @@ def copy_double_system_from_start(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_double_system_from_start ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -186,7 +186,7 @@ def copy_double_system_into_start(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_double_system_into_start ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -206,7 +206,7 @@ def copy_double_double_system_from_start(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_double_double_system_from_start ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -226,7 +226,7 @@ def copy_double_double_system_into_start(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_double_double_system_into_start ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -246,7 +246,7 @@ def copy_quad_double_system_from_start(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_quad_double_system_from_start ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -266,7 +266,7 @@ def copy_quad_double_system_into_start(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_quad_double_system_into_start ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -286,7 +286,7 @@ def copy_double_solutions_from_start(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_double_solutions_from_start ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -306,7 +306,7 @@ def copy_double_solutions_into_start(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_double_solutions_into_start ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -326,7 +326,7 @@ def copy_double_double_solutions_from_start(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_double_double_solutions_from_start ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -346,7 +346,7 @@ def copy_double_double_solutions_into_start(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_double_double_solutions_into_start ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -366,7 +366,7 @@ def copy_quad_double_solutions_from_start(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_quad_double_solutions_from_start ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -386,7 +386,7 @@ def copy_quad_double_solutions_into_start(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_quad_double_solutions_into_start ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -405,7 +405,7 @@ def copy_double_solutions_from_target(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_double_solutions_from_target ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -425,7 +425,7 @@ def copy_double_solutions_into_target(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_double_solutions_into_target ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -445,7 +445,7 @@ def copy_double_double_solutions_from_target(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_double_double_solutions_from_target ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -465,7 +465,7 @@ def copy_double_double_solutions_into_target(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_double_double_target_solutions ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -485,7 +485,7 @@ def copy_quad_double_solutions_from_target(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_quad_double_solutions_from_target ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -505,7 +505,7 @@ def copy_quad_double_solutions_into_target(vrblvl=0):
     """
     if vrblvl > 0:
         print('in copy_quad_double_solutions_into_target ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -776,7 +776,7 @@ def set_double_homotopy(gamma=0, pwt=2, vrblvl=0):
     if vrblvl > 0:
         print('in set_double_homotopy, with power :', pwt)
         print('gamma :', gamma)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apwt = pointer(c_int32(pwt))
     bbb = pointer(c_int32(0))
     if gamma != 0:
@@ -816,7 +816,7 @@ def set_double_double_homotopy(gamma=0, pwt=2, vrblvl=0):
     if vrblvl > 0:
         print('in set_double_double_homotopy, with power :', pwt)
         print('gamma :', gamma)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apwt = pointer(c_int32(pwt))
     bbb = pointer(c_int32(0))
     if gamma != 0:
@@ -856,7 +856,7 @@ def set_quad_double_homotopy(gamma=0, pwt=2, vrblvl=0):
     if vrblvl > 0:
         print('in set_quad_double_homotopy, with power :', pwt)
         print('gamma :', gamma)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     apwt = pointer(c_int32(pwt))
     bbb = pointer(c_int32(0))
     if gamma != 0:
@@ -891,7 +891,7 @@ def clear_double_homotopy(vrblvl=0):
     """
     if vrblvl > 0:
         print('in clear_double_homotopy ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -909,7 +909,7 @@ def clear_double_double_homotopy(vrblvl=0):
     """
     if vrblvl > 0:
         print('in clear_double_double_homotopy ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -927,7 +927,7 @@ def clear_quad_double_homotopy(vrblvl=0):
     """
     if vrblvl > 0:
         print('in clear_quad_double_homotopy ...')
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -947,8 +947,8 @@ def example_start_system(vrblvl=0):
         print('in example_start_system ...')
     pols = ['x^2 - 1;', 'y - 1;']
     names = ['x', 'y']
-    sol1 = make_solution(names, [1, 1])
-    sol2 = make_solution(names, [-1, 1])
+    sol1 = make_solution(names, [1, 1], vrblvl=vrblvl-1)
+    sol2 = make_solution(names, [-1, 1], vrblvl=vrblvl-1)
     sols = [sol1, sol2]
     return (pols, sols)
 
@@ -960,8 +960,8 @@ def example_target_system(vrblvl=0):
         print('in example_start_system ...')
     pols = ['(x - 2)*(y - 2);', 'x + y - 2;']
     names = ['x', 'y']
-    sol1 = make_solution(names, [2, 0])
-    sol2 = make_solution(names, [0, 2])
+    sol1 = make_solution(names, [2, 0], vrblvl=vrblvl-1)
+    sol2 = make_solution(names, [0, 2], vrblvl=vrblvl-1)
     sols = [sol1, sol2]
     return (pols, sols)
 
@@ -972,22 +972,30 @@ def test_double_start_system(vrblvl=0):
     if vrblvl > 0:
         print('in test_double_start_system ...')
     (pols, sols) = example_start_system(vrblvl)
-    err = verify(pols, sols, vrblvl-1)
+    if vrblvl > 0:
+        print('the start system :')
+        for pol in pols:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    err = verify(pols, sols, vrblvl=vrblvl-1)
     if vrblvl > 0:
         print('the error of the start solutions :', err)
     fail = int(abs(err.real) + abs(err.imag) > 1.0e-8)
-    set_double_start_system(pols, vrblvl)
+    set_double_start_system(pols, vrblvl-1)
     clear_double_system(vrblvl-1)
-    copy_double_system_from_start(vrblvl)
+    copy_double_system_from_start(vrblvl-1)
     pols = get_double_system(vrblvl-1)
     if vrblvl > 0:
         print('retrieved polynomials :')
         for pol in pols:
             print(pol)
     fail = fail + int(len(pols) != 2)
-    set_double_start_solutions(2, sols, vrblvl)
+    set_double_start_solutions(2, sols, vrblvl-1)
     clear_double_solutions(vrblvl-1)
-    copy_double_solutions_from_start(vrblvl)
+    copy_double_solutions_from_start(vrblvl-1)
     sols = get_double_solutions(vrblvl-1)
     if vrblvl > 0:
         print('retrieved solutions :')

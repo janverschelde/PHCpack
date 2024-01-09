@@ -279,9 +279,12 @@ def evaluate_polynomial(pol, dsol, vrblvl=0):
     rpol = rpol.replace('E', 'e')
     rpol = rpol.replace('^', '**')
     for varname in varsd:
-        xre = f"{dsol[varname].real:+.17f}"
-        xim = f"{dsol[varname].imag:+.17f}"
-        value = '(' + xre + xim + 'j)'
+        if isinstance(dsol[varname], complex):
+            xre = f"{dsol[varname].real:+.17f}"
+            xim = f"{dsol[varname].imag:+.17f}"
+            value = '(' + xre + xim + 'j)'
+        else:
+            value = dsol[varname]
         rpol = rpol.replace(varname, value)
     result = rpol[:-1]
     return eval(result)
@@ -678,11 +681,6 @@ def set_double_solutions(nvr, sols, vrblvl=0):
     clear_double_solutions(vrblvl)
     fail = 0
     for (ind, sol) in enumerate(sols):
-        print('calling append_double_solution_string ...')
-        print('the solution :')
-        print(sol)
-        print('nvr =', nvr)
-        print('len(sol) =', len(sol))
         fail = append_double_solution_string(nvr, sol, vrblvl)
         if fail != 0:
             print('Solution at position', ind, 'is not appended.')
@@ -1209,7 +1207,7 @@ def main():
     """
     Runs some tests on solutions.
     """
-    lvl = 10
+    lvl = 1
     fail = test_double_functions(lvl)
     fail = fail + test_double_solution_class(lvl)
     if fail == 0:
