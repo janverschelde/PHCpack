@@ -4,6 +4,8 @@ the functions in this module separate the generic points in the witness set
 according to the irreducible components of the solution set.
 """
 from ctypes import c_int32, c_double, pointer
+from random import uniform
+from cmath import exp, pi
 from phcpy.version import get_phcfun, int4a2nbr
 from phcpy.solutions import make_solution, endmultiplicity
 from phcpy.solutions import get_double_solutions
@@ -15,6 +17,10 @@ from phcpy.solutions import clear_double_double_solutions
 from phcpy.solutions import get_quad_double_solutions
 from phcpy.solutions import set_quad_double_solutions
 from phcpy.solutions import clear_quad_double_solutions
+from phcpy.solutions import filter_zero_coordinates
+from phcpy.families import cyclic
+from phcpy.solver import solve
+from phcpy.sets import double_embed
 from phcpy.sets import set_double_witness_set
 from phcpy.sets import set_double_double_witness_set
 from phcpy.sets import set_quad_double_witness_set
@@ -319,14 +325,689 @@ def initialize_quad_double_monodromy(nbloops, deg, dim, vrblvl=0):
         print(', return value :', retval)
     return retval
 
+def preset_double_solutions(vrblvl=0):
+    """
+    Initializes the start solutions for monodromy loops to the
+    solutions set in double precision.
+    """
+    if vrblvl > 0:
+        print('in preset_double_solutions ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> preset_double_solutions calls phc', end='')
+    retval = phc(51, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def preset_double_double_solutions(vrblvl=0):
+    """
+    Initializes the start solutions for monodromy loops to the
+    solutions set in double double precision.
+    """
+    if vrblvl > 0:
+        print('in preset_double_double_solutions ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> preset_double_double_solutions calls phc', end='')
+    retval = phc(641, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def preset_quad_double_solutions(vrblvl=0):
+    """
+    Initializes the start solutions for monodromy loops to the
+    solutions set in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in preset_quad_double_solutions ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> preset_quad_double_solutions calls phc', end='')
+    retval = phc(671, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def reset_double_solutions(vrblvl=0):
+    """
+    Resets the start solutions for monodromy loops in double precision
+    to the solutions used to initialize the start solutions with.
+    """
+    if vrblvl > 0:
+        print('in reset_double_solutions ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> reset_double_solutions calls phc', end='')
+    retval = phc(48, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def reset_double_double_solutions(vrblvl=0):
+    """
+    Resets the start solutions for monodromy loops in double double precision
+    to the solutions used to initialize the start solutions with.
+    """
+    if vrblvl > 0:
+        print('in reset_double_double_solutions ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> reset_double_double_solutions calls phc', end='')
+    retval = phc(638, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def reset_quad_double_solutions(vrblvl=0):
+    """
+    Resets the start solutions for monodromy loops in quad double precision
+    to the solutions used to initialize the start solutions with.
+    """
+    if vrblvl > 0:
+        print('in reset_quad_double_solutions ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> reset_quad_double_solutions calls phc', end='')
+    retval = phc(668, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def set_double_slice(equ, idx, cff, vrblvl=0):
+    """
+    Sets the coefficients of slicing equation with index equ
+    at position idx to the value in double precision:
+    cff[0] + cff[1]*complex(0, 1).
+    """
+    if vrblvl > 0:
+        print('in set_double_slice, equ :', equ, end='')
+        print(', in idx :', idx, ', cff :', cff)
+    phc = get_phcfun(vrblvl-1)
+    aequ = pointer(c_int32(equ))
+    bidx = pointer(c_int32(idx))
+    cffs = (c_double * 2)()
+    cffs[0] = c_double(cff[0])
+    cffs[1] = c_double(cff[1])
+    ccff = pointer(cffs)
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> set_double_slice calls phc', end='')
+    retval = phc(43, aequ, bidx, ccff, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def set_double_double_slice(equ, idx, cff, vrblvl=0):
+    """
+    Sets the coefficients of slicing equation with index equ
+    at position idx to the value in double double precision:
+    (cff[0], cff[1]) + (cff[2], cff[3])*complex(0, 1).
+    """
+    if vrblvl > 0:
+        print('in set_double_double_slice, equ :', equ, end='')
+        print(', in idx :', idx, ', cff :', cff)
+    phc = get_phcfun(vrblvl-1)
+    aequ = pointer(c_int32(equ))
+    bidx = pointer(c_int32(idx))
+    cffs = (c_double * 4)()
+    cffs[0] = c_double(cff[0])
+    cffs[1] = c_double(cff[1])
+    cffs[2] = c_double(cff[2])
+    cffs[3] = c_double(cff[3])
+    ccff = pointer(cffs)
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> set_double_double_slice calls phc', end='')
+    retval = phc(633, aequ, bidx, ccff, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def set_quad_double_slice(equ, idx, cff, vrblvl=0):
+    """
+    Sets the coefficients of slicing equation with index equ
+    at position idx to the value in quad double precision:
+      (cff[0], cff[1], cff[2], cff[3])
+    + (cff[4], cff[5], cff[6], cff[7])*complex(0, 1).
+    """
+    if vrblvl > 0:
+        print('in set_double_double_slice, equ :', equ, end='')
+        print(', in idx :', idx, ', cff :', cff)
+    phc = get_phcfun(vrblvl-1)
+    aequ = pointer(c_int32(equ))
+    bidx = pointer(c_int32(idx))
+    cffs = (c_double * 8)()
+    cffs[0] = c_double(cff[0])
+    cffs[1] = c_double(cff[1])
+    cffs[2] = c_double(cff[2])
+    cffs[3] = c_double(cff[3])
+    cffs[4] = c_double(cff[4])
+    cffs[5] = c_double(cff[5])
+    cffs[6] = c_double(cff[6])
+    cffs[7] = c_double(cff[7])
+    ccff = pointer(cffs)
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> set_quad_double_slice calls phc', end='')
+    retval = phc(663, aequ, bidx, ccff, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def set_double_trace(first, vrblvl=0):
+    """
+    Sets the constant coefficient of the first slice,
+    for use in the linear trace test in double precision.
+    The integer first indicates if it is the first time or not.
+    """
+    if vrblvl > 0:
+        print('in set_double_trace, first :', first)
+    if first == 1:
+        cff = [-1.0, 0.0]
+    else:
+        cff = [+1.0, 0.0]
+    return set_double_slice(0, 0, cff, vrblvl)
+
+def set_double_double_trace(first, vrblvl=0):
+    """
+    Sets the constant coefficient of the first slice,
+    for use in the linear trace test in double double precision.
+    The integer first indicates if it is the first time or not.
+    """
+    if vrblvl > 0:
+        print('in set_double_double_trace, first :', first)
+    if first == 1:
+        cff = [-1.0, 0.0, 0.0, 0.0]
+    else:
+        cff = [+1.0, 0.0, 0.0, 0.0]
+    return set_double_double_slice(0, 0, cff, vrblvl)
+
+def set_quad_double_trace(first, vrblvl=0):
+    """
+    Sets the constant coefficient of the first slice,
+    for use in the linear trace test in quad double precision.
+    The integer first indicates if it is the first time or not.
+    """
+    if vrblvl > 0:
+        print('in set_quad_double_trace, first :', first)
+    if first == 1:
+        cff = [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    else:
+        cff = [+1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    return set_quad_double_slice(0, 0, cff, vrblvl)
+
+def set_double_gammas(dim, vrblvl=0):
+    """
+    Sets the gamma constants in double precision
+    for the sampler in the monodromy loops.
+    Generates as many random complex constants as dim.
+    """
+    if vrblvl > 0:
+        print('in set_double_gammas, dim :', dim)
+    phc = get_phcfun(vrblvl-1)
+    aidx = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    gamma = (c_double * 2)()
+    cgamma = pointer(gamma)
+    vrb = c_int32(vrblvl-1)
+    retval = 0
+    for i in range(dim):
+        angle = uniform(0, 2*pi)
+        rndgamma = exp(angle*complex(0, 1))
+        gamma[0] = c_double(rndgamma.real)
+        gamma[1] = c_double(rndgamma.imag)
+        if(vrblvl > 0):
+            print('random gamma :', rndgamma)
+        if vrblvl > 0:
+            print('-> set_double_gammas calls phc', end='')
+        aidx[0] = c_int32(i)
+        retval = phc(44, aidx, bbb, cgamma, vrb)
+        if vrblvl > 0:
+            print(', return value :', retval)
+    return retval
+
+def set_double_double_gammas(dim, vrblvl=0):
+    """
+    Sets the gamma constants in double_double precision
+    for the sampler in the monodromy loops.
+    Generates as many random complex constants as dim.
+    """
+    if vrblvl > 0:
+        print('in set_double_double_gammas, dim :', dim)
+    phc = get_phcfun(vrblvl-1)
+    aidx = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    gamma = (c_double * 4)()
+    cgamma = pointer(gamma)
+    vrb = c_int32(vrblvl-1)
+    retval = 0
+    for i in range(dim):
+        angle = uniform(0, 2*pi)
+        rndgamma = exp(angle*complex(0, 1))
+        gamma[0] = c_double(rndgamma.real)
+        gamma[1] = c_double(0.0)
+        gamma[2] = c_double(rndgamma.imag)
+        gamma[3] = c_double(0.0)
+        if(vrblvl > 0):
+            print('random gamma :', rndgamma)
+        if vrblvl > 0:
+            print('-> set_double_double_gammas calls phc', end='')
+        aidx[0] = c_int32(i)
+        retval = phc(634, aidx, bbb, cgamma, vrb)
+        if vrblvl > 0:
+            print(', return value :', retval)
+    return retval
+
+def set_quad_double_gammas(dim, vrblvl=0):
+    """
+    Sets the gamma constants in quad_double precision
+    for the sampler in the monodromy loops.
+    Generates as many random complex constants as dim.
+    """
+    if vrblvl > 0:
+        print('in set_quad_double_gammas, dim :', dim)
+    phc = get_phcfun(vrblvl-1)
+    aidx = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    gamma = (c_double * 8)()
+    cgamma = pointer(gamma)
+    vrb = c_int32(vrblvl-1)
+    retval = 0
+    for i in range(dim):
+        angle = uniform(0, 2*pi)
+        rndgamma = exp(angle*complex(0, 1))
+        gamma[0] = c_double(rndgamma.real)
+        gamma[1] = c_double(0.0)
+        gamma[2] = c_double(0.0)
+        gamma[3] = c_double(0.0)
+        gamma[4] = c_double(rndgamma.imag)
+        gamma[5] = c_double(0.0)
+        gamma[6] = c_double(0.0)
+        gamma[7] = c_double(0.0)
+        if(vrblvl > 0):
+            print('random gamma :', rndgamma)
+        if vrblvl > 0:
+            print('-> set_quad_double_gammas calls phc', end='')
+        aidx[0] = c_int32(i)
+        retval = phc(664, aidx, bbb, cgamma, vrb)
+        if vrblvl > 0:
+            print(', return value :', retval)
+    return retval
+    return retval
+
+def swap_double_slices(vrblvl=0):
+    """
+    Swaps the slices with new ones to turn back in one monodromy loop
+    in double precision.
+    """
+    if vrblvl > 0:
+        print('in swap_double_slices ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> swap_double_slices calls phc', end='')
+    retval = phc(46, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def swap_double_double_slices(vrblvl=0):
+    """
+    Swaps the slices with new ones to turn back in one monodromy loop
+    in double double precision.
+    """
+    if vrblvl > 0:
+        print('in swap_double_double_slices ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> swap_double_double_slices calls phc', end='')
+    retval = phc(636, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def swap_quad_double_slices(vrblvl=0):
+    """
+    Swaps the slices with new ones to turn back in one monodromy loop
+    in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in swap_quad_double_slices ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> swap_quad_double_slices calls phc', end='')
+    retval = phc(666, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def double_witness_sample(vrblvl=0):
+    """
+    Computes a new witness set for a new set of slices,
+    in double precision.
+    """
+    if vrblvl > 0:
+        print('in double_witness_sample ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> double_witness_sample calls phc', end='')
+    retval = phc(45, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def double_double_witness_sample(vrblvl=0):
+    """
+    Computes a new witness set for a new set of slices,
+    in double double precision.
+    """
+    if vrblvl > 0:
+        print('in double_double_witness_sample ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> double_double_witness_sample calls phc', end='')
+    retval = phc(635, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def quad_double_witness_sample(vrblvl=0):
+    """
+    Computes a new witness set for a new set of slices,
+    in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in quad_double_witness_sample ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> quad_double_witness_sample calls phc', end='')
+    retval = phc(665, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def copy_double_witness_set(vrblvl=0):
+    """
+    Copies the witness set from the sampler to the system set
+    in double precision.
+    """
+    if vrblvl > 0:
+        print('in copy_double_witness_set ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> copy_double_witness_set calls phc', end='')
+    retval = phc(47, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def copy_double_double_witness_set(vrblvl=0):
+    """
+    Copies the witness set from the sampler to the system set
+    in double double precision.
+    """
+    if vrblvl > 0:
+        print('in copy_double_double_witness_set ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> copy_double_double_witness_set calls phc', end='')
+    retval = phc(637, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def copy_quad_double_witness_set(vrblvl=0):
+    """
+    Copies the witness set from the sampler to the system set
+    in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in copy_quad_double_witness_set ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> copy_quad_double_witness_set calls phc', end='')
+    retval = phc(667, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def copy_double_Laurent_witness_set(vrblvl=0):
+    """
+    Copies the witness set from the sampler to the Laurent system set
+    in double precision.
+    """
+    if vrblvl > 0:
+        print('in copy_double_witness_set ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> copy_double_Laurent_witness_set calls phc', end='')
+    retval = phc(807, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def copy_double_double_Laurent_witness_set(vrblvl=0):
+    """
+    Copies the witness set from the sampler to the Laurent system set
+    in double double precision.
+    """
+    if vrblvl > 0:
+        print('in copy_double_double_witness_set ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> copy_double_double_Laurent_witness_set calls phc', end='')
+    retval = phc(808, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def copy_quad_double_Laurent_witness_set(vrblvl=0):
+    """
+    Copies the witness set from the sampler to the Laurent system set
+    in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in copy_quad_double_witness_set ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> copy_quad_double_Laurent_witness_set calls phc', end='')
+    retval = phc(809, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def double_witness_track(islaurent=False, vrblvl=0):
+    """
+    Tracks as many paths as set in double precision,
+    as many as the size of the witness set.
+    If the system is Laurent, then islaurent must be True.
+    """
+    if vrblvl > 0:
+        print('in double_witness_track, islaurent :', islaurent)
+    double_witness_sample(vrblvl)
+    swap_double_slices(vrblvl)
+    if islaurent:
+        copy_double_Laurent_witness_set(vrblvl)
+    else:
+        copy_double_witness_set(vrblvl)
+
+def double_double_witness_track(islaurent=False, vrblvl=0):
+    """
+    Tracks as many paths as set in double double precision,
+    as many as the size of the witness set.
+    If the system is Laurent, then islaurent must be True.
+    """
+    if vrblvl > 0:
+        print('in double_double_witness_track, islaurent :', islaurent)
+    double_double_witness_sample(vrblvl)
+    swap_double_double_slices(vrblvl)
+    if islaurent:
+        copy_double_double_Laurent_witness_set(vrblvl)
+    else:
+        copy_double_double_witness_set(vrblvl)
+
+def quad_double_witness_track(islaurent=False, vrblvl=0):
+    """
+    Tracks as many paths as set in quad double precision,
+    as many as the size of the witness set.
+    If the system is Laurent, then islaurent must be True.
+    """
+    if vrblvl > 0:
+        print('in quad_double_witness_track, islaurent :', islaurent)
+    quad_double_witness_sample(vrblvl)
+    swap_quad_double_slices(vrblvl)
+    if islaurent:
+        copy_quad_double_Laurent_witness_set(vrblvl)
+    else:
+        copy_quad_double_witness_set(vrblvl)
+
+def double_trace_grid_diagnostics(vrblvl=0):
+    """
+    Returns the maximal error on the samples in the trace grid
+    and the minimal distance between the samples in the trace grid,
+    computed in double precision.
+    """
+    if vrblvl > 0:
+        print('in double_trace_grid_diagnostics ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    pars = (c_double * 2)()
+    cpars = pointer(pars)
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> double_trace_grid_diagnostics calls phc', end='')
+    retval = phc(56, aaa, bbb, cpars, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    vals = cpars[:2]
+    err = vals[0][0]
+    dis = vals[0][1]
+    if vrblvl > 0:
+       print('err :', err, ', dis :', dis)
+    return (err, dis)
+
+def double_double_trace_grid_diagnostics(vrblvl=0):
+    """
+    Returns the maximal error on the samples in the trace grid
+    and the minimal distance between the samples in the trace grid,
+    computed in double double precision.
+    """
+    if vrblvl > 0:
+        print('in double_double_trace_grid_diagnostics ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> double_double_trace_grid_diagnostics calls phc', end='')
+    retval = phc(646, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def quad_double_trace_grid_diagnostics(vrblvl=0):
+    """
+    Returns the maximal error on the samples in the trace grid
+    and the minimal distance between the samples in the trace grid,
+    computed in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in quad_double_trace_grid_diagnostics ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> quad_double_trace_grid_diagnostics calls phc', end='')
+    retval = phc(676, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
 def double_monodromy_breakup(embsys, esols, dim, \
-    islaurent=False, verbose=True, nbloops=20, vrblvl=0):
+    islaurent=False, verbose=False, nbloops=20, vrblvl=0):
     r"""
-    Applies the monodromy breakup algorithm in standard double precision
+    Applies the monodromy breakup algorithm in double precision
     to factor the *dim*-dimensional algebraic set represented by the
     embedded system *embsys* and its solutions *esols*.
     If the embedded polynomial system is a Laurent system,
-    then islaurent must equal True.
+    then *islaurent* must be True.
     If *verbose* is False, then no output is written.
     The value of *nbloops* equals the maximum number of loops.
     """
@@ -341,6 +1022,8 @@ def double_monodromy_breakup(embsys, esols, dim, \
         for (idx, sol) in enumerate(esols):
             print('Solution', idx+1, ':')
             print(sol)
+    if verbose:
+        print('... running monodromy loops in double precision ...')
     deg = len(esols)
     nvr = len(embsys)
     set_double_verbose(verbose, vrblvl)
@@ -352,6 +1035,23 @@ def double_monodromy_breakup(embsys, esols, dim, \
         set_double_witness_set(nvr, dim, embsys, esols, vrblvl-1)
         double_assign_labels(nvr, vrblvl)
         initialize_double_sampler(dim, vrblvl)
+    initialize_double_monodromy(nbloops, deg, dim, vrblvl)
+    preset_double_solutions(vrblvl)
+    if verbose:
+        print('... initializing the grid for the linear trace ...')
+    for i in range(1, 3):
+        set_double_trace(i, vrblvl)
+        set_double_gammas(nvr, vrblvl)
+        double_witness_track(islaurent)
+        preset_double_solutions(vrblvl)
+        reset_double_solutions(vrblvl)
+        swap_double_slices(vrblvl)
+    (err, dis) = double_trace_grid_diagnostics(vrblvl)
+    if verbose:
+        print('The diagnostics of the trace grid :')
+        print('  largest error on the samples :', err)
+        print('  smallest distance between the samples :', dis)
+    return 0
 
 def test_double_assign_labels(vrblvl=0):
     """
@@ -452,6 +1152,29 @@ def test_quad_double_assign_labels(vrblvl=0):
         fail = fail + int(mval != idx+1)
     return fail
 
+def test_double_monodromy(vrblvl=0):
+    """
+    Tests the monodromy breakup in double precision.
+    """
+    if vrblvl > 0:
+        print('in test_double monodromy')
+    cyc4 = cyclic(4)
+    cyc4e1 = double_embed(4, 1, cyc4, vrblvl=vrblvl-1)
+    clear_double_solutions(vrblvl-1)
+    c4sols = solve(cyc4e1, verbose_level=vrblvl-1)
+    esols = filter_zero_coordinates(c4sols, varname='zz1', tol=1.0e-8, \
+        oper='select', vrblvl=vrblvl-1)
+    print('the embedded cyclic 4-roots system :')
+    for pol in cyc4e1:
+        print(pol)
+    print('the generic points :')
+    for (idx, sol) in enumerate(esols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    fail = int(len(esols) != 4)
+    double_monodromy_breakup(cyc4e1, esols, 1, vrblvl=vrblvl)
+    return fail
+
 def main():
     """
     Runs some tests.
@@ -460,6 +1183,7 @@ def main():
     fail = test_double_assign_labels(lvl)
     fail = fail + test_double_double_assign_labels(lvl)
     fail = fail + test_quad_double_assign_labels(lvl)
+    fail = fail + test_double_monodromy(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:

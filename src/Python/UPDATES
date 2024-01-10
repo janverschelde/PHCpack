@@ -1,7 +1,8 @@
 Tue 9 Jan 2024 : fixed bug in verify of solutions.py so it works also for
   coordinates that are not of type complex.  Improved use of verbose level
   in polynomials.py, homotopies.py, trackers.py and curves.py.
-  Fixed calls to strsol2dict() regarding the verbose level.
+  Fixed calls to strsol2dict() regarding the verbose level.  Extended
+  factor.py to the computation of the trace grid in double precision.
 
 Mon 8 Jan 2024 : start of a new module factor, to factor positive dimensional
   solution sets into irreducible components.  Improved the use of the verbose
