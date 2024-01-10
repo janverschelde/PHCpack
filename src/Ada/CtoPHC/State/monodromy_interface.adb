@@ -790,7 +790,7 @@ package body Monodromy_Interface is
   begin
     if vrblvl > 0 then
       put("-> in monodromy_interface.");
-      put_line("Monodromy_QuadDobl_Perm_Solutions ...");
+      put_line("Monodromy_Standard_Perm_Solutions ...");
     end if;
     Standard_Monodromy_Permutations.Store(sols);
     return 0;
@@ -798,7 +798,7 @@ package body Monodromy_Interface is
     when others => 
       if vrblvl > 0 then
         put("Exception raised in monodromy_interface.");
-        put_line("Monodromy_QuadDobl_Perm_Solutions.");
+        put_line("Monodromy_Standard_Perm_Solutions.");
       end if;
       return 51;
   end Monodromy_Standard_Perm_Solutions;
