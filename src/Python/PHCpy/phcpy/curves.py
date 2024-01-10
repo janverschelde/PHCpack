@@ -68,7 +68,7 @@ def set_parameter_value(idx, value, vrblvl=0):
         cpar[0] = c_double(value.real)
         cpar[1] = c_double(value.imag)
     else:
-        if((idx == 2) or (idx == 3) or (idx == 11) or (idx == 12)):
+        if idx in (2, 3, 11, 12):
             bval = pointer(c_int32(value))
         else:
             bval = pointer(c_int32(0))
@@ -104,12 +104,10 @@ def get_parameter_value(idx, vrblvl=0):
     if idx == 1:
         vals = cval[:2]
         return complex(vals[0][0], vals[0][1])
-    else:
-        if((idx == 2) or (idx == 3) or (idx == 11) or (idx == 12)):
-            return bval[0]
-        else:
-            vals = cval[:2]
-            return vals[0][0]
+    if idx in (2, 3, 11, 12):
+        return bval[0]
+    vals = cval[:2]
+    return vals[0][0]
 
 def set_gamma_constant(gamma, vrblvl=0):
     """
@@ -887,7 +885,7 @@ def get_double_solution(vrblvl=0):
     retval = phc(863, apar, bvrb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    sol = get_next_double_solution(1, vrblvl)  
+    sol = get_next_double_solution(1, vrblvl)
     return sol
 
 def get_double_double_solution(vrblvl=0):
@@ -911,7 +909,7 @@ def get_double_double_solution(vrblvl=0):
     retval = phc(863, apar, bvrb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    sol = get_next_double_double_solution(1, vrblvl)  
+    sol = get_next_double_double_solution(1, vrblvl)
     return sol
 
 def get_quad_double_solution(vrblvl=0):
@@ -935,7 +933,7 @@ def get_quad_double_solution(vrblvl=0):
     retval = phc(863, apar, bvrb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    sol = get_next_quad_double_solution(1, vrblvl)  
+    sol = get_next_quad_double_solution(1, vrblvl)
     return sol
 
 def double_predict_correct(vrblvl=0):
@@ -1632,7 +1630,7 @@ def double_double_pade_coefficients(idx, vrblvl=0):
     dencfs = []
     for col in range(dendeg+1):
         apars[1] = 0
-        apars[2] = idx 
+        apars[2] = idx
         apars[3] = col
         if vrblvl > 0:
             print('-> double_double_pade_coefficients calls phc', end='')
@@ -1761,7 +1759,7 @@ def double_poles(dim, vrblvl=0):
             apars[1] = i
             apars[2] = j
             if vrblvl > 0:
-                 print('-> double_poles calls phc', end='')
+                print('-> double_poles calls phc', end='')
             retval = phc(871, apar, bvrb, ccff, vrb)
             if vrblvl > 0:
                 print(', return value :', retval)
@@ -1800,7 +1798,7 @@ def double_double_poles(dim, vrblvl=0):
             apars[1] = i
             apars[2] = j
             if vrblvl > 0:
-                 print('-> double_double_poles calls phc', end='')
+                print('-> double_double_poles calls phc', end='')
             retval = phc(871, apar, bvrb, ccff, vrb)
             if vrblvl > 0:
                 print(', return value :', retval)
@@ -1839,7 +1837,7 @@ def quad_double_poles(dim, vrblvl=0):
             apars[1] = i
             apars[2] = j
             if vrblvl > 0:
-                 print('-> quad_double_poles calls phc', end='')
+                print('-> quad_double_poles calls phc', end='')
             retval = phc(871, apar, bvrb, ccff, vrb)
             if vrblvl > 0:
                 print(', return value :', retval)
@@ -1859,10 +1857,10 @@ def symbolic_pade_approximant(cff):
     On return is the string representation of the Pade approximant,
     using 't' as the variable.
     """
-    (nq, dq) = cff
-    num = ['+' + str(nq[k]) + ('*t**%d' % k) for k in range(len(nq))]
+    (nuq, deq) = cff
+    num = ['+' + str(nuq[k]) + (f"*t**{k}") for k in range(len(nuq))]
     numerator = ''.join(num)
-    den = ['+' + str(nq[k]) + ('*t**%d' % k) for k in range(len(dq))]
+    den = ['+' + str(nuq[k]) + (f"*t**{k}") for k in range(len(deq))]
     denominator = ''.join(den)
     result = '(' + numerator + ')/(' + denominator + ')'
     return result
@@ -2212,7 +2210,7 @@ def next_double_loop(hom, idx, sols, interactive=False, vrblvl=0):
         for step in range(1, 101):
             if interactive:
                 answer = input('next predictor-corrector step ? (y/n) ')
-                if(answer != 'y'):
+                if answer != 'y':
                     result.append(sol)
                     break
             else:
@@ -2453,18 +2451,21 @@ def test_double_track(vrblvl=0):
         print('in test_double_track ...')
     mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
     start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
-    print('the start system :')
-    for pol in start:
-        print(pol)
-    print('the start solutions :')
-    for (idx, sol) in enumerate(startsols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
     gamma, sols = double_track(mickey, start, startsols, vrblvl=vrblvl)
-    print('the solutions :')
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('gamma :', gamma)
+        print('the solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     err = verify(mickey, sols, vrblvl)
     if vrblvl > 0:
         print('the error sum :', err)
@@ -2490,19 +2491,22 @@ def test_double_double_track(vrblvl=0):
         print('in test_double_double_track ...')
     mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
     start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
-    print('the start system :')
-    for pol in start:
-        print(pol)
-    print('the start solutions :')
-    for (idx, sol) in enumerate(startsols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
     gamma, sols = double_double_track(mickey, start, startsols, \
         vrblvl=vrblvl)
-    print('the solutions :')
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('gamma :', gamma)
+        print('the solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     err = verify(mickey, sols, vrblvl)
     if vrblvl > 0:
         print('the error sum :', err)
@@ -2528,19 +2532,22 @@ def test_quad_double_track(vrblvl=0):
         print('in test_quad_double_track ...')
     mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
     start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
-    print('the start system :')
-    for pol in start:
-        print(pol)
-    print('the start solutions :')
-    for (idx, sol) in enumerate(startsols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
     gamma, sols = quad_double_track(mickey, start, startsols, \
         vrblvl=vrblvl)
-    print('the solutions :')
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('gamma :', gamma)
+        print('the solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     err = verify(mickey, sols, vrblvl)
     if vrblvl > 0:
         print('the error sum :', err)
@@ -2577,6 +2584,7 @@ def test_next_double_track(vrblvl=0):
     gamma, sols = next_double_track(mickey, start, startsols, \
         interactive=False, vrblvl=vrblvl-1)
     if vrblvl > 0:
+        print('gamma :', gamma)
         print('the solutions :')
         for (idx, sol) in enumerate(sols):
             print('Solution', idx+1, ':')
@@ -2606,19 +2614,22 @@ def test_next_double_double_track(vrblvl=0):
         print('in test_next_double_double_track ...')
     mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
     start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
-    print('the start system :')
-    for pol in start:
-        print(pol)
-    print('the start solutions :')
-    for (idx, sol) in enumerate(startsols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
     gamma, sols = next_double_double_track(mickey, start, startsols, \
         vrblvl=vrblvl)
-    print('the solutions :')
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('gamma :', gamma)
+        print('the solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     err = verify(mickey, sols, vrblvl)
     if vrblvl > 0:
         print('the error sum :', err)
@@ -2644,19 +2655,22 @@ def test_next_quad_double_track(vrblvl=0):
         print('in test_next_quad_double_track ...')
     mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
     start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
-    print('the start system :')
-    for pol in start:
-        print(pol)
-    print('the start solutions :')
-    for (idx, sol) in enumerate(startsols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
     gamma, sols = next_quad_double_track(mickey, start, startsols, \
         vrblvl=vrblvl)
-    print('the solutions :')
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('gamma :', gamma)
+        print('the solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     err = verify(mickey, sols, vrblvl)
     if vrblvl > 0:
         print('the error sum :', err)
@@ -2683,18 +2697,23 @@ def test_double_hyperbola(vrblvl=0):
     par = 0.1
     xtp = ['x^2 - (t - 0.5)^2 - 0.01;']
     solx = sqrt(4*par**2+1)/2
-    print('\nvalue of the first start solution :', solx)
+    if vrblvl > 0:
+        print('\nvalue of the first start solution :', solx)
     sol1 = make_solution(['x'], [solx])
-    print('the first start solution :\n', sol1)
+    if vrblvl > 0:
+        print('the first start solution :\n', sol1)
     sol2 = make_solution(['x'], [-solx])
-    print('the second start solution :\n', sol2)
-    print('tracking in double precision ...')
-    (gamma, sols) = next_double_loop(xtp, 2, [sol1, sol2], \
+    if vrblvl > 0:
+        print('the second start solution :\n', sol2)
+        print('tracking in double precision ...')
+    gamma, sols = next_double_loop(xtp, 2, [sol1, sol2], \
         interactive=False, vrblvl=vrblvl)
-    print('the solutions :')
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('gamma :', gamma)
+        print('the solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     endxtp = [xtp[0].replace('t', '1.0')]
     err = verify(endxtp, sols, vrblvl)
     if vrblvl > 0:
@@ -2722,14 +2741,19 @@ def test_double_double_hyperbola(vrblvl=0):
     par = 0.1
     xtp = ['x^2 - (t - 0.5)^2 - 0.01;']
     solx = sqrt(4*par**2+1)/2
-    print('\nvalue of the first start solution :', solx)
+    if vrblvl > 0:
+        print('\nvalue of the first start solution :', solx)
     sol1 = make_solution(['x'], [solx])
-    print('the first start solution :\n', sol1)
+    if vrblvl > 0:
+        print('the first start solution :\n', sol1)
     sol2 = make_solution(['x'], [-solx])
-    print('the second start solution :\n', sol2)
-    print('tracking in double double precision ...')
-    (gamma, sols) = next_double_double_loop(xtp, 2, [sol1, sol2], \
+    if vrblvl > 0:
+        print('the second start solution :\n', sol2)
+        print('tracking in double double precision ...')
+    gamma, sols = next_double_double_loop(xtp, 2, [sol1, sol2], \
         interactive=False, vrblvl=vrblvl)
+    if vrblvl > 0:
+        print('gamma :', gamma)
     endxtp = [xtp[0].replace('t', '1.0')]
     err = verify(endxtp, sols, vrblvl)
     if vrblvl > 0:
@@ -2757,14 +2781,19 @@ def test_quad_double_hyperbola(vrblvl=0):
     par = 0.1
     xtp = ['x^2 - (t - 0.5)^2 - 0.01;']
     solx = sqrt(4*par**2+1)/2
-    print('\nvalue of the first start solution :', solx)
+    if vrblvl > 0:
+        print('\nvalue of the first start solution :', solx)
     sol1 = make_solution(['x'], [solx])
-    print('the first start solution :\n', sol1)
+    if vrblvl > 0:
+        print('the first start solution :\n', sol1)
     sol2 = make_solution(['x'], [-solx])
-    print('the second start solution :\n', sol2)
-    print('tracking in quad double precision ...')
-    (gamma, sols) = next_quad_double_loop(xtp, 2, [sol1, sol2], \
+    if vrblvl > 0:
+        print('the second start solution :\n', sol2)
+        print('tracking in quad double precision ...')
+    gamma, sols = next_quad_double_loop(xtp, 2, [sol1, sol2], \
         interactive=False, vrblvl=vrblvl)
+    if vrblvl > 0:
+        print('gamma :', gamma)
     endxtp = [xtp[0].replace('t', '1.0')]
     err = verify(endxtp, sols, vrblvl)
     if vrblvl > 0:

@@ -1,3 +1,5 @@
+Wed 10 Jan 2024 : improved curves.py for pylint warnings.
+
 Tue 9 Jan 2024 : fixed bug in verify of solutions.py so it works also for
   coordinates that are not of type complex.  Improved use of verbose level
   in polynomials.py, homotopies.py, trackers.py and curves.py.
