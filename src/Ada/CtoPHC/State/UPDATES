@@ -1,4 +1,5 @@
 Tue 9 Jan 2024 : in monodromy_interface.adb, fixed messaging.
+  Fixed output in standard_monodromy_permutations.adb.
 
 Sat 30 Dec 2023 : in schubert_interface.adb, used the verbose level to
   expose the commented out debugging information.
