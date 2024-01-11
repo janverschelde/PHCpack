@@ -49,6 +49,11 @@ with Standard_Sampling_Operations;
 with DoblDobl_Sampling_Operations;
 with QuadDobl_Sampling_Operations;
 
+with Standard_Integer_Numbers_io;
+ use Standard_Integer_Numbers_io;
+with Standard_Natural_Vectors_io;
+ use Standard_Natural_Vectors_io;
+
 package body Monodromy_Interface is
 
   function Monodromy_Standard_Initialize_Sampler
@@ -790,7 +795,7 @@ package body Monodromy_Interface is
   begin
     if vrblvl > 0 then
       put("-> in monodromy_interface.");
-      put_line("Monodromy_Standard_Perm_Solutions ...");
+      put_line("Monodromy_QuadDobl_Perm_Solutions ...");
     end if;
     Standard_Monodromy_Permutations.Store(sols);
     return 0;
@@ -798,7 +803,7 @@ package body Monodromy_Interface is
     when others => 
       if vrblvl > 0 then
         put("Exception raised in monodromy_interface.");
-        put_line("Monodromy_Standard_Perm_Solutions.");
+        put_line("Monodromy_QuadDobl_Perm_Solutions.");
       end if;
       return 51;
   end Monodromy_Standard_Perm_Solutions;
@@ -854,12 +859,14 @@ package body Monodromy_Interface is
                vrblvl : integer32 := 0 ) return integer32 is
 
     perm : constant Standard_Natural_Vectors.Vector
-         := Standard_Monodromy_Permutations.Permutation;
+         := Standard_Monodromy_Permutations.Permutation(vrblvl);
 
   begin
     if vrblvl > 0 then
       put("-> in monodromy_interface.");
       put_line("Monodromy_Standard_Permutation ...");
+      put("vrblvl : "); put(vrblvl,1); new_line;
+      put("the permutation :"); put(perm); new_line;
     end if;
     Assign(perm,b);
     return 0;

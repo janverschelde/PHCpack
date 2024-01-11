@@ -1,3 +1,7 @@
+Thu 11 Jan 2024 : added verbose level in the Permutation function
+  of standard_monodromy_permutations, passed the option vrblvl in
+  monodromy_interface.adb.
+
 Tue 9 Jan 2024 : in monodromy_interface.adb, fixed messaging.
   Fixed output in standard_monodromy_permutations.adb.
 

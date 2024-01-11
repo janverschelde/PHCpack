@@ -96,7 +96,7 @@ package body Standard_Monodromy_Permutations is
       for j in v'range loop
         res := res + ls.v(j)*v(j);
       end loop;
-     -- put("residual on slice : "); put(res); new_line;
+      put("residual on slice : "); put(res); new_line;
       tmp := Tail_Of(tmp);
     end loop;
   end On_Slice;
@@ -172,8 +172,8 @@ package body Standard_Monodromy_Permutations is
     if ind < 3 then
      -- put("storing trace grid for slice "); put(ind,1); new_line;
       sli := Standard_Sampling_Operations.Retrieve_Start_Slices;
-    --  put_line("the retrieved slices :"); put(sli);
-      On_Slice(sols,sli(1).all);
+     -- put_line("the retrieved slices :"); put(sli);
+     -- On_Slice(sols,sli(1).all);
       declare
         cp_sli : Standard_Complex_VecVecs.VecVec(sli'range);
       begin
@@ -194,10 +194,6 @@ package body Standard_Monodromy_Permutations is
                 put(PHCpack_Operations.output_file,
                     trace_grid_maximal_error,3);
                 new_line(PHCpack_Operations.output_file);
-              else
-                put(standard_output,"maximal error on trace grid : ");
-                put(standard_output,trace_grid_maximal_error,3);
-                new_line(standard_output);
               end if;
             end if;
             trace_grid_minimal_distance
@@ -209,10 +205,6 @@ package body Standard_Monodromy_Permutations is
                 put(PHCpack_Operations.output_file,
                     trace_grid_minimal_distance,3);
                 new_line(PHCpack_Operations.output_file);
-              else
-                put(standard_output,"minimial distance on trace grid : ");
-                put(standard_output,trace_grid_minimal_distance,3);
-                new_line(standard_output);
               end if;
             end if;
           end if;
@@ -320,7 +312,7 @@ package body Standard_Monodromy_Permutations is
     end loop;
   end Extinguish;
 
-  function Permutation return Vector is
+  function Permutation ( vrblvl : integer32 := 0 ) return Vector is
 
     len : constant integer32 := integer32(Length_Of(grid(0)));
     res : Vector(1..len);
@@ -328,11 +320,16 @@ package body Standard_Monodromy_Permutations is
     ls1,ls2 : Link_to_Solution;
 
   begin
-   -- Write_Grid;
-   -- put_line("Solution list 0 :");
-   -- put(standard_output,Length_Of(grid(0)),Head_Of(grid(0)).n,grid(0));
-   -- put("Solution list "); put(ind,1); put_line(" :");
-   -- put(standard_output,Length_Of(grid(ind)),Head_Of(grid(ind)).n,grid(ind));
+    put("in Permutation, vrblvl :"); put(vrblvl,1); new_line;
+    if vrblvl > 0 then
+      Write_Grid;
+      put_line("Solution list 0 :");
+      put(standard_output,natural32(Length_Of(grid(0))),
+          natural32(Head_Of(grid(0)).n),grid(0));
+      put("Solution list "); put(ind,1); put_line(" :");
+      put(standard_output,natural32(Length_Of(grid(ind))),
+          natural32(Head_Of(grid(ind)).n),grid(ind));
+    end if;
     pt1 := grid(0);
     for i in 1..len loop
       ls1 := Head_Of(pt1);
