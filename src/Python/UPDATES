@@ -1,3 +1,5 @@
+Thu 11 Jan 2024 : extended factor.py with monodromy loops.
+
 Wed 10 Jan 2024 : improved curves.py for pylint warnings.
 
 Tue 9 Jan 2024 : fixed bug in verify of solutions.py so it works also for

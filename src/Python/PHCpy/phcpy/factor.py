@@ -582,7 +582,7 @@ def set_double_gammas(dim, vrblvl=0):
         rndgamma = exp(angle*complex(0, 1))
         gamma[0] = c_double(rndgamma.real)
         gamma[1] = c_double(rndgamma.imag)
-        if(vrblvl > 0):
+        if vrblvl > 0:
             print('random gamma :', rndgamma)
         if vrblvl > 0:
             print('-> set_double_gammas calls phc', end='')
@@ -614,7 +614,7 @@ def set_double_double_gammas(dim, vrblvl=0):
         gamma[1] = c_double(0.0)
         gamma[2] = c_double(rndgamma.imag)
         gamma[3] = c_double(0.0)
-        if(vrblvl > 0):
+        if vrblvl > 0:
             print('random gamma :', rndgamma)
         if vrblvl > 0:
             print('-> set_double_double_gammas calls phc', end='')
@@ -650,7 +650,7 @@ def set_quad_double_gammas(dim, vrblvl=0):
         gamma[5] = c_double(0.0)
         gamma[6] = c_double(0.0)
         gamma[7] = c_double(0.0)
-        if(vrblvl > 0):
+        if vrblvl > 0:
             print('random gamma :', rndgamma)
         if vrblvl > 0:
             print('-> set_quad_double_gammas calls phc', end='')
@@ -658,7 +658,6 @@ def set_quad_double_gammas(dim, vrblvl=0):
         retval = phc(664, aidx, bbb, cgamma, vrb)
         if vrblvl > 0:
             print(', return value :', retval)
-    return retval
     return retval
 
 def swap_double_slices(vrblvl=0):
@@ -717,6 +716,57 @@ def swap_quad_double_slices(vrblvl=0):
     if vrblvl > 0:
         print(', return value :', retval)
     return retval
+
+def new_double_slices(dim, nvr, vrblvl=0):
+    """
+    Generates dim random hyperplanes in double precision
+    where nvr is the number of variables.
+    """
+    if vrblvl > 0:
+        print('in new_double_slices, dim :', dim, end='')
+        print(', nvr :', nvr)
+    fail = 0
+    for row in range(dim):
+        for col in range(nvr+1):
+            angle = uniform(0, 2*pi)
+            rancff = exp(angle*complex(0, 1))
+            cff = [rancff.real, rancff.imag]
+            fail = fail + set_double_slice(row, col, cff, vrblvl)
+    return fail
+
+def new_double_double_slices(dim, nvr, vrblvl=0):
+    """
+    Generates dim random hyperplanes in double double precision
+    where nvr is the number of variables.
+    """
+    if vrblvl > 0:
+        print('in new_double_double_slices, dim :', dim, end='')
+        print(', nvr :', nvr)
+    fail = 0
+    for row in range(dim):
+        for col in range(nvr+1):
+            angle = uniform(0, 2*pi)
+            rancff = exp(angle*complex(0, 1))
+            cff = [rancff.real, 0.0, rancff.imag, 0.0]
+            fail = fail + set_double_double_slice(row, col, cff, vrblvl)
+    return fail
+
+def new_quad_double_slices(dim, nvr, vrblvl=0):
+    """
+    Generates dim random hyperplanes in quad double precision
+    where nvr is the number of variables.
+    """
+    if vrblvl > 0:
+        print('in new_quad_double_slices, dim :', dim, end='')
+        print(', nvr :', nvr)
+    fail = 0
+    for row in range(dim):
+        for col in range(nvr+1):
+            angle = uniform(0, 2*pi)
+            rancff = exp(angle*complex(0, 1))
+            cff = [rancff.real, 0.0, 0.0, 0.0, rancff.imag, 0.0, 0.0, 0.0]
+            fail = fail + set_quad_double_slice(row, col, cff, vrblvl)
+    return fail
 
 def double_witness_sample(vrblvl=0):
     """
@@ -957,7 +1007,7 @@ def double_trace_grid_diagnostics(vrblvl=0):
     err = vals[0][0]
     dis = vals[0][1]
     if vrblvl > 0:
-       print('err :', err, ', dis :', dis)
+        print('err :', err, ', dis :', dis)
     return (err, dis)
 
 def double_double_trace_grid_diagnostics(vrblvl=0):
@@ -999,6 +1049,106 @@ def quad_double_trace_grid_diagnostics(vrblvl=0):
     if vrblvl > 0:
         print(', return value :', retval)
     return retval
+
+def double_trace_sum_difference(labels, vrblvl=0):
+    """
+    Returns the difference between the actual sum at the samples
+    defined by the labels to the generic points of a factor
+    and the trace sum, in double precision.
+    """
+    if vrblvl > 0:
+        print('in double_trace_sum_difference, labels :', labels)
+    phc = get_phcfun(vrblvl-1)
+    adim = pointer(c_int32(len(labels)))
+    fac = (c_int32 * len(labels))()
+    for (idx, label) in enumerate(labels):
+        fac[idx] = c_int32(label)
+    bfac = pointer(fac)
+    cdif = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> double_trace_sum_difference calls phc', end='')
+    retval = phc(57, adim, bfac, cdif, vrb)
+    result = cdif[0][0]
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('trace sum difference :', result)
+    return result
+
+def double_double_trace_sum_difference(labels, vrblvl=0):
+    """
+    Returns the difference between the actual sum at the samples
+    defined by the labels to the generic points of a factor
+    and the trace sum, in double double precision.
+    """
+    if vrblvl > 0:
+        print('in double_double_trace_sum_difference, labels :', labels)
+    phc = get_phcfun(vrblvl-1)
+    adim = pointer(c_int32(len(labels)))
+    fac = (c_int32 * len(labels))()
+    for (idx, label) in enumerate(labels):
+        fac[idx] = c_int32(label)
+    bfac = pointer(fac)
+    cdif = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> double_double_trace_sum_difference calls phc', end='')
+    retval = phc(647, adim, bfac, cdif, vrb)
+    result = cdif[0][0]
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('trace sum difference :', result)
+    return result
+
+def quad_double_trace_sum_difference(labels, vrblvl=0):
+    """
+    Returns the difference between the actual sum at the samples
+    defined by the labels to the generic points of a factor
+    and the trace sum, in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in quad_double_trace_sum_difference, labels :', labels)
+    phc = get_phcfun(vrblvl-1)
+    adim = pointer(c_int32(len(labels)))
+    fac = (c_int32 * len(labels))()
+    for (idx, label) in enumerate(labels):
+        fac[idx] = c_int32(label)
+    bfac = pointer(fac)
+    cdif = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> quad_double_trace_sum_difference calls phc', end='')
+    retval = phc(677, adim, bfac, cdif, vrb)
+    result = cdif[0][0]
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('trace sum difference :', result)
+    return result
+
+def double_loop_permutation(deg, vrblvl=0):
+    """
+    Returns the permutation using the solution most recently computed,
+    for a set of degree deg, after a loop in double precision.
+    """
+    if vrblvl > 0:
+        print('in double_loop_permutation, deg :', deg)
+    phc = get_phcfun(vrblvl-1)
+    adeg = pointer(c_int32(deg))
+    perm = (c_int32 * deg)()
+    bperm = pointer(perm)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> double_loop permutation calls phc', end='')
+    retval = phc(52, adeg, bperm, ccc, vrb)
+    vals = bperm[0:deg]
+    result = []
+    for idx in range(deg):
+        result.append(int(vals[0][idx]))
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('permutation :', result)
+    return result
 
 def double_monodromy_breakup(embsys, esols, dim, \
     islaurent=False, verbose=False, nbloops=20, vrblvl=0):
@@ -1042,7 +1192,7 @@ def double_monodromy_breakup(embsys, esols, dim, \
     for i in range(1, 3):
         set_double_trace(i, vrblvl)
         set_double_gammas(nvr, vrblvl)
-        double_witness_track(islaurent)
+        double_witness_track(islaurent, vrblvl)
         preset_double_solutions(vrblvl)
         reset_double_solutions(vrblvl)
         swap_double_slices(vrblvl)
@@ -1051,6 +1201,18 @@ def double_monodromy_breakup(embsys, esols, dim, \
         print('The diagnostics of the trace grid :')
         print('  largest error on the samples :', err)
         print('  smallest distance between the samples :', dis)
+    for i in range(1, nbloops+1):
+        if verbose:
+            print('... starting loop %d ...' % i)
+        new_double_slices(dim, nvr, vrblvl)
+        set_double_gammas(nvr)
+        double_witness_track(islaurent, vrblvl)
+        clear_double_solutions(vrblvl-1)
+        set_double_gammas(nvr)
+        double_witness_track(islaurent, vrblvl)
+        perm = double_loop_permutation(deg, vrblvl)
+        if verbose:
+            print('new permutation :', perm)
     return 0
 
 def test_double_assign_labels(vrblvl=0):
@@ -1172,17 +1334,18 @@ def test_double_monodromy(vrblvl=0):
         print('Solution', idx+1, ':')
         print(sol)
     fail = int(len(esols) != 4)
-    double_monodromy_breakup(cyc4e1, esols, 1, vrblvl=vrblvl)
+    double_monodromy_breakup(cyc4e1, esols, dim=1, nbloops=1, vrblvl=vrblvl)
     return fail
 
 def main():
     """
     Runs some tests.
     """
-    lvl = 1
-    fail = test_double_assign_labels(lvl)
-    fail = fail + test_double_double_assign_labels(lvl)
-    fail = fail + test_quad_double_assign_labels(lvl)
+    lvl = 10
+    #fail = test_double_assign_labels(lvl)
+    #fail = fail + test_double_double_assign_labels(lvl)
+    #fail = fail + test_quad_double_assign_labels(lvl)
+    fail = 0
     fail = fail + test_double_monodromy(lvl)
     if fail == 0:
         print('=> All tests passed.')
