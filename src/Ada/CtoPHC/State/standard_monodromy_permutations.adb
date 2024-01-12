@@ -320,7 +320,6 @@ package body Standard_Monodromy_Permutations is
     ls1,ls2 : Link_to_Solution;
 
   begin
-    put("in Permutation, vrblvl :"); put(vrblvl,1); new_line;
     if vrblvl > 0 then
       Write_Grid;
       put_line("Solution list 0 :");

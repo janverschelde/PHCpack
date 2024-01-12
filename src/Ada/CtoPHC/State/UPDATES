@@ -1,3 +1,5 @@
+Fri 12 Jan 2024 : removed put() in standard_monodromy_permutations.adb.
+
 Thu 11 Jan 2024 : added verbose level in the Permutation function
   of standard_monodromy_permutations, passed the option vrblvl in
   monodromy_interface.adb.
