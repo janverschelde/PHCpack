@@ -20,7 +20,8 @@ from phcpy.solutions import clear_quad_double_solutions
 from phcpy.solutions import filter_zero_coordinates
 from phcpy.families import cyclic
 from phcpy.solver import solve
-from phcpy.sets import double_embed
+from phcpy.sets import double_embed, double_double_embed
+from phcpy.sets import quad_double_embed
 from phcpy.sets import set_double_witness_set
 from phcpy.sets import set_double_double_witness_set
 from phcpy.sets import set_quad_double_witness_set
@@ -72,7 +73,7 @@ def set_double_double_verbose(verbose=True, vrblvl=0):
         print(', return value :', retval)
     return retval
 
-def set_quad_double_monodromy_verbose(verbose=True, vrblvl=0):
+def set_quad_double_verbose(verbose=True, vrblvl=0):
     """
     Sets the state of the monodromy algorithm in quad double precision
     to verbose if vrblvl > 0, otherwise it is set to remain mute.
@@ -1021,14 +1022,20 @@ def double_double_trace_grid_diagnostics(vrblvl=0):
     phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
-    ccc = pointer(c_double(0.0))
+    pars = (c_double * 2)()
+    cpars = pointer(pars)
     vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> double_double_trace_grid_diagnostics calls phc', end='')
-    retval = phc(646, aaa, bbb, ccc, vrb)
+    retval = phc(646, aaa, bbb, cpars, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    return retval
+    vals = cpars[:2]
+    err = vals[0][0]
+    dis = vals[0][1]
+    if vrblvl > 0:
+        print('err :', err, ', dis :', dis)
+    return (err, dis)
 
 def quad_double_trace_grid_diagnostics(vrblvl=0):
     """
@@ -1041,14 +1048,20 @@ def quad_double_trace_grid_diagnostics(vrblvl=0):
     phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
-    ccc = pointer(c_double(0.0))
+    pars = (c_double * 2)()
+    cpars = pointer(pars)
     vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> quad_double_trace_grid_diagnostics calls phc', end='')
-    retval = phc(676, aaa, bbb, ccc, vrb)
+    retval = phc(676, aaa, bbb, cpars, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    return retval
+    vals = cpars[:2]
+    err = vals[0][0]
+    dis = vals[0][1]
+    if vrblvl > 0:
+        print('err :', err, ', dis :', dis)
+    return (err, dis)
 
 def double_trace_sum_difference(labels, vrblvl=0):
     """
@@ -1368,6 +1381,48 @@ def double_trace_test(vrblvl=0):
         print('certified :', result)
     return result
 
+def double_double_trace_test(vrblvl=0):
+    """
+    Runs the trace test on the decompostion in double double precision,
+    returns True if certified, otherwise returns False.
+    """
+    if vrblvl > 0:
+        print('in double_double_trace_test ...')
+    phc = get_phcfun(vrblvl-1)
+    adone = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> double_double_trace_test calls phc', end='')
+    retval = phc(645, adone, bbb, ccc, vrb)
+    result = (adone[0] == 1)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('certified :', result)
+    return result
+
+def quad_double_trace_test(vrblvl=0):
+    """
+    Runs the trace test on the decompostion in quad double precision,
+    returns True if certified, otherwise returns False.
+    """
+    if vrblvl > 0:
+        print('in quad_double_trace_test ...')
+    phc = get_phcfun(vrblvl-1)
+    adone = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> quad_double_trace_test calls phc', end='')
+    retval = phc(675, adone, bbb, ccc, vrb)
+    result = (adone[0] == 1)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('certified :', result)
+    return result
+
 def double_witness_points(idx, deg, vrblvl=0):
     """
     Given an index idx of an irreducible component,
@@ -1400,6 +1455,70 @@ def double_witness_points(idx, deg, vrblvl=0):
         print('labels of witness points :', result)
     return result
 
+def double_double_witness_points(idx, deg, vrblvl=0):
+    """
+    Given an index idx of an irreducible component,
+    computed in double double precision,
+    returns the labels of the witness points that span the component.
+    The input deg is the upper bound on the degree of a factor.
+    The degree of the factor is the length of the returned list.
+    """
+    if vrblvl > 0:
+        print('in double_double_witness_points, idx :', idx, end='')
+        print(', deg :', deg)
+    phc = get_phcfun(vrblvl-1)
+    aidx = pointer(c_int32(idx))
+    witpts = (c_int32 * deg)()
+    bwit = pointer(witpts)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> double_double_witness_points calls phc', end='')
+    retval = phc(657, aidx, bwit, ccc, vrb)
+    wdeg = aidx[0]
+    if vrblvl > 0:
+        print('the degree of factor', idx, ':', wdeg)
+    result = []
+    vals = bwit[:wdeg]
+    for index in range(wdeg):
+        result.append(vals[0][index])
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('labels of witness points :', result)
+    return result
+
+def quad_double_witness_points(idx, deg, vrblvl=0):
+    """
+    Given an index idx of an irreducible component,
+    computed in quad double precision,
+    returns the labels of the witness points that span the component.
+    The input deg is the upper bound on the degree of a factor.
+    The degree of the factor is the length of the returned list.
+    """
+    if vrblvl > 0:
+        print('in quad_double_witness_points, idx :', idx, end='')
+        print(', deg :', deg)
+    phc = get_phcfun(vrblvl-1)
+    aidx = pointer(c_int32(idx))
+    witpts = (c_int32 * deg)()
+    bwit = pointer(witpts)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> quad_double_witness_points calls phc', end='')
+    retval = phc(687, aidx, bwit, ccc, vrb)
+    wdeg = aidx[0]
+    if vrblvl > 0:
+        print('the degree of factor', idx, ':', wdeg)
+    result = []
+    vals = bwit[:wdeg]
+    for index in range(wdeg):
+        result.append(vals[0][index])
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('labels of witness points :', result)
+    return result
+
 def double_decomposition(deg, vrblvl=0):
     """
     Returns the decomposition as a list of labels of witness points
@@ -1412,6 +1531,36 @@ def double_decomposition(deg, vrblvl=0):
     for idx in range(1, nbr+1):
         witpts = double_witness_points(idx, deg, vrblvl)
         trace = double_trace_sum_difference(witpts, vrblvl)
+        result.append((witpts, trace))
+    return result
+
+def double_double_decomposition(deg, vrblvl=0):
+    """
+    Returns the decomposition as a list of labels of witness points
+    on the components, computed in double double precision.
+    """
+    if vrblvl > 0:
+        print('in double_double_decomposition, deg :', deg)
+    nbr = double_double_factor_count(vrblvl)
+    result = []
+    for idx in range(1, nbr+1):
+        witpts = double_double_witness_points(idx, deg, vrblvl)
+        trace = double_double_trace_sum_difference(witpts, vrblvl)
+        result.append((witpts, trace))
+    return result
+
+def quad_double_decomposition(deg, vrblvl=0):
+    """
+    Returns the decomposition as a list of labels of witness points
+    on the components, computed in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in quad_double_decomposition, deg :', deg)
+    nbr = quad_double_factor_count(vrblvl)
+    result = []
+    for idx in range(1, nbr+1):
+        witpts = quad_double_witness_points(idx, deg, vrblvl)
+        trace = quad_double_trace_sum_difference(witpts, vrblvl)
         result.append((witpts, trace))
     return result
    
@@ -1493,6 +1642,166 @@ def double_monodromy_breakup(embsys, esols, dim, \
             break
         reset_double_solutions(vrblvl)
     return double_decomposition(deg, vrblvl)
+   
+def double_double_monodromy_breakup(embsys, esols, dim, \
+    islaurent=False, verbose=False, nbloops=20, vrblvl=0):
+    r"""
+    Applies the monodromy breakup algorithm in double double precision
+    to factor the *dim*-dimensional algebraic set represented by the
+    embedded system *embsys* and its solutions *esols*.
+    If the embedded polynomial system is a Laurent system,
+    then *islaurent* must be True.
+    If *verbose* is False, then no output is written.
+    The value of *nbloops* equals the maximum number of loops.
+    """
+    if vrblvl > 0:
+        print('in double_double_monodromy_breakup', end='')
+        print(', dim :', dim, ', nbloops :', nbloops)
+        print(', islaurent :', islaurent, ', verbose :', verbose)
+        print('the embedded polynomials :')
+        for pol in embsys:
+            print(pol)
+        print('the generic points :')
+        for (idx, sol) in enumerate(esols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    if verbose:
+        print('... running monodromy loops in double double precision ...')
+    deg = len(esols)
+    nvr = len(embsys)
+    set_double_double_verbose(verbose, vrblvl)
+    if islaurent:
+        set_double_double_Laurent_witness_set(nvr, dim, embsys, esols, \
+            vrblvl-1)
+        double_double_assign_labels(nvr, vrblvl)
+        initialize_double_double_Laurent_sampler(dim, vrblvl)
+    else:
+        set_double_double_witness_set(nvr, dim, embsys, esols, vrblvl-1)
+        double_double_assign_labels(nvr, vrblvl)
+        initialize_double_double_sampler(dim, vrblvl)
+    initialize_double_double_monodromy(nbloops, deg, dim, vrblvl)
+    preset_double_double_solutions(vrblvl)
+    if verbose:
+        print('... initializing the grid for the linear trace ...')
+    for i in range(1, 3):
+        set_double_double_trace(i, vrblvl)
+        set_double_double_gammas(nvr, vrblvl)
+        double_double_witness_track(islaurent, vrblvl)
+        preset_double_double_solutions(vrblvl)
+        reset_double_double_solutions(vrblvl)
+        swap_double_double_slices(vrblvl)
+    (err, dis) = double_double_trace_grid_diagnostics(vrblvl)
+    if verbose:
+        print('The diagnostics of the trace grid :')
+        print('  largest error on the samples :', err)
+        print('  smallest distance between the samples :', dis)
+    for i in range(1, nbloops+1):
+        if verbose:
+            print('... starting loop %d ...' % i)
+        new_double_double_slices(dim, nvr, vrblvl)
+        set_double_double_gammas(nvr)
+        double_double_witness_track(islaurent, vrblvl)
+        clear_double_double_solutions(vrblvl-1)
+        set_double_double_gammas(nvr)
+        double_double_witness_track(islaurent, vrblvl)
+        preset_double_double_solutions(vrblvl)
+        perm = double_double_loop_permutation(deg, vrblvl)
+        if verbose:
+            print('new permutation :', perm)
+        nb0 = double_double_factor_count(vrblvl)
+        nf0, nf1 = update_double_double_decomposition(deg, perm, vrblvl)
+        nb1 = double_double_factor_count(vrblvl)
+        if verbose:
+            print('number of factors : %d -> %d' % (nb0, nb1))
+            deco = double_double_decomposition(deg, vrblvl)
+            print('the decomposition :')
+            for (idx, factor) in enumerate(deco):
+                print('  factor', idx+1, ':', factor)
+        done = double_double_trace_test(vrblvl)
+        if done:
+            break
+        reset_double_double_solutions(vrblvl)
+    return double_double_decomposition(deg, vrblvl)
+   
+def quad_double_monodromy_breakup(embsys, esols, dim, \
+    islaurent=False, verbose=False, nbloops=20, vrblvl=0):
+    r"""
+    Applies the monodromy breakup algorithm in quad double precision
+    to factor the *dim*-dimensional algebraic set represented by the
+    embedded system *embsys* and its solutions *esols*.
+    If the embedded polynomial system is a Laurent system,
+    then *islaurent* must be True.
+    If *verbose* is False, then no output is written.
+    The value of *nbloops* equals the maximum number of loops.
+    """
+    if vrblvl > 0:
+        print('in quad_double_monodromy_breakup', end='')
+        print(', dim :', dim, ', nbloops :', nbloops)
+        print(', islaurent :', islaurent, ', verbose :', verbose)
+        print('the embedded polynomials :')
+        for pol in embsys:
+            print(pol)
+        print('the generic points :')
+        for (idx, sol) in enumerate(esols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    if verbose:
+        print('... running monodromy loops in quad double precision ...')
+    deg = len(esols)
+    nvr = len(embsys)
+    set_quad_double_verbose(verbose, vrblvl)
+    if islaurent:
+        set_quad_double_Laurent_witness_set(nvr, dim, embsys, esols, \
+            vrblvl-1)
+        quad_double_assign_labels(nvr, vrblvl)
+        initialize_quad_double_Laurent_sampler(dim, vrblvl)
+    else:
+        set_quad_double_witness_set(nvr, dim, embsys, esols, vrblvl-1)
+        quad_double_assign_labels(nvr, vrblvl)
+        initialize_quad_double_sampler(dim, vrblvl)
+    initialize_quad_double_monodromy(nbloops, deg, dim, vrblvl)
+    preset_quad_double_solutions(vrblvl)
+    if verbose:
+        print('... initializing the grid for the linear trace ...')
+    for i in range(1, 3):
+        set_quad_double_trace(i, vrblvl)
+        set_quad_double_gammas(nvr, vrblvl)
+        quad_double_witness_track(islaurent, vrblvl)
+        preset_quad_double_solutions(vrblvl)
+        reset_quad_double_solutions(vrblvl)
+        swap_quad_double_slices(vrblvl)
+    (err, dis) = quad_double_trace_grid_diagnostics(vrblvl)
+    if verbose:
+        print('The diagnostics of the trace grid :')
+        print('  largest error on the samples :', err)
+        print('  smallest distance between the samples :', dis)
+    for i in range(1, nbloops+1):
+        if verbose:
+            print('... starting loop %d ...' % i)
+        new_quad_double_slices(dim, nvr, vrblvl)
+        set_quad_double_gammas(nvr)
+        quad_double_witness_track(islaurent, vrblvl)
+        clear_quad_double_solutions(vrblvl-1)
+        set_quad_double_gammas(nvr)
+        quad_double_witness_track(islaurent, vrblvl)
+        preset_quad_double_solutions(vrblvl)
+        perm = quad_double_loop_permutation(deg, vrblvl)
+        if verbose:
+            print('new permutation :', perm)
+        nb0 = quad_double_factor_count(vrblvl)
+        nf0, nf1 = update_quad_double_decomposition(deg, perm, vrblvl)
+        nb1 = quad_double_factor_count(vrblvl)
+        if verbose:
+            print('number of factors : %d -> %d' % (nb0, nb1))
+            deco = quad_double_decomposition(deg, vrblvl)
+            print('the decomposition :')
+            for (idx, factor) in enumerate(deco):
+                print('  factor', idx+1, ':', factor)
+        done = quad_double_trace_test(vrblvl)
+        if done:
+            break
+        reset_quad_double_solutions(vrblvl)
+    return quad_double_decomposition(deg, vrblvl)
 
 def test_double_assign_labels(vrblvl=0):
     """
@@ -1598,7 +1907,7 @@ def test_double_monodromy(vrblvl=0):
     Tests the monodromy breakup in double precision.
     """
     if vrblvl > 0:
-        print('in test_double monodromy')
+        print('in test_double_monodromy')
     cyc4 = cyclic(4)
     cyc4e1 = double_embed(4, 1, cyc4, vrblvl=vrblvl-1)
     clear_double_solutions(vrblvl-1)
@@ -1613,8 +1922,64 @@ def test_double_monodromy(vrblvl=0):
         print('Solution', idx+1, ':')
         print(sol)
     fail = int(len(esols) != 4)
-    deco = double_monodromy_breakup(cyc4e1, esols, dim=1, verbose=True, \
-        vrblvl=vrblvl)
+    deco = double_monodromy_breakup(cyc4e1, esols, dim=1, \
+        verbose=True, nbloops=15, vrblvl=vrblvl)
+    if vrblvl > 0:
+        print('the decomposition :')
+        for (idx, factor) in enumerate(deco):
+            print('  factor', idx+1, ':', factor)
+    return int(len(deco) != 2)
+
+def test_double_double_monodromy(vrblvl=0):
+    """
+    Tests the monodromy breakup in double double precision.
+    """
+    if vrblvl > 0:
+        print('in test_double_double_monodromy')
+    cyc4 = cyclic(4)
+    cyc4e1 = double_double_embed(4, 1, cyc4, vrblvl=vrblvl-1)
+    clear_double_double_solutions(vrblvl-1)
+    c4sols = solve(cyc4e1, precision='dd', verbose_level=vrblvl-1)
+    esols = filter_zero_coordinates(c4sols, varname='zz1', tol=1.0e-8, \
+        oper='select', vrblvl=vrblvl-1)
+    print('the embedded cyclic 4-roots system :')
+    for pol in cyc4e1:
+        print(pol)
+    print('the generic points :')
+    for (idx, sol) in enumerate(esols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    fail = int(len(esols) != 4)
+    deco = double_double_monodromy_breakup(cyc4e1, esols, dim=1, \
+        verbose=True, nbloops=0, vrblvl=vrblvl)
+    if vrblvl > 0:
+        print('the decomposition :')
+        for (idx, factor) in enumerate(deco):
+            print('  factor', idx+1, ':', factor)
+    return int(len(deco) != 2)
+
+def test_quad_double_monodromy(vrblvl=0):
+    """
+    Tests the monodromy breakup in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in test_quad_double_monodromy')
+    cyc4 = cyclic(4)
+    cyc4e1 = quad_double_embed(4, 1, cyc4, vrblvl=vrblvl-1)
+    clear_quad_double_solutions(vrblvl-1)
+    c4sols = solve(cyc4e1, precision='qd', verbose_level=vrblvl-1)
+    esols = filter_zero_coordinates(c4sols, varname='zz1', tol=1.0e-8, \
+        oper='select', vrblvl=vrblvl-1)
+    print('the embedded cyclic 4-roots system :')
+    for pol in cyc4e1:
+        print(pol)
+    print('the generic points :')
+    for (idx, sol) in enumerate(esols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    fail = int(len(esols) != 4)
+    deco = quad_double_monodromy_breakup(cyc4e1, esols, dim=1, \
+        verbose=True, nbloops=0, vrblvl=vrblvl)
     if vrblvl > 0:
         print('the decomposition :')
         for (idx, factor) in enumerate(deco):
@@ -1630,6 +1995,8 @@ def main():
     fail = fail + test_double_double_assign_labels(lvl)
     fail = fail + test_quad_double_assign_labels(lvl)
     fail = fail + test_double_monodromy(lvl)
+    fail = fail + test_double_double_monodromy(lvl)
+    fail = fail + test_quad_double_monodromy(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:

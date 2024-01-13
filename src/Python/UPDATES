@@ -1,4 +1,6 @@
 Fri 12 Jan 2024 : monodromy breakup in factor.py works in double precision.
+  To factor.py, added versions of the monodromy breakup algorithm in
+  double double and quad double precision.
 
 Thu 11 Jan 2024 : extended factor.py with monodromy loops.
 
