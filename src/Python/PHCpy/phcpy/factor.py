@@ -1069,7 +1069,7 @@ def double_trace_sum_difference(labels, vrblvl=0):
     if vrblvl > 0:
         print('-> double_trace_sum_difference calls phc', end='')
     retval = phc(57, adim, bfac, cdif, vrb)
-    result = cdif[0][0]
+    result = cdif[0]
     if vrblvl > 0:
         print(', return value :', retval)
         print('trace sum difference :', result)
@@ -1150,6 +1150,271 @@ def double_loop_permutation(deg, vrblvl=0):
         print('permutation :', result)
     return result
 
+def double_double_loop_permutation(deg, vrblvl=0):
+    """
+    Returns the permutation using the solution most recently computed,
+    for a set of degree deg, after a loop in double double precision.
+    """
+    if vrblvl > 0:
+        print('in double_double_loop_permutation, deg :', deg)
+    phc = get_phcfun(vrblvl-1)
+    adeg = pointer(c_int32(deg))
+    perm = (c_int32 * deg)()
+    bperm = pointer(perm)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> double_double_loop permutation calls phc', end='')
+    retval = phc(642, adeg, bperm, ccc, vrb)
+    vals = bperm[0:deg]
+    result = []
+    for idx in range(deg):
+        result.append(int(vals[0][idx]))
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('permutation :', result)
+    return result
+
+def quad_double_loop_permutation(deg, vrblvl=0):
+    """
+    Returns the permutation using the solution most recently computed,
+    for a set of degree deg, after a loop in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in quad_double_loop_permutation, deg :', deg)
+    phc = get_phcfun(vrblvl-1)
+    adeg = pointer(c_int32(deg))
+    perm = (c_int32 * deg)()
+    bperm = pointer(perm)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> quad_double_loop permutation calls phc', end='')
+    retval = phc(672, adeg, bperm, ccc, vrb)
+    vals = bperm[0:deg]
+    result = []
+    for idx in range(deg):
+        result.append(int(vals[0][idx]))
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('permutation :', result)
+    return result
+
+def double_factor_count(vrblvl=0):
+    """
+    Returns the number of factors computed in double precision.
+    """
+    if vrblvl > 0:
+        print('in double_factor_count ...')
+    phc = get_phcfun(vrblvl-1)
+    anbr = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> double_factor_count calls phc', end='')
+    retval = phc(68, anbr, bbb, ccc, vrb)
+    result = anbr[0]
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('number of factors :', result)
+    return result
+
+def double_double_factor_count(vrblvl=0):
+    """
+    Returns the number of factors computed in double double precision.
+    """
+    if vrblvl > 0:
+        print('in double_double_factor_count ...')
+    phc = get_phcfun(vrblvl-1)
+    anbr = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> double_double_factor_count calls phc', end='')
+    retval = phc(647, anbr, bbb, ccc, vrb)
+    result = anbr[0]
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('number of factors :', result)
+    return result
+
+def quad_double_factor_count(vrblvl=0):
+    """
+    Returns the number of factors computed in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in quad_double_factor_count ...')
+    phc = get_phcfun(vrblvl-1)
+    anbr = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> quad_double_factor_count calls phc', end='')
+    retval = phc(677, anbr, bbb, ccc, vrb)
+    result = anbr[0]
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('number of factors :', result)
+    return result
+
+def update_double_decomposition(deg, perm, vrblvl=0):
+    """
+    Updates the decomposition with a permutation of deg elements
+    computed in double precision.
+    Returns the tuple with the previous and the new number of factors.
+    """
+    if vrblvl > 0:
+        print('in update_double_decomposition, deg :', deg)
+        print('permutation :', perm)
+    phc = get_phcfun(vrblvl-1)
+    nbrs = (c_int32 * 2)()
+    nbrs[0] = len(perm)
+    anbr = pointer(nbrs)
+    iperm = (c_int32 * len(perm))()
+    for (idx, nbr) in enumerate(perm):
+        iperm[idx] = c_int32(nbr)
+    bperm = pointer(iperm)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> update_double_decomposition_count calls phc', end='')
+    retval = phc(53, anbr, bperm, ccc, vrb)
+    vals = anbr[:2]
+    result = (vals[0][0], vals[0][1])
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('number of factors :', result)
+    return result
+
+def update_double_double_decomposition(deg, perm, vrblvl=0):
+    """
+    Updates the decomposition with a permutation of deg elements
+    computed in double double precision.
+    Returns the tuple with the previous and the new number of factors.
+    """
+    if vrblvl > 0:
+        print('in update_double_double_decomposition, deg :', deg)
+        print('permutation :', perm)
+    phc = get_phcfun(vrblvl-1)
+    nbrs = (c_int32 * 2)()
+    nbrs[0] = len(perm)
+    anbr = pointer(nbrs)
+    iperm = (c_int32 * len(perm))()
+    for (idx, nbr) in enumerate(perm):
+        iperm[idx] = c_int32(nbr)
+    bperm = pointer(iperm)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> update_double_double_decomposition_count calls phc', end='')
+    retval = phc(643, anbr, bperm, ccc, vrb)
+    vals = anbr[:2]
+    result = (vals[0][0], vals[0][1])
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('number of factors :', result)
+    return result
+
+def update_quad_double_decomposition(deg, perm, vrblvl=0):
+    """
+    Updates the decomposition with a permutation of deg elements
+    computed in quad double precision.
+    Returns the tuple with the previous and the new number of factors.
+    """
+    if vrblvl > 0:
+        print('in update_quad_double_decomposition, deg :', deg)
+        print('permutation :', perm)
+    phc = get_phcfun(vrblvl-1)
+    nbrs = (c_int32 * 2)()
+    nbrs[0] = len(perm)
+    anbr = pointer(nbrs)
+    iperm = (c_int32 * len(perm))()
+    for (idx, nbr) in enumerate(perm):
+        iperm[idx] = c_int32(nbr)
+    bperm = pointer(iperm)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> update_quad_double_decomposition_count calls phc', end='')
+    retval = phc(673, anbr, bperm, ccc, vrb)
+    vals = anbr[:2]
+    result = (vals[0][0], vals[0][1])
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('number of factors :', result)
+    return result
+
+def double_trace_test(vrblvl=0):
+    """
+    Runs the trace test on the decompostion in double precision,
+    returns True if certified, otherwise returns False.
+    """
+    if vrblvl > 0:
+        print('in double_trace_test ...')
+    phc = get_phcfun(vrblvl-1)
+    adone = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> double_trace_test calls phc', end='')
+    retval = phc(55, adone, bbb, ccc, vrb)
+    result = (adone[0] == 1)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('certified :', result)
+    return result
+
+def double_witness_points(idx, deg, vrblvl=0):
+    """
+    Given an index idx of an irreducible component,
+    computed in double precision,
+    returns the labels of the witness points that span the component.
+    The input deg is the upper bound on the degree of a factor.
+    The degree of the factor is the length of the returned list.
+    """
+    if vrblvl > 0:
+        print('in double_witness_points, idx :', idx, end='')
+        print(', deg :', deg)
+    phc = get_phcfun(vrblvl-1)
+    aidx = pointer(c_int32(idx))
+    witpts = (c_int32 * deg)()
+    bwit = pointer(witpts)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> double_witness_points calls phc', end='')
+    retval = phc(69, aidx, bwit, ccc, vrb)
+    wdeg = aidx[0]
+    if vrblvl > 0:
+        print('the degree of factor', idx, ':', wdeg)
+    result = []
+    vals = bwit[:wdeg]
+    for index in range(wdeg):
+        result.append(vals[0][index])
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('labels of witness points :', result)
+    return result
+
+def double_decomposition(deg, vrblvl=0):
+    """
+    Returns the decomposition as a list of labels of witness points
+    on the components, computed in double precision.
+    """
+    if vrblvl > 0:
+        print('in double_decomposition, deg :', deg)
+    nbr = double_factor_count(vrblvl)
+    result = []
+    for idx in range(1, nbr+1):
+        witpts = double_witness_points(idx, deg, vrblvl)
+        trace = double_trace_sum_difference(witpts, vrblvl)
+        result.append((witpts, trace))
+    return result
+   
 def double_monodromy_breakup(embsys, esols, dim, \
     islaurent=False, verbose=False, nbloops=20, vrblvl=0):
     r"""
@@ -1210,10 +1475,24 @@ def double_monodromy_breakup(embsys, esols, dim, \
         clear_double_solutions(vrblvl-1)
         set_double_gammas(nvr)
         double_witness_track(islaurent, vrblvl)
+        preset_double_solutions(vrblvl)
         perm = double_loop_permutation(deg, vrblvl)
         if verbose:
             print('new permutation :', perm)
-    return 0
+        nb0 = double_factor_count(vrblvl)
+        nf0, nf1 = update_double_decomposition(deg, perm, vrblvl)
+        nb1 = double_factor_count(vrblvl)
+        if verbose:
+            print('number of factors : %d -> %d' % (nb0, nb1))
+            deco = double_decomposition(deg, vrblvl)
+            print('the decomposition :')
+            for (idx, factor) in enumerate(deco):
+                print('  factor', idx+1, ':', factor)
+        done = double_trace_test(vrblvl)
+        if done:
+            break
+        reset_double_solutions(vrblvl)
+    return double_decomposition(deg, vrblvl)
 
 def test_double_assign_labels(vrblvl=0):
     """
@@ -1334,18 +1613,22 @@ def test_double_monodromy(vrblvl=0):
         print('Solution', idx+1, ':')
         print(sol)
     fail = int(len(esols) != 4)
-    double_monodromy_breakup(cyc4e1, esols, dim=1, nbloops=1, vrblvl=vrblvl)
-    return fail
+    deco = double_monodromy_breakup(cyc4e1, esols, dim=1, verbose=True, \
+        vrblvl=vrblvl)
+    if vrblvl > 0:
+        print('the decomposition :')
+        for (idx, factor) in enumerate(deco):
+            print('  factor', idx+1, ':', factor)
+    return int(len(deco) != 2)
 
 def main():
     """
     Runs some tests.
     """
-    lvl = 10
-    #fail = test_double_assign_labels(lvl)
-    #fail = fail + test_double_double_assign_labels(lvl)
-    #fail = fail + test_quad_double_assign_labels(lvl)
-    fail = 0
+    lvl = 1
+    fail = test_double_assign_labels(lvl)
+    fail = fail + test_double_double_assign_labels(lvl)
+    fail = fail + test_quad_double_assign_labels(lvl)
     fail = fail + test_double_monodromy(lvl)
     if fail == 0:
         print('=> All tests passed.')
