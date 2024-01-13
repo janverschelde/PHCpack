@@ -6,7 +6,7 @@ and with the plots of the location of the closest poles.
 import matplotlib.pyplot as plt
 from phcpy.dimension import set_seed, get_seed
 from phcpy.solutions import strsol2dict, clear_double_solutions
-from phcpy.homotopies import total_degree_start_system
+from phcpy.starters import total_degree_start_system
 from phcpy.curves import set_default_parameters, write_parameters
 from phcpy.curves import initialize_double_artificial_homotopy
 from phcpy.curves import set_double_solution, get_double_solution
@@ -60,6 +60,7 @@ for k in range(len(qsols)):
     axs.set_xlim(min(xre)-0.3, max(xre)+0.3)
     axs.set_ylim(min(yre)-0.3, max(yre)+0.3)
     dots, = axs.plot(xre,yre,'b-')
+    dots, = axs.plot(xre,yre,'bo')
     fig1.canvas.draw()
     allpoles.append(poles)
 fig1.canvas.draw()

@@ -4,7 +4,7 @@ Excerpt from the user manual of phcpy.
 import matplotlib.pyplot as plt
 from phcpy.dimension import set_seed, get_seed
 from phcpy.solutions import strsol2dict
-from phcpy.homotopies import total_degree_start_system
+from phcpy.starters import total_degree_start_system
 from phcpy.trackers import initialize_double_tracker
 from phcpy.trackers import initialize_double_solution
 from phcpy.trackers import next_double_solution
@@ -46,6 +46,7 @@ for k in range(len(qsols)):
     axs.set_xlim(min(xre)-0.3, max(xre)+0.3)
     axs.set_ylim(min(yre)-0.3, max(yre)+0.3)
     dots, = axs.plot(xre,yre,'r-')
+    dots, = axs.plot(xre,yre,'ro')
     fig.canvas.draw()
 fig.canvas.draw()
 ans = input('hit return to exit')
