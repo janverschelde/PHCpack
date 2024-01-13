@@ -1,8 +1,9 @@
+Sat 13 Jan 2024 : added test on the adjacent 2-by-2 minors of a matrix.
+  New function to write the numerical irreducible decomposition.
+
 Fri 12 Jan 2024 : monodromy breakup in factor.py works in double precision.
   To factor.py, added versions of the monodromy breakup algorithm in
   double double and quad double precision.
-  In PHCpy/tests, updated showpaths.py and showpoles.py for the change in
-  module name: starters instead of homotopies.
 
 Thu 11 Jan 2024 : extended factor.py with monodromy loops.
 

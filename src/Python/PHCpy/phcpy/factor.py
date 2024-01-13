@@ -1563,6 +1563,13 @@ def quad_double_decomposition(deg, vrblvl=0):
         trace = quad_double_trace_sum_difference(witpts, vrblvl)
         result.append((witpts, trace))
     return result
+
+def write_decomposition(deco):
+    """
+    Writes the decomposition in deco.
+    """
+    for (idx, factor) in enumerate(deco):
+        print('  factor', idx+1, ':', factor)
    
 def double_monodromy_breakup(embsys, esols, dim, \
     islaurent=False, verbose=False, nbloops=20, vrblvl=0):
@@ -1635,8 +1642,7 @@ def double_monodromy_breakup(embsys, esols, dim, \
             print('number of factors : %d -> %d' % (nb0, nb1))
             deco = double_decomposition(deg, vrblvl)
             print('the decomposition :')
-            for (idx, factor) in enumerate(deco):
-                print('  factor', idx+1, ':', factor)
+            write_decomposition(deco)
         done = double_trace_test(vrblvl)
         if done:
             break
@@ -1715,8 +1721,7 @@ def double_double_monodromy_breakup(embsys, esols, dim, \
             print('number of factors : %d -> %d' % (nb0, nb1))
             deco = double_double_decomposition(deg, vrblvl)
             print('the decomposition :')
-            for (idx, factor) in enumerate(deco):
-                print('  factor', idx+1, ':', factor)
+            write_decomposition(deco)
         done = double_double_trace_test(vrblvl)
         if done:
             break
@@ -1795,8 +1800,7 @@ def quad_double_monodromy_breakup(embsys, esols, dim, \
             print('number of factors : %d -> %d' % (nb0, nb1))
             deco = quad_double_decomposition(deg, vrblvl)
             print('the decomposition :')
-            for (idx, factor) in enumerate(deco):
-                print('  factor', idx+1, ':', factor)
+            write_decomposition(deco)
         done = quad_double_trace_test(vrblvl)
         if done:
             break
@@ -1982,8 +1986,7 @@ def test_quad_double_monodromy(vrblvl=0):
         verbose=True, nbloops=0, vrblvl=vrblvl)
     if vrblvl > 0:
         print('the decomposition :')
-        for (idx, factor) in enumerate(deco):
-            print('  factor', idx+1, ':', factor)
+        write_decomposition(deco)
     return int(len(deco) != 2)
 
 def main():
