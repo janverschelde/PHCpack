@@ -1,5 +1,6 @@
 Sat 13 Jan 2024 : added test on the adjacent 2-by-2 minors of a matrix.
   New function to write the numerical irreducible decomposition.
+  Fixed factor.py and all tests now pass.
 
 Fri 12 Jan 2024 : monodromy breakup in factor.py works in double precision.
   To factor.py, added versions of the monodromy breakup algorithm in

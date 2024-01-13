@@ -1107,7 +1107,7 @@ def double_double_trace_sum_difference(labels, vrblvl=0):
     if vrblvl > 0:
         print('-> double_double_trace_sum_difference calls phc', end='')
     retval = phc(647, adim, bfac, cdif, vrb)
-    result = cdif[0][0]
+    result = cdif[0]
     if vrblvl > 0:
         print(', return value :', retval)
         print('trace sum difference :', result)
@@ -1132,7 +1132,7 @@ def quad_double_trace_sum_difference(labels, vrblvl=0):
     if vrblvl > 0:
         print('-> quad_double_trace_sum_difference calls phc', end='')
     retval = phc(677, adim, bfac, cdif, vrb)
-    result = cdif[0][0]
+    result = cdif[0]
     if vrblvl > 0:
         print(', return value :', retval)
         print('trace sum difference :', result)
@@ -1246,7 +1246,7 @@ def double_double_factor_count(vrblvl=0):
     vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> double_double_factor_count calls phc', end='')
-    retval = phc(647, anbr, bbb, ccc, vrb)
+    retval = phc(656, anbr, bbb, ccc, vrb)
     result = anbr[0]
     if vrblvl > 0:
         print(', return value :', retval)
@@ -1266,7 +1266,7 @@ def quad_double_factor_count(vrblvl=0):
     vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> quad_double_factor_count calls phc', end='')
-    retval = phc(677, anbr, bbb, ccc, vrb)
+    retval = phc(686, anbr, bbb, ccc, vrb)
     result = anbr[0]
     if vrblvl > 0:
         print(', return value :', retval)
@@ -1445,13 +1445,13 @@ def double_witness_points(idx, deg, vrblvl=0):
     retval = phc(69, aidx, bwit, ccc, vrb)
     wdeg = aidx[0]
     if vrblvl > 0:
+        print(', the return value :', retval)
         print('the degree of factor', idx, ':', wdeg)
     result = []
     vals = bwit[:wdeg]
     for index in range(wdeg):
         result.append(vals[0][index])
     if vrblvl > 0:
-        print(', return value :', retval)
         print('labels of witness points :', result)
     return result
 
@@ -1477,13 +1477,13 @@ def double_double_witness_points(idx, deg, vrblvl=0):
     retval = phc(657, aidx, bwit, ccc, vrb)
     wdeg = aidx[0]
     if vrblvl > 0:
+        print(', the return value :', retval)
         print('the degree of factor', idx, ':', wdeg)
     result = []
     vals = bwit[:wdeg]
     for index in range(wdeg):
         result.append(vals[0][index])
     if vrblvl > 0:
-        print(', return value :', retval)
         print('labels of witness points :', result)
     return result
 
@@ -1509,13 +1509,13 @@ def quad_double_witness_points(idx, deg, vrblvl=0):
     retval = phc(687, aidx, bwit, ccc, vrb)
     wdeg = aidx[0]
     if vrblvl > 0:
+        print(', the return value :', retval)
         print('the degree of factor', idx, ':', wdeg)
     result = []
     vals = bwit[:wdeg]
     for index in range(wdeg):
         result.append(vals[0][index])
     if vrblvl > 0:
-        print(', return value :', retval)
         print('labels of witness points :', result)
     return result
 
@@ -1911,7 +1911,7 @@ def test_double_monodromy(vrblvl=0):
     Tests the monodromy breakup in double precision.
     """
     if vrblvl > 0:
-        print('in test_double_monodromy')
+        print('in test_double_monodromy ...')
     cyc4 = cyclic(4)
     cyc4e1 = double_embed(4, 1, cyc4, vrblvl=vrblvl-1)
     clear_double_solutions(vrblvl-1)
@@ -1939,7 +1939,7 @@ def test_double_double_monodromy(vrblvl=0):
     Tests the monodromy breakup in double double precision.
     """
     if vrblvl > 0:
-        print('in test_double_double_monodromy')
+        print('in test_double_double_monodromy ...')
     cyc4 = cyclic(4)
     cyc4e1 = double_double_embed(4, 1, cyc4, vrblvl=vrblvl-1)
     clear_double_double_solutions(vrblvl-1)
@@ -1955,7 +1955,7 @@ def test_double_double_monodromy(vrblvl=0):
         print(sol)
     fail = int(len(esols) != 4)
     deco = double_double_monodromy_breakup(cyc4e1, esols, dim=1, \
-        verbose=True, nbloops=0, vrblvl=vrblvl)
+        verbose=True, nbloops=15, vrblvl=vrblvl)
     if vrblvl > 0:
         print('the decomposition :')
         for (idx, factor) in enumerate(deco):
@@ -1967,7 +1967,7 @@ def test_quad_double_monodromy(vrblvl=0):
     Tests the monodromy breakup in quad double precision.
     """
     if vrblvl > 0:
-        print('in test_quad_double_monodromy')
+        print('in test_quad_double_monodromy ...')
     cyc4 = cyclic(4)
     cyc4e1 = quad_double_embed(4, 1, cyc4, vrblvl=vrblvl-1)
     clear_quad_double_solutions(vrblvl-1)
@@ -1983,7 +1983,7 @@ def test_quad_double_monodromy(vrblvl=0):
         print(sol)
     fail = int(len(esols) != 4)
     deco = quad_double_monodromy_breakup(cyc4e1, esols, dim=1, \
-        verbose=True, nbloops=0, vrblvl=vrblvl)
+        verbose=True, nbloops=15, vrblvl=vrblvl)
     if vrblvl > 0:
         print('the decomposition :')
         write_decomposition(deco)
