@@ -32,11 +32,9 @@ def random_trinomials():
     on the complex unit circle.
     """
     exponents = [(randint(0, 5), randint(0, 5)) for _ in range(0, 6)]
-    makemonf = lambda e: 'x^%d*y^%d' % e
-    monomials = [makemonf(e) for e in exponents]
+    monomials = [f'x^{xe}*y^{ye}' for (xe, ye) in exponents]
     angles = [uniform(0, 2*pi) for _ in range(0, 6)]
-    makecff = lambda a: '(' + str(cos(a)) + '%+.14f' % sin(a) + '*i)'
-    cff = [makecff(a) for a in angles]
+    cff = [f'({cos(a):.14f} {sin(a):+.14f}*i)' for a in angles]
     one = '+'.join(cff[i] + '*' + monomials[i] for i in range(0, 3)) + ';'
     two = '+'.join(cff[i] + '*' + monomials[i] for i in range(3, 6)) + ';'
     return [one, two]
@@ -54,9 +52,9 @@ def real_random_trinomials(sys):
         rpol = ''
         for i in range(1, len(terms)-1):
             rterm = terms[i].split('+')
-            cff = '%+.17f' % uniform(-1, +1)
+            cff = f'{uniform(-1, +1):+.17f}'
             rpol = rpol + cff + rterm[0]
-        cff = '%+.17f' % uniform(-1, +1)
+        cff = f'{uniform(-1, +1):+.17f}'
         rpol = rpol + cff + terms[len(terms)-1]
         result.append(rpol)
     return result
@@ -71,6 +69,7 @@ def solve_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     """
     if vrblvl > 0:
         print('in solve_double_system, nbtasks :', nbtasks)
+    clear_double_solutions(vrblvl-1)
     phc = get_phcfun(vrblvl-1)
     apars = create_string_buffer(b"", 8)
     broco = create_string_buffer(b"", 8096)
@@ -98,6 +97,7 @@ def solve_double_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     """
     if vrblvl > 0:
         print("in solve_double_double_system, nbtasks :", nbtasks)
+    clear_double_double_solutions(vrblvl-1)
     phc = get_phcfun(vrblvl-1)
     apars = create_string_buffer(b"", 8)
     broco = create_string_buffer(b"", 8096)
@@ -125,6 +125,7 @@ def solve_quad_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     """
     if vrblvl > 0:
         print("in solve_quad_double_system, nbtasks :", nbtasks)
+    clear_quad_double_solutions(vrblvl-1)
     phc = get_phcfun(vrblvl-1)
     apars = create_string_buffer(b"", 8)
     broco = create_string_buffer(b"", 8096)
@@ -152,6 +153,7 @@ def solve_double_Laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
     """
     if vrblvl > 0:
         print('in solve_double_Laurent_system, nbtasks :', nbtasks)
+    clear_double_solutions(vrblvl-1)
     phc = get_phcfun(vrblvl-1)
     apars = create_string_buffer(b"", 8)
     broco = create_string_buffer(b"", 8096)
@@ -179,6 +181,7 @@ def solve_double_double_Laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
     """
     if vrblvl > 0:
         print('in solve_double_double_Laurent_system, nbtasks :', nbtasks)
+    clear_double_double_solutions(vrblvl-1)
     phc = get_phcfun(vrblvl-1)
     apars = create_string_buffer(b"", 8)
     broco = create_string_buffer(b"", 8096)
@@ -206,6 +209,7 @@ def solve_quad_double_Laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
     """
     if vrblvl > 0:
         print('in solve_quad_double_Laurent_system, nbtasks :', nbtasks)
+    clear_quad_double_solutions(vrblvl-1)
     phc = get_phcfun(vrblvl-1)
     apars = create_string_buffer(b"", 8)
     broco = create_string_buffer(b"", 8096)
@@ -234,7 +238,7 @@ def solve_checkin(pols, msg):
     print(msg)
     dim = number_of_symbols(pols)
     neq = len(pols)
-    print('got %d polynomials in %d variables.' % (neq, dim))
+    print(f'got {neq} polynomials in {dim} variables.')
     print('Either correct the input, or use phcpy.factor.solve')
     print('to solve polynomial systems that are not square.')
     return False
@@ -266,6 +270,13 @@ def solve(pols, tasks=0, mvfocus=0, precision='d',
     If *verbose_level* is larger than 0, then the names of the procedures
     called in the running of the blackbox solver will be listed.
     """
+    if verbose_level > 0:
+        print('in solve, tasks :', tasks, end='')
+        print(', mvfocus :', mvfocus, end='')
+        print(', precision :', precision)
+        print('the polynomials on input :')
+        for pol in pols:
+            print(pol)
     if checkin:
         errmsg = 'The blackbox solver accepts only square systems,'
         if not solve_checkin(pols, errmsg):
@@ -277,6 +288,10 @@ def solve(pols, tasks=0, mvfocus=0, precision='d',
         set_double_Laurent_system(len(pols), pols, vrblvl=verbose_level-1)
         nbr, roco = solve_double_Laurent_system(nbtasks=tasks, \
             mvfocus=mvfocus, vrblvl=verbose_level-1)
+        if verbose_level > 0:
+            print('nbr :', nbr, end='')
+            print(', roco :')
+            print(roco)
         sols = get_double_solutions(vrblvl=verbose_level-1)
         clear_double_solutions(vrblvl=verbose_level-1)
         if dictionary_output:
@@ -287,6 +302,10 @@ def solve(pols, tasks=0, mvfocus=0, precision='d',
             vrblvl=verbose_level-1)
         nbr, roco = solve_double_double_Laurent_system(nbtasks=tasks, \
             mvfocus=mvfocus, vrblvl=verbose_level-1)
+        if verbose_level > 0:
+            print('nbr :', nbr, end='')
+            print(', roco :')
+            print(roco)
         sols = get_double_double_solutions(vrblvl=verbose_level-1)
         clear_double_double_solutions(vrblvl=verbose_level-1)
         if dictionary_output:
@@ -297,12 +316,17 @@ def solve(pols, tasks=0, mvfocus=0, precision='d',
             vrblvl=verbose_level-1)
         nbr, roco = solve_quad_double_Laurent_system(nbtasks=tasks, \
             mvfocus=mvfocus, vrblvl=verbose_level-1)
+        if verbose_level > 0:
+            print('nbr :', nbr, end='')
+            print(', roco :')
+            print(roco)
         sols = get_quad_double_solutions(vrblvl=verbose_level-1)
         clear_quad_double_solutions(vrblvl=verbose_level-1)
         if dictionary_output:
             return formdictlist(sols)
         return sols
     print('wrong level of precision, use d, dd, or qd')
+    return None
 
 def test_trinomial_solve(vrblvl=0):
     """

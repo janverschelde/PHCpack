@@ -4,8 +4,6 @@ has an interesting numerical irreducible decomposition.
 """
 from phcpy.families import adjacent_minors
 from phcpy.dimension import get_core_count
-from phcpy.polynomials import clear_double_system
-from phcpy.solutions import clear_double_solutions
 from phcpy.solver import solve
 from phcpy.sets import double_embed
 from phcpy.factor import double_monodromy_breakup
@@ -30,6 +28,4 @@ for col in range(3, 6):
     print('the decomposition :')
     write_decomposition(deco)
     print('the number of factors :', len(deco))
-    clear_double_system()
-    clear_double_solutions()
     
