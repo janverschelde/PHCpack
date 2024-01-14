@@ -1,7 +1,8 @@
 Sun 14 Jan 2024 : improved use of vrblvl in sets.py and for pylint.
   Cleared solutions in the *_double_solve functions in solver.py
   and used f-strings to format numbers.  Simplified test minors2x2.py.
-  Added the Jupyter notebook minors2x2.ipynb.
+  To the tests folder, added the Jupyter notebook minors2x2.ipynb,
+  and the notebooks showpaths.ipynb and showpoles.ipynb.
 
 Sat 13 Jan 2024 : added test on the adjacent 2-by-2 minors of a matrix.
   New function to write the numerical irreducible decomposition.
