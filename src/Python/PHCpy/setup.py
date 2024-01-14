@@ -16,7 +16,7 @@ setup(
     py_modules = ['phcpy/version', 'phcpy/dimension', \
         'phcpy/polynomials', 'phcpy/solutions', 'phcpy/volumes', \
         'phcpy/solver', 'phcpy/examples', 'phcpy/families', \
-        'phcpy/starters', 'phcpy/homotopies',
+        'phcpy/deflation', 'phcpy/starters', 'phcpy/homotopies', \
         'phcpy/trackers', 'phcpy/series', 'phcpy/curves', \
         'phcpy/schubert', 'phcpy/sets', 'phcpy/cascades', \
         'phcpy/diagonal', 'phcpy/factor' ],

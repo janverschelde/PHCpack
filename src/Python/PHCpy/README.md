@@ -16,6 +16,7 @@ in the phcpy folder.
 | solver         | exports the blackbox solver                      |
 | examples       | runs some examples                               |
 | families       | families of systems, for any dimension           |
+| deflation      | quadratic convergence at isolated singularity    |
 | starters       | constructing start systems for homotopies        |
 | homotopies     | homotopies are systems in one parameter          |
 | trackers       | aposteriori step size control path trackers      |

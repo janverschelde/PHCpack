@@ -3,6 +3,7 @@ Sat 13 Jan 2024 : added test on the adjacent 2-by-2 minors of a matrix.
   Fixed factor.py and all tests now pass.
   Better use of verbose level vrblvl flag in solver.py.
   Edited solver.py for pylint warnings.
+  New module deflation.py with Newton steps and deflation methods.
 
 Fri 12 Jan 2024 : monodromy breakup in factor.py works in double precision.
   To factor.py, added versions of the monodromy breakup algorithm in
