@@ -16,3 +16,6 @@ The plots by showpaths.py are made with aposteriori step size control,
 and plots by showpoles.py are done with apriori step size control.
 The adjacent 2-by-2 minors problem runs the monodromy algorithm
 to decompose a positive dimensional set into irreducible factors.
+
+The corresponding notebooks document the development of the tests,
+with the intent to prepare for the use cases in the tutorial.
