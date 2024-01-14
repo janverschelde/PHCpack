@@ -1,3 +1,5 @@
+Sun 14 Jan 2024 : improved use of vrblvl in sets.py and for pylint.
+
 Sat 13 Jan 2024 : added test on the adjacent 2-by-2 minors of a matrix.
   New function to write the numerical irreducible decomposition.
   Fixed factor.py and all tests now pass.

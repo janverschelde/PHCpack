@@ -1,6 +1,16 @@
 """
 This module exports routines of PHCpack to manipulate
 positive dimensional solution sets of polynomial systems.
+
+A numerical data structure to represent a pure dimensional 
+solution set is a witness set, which consists of two parts:
+1. the original polynomial system, augmented with as many
+   random linear equations as the dimension of the set; and
+2. isolated solutions of the augmented system,
+   as many as the degree of the solution set.
+The solutions of the augmented system are called witness points
+and are generic points on the algebraic set.
+
 The embed functions add slack variables and random hyperplanes.
 The number of slack variables equals the number of random hyperplanes,
 which in turn equals the dimension of the solution set.
@@ -9,7 +19,7 @@ and the coordinates of the solutions.
 Given a witness set and a point, a homotopy membership determines whether
 the point belongs to the solution set represented by the witness set.
 """
-from ctypes import c_int32, c_double, pointer, create_string_buffer
+from ctypes import c_int32, c_double, pointer
 from phcpy.version import get_phcfun, str2int4a
 from phcpy.polynomials import number_of_symbols, string_of_symbols
 from phcpy.polynomials import clear_symbol_table
@@ -42,8 +52,7 @@ def double_embed(nvr, topdim, pols, vrblvl=0):
     this function returns an embedding of *pols* of dimension *topdim*.
     The *topdim* is the top dimension which equals the expected highest
     dimension of a component of the solution set of the system of polynomials.
-    If *vrblvl* is larger than 0, then the names of the procedures
-    called in the running of the blackbox solver will be listed.
+    If *vrblvl* is larger than 0, then extra information is printed.
     """
     if vrblvl > 0:
         print('in double_embed, nvr :', nvr, end='')
@@ -51,18 +60,18 @@ def double_embed(nvr, topdim, pols, vrblvl=0):
         print('the polynomials :')
         for pol in pols:
             print(pol)
-    set_double_system(nvr, pols, vrblvl)
-    phc = get_phcfun()
+    set_double_system(nvr, pols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     btopdim = pointer(c_int32(topdim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> double_embed calls phc', end='')
     retval = phc(66, btopdim, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    result = get_double_system(vrblvl)
+    result = get_double_system(vrblvl-1)
     return result
 
 def double_double_embed(nvr, topdim, pols, vrblvl=0):
@@ -72,8 +81,7 @@ def double_double_embed(nvr, topdim, pols, vrblvl=0):
     this function returns an embedding of *pols* of dimension *topdim*.
     The *topdim* is the top dimension which equals the expected highest
     dimension of a component of the solution set of the system of polynomials.
-    If *vrblvl* is larger than 0, then the names of the procedures
-    called in the running of the blackbox solver will be listed.
+    If *vrblvl* is larger than 0, then extra information is printed.
     """
     if vrblvl > 0:
         print('in double_double_embed, nvr :', nvr, end='')
@@ -81,18 +89,18 @@ def double_double_embed(nvr, topdim, pols, vrblvl=0):
         print('the polynomials :')
         for pol in pols:
             print(pol)
-    set_double_double_system(nvr, pols, vrblvl)
-    phc = get_phcfun()
+    set_double_double_system(nvr, pols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     btopdim = pointer(c_int32(topdim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> double_double_embed calls phc', end='')
     retval = phc(129, btopdim, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    result = get_double_double_system(vrblvl)
+    result = get_double_double_system(vrblvl-1)
     return result
 
 def quad_double_embed(nvr, topdim, pols, vrblvl=0):
@@ -102,8 +110,7 @@ def quad_double_embed(nvr, topdim, pols, vrblvl=0):
     this function returns an embedding of *pols* of dimension *topdim*.
     The *topdim* is the top dimension which equals the expected highest
     dimension of a component of the solution set of the system of polynomials.
-    If *vrblvl* is larger than 0, then the names of the procedures
-    called in the running of the blackbox solver will be listed.
+    If *vrblvl* is larger than 0, then extra information is printed.
     """
     if vrblvl > 0:
         print('in quad_double_embed, nvr :', nvr, end='')
@@ -111,8 +118,8 @@ def quad_double_embed(nvr, topdim, pols, vrblvl=0):
         print('the polynomials :')
         for pol in pols:
             print(pol)
-    set_quad_double_system(nvr, pols, vrblvl)
-    phc = get_phcfun()
+    set_quad_double_system(nvr, pols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     btopdim = pointer(c_int32(topdim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -122,7 +129,7 @@ def quad_double_embed(nvr, topdim, pols, vrblvl=0):
     retval = phc(260, btopdim, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    result = get_quad_double_system(vrblvl)
+    result = get_quad_double_system(vrblvl-1)
     return result
 
 def double_Laurent_embed(nvr, topdim, pols, vrblvl=0):
@@ -141,8 +148,8 @@ def double_Laurent_embed(nvr, topdim, pols, vrblvl=0):
         print('the polynomials :')
         for pol in pols:
             print(pol)
-    set_double_Laurent_system(nvr, pols, vrblvl)
-    phc = get_phcfun()
+    set_double_Laurent_system(nvr, pols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     btopdim = pointer(c_int32(topdim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
@@ -152,7 +159,7 @@ def double_Laurent_embed(nvr, topdim, pols, vrblvl=0):
     retval = phc(625, btopdim, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    result = get_double_Laurent_system(vrblvl)
+    result = get_double_Laurent_system(vrblvl-1)
     return result
 
 def double_double_Laurent_embed(nvr, topdim, pols, vrblvl=0):
@@ -171,18 +178,18 @@ def double_double_Laurent_embed(nvr, topdim, pols, vrblvl=0):
         print('the polynomials :')
         for pol in pols:
             print(pol)
-    set_double_double_Laurent_system(nvr, pols, vrblvl)
-    phc = get_phcfun()
+    set_double_double_Laurent_system(nvr, pols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     btopdim = pointer(c_int32(topdim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> double_double_Laurent_embed calls phc', end='')
     retval = phc(626, btopdim, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    result = get_double_double_Laurent_system(vrblvl)
+    result = get_double_double_Laurent_system(vrblvl-1)
     return result
 
 def quad_double_Laurent_embed(nvr, topdim, pols, vrblvl=0):
@@ -201,12 +208,12 @@ def quad_double_Laurent_embed(nvr, topdim, pols, vrblvl=0):
         print('the polynomials :')
         for pol in pols:
             print(pol)
-    set_quad_double_Laurent_system(nvr, pols, vrblvl)
-    phc = get_phcfun()
+    set_quad_double_Laurent_system(nvr, pols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     btopdim = pointer(c_int32(topdim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> quad_double_Laurent_embed calls phc', end='')
     retval = phc(627, btopdim, bbb, ccc, vrb)
@@ -237,13 +244,13 @@ def set_double_witness_set(nvr, dim, pols, sols, vrblvl=0):
         print('the solutions :')
         for sol in sols:
             print(sol)
-    set_double_system(nvr, pols, vrblvl)
-    set_double_solutions(nvr, sols, vrblvl)
-    phc = get_phcfun()
+    set_double_system(nvr, pols, vrblvl-1)
+    set_double_solutions(nvr, sols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     anvr = pointer(c_int32(nvr))
     bdim = pointer(c_int32(dim))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> set_double_witness_set calls phc', end='')
     retval = phc(816, anvr, bdim, ccc, vrb)
@@ -273,9 +280,9 @@ def set_double_double_witness_set(nvr, dim, pols, sols, vrblvl=0):
         print('the solutions :')
         for sol in sols:
             print(sol)
-    set_double_double_system(nvr, pols, vrblvl)
-    set_double_double_solutions(nvr, sols, vrblvl)
-    phc = get_phcfun()
+    set_double_double_system(nvr, pols, vrblvl-1)
+    set_double_double_solutions(nvr, sols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     anvr = pointer(c_int32(nvr))
     bdim = pointer(c_int32(dim))
     ccc = pointer(c_double(0.0))
@@ -309,9 +316,9 @@ def set_quad_double_witness_set(nvr, dim, pols, sols, vrblvl=0):
         print('the solutions :')
         for sol in sols:
             print(sol)
-    set_quad_double_system(nvr, pols, vrblvl)
-    set_quad_double_solutions(nvr, sols, vrblvl)
-    phc = get_phcfun()
+    set_quad_double_system(nvr, pols, vrblvl-1)
+    set_quad_double_solutions(nvr, sols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     anvr = pointer(c_int32(nvr))
     bdim = pointer(c_int32(dim))
     ccc = pointer(c_double(0.0))
@@ -345,9 +352,9 @@ def set_double_Laurent_witness_set(nvr, dim, pols, sols, vrblvl=0):
         print('the solutions :')
         for sol in sols:
             print(sol)
-    set_double_Laurent_system(nvr, pols, vrblvl)
-    set_double_solutions(nvr, sols, vrblvl)
-    phc = get_phcfun()
+    set_double_Laurent_system(nvr, pols, vrblvl-1)
+    set_double_solutions(nvr, sols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     anvr = pointer(c_int32(nvr))
     bdim = pointer(c_int32(dim))
     ccc = pointer(c_double(0.0))
@@ -381,9 +388,9 @@ def set_double_double_Laurent_witness_set(nvr, dim, pols, sols, vrblvl=0):
         print('the solutions :')
         for sol in sols:
             print(sol)
-    set_double_double_Laurent_system(nvr, pols, vrblvl)
-    set_double_double_solutions(nvr, sols, vrblvl)
-    phc = get_phcfun()
+    set_double_double_Laurent_system(nvr, pols, vrblvl-1)
+    set_double_double_solutions(nvr, sols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     anvr = pointer(c_int32(nvr))
     bdim = pointer(c_int32(dim))
     ccc = pointer(c_double(0.0))
@@ -417,9 +424,9 @@ def set_quad_double_Laurent_witness_set(nvr, dim, pols, sols, vrblvl=0):
         print('the solutions :')
         for sol in sols:
             print(sol)
-    set_quad_double_system(nvr, pols, vrblvl)
-    set_quad_double_solutions(nvr, sols, vrblvl)
-    phc = get_phcfun()
+    set_quad_double_system(nvr, pols, vrblvl-1)
+    set_quad_double_solutions(nvr, sols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     anvr = pointer(c_int32(nvr))
     bdim = pointer(c_int32(dim))
     ccc = pointer(c_double(0.0))
@@ -438,11 +445,11 @@ def drop_variable_from_table(name, vrblvl=0):
     """
     if vrblvl > 0:
         print('in drop_variable_from_table, name :', name);
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     anbc = pointer(c_int32(len(name)))
-    bvar = str2int4a(name, (vrblvl > 0))
+    bvar = str2int4a(name, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> drop_variable_from_table calls phc', end='')
     retval = phc(296, anbc, bvar, ccc, vrb)
@@ -455,80 +462,80 @@ def drop_variable_from_double_polynomials(pols, svar, vrblvl=0):
     Removes the variable with symbol in the string *svar*
     from the list *pols* of strings that represent polynomials
     in several variables, with coefficients in double precision.
-    Note that the system in *pols* must be square.
+    The system in *pols* must be square.
     """
     if vrblvl > 0:
         print('in drop_variable_from_double_polynomials, svar :', svar)
         print('the polynomials :')
         for pol in pols:
             print(pol)
-    set_double_system(len(pols), pols, vrblvl)
-    phc = get_phcfun()
+    set_double_system(len(pols), pols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     anbc = pointer(c_int32(len(svar)))
-    bvar = str2int4a(svar, (vrblvl > 0))
+    bvar = str2int4a(svar, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> drop_variable_from_double_polynomials calls phc', end='')
     retval = phc(309, anbc, bvar, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    drop_variable_from_table(svar, vrblvl)
-    return get_double_system(vrblvl)
+    drop_variable_from_table(svar, vrblvl-1)
+    return get_double_system(vrblvl-1)
 
 def drop_variable_from_double_double_polynomials(pols, svar, vrblvl=0):
     r"""
     Removes the variable with symbol in the string *svar*
     from the list *pols* of strings that represent polynomials
     in several variables, with coefficients in double double precision.
-    Note that the system in *pols* must be square.
+    The system in *pols* must be square.
     """
     if vrblvl > 0:
         print('in drop_variable_from_double_double_polynomials, svar :', svar)
         print('the polynomials :')
         for pol in pols:
             print(pol)
-    set_double_double_system(len(pols), pols, vrblvl)
-    phc = get_phcfun()
+    set_double_double_system(len(pols), pols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     anbc = pointer(c_int32(len(svar)))
-    bvar = str2int4a(svar, (vrblvl > 0))
+    bvar = str2int4a(svar, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> drop_variable_from_double_double_polynomials calls phc', \
             end='')
     retval = phc(310, anbc, bvar, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    drop_variable_from_table(svar, vrblvl)
-    return get_double_double_system(vrblvl)
+    drop_variable_from_table(svar, vrblvl-1)
+    return get_double_double_system(vrblvl-1)
 
 def drop_variable_from_quad_double_polynomials(pols, svar, vrblvl=0):
     r"""
     Removes the variable with symbol in the string *svar*
     from the list *pols* of strings that represent polynomials
     in several variables, with coefficients in quad double precision.
-    Note that the system in *pols* must be square.
+    The system in *pols* must be square.
     """
     if vrblvl > 0:
         print('in drop_variable_from_quad_double_polynomials, svar :', svar)
         print('the polynomials :')
         for pol in pols:
             print(pol)
-    set_quad_double_system(len(pols), pols, vrblvl)
-    phc = get_phcfun()
+    set_quad_double_system(len(pols), pols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     anbc = pointer(c_int32(len(svar)))
-    bvar = str2int4a(svar, (vrblvl > 0))
+    bvar = str2int4a(svar, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> drop_variable_from_quad_double_polynomials calls phc', \
             end='')
     retval = phc(311, anbc, bvar, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    drop_variable_from_table(svar, vrblvl)
-    return get_quad_double_system(vrblvl)
+    drop_variable_from_table(svar, vrblvl-1)
+    return get_quad_double_system(vrblvl-1)
 
 def drop_coordinate_from_double_solutions(sols, nvr, svar, vrblvl=0):
     r"""
@@ -544,12 +551,12 @@ def drop_coordinate_from_double_solutions(sols, nvr, svar, vrblvl=0):
         for (idx, sol) in enumerate(sols):
             print('Solution', idx+1, ':')
             print(sol)
-    clear_symbol_table(vrblvl)
-    clear_double_solutions(vrblvl)
-    set_double_solutions(nvr, sols)
-    phc = get_phcfun()
+    clear_symbol_table(vrblvl-1)
+    clear_double_solutions(vrblvl-1)
+    set_double_solutions(nvr, sols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     anbc = pointer(c_int32(len(svar)))
-    bvar = str2int4a(svar, (vrblvl > 0))
+    bvar = str2int4a(svar, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl)
     if vrblvl > 0:
@@ -557,8 +564,8 @@ def drop_coordinate_from_double_solutions(sols, nvr, svar, vrblvl=0):
     retval = phc(146, anbc, bvar, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    drop_variable_from_table(svar, vrblvl)
-    return get_double_solutions(vrblvl)
+    drop_variable_from_table(svar, vrblvl-1)
+    return get_double_solutions(vrblvl-1)
 
 def drop_coordinate_from_double_double_solutions(sols, nvr, svar, vrblvl=0):
     r"""
@@ -574,22 +581,22 @@ def drop_coordinate_from_double_double_solutions(sols, nvr, svar, vrblvl=0):
         for (idx, sol) in enumerate(sols):
             print('Solution', idx+1, ':')
             print(sol)
-    clear_symbol_table(vrblvl)
-    clear_double_double_solutions(vrblvl)
-    set_double_double_solutions(nvr, sols)
-    phc = get_phcfun()
+    clear_symbol_table(vrblvl-1)
+    clear_double_double_solutions(vrblvl-1)
+    set_double_double_solutions(nvr, sols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     anbc = pointer(c_int32(len(svar)))
-    bvar = str2int4a(svar, (vrblvl > 0))
+    bvar = str2int4a(svar, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> drop_coordinate_from_double_double_solutions calls phc', \
             end='')
     retval = phc(349, anbc, bvar, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    drop_variable_from_table(svar, vrblvl)
-    return get_double_double_solutions(vrblvl)
+    drop_variable_from_table(svar, vrblvl-1)
+    return get_double_double_solutions(vrblvl-1)
 
 def drop_coordinate_from_quad_double_solutions(sols, nvr, svar, vrblvl=0):
     r"""
@@ -605,22 +612,22 @@ def drop_coordinate_from_quad_double_solutions(sols, nvr, svar, vrblvl=0):
         for (idx, sol) in enumerate(sols):
             print('Solution', idx+1, ':')
             print(sol)
-    clear_symbol_table(vrblvl)
-    clear_quad_double_solutions(vrblvl)
-    set_quad_double_solutions(nvr, sols)
-    phc = get_phcfun()
+    clear_symbol_table(vrblvl-1)
+    clear_quad_double_solutions(vrblvl-1)
+    set_quad_double_solutions(nvr, sols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
     anbc = pointer(c_int32(len(svar)))
-    bvar = str2int4a(svar, (vrblvl > 0))
+    bvar = str2int4a(svar, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> drop_coordinate_from_quad_double_solutions calls phc', \
             end='')
     retval = phc(399, anbc, bvar, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    drop_variable_from_table(svar, vrblvl)
-    return get_quad_double_solutions(vrblvl)
+    drop_variable_from_table(svar, vrblvl-1)
+    return get_quad_double_solutions(vrblvl-1)
 
 def double_membertest(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, tasks=0, vrblvl=0):
@@ -652,7 +659,7 @@ def double_membertest(wsys, gpts, dim, point, \
     nvr = number_of_symbols(wsys)
     set_double_witness_set(nvr, dim, wsys, gpts, vrblvl)
     nvr = len(point)//2
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(vrblvl))
     bdims = (c_int32 * 3)()
     bdims[0] = nvr
@@ -666,7 +673,7 @@ def double_membertest(wsys, gpts, dim, point, \
     for (idx, crd) in enumerate(point):
         tolstpt[2+idx] = c_double(crd)
     ctoltpt = pointer(tolstpt)
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> double_membertest calls phc', end='')
     retval = phc(537, aaa, dims, ctoltpt, vrb)
@@ -709,7 +716,7 @@ def double_double_membertest(wsys, gpts, dim, point, \
     nvr = number_of_symbols(wsys)
     set_double_double_witness_set(nvr, dim, wsys, gpts, vrblvl)
     nvr = len(point)//4
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(vrblvl))
     bdims = (c_int32 * 3)()
     bdims[0] = nvr
@@ -723,7 +730,7 @@ def double_double_membertest(wsys, gpts, dim, point, \
     for (idx, crd) in enumerate(point):
         tolstpt[2+idx] = c_double(crd)
     ctoltpt = pointer(tolstpt)
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> double_double_membertest calls phc', end='')
     retval = phc(538, aaa, dims, ctoltpt, vrb)
@@ -766,7 +773,7 @@ def quad_double_membertest(wsys, gpts, dim, point, \
     nvr = number_of_symbols(wsys)
     set_quad_double_witness_set(nvr, dim, wsys, gpts, vrblvl)
     nvr = len(point)//8
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(vrblvl))
     bdims = (c_int32 * 3)()
     bdims[0] = nvr
@@ -780,7 +787,7 @@ def quad_double_membertest(wsys, gpts, dim, point, \
     for (idx, crd) in enumerate(point):
         tolstpt[2+idx] = c_double(crd)
     ctoltpt = pointer(tolstpt)
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> quad_double_membertest calls phc', end='')
     retval = phc(539, aaa, dims, ctoltpt, vrb)
@@ -805,14 +812,14 @@ def double_hypersurface_set(nvr, hpol, vrblvl=0):
     if vrblvl > 0:
         print('in double_hypersurface_set, nvr :', nvr)
         print('the polynomial :', hpol)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     nbc = (c_int32 * 2)()
     nbc[0] = nvr
     nbc[1] = len(hpol) 
     anbc = pointer(nbc)
-    bpol = str2int4a(hpol, (vrblvl-1 > 0))
+    bpol = str2int4a(hpol, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> double_hypersurface_set calls phc', end='')
     retval = phc(270, anbc, bpol, ccc, vrb)
@@ -834,14 +841,14 @@ def double_double_hypersurface_set(nvr, hpol, vrblvl=0):
     if vrblvl > 0:
         print('in double_double_hypersurface_set, nvr :', nvr)
         print('the polynomial :', hpol)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     nbc = (c_int32 * 2)()
     nbc[0] = nvr
     nbc[1] = len(hpol) 
     anbc = pointer(nbc)
-    bpol = str2int4a(hpol, (vrblvl-1 > 0))
+    bpol = str2int4a(hpol, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> double_double_hypersurface_set calls phc', end='')
     retval = phc(259, anbc, bpol, ccc, vrb)
@@ -863,14 +870,14 @@ def quad_double_hypersurface_set(nvr, hpol, vrblvl=0):
     if vrblvl > 0:
         print('in quad_double_hypersurface_set, nvr :', nvr)
         print('the polynomial :', hpol)
-    phc = get_phcfun()
+    phc = get_phcfun(vrblvl-1)
     nbc = (c_int32 * 2)()
     nbc[0] = nvr
     nbc[1] = len(hpol) 
     anbc = pointer(nbc)
-    bpol = str2int4a(hpol, (vrblvl-1 > 0))
+    bpol = str2int4a(hpol, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> quad_double_hypersurface_set calls phc', end='')
     retval = phc(269, anbc, bpol, ccc, vrb)
@@ -892,13 +899,15 @@ def test_double_twisted(vrblvl=0):
     twistede1 = double_embed(3, 1, twisted, vrblvl)
     # trick to order the variables in the solutions
     twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
-    print('the embedded system :')
-    for pol in twistede1:
-        print(pol)
+    if vrblvl > 0:
+        print('the embedded system :')
+        for pol in twistede1:
+            print(pol)
     sols = solve(twistede1, verbose_level=vrblvl)
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     return int(len(sols) != 3)
 
 def test_double_double_twisted(vrblvl=0):
@@ -913,13 +922,15 @@ def test_double_double_twisted(vrblvl=0):
     twistede1 = double_double_embed(3, 1, twisted, vrblvl)
     # trick to order the variables in the solutions
     twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
-    print('the embedded system :')
-    for pol in twistede1:
-        print(pol)
+    if vrblvl > 0:
+        print('the embedded system :')
+        for pol in twistede1:
+            print(pol)
     sols = solve(twistede1, tasks=1, precision='dd', verbose_level=vrblvl)
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     return int(len(sols) != 3)
 
 def test_quad_double_twisted(vrblvl=0):
@@ -934,13 +945,15 @@ def test_quad_double_twisted(vrblvl=0):
     twistede1 = quad_double_embed(3, 1, twisted, vrblvl)
     # trick to order the variables in the solutions
     twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
-    print('the embedded system :')
-    for pol in twistede1:
-        print(pol)
+    if vrblvl > 0:
+        print('the embedded system :')
+        for pol in twistede1:
+            print(pol)
     sols = solve(twistede1, tasks=1, precision='qd', verbose_level=vrblvl)
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     return int(len(sols) != 3)
 
 def test_double_Laurent_twisted(vrblvl=0):
@@ -956,15 +969,17 @@ def test_double_Laurent_twisted(vrblvl=0):
     twistede1 = double_Laurent_embed(3, 1, twisted, vrblvl)
     # trick to order the variables in the solutions
     twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
-    print('the embedded system :')
-    for pol in twistede1:
-        print(pol)
+    if vrblvl > 0:
+        print('the embedded system :')
+        for pol in twistede1:
+            print(pol)
     # second trick to avoid single monomial equation
     twistede1[2] = twistede1[2][:-1] + twistede1[3]
     sols = solve(twistede1, verbose_level=vrblvl)
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     return int(len(sols) != 3)
 
 def test_double_double_Laurent_twisted(vrblvl=0):
@@ -980,15 +995,17 @@ def test_double_double_Laurent_twisted(vrblvl=0):
     twistede1 = double_double_Laurent_embed(3, 1, twisted, vrblvl)
     # trick to order the variables in the solutions
     twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
-    print('the embedded system :')
-    for pol in twistede1:
-        print(pol)
+    if vrblvl > 0:
+        print('the embedded system :')
+        for pol in twistede1:
+            print(pol)
     # second trick to avoid single monomial equation
     twistede1[2] = twistede1[2][:-1] + twistede1[3]
     sols = solve(twistede1, tasks=1, precision='dd', verbose_level=vrblvl)
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     return int(len(sols) != 3)
 
 def test_quad_double_Laurent_twisted(vrblvl=0):
@@ -1004,15 +1021,17 @@ def test_quad_double_Laurent_twisted(vrblvl=0):
     twistede1 = quad_double_Laurent_embed(3, 1, twisted, vrblvl)
     # trick to order the variables in the solutions
     twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
-    print('the embedded system :')
-    for pol in twistede1:
-        print(pol)
+    if vrblvl > 0:
+        print('the embedded system :')
+        for pol in twistede1:
+            print(pol)
     # second trick to avoid single monomial equation
     twistede1[2] = twistede1[2][:-1] + twistede1[3]
     sols = solve(twistede1, tasks=1, precision='qd', verbose_level=vrblvl)
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     return int(len(sols) != 3)
 
 def test_double_member(vrblvl=0):
@@ -1027,12 +1046,14 @@ def test_double_member(vrblvl=0):
     sols = solve(twistede1, verbose_level=vrblvl)
     inpoint = [1, 0, 1, 0, 1, 0]
     ismbr = double_membertest(twistede1, sols, 1, inpoint, vrblvl=vrblvl)
-    print('on point in the set :', ismbr)
-    fail = int(ismbr != True)
+    if vrblvl > 0:
+        print('on point in the set :', ismbr)
+    fail = int(ismbr is not True)
     outpoint = [1, 0, 1, 0, 2, 0]
     ismbr = double_membertest(twistede1, sols, 1, outpoint, vrblvl=vrblvl)
-    print('on point not in the set :', ismbr)
-    fail = fail + int(ismbr != False)
+    if vrblvl > 0:
+        print('on point not in the set :', ismbr)
+    fail = fail + int(ismbr is not False)
     return fail
 
 def test_double_double_member(vrblvl=0):
@@ -1048,13 +1069,15 @@ def test_double_double_member(vrblvl=0):
     inpoint = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0]
     ismbr = double_double_membertest(twistede1, sols, 1, inpoint, \
         vrblvl=vrblvl)
-    print('on point in the set :', ismbr)
-    fail = int(ismbr != True)
+    if vrblvl > 0:
+        print('on point in the set :', ismbr)
+    fail = int(ismbr is not True)
     outpoint = [1, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0]
     ismbr = double_double_membertest(twistede1, sols, 1, outpoint, \
         vrblvl=vrblvl)
-    print('on point not in the set :', ismbr)
-    fail = fail + int(ismbr != False)
+    if vrblvl > 0:
+        print('on point not in the set :', ismbr)
+    fail = fail + int(ismbr is not False)
     return fail
 
 def test_quad_double_member(vrblvl=0):
@@ -1072,15 +1095,17 @@ def test_quad_double_member(vrblvl=0):
                1, 0, 0, 0, 0, 0, 0, 0 ]
     ismbr = quad_double_membertest(twistede1, sols, 1, inpoint, \
         vrblvl=vrblvl)
-    print('on point in the set :', ismbr)
-    fail = int(ismbr != True)
+    if vrblvl > 0:
+        print('on point in the set :', ismbr)
+    fail = int(ismbr is not True)
     outpoint = [1, 0, 0, 0, 0, 0, 0, 0, \
                 1, 0, 0, 0, 0, 0, 0, 0, \
                 2, 0, 0, 0, 0, 0, 0, 0]
     ismbr = quad_double_membertest(twistede1, sols, 1, outpoint, \
         vrblvl=vrblvl)
-    print('on point not in the set :', ismbr)
-    fail = fail + int(ismbr != False)
+    if vrblvl > 0:
+        print('on point not in the set :', ismbr)
+    fail = fail + int(ismbr is not False)
     return fail
 
 def test_double_drop(vrblvl=0):
@@ -1093,27 +1118,31 @@ def test_double_drop(vrblvl=0):
     twistede1 = double_embed(3, 1, twisted, vrblvl=vrblvl)
     # trick needed to move zz1 to the end
     twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
-    print('the embedded system :')
-    for pol in twistede1:
-        print(pol)
+    if vrblvl > 0:
+        print('the embedded system :')
+        for pol in twistede1:
+            print(pol)
     clear_double_solutions(vrblvl)
     sols = solve(twistede1, verbose_level=vrblvl)
-    print('the solutions :')
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
-    print('the symbols :', string_of_symbols())
+    if vrblvl > 0:
+        print('the solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+        print('the symbols :', string_of_symbols())
     name = 'zz1'
     dropped = drop_variable_from_double_polynomials(twistede1, name, vrblvl)
-    print('the polynomials after the drop :')
-    for pol in dropped:
-        print(pol)
-    print('the symbols :', string_of_symbols())
+    if vrblvl > 0:
+        print('the polynomials after the drop :')
+        for pol in dropped:
+            print(pol)
+        print('the symbols :', string_of_symbols())
     dropsols = drop_coordinate_from_double_solutions(sols, 4, name, vrblvl)
-    print('the solutions after the drop :')
-    for (idx, sol) in enumerate(dropsols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the solutions after the drop :')
+        for (idx, sol) in enumerate(dropsols):
+            print('Solution', idx+1, ':')
+            print(sol)
     return 0
 
 def test_double_double_drop(vrblvl=0):
@@ -1126,29 +1155,33 @@ def test_double_double_drop(vrblvl=0):
     twistede1 = double_double_embed(3, 1, twisted, vrblvl=vrblvl)
     # trick needed to move zz1 to the end
     twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
-    print('the embedded system :')
-    for pol in twistede1:
-        print(pol)
+    if vrblvl > 0:
+        print('the embedded system :')
+        for pol in twistede1:
+            print(pol)
     clear_double_double_solutions(vrblvl)
     sols = solve(twistede1, tasks=1, precision='dd', verbose_level=vrblvl)
-    print('the solutions :')
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
-    print('the symbols :', string_of_symbols())
+    if vrblvl > 0:
+        print('the solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+        print('the symbols :', string_of_symbols())
     name = 'zz1'
     dropped = drop_variable_from_double_double_polynomials(twistede1, \
         name, vrblvl)
-    print('the polynomials after the drop :')
-    for pol in dropped:
-        print(pol)
-    print('the symbols :', string_of_symbols())
+    if vrblvl > 0:
+        print('the polynomials after the drop :')
+        for pol in dropped:
+            print(pol)
+        print('the symbols :', string_of_symbols())
     dropsols = drop_coordinate_from_double_double_solutions(sols, 4, \
         name, vrblvl)
-    print('the solutions after the drop :')
-    for (idx, sol) in enumerate(dropsols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the solutions after the drop :')
+        for (idx, sol) in enumerate(dropsols):
+            print('Solution', idx+1, ':')
+            print(sol)
     return 0
 
 def test_quad_double_drop(vrblvl=0):
@@ -1161,29 +1194,33 @@ def test_quad_double_drop(vrblvl=0):
     twistede1 = quad_double_embed(3, 1, twisted, vrblvl=vrblvl)
     # trick needed to move zz1 to the end
     twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
-    print('the embedded system :')
-    for pol in twistede1:
-        print(pol)
+    if vrblvl > 0:
+        print('the embedded system :')
+        for pol in twistede1:
+            print(pol)
     clear_quad_double_solutions()
     sols = solve(twistede1, precision='qd', verbose_level=vrblvl)
-    print('the solutions :')
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
-    print('the symbols :', string_of_symbols())
+    if vrblvl > 0:
+        print('the solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+        print('the symbols :', string_of_symbols())
     name = 'zz1'
     dropped = drop_variable_from_quad_double_polynomials(twistede1, \
         name, vrblvl)
-    print('after the drop :')
-    for pol in dropped:
-        print(pol)
-    print('the symbols :', string_of_symbols())
+    if vrblvl > 0:
+        print('after the drop :')
+        for pol in dropped:
+            print(pol)
+        print('the symbols :', string_of_symbols())
     dropsols = drop_coordinate_from_quad_double_solutions(sols, 4, \
         name, vrblvl)
-    print('the solutions after the drop :')
-    for (idx, sol) in enumerate(dropsols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the solutions after the drop :')
+        for (idx, sol) in enumerate(dropsols):
+            print('Solution', idx+1, ':')
+            print(sol)
     return 0
 
 def test_double_hypersurface_set(vrblvl=0):
@@ -1195,13 +1232,14 @@ def test_double_hypersurface_set(vrblvl=0):
         print('in test_double_hypersurface_set ...')
     hyp = 'x*y*z + 3*x^2 - 1;'
     (pols, sols) = double_hypersurface_set(3, hyp, vrblvl)
-    print('the polynomials :')
-    for pol in pols:
-        print(pol)
-    print('the generic points :')
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the polynomials :')
+        for pol in pols:
+            print(pol)
+        print('the generic points :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     return int(len(sols) != 3)
 
 def test_double_double_hypersurface_set(vrblvl=0):
@@ -1213,13 +1251,14 @@ def test_double_double_hypersurface_set(vrblvl=0):
         print('in test_double_double_hypersurface_set ...')
     hyp = 'x*y*z + 3*x^2 - 1;'
     (pols, sols) = double_double_hypersurface_set(3, hyp, vrblvl)
-    print('the polynomials :')
-    for pol in pols:
-        print(pol)
-    print('the generic points :')
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the polynomials :')
+        for pol in pols:
+            print(pol)
+        print('the generic points :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     return int(len(sols) != 3)
 
 def test_quad_double_hypersurface_set(vrblvl=0):
@@ -1231,13 +1270,14 @@ def test_quad_double_hypersurface_set(vrblvl=0):
         print('in test_quad_double_hypersurface_set ...')
     hyp = 'x*y*z + 3*x^2 - 1;'
     (pols, sols) = quad_double_hypersurface_set(3, hyp, vrblvl)
-    print('the polynomials :')
-    for pol in pols:
-        print(pol)
-    print('the generic points :')
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the polynomials :')
+        for pol in pols:
+            print(pol)
+        print('the generic points :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
     return int(len(sols) != 3)
 
 def main():
