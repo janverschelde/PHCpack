@@ -784,7 +784,7 @@ def set_double_homotopy(gamma=0, pwt=2, vrblvl=0):
     else:
         angle = uniform(0, 2*pi)
         usegamma = exp(angle*complex(0, 1))
-        if(vrblvl > 0):
+        if vrblvl > 0:
             print('random gamma :', usegamma)
     c_gamma = (c_double*2)()
     c_gamma[0] = c_double(usegamma.real)
@@ -803,7 +803,7 @@ def set_double_homotopy(gamma=0, pwt=2, vrblvl=0):
     retval = phc(996, aprc, bbb, ptr_gamma, vrb) # set gamma
     if vrblvl > 0:
         print(', return value :', retval)
-    return usegamma 
+    return usegamma
 
 def set_double_double_homotopy(gamma=0, pwt=2, vrblvl=0):
     """
@@ -824,7 +824,7 @@ def set_double_double_homotopy(gamma=0, pwt=2, vrblvl=0):
     else:
         angle = uniform(0, 2*pi)
         usegamma = exp(angle*complex(0, 1))
-        if(vrblvl > 0):
+        if vrblvl > 0:
             print('random gamma :', usegamma)
     c_gamma = (c_double*2)()
     c_gamma[0] = c_double(usegamma.real)
@@ -843,7 +843,7 @@ def set_double_double_homotopy(gamma=0, pwt=2, vrblvl=0):
     retval = phc(996, aprc, bbb, ptr_gamma, vrb) # set gamma
     if vrblvl > 0:
         print(', return value :', retval)
-    return usegamma 
+    return usegamma
 
 def set_quad_double_homotopy(gamma=0, pwt=2, vrblvl=0):
     """
@@ -864,7 +864,7 @@ def set_quad_double_homotopy(gamma=0, pwt=2, vrblvl=0):
     else:
         angle = uniform(0, 2*pi)
         usegamma = exp(angle*complex(0, 1))
-        if(vrblvl > 0):
+        if vrblvl > 0:
             print('random gamma :', usegamma)
     c_gamma = (c_double*2)()
     c_gamma[0] = c_double(usegamma.real)
@@ -883,7 +883,7 @@ def set_quad_double_homotopy(gamma=0, pwt=2, vrblvl=0):
     retval = phc(996, aprc, bbb, ptr_gamma, vrb) # set gamma
     if vrblvl > 0:
         print(', return value :', retval)
-    return usegamma 
+    return usegamma
 
 def clear_double_homotopy(vrblvl=0):
     """

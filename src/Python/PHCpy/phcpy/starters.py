@@ -291,7 +291,7 @@ def test_total_degree(vrblvl=0):
     totdeg = total_degree(pols, vrblvl)
     if vrblvl > 0:
         print('the total degree of noon3 :', totdeg)
-    (start, startsols) = total_degree_start_system(pols, vrblvl)
+    start, startsols = total_degree_start_system(pols, vrblvl)
     if vrblvl > 0:
         print('the start system :')
         for pol in start:
@@ -313,8 +313,12 @@ def test_m_homogeneous_degree(vrblvl=0):
     fail = int(deg != 9)
     deg = m_partition_bezout_number(pols, partition, vrblvl=vrblvl)
     fail = fail + int(deg != 9)
-    q, qsols = m_homogeneous_start_system(pols, partition, vrblvl=vrblvl)
-    fail = fail + int(len(qsols) != 9)
+    start, sols = m_homogeneous_start_system(pols, partition, vrblvl=vrblvl)
+    if vrblvl > 0:
+        print('the start system :')
+        for pol in start:
+            print(pol)
+    fail = fail + int(len(sols) != 9)
     return fail
 
 def test_linear_product_root_count(vrblvl=0):
