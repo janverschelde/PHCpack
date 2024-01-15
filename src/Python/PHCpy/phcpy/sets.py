@@ -28,12 +28,12 @@ from phcpy.polynomials import set_double_double_system
 from phcpy.polynomials import get_double_double_system
 from phcpy.polynomials import set_quad_double_system
 from phcpy.polynomials import get_quad_double_system
-from phcpy.polynomials import set_double_Laurent_system
-from phcpy.polynomials import get_double_Laurent_system
-from phcpy.polynomials import set_double_double_Laurent_system
-from phcpy.polynomials import get_double_double_Laurent_system
-from phcpy.polynomials import set_quad_double_Laurent_system
-from phcpy.polynomials import get_quad_double_Laurent_system
+from phcpy.polynomials import set_double_laurent_system
+from phcpy.polynomials import get_double_laurent_system
+from phcpy.polynomials import set_double_double_laurent_system
+from phcpy.polynomials import get_double_double_laurent_system
+from phcpy.polynomials import set_quad_double_laurent_system
+from phcpy.polynomials import get_quad_double_laurent_system
 from phcpy.solutions import set_double_solutions
 from phcpy.solutions import get_double_solutions
 from phcpy.solutions import clear_double_solutions
@@ -132,7 +132,7 @@ def quad_double_embed(nvr, topdim, pols, vrblvl=0):
     result = get_quad_double_system(vrblvl-1)
     return result
 
-def double_Laurent_embed(nvr, topdim, pols, vrblvl=0):
+def double_laurent_embed(nvr, topdim, pols, vrblvl=0):
     r"""
     Given in *pols* a list of strings representing Laurent polynomials 
     in *nvr* variables, with coefficients in double precision,
@@ -143,26 +143,26 @@ def double_Laurent_embed(nvr, topdim, pols, vrblvl=0):
     called in the running of the blackbox solver will be listed.
     """
     if vrblvl > 0:
-        print('in double_Laurent_embed, nvr :', nvr, end='')
+        print('in double_laurent_embed, nvr :', nvr, end='')
         print(', topdim :', topdim)
         print('the polynomials :')
         for pol in pols:
             print(pol)
-    set_double_Laurent_system(nvr, pols, vrblvl-1)
+    set_double_laurent_system(nvr, pols, vrblvl-1)
     phc = get_phcfun(vrblvl-1)
     btopdim = pointer(c_int32(topdim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl)
     if vrblvl > 0:
-        print('-> double_Laurent_embed calls phc', end='')
+        print('-> double_laurent_embed calls phc', end='')
     retval = phc(625, btopdim, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    result = get_double_Laurent_system(vrblvl-1)
+    result = get_double_laurent_system(vrblvl-1)
     return result
 
-def double_double_Laurent_embed(nvr, topdim, pols, vrblvl=0):
+def double_double_laurent_embed(nvr, topdim, pols, vrblvl=0):
     r"""
     Given in *pols* a list of strings representing Laurent polynomials 
     in *nvr* variables, with coefficients in double double precision,
@@ -173,26 +173,26 @@ def double_double_Laurent_embed(nvr, topdim, pols, vrblvl=0):
     called in the running of the blackbox solver will be listed.
     """
     if vrblvl > 0:
-        print('in double_double_Laurent_embed, nvr :', nvr, end='')
+        print('in double_double_laurent_embed, nvr :', nvr, end='')
         print(', topdim :', topdim)
         print('the polynomials :')
         for pol in pols:
             print(pol)
-    set_double_double_Laurent_system(nvr, pols, vrblvl-1)
+    set_double_double_laurent_system(nvr, pols, vrblvl-1)
     phc = get_phcfun(vrblvl-1)
     btopdim = pointer(c_int32(topdim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
-        print('-> double_double_Laurent_embed calls phc', end='')
+        print('-> double_double_laurent_embed calls phc', end='')
     retval = phc(626, btopdim, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    result = get_double_double_Laurent_system(vrblvl-1)
+    result = get_double_double_laurent_system(vrblvl-1)
     return result
 
-def quad_double_Laurent_embed(nvr, topdim, pols, vrblvl=0):
+def quad_double_laurent_embed(nvr, topdim, pols, vrblvl=0):
     r"""
     Given in *pols* a list of strings representing Laurent polynomials 
     in *nvr* variables, with coefficients in quad double precision,
@@ -203,23 +203,23 @@ def quad_double_Laurent_embed(nvr, topdim, pols, vrblvl=0):
     called in the running of the blackbox solver will be listed.
     """
     if vrblvl > 0:
-        print('in quad_double_Laurent_embed, nvr :', nvr, end='')
+        print('in quad_double_laurent_embed, nvr :', nvr, end='')
         print(', topdim :', topdim)
         print('the polynomials :')
         for pol in pols:
             print(pol)
-    set_quad_double_Laurent_system(nvr, pols, vrblvl-1)
+    set_quad_double_laurent_system(nvr, pols, vrblvl-1)
     phc = get_phcfun(vrblvl-1)
     btopdim = pointer(c_int32(topdim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
-        print('-> quad_double_Laurent_embed calls phc', end='')
+        print('-> quad_double_laurent_embed calls phc', end='')
     retval = phc(627, btopdim, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
-    result = get_quad_double_Laurent_system(vrblvl)
+    result = get_quad_double_laurent_system(vrblvl)
     return result
 
 def set_double_witness_set(nvr, dim, pols, sols, vrblvl=0):
@@ -330,7 +330,7 @@ def set_quad_double_witness_set(nvr, dim, pols, sols, vrblvl=0):
         print(', return value :', retval)
     return retval
 
-def set_double_Laurent_witness_set(nvr, dim, pols, sols, vrblvl=0):
+def set_double_laurent_witness_set(nvr, dim, pols, sols, vrblvl=0):
     r"""
     Given in *nvr* is the total number of variables in the list of
     Laurent polynomials in *pols* and its list of solutions in *sols*.
@@ -344,7 +344,7 @@ def set_double_Laurent_witness_set(nvr, dim, pols, sols, vrblvl=0):
     symbol table in both the polynomials and the solutions.
     """
     if vrblvl > 0:
-        print('in set_double_Laurent_witness_set, nvr :', nvr, end='')
+        print('in set_double_laurent_witness_set, nvr :', nvr, end='')
         print(', dim :', dim)
         print('the polynomials :')
         for pol in pols:
@@ -352,7 +352,7 @@ def set_double_Laurent_witness_set(nvr, dim, pols, sols, vrblvl=0):
         print('the solutions :')
         for sol in sols:
             print(sol)
-    set_double_Laurent_system(nvr, pols, vrblvl-1)
+    set_double_laurent_system(nvr, pols, vrblvl-1)
     set_double_solutions(nvr, sols, vrblvl-1)
     phc = get_phcfun(vrblvl-1)
     anvr = pointer(c_int32(nvr))
@@ -360,13 +360,13 @@ def set_double_Laurent_witness_set(nvr, dim, pols, sols, vrblvl=0):
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl)
     if vrblvl > 0:
-        print('-> set_double_Laurent_witness_set calls phc', end='')
+        print('-> set_double_laurent_witness_set calls phc', end='')
     retval = phc(819, anvr, bdim, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
     return retval
 
-def set_double_double_Laurent_witness_set(nvr, dim, pols, sols, vrblvl=0):
+def set_double_double_laurent_witness_set(nvr, dim, pols, sols, vrblvl=0):
     r"""
     Given in *nvr* is the total number of variables in the list of
     Laurent polynomials in *pols* and its list of solutions in *sols*.
@@ -380,7 +380,7 @@ def set_double_double_Laurent_witness_set(nvr, dim, pols, sols, vrblvl=0):
     symbol table in both the polynomials and the solutions.
     """
     if vrblvl > 0:
-        print('in set_double_double_Laurent_witness_set, nvr :', nvr, end='')
+        print('in set_double_double_laurent_witness_set, nvr :', nvr, end='')
         print(', dim :', dim)
         print('the polynomials :')
         for pol in pols:
@@ -388,7 +388,7 @@ def set_double_double_Laurent_witness_set(nvr, dim, pols, sols, vrblvl=0):
         print('the solutions :')
         for sol in sols:
             print(sol)
-    set_double_double_Laurent_system(nvr, pols, vrblvl-1)
+    set_double_double_laurent_system(nvr, pols, vrblvl-1)
     set_double_double_solutions(nvr, sols, vrblvl-1)
     phc = get_phcfun(vrblvl-1)
     anvr = pointer(c_int32(nvr))
@@ -396,13 +396,13 @@ def set_double_double_Laurent_witness_set(nvr, dim, pols, sols, vrblvl=0):
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl)
     if vrblvl > 0:
-        print('-> set_double_double_Laurent_witness_set calls phc', end='')
+        print('-> set_double_double_laurent_witness_set calls phc', end='')
     retval = phc(820, anvr, bdim, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
     return retval
 
-def set_quad_double_Laurent_witness_set(nvr, dim, pols, sols, vrblvl=0):
+def set_quad_double_laurent_witness_set(nvr, dim, pols, sols, vrblvl=0):
     r"""
     Given in *nvr* is the total number of variables in the list of
     Laurent polynomials in *pols* and its list of solutions in *sols*.
@@ -416,7 +416,7 @@ def set_quad_double_Laurent_witness_set(nvr, dim, pols, sols, vrblvl=0):
     symbol table in both the polynomials and the solutions.
     """
     if vrblvl > 0:
-        print('in set_quad_double_Laurent_witness_set, nvr :', nvr, end='')
+        print('in set_quad_double_laurent_witness_set, nvr :', nvr, end='')
         print(', dim :', dim)
         print('the polynomials :')
         for pol in pols:
@@ -432,7 +432,7 @@ def set_quad_double_Laurent_witness_set(nvr, dim, pols, sols, vrblvl=0):
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl)
     if vrblvl > 0:
-        print('-> set_quad_double_Laurent_witness_set calls phc', end='')
+        print('-> set_quad_double_laurent_witness_set calls phc', end='')
     retval = phc(821, anvr, bdim, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
@@ -444,7 +444,7 @@ def drop_variable_from_table(name, vrblvl=0):
     The verbose level is given by the value of vrblvl.
     """
     if vrblvl > 0:
-        print('in drop_variable_from_table, name :', name);
+        print('in drop_variable_from_table, name :', name)
     phc = get_phcfun(vrblvl-1)
     anbc = pointer(c_int32(len(name)))
     bvar = str2int4a(name, vrblvl=vrblvl-1)
@@ -684,7 +684,7 @@ def double_membertest(wsys, gpts, dim, point, \
     onset = vals[0][0]
     if vrblvl > 0:
         print('onsys :', onsys, '  onset :', onset)
-    return (onset == 1)
+    return onset == 1
 
 def double_double_membertest(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, tasks=0, vrblvl=0):
@@ -741,7 +741,7 @@ def double_double_membertest(wsys, gpts, dim, point, \
     onset = vals[0][0]
     if vrblvl > 0:
         print('onsys :', onsys, '  onset :', onset)
-    return (onset == 1)
+    return onset == 1
 
 def quad_double_membertest(wsys, gpts, dim, point, \
     evatol=1.0e-6, memtol=1.0e-6, tasks=0, vrblvl=0):
@@ -798,7 +798,7 @@ def quad_double_membertest(wsys, gpts, dim, point, \
     onset = vals[0][0]
     if vrblvl > 0:
         print('onsys :', onsys, '  onset :', onset)
-    return (onset == 1)
+    return onset == 1
 
 def double_hypersurface_set(nvr, hpol, vrblvl=0):
     r"""
@@ -815,7 +815,7 @@ def double_hypersurface_set(nvr, hpol, vrblvl=0):
     phc = get_phcfun(vrblvl-1)
     nbc = (c_int32 * 2)()
     nbc[0] = nvr
-    nbc[1] = len(hpol) 
+    nbc[1] = len(hpol)
     anbc = pointer(nbc)
     bpol = str2int4a(hpol, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
@@ -844,7 +844,7 @@ def double_double_hypersurface_set(nvr, hpol, vrblvl=0):
     phc = get_phcfun(vrblvl-1)
     nbc = (c_int32 * 2)()
     nbc[0] = nvr
-    nbc[1] = len(hpol) 
+    nbc[1] = len(hpol)
     anbc = pointer(nbc)
     bpol = str2int4a(hpol, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
@@ -873,7 +873,7 @@ def quad_double_hypersurface_set(nvr, hpol, vrblvl=0):
     phc = get_phcfun(vrblvl-1)
     nbc = (c_int32 * 2)()
     nbc[0] = nvr
-    nbc[1] = len(hpol) 
+    nbc[1] = len(hpol)
     anbc = pointer(nbc)
     bpol = str2int4a(hpol, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
@@ -956,17 +956,17 @@ def test_quad_double_twisted(vrblvl=0):
             print(sol)
     return int(len(sols) != 3)
 
-def test_double_Laurent_twisted(vrblvl=0):
+def test_double_laurent_twisted(vrblvl=0):
     """
     Tests the computation of a witness set for the twisted cubic
-    defined as a Laurent system in double precision.
+    defined as a laurent system in double precision.
     As the degree of the twisted cubic is three,
     the number of witness points must equal three as well.
     """
     if vrblvl > 0:
-        print('in test_double_Laurent_twisted ...')
+        print('in test_double_laurent_twisted ...')
     twisted = ['x^2*y^(-1) - 1;', 'x^3*z^(-1) - 1;']
-    twistede1 = double_Laurent_embed(3, 1, twisted, vrblvl)
+    twistede1 = double_laurent_embed(3, 1, twisted, vrblvl)
     # trick to order the variables in the solutions
     twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
     if vrblvl > 0:
@@ -982,17 +982,17 @@ def test_double_Laurent_twisted(vrblvl=0):
             print(sol)
     return int(len(sols) != 3)
 
-def test_double_double_Laurent_twisted(vrblvl=0):
+def test_double_double_laurent_twisted(vrblvl=0):
     """
     Tests the computation of a witness set for the twisted cubic
-    defined as a Laurent system in double double precision.
+    defined as a laurent system in double double precision.
     As the degree of the twisted cubic is three,
     the number of witness points must equal three as well.
     """
     if vrblvl > 0:
-        print('in test_double_double_Laurent_twisted ...')
+        print('in test_double_double_laurent_twisted ...')
     twisted = ['x^2*y^(-1) - 1;', 'x^3*z^(-1) - 1;']
-    twistede1 = double_double_Laurent_embed(3, 1, twisted, vrblvl)
+    twistede1 = double_double_laurent_embed(3, 1, twisted, vrblvl)
     # trick to order the variables in the solutions
     twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
     if vrblvl > 0:
@@ -1008,17 +1008,17 @@ def test_double_double_Laurent_twisted(vrblvl=0):
             print(sol)
     return int(len(sols) != 3)
 
-def test_quad_double_Laurent_twisted(vrblvl=0):
+def test_quad_double_laurent_twisted(vrblvl=0):
     """
     Tests the computation of a witness set for the twisted cubic
-    defined as a Laurent system in quad double precision.
+    defined as a laurent system in quad double precision.
     As the degree of the twisted cubic is three,
     the number of witness points must equal three as well.
     """
     if vrblvl > 0:
-        print('in test_quad_double_Laurent_twisted ...')
+        print('in test_quad_double_laurent_twisted ...')
     twisted = ['x^2*y^(-1) - 1;', 'x^3*z^(-1) - 1;']
-    twistede1 = quad_double_Laurent_embed(3, 1, twisted, vrblvl)
+    twistede1 = quad_double_laurent_embed(3, 1, twisted, vrblvl)
     # trick to order the variables in the solutions
     twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
     if vrblvl > 0:
@@ -1288,9 +1288,9 @@ def main():
     fail = test_double_twisted(lvl)
     fail = fail + test_double_double_twisted(lvl)
     fail = fail + test_quad_double_twisted(lvl)
-    fail = fail + test_double_Laurent_twisted(lvl)
-    fail = fail + test_double_double_Laurent_twisted(lvl)
-    fail = fail + test_quad_double_Laurent_twisted(lvl)
+    fail = fail + test_double_laurent_twisted(lvl)
+    fail = fail + test_double_double_laurent_twisted(lvl)
+    fail = fail + test_quad_double_laurent_twisted(lvl)
     fail = fail + test_double_member(lvl)
     fail = fail + test_double_double_member(lvl)
     fail = fail + test_quad_double_member(lvl)

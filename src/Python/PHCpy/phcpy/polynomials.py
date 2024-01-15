@@ -10,12 +10,12 @@ from phcpy.dimension import set_double_double_dimension
 from phcpy.dimension import get_double_double_dimension
 from phcpy.dimension import set_quad_double_dimension
 from phcpy.dimension import get_quad_double_dimension
-from phcpy.dimension import set_double_Laurent_dimension
-from phcpy.dimension import get_double_Laurent_dimension
-from phcpy.dimension import set_double_double_Laurent_dimension
-from phcpy.dimension import get_double_double_Laurent_dimension
-from phcpy.dimension import set_quad_double_Laurent_dimension
-from phcpy.dimension import get_quad_double_Laurent_dimension
+from phcpy.dimension import set_double_laurent_dimension
+from phcpy.dimension import get_double_laurent_dimension
+from phcpy.dimension import set_double_double_laurent_dimension
+from phcpy.dimension import get_double_double_laurent_dimension
+from phcpy.dimension import set_quad_double_laurent_dimension
+from phcpy.dimension import get_quad_double_laurent_dimension
 
 def set_double_polynomial(idx, nvr, pol, vrblvl=0):
     """
@@ -86,7 +86,7 @@ def set_quad_double_polynomial(idx, nvr, pol, vrblvl=0):
         print(', return value :', retval)
     return retval
 
-def set_double_Laurent_polynomial(idx, nvr, pol, vrblvl=0):
+def set_double_laurent_polynomial(idx, nvr, pol, vrblvl=0):
     """
     Sets the polynomial by the string pol, in double precision,
     with a number of variables no more than nvr, at index idx.
@@ -95,7 +95,7 @@ def set_double_Laurent_polynomial(idx, nvr, pol, vrblvl=0):
     which must be set to a value at least idx.
     """
     if vrblvl > 0:
-        print('in set_double_Laurent_polynomial, pol :', pol, end='')
+        print('in set_double_laurent_polynomial, pol :', pol, end='')
         print(', idx :', idx, ', nvr :', nvr)
     phc = get_phcfun(vrblvl-1)
     apars = int4a2nbr([len(pol), nvr, idx], vrblvl=vrblvl-1)
@@ -103,13 +103,13 @@ def set_double_Laurent_polynomial(idx, nvr, pol, vrblvl=0):
     ccc = pointer(c_double(0.0))
     vlvl = c_int32(vrblvl)
     if vrblvl > 0:
-        print('-> set_double_Laurent_polynomial calls phc', end='')
+        print('-> set_double_laurent_polynomial calls phc', end='')
     retval = phc(74, apars, bpol, ccc, vlvl)
     if vrblvl > 0:
         print(', return value :', retval)
     return retval
 
-def set_double_double_Laurent_polynomial(idx, nvr, pol, vrblvl=0):
+def set_double_double_laurent_polynomial(idx, nvr, pol, vrblvl=0):
     """
     Sets the polynomial by the string pol, in double double precision,
     with a number of variables no more than nvr, at index idx.
@@ -118,7 +118,7 @@ def set_double_double_Laurent_polynomial(idx, nvr, pol, vrblvl=0):
     which must be set to a value at least idx.
     """
     if vrblvl > 0:
-        print('in set_double_double_Laurent_polynomial, pol :', pol, end='')
+        print('in set_double_double_laurent_polynomial, pol :', pol, end='')
         print(', idx :', idx, ', nvr :', nvr)
     phc = get_phcfun(vrblvl-1)
     apars = int4a2nbr([len(pol), nvr, idx], vrblvl=vrblvl-1)
@@ -126,13 +126,13 @@ def set_double_double_Laurent_polynomial(idx, nvr, pol, vrblvl=0):
     ccc = pointer(c_double(0.0))
     vlvl = c_int32(vrblvl)
     if vrblvl > 0:
-        print('-> set_double_double_Laurent_polynomial calls phc', end='')
+        print('-> set_double_double_laurent_polynomial calls phc', end='')
     retval = phc(558, apars, bpol, ccc, vlvl)
     if vrblvl > 0:
         print(', return value :', retval)
     return retval
 
-def set_quad_double_Laurent_polynomial(idx, nvr, pol, vrblvl=0):
+def set_quad_double_laurent_polynomial(idx, nvr, pol, vrblvl=0):
     """
     Sets the polynomial by the string pol, in quad double precision,
     with a number of variables no more than nvr, at index idx.
@@ -141,7 +141,7 @@ def set_quad_double_Laurent_polynomial(idx, nvr, pol, vrblvl=0):
     which must be set to a value at least idx.
     """
     if vrblvl > 0:
-        print('in set_quad_double_Laurent_polynomial, pol :', pol, end='')
+        print('in set_quad_double_laurent_polynomial, pol :', pol, end='')
         print(', idx :', idx, ', nvr :', nvr)
     phc = get_phcfun(vrblvl-1)
     apars = int4a2nbr([len(pol), nvr, idx], vrblvl=vrblvl-1)
@@ -149,7 +149,7 @@ def set_quad_double_Laurent_polynomial(idx, nvr, pol, vrblvl=0):
     ccc = pointer(c_double(0.0))
     vlvl = c_int32(vrblvl)
     if vrblvl > 0:
-        print('-> set_quad_double_Laurent_polynomial calls phc', end='')
+        print('-> set_quad_double_laurent_polynomial calls phc', end='')
     retval = phc(568, apars, bpol, ccc, vlvl)
     if vrblvl > 0:
         print(', return value :', retval)
@@ -218,70 +218,70 @@ def set_quad_double_system(nvr, pols, vrblvl=0):
         result = result + retval
     return result
 
-def set_double_Laurent_system(nvr, pols, vrblvl=0):
+def set_double_laurent_system(nvr, pols, vrblvl=0):
     """
-    Sets the Laurent system defines by the strings in pols,
+    Sets the laurent system defines by the strings in pols,
     in double precision,
     with a number of variables no more than nvr.
     The dimension of the system is set to len(pols).
-    Returns the sum of the return values of set_double_Laurent_polynomial.
+    Returns the sum of the return values of set_double_laurent_polynomial.
     """
     if vrblvl > 0:
-        print('in set_double_Laurent_system, nvr :', nvr)
+        print('in set_double_laurent_system, nvr :', nvr)
     dim = len(pols)
-    set_double_Laurent_dimension(dim, vrblvl)
+    set_double_laurent_dimension(dim, vrblvl)
     result = 0
     for k in range(dim):
         if vrblvl > 0:
-            print(f"-> set_double_Laurent_system, pols[{k}] = {pols[k]}")
-        retval = set_double_Laurent_polynomial(k+1, nvr, pols[k], vrblvl)
+            print(f"-> set_double_laurent_system, pols[{k}] = {pols[k]}")
+        retval = set_double_laurent_polynomial(k+1, nvr, pols[k], vrblvl)
         if vrblvl > 0:
-            print('-> set_double_Laurent_polynomial returns', retval)
+            print('-> set_double_laurent_polynomial returns', retval)
         result = result + retval
     return result
 
-def set_double_double_Laurent_system(nvr, pols, vrblvl=0):
+def set_double_double_laurent_system(nvr, pols, vrblvl=0):
     """
-    Sets the Laurent system defines by the strings in pols,
+    Sets the laurent system defines by the strings in pols,
     in double double precision,
     with a number of variables no more than nvr.
     The dimension of the system is set to len(pols).
     Returns the sum of the return values 
-    of set_double_double_Laurent_polynomial.
+    of set_double_double_laurent_polynomial.
     """
     if vrblvl > 0:
-        print('in set_double_double_Laurent_system, nvr :', nvr)
+        print('in set_double_double_laurent_system, nvr :', nvr)
     dim = len(pols)
-    set_double_double_Laurent_dimension(dim, vrblvl)
+    set_double_double_laurent_dimension(dim, vrblvl)
     result = 0
     for k in range(dim):
         if vrblvl > 0:
-            print(f"-> set_double_double_Laurent_system, pols[{k}] = {pols[k]}")
-        retval = set_double_double_Laurent_polynomial(k+1, nvr, pols[k], vrblvl)
+            print(f"-> set_double_double_laurent_system, pols[{k}] = {pols[k]}")
+        retval = set_double_double_laurent_polynomial(k+1, nvr, pols[k], vrblvl)
         if vrblvl > 0:
-            print('-> set_double_double_Laurent_polynomial returns', retval)
+            print('-> set_double_double_laurent_polynomial returns', retval)
         result = result + retval
     return result
 
-def set_quad_double_Laurent_system(nvr, pols, vrblvl=0):
+def set_quad_double_laurent_system(nvr, pols, vrblvl=0):
     """
-    Sets the Laurent system defines by the strings in pols,
+    Sets the laurent system defines by the strings in pols,
     in quad double precision,
     with a number of variables no more than nvr.
     The dimension of the system is set to len(pols).
     Returns the sum of the return values of set_quad_double_polynomial.
     """
     if vrblvl > 0:
-        print('in set_quad_double_Laurent_system, nvr :', nvr)
+        print('in set_quad_double_laurent_system, nvr :', nvr)
     dim = len(pols)
-    set_quad_double_Laurent_dimension(dim, vrblvl)
+    set_quad_double_laurent_dimension(dim, vrblvl)
     result = 0
     for k in range(dim):
         if vrblvl > 0:
-            print(f"-> set_quad_double_Laurent_system, pols[{k}] = {pols[k]}")
-        retval = set_quad_double_Laurent_polynomial(k+1, nvr, pols[k], vrblvl)
+            print(f"-> set_quad_double_laurent_system, pols[{k}] = {pols[k]}")
+        retval = set_quad_double_laurent_polynomial(k+1, nvr, pols[k], vrblvl)
         if vrblvl > 0:
-            print('-> set_quad_double_Laurent_polynomial returns', retval)
+            print('-> set_quad_double_laurent_polynomial returns', retval)
         result = result + retval
     return result
 
@@ -375,20 +375,20 @@ def get_quad_double_polynomial(idx, vrblvl=0):
     result = pols[0] + ';'
     return result
 
-def get_double_Laurent_polynomial(idx, vrblvl=0):
+def get_double_laurent_polynomial(idx, vrblvl=0):
     """
     Returns the string representation of the Laurent polynomial
     in double precision, at index idx.
     """
     if vrblvl > 0:
-        print('in get_double_Laurent_polynomial idx :', idx)
+        print('in get_double_laurent_polynomial idx :', idx)
     phc = get_phcfun(vrblvl-1)
     adx = pointer(c_int32(idx))
     bsz = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl)
     if vrblvl > 0:
-        print('-> get_double_Laurent_polynomial calls phc', end='')
+        print('-> get_double_laurent_polynomial calls phc', end='')
     retval = phc(604, adx, bsz, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
@@ -396,7 +396,7 @@ def get_double_Laurent_polynomial(idx, vrblvl=0):
     szd = bsz[0]
     poldata = create_string_buffer(b"", 4*szd)
     if vrblvl > 0:
-        print('-> get_double_Laurent_polynomial calls phc', end='')
+        print('-> get_double_laurent_polynomial calls phc', end='')
     retval = phc(128, adx, poldata, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
@@ -405,20 +405,20 @@ def get_double_Laurent_polynomial(idx, vrblvl=0):
     result = pols[0] + ';'
     return result
 
-def get_double_double_Laurent_polynomial(idx, vrblvl=0):
+def get_double_double_laurent_polynomial(idx, vrblvl=0):
     """
     Returns the string representation of the Laurent polynomial
     in double double precision, at index idx.
     """
     if vrblvl > 0:
-        print('in get_double_double_Laurent_polynomial idx :', idx)
+        print('in get_double_double_laurent_polynomial idx :', idx)
     phc = get_phcfun(vrblvl-1)
     adx = pointer(c_int32(idx))
     bsz = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl)
     if vrblvl > 0:
-        print('-> get_double_double_Laurent_polynomial calls phc', end='')
+        print('-> get_double_double_laurent_polynomial calls phc', end='')
     retval = phc(605, adx, bsz, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
@@ -426,7 +426,7 @@ def get_double_double_Laurent_polynomial(idx, vrblvl=0):
     szd = bsz[0]
     poldata = create_string_buffer(b"", 4*szd)
     if vrblvl > 0:
-        print('-> get_double_double_Laurent_polynomial calls phc', end='')
+        print('-> get_double_double_laurent_polynomial calls phc', end='')
     retval = phc(559, adx, poldata, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
@@ -435,20 +435,20 @@ def get_double_double_Laurent_polynomial(idx, vrblvl=0):
     result = pols[0] + ';'
     return result
 
-def get_quad_double_Laurent_polynomial(idx, vrblvl=0):
+def get_quad_double_laurent_polynomial(idx, vrblvl=0):
     """
     Returns the string representation of the Laurent polynomial
     in quad double precision, at index idx.
     """
     if vrblvl > 0:
-        print('in get_quad_double_Laurent_polynomial idx :', idx)
+        print('in get_quad_double_laurent_polynomial idx :', idx)
     phc = get_phcfun(vrblvl-1)
     adx = pointer(c_int32(idx))
     bsz = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl)
     if vrblvl > 0:
-        print('-> get_quad_double_Laurent_polynomial calls phc', end='')
+        print('-> get_quad_double_laurent_polynomial calls phc', end='')
     retval = phc(606, adx, bsz, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
@@ -456,7 +456,7 @@ def get_quad_double_Laurent_polynomial(idx, vrblvl=0):
     szd = bsz[0]
     poldata = create_string_buffer(b"", 4*szd)
     if vrblvl > 0:
-        print('-> get_quad_double_Laurent_polynomial calls phc', end='')
+        print('-> get_quad_double_laurent_polynomial calls phc', end='')
     retval = phc(569, adx, poldata, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
@@ -513,51 +513,51 @@ def get_quad_double_system(vrblvl=0):
         result.append(pol)
     return result
 
-def get_double_Laurent_system(vrblvl=0):
+def get_double_laurent_system(vrblvl=0):
     """
     Returns the string representation of the Laurent polynomials
     in double precision.
     """
-    dim = get_double_Laurent_dimension(vrblvl)
+    dim = get_double_laurent_dimension(vrblvl)
     if vrblvl > 0:
-        print('in get_double_Laurent_system, dim :', dim)
+        print('in get_double_laurent_system, dim :', dim)
     result = []
     for k in range(1, dim+1):
-        pol = get_double_Laurent_polynomial(k, vrblvl)
+        pol = get_double_laurent_polynomial(k, vrblvl)
         if vrblvl > 0:
-            print('get_double_Laurent_system retrieved pol :', pol)
+            print('get_double_laurent_system retrieved pol :', pol)
         result.append(pol)
     return result
 
-def get_double_double_Laurent_system(vrblvl=0):
+def get_double_double_laurent_system(vrblvl=0):
     """
     Returns the string representation of the Laurent polynomials
     in double double precision.
     """
-    dim = get_double_double_Laurent_dimension(vrblvl)
+    dim = get_double_double_laurent_dimension(vrblvl)
     if vrblvl > 0:
-        print('in get_double_double_Laurent_system, dim :', dim)
+        print('in get_double_double_laurent_system, dim :', dim)
     result = []
     for k in range(1, dim+1):
-        pol = get_double_double_Laurent_polynomial(k, vrblvl)
+        pol = get_double_double_laurent_polynomial(k, vrblvl)
         if vrblvl > 0:
-            print('get_double_double_Laurent_system retrieved pol :', pol)
+            print('get_double_double_laurent_system retrieved pol :', pol)
         result.append(pol)
     return result
 
-def get_quad_double_Laurent_system(vrblvl=0):
+def get_quad_double_laurent_system(vrblvl=0):
     """
     Returns the string representation of the Laurent polynomials
     in quad double precision.
     """
-    dim = get_quad_double_Laurent_dimension(vrblvl)
+    dim = get_quad_double_laurent_dimension(vrblvl)
     if vrblvl > 0:
-        print('in get_quad_double_Laurent_system, dim :', dim)
+        print('in get_quad_double_laurent_system, dim :', dim)
     result = []
     for k in range(1, dim+1):
-        pol = get_quad_double_Laurent_polynomial(k, vrblvl)
+        pol = get_quad_double_laurent_polynomial(k, vrblvl)
         if vrblvl > 0:
-            print('get_quad_double_Laurent_system retrieved pol :', pol)
+            print('get_quad_double_laurent_system retrieved pol :', pol)
         result.append(pol)
     return result
 
@@ -612,7 +612,8 @@ def number_of_symbols(pols, vrblvl=0):
 
 def is_square(pols):
     r"""
-    Given in the list *pols* are string representations of Laurent polynomials.
+    Given in the list *pols* are string representations 
+    of Laurent polynomials.
     A system is square if it has as many unknowns as equations.
     Returns True if the system is square, False otherwise.
     """
@@ -1050,61 +1051,61 @@ def test_quad_double_polynomial(vrblvl=0):
     print('the list of symbols :', smb)
     return int(len(smb) != 2)
 
-def test_double_Laurent_polynomial(vrblvl=0):
+def test_double_laurent_polynomial(vrblvl=0):
     """
     Tests the setting and getting of a Laurent polynomial,
     in double precision.
     The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
-        print('in test_double_Laurent_polynomial ...')
-    set_double_Laurent_dimension(2, vrblvl)
-    dim = get_double_Laurent_dimension(vrblvl)
+        print('in test_double_laurent_polynomial ...')
+    set_double_laurent_dimension(2, vrblvl)
+    dim = get_double_laurent_dimension(vrblvl)
     print('the dimension :', dim)
     org = "x*y^(-3) - 1;"
     idx = 1
-    set_double_Laurent_polynomial(idx, dim, org, vrblvl)
-    pol = get_double_Laurent_polynomial(idx, vrblvl)
+    set_double_laurent_polynomial(idx, dim, org, vrblvl)
+    pol = get_double_laurent_polynomial(idx, vrblvl)
     print('the retrieved polynomial :', pol)
     smb = string_of_symbols(100, vrblvl)
     print('the list of symbols :', smb)
     return int(len(smb) != 2)
 
-def test_double_double_Laurent_polynomial(vrblvl=0):
+def test_double_double_laurent_polynomial(vrblvl=0):
     """
     Tests the setting and getting of a Laurent polynomial,
     in double double precision.
     The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
-        print('in test_double_double_Laurent_polynomial ...')
-    set_double_double_Laurent_dimension(2, vrblvl)
-    dim = get_double_double_Laurent_dimension(vrblvl)
+        print('in test_double_double_laurent_polynomial ...')
+    set_double_double_laurent_dimension(2, vrblvl)
+    dim = get_double_double_laurent_dimension(vrblvl)
     print('the dimension :', dim)
     org = "x*y^(-3) - 1;"
     idx = 1
-    set_double_double_Laurent_polynomial(idx, dim, org, vrblvl)
-    pol = get_double_double_Laurent_polynomial(idx, vrblvl)
+    set_double_double_laurent_polynomial(idx, dim, org, vrblvl)
+    pol = get_double_double_laurent_polynomial(idx, vrblvl)
     print('the retrieved polynomial :', pol)
     smb = string_of_symbols(100, vrblvl)
     print('the list of symbols :', smb)
     return int(len(smb) != 2)
 
-def test_quad_double_Laurent_polynomial(vrblvl=0):
+def test_quad_double_laurent_polynomial(vrblvl=0):
     """
     Tests the setting and getting of a Laurent polynomial,
     in quad double precision.
     The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
-        print('in test_quad_double_Laurent_polynomial ...')
-    set_quad_double_Laurent_dimension(2, vrblvl)
-    dim = get_quad_double_Laurent_dimension(vrblvl)
+        print('in test_quad_double_laurent_polynomial ...')
+    set_quad_double_laurent_dimension(2, vrblvl)
+    dim = get_quad_double_laurent_dimension(vrblvl)
     print('the dimension :', dim)
     org = "x*y^(-3) - 1;"
     idx = 1
-    set_quad_double_Laurent_polynomial(idx, dim, org, vrblvl)
-    pol = get_quad_double_Laurent_polynomial(idx, vrblvl)
+    set_quad_double_laurent_polynomial(idx, dim, org, vrblvl)
+    pol = get_quad_double_laurent_polynomial(idx, vrblvl)
     print('the retrieved polynomial :', pol)
     smb = string_of_symbols(100, vrblvl)
     print('the list of symbols :', smb)
@@ -1182,14 +1183,14 @@ def test_quad_double_system(vrblvl=0):
         print(pol)
     return int(len(pols) != 3)
 
-def test_double_Laurent_system(vrblvl=0):
+def test_double_laurent_system(vrblvl=0):
     """
-    Tests the setting and getting of a Laurent system,
+    Tests the setting and getting of a laurent system,
     in double precision.
     The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
-        print('in test_double_Laurent_system ...')
+        print('in test_double_laurent_system ...')
     polynomials = ["x^(-3) + 2*x*y - 1;", "x + y^(-1) - 1;", "x - 1;"]
     dim = number_of_symbols(polynomials, vrblvl)
     print('number of symbols :', dim)
@@ -1199,21 +1200,21 @@ def test_double_Laurent_system(vrblvl=0):
         print('number of polynomials :', len(polynomials))
         print('  number of variables :', dim)
         print('The system is not square.')
-    set_double_Laurent_system(dim, polynomials, vrblvl)
-    pols = get_double_Laurent_system(vrblvl)
+    set_double_laurent_system(dim, polynomials, vrblvl)
+    pols = get_double_laurent_system(vrblvl)
     print('the retrieved polynomials :')
     for pol in pols:
         print(pol)
     return int(len(pols) != 3)
 
-def test_double_double_Laurent_system(vrblvl=0):
+def test_double_double_laurent_system(vrblvl=0):
     """
-    Tests the setting and getting of a Laurent system,
+    Tests the setting and getting of a laurent system,
     in double double precision.
     The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
-        print('test_double_double_Laurent_system ...')
+        print('test_double_double_laurent_system ...')
     polynomials = ["x^(-3) + 2*x*y - 1;", "x + y**(-1) - 1/3;", "x - 1;"]
     dim = number_of_symbols(polynomials, vrblvl)
     print('number of symbols :', dim)
@@ -1223,21 +1224,21 @@ def test_double_double_Laurent_system(vrblvl=0):
         print('number of polynomials :', len(polynomials))
         print('  number of variables :', dim)
         print('The system is not square.')
-    set_double_double_Laurent_system(dim, polynomials, vrblvl)
-    pols = get_double_double_Laurent_system(vrblvl)
+    set_double_double_laurent_system(dim, polynomials, vrblvl)
+    pols = get_double_double_laurent_system(vrblvl)
     print('the retrieved polynomials :')
     for pol in pols:
         print(pol)
     return len(pols) != 3
 
-def test_quad_double_Laurent_system(vrblvl=0):
+def test_quad_double_laurent_system(vrblvl=0):
     """
-    Tests the setting and getting of a Laurent system,
+    Tests the setting and getting of a laurent system,
     in quad double precision.
     The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
-        print('in test_quad_double_Laurent_system ...')
+        print('in test_quad_double_laurent_system ...')
     polynomials = ["x^(-3) + 2*x*y - 1;", "x + y**(-1) - 1/3;", "y - 1;"]
     dim = number_of_symbols(polynomials, vrblvl)
     print('number of symbols :', dim)
@@ -1247,8 +1248,8 @@ def test_quad_double_Laurent_system(vrblvl=0):
         print('number of polynomials :', len(polynomials))
         print('  number of variables :', dim)
         print('The system is not square.')
-    set_quad_double_Laurent_system(dim, polynomials, vrblvl)
-    pols = get_quad_double_Laurent_system(vrblvl)
+    set_quad_double_laurent_system(dim, polynomials, vrblvl)
+    pols = get_quad_double_laurent_system(vrblvl)
     print('the retrieved polynomials :')
     for pol in pols:
         print(pol)
@@ -1348,7 +1349,7 @@ def test_degree_of_double_polynomial(vrblvl=0):
         print('index :', idx)
         deg = degree_of_double_polynomial(idx+1, vrblvl)
         print('degree of', pol, ':', deg)
-        degsum = degsum + deg 
+        degsum = degsum + deg
     return int(degsum != 5)
 
 def main():
@@ -1359,15 +1360,15 @@ def main():
     fail = test_double_polynomial(lvl)
     fail = fail + test_double_double_polynomial(lvl)
     fail = fail + test_quad_double_polynomial(lvl)
-    fail = fail + test_double_Laurent_polynomial(lvl)
-    fail = fail + test_double_double_Laurent_polynomial(lvl)
-    fail = fail + test_quad_double_Laurent_polynomial(lvl)
+    fail = fail + test_double_laurent_polynomial(lvl)
+    fail = fail + test_double_double_laurent_polynomial(lvl)
+    fail = fail + test_quad_double_laurent_polynomial(lvl)
     fail = fail + test_double_system(lvl)
     fail = fail + test_double_double_system(lvl)
     fail = fail + test_quad_double_system(lvl)
-    fail = fail + test_double_Laurent_system(lvl)
-    fail = fail + test_double_double_Laurent_system(lvl)
-    fail = fail + test_quad_double_Laurent_system(lvl)
+    fail = fail + test_double_laurent_system(lvl)
+    fail = fail + test_double_double_laurent_system(lvl)
+    fail = fail + test_quad_double_laurent_system(lvl)
     fail = fail + test_double_syspool(lvl)
     fail = fail + test_double_double_syspool(lvl)
     fail = fail + test_quad_double_syspool(lvl)

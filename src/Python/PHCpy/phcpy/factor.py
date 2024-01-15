@@ -25,9 +25,9 @@ from phcpy.sets import quad_double_embed
 from phcpy.sets import set_double_witness_set
 from phcpy.sets import set_double_double_witness_set
 from phcpy.sets import set_quad_double_witness_set
-from phcpy.sets import set_double_Laurent_witness_set
-from phcpy.sets import set_double_double_Laurent_witness_set
-from phcpy.sets import set_quad_double_Laurent_witness_set
+from phcpy.sets import set_double_laurent_witness_set
+from phcpy.sets import set_double_double_laurent_witness_set
+from phcpy.sets import set_quad_double_laurent_witness_set
 
 def set_double_verbose(verbose=True, vrblvl=0):
     """
@@ -206,58 +206,58 @@ def initialize_quad_double_sampler(dim, vrblvl=0):
         print(', return value :', retval)
     return retval
 
-def initialize_double_Laurent_sampler(dim, vrblvl=0):
+def initialize_double_laurent_sampler(dim, vrblvl=0):
     """
     Initializes the sampling machine with a witness set,
-    for a Laurent system set in double precision.
+    for a laurent system set in double precision.
     """
     if vrblvl > 0:
-        print('in initialize_double_Laurent_sampler, dim :', dim)
+        print('in initialize_double_laurent_sampler, dim :', dim)
     phc = get_phcfun(vrblvl-1)
     adim = pointer(c_int32(dim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
-        print('-> initialize_double_Laurent_sampler calls phc', end='')
+        print('-> initialize_double_laurent_sampler calls phc', end='')
     retval = phc(804, adim, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
     return retval
 
-def initialize_double_double_Laurent_sampler(dim, vrblvl=0):
+def initialize_double_double_laurent_sampler(dim, vrblvl=0):
     """
     Initializes the sampling machine with a witness set,
-    for a Laurent system set in double double precision.
+    for a laurent system set in double double precision.
     """
     if vrblvl > 0:
-        print('in initialize_double_double_Laurent_sampler, dim :', dim)
+        print('in initialize_double_double_laurent_sampler, dim :', dim)
     phc = get_phcfun(vrblvl-1)
     adim = pointer(c_int32(dim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
-        print('-> initialize_double_double_Laurent_sampler calls phc', end='')
+        print('-> initialize_double_double_laurent_sampler calls phc', end='')
     retval = phc(805, adim, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
     return retval
 
-def initialize_quad_double_Laurent_sampler(dim, vrblvl=0):
+def initialize_quad_double_laurent_sampler(dim, vrblvl=0):
     """
     Initializes the sampling machine with a witness set,
-    for a Laurent system set in quad double precision.
+    for a laurent system set in quad double precision.
     """
     if vrblvl > 0:
-        print('in initialize_quad_double_Laurent_sampler, dim :', dim)
+        print('in initialize_quad_double_laurent_sampler, dim :', dim)
     phc = get_phcfun(vrblvl-1)
     adim = pointer(c_int32(dim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
-        print('-> initialize_quad_double_Laurent_sampler calls phc', end='')
+        print('-> initialize_quad_double_laurent_sampler calls phc', end='')
     retval = phc(806, adim, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
@@ -883,9 +883,9 @@ def copy_quad_double_witness_set(vrblvl=0):
         print(', return value :', retval)
     return retval
 
-def copy_double_Laurent_witness_set(vrblvl=0):
+def copy_double_laurent_witness_set(vrblvl=0):
     """
-    Copies the witness set from the sampler to the Laurent system set
+    Copies the witness set from the sampler to the laurent system set
     in double precision.
     """
     if vrblvl > 0:
@@ -896,15 +896,15 @@ def copy_double_Laurent_witness_set(vrblvl=0):
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
-        print('-> copy_double_Laurent_witness_set calls phc', end='')
+        print('-> copy_double_laurent_witness_set calls phc', end='')
     retval = phc(807, aaa, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
     return retval
 
-def copy_double_double_Laurent_witness_set(vrblvl=0):
+def copy_double_double_laurent_witness_set(vrblvl=0):
     """
-    Copies the witness set from the sampler to the Laurent system set
+    Copies the witness set from the sampler to the laurent system set
     in double double precision.
     """
     if vrblvl > 0:
@@ -915,15 +915,15 @@ def copy_double_double_Laurent_witness_set(vrblvl=0):
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
-        print('-> copy_double_double_Laurent_witness_set calls phc', end='')
+        print('-> copy_double_double_laurent_witness_set calls phc', end='')
     retval = phc(808, aaa, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
     return retval
 
-def copy_quad_double_Laurent_witness_set(vrblvl=0):
+def copy_quad_double_laurent_witness_set(vrblvl=0):
     """
-    Copies the witness set from the sampler to the Laurent system set
+    Copies the witness set from the sampler to the laurent system set
     in quad double precision.
     """
     if vrblvl > 0:
@@ -934,7 +934,7 @@ def copy_quad_double_Laurent_witness_set(vrblvl=0):
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
-        print('-> copy_quad_double_Laurent_witness_set calls phc', end='')
+        print('-> copy_quad_double_laurent_witness_set calls phc', end='')
     retval = phc(809, aaa, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
@@ -944,14 +944,14 @@ def double_witness_track(islaurent=False, vrblvl=0):
     """
     Tracks as many paths as set in double precision,
     as many as the size of the witness set.
-    If the system is Laurent, then islaurent must be True.
+    If the system is laurent, then islaurent must be True.
     """
     if vrblvl > 0:
         print('in double_witness_track, islaurent :', islaurent)
     double_witness_sample(vrblvl)
     swap_double_slices(vrblvl)
     if islaurent:
-        copy_double_Laurent_witness_set(vrblvl)
+        copy_double_laurent_witness_set(vrblvl)
     else:
         copy_double_witness_set(vrblvl)
 
@@ -959,14 +959,14 @@ def double_double_witness_track(islaurent=False, vrblvl=0):
     """
     Tracks as many paths as set in double double precision,
     as many as the size of the witness set.
-    If the system is Laurent, then islaurent must be True.
+    If the system is laurent, then islaurent must be True.
     """
     if vrblvl > 0:
         print('in double_double_witness_track, islaurent :', islaurent)
     double_double_witness_sample(vrblvl)
     swap_double_double_slices(vrblvl)
     if islaurent:
-        copy_double_double_Laurent_witness_set(vrblvl)
+        copy_double_double_laurent_witness_set(vrblvl)
     else:
         copy_double_double_witness_set(vrblvl)
 
@@ -974,14 +974,14 @@ def quad_double_witness_track(islaurent=False, vrblvl=0):
     """
     Tracks as many paths as set in quad double precision,
     as many as the size of the witness set.
-    If the system is Laurent, then islaurent must be True.
+    If the system is laurent, then islaurent must be True.
     """
     if vrblvl > 0:
         print('in quad_double_witness_track, islaurent :', islaurent)
     quad_double_witness_sample(vrblvl)
     swap_quad_double_slices(vrblvl)
     if islaurent:
-        copy_quad_double_Laurent_witness_set(vrblvl)
+        copy_quad_double_laurent_witness_set(vrblvl)
     else:
         copy_quad_double_witness_set(vrblvl)
 
@@ -1375,7 +1375,7 @@ def double_trace_test(vrblvl=0):
     if vrblvl > 0:
         print('-> double_trace_test calls phc', end='')
     retval = phc(55, adone, bbb, ccc, vrb)
-    result = (adone[0] == 1)
+    result = adone[0] == 1
     if vrblvl > 0:
         print(', return value :', retval)
         print('certified :', result)
@@ -1396,7 +1396,7 @@ def double_double_trace_test(vrblvl=0):
     if vrblvl > 0:
         print('-> double_double_trace_test calls phc', end='')
     retval = phc(645, adone, bbb, ccc, vrb)
-    result = (adone[0] == 1)
+    result = adone[0] == 1
     if vrblvl > 0:
         print(', return value :', retval)
         print('certified :', result)
@@ -1417,7 +1417,7 @@ def quad_double_trace_test(vrblvl=0):
     if vrblvl > 0:
         print('-> quad_double_trace_test calls phc', end='')
     retval = phc(675, adone, bbb, ccc, vrb)
-    result = (adone[0] == 1)
+    result = adone[0] == 1
     if vrblvl > 0:
         print(', return value :', retval)
         print('certified :', result)
@@ -1570,14 +1570,14 @@ def write_decomposition(deco):
     """
     for (idx, factor) in enumerate(deco):
         print('  factor', idx+1, ':', factor)
-   
+
 def double_monodromy_breakup(embsys, esols, dim, \
     islaurent=False, verbose=False, nbloops=20, vrblvl=0):
     r"""
     Applies the monodromy breakup algorithm in double precision
     to factor the *dim*-dimensional algebraic set represented by the
     embedded system *embsys* and its solutions *esols*.
-    If the embedded polynomial system is a Laurent system,
+    If the embedded polynomial system is a laurent system,
     then *islaurent* must be True.
     If *verbose* is False, then no output is written.
     The value of *nbloops* equals the maximum number of loops.
@@ -1599,9 +1599,9 @@ def double_monodromy_breakup(embsys, esols, dim, \
     nvr = len(embsys)
     set_double_verbose(verbose, vrblvl)
     if islaurent:
-        set_double_Laurent_witness_set(nvr, dim, embsys, esols, vrblvl-1)
+        set_double_laurent_witness_set(nvr, dim, embsys, esols, vrblvl-1)
         double_assign_labels(nvr, vrblvl)
-        initialize_double_Laurent_sampler(dim, vrblvl)
+        initialize_double_laurent_sampler(dim, vrblvl)
     else:
         set_double_witness_set(nvr, dim, embsys, esols, vrblvl-1)
         double_assign_labels(nvr, vrblvl)
@@ -1624,7 +1624,7 @@ def double_monodromy_breakup(embsys, esols, dim, \
         print('  smallest distance between the samples :', dis)
     for i in range(1, nbloops+1):
         if verbose:
-            print('... starting loop %d ...' % i)
+            print(f'... starting loop {i} ...')
         new_double_slices(dim, nvr, vrblvl)
         set_double_gammas(nvr)
         double_witness_track(islaurent, vrblvl)
@@ -1637,9 +1637,11 @@ def double_monodromy_breakup(embsys, esols, dim, \
             print('new permutation :', perm)
         nb0 = double_factor_count(vrblvl)
         nf0, nf1 = update_double_decomposition(deg, perm, vrblvl)
+        if vrblvl > 0:
+            print('nf0 :', nf0, ', nf1 :', nf1)
         nb1 = double_factor_count(vrblvl)
         if verbose:
-            print('number of factors : %d -> %d' % (nb0, nb1))
+            print(f'number of factors : {nb0} -> {nb1}')
             deco = double_decomposition(deg, vrblvl)
             print('the decomposition :')
             write_decomposition(deco)
@@ -1648,14 +1650,14 @@ def double_monodromy_breakup(embsys, esols, dim, \
             break
         reset_double_solutions(vrblvl)
     return double_decomposition(deg, vrblvl)
-   
+
 def double_double_monodromy_breakup(embsys, esols, dim, \
     islaurent=False, verbose=False, nbloops=20, vrblvl=0):
     r"""
     Applies the monodromy breakup algorithm in double double precision
     to factor the *dim*-dimensional algebraic set represented by the
     embedded system *embsys* and its solutions *esols*.
-    If the embedded polynomial system is a Laurent system,
+    If the embedded polynomial system is a laurent system,
     then *islaurent* must be True.
     If *verbose* is False, then no output is written.
     The value of *nbloops* equals the maximum number of loops.
@@ -1677,10 +1679,10 @@ def double_double_monodromy_breakup(embsys, esols, dim, \
     nvr = len(embsys)
     set_double_double_verbose(verbose, vrblvl)
     if islaurent:
-        set_double_double_Laurent_witness_set(nvr, dim, embsys, esols, \
+        set_double_double_laurent_witness_set(nvr, dim, embsys, esols, \
             vrblvl-1)
         double_double_assign_labels(nvr, vrblvl)
-        initialize_double_double_Laurent_sampler(dim, vrblvl)
+        initialize_double_double_laurent_sampler(dim, vrblvl)
     else:
         set_double_double_witness_set(nvr, dim, embsys, esols, vrblvl-1)
         double_double_assign_labels(nvr, vrblvl)
@@ -1703,7 +1705,7 @@ def double_double_monodromy_breakup(embsys, esols, dim, \
         print('  smallest distance between the samples :', dis)
     for i in range(1, nbloops+1):
         if verbose:
-            print('... starting loop %d ...' % i)
+            print(f'... starting loop {i} ...')
         new_double_double_slices(dim, nvr, vrblvl)
         set_double_double_gammas(nvr)
         double_double_witness_track(islaurent, vrblvl)
@@ -1716,9 +1718,11 @@ def double_double_monodromy_breakup(embsys, esols, dim, \
             print('new permutation :', perm)
         nb0 = double_double_factor_count(vrblvl)
         nf0, nf1 = update_double_double_decomposition(deg, perm, vrblvl)
+        if vrblvl > 0:
+            print('nf0 :', nf0, ', nf1 :', nf1)
         nb1 = double_double_factor_count(vrblvl)
         if verbose:
-            print('number of factors : %d -> %d' % (nb0, nb1))
+            print(f'number of factors : {nb0} -> {nb1}')
             deco = double_double_decomposition(deg, vrblvl)
             print('the decomposition :')
             write_decomposition(deco)
@@ -1727,14 +1731,14 @@ def double_double_monodromy_breakup(embsys, esols, dim, \
             break
         reset_double_double_solutions(vrblvl)
     return double_double_decomposition(deg, vrblvl)
-   
+
 def quad_double_monodromy_breakup(embsys, esols, dim, \
     islaurent=False, verbose=False, nbloops=20, vrblvl=0):
     r"""
     Applies the monodromy breakup algorithm in quad double precision
     to factor the *dim*-dimensional algebraic set represented by the
     embedded system *embsys* and its solutions *esols*.
-    If the embedded polynomial system is a Laurent system,
+    If the embedded polynomial system is a laurent system,
     then *islaurent* must be True.
     If *verbose* is False, then no output is written.
     The value of *nbloops* equals the maximum number of loops.
@@ -1756,10 +1760,10 @@ def quad_double_monodromy_breakup(embsys, esols, dim, \
     nvr = len(embsys)
     set_quad_double_verbose(verbose, vrblvl)
     if islaurent:
-        set_quad_double_Laurent_witness_set(nvr, dim, embsys, esols, \
+        set_quad_double_laurent_witness_set(nvr, dim, embsys, esols, \
             vrblvl-1)
         quad_double_assign_labels(nvr, vrblvl)
-        initialize_quad_double_Laurent_sampler(dim, vrblvl)
+        initialize_quad_double_laurent_sampler(dim, vrblvl)
     else:
         set_quad_double_witness_set(nvr, dim, embsys, esols, vrblvl-1)
         quad_double_assign_labels(nvr, vrblvl)
@@ -1782,7 +1786,7 @@ def quad_double_monodromy_breakup(embsys, esols, dim, \
         print('  smallest distance between the samples :', dis)
     for i in range(1, nbloops+1):
         if verbose:
-            print('... starting loop %d ...' % i)
+            print(f'... starting loop {i} ...')
         new_quad_double_slices(dim, nvr, vrblvl)
         set_quad_double_gammas(nvr)
         quad_double_witness_track(islaurent, vrblvl)
@@ -1795,9 +1799,11 @@ def quad_double_monodromy_breakup(embsys, esols, dim, \
             print('new permutation :', perm)
         nb0 = quad_double_factor_count(vrblvl)
         nf0, nf1 = update_quad_double_decomposition(deg, perm, vrblvl)
+        if vrblvl > 0:
+            print('nf0 :', nf0, ', nf1 :', nf1)
         nb1 = quad_double_factor_count(vrblvl)
         if verbose:
-            print('number of factors : %d -> %d' % (nb0, nb1))
+            print(f'number of factors : {nb0} -> {nb1}')
             deco = quad_double_decomposition(deg, vrblvl)
             print('the decomposition :')
             write_decomposition(deco)
@@ -1932,7 +1938,8 @@ def test_double_monodromy(vrblvl=0):
         print('the decomposition :')
         for (idx, factor) in enumerate(deco):
             print('  factor', idx+1, ':', factor)
-    return int(len(deco) != 2)
+    fail = fail + int(len(deco) != 2)
+    return fail
 
 def test_double_double_monodromy(vrblvl=0):
     """
@@ -1960,7 +1967,8 @@ def test_double_double_monodromy(vrblvl=0):
         print('the decomposition :')
         for (idx, factor) in enumerate(deco):
             print('  factor', idx+1, ':', factor)
-    return int(len(deco) != 2)
+    fail = fail + int(len(deco) != 2)
+    return fail
 
 def test_quad_double_monodromy(vrblvl=0):
     """
@@ -1987,7 +1995,8 @@ def test_quad_double_monodromy(vrblvl=0):
     if vrblvl > 0:
         print('the decomposition :')
         write_decomposition(deco)
-    return int(len(deco) != 2)
+    fail = fail + int(len(deco) != 2)
+    return fail
 
 def main():
     """
