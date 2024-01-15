@@ -537,6 +537,96 @@ def drop_variable_from_quad_double_polynomials(pols, svar, vrblvl=0):
     drop_variable_from_table(svar, vrblvl-1)
     return get_quad_double_system(vrblvl-1)
 
+def drop_variable_from_double_laurent_polynomials(pols, svar, vrblvl=0):
+    r"""
+    Removes the variable with symbol in the string *svar*
+    from the list *pols* of strings that represent Laurent polynomials
+    in several variables, with coefficients in double precision.
+    The system in *pols* must be square.
+    """
+    if vrblvl > 0:
+        print('in drop_variable_from_double_laurent_polynomials,', end='')
+        print(', svar :', svar)
+        print('the polynomials :')
+        for pol in pols:
+            print(pol)
+    set_double_laurent_system(len(pols), pols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
+    anbc = pointer(c_int32(len(svar)))
+    bvar = str2int4a(svar, vrblvl=vrblvl-1)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> drop_variable_from_double_laurent_polynomials calls phc', \
+            end='')
+    retval = phc(831, anbc, bvar, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    drop_variable_from_table(svar, vrblvl-1)
+    return get_double_laurent_system(vrblvl-1)
+
+def drop_variable_from_double_double_laurent_polynomials(pols, svar, \
+    vrblvl=0):
+    r"""
+    Removes the variable with symbol in the string *svar*
+    from the list *pols* of strings that represent Laurent polynomials
+    in several variables, with coefficients in double double precision.
+    The system in *pols* must be square.
+    """
+    if vrblvl > 0:
+        print('in drop_variable_from_double_double_laurent_polynomials,', \
+            end='')
+        print(', svar :', svar)
+        print('the polynomials :')
+        for pol in pols:
+            print(pol)
+    set_double_double_laurent_system(len(pols), pols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
+    anbc = pointer(c_int32(len(svar)))
+    bvar = str2int4a(svar, vrblvl=vrblvl-1)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print( \
+        '-> drop_variable_from_double_double_laurent_polynomials calls phc', \
+            end='')
+    retval = phc(832, anbc, bvar, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    drop_variable_from_table(svar, vrblvl-1)
+    return get_double_double_laurent_system(vrblvl-1)
+
+def drop_variable_from_quad_double_laurent_polynomials(pols, svar, \
+    vrblvl=0):
+    r"""
+    Removes the variable with symbol in the string *svar*
+    from the list *pols* of strings that represent Laurent polynomials
+    in several variables, with coefficients in quad double precision.
+    The system in *pols* must be square.
+    """
+    if vrblvl > 0:
+        print('in drop_variable_from_quad_double_laurent_polynomials,', \
+            end='')
+        print(', svar :', svar)
+        print('the polynomials :')
+        for pol in pols:
+            print(pol)
+    set_quad_double_laurent_system(len(pols), pols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
+    anbc = pointer(c_int32(len(svar)))
+    bvar = str2int4a(svar, vrblvl=vrblvl-1)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print( \
+        '-> drop_variable_from_quad_double_laurent_polynomials calls phc', \
+            end='')
+    retval = phc(833, anbc, bvar, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    drop_variable_from_table(svar, vrblvl-1)
+    return get_quad_double_laurent_system(vrblvl-1)
+
 def drop_coordinate_from_double_solutions(sols, nvr, svar, vrblvl=0):
     r"""
     Removes the variable with symbol in the string *svar*
