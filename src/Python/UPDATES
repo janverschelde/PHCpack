@@ -1,5 +1,6 @@
 Mon 15 Jan 2024 : improved starters.py, homotopies.py, and schubert.py
-  for pylint warnings.
+  for pylint warnings.  Path tracking works for Laurent homotopies,
+  after extensions in polynomials.py, homotopies.py, and trackers.py.
 
 Sun 14 Jan 2024 : improved use of vrblvl in sets.py and for pylint.
   Cleared solutions in the *_double_solve functions in solver.py

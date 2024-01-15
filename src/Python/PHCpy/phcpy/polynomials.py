@@ -695,6 +695,60 @@ def clear_quad_double_system(vrblvl=0):
         print(', return value :', retval)
     return retval
 
+def clear_double_laurent_system(vrblvl=0):
+    """
+    Clears the Laurent system set in double precision.
+    """
+    if vrblvl > 0:
+        print('in clear_double_laurent_system ...')
+    phc = get_phcfun(vrblvl-1)
+    adim = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> clear_double_laurent_system calls phc', end='')
+    retval = phc(127, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def clear_double_double_laurent_system(vrblvl=0):
+    """
+    Clears the Laurent system set in double double precision.
+    """
+    if vrblvl > 0:
+        print('in clear_double_double_laurent_system ...')
+    phc = get_phcfun(vrblvl-1)
+    adim = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> clear_double_double_laurent_system calls phc', end='')
+    retval = phc(557, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def clear_quad_double_laurent_system(vrblvl=0):
+    """
+    Clears the Laurent system set in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in clear_quad_double_laurent_system ...')
+    phc = get_phcfun(vrblvl-1)
+    adim = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> clear_quad_double_laurent_system calls phc', end='')
+    retval = phc(567, adim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
 def clear_symbol_table(vrblvl=0):
     """
     Clears the table of symbols used to represent polynomials.

@@ -2,9 +2,12 @@
 The module trackers offers functions to track paths starting
 at the known solutions of a start system and leading to
 the desired solutions of a target system,
-with aposteriori step control algorithms.
+with aposteriori step size control algorithms.
+An aposteriori step size control algorithm determines the step size
+based on the performance of the corrector.
 For small problems, the default values of the parameters and tolerances 
 for predictor and corrector suffice, otherwise they must be tuned.
+Reruns of paths must happen with the same value of the gamma constant.
 """
 from ctypes import c_int32, c_double, pointer
 from random import uniform
@@ -23,22 +26,34 @@ from phcpy.solutions import get_next_quad_double_solution
 from phcpy.solutions import strsol2dict, verify
 from phcpy.homotopies import set_double_target_system
 from phcpy.homotopies import set_double_start_system
+from phcpy.homotopies import set_double_laurent_target_system
+from phcpy.homotopies import set_double_laurent_start_system
 from phcpy.homotopies import set_double_start_solutions
 from phcpy.homotopies import set_double_homotopy
+from phcpy.homotopies import set_double_laurent_homotopy
 from phcpy.homotopies import get_double_target_solutions
 from phcpy.homotopies import clear_double_homotopy
+from phcpy.homotopies import clear_double_laurent_homotopy
 from phcpy.homotopies import set_double_double_target_system
 from phcpy.homotopies import set_double_double_start_system
+from phcpy.homotopies import set_double_double_laurent_target_system
+from phcpy.homotopies import set_double_double_laurent_start_system
 from phcpy.homotopies import set_double_double_start_solutions
 from phcpy.homotopies import set_double_double_homotopy
+from phcpy.homotopies import set_double_double_laurent_homotopy
 from phcpy.homotopies import get_double_double_target_solutions
 from phcpy.homotopies import clear_double_double_homotopy
+from phcpy.homotopies import clear_double_double_laurent_homotopy
 from phcpy.homotopies import set_quad_double_target_system
 from phcpy.homotopies import set_quad_double_start_system
+from phcpy.homotopies import set_quad_double_laurent_target_system
+from phcpy.homotopies import set_quad_double_laurent_start_system
 from phcpy.homotopies import set_quad_double_start_solutions
 from phcpy.homotopies import set_quad_double_homotopy
+from phcpy.homotopies import set_quad_double_laurent_homotopy
 from phcpy.homotopies import get_quad_double_target_solutions
 from phcpy.homotopies import clear_quad_double_homotopy
+from phcpy.homotopies import clear_quad_double_laurent_homotopy
 from phcpy.starters import total_degree_start_system
 
 def show_parameters(vrblvl=0):
@@ -167,7 +182,7 @@ def clear_double_track_data(vrblvl=0):
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> clear_double_track_data calls phc', end='')
     retval = phc(18, aaa, bbb, ccc, vrb)
@@ -186,7 +201,7 @@ def clear_double_double_track_data(vrblvl=0):
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> clear_double_double_track_data calls phc', end='')
     retval = phc(238, aaa, bbb, ccc, vrb)
@@ -205,10 +220,67 @@ def clear_quad_double_track_data(vrblvl=0):
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> clear_quad_double_track_data calls phc', end='')
     retval = phc(248, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def clear_double_laurent_track_data(vrblvl=0):
+    """
+    Clears the data allocated for path tracking in double precision
+    with an artificial parameter Laurent homotopy.
+    """
+    if vrblvl > 0:
+         print('in clear_double_laurent_track_data ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> clear_double_laurent_track_data calls phc', end='')
+    retval = phc(771, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def clear_double_double_laurent_track_data(vrblvl=0):
+    """
+    Clears the data allocated for path tracking in double double precision
+    with an artificial parameter Laurent homotopy.
+    """
+    if vrblvl > 0:
+         print('in clear_double_double_laurent_track_data ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> clear_double_double_laurent_track_data calls phc', end='')
+    retval = phc(772, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def clear_quad_double_laurent_track_data(vrblvl=0):
+    """
+    Clears the data allocated for path tracking in quad double precision
+    with an artificial parameter Laurent homotopy.
+    """
+    if vrblvl > 0:
+         print('in clear_quad_double_laurent_track_data ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> clear_quad_double_laurent_track_data calls phc', end='')
+    retval = phc(773, aaa, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
     return retval
@@ -219,11 +291,13 @@ def do_double_track(tasks=0, vrblvl=0):
     of tasks equal to tasks (no multithreading if zero).
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in do_double_track, tasks :', tasks)
     phc = get_phcfun(vrblvl-1)
     nbtasks = pointer(c_int32(tasks))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> do_double_track calls phc', end='')
     retval = phc(16, nbtasks, bbb, ccc, vrb)
@@ -237,11 +311,13 @@ def do_double_double_track(tasks=0, vrblvl=0):
     of tasks equal to tasks (no multithreading if zero).
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in do_double_double_track, tasks :', tasks)
     phc = get_phcfun(vrblvl-1)
     nbtasks = pointer(c_int32(tasks))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> do_double_double_track calls phc', end='')
     retval = phc(236, nbtasks, bbb, ccc, vrb)
@@ -255,11 +331,13 @@ def do_quad_double_track(tasks=0, vrblvl=0):
     of tasks equal to tasks (no multithreading if zero).
     The verbose level is given by vrblvl.
     """
+    if vrblvl > 0:
+        print('in do_quad_double_track, tasks :', tasks)
     phc = get_phcfun(vrblvl-1)
     nbtasks = pointer(c_int32(tasks))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> do_quad_double_track calls phc', end='')
     retval = phc(246, nbtasks, bbb, ccc, vrb)
@@ -267,7 +345,71 @@ def do_quad_double_track(tasks=0, vrblvl=0):
         print(', return value :', retval)
     return retval
 
-def double_track(target, start, startsols, gamma=0, pwt=2, tasks=0, vrblvl=0):
+def do_double_laurent_track(tasks=0, vrblvl=0):
+    """
+    Calls the path trackers in double precision with a number
+    of tasks equal to tasks (no multithreading if zero),
+    for a homotopy of Laurent polynomial systems.
+    The verbose level is given by vrblvl.
+    """
+    if vrblvl > 0:
+        print('in do_double_laurent_track, tasks :', tasks)
+    phc = get_phcfun(vrblvl-1)
+    nbtasks = pointer(c_int32(tasks))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> do_double_laurent_track calls phc', end='')
+    retval = phc(774, nbtasks, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def do_double_double_laurent_track(tasks=0, vrblvl=0):
+    """
+    Calls the path trackers in double double precision with a number
+    of tasks equal to tasks (no multithreading if zero),
+    for a homotopy of Laurent polynomial sysetms.
+    The verbose level is given by vrblvl.
+    """
+    if vrblvl > 0:
+        print('in do_double_double_laurent_track, tasks :', tasks)
+    phc = get_phcfun(vrblvl-1)
+    nbtasks = pointer(c_int32(tasks))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> do_double_double_laurent_track calls phc', end='')
+    retval = phc(775, nbtasks, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def do_quad_double_laurent_track(tasks=0, vrblvl=0):
+    """
+    Calls the path trackers in quad double precision with a number
+    of tasks equal to tasks (no multithreading if zero),
+    for a homotopy of Laurent polynomial systems.
+    The verbose level is given by vrblvl.
+    """
+    if vrblvl > 0:
+        print('in do_quad_double_laurent_track, tasks :', tasks)
+    phc = get_phcfun(vrblvl-1)
+    nbtasks = pointer(c_int32(tasks))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> do_quad_double_laurent_track calls phc', end='')
+    retval = phc(776, nbtasks, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def double_track(target, start, startsols, \
+    gamma=0, pwt=2, tasks=0, vrblvl=0):
     r"""
     Track paths in double precision.
     On input are a target system, a start system with solutions,
@@ -302,15 +444,15 @@ def double_track(target, start, startsols, gamma=0, pwt=2, tasks=0, vrblvl=0):
         for (idx, sol) in enumerate(startsols):
             print('Solution', idx+1, ':')
             print(sol)
-    set_double_target_system(target, vrblvl)
-    set_double_start_system(start, vrblvl)
-    nvr = number_of_symbols(start)
-    set_double_start_solutions(nvr, startsols, vrblvl)
-    usedgamma = set_double_homotopy(gamma, pwt, vrblvl)
+    set_double_target_system(target, vrblvl-1)
+    set_double_start_system(start, vrblvl-1)
+    nvr = number_of_symbols(start, vrblvl-1)
+    set_double_start_solutions(nvr, startsols, vrblvl-1)
+    usedgamma = set_double_homotopy(gamma, pwt, vrblvl-1)
     do_double_track(tasks, vrblvl)
-    sols = get_double_target_solutions(vrblvl)
-    clear_double_solutions(vrblvl)
-    clear_double_homotopy(vrblvl)
+    sols = get_double_target_solutions(vrblvl-1)
+    clear_double_solutions(vrblvl-1)
+    clear_double_homotopy(vrblvl-1)
     clear_double_track_data(vrblvl)
     return (usedgamma, sols)
 
@@ -351,15 +493,15 @@ def double_double_track(target, start, startsols, \
         for (idx, sol) in enumerate(startsols):
             print('Solution', idx+1, ':')
             print(sol)
-    set_double_double_target_system(target, vrblvl)
-    set_double_double_start_system(start, vrblvl)
-    nvr = number_of_symbols(start)
-    set_double_double_start_solutions(nvr, startsols, vrblvl)
-    usedgamma = set_double_double_homotopy(gamma, pwt, vrblvl)
+    set_double_double_target_system(target, vrblvl-1)
+    set_double_double_start_system(start, vrblvl-1)
+    nvr = number_of_symbols(start, vrblvl-1)
+    set_double_double_start_solutions(nvr, startsols, vrblvl-1)
+    usedgamma = set_double_double_homotopy(gamma, pwt, vrblvl-1)
     do_double_double_track(tasks, vrblvl)
-    sols = get_double_double_target_solutions(vrblvl)
-    clear_double_double_solutions(vrblvl)
-    clear_double_double_homotopy(vrblvl)
+    sols = get_double_double_target_solutions(vrblvl-1)
+    clear_double_double_solutions(vrblvl-1)
+    clear_double_double_homotopy(vrblvl-1)
     clear_double_double_track_data(vrblvl)
     return (usedgamma, sols)
 
@@ -400,15 +542,161 @@ def quad_double_track(target, start, startsols, \
         for (idx, sol) in enumerate(startsols):
             print('Solution', idx+1, ':')
             print(sol)
-    set_quad_double_target_system(target, vrblvl)
-    set_quad_double_start_system(start, vrblvl)
-    nvr = number_of_symbols(start)
-    set_quad_double_start_solutions(nvr, startsols, vrblvl)
-    usedgamma = set_quad_double_homotopy(gamma, pwt, vrblvl)
+    set_quad_double_target_system(target, vrblvl-1)
+    set_quad_double_start_system(start, vrblvl-1)
+    nvr = number_of_symbols(start, vrblvl-1)
+    set_quad_double_start_solutions(nvr, startsols, vrblvl-1)
+    usedgamma = set_quad_double_homotopy(gamma, pwt, vrblvl-1)
     do_quad_double_track(tasks, vrblvl)
-    sols = get_quad_double_target_solutions(vrblvl)
-    clear_quad_double_homotopy(vrblvl)
+    sols = get_quad_double_target_solutions(vrblvl-1)
+    clear_quad_double_homotopy(vrblvl-1)
     clear_quad_double_track_data(vrblvl)
+    return (usedgamma, sols)
+
+def double_laurent_track(target, start, startsols, \
+    gamma=0, pwt=2, tasks=0, vrblvl=0):
+    r"""
+    Track paths in double precision, for Laurent systems.
+    On input are a target system, a start system with solutions,
+    optionally: a (random) gamma constant and the number of tasks.
+    The *target* is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The *start* is a list of strings representing the polynomials
+    of the start system, with known solutions in sols.
+    The *startsols* is a list of strings representing start solutions.
+    By default, a random *gamma* constant is generated,
+    otherwise *gamma* must be a nonzero complex constant.
+    The *pwt* is the power of t in the homotopy.
+    Changing the default of *pwt* can only be done if a nonzero complex
+    value for *gamma* is provided as well.
+    The number of tasks in the multithreading is defined by *tasks*.
+    The default zero value for *tasks* indicates no multithreading.
+    On return is a tuple, with first the gamma used in the homotopy
+    and then second, the string representations of the solutions
+    computed at the end of the paths.
+    """
+    if vrblvl > 0:
+        print('in double_laurent_track, with gamma :', gamma, end='')
+        print(', pwt :', pwt, end=''),
+        print(', tasks :', tasks)
+        print('the target system :')
+        for pol in target:
+            print(pol)
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    set_double_laurent_target_system(target, vrblvl)
+    set_double_laurent_start_system(start, vrblvl)
+    nvr = number_of_symbols(start)
+    set_double_start_solutions(nvr, startsols, vrblvl)
+    usedgamma = set_double_laurent_homotopy(gamma, pwt, vrblvl)
+    do_double_laurent_track(tasks, vrblvl)
+    sols = get_double_target_solutions(vrblvl)
+    clear_double_solutions(vrblvl)
+    clear_double_laurent_homotopy(vrblvl)
+    clear_double_laurent_track_data(vrblvl)
+    return (usedgamma, sols)
+
+def double_double_laurent_track(target, start, startsols, \
+    gamma=0, pwt=2, tasks=1, vrblvl=0):
+    r"""
+    Tracks paths in double double precision, for Laurent systems.
+    On input are a target system, a start system with solutions,
+    optionally: a (random) gamma constant and the number of tasks.
+    The *target* is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The *start* is a list of strings representing the polynomials
+    of the start system, with known solutions in sols.
+    The *startsols* is a list of strings representing start solutions.
+    By default, a random *gamma* constant is generated,
+    otherwise *gamma* must be a nonzero complex constant.
+    The *pwt* is the power of t in the homotopy.
+    Changing the default of *pwt* can only be done if a nonzero complex
+    value for *gamma* is provided as well.
+    The number of tasks in the multithreading is defined by *tasks*.
+    The default zero value for *tasks* indicates no multithreading.
+    On return is a tuple, with first the gamma used in the homotopy
+    and then second, the string representations of the solutions
+    computed at the end of the paths.
+    Note: tasks=0 does not work ...
+    """
+    if vrblvl > 0:
+        print('in double_double_laurent_track, with gamma :', gamma, \
+            end='')
+        print(', pwt :', pwt, end=''),
+        print(', tasks :', tasks)
+        print('the target system :')
+        for pol in target:
+            print(pol)
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    set_double_double_laurent_target_system(target, vrblvl-1)
+    set_double_double_laurent_start_system(start, vrblvl-1)
+    nvr = number_of_symbols(start, vrblvl-1)
+    set_double_double_start_solutions(nvr, startsols, vrblvl-1)
+    usedgamma = set_double_double_laurent_homotopy(gamma, pwt, vrblvl-1)
+    do_double_double_laurent_track(tasks, vrblvl)
+    sols = get_double_double_target_solutions(vrblvl-1)
+    clear_double_double_solutions(vrblvl-1)
+    clear_double_double_laurent_homotopy(vrblvl-1)
+    clear_double_double_laurent_track_data(vrblvl)
+    return (usedgamma, sols)
+
+def quad_double_laurent_track(target, start, startsols, \
+    gamma=0, pwt=2, tasks=1, vrblvl=0):
+    r"""
+    Tracks paths in quad double precision, for Laurent systems.
+    On input are a target system, a start system with solutions,
+    optionally: a (random) gamma constant and the number of tasks.
+    The *target* is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The *start* is a list of strings representing the polynomials
+    of the start system, with known solutions in sols.
+    The *startsols* is a list of strings representing start solutions.
+    By default, a random *gamma* constant is generated,
+    otherwise *gamma* must be a nonzero complex constant.
+    The *pwt* is the power of t in the homotopy.
+    Changing the default of *pwt* can only be done if a nonzero complex
+    value for *gamma* is provided as well.
+    The number of tasks in the multithreading is defined by *tasks*.
+    The default zero value for *tasks* indicates no multithreading.
+    On return is a tuple, with first the gamma used in the homotopy
+    and then second, the string representations of the solutions
+    computed at the end of the paths.
+    Note: tasks=0 does not work ...
+    """
+    if vrblvl > 0:
+        print('in quad_double_laurent_track, with gamma :', gamma, end='')
+        print(', pwt :', pwt, end=''),
+        print(', tasks :', tasks)
+        print('the target system :')
+        for pol in target:
+            print(pol)
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    set_quad_double_laurent_target_system(target, vrblvl-1)
+    set_quad_double_laurent_start_system(start, vrblvl-1)
+    nvr = number_of_symbols(start, vrblvl-1)
+    set_quad_double_start_solutions(nvr, startsols, vrblvl-1)
+    usedgamma = set_quad_double_homotopy(gamma, pwt, vrblvl-1)
+    do_quad_double_laurent_track(tasks, vrblvl)
+    sols = get_quad_double_target_solutions(vrblvl-1)
+    clear_quad_double_laurent_homotopy(vrblvl-1)
+    clear_quad_double_laurent_track_data(vrblvl)
     return (usedgamma, sols)
 
 def initialize_double_tracker(target, start, fixedgamma=True, \
@@ -787,6 +1075,8 @@ def test_next_double_track(vrblvl=0):
     Tests the step-by-step tracking on the mickey mouse example
     of two quadrics, in double precision.
     """
+    if vrblvl > 0:
+        print('in test_next_double_track ...')
     mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
     start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl-1)
     if vrblvl > 0:
@@ -824,6 +1114,8 @@ def test_next_double_double_track(vrblvl=0):
     Tests the step-by-step tracking on the mickey mouse example
     of two quadrics, in double double precision.
     """
+    if vrblvl > 0:
+        print('in test_next_double_double_track ...')
     mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
     start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl-1)
     if vrblvl > 0:
@@ -862,6 +1154,8 @@ def test_next_quad_double_track(vrblvl=0):
     Tests the step-by-step tracking on the mickey mouse example
     of two quadrics, in quad double precision.
     """
+    if vrblvl > 0:
+        print('in test_next_quad_double_track ...')
     mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
     start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl-1)
     if vrblvl > 0:
@@ -895,10 +1189,129 @@ def test_next_quad_double_track(vrblvl=0):
     clear_quad_double_solutions(vrblvl-1)
     return fail
 
+def test_double_laurent_track(vrblvl=0):
+    """
+    Tests tracking the mickey mouse example of two quadrics,
+    set as Laurent system in double precision.
+    """
+    if vrblvl > 0:
+        print('in test_double_laurent_track ...')
+    mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
+    start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl-1)
+    if vrblvl > 0:
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    gamma, sols = double_laurent_track(mickey, start, startsols, \
+        vrblvl=vrblvl-1)
+    if vrblvl > 0:
+        print('the solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    err = verify(mickey, sols, vrblvl-1)
+    if vrblvl > 0:
+        print('the error sum :', err)
+    if len(sols) == 4 and abs(err.real + err.imag) < 1.0e-10:
+        if vrblvl > 0:
+            print('Found 4 solutions and error is okay.')
+        return 0
+    if len(sols) != 4:
+        if vrblvl > 0:
+            print('Number of solutions is not 4 :', len(sols))
+        return 1
+    if abs(err.real + err.imag) >= 1.0e-10:
+        if vrblvl > 0:
+            print('The error is too large.')
+    return 1
+
+def test_double_double_laurent_track(vrblvl=0):
+    """
+    Tests tracking the mickey mouse example of two quadrics,
+    set as Laurent system in double double precision.
+    """
+    if vrblvl > 0:
+        print('in test_double_double_laurent_track ...')
+    mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
+    start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl-1)
+    print('the start system :')
+    for pol in start:
+        print(pol)
+    print('the start solutions :')
+    for (idx, sol) in enumerate(startsols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    gamma, sols = double_double_laurent_track(mickey, start, startsols, \
+        tasks=4, vrblvl=vrblvl)
+    if vrblvl > 0:
+        print('the solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    err = verify(mickey, sols, vrblvl)
+    if vrblvl > 0:
+        print('the error sum :', err)
+    if len(sols) == 4 and abs(err.real + err.imag) < 1.0e-10:
+        if vrblvl > 0:
+            print('Found 4 solutions and error is okay.')
+        return 0
+    if len(sols) != 4:
+        if vrblvl > 0:
+            print('Number of solutions is not 4 :', len(sols))
+        return 1
+    if abs(err.real + err.imag) >= 1.0e-10:
+        if vrblvl > 0:
+            print('The error is too large.')
+    return 1
+
+def test_quad_double_laurent_track(vrblvl=0):
+    """
+    Tests tracking the mickey mouse example of two quadrics,
+    set as Laurent system in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in test_quad_double_laurent_track ...')
+    mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
+    start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
+    print('the start system :')
+    for pol in start:
+        print(pol)
+    print('the start solutions :')
+    for (idx, sol) in enumerate(startsols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    gamma, sols = quad_double_laurent_track(mickey, start, startsols, 
+        tasks=2, vrblvl=vrblvl)
+    print('the solutions :')
+    for (idx, sol) in enumerate(sols):
+        print('Solution', idx+1, ':')
+        print(sol)
+    err = verify(mickey, sols, vrblvl)
+    if vrblvl > 0:
+        print('the error sum :', err)
+    if len(sols) == 4 and abs(err.real + err.imag) < 1.0e-10:
+        if vrblvl > 0:
+            print('Found 4 solutions and error is okay.')
+        return 0
+    if len(sols) != 4:
+        if vrblvl > 0:
+            print('Number of solutions is not 4 :', len(sols))
+        return 1
+    if abs(err.real + err.imag) >= 1.0e-10:
+        if vrblvl > 0:
+            print('The error is too large.')
+    return 1
+
 def test_tuning(vrblvl=0):
     """
     Runs some tests on tuning the parameters.
     """
+    if vrblvl > 0:
+        print('in test_tuning ...')
     show_parameters(vrblvl-1)
     print('setting the condition level to 2 ...')
     set_condition_level(2, vrblvl-1)
@@ -923,6 +1336,9 @@ def main():
     fail = fail + test_next_double_track(lvl)
     fail = fail + test_next_double_double_track(lvl)
     fail = fail + test_next_quad_double_track(lvl)
+    fail = fail + test_double_laurent_track(lvl)
+    fail = fail + test_double_double_laurent_track(lvl)
+    fail = fail + test_quad_double_laurent_track(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:
