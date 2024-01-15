@@ -122,6 +122,27 @@ package Path_Trackers_Interface is
   --   Makes a homotopy in double precision with random gamma constant,
   --   to solve a Laurent system.  The verbose level is in vrblvl.
 
+  function Path_Trackers_Standard_Laurent_Homotopy_Gamma
+             ( a : C_intarrs.Pointer; c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Makes a homotopy in double precision with given gamma constant,
+  --   for Laurent systems.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the power of t in the homotopy;
+  --   c       in c[0] is the real part of the gamma,
+  --           in c[1] is the imaginary part of the gamma;
+  --   vrblvl  is the verbose level.
+
+  function Path_Trackers_Standard_Laurent_Homotopy_Clear
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Clears the data for the Laurent homotopy in double precision.
+  --   The verbose level is in vrblvl.
+
   function Path_Trackers_DoblDobl_Laurent_Homotopy
              ( vrblvl : integer32 := 0 ) return integer32;
 
@@ -129,12 +150,54 @@ package Path_Trackers_Interface is
   --   Makes a homotopy in double double precision with random gamma constant,
   --   to solve a Laurent system.  The verbose level is in vrblvl.
 
+  function Path_Trackers_DoblDobl_Laurent_Homotopy_Gamma
+             ( a : C_intarrs.Pointer; c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Makes a homotopy in double double precision with given gamma constant,
+  --   for Laurent systems.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the power of t in the homotopy;
+  --   c       in c[0] is the real part of the gamma,
+  --           in c[1] is the imaginary part of the gamma;
+  --   vrblvl  is the verbose level.
+
+  function Path_Trackers_DoblDobl_Laurent_Homotopy_Clear
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Clears the data for the Laurent homotopy in double double precision.
+  --   The verbose level is in vrblvl.
+
   function Path_Trackers_QuadDobl_Laurent_Homotopy
              ( vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Makes a homotopy in quad double precision with random gamma constant,
   --   to solve a Laurent system.  The verbose level is in vrblvl.
+
+  function Path_Trackers_QuadDobl_Laurent_Homotopy_Gamma
+             ( a : C_intarrs.Pointer; c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Makes a homotopy in quad double precision with given gamma constant,
+  --   for Laurent systems.
+
+  -- ON ENTRY :
+  --   a       in a[0] is the power of t in the homotopy;
+  --   c       in c[0] is the real part of the gamma,
+  --           in c[1] is the imaginary part of the gamma;
+  --   vrblvl  is the verbose level.
+
+  function Path_Trackers_QuadDobl_Laurent_Homotopy_Clear
+             ( vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Clears the data for the Laurent homotopy in quad double precision.
+  --   The verbose level is in vrblvl.
 
   function Path_Trackers_Standard_Silent_Track
              ( a : C_intarrs.Pointer;

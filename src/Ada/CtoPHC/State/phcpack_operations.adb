@@ -62,6 +62,8 @@ with Extrinsic_Diagonal_Homotopies;      use Extrinsic_Diagonal_Homotopies;
 with Multitasking_Continuation;          use Multitasking_Continuation;
 with Numerical_Tropisms_Container;
 
+with DoblDobl_Complex_Solutions_io;
+
 package body PHCpack_Operations is
 
 -- INTERNAL DATA :
@@ -802,7 +804,8 @@ package body PHCpack_Operations is
   end Create_Standard_Laurent_Homotopy;
 
   procedure Create_Standard_Laurent_Homotopy
-              ( gamma : in Standard_Complex_Numbers.Complex_Number ) is
+              ( gamma : in Standard_Complex_Numbers.Complex_Number;
+                pwrt : in natural32 := 2 ) is
   begin
     if not empty_standard_laurent_homotopy then
       Standard_Laurent_Homotopy.Clear;
@@ -811,7 +814,7 @@ package body PHCpack_Operations is
       empty_standard_laurent_homotopy := false;
     end if;
     Standard_Laurent_Homotopy.Create
-      (st_target_laur_sys.all,st_start_laur_sys.all,2,gamma);
+      (st_target_laur_sys.all,st_start_laur_sys.all,pwrt,gamma);
     empty_standard_laurent_homotopy := false;
   exception
     when others => put_line("exception raised when creating a homotopy");
@@ -828,7 +831,8 @@ package body PHCpack_Operations is
   end Create_DoblDobl_Laurent_Homotopy;
 
   procedure Create_DoblDobl_Laurent_Homotopy
-              ( gamma : in DoblDobl_Complex_Numbers.Complex_Number ) is
+              ( gamma : in DoblDobl_Complex_Numbers.Complex_Number;
+                pwrt : in natural32 := 2 ) is
 
   begin
     if not empty_dobldobl_laurent_homotopy then
@@ -838,7 +842,7 @@ package body PHCpack_Operations is
       empty_dobldobl_laurent_homotopy := false;
     end if;
     DoblDobl_Laurent_Homotopy.Create
-      (dd_target_laur_sys.all,dd_start_laur_sys.all,2,gamma);
+      (dd_target_laur_sys.all,dd_start_laur_sys.all,pwrt,gamma);
     empty_dobldobl_laurent_homotopy := false;
   exception
     when others => put_line("exception raised when creating a homotopy");
@@ -855,7 +859,8 @@ package body PHCpack_Operations is
   end Create_QuadDobl_Laurent_Homotopy;
 
   procedure Create_QuadDobl_Laurent_Homotopy
-              ( gamma : in QuadDobl_Complex_Numbers.Complex_Number ) is
+              ( gamma : in QuadDobl_Complex_Numbers.Complex_Number;
+                pwrt : in natural32 := 2 ) is
   begin
     if not empty_quaddobl_laurent_homotopy then
       QuadDobl_Laurent_Homotopy.Clear;
@@ -864,7 +869,7 @@ package body PHCpack_Operations is
       empty_quaddobl_laurent_homotopy := false;
     end if;
     QuadDobl_Laurent_Homotopy.Create
-      (qd_target_laur_sys.all,qd_start_laur_sys.all,2,gamma);
+      (qd_target_laur_sys.all,qd_start_laur_sys.all,pwrt,gamma);
     empty_quaddobl_laurent_homotopy := false;
   exception
     when others => put_line("exception raised when creating a homotopy");
@@ -2646,13 +2651,21 @@ package body PHCpack_Operations is
              DoblDobl_Homotopy.Diff,DoblDobl_Homotopy.Diff);
 
   begin
+    put_line("in Solve_by_DoblDobl_Homotopy_Continuation ...");
     if zero_dobldobl_constant
      then r := DoblDobl_Complex_Numbers.Create
                  (Double_Double_Numbers.create(0.793450603947633),
                   Double_Double_Numbers.create(-0.608634651572795));
+         -- put_line("zero_dobldobl_constant is true");
      else r := dd_gamma_constant;
+         -- put_line("zero_dobldobl_constant is false");
+         -- put_line("The target system :");
+         -- put(dd_target_sys.all);
+         -- put_line("The start system :");
+         -- put(dd_start_sys.all);
     end if;
     if empty_dobldobl_homotopy then
+      put_line("empty_dobldobl_homotopy is true");
       DoblDobl_Homotopy.Create(dd_target_sys.all,dd_start_sys.all,k,r);
       empty_dobldobl_homotopy := false; -- for dynamic load balancing
       if file_okay then
@@ -2663,6 +2676,18 @@ package body PHCpack_Operations is
         put(output_file,"  gamma : "); put(output_file,r);
         new_line(output_file); new_line(output_file);
       end if;
+   -- else
+   --   put_line("empty_dobldobl_homotopy is false");
+   --   put_line("The target system :");
+   --   put(DoblDobl_Homotopy.Target_System);
+   --   put_line("The start system :");
+   --   put(DoblDobl_Homotopy.Start_System);
+   --   put("The relaxation power : ");
+   --   put(DoblDobl_Homotopy.Relaxation_Power,1); new_line;
+   --   put("The gamma constant : ");
+   --   put(DoblDobl_Homotopy.Accessibility_Constant); new_line;
+   --   put_line("The homotopy system :");
+   --   put(DoblDobl_Homotopy.Homotopy_System);
     end if;
     if auto_tune
      then Continuation_Parameters.Tune(0); -- (0,32) is too severe
@@ -2680,6 +2705,9 @@ package body PHCpack_Operations is
       if k /= 1
        then DoblDobl_Redefine_Homotopy;
       end if;
+      put_line("order of endgame extrapolator is not zero");
+    else
+      put_line("order of endgame extrapolator is zero");
     end if;
     if file_okay then
       tstart(timer);
@@ -2716,6 +2744,13 @@ package body PHCpack_Operations is
         if Continuation_Parameters.endext_order = 0 then
           if nbequ = nbvar
            then Sil_Cont(dd_target_sols,Create(integer(1)));
+          -- JV 01/01/2024
+          -- then 
+          --    put_line("The solutions at the start :");
+          --    DoblDobl_Complex_Solutions_io.Write(standard_output,dd_target_sols);
+          --    Rep_Cont(standard_output,dd_target_sols,Create(integer(1)));
+          --    put_line("The solutions at the end :");
+          --    DoblDobl_Complex_Solutions_io.Write(standard_output,dd_target_sols);
            else Sil_Cont(dd_target_sols,nbequ,Create(integer(1)));
           end if;
         else

@@ -266,6 +266,15 @@ function use_track ( job : integer32;
 --          =  67 : read double double target system without solutions;
 --          =  68 : read quad double target system without solutions.
 --
+-- more homotopy operations on Laurent systems :
+--
+--          =  69 : make double Laurent homotopy with given gamma;
+--          =  70 : make double double Laurent homotopy with given gamma;
+--          =  71 : make quad double Laurent homotopy with given gamma;
+--          =  72 : clear double Laurent homotopy;
+--          =  73 : clear double double Laurent homotopy;
+--          =  74 : clear quad double Laurent homotopy;
+--
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
 --   e.g.: job not in the right range.

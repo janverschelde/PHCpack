@@ -832,16 +832,24 @@ function use_c2phc4c ( job : integer32;
       when 907..909 => return use_syscon(job,a,b,c,vrblvl-1);
      -- projective transformations of solutions
       when 894..896 => return use_solcon(job,a,b,c,vrblvl-1); -- 1-homogeneous
+     -- adding a symbol passed as string
+      when 897 => return use_syscon(job,a,b,c,vrblvl-1);
+     -- projective transformations of solutions continued ...
       when 898..900 => return use_solcon(job,a,b,c,vrblvl-1); -- to affine
      -- multi-homogeneous
       when 910..912 => return use_solcon(job,a,b,c,vrblvl-1);
      -- from m-hom to affine
       when 913..915 => return use_solcon(job,a,b,c,vrblvl-1);
-     -- adding a symbol passed as string
-      when 897 => return use_syscon(job,a,b,c,vrblvl-1);
      -- reading solutions from file with given name
       when 916..918 => return use_solcon(job,a,b,c,vrblvl-1);
       when 920 => return Job_Handlers.Standard_Condition_Report(a,b,c,vrblvl-1);
+     -- making and clearing Laurent homotopies
+      when 921 => return use_track(69,a,b,c,vrblvl-1);
+      when 922 => return use_track(70,a,b,c,vrblvl-1);
+      when 923 => return use_track(71,a,b,c,vrblvl-1);
+      when 924 => return use_track(72,a,b,c,vrblvl-1);
+      when 925 => return use_track(73,a,b,c,vrblvl-1);
+      when 926 => return use_track(74,a,b,c,vrblvl-1);
      -- get number of available CPUs
       when 994 => return Job_Handlers.Get_Core_Count(a,vrblvl-1);
      -- get and set the gamma constant

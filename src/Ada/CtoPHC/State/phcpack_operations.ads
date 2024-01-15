@@ -205,13 +205,16 @@ package PHCpack_Operations is
 
   procedure Create_Standard_Laurent_Homotopy;
   procedure Create_Standard_Laurent_Homotopy
-              ( gamma : in Standard_Complex_Numbers.Complex_Number );
+              ( gamma : in Standard_Complex_Numbers.Complex_Number;
+                pwrt : in natural32 := 2 );
   procedure Create_DoblDobl_Laurent_Homotopy;
   procedure Create_DoblDobl_Laurent_Homotopy
-              ( gamma : in DoblDobl_Complex_Numbers.Complex_Number );
+              ( gamma : in DoblDobl_Complex_Numbers.Complex_Number;
+                pwrt : in natural32 := 2 );
   procedure Create_QuadDobl_Laurent_Homotopy;
   procedure Create_QuadDobl_Laurent_Homotopy
-              ( gamma : in QuadDobl_Complex_Numbers.Complex_Number );
+              ( gamma : in QuadDobl_Complex_Numbers.Complex_Number;
+                pwrt : in natural32 := 2 );
 
   -- DESCRIPTION :
   --   Creates a linear homotopy between target and start system,

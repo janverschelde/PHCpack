@@ -13,8 +13,11 @@ with Multprec_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Homotopy;
+with Standard_Laurent_Homotopy;
 with DoblDobl_Homotopy;
+with DoblDobl_Laurent_Homotopy;
 with QuadDobl_Homotopy;
+with QuadDobl_Laurent_Homotopy;
 with Multprec_Homotopy;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
@@ -350,6 +353,61 @@ package body Path_Trackers_Interface is
      return 792;
   end Path_Trackers_Standard_Laurent_Homotopy;
 
+  function Path_Trackers_Standard_Laurent_Homotopy_Gamma
+             ( a : C_intarrs.Pointer; c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    g : Standard_Floating_Vectors.Vector(1..2);
+    gamma : Standard_Complex_Numbers.Complex_Number;
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    pwt : constant natural32 := natural32(v_a(v_a'first)); -- power of t
+
+  begin
+    if vrblvl > 0 then
+      put("-> in path_trackers_interface.");
+      put_line("Path_Trackers_Standard_Laurent_Homotopy_Gamma ...");
+    end if;
+    Assign(2,c,g);
+    gamma := Standard_Complex_Numbers.Create(g(1),g(2));
+    if pwt > 0 then -- the power of t must be positive
+      PHCpack_Operations.Create_Standard_Laurent_Homotopy(gamma,pwt);
+    else
+      if vrblvl > 0 then
+        put("Invalid input "); put(pwt,1);
+        put_line(" for the power of t.");
+        put_line("Will resort to the default power of t ...");
+      end if;
+      PHCpack_Operations.Create_Standard_Laurent_Homotopy(gamma);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in path_trackers_interface.");
+        put_line("Path_Trackers_Standard_Laurent_Homotopy_Gamma.");
+      end if;
+     return 921;
+  end Path_Trackers_Standard_Laurent_Homotopy_Gamma;
+
+  function Path_Trackers_Standard_Laurent_Homotopy_Clear
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in path_trackers_interface.");
+      put_line("Path_Trackers_Standard_Laurent_Homotopy_Clear ...");
+    end if;
+    Standard_Laurent_Homotopy.Clear;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in path_trackers_interface.");
+        put_line("Path_Trackers_Standard_Laurent_Homotopy_Clear.");
+      end if;
+     return 924;
+  end Path_Trackers_Standard_Laurent_Homotopy_Clear;
+
   function Path_Trackers_DoblDobl_Laurent_Homotopy
              ( vrblvl : integer32 := 0 ) return integer32 is
   begin
@@ -368,6 +426,64 @@ package body Path_Trackers_Interface is
      return 793;
   end Path_Trackers_DoblDobl_Laurent_Homotopy;
 
+  function Path_Trackers_DoblDobl_Laurent_Homotopy_Gamma
+             ( a : C_intarrs.Pointer; c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    g : Standard_Floating_Vectors.Vector(1..2);
+    g_re,g_im : double_double;
+    gamma : DoblDobl_Complex_Numbers.Complex_Number;
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    pwt : constant natural32 := natural32(v_a(v_a'first)); -- power of t
+
+  begin
+    if vrblvl > 0 then
+      put("-> in path_trackers_interface.");
+      put_line("Path_Trackers_DoblDobl_Laurent_Homotopy_Gamma ...");
+    end if;
+    Assign(2,c,g);
+    g_re := create(g(1));
+    g_im := create(g(2));
+    gamma := DoblDobl_Complex_Numbers.Create(g_re,g_im);
+    if pwt > 0 then -- the power of t must be positive
+      PHCpack_Operations.Create_DoblDobl_Laurent_Homotopy(gamma,pwt);
+    else
+      if vrblvl > 0 then
+        put("Invalid input "); put(pwt,1);
+        put_line(" for the power of t.");
+        put_line("Will resort to the default power of t ...");
+      end if;
+      PHCpack_Operations.Create_DoblDobl_Laurent_Homotopy(gamma);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in path_trackers_interface.");
+        put_line("Path_Trackers_DoblDobl_Laurent_Homotopy_Gamma.");
+      end if;
+     return 922;
+  end Path_Trackers_DoblDobl_Laurent_Homotopy_Gamma;
+
+  function Path_Trackers_DoblDobl_Laurent_Homotopy_Clear
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in path_trackers_interface.");
+      put_line("Path_Trackers_DoblDobl_Laurent_Homotopy_Clear ...");
+    end if;
+    DoblDobl_Laurent_Homotopy.Clear;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in path_trackers_interface.");
+        put_line("Path_Trackers_DoblDobl_Laurent_Homotopy_Clear.");
+      end if;
+     return 925;
+  end Path_Trackers_DoblDobl_Laurent_Homotopy_Clear;
+
   function Path_Trackers_QuadDobl_Laurent_Homotopy
              ( vrblvl : integer32 := 0 ) return integer32 is
   begin
@@ -385,6 +501,64 @@ package body Path_Trackers_Interface is
       end if;
      return 794;
   end Path_Trackers_QuadDobl_Laurent_Homotopy;
+
+  function Path_Trackers_QuadDobl_Laurent_Homotopy_Gamma
+             ( a : C_intarrs.Pointer; c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    g : Standard_Floating_Vectors.Vector(1..2);
+    g_re,g_im : quad_double;
+    gamma : QuadDobl_Complex_Numbers.Complex_Number;
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    pwt : constant natural32 := natural32(v_a(v_a'first)); -- power of t
+
+  begin
+    if vrblvl > 0 then
+      put("-> in path_trackers_interface.");
+      put_line("Path_Trackers_QuadDobl_Laurent_Homotopy_Gamma ...");
+    end if;
+    Assign(2,c,g);
+    g_re := create(g(1));
+    g_im := create(g(1));
+    gamma := QuadDobl_Complex_Numbers.Create(g_re,g_im);
+    if pwt > 0 then -- the power of t must be positive
+      PHCpack_Operations.Create_QuadDobl_Homotopy(gamma,pwt);
+    else
+      if vrblvl > 0 then
+        put("Invalid input "); put(pwt,1);
+        put_line(" for the power of t.");
+        put_line("Will resort to the default power of t ...");
+      end if;
+      PHCpack_Operations.Create_QuadDobl_Laurent_Homotopy(gamma);
+    end if;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in path_trackers_interface.");
+        put_line("Path_Trackers_QuadDobl_Laurent_Homotopy_Gamma.");
+      end if;
+     return 923;
+  end Path_Trackers_QuadDobl_Laurent_Homotopy_Gamma;
+
+  function Path_Trackers_QuadDobl_Laurent_Homotopy_Clear
+             ( vrblvl : integer32 := 0 ) return integer32 is
+  begin
+    if vrblvl > 0 then
+      put("-> in path_trackers_interface.");
+      put_line("Path_Trackers_QuadDobl_Laurent_Homotopy_Clear ...");
+    end if;
+    QuadDobl_Laurent_Homotopy.Clear;
+    return 0;
+  exception
+    when others => 
+      if vrblvl > 0 then
+        put("Exception raised in path_trackers_interface.");
+        put_line("Path_Trackers_QuadDobl_Laurent_Homotopy_Clear.");
+      end if;
+     return 926;
+  end Path_Trackers_QuadDobl_Laurent_Homotopy_Clear;
 
   function Path_Trackers_Standard_Silent_Track
              ( a : C_intarrs.Pointer;

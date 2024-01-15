@@ -172,6 +172,15 @@ function use_c2phc4c ( job : integer32;
 --         = 794 : creates a homotopy with the Laurent systems stored
 --                 as target and start in quad double precision.
 --
+-- more homotopy operations on Laurent systems :
+--
+--         = 921 : make double Laurent homotopy with given gamma;
+--         = 922 : make double double Laurent homotopy with given gamma;
+--         = 923 : make quad double Laurent homotopy with given gamma;
+--         = 924 : clear double Laurent homotopy;
+--         = 925 : clear double double Laurent homotopy;
+--         = 926 : clear quad double Laurent homotopy;
+--
 -- the operations of the systems container :
 --
 --   job   =  20 : read polynomial system and put in container;

@@ -114,6 +114,19 @@ function use_track ( job : integer32;
         return Diagonal_Homotopy_QuadDobl_Laurential_Set(a,b,vrblvl-1);
       when 67 => return DoblDobl_PolySys_Prompt_for_Target(vrblvl-1);
       when 68 => return QuadDobl_PolySys_Prompt_for_Target(vrblvl-1);
+     -- more homotopy operations on Laurent systems
+      when 69 =>
+        return Path_Trackers_Standard_Laurent_Homotopy_Gamma(a,c,vrblvl-1);
+      when 70 =>
+        return Path_Trackers_DoblDobl_Laurent_Homotopy_Gamma(a,c,vrblvl-1);
+      when 71 =>
+        return Path_Trackers_QuadDobl_Laurent_Homotopy_Gamma(a,c,vrblvl-1);
+      when 72 =>
+        return Path_Trackers_Standard_Laurent_Homotopy_Clear(vrblvl-1);
+      when 73 =>
+        return Path_Trackers_DoblDobl_Laurent_Homotopy_Clear(vrblvl-1);
+      when 74 =>
+        return Path_Trackers_QuadDobl_Laurent_Homotopy_Clear(vrblvl-1);
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   end Handle_Jobs;

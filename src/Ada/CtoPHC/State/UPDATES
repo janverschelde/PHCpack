@@ -1,3 +1,7 @@
+Mon 15 Jan 2024 : extended path_trackers_interface with 6 procedures on
+  Laurent homotopies, modified phcpack_operations, updated use_track,
+  and use_c2phc4c.
+
 Fri 12 Jan 2024 : removed put() in standard_monodromy_permutations.adb.
 
 Thu 11 Jan 2024 : added verbose level in the Permutation function
