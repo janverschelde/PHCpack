@@ -3,6 +3,8 @@ Mon 15 Jan 2024 : improved starters.py, homotopies.py, and schubert.py
   after extensions in polynomials.py, homotopies.py, and trackers.py.
   Extensions in sets.py and cascades.py to work for Laurent systems.
   Bug fixes in cascades.py for dd/qd Laurent systems.
+  Extended sets.py with membership tests for Laurent witness sets.
+  Added sevenbar.py to the tests.
 
 Sun 14 Jan 2024 : improved use of vrblvl in sets.py and for pylint.
   Cleared solutions in the *_double_solve functions in solver.py

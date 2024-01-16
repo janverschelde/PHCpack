@@ -890,6 +890,177 @@ def quad_double_membertest(wsys, gpts, dim, point, \
         print('onsys :', onsys, '  onset :', onset)
     return onset == 1
 
+def double_laurent_membertest(wsys, gpts, dim, point, \
+    evatol=1.0e-6, memtol=1.0e-6, tasks=0, vrblvl=0):
+    r"""
+    Applies the homotopy membership test for a point to belong to
+    a witness set of dimension *dim*, given by an embedded Laurent
+    system in *wsys*, with corresponding generic points in *gpts*.
+    The coordinates of the test point are given in the list *point*,
+    as a list of doubles, with the real and imaginary part of each
+    coordinate of the point.  By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
+    Calculations happen in double precision.
+    The default values for the evaluation (*evatol*) and the membership
+    (*memtol*) allow for singular values at the end points of the paths
+    in the homotopy membership test.
+    """
+    if vrblvl > 0:
+        print('in double_laurent_membertest, dim :', dim)
+        print('the polynomials :')
+        for pol in wsys:
+            print(pol)
+        print('the generic points in the witness set :')
+        for (idx, sol) in enumerate(gpts):
+            print('Generic point', idx+1, ':')
+            print(sol)
+        print('the point :')
+        print(point)
+    nvr = number_of_symbols(wsys)
+    set_double_laurent_witness_set(nvr, dim, wsys, gpts, vrblvl)
+    nvr = len(point)//2
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(vrblvl))
+    bdims = (c_int32 * 3)()
+    bdims[0] = nvr
+    bdims[1] = dim
+    bdims[2] = tasks
+    dims = pointer(bdims)
+    size = 2 + 2*nvr
+    tolstpt = (c_double * size)()
+    tolstpt[0] = evatol
+    tolstpt[1] = memtol
+    for (idx, crd) in enumerate(point):
+        tolstpt[2+idx] = c_double(crd)
+    ctoltpt = pointer(tolstpt)
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> double_laurent_membertest calls phc', end='')
+    retval = phc(795, aaa, dims, ctoltpt, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    onsys = aaa[0]
+    vals = dims[:2]
+    onset = vals[0][0]
+    if vrblvl > 0:
+        print('onsys :', onsys, '  onset :', onset)
+    return onset == 1
+
+def double_double_laurent_membertest(wsys, gpts, dim, point, \
+    evatol=1.0e-6, memtol=1.0e-6, tasks=0, vrblvl=0):
+    r"""
+    Applies the homotopy membership test for a point to belong to
+    a witness set of dimension *dim*, given by an embedded Laurent
+    system in *wsys*, with corresponding generic points in *gpts*.
+    The coordinates of the test point are given in the list *point*,
+    as a list of doubles, with the real and imaginary part of each
+    coordinate of the point.  By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
+    Calculations happen in double double precision.
+    The default values for the evaluation (*evatol*) and the membership
+    (*memtol*) allow for singular values at the end points of the paths
+    in the homotopy membership test.
+    """
+    if vrblvl > 0:
+        print('in double_double_laurent_membertest, dim :', dim)
+        print('the polynomials :')
+        for pol in wsys:
+            print(pol)
+        print('the generic points in the witness set :')
+        for (idx, sol) in enumerate(gpts):
+            print('Generic point', idx+1, ':')
+            print(sol)
+        print('the point :')
+        print(point)
+    nvr = number_of_symbols(wsys)
+    set_double_double_laurent_witness_set(nvr, dim, wsys, gpts, vrblvl)
+    nvr = len(point)//4
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(vrblvl))
+    bdims = (c_int32 * 3)()
+    bdims[0] = nvr
+    bdims[1] = dim
+    bdims[2] = tasks
+    dims = pointer(bdims)
+    size = 2 + 4*nvr
+    tolstpt = (c_double * size)()
+    tolstpt[0] = evatol
+    tolstpt[1] = memtol
+    for (idx, crd) in enumerate(point):
+        tolstpt[2+idx] = c_double(crd)
+    ctoltpt = pointer(tolstpt)
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> double_double_laurent_membertest calls phc', end='')
+    retval = phc(796, aaa, dims, ctoltpt, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    onsys = aaa[0]
+    vals = dims[:2]
+    onset = vals[0][0]
+    if vrblvl > 0:
+        print('onsys :', onsys, '  onset :', onset)
+    return onset == 1
+
+def quad_double_laurent_membertest(wsys, gpts, dim, point, \
+    evatol=1.0e-6, memtol=1.0e-6, tasks=0, vrblvl=0):
+    r"""
+    Applies the homotopy membership test for a point to belong to
+    a witness set of dimension *dim*, given by an embedded Laurent
+    system in *wsys*, with corresponding generic points in *gpts*.
+    The coordinates of the test point are given in the list *point*,
+    as a list of doubles, with the real and imaginary part of each
+    coordinate of the point.  By default, *verbose* is True.
+    The number of threads is given in *tasks*.  If *tasks* is zero,
+    then no multithreading is applied in the homotopy membership test.
+    Calculations happen in quad double precision.
+    The default values for the evaluation (*evatol*) and the membership
+    (*memtol*) allow for singular values at the end points of the paths
+    in the homotopy membership test.
+    """
+    if vrblvl > 0:
+        print('in quad_double_laurent_membertest, dim :', dim)
+        print('the polynomials :')
+        for pol in wsys:
+            print(pol)
+        print('the generic points in the witness set :')
+        for (idx, sol) in enumerate(gpts):
+            print('Generic point', idx+1, ':')
+            print(sol)
+        print('the point :')
+        print(point)
+    nvr = number_of_symbols(wsys)
+    set_quad_double_laurent_witness_set(nvr, dim, wsys, gpts, vrblvl)
+    nvr = len(point)//8
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(vrblvl))
+    bdims = (c_int32 * 3)()
+    bdims[0] = nvr
+    bdims[1] = dim
+    bdims[2] = tasks
+    dims = pointer(bdims)
+    size = 2 + 8*nvr
+    tolstpt = (c_double * size)()
+    tolstpt[0] = evatol
+    tolstpt[1] = memtol
+    for (idx, crd) in enumerate(point):
+        tolstpt[2+idx] = c_double(crd)
+    ctoltpt = pointer(tolstpt)
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> quad_double_laurent_membertest calls phc', end='')
+    retval = phc(797, aaa, dims, ctoltpt, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    onsys = aaa[0]
+    vals = dims[:2]
+    onset = vals[0][0]
+    if vrblvl > 0:
+        print('onsys :', onsys, '  onset :', onset)
+    return onset == 1
+
 def double_hypersurface_set(nvr, hpol, vrblvl=0):
     r"""
     Given in *hpol* the string representation of a polynomial
