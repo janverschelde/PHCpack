@@ -1,3 +1,6 @@
+Tue 16 Jan 2024 : added a Jupyter notebook version of the sevenbar.py
+  test example.
+
 Mon 15 Jan 2024 : improved starters.py, homotopies.py, and schubert.py
   for pylint warnings.  Path tracking works for Laurent homotopies,
   after extensions in polynomials.py, homotopies.py, and trackers.py.
