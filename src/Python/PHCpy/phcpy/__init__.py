@@ -62,6 +62,8 @@ diagonal
     intersecting positive dimensional solution sets by diagonal homotopies.
 factor
     factor positive dimensional solution sets into irreducible components.
+decomposition
+    solving is computing a numerical irreducible decomposition
 
 The main() of every module provides some basic examples and tests.
 """
@@ -134,7 +136,7 @@ phc = set_phcfun()
 from phcpy import version, dimension, polynomials, solutions
 from phcpy import solver, volumes, examples, families, deflation
 from phcpy import starters, homotopies, trackers, series, curves
-from phcpy import schubert, sets, cascades, diagonal, factor
+from phcpy import schubert, sets, cascades, diagonal, factor, decomposition
 
 # The version number is defined as a data attribute.
 __version__ = '1.1.3'
