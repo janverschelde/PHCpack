@@ -6,6 +6,7 @@ Running the tests can take some time.
 """
 from phcpy.dimension import set_seed
 from phcpy.solver import solve
+from phcpy.decomposition import double_laurent_solve
 
 def binomials():
     """
@@ -1038,6 +1039,21 @@ def solve_tangents():
         print(' failed')
     return int(fail)
 
+def solve_sevenbar():
+    """
+    Test on solving the sevenbar problem.
+    Checks that the degree of the curve is one
+    and that there are six isolated solutions.
+    """
+    pols = sevenbar()
+    sols = double_laurent_solve(pols, topdim=1)
+    fail = len(sols[0][1]) != 6 or len(sols[1][1]) != 3
+    if not fail:
+        print(' passed')
+    else:
+        print(' failed')
+    return int(fail)
+
 def main():
     """
     Solves the systems and checks on their number of solutions.
@@ -1053,6 +1069,7 @@ def main():
     fail = fail + solve_rps10()
     fail = fail + solve_stewgou40()
     fail = fail + solve_tangents()
+    fail = fail + solve_sevenbar()
     if fail == 0:
         print('=> All tests passed.')
     else:

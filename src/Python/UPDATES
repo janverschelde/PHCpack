@@ -1,6 +1,7 @@
 Wed 17 Jan 2024 : new module decomposition.py exports the extended
   blackbox solvers for a numerical irreducible decomposition.
   Fixed import statements at the top of decomposition.py.
+  Added function solve_sevenbar() to the examples module.
 
 Tue 16 Jan 2024 : added a Jupyter notebook version of the sevenbar.py
   test example.
