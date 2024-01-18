@@ -3,19 +3,20 @@ Exports functions to compute a numerical irreducible decomposition.
 """
 from ctypes import c_int32, c_double, pointer
 from phcpy.version import get_phcfun
-from polynomials import number_of_symbols
-from polynomials import set_double_system, get_double_system
-from polynomials import set_double_laurent_system
-from polynomials import get_double_laurent_system
-from polynomials import set_double_double_system, get_double_double_system
-from polynomials import set_double_double_laurent_system
-from polynomials import get_double_double_laurent_system
-from polynomials import set_quad_double_system, get_quad_double_system
-from polynomials import set_quad_double_laurent_system
-from polynomials import get_quad_double_laurent_system
-from solutions import get_double_solutions
-from solutions import get_double_double_solutions
-from solutions import get_quad_double_solutions
+from phcpy.polynomials import number_of_symbols
+from phcpy.polynomials import set_double_system, get_double_system
+from phcpy.polynomials import set_double_laurent_system
+from phcpy.polynomials import get_double_laurent_system
+from phcpy.polynomials import set_double_double_system
+from phcpy.polynomials import get_double_double_system
+from phcpy.polynomials import set_double_double_laurent_system
+from phcpy.polynomials import get_double_double_laurent_system
+from phcpy.polynomials import set_quad_double_system, get_quad_double_system
+from phcpy.polynomials import set_quad_double_laurent_system
+from phcpy.polynomials import get_quad_double_laurent_system
+from phcpy.solutions import get_double_solutions
+from phcpy.solutions import get_double_double_solutions
+from phcpy.solutions import get_quad_double_solutions
 
 def copy_double_witset(dim, vrblvl=0):
     """
