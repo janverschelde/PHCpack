@@ -29,7 +29,7 @@ def copy_double_witset(dim, vrblvl=0):
     adim = pointer(c_int32(dim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = pointer(c_int32(vrblvl-1))
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> copy_double_witset calls phc', end='')
     retval = phc(851, adim, bbb, ccc, vrb)
@@ -48,7 +48,7 @@ def copy_double_double_witset(dim, vrblvl=0):
     adim = pointer(c_int32(dim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = pointer(c_int32(vrblvl-1))
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> copy_double_double_witset calls phc', end='')
     retval = phc(853, adim, bbb, ccc, vrb)
@@ -67,7 +67,7 @@ def copy_quad_double_witset(dim, vrblvl=0):
     adim = pointer(c_int32(dim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = pointer(c_int32(vrblvl-1))
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> copy_quad_double_witset calls phc', end='')
     retval = phc(855, adim, bbb, ccc, vrb)
@@ -86,7 +86,7 @@ def copy_double_laurent_witset(dim, vrblvl=0):
     adim = pointer(c_int32(dim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = pointer(c_int32(vrblvl-1))
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> copy_double_laurent_witset calls phc', end='')
     retval = phc(852, adim, bbb, ccc, vrb)
@@ -105,7 +105,7 @@ def copy_double_double_laurent_witset(dim, vrblvl=0):
     adim = pointer(c_int32(dim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = pointer(c_int32(vrblvl-1))
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> copy_double_double_laurent_witset calls phc', end='')
     retval = phc(854, adim, bbb, ccc, vrb)
@@ -124,7 +124,7 @@ def copy_quad_double_laurent_witset(dim, vrblvl=0):
     adim = pointer(c_int32(dim))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = pointer(c_int32(vrblvl-1))
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> copy_quad_double_laurent_witset calls phc', end='')
     retval = phc(856, adim, bbb, ccc, vrb)
@@ -159,7 +159,7 @@ def double_solve(pols, topdim=-1, \
     pars = pointer(apars)
     bvrb = pointer(c_int32(verbose))
     ccc = pointer(c_double(0.0))
-    vrb = pointer(c_int32(vrblvl-1))
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> double_solve calls phc', end='')
     retval = phc(845, pars, bvrb, ccc, vrb)
@@ -167,7 +167,7 @@ def double_solve(pols, topdim=-1, \
         print(', return value :', retval)
     witsols = []
     for soldim in range(topdim+1):
-        copy_double_witset(soldim)
+        copy_double_witset(soldim, vrblvl=vrblvl-1)
         witpol = get_double_system(vrblvl-1)
         witpts = get_double_solutions(vrblvl-1)
         witset = (witpol, witpts)
@@ -201,7 +201,7 @@ def double_laurent_solve(pols, topdim=-1, \
     pars = pointer(apars)
     bvrb = pointer(c_int32(verbose))
     ccc = pointer(c_double(0.0))
-    vrb = pointer(c_int32(vrblvl-1))
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> double_laurent_solve calls phc', end='')
     retval = phc(846, pars, bvrb, ccc, vrb)
@@ -243,7 +243,7 @@ def double_double_solve(pols, topdim=-1, \
     pars = pointer(apars)
     bvrb = pointer(c_int32(verbose))
     ccc = pointer(c_double(0.0))
-    vrb = pointer(c_int32(vrblvl-1))
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> double_double_solve calls phc', end='')
     retval = phc(847, pars, bvrb, ccc, vrb)
@@ -285,7 +285,7 @@ def double_double_laurent_solve(pols, topdim=-1, \
     pars = pointer(apars)
     bvrb = pointer(c_int32(verbose))
     ccc = pointer(c_double(0.0))
-    vrb = pointer(c_int32(vrblvl-1))
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> double_double_laurent_solve calls phc', end='')
     retval = phc(848, pars, bvrb, ccc, vrb)
@@ -327,7 +327,7 @@ def quad_double_solve(pols, topdim=-1, \
     pars = pointer(apars)
     bvrb = pointer(c_int32(verbose))
     ccc = pointer(c_double(0.0))
-    vrb = pointer(c_int32(vrblvl-1))
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> quad_double_solve calls phc', end='')
     retval = phc(849, pars, bvrb, ccc, vrb)
@@ -369,7 +369,7 @@ def quad_double_laurent_solve(pols, topdim=-1, \
     pars = pointer(apars)
     bvrb = pointer(c_int32(verbose))
     ccc = pointer(c_double(0.0))
-    vrb = pointer(c_int32(vrblvl-1))
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> quad_double_laurent_solve calls phc', end='')
     retval = phc(850, pars, bvrb, ccc, vrb)
@@ -394,7 +394,7 @@ def test_double_solve(vrblvl=0):
             '(x1-1)*(x2-1)*(x2-2)*(x2-3);', \
             '(x1-1)*(x1-2)*(x3-1)*(x3-2);', \
             '(x1-1)*(x2-1)*(x3-1)*(x4-1);']
-    sols = double_solve(pols, vrblvl=vrblvl)
+    sols = double_solve(pols, verbose=False, vrblvl=vrblvl)
     fail = 0
     degs = [4, 12, 1, 1] # degrees of the components
     for (dim, witset) in enumerate(sols):
@@ -408,7 +408,7 @@ def test_double_double_solve(vrblvl=0):
     Runs a test on solving in double double precision.
     """
     if vrblvl > 0:
-        print('in test_double_solve ...')
+        print('in test_double_double_solve ...')
     pols = ['(x - 1)*(y-x^2);', \
             '(x - 1)*(z-x^3);', \
             '(x^2 - 1)*(y-x^2);' ]
@@ -497,7 +497,7 @@ def main():
     """
     Runs some tests.
     """
-    lvl = 0
+    lvl = 1
     fail = test_double_solve(lvl)
     fail = fail + test_double_laurent_solve(lvl)
     fail = fail + test_double_double_solve(lvl)

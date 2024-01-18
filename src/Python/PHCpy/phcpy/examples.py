@@ -1045,8 +1045,9 @@ def solve_sevenbar():
     Checks that the degree of the curve is one
     and that there are six isolated solutions.
     """
+    print('\nsolving a special 7-bar problem...', end='')
     pols = sevenbar()
-    sols = double_laurent_solve(pols, topdim=1)
+    sols = double_laurent_solve(pols, topdim=1, verbose=False)
     fail = len(sols[0][1]) != 6 or len(sols[1][1]) != 3
     if not fail:
         print(' passed')
