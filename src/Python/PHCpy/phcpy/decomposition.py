@@ -138,6 +138,11 @@ def double_solve(pols, topdim=-1, \
     Runs the cascades of homotopies on the polynomial system in pols
     in double precision.  The default top dimension topdim
     is the number of variables in pols minus one.
+    The other parameters are (1) filtsols, to filter the spurious solutions,
+    (2) factor, to factor the positive dimensional components,
+    (3) tasks, is the number of tasks (0 for no multithreading),
+    (4) verbose, to write extra information during the decomposition.
+    The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
         print('in double_solve, topdim :', topdim, end='')
@@ -147,9 +152,9 @@ def double_solve(pols, topdim=-1, \
         for pol in pols:
             print(pol)
     nvr = number_of_symbols(pols, vrblvl-1)
-    if(topdim == -1):
+    if topdim == -1:
         topdim = nvr - 1
-    set_double_system(nvr, pols,vrblvl-1) 
+    set_double_system(nvr, pols,vrblvl-1)
     phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 4)()
     apars[0] = c_int32(tasks)
@@ -180,6 +185,11 @@ def double_laurent_solve(pols, topdim=-1, \
     Runs the cascades of homotopies on the Laurent system in pols
     in double precision.  The default top dimension topdim
     is the number of variables in pols minus one.
+    The other parameters are (1) filtsols, to filter the spurious solutions,
+    (2) factor, to factor the positive dimensional components,
+    (3) tasks, is the number of tasks (0 for no multithreading),
+    (4) verbose, to write extra information during the decomposition.
+    The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
         print('in double_laurent_solve, topdim :', topdim, end='')
@@ -189,9 +199,9 @@ def double_laurent_solve(pols, topdim=-1, \
         for pol in pols:
             print(pol)
     nvr = number_of_symbols(pols, vrblvl-1)
-    if(topdim == -1):
+    if topdim == -1:
         topdim = nvr - 1
-    set_double_laurent_system(nvr, pols,vrblvl-1) 
+    set_double_laurent_system(nvr, pols,vrblvl-1)
     phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 4)()
     apars[0] = c_int32(tasks)
@@ -222,6 +232,11 @@ def double_double_solve(pols, topdim=-1, \
     Runs the cascades of homotopies on the polynomial system in pols
     in double double precision.  The default top dimension topdim
     is the number of variables in pols minus one.
+    The other parameters are (1) filtsols, to filter the spurious solutions,
+    (2) factor, to factor the positive dimensional components,
+    (3) tasks, is the number of tasks (0 for no multithreading),
+    (4) verbose, to write extra information during the decomposition.
+    The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
         print('in double_double_solve, topdim :', topdim, end='')
@@ -231,9 +246,9 @@ def double_double_solve(pols, topdim=-1, \
         for pol in pols:
             print(pol)
     nvr = number_of_symbols(pols, vrblvl-1)
-    if(topdim == -1):
+    if topdim == -1:
         topdim = nvr - 1
-    set_double_double_system(nvr, pols,vrblvl-1) 
+    set_double_double_system(nvr, pols,vrblvl-1)
     phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 4)()
     apars[0] = c_int32(tasks)
@@ -264,6 +279,11 @@ def double_double_laurent_solve(pols, topdim=-1, \
     Runs the cascades of homotopies on the Laurent system in pols
     in double double precision.  The default top dimension topdim
     is the number of variables in pols minus one.
+    The other parameters are (1) filtsols, to filter the spurious solutions,
+    (2) factor, to factor the positive dimensional components,
+    (3) tasks, is the number of tasks (0 for no multithreading),
+    (4) verbose, to write extra information during the decomposition.
+    The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
         print('in double_double_laurent_solve, topdim :', topdim, end='')
@@ -273,9 +293,9 @@ def double_double_laurent_solve(pols, topdim=-1, \
         for pol in pols:
             print(pol)
     nvr = number_of_symbols(pols, vrblvl-1)
-    if(topdim == -1):
+    if topdim == -1:
         topdim = nvr - 1
-    set_double_double_laurent_system(nvr, pols,vrblvl-1) 
+    set_double_double_laurent_system(nvr, pols,vrblvl-1)
     phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 4)()
     apars[0] = c_int32(tasks)
@@ -306,6 +326,11 @@ def quad_double_solve(pols, topdim=-1, \
     Runs the cascades of homotopies on the polynomial system in pols
     in quad double precision.  The default top dimension topdim
     is the number of variables in pols minus one.
+    The other parameters are (1) filtsols, to filter the spurious solutions,
+    (2) factor, to factor the positive dimensional components,
+    (3) tasks, is the number of tasks (0 for no multithreading),
+    (4) verbose, to write extra information during the decomposition.
+    The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
         print('in quad_double_solve, topdim :', topdim, end='')
@@ -315,9 +340,9 @@ def quad_double_solve(pols, topdim=-1, \
         for pol in pols:
             print(pol)
     nvr = number_of_symbols(pols, vrblvl-1)
-    if(topdim == -1):
+    if topdim == -1:
         topdim = nvr - 1
-    set_quad_double_system(nvr, pols,vrblvl-1) 
+    set_quad_double_system(nvr, pols,vrblvl-1)
     phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 4)()
     apars[0] = c_int32(tasks)
@@ -348,6 +373,11 @@ def quad_double_laurent_solve(pols, topdim=-1, \
     Runs the cascades of homotopies on the Laurent system in pols
     in quad double precision.  The default top dimension topdim
     is the number of variables in pols minus one.
+    The other parameters are (1) filtsols, to filter the spurious solutions,
+    (2) factor, to factor the positive dimensional components,
+    (3) tasks, is the number of tasks (0 for no multithreading),
+    (4) verbose, to write extra information during the decomposition.
+    The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
         print('in quad_double_laurent_solve, topdim :', topdim, end='')
@@ -357,9 +387,9 @@ def quad_double_laurent_solve(pols, topdim=-1, \
         for pol in pols:
             print(pol)
     nvr = number_of_symbols(pols, vrblvl-1)
-    if(topdim == -1):
+    if topdim == -1:
         topdim = nvr - 1
-    set_quad_double_laurent_system(nvr, pols,vrblvl-1) 
+    set_quad_double_laurent_system(nvr, pols,vrblvl-1)
     phc = get_phcfun(vrblvl-1)
     apars = (c_int32 * 4)()
     apars[0] = c_int32(tasks)

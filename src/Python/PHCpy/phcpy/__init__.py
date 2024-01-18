@@ -110,23 +110,23 @@ def set_phcfun(vrblvl=0):
     """
     if vrblvl > 0:
         print('in set_phcfun ...')
-    CWD = getcwd()
+    cwd = getcwd()
     if vrblvl > 0:
-        print('CWD =', CWD)
-    LOCATION = get_site_location(vrblvl) + '/phcpy' 
+        print('cwd =', cwd)
+    location = get_site_location(vrblvl) + '/phcpy'
     if vrblvl > 0:
-        print('LOCATION :')
-        print(LOCATION)
-    chdir(LOCATION)
+        print('location :')
+        print(location)
+    chdir(location)
     if vrblvl > 0:
         print('os.getcwd :')
         print(getcwd())
-    try: 
+    try:
         from phcpy.version import version_string
         print(version_string(vrblvl=0) + ' works!')
         from phcpy.version import get_phcfun_fromlib
         result = get_phcfun_fromlib(vrblvl=0)
-        chdir(CWD)
+        chdir(cwd)
         return result
     except:
         print('Is the libPHCpack not suited for this platform?')
