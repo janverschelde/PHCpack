@@ -411,6 +411,8 @@ def double_start_diagonal_cascade(gamma=0, tasks=0, vrblvl=0):
         print('in double_start_diagonal_cascade, gamma :', gamma, end='')
         print(', tasks :', tasks)
     usedgamma = set_double_homotopy(gamma, vrblvl=vrblvl-1)
+    if vrblvl > 0:
+        print('gamma :', usedgamma)
     do_double_track(tasks, vrblvl=vrblvl-1)
     clear_double_solutions(vrblvl-1)
     clear_double_system(vrblvl-1)
@@ -434,6 +436,8 @@ def double_double_start_diagonal_cascade(gamma=0, tasks=0, vrblvl=0):
             gamma, end='')
         print(', tasks :', tasks)
     usedgamma = set_double_double_homotopy(gamma, vrblvl=vrblvl-1)
+    if vrblvl > 0:
+        print('gamma :', usedgamma)
     do_double_double_track(tasks, vrblvl=vrblvl-1)
     clear_double_double_solutions(vrblvl-1)
     clear_double_double_system(vrblvl-1)
@@ -457,6 +461,8 @@ def quad_double_start_diagonal_cascade(gamma=0, tasks=0, vrblvl=0):
             gamma, end='')
         print(', tasks :', tasks)
     usedgamma = set_quad_double_homotopy(gamma, vrblvl=vrblvl-1)
+    if vrblvl > 0:
+        print('gamma :', usedgamma)
     do_quad_double_track(tasks, vrblvl=vrblvl-1)
     clear_quad_double_solutions(vrblvl-1)
     clear_quad_double_system(vrblvl-1)
@@ -573,7 +579,7 @@ def quad_double_collapse_diagonal(ksl, dim, vrblvl=0):
         print(', return value :', retval)
     return retval
 
-def double_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2,
+def double_diagonal_solve(dim, dm1, sys1, sols1, dm2, sys2, sols2,
     tasks=0, vrblvl=0):
     r"""
     Runs the diagonal homotopies in double precision
@@ -584,7 +590,7 @@ def double_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2,
     Returns the last system in the cascade and its solutions.
     """
     if vrblvl > 0:
-        print('in double_diagonal_solver, dim :', dim, end='')
+        print('in double_diagonal_solve, dim :', dim, end='')
         print(', dm1 :', dm1, ', dm2 :', dm2)
         print('the first system :')
         for pol in sys1:
@@ -624,7 +630,7 @@ def double_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2,
         endsols = double_cascade_step(k, topsys, startsols, tasks=tasks, \
             vrblvl=vrblvl)
         if vrblvl > 0:
-            print('after running cascade step %d :' % k)
+            print(f'after running cascade step {k} :')
             for (idx, sol) in enumerate(endsols):
                 print('Solution', idx+1, ':')
                 print(sol)
@@ -652,7 +658,7 @@ def double_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2,
     sols = get_double_solutions(vrblvl-1)
     return (rsys, sols)
 
-def double_double_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2,
+def double_double_diagonal_solve(dim, dm1, sys1, sols1, dm2, sys2, sols2,
     tasks=0, vrblvl=0):
     r"""
     Runs the diagonal homotopies in double double precision
@@ -663,7 +669,7 @@ def double_double_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2,
     Returns the last system in the cascade and its solutions.
     """
     if vrblvl > 0:
-        print('in double_double_diagonal_solver, dim :', dim, end='')
+        print('in double_double_diagonal_solve, dim :', dim, end='')
         print(', dm1 :', dm1, ', dm2 :', dm2)
         print('the first system :')
         for pol in sys1:
@@ -703,7 +709,7 @@ def double_double_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2,
         endsols = double_double_cascade_step(k, topsys, startsols, \
             tasks=tasks, vrblvl=vrblvl)
         if vrblvl > 0:
-            print('after running cascade step %d :' % k)
+            print(f'after running cascade step {k} :')
             for (idx, sol) in enumerate(endsols):
                 print('Solution', idx+1, ':')
                 print(sol)
@@ -731,7 +737,7 @@ def double_double_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2,
     sols = get_double_double_solutions(vrblvl-1)
     return (rsys, sols)
 
-def quad_double_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2,
+def quad_double_diagonal_solve(dim, dm1, sys1, sols1, dm2, sys2, sols2,
     tasks=0, vrblvl=0):
     r"""
     Runs the diagonal homotopies in quad double precision
@@ -742,7 +748,7 @@ def quad_double_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2,
     Returns the last system in the cascade and its solutions.
     """
     if vrblvl > 0:
-        print('in quad_double_diagonal_solver, dim :', dim, end='')
+        print('in quad_double_diagonal_solve, dim :', dim, end='')
         print(', dm1 :', dm1, ', dm2 :', dm2)
         print('the first system :')
         for pol in sys1:
@@ -782,7 +788,7 @@ def quad_double_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2,
         endsols = quad_double_cascade_step(k, topsys, startsols, \
             tasks=tasks, vrblvl=vrblvl)
         if vrblvl > 0:
-            print('after running cascade step %d :' % k)
+            print(f'after running cascade step {k} :')
             for (idx, sol) in enumerate(endsols):
                 print('Solution', idx+1, ':')
                 print(sol)
@@ -832,12 +838,12 @@ def test_double_diagonal_homotopy(vrblvl=0):
         for (idx, sol) in enumerate(w2sols):
             print('Solution', idx+1, ':')
             print(sol)
-    (psys, sols) = double_diagonal_solver\
+    (psys, sols) = double_diagonal_solve\
         (2, 1, w1sys, w1sols, 1, w2sys, w2sols, 0, vrblvl)
     print('the end system :')
     for pol in psys:
         print(pol)
-    print('the solutions of the diagonal solver :')
+    print('the solutions of the diagonal solve :')
     for (idx, sol) in enumerate(sols):
         print('Solution', idx+1, ':')
         print(sol)
@@ -865,12 +871,12 @@ def test_double_double_diagonal_homotopy(vrblvl=0):
         for (idx, sol) in enumerate(w2sols):
             print('Solution', idx+1, ':')
             print(sol)
-    (psys, sols) = double_double_diagonal_solver\
+    (psys, sols) = double_double_diagonal_solve\
         (2, 1, w1sys, w1sols, 1, w2sys, w2sols, tasks=1, vrblvl=vrblvl)
     print('the end system :')
     for pol in psys:
         print(pol)
-    print('the solutions of the diagonal solver :')
+    print('the solutions of the diagonal solve :')
     for (idx, sol) in enumerate(sols):
         print('Solution', idx+1, ':')
         print(sol)
@@ -898,12 +904,12 @@ def test_quad_double_diagonal_homotopy(vrblvl=0):
         for (idx, sol) in enumerate(w2sols):
             print('Solution', idx+1, ':')
             print(sol)
-    (psys, sols) = quad_double_diagonal_solver\
+    (psys, sols) = quad_double_diagonal_solve\
         (2, 1, w1sys, w1sols, 1, w2sys, w2sols, tasks=1, vrblvl=vrblvl)
     print('the end system :')
     for pol in psys:
         print(pol)
-    print('the solutions of the diagonal solver :')
+    print('the solutions of the diagonal solve :')
     for (idx, sol) in enumerate(sols):
         print('Solution', idx+1, ':')
         print(sol)

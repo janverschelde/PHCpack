@@ -1,3 +1,5 @@
+Fri 19 Jan 2024 : improved diagonal.py for pylint suggestions.
+
 Thu 18 Jan 2024 : fixed verbose level in calls to phc in decomposition.py,
   made solving of sevenbar in example uniform as in the other examples.
   Improvements in decomposition.py and __init__.py for pylint.
