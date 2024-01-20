@@ -11,13 +11,13 @@ from phcpy.solutions import make_solution, coordinates, strsol2dict
 from phcpy.sets import double_embed
 from phcpy.diagonal import double_diagonal_solve
 
-def polynomials(a, b, r):
+def polynomials(apt, bpt, rad):
     """
     Returns string representations of two polynomials:
-    1) a circle with radius r centered at (a, b);
+    1) a circle with radius r centered at (apt, bpt);
     2) a line through the origin with slope s.
     """
-    crc = '(x - %.15e)^2 + (y - %.15e)^2 - %.15e;' % (a, b, r**2)
+    crc = f'(x - {apt:.15e})^2 + (y - {bpt:.15e})^2 - {rad**2:.15e};'
     lin = 'y - s*x;'
     return [crc, lin]
 
@@ -35,10 +35,10 @@ def special_solutions(pols, slope):
     sols = solve(special)
     result = []
     for sol in sols:
-        (vars, vals) = coordinates(sol)
-        vars.append('s')
-        vals.append(slope)
-        extsol = make_solution(vars, vals)
+        (names, values) = coordinates(sol)
+        names.append('s')
+        values.append(slope)
+        extsol = make_solution(names, values)
         result.append(extsol)
     return result
 
@@ -59,24 +59,9 @@ def make_witness_set(pols, verbose=True):
             print(sol)
     return (embpols, embsols)
 
-def membership_test(witsys, witsols, verbose=True):
-    """
-    Given a witness sets in the tuple witset,
-    runs a membership test on a solution.
-    """
-    point = make_solution(['x', 'y', 's'], [2, 2, 1])
-    print('testing the point\n', point)
-    ismb = is_member(witsys, witsols, 1, point, verbose=False)
-    if ismb:
-        print('the point is a member')
-    else:
-        print('the point is NOT a member')
-    return ismb
-
 def circle_line_set():
     """
     Generates the system and its witness set.
-    As a sanity check, a membership test is done.
     Returns the witness set for a fixed circle 
     intersect with a one parameter family of lines 
     as a tuple of polynomials and solutions
@@ -96,7 +81,6 @@ def circle_line_set():
     for sol in embsols:
         print(sol)
     print('degree of the set :', len(embsols))
-    # membership_test(embsyst, embsols)
     return (embsyst, embsols)
 
 def random_complex():
@@ -106,21 +90,21 @@ def random_complex():
     theta = uniform(0, 2*pi)
     return complex(cos(theta), sin(theta))
 
-def random_hyperplane(vars):
+def random_hyperplane(variables):
     """
-    Returns a linear equation in the variables
-    in the list vars, with random complex coefficients.
+    Returns a linear equation in the variables,
+    with random complex coefficients.
     """
     cf0 = str(random_complex())
     tf0 = cf0.replace('j', '*i')
     result = tf0
-    for var in vars:
+    for var in variables:
         cff = str(random_complex())
         tcf = cff.replace('j', '*i')
         result = result + '+' + tcf + '*' + var
     return result + ';'
 
-def jacobian(a, b):
+def jacobian(apt, bpt):
     """
     Returns the equations which define the points
     where the Jacobian matrix is singular,
@@ -128,7 +112,7 @@ def jacobian(a, b):
     Random complex coefficients are generated to
     scale the multiplier variables.
     """
-    eq1 = '2*(x-%.15e)*L1 + 2*(y-%.15e)*L2;' % (a, b)
+    eq1 = f'2*(x-{apt:.15e})*L1 + 2*(y-{bpt:.15e})*L2;'
     eq2 = '-s*L1 + L2;'
     eq3 = random_hyperplane(['L1', 'L2'])
     print('eq3 = ', eq3)
@@ -139,13 +123,12 @@ def extend_solutions(sols):
     To each solution in sols, adds L1 and L2 with values 1,
     and zz2 and zz3 with values zero.
     """
-    from phcpy.solutions import make_solution, coordinates
     result = []
     for sol in sols:
-        (vars, vals) = coordinates(sol)
-        vars = vars + ['L1', 'L2', 'zz2', 'zz3']
-        vals = vals + [1, 1, 0, 0]
-        extsol = make_solution(vars, vals)
+        (names, values) = coordinates(sol)
+        names = names + ['L1', 'L2', 'zz2', 'zz3']
+        values = values + [1, 1, 0, 0]
+        extsol = make_solution(names, values)
         result.append(extsol)
     return result
 
@@ -155,7 +138,6 @@ def extend(pols, sols, verbose=True):
     L1 and L2, addition two linear equations,
     and two slack variables zz2 and zz3.
     """
-    vars = ['zz2', 'zz3']
     eq1 = 'zz2;'
     eq2 = 'zz3;'
     eq3 = 'L1 - 1;'
@@ -195,8 +177,8 @@ def insert_symbols(pol):
     """
     To the string pol, adds the sequence of symbols.
     """
-    q = pol.lstrip()
-    if q[0] == '+' or q[0] == '-':
+    qpol = pol.lstrip()
+    if qpol[0] == '+' or qpol[0] == '-':
         smb = 'x - x + y - y + s + L1 - L1 + L2 - L2 - s '
     else:
         smb = 'x - x + y - y + s + L1 - L1 + L2 - L2 - s + '
@@ -272,7 +254,7 @@ def plotgeneral(fig):
     circle = plt.Circle(center, radius, edgecolor='blue', \
        facecolor='none')
     axs.add_artist(circle)
-    plt.plot([0, 4], [0, 4], 'r') 
+    plt.plot([0, 4], [0, 4], 'r')
     plt.plot([2, 3], [2, 3], 'go')
     plt.axis([0, 5, 0, 4])
 
@@ -283,18 +265,18 @@ def plotspecial(fig, sol1, sol2):
     The two solutions sol1 and sol2 define 3-tuples of
     x and y coordinates and a slope.
     """
-    (xp1, yp1, s1) = sol1
-    (xp2, yp2, s2) = sol2
+    (xp1, yp1, slope1) = sol1
+    (xp2, yp2, slope2) = sol2
     axs = fig.gca()
     center = (3, 2)
     radius = 1
     circle = plt.Circle(center, radius, edgecolor='blue', \
        facecolor='none')
     axs.add_artist(circle)
-    y1 = 5*s1
-    y2 = 5*s2
-    plt.plot([0, 5], [0, y1], 'r') 
-    plt.plot([0, 5], [0, y2], 'r') 
+    y1r = 5*slope1
+    y2r = 5*slope2
+    plt.plot([0, 5], [0, y1r], 'r')
+    plt.plot([0, 5], [0, y2r], 'r')
     plt.plot([xp1, xp2], [yp1, yp2], 'go')
     plt.axis([0, 5, 0, 4])
 
@@ -321,8 +303,12 @@ def main():
     witset2 = singular_locus_set()
     intwitset = intersect(5, 3, 2, witset1, witset2)
     (eqs, sols) = intwitset
+    print('the equations :')
+    for equ in eqs:
+        print(equ)
     print('the solutions :')
-    for sol in sols:
+    for (idx, sol) in enumerate(sols):
+        print('Solution', idx+1, ':')
         print(sol)
     sol1 = coordinates_and_slopes(sols[0])
     sol2 = coordinates_and_slopes(sols[1])
