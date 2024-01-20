@@ -1,3 +1,6 @@
+Sat 20 Jan 2024 : added touchcircle.ipynb to the tests folder
+  to better explain the test of computing tangent lines to a circle.
+
 Fri 19 Jan 2024 : improved diagonal.py for pylint suggestions.
   Added touchcircle.py to the tests folder.
 
