@@ -2,7 +2,6 @@
 To install phcpy, the file libPHCpack must be in the folder phcpy,
 in the same location where the modules of phcpy are installed.
 """
-
 from distutils.core import setup
 
 setup(
@@ -19,7 +18,8 @@ setup(
         'phcpy/deflation', 'phcpy/starters', 'phcpy/homotopies', \
         'phcpy/trackers', 'phcpy/series', 'phcpy/curves', \
         'phcpy/schubert', 'phcpy/sets', 'phcpy/cascades', \
-        'phcpy/diagonal', 'phcpy/factor', 'phcpy/decomposition' ],
+        'phcpy/diagonal', 'phcpy/factor', 'phcpy/decomposition' \
+        'phcpy/binomials' ],
     license = 'GNU GENERAL PUBLIC LICENSE version 3' ,
     package_data = {'phcpy':['libPHCpack.so', 'libPHCpack.dll', \
         'libPHCpack.dylib']} ,

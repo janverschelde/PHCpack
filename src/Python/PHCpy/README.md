@@ -28,6 +28,7 @@ in the phcpy folder.
 | diagonal       | intersecting positive dimensional solutions sets |
 | factor         | factor sets in irreducible components            |
 | decomposition  | a numerical irreducible decomposition            |
+| binomials      | solving systems of two terms in every equation   |
 
 The directed acyclic graph shows the dependencies of
 the first seven modules:

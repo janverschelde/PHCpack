@@ -63,7 +63,10 @@ diagonal
 factor
     factor positive dimensional solution sets into irreducible components.
 decomposition
-    solving is computing a numerical irreducible decomposition
+    solving is computing a numerical irreducible decomposition.
+binomials
+    a binomial system has exactly two terms in every equation
+    and can be solved faster.
 
 The main() of every module provides some basic examples and tests.
 """
@@ -137,6 +140,7 @@ from phcpy import version, dimension, polynomials, solutions
 from phcpy import solver, volumes, examples, families, deflation
 from phcpy import starters, homotopies, trackers, series, curves
 from phcpy import schubert, sets, cascades, diagonal, factor, decomposition
+from phcpy import binomials
 
 # The version number is defined as a data attribute.
 __version__ = '1.1.3'
