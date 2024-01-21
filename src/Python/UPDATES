@@ -1,3 +1,6 @@
+Sun 21 Jan 2024 : extended polynomials.py with function to return the
+  number of terms in a polynomial system.
+
 Sat 20 Jan 2024 : added touchcircle.ipynb to the tests folder
   to better explain the test of computing tangent lines to a circle.
   Improved touchcircle.py for pylint warnings.
