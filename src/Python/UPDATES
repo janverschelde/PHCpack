@@ -1,3 +1,6 @@
+Mon 22 Jan 2024 : extended volumes.py with functions to work with
+  the computed mixed cells.
+
 Sun 21 Jan 2024 : extended polynomials.py with function to return the
   number of terms in a polynomial system.  New module binomials.py
   to compute monomial maps as solutions of binomial systems.
