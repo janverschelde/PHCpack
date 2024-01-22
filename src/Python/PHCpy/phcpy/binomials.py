@@ -27,7 +27,7 @@ def is_binomial_system(vrblvl=0):
         nbterms = get_double_number_laurent_terms(i, vrblvl-1)
         if vrblvl > 0:
             print('  -> number of terms in polynomial', i, ':', nbterms)
-        if(nbterms != 2):
+        if nbterms != 2:
             if vrblvl > 0:
                 print('  the system is not a binomial system')
             return False
@@ -111,7 +111,7 @@ def coefficients_double_map(dim, idx, nvr, vrblvl=0):
     dims = (c_int32 * 3)()
     dims[0] = dim
     dims[1] = idx
-    dims[2] = nvr 
+    dims[2] = nvr
     adim = pointer(dims)
     bbb = pointer(c_int32(0))
     # complex coefficients
@@ -145,7 +145,7 @@ def exponents_double_map(dim, idx, nvr, vrblvl=0):
     dims = (c_int32 * 3)()
     dims[0] = dim
     dims[1] = idx
-    dims[2] = nvr 
+    dims[2] = nvr
     adim = pointer(dims)
     nbexp = dim*nvr
     exp = (c_int32 * nbexp)()
@@ -288,7 +288,7 @@ def test_double_solve(vrblvl=0):
     fail = int(topdim != 2)
     dims = {}
     for dim in range(topdim, -1, -1):
-        dims[dim] = number_double_maps(dim, vrblvl) 
+        dims[dim] = number_double_maps(dim, vrblvl)
     if vrblvl > 0:
         print('the dimensions :')
         print(dims)
