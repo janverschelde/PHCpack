@@ -77,7 +77,7 @@ def number_of_cells(vrblvl=0):
     Returns the number of cells computed by the mixed_volume function.
     """
     if vrblvl > 0:
-        print('in number of cells ...')
+        print('in number_of_cells ...')
     phc = get_phcfun(vrblvl-1)
     alen = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
@@ -86,6 +86,27 @@ def number_of_cells(vrblvl=0):
     if vrblvl > 0:
         print('-> number_of_cells calls phc', end='')
     retval = phc(82, alen, bbb, ccc, vrb)
+    result = alen[0]
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('the number of cells :', result)
+    return result
+
+def number_of_stable_cells(vrblvl=0):
+    """
+    Returns the number of stable cells computed 
+    by the mixed_volume function.
+    """
+    if vrblvl > 0:
+        print('in number_of_mixed_cells ...')
+    phc = get_phcfun(vrblvl-1)
+    alen = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> number_of_cells calls phc', end='')
+    retval = phc(881, alen, bbb, ccc, vrb)
     result = alen[0]
     if vrblvl > 0:
         print(', return value :', retval)
@@ -159,10 +180,12 @@ def test_stable_mixed_volume(vrblvl=0):
     set_double_system(2, polynomials, vrblvl)
     mvl, smv = stable_mixed_volume(True, vrblvl)
     nbr = number_of_cells(vrblvl)
+    stbnbr = number_of_stable_cells(vrblvl)
     if vrblvl > 0:
         print('the mixed volume by DEMiCs :', mvl)
         print('the stable mixed volume by DEMiCs :', smv)
         print('the number of cells :', nbr)
+        print('the number of stable cells :', stbnbr)
     mvcells = 0
     for idx in range(1, nbr+1):
         mvcells = mvcells + cell_mixed_volume(idx, vrblvl)
@@ -172,10 +195,12 @@ def test_stable_mixed_volume(vrblvl=0):
     clear_cells(vrblvl)
     mvl, smv = stable_mixed_volume(False, vrblvl)
     nbr = number_of_cells(vrblvl)
+    stbnbr = number_of_stable_cells(vrblvl)
     if vrblvl > 0:
         print('the mixed volume by MixedVol :', mvl)
         print('the stable mixed volume by MixedVol :', smv)
         print('the number of cells :', nbr)
+        print('the number of stable cells :', stbnbr)
     mvcells = 0
     for idx in range(1, nbr+1):
         mvcells = mvcells + cell_mixed_volume(idx, vrblvl)

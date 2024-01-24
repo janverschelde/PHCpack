@@ -1,3 +1,6 @@
+Tue 23 Jan 2024 : added function to volumes.py to return the number of
+  stable mixed cells.
+
 Mon 22 Jan 2024 : extended volumes.py with functions to work with
   the computed mixed cells.
 
