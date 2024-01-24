@@ -505,12 +505,19 @@ package body Cells_Container is
 
     tmp : Mixed_Subdivision;
     cnt : natural32 := 0;
+   -- idx : natural32 := k;
 
   begin
-    if not stable
-     then tmp := cells;
-     else tmp := orgcells;
-    end if;
+  --  if not stable then
+    tmp := cells;
+  --  else
+  --    if k <= Length_Of(orgcells) then
+  --      tmp := orgcells;
+  --    else
+  --      tmp := stbcells;
+  --      idx := k - Length_Of(orgcells);
+  --    end if;
+  --  end if;
     while not Is_Null(tmp) loop
       cnt := cnt + 1;
       if cnt = k then

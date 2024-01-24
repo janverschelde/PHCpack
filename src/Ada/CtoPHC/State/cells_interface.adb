@@ -436,6 +436,14 @@ package body Cells_Interface is
     end if;
     Cells_Container.Retrieve(k,mic,fail);
     if fail or mix = null then
+      if vrblvl > 0 then
+        if fail
+         then put("failed to retrieve cell "); put(k,1); new_line;
+        end if;
+        if mix = null
+         then put_line("failed because type of mixture mix is null.");
+        end if;
+      end if;
       return 90;
     else
       Mixed_Volume(n,mix.all,mic,mv);

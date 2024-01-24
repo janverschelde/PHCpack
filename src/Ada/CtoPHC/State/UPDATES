@@ -1,3 +1,8 @@
+Tue 23 Jan 2024 : extended cells_interface.adb with error message when
+  verbose level is positive when the mixed volume of a cell procedure fails.
+  Patched a bug in cells_interface.adb on retrieving a mixed cells when
+  the stable mixed volume is computed.
+
 Mon 15 Jan 2024 : extended path_trackers_interface with 6 procedures on
   Laurent homotopies, modified phcpack_operations, updated use_track,
   and use_c2phc4c.
