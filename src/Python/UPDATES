@@ -1,3 +1,6 @@
+Wed 24 Jan 2024 : to volumes.py added polyhedral homotopies to solve
+  a random coefficient system in double precision.
+
 Tue 23 Jan 2024 : added function to volumes.py to return the number of
   stable mixed cells.
 
