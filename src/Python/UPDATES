@@ -1,5 +1,6 @@
 Thu 25 Jan 2024 : added polyhedral homotopies in double double and
-  quad double precision to volumes.py.
+  quad double precision to volumes.py.  Added haas.py to tests.py,
+  to illustrate the solver on many cores.
 
 Wed 24 Jan 2024 : to volumes.py added polyhedral homotopies to solve
   a random coefficient system in double precision.
