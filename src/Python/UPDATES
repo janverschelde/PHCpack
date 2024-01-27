@@ -1,6 +1,8 @@
 Sat 27 Jan 2024 : shorted 'verbose_level' to 'vrblvl' in the solve()
   of solver.py, updated sets.py, cascades.py, and factor.py.
   Fixed documentation strings in sets.py and factor.py.
+  Corrected the tests haas.py and haas.ipynb for the 'verbose_level'
+  change and added two sentences about the counterexample.
 
 Fri 26 Jan 2024 : added haas.ipynb to the tests, with the plots of
   the roots of the counter example of Bertrand Haas.
