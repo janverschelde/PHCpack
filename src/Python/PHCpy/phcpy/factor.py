@@ -494,7 +494,7 @@ def set_quad_double_slice(equ, idx, cff, vrblvl=0):
     """
     Sets the coefficients of slicing equation with index equ
     at position idx to the value in quad double precision:
-      (cff[0], cff[1], cff[2], cff[3])
+    (cff[0], cff[1], cff[2], cff[3])
     + (cff[4], cff[5], cff[6], cff[7])*complex(0, 1).
     """
     if vrblvl > 0:

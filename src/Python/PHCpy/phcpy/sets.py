@@ -4,10 +4,13 @@ positive dimensional solution sets of polynomial systems.
 
 A numerical data structure to represent a pure dimensional 
 solution set is a witness set, which consists of two parts:
+
 1. the original polynomial system, augmented with as many
    random linear equations as the dimension of the set; and
+
 2. isolated solutions of the augmented system,
    as many as the degree of the solution set.
+
 The solutions of the augmented system are called witness points
 and are generic points on the algebraic set.
 
