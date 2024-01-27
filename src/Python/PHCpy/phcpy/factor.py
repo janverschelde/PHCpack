@@ -1921,7 +1921,7 @@ def test_double_monodromy(vrblvl=0):
     cyc4 = cyclic(4)
     cyc4e1 = double_embed(4, 1, cyc4, vrblvl=vrblvl-1)
     clear_double_solutions(vrblvl-1)
-    c4sols = solve(cyc4e1, verbose_level=vrblvl-1)
+    c4sols = solve(cyc4e1, vrblvl=vrblvl-1)
     esols = filter_zero_coordinates(c4sols, varname='zz1', tol=1.0e-8, \
         oper='select', vrblvl=vrblvl-1)
     print('the embedded cyclic 4-roots system :')
@@ -1950,7 +1950,7 @@ def test_double_double_monodromy(vrblvl=0):
     cyc4 = cyclic(4)
     cyc4e1 = double_double_embed(4, 1, cyc4, vrblvl=vrblvl-1)
     clear_double_double_solutions(vrblvl-1)
-    c4sols = solve(cyc4e1, precision='dd', verbose_level=vrblvl-1)
+    c4sols = solve(cyc4e1, precision='dd', vrblvl=vrblvl-1)
     esols = filter_zero_coordinates(c4sols, varname='zz1', tol=1.0e-8, \
         oper='select', vrblvl=vrblvl-1)
     print('the embedded cyclic 4-roots system :')
@@ -1979,7 +1979,7 @@ def test_quad_double_monodromy(vrblvl=0):
     cyc4 = cyclic(4)
     cyc4e1 = quad_double_embed(4, 1, cyc4, vrblvl=vrblvl-1)
     clear_quad_double_solutions(vrblvl-1)
-    c4sols = solve(cyc4e1, precision='qd', verbose_level=vrblvl-1)
+    c4sols = solve(cyc4e1, precision='qd', vrblvl=vrblvl-1)
     esols = filter_zero_coordinates(c4sols, varname='zz1', tol=1.0e-8, \
         oper='select', vrblvl=vrblvl-1)
     print('the embedded cyclic 4-roots system :')

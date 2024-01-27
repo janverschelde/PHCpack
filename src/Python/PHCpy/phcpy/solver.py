@@ -1,5 +1,7 @@
 """
-Exports the blackbox solver for isolated solutions of square systems.
+Exports the blackbox solver for isolated solutions of square systems,
+in double, double double, and quad double precision.
+Also Laurent systems are accepted on input.
 """
 from random import randint, uniform, seed
 from math import cos, sin, pi
@@ -24,13 +26,15 @@ from phcpy.solutions import write_quad_double_solutions
 from phcpy.solutions import formdictlist
 from phcpy.volumes import stable_mixed_volume
 
-def random_trinomials():
+def random_trinomials(vrblvl=0):
     """
     Returns a system of two trinomials equations for testing.
     A trinomial consists of three monomials in two variables.
     Exponents are uniform between 0 and 5 and coefficients are
     on the complex unit circle.
     """
+    if vrblvl > 0:
+        print('in random trinomials ...')
     exponents = [(randint(0, 5), randint(0, 5)) for _ in range(0, 6)]
     monomials = [f'x^{xe}*y^{ye}' for (xe, ye) in exponents]
     angles = [uniform(0, 2*pi) for _ in range(0, 6)]
@@ -39,13 +43,15 @@ def random_trinomials():
     two = '+'.join(cff[i] + '*' + monomials[i] for i in range(3, 6)) + ';'
     return [one, two]
 
-def real_random_trinomials(sys):
+def real_random_trinomials(sys, vrblvl=0):
     r"""
     On input in sys are two random trinonials with complex coefficients,
     in the format what **random_trinomials()** returns.
     On return is a list of two real random trinomials with the same
     monomial structure but with random real coefficients in [-1,+1].
     """
+    if vrblvl > 0:
+        print('in real_random_trinomials ...')
     result = []
     for pol in sys:
         terms = pol.split(')')
@@ -227,12 +233,14 @@ def solve_quad_double_laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
     result = int4a2str(broco, vrblvl=vrblvl-1)
     return (roco, result)
 
-def solve_checkin(pols, msg):
+def solve_checkin(pols, msg, vrblvl=0):
     r"""
     Checks whether the system defined by the list of strings in *pols*
     is square.  If so, True is returned.  Otherwise, the error message
     in the string *msg* is printed to help the user.
     """
+    if vrblvl > 0:
+        print('in solve_checkin ...')
     if is_square(pols):
         return True
     print(msg)
@@ -244,7 +252,7 @@ def solve_checkin(pols, msg):
     return False
 
 def solve(pols, tasks=0, mvfocus=0, precision='d',
-    checkin=True, dictionary_output=False, verbose_level=0):
+    checkin=True, dictionary_output=False, vrblvl=0):
     r"""
     Calls the blackbox solver to compute all isolated solutions.
     To compute all solutions, also all positive dimensional solution sets,
@@ -267,10 +275,10 @@ def solve(pols, tasks=0, mvfocus=0, precision='d',
     If *checkin* (by default), the input *pols* is checked for being square.
     If *dictionary_output*, then on return is a list of dictionaries,
     else the returned list is a list of strings.
-    If *verbose_level* is larger than 0, then the names of the procedures
+    If *vrblvl* is larger than 0, then the names of the procedures
     called in the running of the blackbox solver will be listed.
     """
-    if verbose_level > 0:
+    if vrblvl > 0:
         print('in solve, tasks :', tasks, end='')
         print(', mvfocus :', mvfocus, end='')
         print(', precision :', precision)
@@ -285,43 +293,43 @@ def solve(pols, tasks=0, mvfocus=0, precision='d',
             print('The number of tasks must be a nonnegative integer.')
             return None
     if precision == 'd':
-        set_double_laurent_system(len(pols), pols, vrblvl=verbose_level-1)
+        set_double_laurent_system(len(pols), pols, vrblvl=vrblvl-1)
         nbr, roco = solve_double_laurent_system(nbtasks=tasks, \
-            mvfocus=mvfocus, vrblvl=verbose_level-1)
-        if verbose_level > 0:
+            mvfocus=mvfocus, vrblvl=vrblvl-1)
+        if vrblvl > 0:
             print('nbr :', nbr, end='')
             print(', roco :')
             print(roco)
-        sols = get_double_solutions(vrblvl=verbose_level-1)
-        clear_double_solutions(vrblvl=verbose_level-1)
+        sols = get_double_solutions(vrblvl=vrblvl-1)
+        clear_double_solutions(vrblvl=vrblvl-1)
         if dictionary_output:
             return formdictlist(sols)
         return sols
     if precision == 'dd':
         set_double_double_laurent_system(len(pols), pols, \
-            vrblvl=verbose_level-1)
+            vrblvl=vrblvl-1)
         nbr, roco = solve_double_double_laurent_system(nbtasks=tasks, \
-            mvfocus=mvfocus, vrblvl=verbose_level-1)
-        if verbose_level > 0:
+            mvfocus=mvfocus, vrblvl=vrblvl-1)
+        if vrblvl > 0:
             print('nbr :', nbr, end='')
             print(', roco :')
             print(roco)
-        sols = get_double_double_solutions(vrblvl=verbose_level-1)
-        clear_double_double_solutions(vrblvl=verbose_level-1)
+        sols = get_double_double_solutions(vrblvl=vrblvl-1)
+        clear_double_double_solutions(vrblvl=vrblvl-1)
         if dictionary_output:
             return formdictlist(sols)
         return sols
     if precision == 'qd':
         set_quad_double_laurent_system(len(pols), pols, \
-            vrblvl=verbose_level-1)
+            vrblvl=vrblvl-1)
         nbr, roco = solve_quad_double_laurent_system(nbtasks=tasks, \
-            mvfocus=mvfocus, vrblvl=verbose_level-1)
-        if verbose_level > 0:
+            mvfocus=mvfocus, vrblvl=vrblvl-1)
+        if vrblvl > 0:
             print('nbr :', nbr, end='')
             print(', roco :')
             print(roco)
-        sols = get_quad_double_solutions(vrblvl=verbose_level-1)
-        clear_quad_double_solutions(vrblvl=verbose_level-1)
+        sols = get_quad_double_solutions(vrblvl=vrblvl-1)
+        clear_quad_double_solutions(vrblvl=vrblvl-1)
         if dictionary_output:
             return formdictlist(sols)
         return sols
@@ -336,23 +344,23 @@ def test_trinomial_solve(vrblvl=0):
     if vrblvl > 0:
         print('in test_trinomial_solve ...')
     seed(12345678)
-    pols = random_trinomials()
+    pols = random_trinomials(vrblvl)
     if vrblvl > 0:
         print('two random trinomials :')
         print(pols)
     set_seed(12345678)
-    set_double_system(2, pols)
-    (mixvol, stable_mixvol) = stable_mixed_volume()
+    set_double_system(2, pols, vrblvl-1)
+    (mixvol, stable_mixvol) = stable_mixed_volume(vrblvl-1)
     if vrblvl > 0:
         print('its mixed volume :', mixvol)
         print('its stable mixed volume :', stable_mixvol)
-    nbr, roco = solve_double_system()
+    nbr, roco = solve_double_system(vrblvl=vrblvl)
     if vrblvl > 0:
         print('number of computed solutions :', nbr)
         print('the root counts :')
         print(roco)
     clear_double_solutions(vrblvl-1)
-    return int(nbr != 28)
+    return int(nbr != stable_mixvol) + int(nbr != 28)
 
 def test_double_solve(vrblvl=0):
     """
@@ -363,7 +371,7 @@ def test_double_solve(vrblvl=0):
         print('in test_double_solve ...')
     polynomials = ["x^3 + 2*x*y - x^2;", "x + y - x^3;"]
     set_double_system(2, polynomials, vrblvl-1)
-    nbr, roco = solve_double_system(vrblvl-1)
+    nbr, roco = solve_double_system(vrblvl=vrblvl)
     if vrblvl > 0:
         print('number of solutions :', nbr)
         print('root counts :\n', roco)
@@ -383,7 +391,7 @@ def test_double_double_solve(vrblvl=0):
         print('in test_double_double_solve ...')
     polynomials = ["x^3 + 2*x*y - x^2;", "x + y - x^3;"]
     set_double_double_system(2, polynomials, vrblvl-1)
-    nbr, roco = solve_double_double_system(vrblvl-1)
+    nbr, roco = solve_double_double_system(vrblvl=vrblvl)
     if vrblvl > 0:
         print('number of solutions :', nbr)
         print('root counts :\n', roco)
@@ -403,7 +411,7 @@ def test_quad_double_solve(vrblvl=0):
         print('in test_quad_double_solve ...')
     polynomials = ["x^3 + 2*x*y - x^2;", "x + y - x^3;"]
     set_quad_double_system(2, polynomials, vrblvl-1)
-    nbr, roco = solve_quad_double_system(vrblvl-1)
+    nbr, roco = solve_quad_double_system(vrblvl=vrblvl)
     if vrblvl > 0:
         print("number of solutions :", nbr)
         print("root counts :\n", roco)
@@ -423,7 +431,7 @@ def test_double_laurent_solve(vrblvl=0):
         print('in test_double_laurent_solve ...')
     polynomials = ["x^(-3) + 2*x*y - x;", "x + y^(-2) - x^3;"]
     set_double_laurent_system(2, polynomials, vrblvl-1)
-    nbr, roco = solve_double_laurent_system(vrblvl-1)
+    nbr, roco = solve_double_laurent_system(vrblvl=vrblvl)
     if vrblvl > 0:
         print('number of solutions :', nbr)
         print('root counts :\n', roco)
@@ -443,7 +451,7 @@ def test_double_double_laurent_solve(vrblvl=0):
         print('in test_double_double_laurent_solve ...')
     polynomials = ["x^(-3) + 2*x*y - x;", "x + y^(-2) - x^3;"]
     set_double_double_laurent_system(2, polynomials, vrblvl-1)
-    nbr, roco = solve_double_double_laurent_system(vrblvl-1)
+    nbr, roco = solve_double_double_laurent_system(vrblvl=vrblvl)
     if vrblvl > 0:
         print('number of solutions :', nbr)
         print('root counts :\n', roco)
@@ -463,7 +471,7 @@ def test_quad_double_laurent_solve(vrblvl=0):
         print('in test_quad_double_laurent_solve ...')
     polynomials = ["x^(-3) + 2*x*y - x;", "x + y^(-2) - x^3;"]
     set_quad_double_laurent_system(2, polynomials, vrblvl-1)
-    nbr, roco = solve_quad_double_laurent_system(vrblvl-1)
+    nbr, roco = solve_quad_double_laurent_system(vrblvl=vrblvl)
     if vrblvl > 0:
         print('number of solutions :', nbr)
         print('root counts :\n', roco)
@@ -481,7 +489,7 @@ def test_solve(vrblvl=0):
     if vrblvl > 0:
         print('in test_solve ...')
     polynomials = ["x^3 + 2*x*y - x^2;", "x + y - x^3;"]
-    sols = solve(polynomials, verbose_level=vrblvl)
+    sols = solve(polynomials, vrblvl=vrblvl)
     if vrblvl > 0:
         print('the solutions :')
         for sol in sols:

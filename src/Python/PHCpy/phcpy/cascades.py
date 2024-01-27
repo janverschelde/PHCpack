@@ -412,7 +412,7 @@ def double_top_cascade(nvr, dim, pols, tol=1.0e-6, tasks=0, vrblvl=0):
     topemb = double_embed(nvr, dim, pols, vrblvl-1)
     if vrblvl > 0:
         print('solving the embedded system at the top ...')
-    topsols = solve(topemb, tasks=tasks, verbose_level=vrblvl-1)
+    topsols = solve(topemb, tasks=tasks, vrblvl=vrblvl-1)
     if vrblvl > 0:
         print('number of solutions found :', len(topsols))
     (sols0, sols1) = split_filter(topsols, dim, tol, vrblvl)
@@ -453,7 +453,7 @@ def double_double_top_cascade(nvr, dim, pols, \
     if vrblvl > 0:
         print('solving the embedded system at the top ...')
     topsols = solve(topemb, tasks=tasks, precision='dd', \
-        verbose_level=vrblvl-1)
+        vrblvl=vrblvl-1)
     if vrblvl > 0:
         print('number of solutions found :', len(topsols))
     (sols0, sols1) = split_filter(topsols, dim, tol, vrblvl)
@@ -494,7 +494,7 @@ def quad_double_top_cascade(nvr, dim, pols, \
     if vrblvl > 0:
         print('solving the embedded system at the top ...')
     topsols = solve(topemb, tasks=tasks, precision='qd', \
-        verbose_level=vrblvl-1)
+        vrblvl=vrblvl-1)
     if vrblvl > 0:
         print('number of solutions found :', len(topsols))
     (sols0, sols1) = split_filter(topsols, dim, tol, vrblvl)
@@ -534,7 +534,7 @@ def double_laurent_top_cascade(nvr, dim, pols, \
     topemb = double_laurent_embed(nvr, dim, pols, vrblvl-1)
     if vrblvl > 0:
         print('solving the embedded system at the top ...')
-    topsols = solve(topemb, tasks=tasks, verbose_level=vrblvl-1)
+    topsols = solve(topemb, tasks=tasks, vrblvl=vrblvl-1)
     if vrblvl > 0:
         print('number of solutions found :', len(topsols))
     (sols0, sols1) = split_filter(topsols, dim, tol, vrblvl)
@@ -575,7 +575,7 @@ def double_double_laurent_top_cascade(nvr, dim, pols, \
     if vrblvl > 0:
         print('solving the embedded system at the top ...')
     topsols = solve(topemb, tasks=tasks, precision='dd', \
-        verbose_level=vrblvl-1)
+        vrblvl=vrblvl-1)
     if vrblvl > 0:
         print('number of solutions found :', len(topsols))
     (sols0, sols1) = split_filter(topsols, dim, tol, vrblvl)
@@ -616,7 +616,7 @@ def quad_double_laurent_top_cascade(nvr, dim, pols, \
     if vrblvl > 0:
         print('solving the embedded system at the top ...')
     topsols = solve(topemb, tasks=tasks, precision='qd', \
-        verbose_level=vrblvl-1)
+        vrblvl=vrblvl-1)
     if vrblvl > 0:
         print('number of solutions found :', len(topsols))
     (sols0, sols1) = split_filter(topsols, dim, tol, vrblvl)

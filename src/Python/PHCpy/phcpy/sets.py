@@ -1164,7 +1164,7 @@ def test_double_twisted(vrblvl=0):
         print('the embedded system :')
         for pol in twistede1:
             print(pol)
-    sols = solve(twistede1, verbose_level=vrblvl)
+    sols = solve(twistede1, vrblvl=vrblvl)
     if vrblvl > 0:
         for (idx, sol) in enumerate(sols):
             print('Solution', idx+1, ':')
@@ -1187,7 +1187,7 @@ def test_double_double_twisted(vrblvl=0):
         print('the embedded system :')
         for pol in twistede1:
             print(pol)
-    sols = solve(twistede1, tasks=1, precision='dd', verbose_level=vrblvl)
+    sols = solve(twistede1, tasks=1, precision='dd', vrblvl=vrblvl)
     if vrblvl > 0:
         for (idx, sol) in enumerate(sols):
             print('Solution', idx+1, ':')
@@ -1210,7 +1210,7 @@ def test_quad_double_twisted(vrblvl=0):
         print('the embedded system :')
         for pol in twistede1:
             print(pol)
-    sols = solve(twistede1, tasks=1, precision='qd', verbose_level=vrblvl)
+    sols = solve(twistede1, tasks=1, precision='qd', vrblvl=vrblvl)
     if vrblvl > 0:
         for (idx, sol) in enumerate(sols):
             print('Solution', idx+1, ':')
@@ -1236,7 +1236,7 @@ def test_double_laurent_twisted(vrblvl=0):
             print(pol)
     # second trick to avoid single monomial equation
     twistede1[2] = twistede1[2][:-1] + twistede1[3]
-    sols = solve(twistede1, verbose_level=vrblvl)
+    sols = solve(twistede1, vrblvl=vrblvl)
     if vrblvl > 0:
         for (idx, sol) in enumerate(sols):
             print('Solution', idx+1, ':')
@@ -1262,7 +1262,7 @@ def test_double_double_laurent_twisted(vrblvl=0):
             print(pol)
     # second trick to avoid single monomial equation
     twistede1[2] = twistede1[2][:-1] + twistede1[3]
-    sols = solve(twistede1, tasks=1, precision='dd', verbose_level=vrblvl)
+    sols = solve(twistede1, tasks=1, precision='dd', vrblvl=vrblvl)
     if vrblvl > 0:
         for (idx, sol) in enumerate(sols):
             print('Solution', idx+1, ':')
@@ -1288,7 +1288,7 @@ def test_quad_double_laurent_twisted(vrblvl=0):
             print(pol)
     # second trick to avoid single monomial equation
     twistede1[2] = twistede1[2][:-1] + twistede1[3]
-    sols = solve(twistede1, tasks=1, precision='qd', verbose_level=vrblvl)
+    sols = solve(twistede1, tasks=1, precision='qd', vrblvl=vrblvl)
     if vrblvl > 0:
         for (idx, sol) in enumerate(sols):
             print('Solution', idx+1, ':')
@@ -1304,7 +1304,7 @@ def test_double_member(vrblvl=0):
     twisted = ['x^2 - y;', 'x^3 - z;']
     twistede1 = double_embed(3, 1, twisted, vrblvl=vrblvl)
     twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
-    sols = solve(twistede1, verbose_level=vrblvl)
+    sols = solve(twistede1, vrblvl=vrblvl)
     inpoint = [1, 0, 1, 0, 1, 0]
     ismbr = double_membertest(twistede1, sols, 1, inpoint, vrblvl=vrblvl)
     if vrblvl > 0:
@@ -1326,7 +1326,7 @@ def test_double_double_member(vrblvl=0):
     twisted = ['x^2 - y;', 'x^3 - z;']
     twistede1 = double_double_embed(3, 1, twisted, vrblvl=vrblvl)
     twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
-    sols = solve(twistede1, tasks=1, precision='dd', verbose_level=vrblvl)
+    sols = solve(twistede1, tasks=1, precision='dd', vrblvl=vrblvl)
     inpoint = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0]
     ismbr = double_double_membertest(twistede1, sols, 1, inpoint, \
         vrblvl=vrblvl)
@@ -1350,7 +1350,7 @@ def test_quad_double_member(vrblvl=0):
     twisted = ['x^2 - y;', 'x^3 - z;']
     twistede1 = quad_double_embed(3, 1, twisted, vrblvl=vrblvl)
     twistede1[0] = 'x + y + z - x - y - z + ' + twistede1[0]
-    sols = solve(twistede1, tasks=1, precision='qd', verbose_level=vrblvl)
+    sols = solve(twistede1, tasks=1, precision='qd', vrblvl=vrblvl)
     inpoint = [1, 0, 0, 0, 0, 0, 0, 0, \
                1, 0, 0, 0, 0, 0, 0, 0, \
                1, 0, 0, 0, 0, 0, 0, 0 ]
@@ -1384,7 +1384,7 @@ def test_double_drop(vrblvl=0):
         for pol in twistede1:
             print(pol)
     clear_double_solutions(vrblvl)
-    sols = solve(twistede1, verbose_level=vrblvl)
+    sols = solve(twistede1, vrblvl=vrblvl)
     if vrblvl > 0:
         print('the solutions :')
         for (idx, sol) in enumerate(sols):
@@ -1421,7 +1421,7 @@ def test_double_double_drop(vrblvl=0):
         for pol in twistede1:
             print(pol)
     clear_double_double_solutions(vrblvl)
-    sols = solve(twistede1, tasks=1, precision='dd', verbose_level=vrblvl)
+    sols = solve(twistede1, tasks=1, precision='dd', vrblvl=vrblvl)
     if vrblvl > 0:
         print('the solutions :')
         for (idx, sol) in enumerate(sols):
@@ -1460,7 +1460,7 @@ def test_quad_double_drop(vrblvl=0):
         for pol in twistede1:
             print(pol)
     clear_quad_double_solutions()
-    sols = solve(twistede1, precision='qd', verbose_level=vrblvl)
+    sols = solve(twistede1, precision='qd', vrblvl=vrblvl)
     if vrblvl > 0:
         print('the solutions :')
         for (idx, sol) in enumerate(sols):
