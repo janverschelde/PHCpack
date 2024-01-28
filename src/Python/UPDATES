@@ -3,6 +3,8 @@ Sun 28 Jan 2024 : extended __init__.py so that it also can load the
   are used.  Completed welcome.rst in the phcpy documentation.
   Added the 'haas.ipynb' to the tutorial of the documentation.
   Updated haas.ipynb for saving of figures.
+  Added fourbar and fourlines to the phcpy documentation,
+  updated fourbar.ipynb and fourlines.ipynb.
 
 Sat 27 Jan 2024 : shorted 'verbose_level' to 'vrblvl' in the solve()
   of solver.py, updated sets.py, cascades.py, and factor.py.
