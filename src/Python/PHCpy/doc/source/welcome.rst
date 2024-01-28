@@ -47,3 +47,30 @@ the user can control the pace of the tracker, asking for the next
 point on a solution path, which is very convenient for plotting.
 This is one of the features of ``phcpy`` which makes PHCpack more
 versatile to the Python programmer.
+
+installing phcpy
+================
+
+The installation requires the library files
+``libPHCpack.so`` (Linux), ``libPHCpack.dll`` (windows), and
+``libPHCpack.dylib`` (Mac OS X) to be present in the folder 
+that holds the modules of ``phcpy``.
+
+The file ``setup.py`` defines the instructions to install
+and is located of the parent folder of ``phcpy`` modules.
+
+Then the installation happens simply via
+
+::
+
+   pip install .
+
+executed at the command prompt in the folder where ``setup.py``
+is located.
+The installation may require superuser priveleges 
+and on older systems with a python2 present, ``pip3`` may be needed.
+
+To make the library files ``libPHCpack``, one can use the 
+alire crate ``phcpack``.  
+Alire <https://alire.ada.dev> is the name of the package
+manager of Ada.
