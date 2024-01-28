@@ -36,10 +36,10 @@ The computationally intensive tasks such as path tracking
 and mixed volume computations are executed as compiled code
 so there will not be a loss of efficiency.
 
-Both phcpy and PHCpack are free and open source software packages;
-you can redistribute it and/or modify it under the terms of the
-GNU General Public License as published by the Free Software Foundation;
-either version 2 of the License, or (at your option) any later version.  
+Both phcpy and PHCpack are free and open source software packages:
+you can redistribute it and/or modify it under the terms of 
+version 3 of the GNU General Public License 
+as published by the Free Software Foundation.
 
 At the poster session EuroSciPy 2013, questions from Max Demenkov 
 led to development of a step-by-step path tracker, a process in which
@@ -68,9 +68,198 @@ Then the installation happens simply via
 executed at the command prompt in the folder where ``setup.py``
 is located.
 The installation may require superuser priveleges 
+(although virtual environments are recommended);
 and on older systems with a python2 present, ``pip3`` may be needed.
 
 To make the library files ``libPHCpack``, one can use the 
 alire crate ``phcpack``.  
 Alire <https://alire.ada.dev> is the name of the package
 manager of Ada.
+
+extending SageMath with phcpy
+=============================
+
+The SageMath project was one of the motivations
+for the development of ``phcpy``.
+
+To extend SageMath with ``phcpy``, locate the python interpreter
+used by SageMath and then extend that python with ``phcpy``.
+
+Importing phcpy apparently changes the configuration of the signal 
+handlers which may lead SageMath to crash when exceptions occur.
+Thanks to Marc Culler for reporting this problem
+and for suggesting a work around:
+
+::
+
+   sage: import phcpy
+   sage: from cysignals import init_cysignals
+   sage: init_cysignals()
+   sage: pari(1)/pari(0)
+
+Without the ``init_cysignals()``,
+the statement ``pari(1)/pari(0)`` crashes SageMath.
+With the ``init_cysignals()``, the ``PariError`` exception is handled
+and the user can continue the SageMath session.
+
+project history
+===============
+
+This section describes some milestones in the development history.
+
+The Python interface to PHCpack got to a first start when
+Kathy Piret met William Stein at the software for algebraic geometry
+workshop at the IMA in the Fall of 2006.  
+The first version of this interface is described
+in the 2008 PhD Thesis of Kathy Piret.
+
+The implementation of the Python bindings depend on the C interface
+to PHCpack, developed for use with message passing on distributed
+memory computers.
+
+Version 0.0.1 originated at lecture 40 of MCS 507 in the Fall of 2012,
+as an illustration of Sphinx.  In Spring of 2013, version 0.0.5 was
+presented at a graduate computational algebraic geometry seminar.
+Version 0.1.0 was prepared for presentation at EuroSciPy 2013 (August 2013).
+Improvements using pylint led to version 0.1.1
+and the module maps was added in version 0.1.2.
+Version 0.1.4 added path trackers with a generator
+so all solutions along a path are returned to the user.
+Multicore path tracking was added in version 0.1.7.
+
+The paper **Modernizing PHCpack through phcpy**
+written for the EuroSciPy 2013 proceedings 
+and available at <http://arxiv.org/abs/1310.0056>
+describes the design of phcpy.
+
+Version 0.2.9 coincides with version 2.4 of PHCpack and gives access
+to the first version of the GPU accelerated path trackers.
+Sweep homotopies to explore the parameter space with detection and
+location of singularities along the solution paths were exported
+in the module sweepers.py in version 0.3.3 of phcpy.
+With the addition of a homotopy membership test in verion 0.3.7,
+the sets.py module provides the key ingredients for a numerical
+irreducible decomposition.  
+Version 0.5.0 introduced Newton's method on power series.
+Use cases were added to the documentation in versions 0.5.2, 0.5.3, and 0.5.4.
+With static linking, the dependencies on the gnat runtime libraries are removed
+and the Sage python interpreter could be extended with version 0.6.2.
+Better support of Laurent polynomial systems was added in version 0.6.8.
+In version 0.6.9, the large module sets.py was divided up, leading to
+the new modules cascades.py, factor.py, and diagonal.py.
+Code snippets for jupyter notebook menu extensions were defined
+in version 0.7.4.  Version 0.8.3 gave access to DEMiCs to compute
+mixed volumes by dynamic enumeration of all mixed cells.
+
+Version 0.9.2 was presented in a talk at the Python devroom at FOSDEM 2019.
+Another important milestone was the poster presentation
+at the 18th Python in Science Conference, SciPy 2019,
+with a paper which appeared in the proceedings (see the references below).
+
+As the original goal of phcpy was on exporting the functionality of
+PHCpack, its design is functional and phcpy is a collection of modules.
+Since version 1.0.0, two class definitions were added,
+one to represent systems of polynomials and another class to
+represent solutions of polynomial systems.
+
+Prior to release 1.1.3, extension modules were applied,
+which worked on Linux and Mac OS X, but unfortunately not on Windows.
+Version 1.1.3 relies directly on the object file ``libPHCpack``
+and applies the ``ctypes`` to interface more directly with the
+compiled code.  The development of version 1.1.3 happened mainly
+on Windows, in an Anaconda distribution of Python.
+
+references
+==========
+
+1. T. Gao, T. Y. Li, M. Wu:
+   **Algorithm 846: MixedVol: a software package for mixed-volume 
+   computation.**
+   *ACM Transactions on Mathematical Software*, 31(4):555-560, 2005.
+
+#. Y. Hida, X.S. Li, and D.H. Bailey:
+   **Algorithms for quad-double precision floating point arithmetic.**
+   In *15th IEEE Symposium on Computer Arithmetic (Arith-15 2001)*,
+   11-17 June 2001, Vail, CO, USA, pages 155-162.
+   IEEE Computer Society, 2001.
+   Shortened version of Technical Report LBNL-46996.
+
+#. M. Joldes, J.-M. Muller, V. Popescu, and W. Tucker: 
+   **CAMPARY: Cuda Multiple Precision Arithmetic Library and Applications.** 
+   In *Mathematical Software - ICMS 2016*, pages 232-240,
+   Springer-Verlag 2016.
+
+#. A. Leykin and J. Verschelde.
+   **Interfacing with the numerical homotopy algorithms in PHCpack.**
+   In N. Takayama and A. Iglesias, editors, *Proceedings of ICMS 2006*,
+   volume 4151 of *Lecture Notes in Computer Science*,
+   pages 354--360. Springer-Verlag, 2006.
+
+#. T. Mizutani and A. Takeda.
+   **DEMiCs: A software package for computing the mixed volume via
+   dynamic enumeration of all mixed cells.**
+   In M. E. Stillman, N. Takayama, and J. Verschelde, editors,
+   *Software for Algebraic Geometry*, volume 148 of The IMA Volumes in
+   Mathematics and its Applications, pages 59-79. Springer-Verlag, 2008.
+
+#. T. Mizutani, A. Takeda, and M. Kojima.
+   **Dynamic enumeration of all mixed cells.**
+   *Discrete Comput. Geom.* 37(3):351-367, 2007.
+
+#. J. Otto, A. Forbes, and J. Verschelde.
+   **Solving Polynomial Systems with phcpy.**
+   In the *Proceedings of the 18th Python in Science Conference (SciPy 2019)*,
+   edited by Chris Calloway, David Lippa, Dillon Niederhut and David Shupe,
+   pages 58-64, 2019. 
+
+#. K. Piret:
+   **Computing Critical Points of Polynomial Systems 
+   using PHCpack and Python.**
+   PhD Thesis, University of Illinois at Chicago, 2008.
+
+#. A. J. Sommese, J. Verschelde, and C. W. Wampler.
+   **Numerical irreducible decomposition using PHCpack.**
+   In *Algebra, Geometry, and Software Systems*, 
+   edited by M. Joswig and N. Takayama,
+   pages 109-130. Springer-Verlag, 2003.
+
+#. J. Verschelde:
+   **Algorithm 795: PHCpack: A general-purpose solver for polynomial
+   systems by homotopy continuation.**
+   *ACM Transactions on Mathematical Software*, 25(2):251--276, 1999.
+
+#. J. Verschelde:
+   **Modernizing PHCpack through phcpy.**
+   In Proceedings of the 6th European Conference on Python in Science
+   (EuroSciPy 2013), edited by Pierre de Buyl and Nelle Varoquaux,
+   pages 71-76, 2014, available at
+   <http://arxiv.org/abs/1310.0056>.
+
+#. J. Verschelde:
+   **Exporting Ada Software to Python and Julia.**
+   *ACM SIGAda Ada Letters* 42(1):76-78, 2022.
+
+#. J. Verschelde and X. Yu:
+   **Polynomial Homotopy Continuation on GPUs.**
+   *ACM Communications in Computer Algebra*, 49(4):130-133, 2015.
+
+acknowledgments
+===============
+
+The PhD thesis of Kathy Piret (cited above) described the
+development of a first Python interface to PHCpack.
+The 2008 ``phcpy.py`` provided access to the blackbox solver,
+the path trackers, and the mixed volume computation.
+
+In the summer of 2017, Jasmine Otto helped with the setup of
+jupyterhub and the definition of a SageMath kernel.
+Code snippets with example uses of ``phcpy`` in a Jupyter notebook
+were introduced during that summer.  The code snippets,
+listed in a chapter of this document, provide another good way
+to explore the capabilities of the software.
+
+This material is based upon work supported by the 
+National Science Foundation under Grants 1115777, 1440534, and 1854513.
+Any opinions, findings, and conclusions or recommendations expressed 
+in this material are those of the author(s) and do not necessarily 
+reflect the views of the National Science Foundation. 
