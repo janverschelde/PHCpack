@@ -103,6 +103,13 @@ def get_site_location(vrblvl=0):
     if vrblvl > 0:
         print('sites :', sites)
     bools = ['site-packages' in x for x in sites]
+    if len(bools) > 0:
+        if True in bools:
+            idx = bools.index(True)
+            return sites[idx]
+    if vrblvl > 0:
+        print('no site-packages, look for dist-packages ...')
+    bools = ['dist-packages' in x for x in sites]
     idx = bools.index(True)
     return sites[idx]
 

@@ -1,3 +1,7 @@
+Sun 28 Jan 2024 : extended __init__.py so that it also can load the
+  libPHCpack on systems where dist-packages instead of site-packages
+  are used.
+
 Sat 27 Jan 2024 : shorted 'verbose_level' to 'vrblvl' in the solve()
   of solver.py, updated sets.py, cascades.py, and factor.py.
   Fixed documentation strings in sets.py and factor.py.
