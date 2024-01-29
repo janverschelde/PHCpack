@@ -12,6 +12,7 @@ This folder contains test scripts to help the phcpy development.
 | showpoles.py   | shows the poles closest to four paths        |
 | minors2x2.py   | decomposition of adjacent 2-by-2 minors      |
 | sevenbar.py    | irreducible decomposition of 7-bar design    |
+| touchcircle.py | diagonal homotopy to touch a circle          |
 
 The apollonius.py, fourbar.py, and fourlines.py correspond to
 the use cases in the tutorial of the phcpy documentation.

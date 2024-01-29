@@ -1,3 +1,5 @@
+Mon 29 Jan 2024 : fixed missing entry in README.md of tests folder.
+
 Sun 28 Jan 2024 : extended __init__.py so that it also can load the
   libPHCpack on systems where dist-packages instead of site-packages
   are used.  Completed welcome.rst in the phcpy documentation.
