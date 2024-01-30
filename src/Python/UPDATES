@@ -1,3 +1,5 @@
+Tue 30 Jan 2024 : added the 2-by-2 minors test to the phcpy tutorial.
+
 Mon 29 Jan 2024 : fixed missing entry in README.md of tests folder.
   Added the plotting of paths and poles to the documentation,
   updated showpaths.ipynb and showpoles.ipynb.
