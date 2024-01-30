@@ -1,4 +1,6 @@
 Mon 29 Jan 2024 : fixed missing entry in README.md of tests folder.
+  Added the plotting of paths and poles to the documentation,
+  updated showpaths.ipynb and showpoles.ipynb.
 
 Sun 28 Jan 2024 : extended __init__.py so that it also can load the
   libPHCpack on systems where dist-packages instead of site-packages
