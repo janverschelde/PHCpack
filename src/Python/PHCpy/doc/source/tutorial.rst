@@ -5,7 +5,8 @@ Tutorial
 Via some interesting use cases, several features are introduced.
 
 1. If one can solve polynomial systems,
-   then one can solve many problems.
+   then one can solve many problems,
+   as illustrated by the wide variety of application areas.
 
 2. The use cases illustrate the formulation of the polynomial systems
    via the packages in Python's computational ecosystem,
@@ -15,6 +16,10 @@ Via some interesting use cases, several features are introduced.
 
 For the plots, Jupyter notebooks are available in the ``tests`` folder.
 The development of the use cases happened via short Python scripts.
+
+In the ``phcpy`` context, solving a problem includes the writing
+of scripts which formulate the polynomial system that define the problem
+and the scripts which verify and interpret the solutions.
 
 A Counter Example to Koushnirenko's Conjecture
 ==============================================
@@ -36,19 +41,19 @@ To get the proper wall clock time, we have to be mindful
 that the Python code calls the compiled functions in the PHCpack library.  
 Therefore, the Python timers will not give accurate timings.  
 Instead, we have to rely on the actual date and time, 
-from the package `datetime` in Python."
+from the package ``datetime`` in Python.
 
 ::
 
     from datetime import datetime
 
-For the plot, the implicit plotting of `sympy` will be used.
+For the plot, the implicit plotting of ``sympy`` will be used.
 
 ::
 
     from sympy import plot_implicit, symbols, Eq
 
-From `phcpy` we import the following functions:
+From ``phcpy`` we import the following functions:
 
 ::
 
@@ -191,7 +196,7 @@ no more than four real positive roots.
 Plotting the Curves
 -------------------
 
-In converting the strings in the polynomial system `H` 
+In converting the strings in the polynomial system ``H`` 
 we have to remove the trailing semicolon
 
 ::
@@ -300,20 +305,20 @@ From `sympy` we import the following:
     from sympy import var
     from sympy.matrices import Matrix
 
-For the plotting, we import `pyplot` of `matplotlib`.
+For the plotting, we import ``pyplot`` of ``matplotlib``.
 
 ::
 
     import matplotlib.pyplot as plt
 
 And then, last an not least, the blackbox solver
-of `phcpy` is imported.
+of ``phcpy`` is imported.
 
 ::
 
     from phcpy.solver import solve
 
-As `phcpy` is an API, the problem is solved
+As ``phcpy`` is an API, the problem is solved
 via a sequence of functions.
 
 solving a polynomial system
@@ -415,7 +420,7 @@ of which the coupler passes through the five points.
     sols = solve(equ)
     len(sols)
 
-The number is `36` which is invariant for this problem.
+The number is ``36`` which is invariant for this problem.
 Solving a general problem, for random precision points, 
 shows that the number of solutions is 36.
 
@@ -484,7 +489,7 @@ shows
     y1*(-1.13*c3 + 0.43*s3 + 0.5) + y2*(0.43*c3 + 1.13*s3 - 1.06) + 0.0440999999999999;
     y1*(-0.78*c4 + 0.78*s4 + 0.5) + y2*(0.78*c4 + 0.78*s4 - 1.06) - 0.0784;
 
-and then continues with `the solutions :` which is skipped
+and then continues with ``the solutions :`` which is skipped
 as the output of the function gives the list of real solutions.
 
 ::
@@ -730,7 +735,7 @@ The output is
     x =  0.676178657404253 -0.613650952963839
     y =  0.356055523659319 0.310794500797803
 
-Observe that one of the lists of ordered angles is used in the `showbar()`.
+Observe that one of the lists of ordered angles is used in the ``showbar()``.
 
 the coupler curve
 -----------------
@@ -984,8 +989,8 @@ Two Lines Meeting Four Given Lines
 Given four lines in general position,
 there are two lines which meet all four given lines.
 With Pieri homotopies we can solve this Schubert problem.
-For the verification of the intersection conditions, `numpy` is used.
-The plots are made with `matplotlib`.
+For the verification of the intersection conditions, ``numpy`` is used.
+The plots are made with ``matplotlib``.
 
 We use random numbers and for reproducible plots, fix the seed.
 
@@ -993,7 +998,7 @@ We use random numbers and for reproducible plots, fix the seed.
 
    from random import seed
 
-From `numpy` we import the following.
+From ``numpy`` we import the following.
 
 ::
 
@@ -1030,7 +1035,7 @@ The formal root count run as
     pcnt = pieri_root_count(mdim, pdim, deg, False)
     pcnt
 
-and outputs `2`.
+and outputs ``2``.
 
 To setup the problem, some auxiliary functions are first defined.
 
@@ -1160,7 +1165,7 @@ has as output
      [ 1.20071164-2.11957742j  0.91569812-1.31875637j]
      [ 0.        +0.j         -1.04202682+0.09584754j]]
 
-To check the solutions, we use `numpy` as follows:
+To check the solutions, we use ``numpy`` as follows:
 
 ::
 
@@ -1217,11 +1222,11 @@ We can generate inputs for which all solutions are real.
         outplanes = [solution_plane(mdim+pdim, pdim, sol) for sol in rtsols]
         return (inplanes, outplanes, target, rtsols)
 
-For visualization, the seed of the random number generators is set fixed."
+For visualization, the seed of the random number generators is set fixed.
 
 ::
 
-    seed(400)"
+    seed(400)
 
 The output of
 
@@ -1697,18 +1702,18 @@ the polynomial systems
 
 Without loss of generality, we take the first circle to be the unit circle,
 centered at (0, 0) and with radius 1.  The origin of the second circle lies
-on the first coordinate axis, so its center has coordinates (`c2x`, 0) and
-radius `r2`.  The third circle has center (`c3x`, `c3y`) and radius `r3`.
-So there are five parameters in this problem: `c2x`, `r2`, `c3x`, `c3y`,
-and `r3`.
+on the first coordinate axis, so its center has coordinates (``c2x``, 0) and
+radius ``r2``.  The third circle has center (``c3x``, ``c3y``) and radius ``r3``.
+So there are five parameters in this problem: ``c2x``, ``r2``, ``c3x``, ``c3y``,
+and ``r3``.
 Values for the five parameters are defined by the first five equations.
-The next three equations determine the center (`x`, `y`) and the radius `r`
+The next three equations determine the center (``x``, ``y``) and the radius ``r``
 of the circle which touches the three given circles.
 The condition on the center of the touching circle is that its distance
 to the center of the given circle is either the difference or the sum of
 the radii of both circles.  So we arrive at eight polynomial systems.
 
-The problem formulation is coded in the function `polynomials`.
+The problem formulation is coded in the function ``polynomials``.
 
 ::
 
@@ -1741,11 +1746,11 @@ The problem formulation is coded in the function `polynomials`.
         return [eqs0,eqs1,eqs2,eqs3,eqs4,eqs5,eqs6,eqs7]
 
 As an example of a general problem, the center of the second circle 
-is at `(2, 0)`, with radius `2/3`, and the third circle is centered
-at `(1, 1)`, with a radius of `1/3`.
+is at ``(2, 0)``, with radius ``2/3``, and the third circle is centered
+at ``(1, 1)``, with a radius of ``1/3``.
 
 Let us look at the eight polynomial systems, 
-computed as the output of the function `polynomials`.
+computed as the output of the function ``polynomials``.
 
 ::
 
@@ -1769,7 +1774,7 @@ The eight polynomial systems are shown below:
 plotting circles
 ----------------
 
-The package `matplotlib` has primitives to define circles.
+The package ``matplotlib`` has primitives to define circles.
 
 ::
 
@@ -1811,11 +1816,11 @@ The code to make :numref:`apolloniusfig1` is below:
 solving polynomial systems
 --------------------------
 
-To solve the polynomial systems, we apply the blackbox solver."
+To solve the polynomial systems, we apply the blackbox solver.
 
 ::
 
-    from phcpy.solver import solve"
+    from phcpy.solver import solve
 
 and we need some functions to extract the real solutions.
 
@@ -1823,7 +1828,7 @@ and we need some functions to extract the real solutions.
 
     from phcpy.solutions import strsol2dict, is_real
 
-The `solve4circles` calls the solver on the polynomial systems of the problem.
+The ``solve4circles`` calls the solver on the polynomial systems of the problem.
 
 ::
 
@@ -1859,7 +1864,7 @@ The `solve4circles` calls the solver on the polynomial systems of the problem.
                             print('radius =', rad)
         return result
 
-The function `solve4circles` puts the solutions of the polynomial 
+The function ``solve4circles`` puts the solutions of the polynomial 
 system in the format of our problem.
 Each solution is a circle, represented by a tuple of the coordinates 
 of the center and the radius of the circle.
@@ -2334,7 +2339,7 @@ edited by J.E. Goodman, J. Pach, and R. Pollack, AMS, 2008.
 formulating the equations
 -------------------------
 
-We need some vector calculus, done with `sympy`.
+We need some vector calculus, done with ``sympy``.
 
 ::
 
@@ -2364,7 +2369,7 @@ is computed by the code
     vm = Vector.zero + x3*N.i + x4*N.j + x5*N.k
     momvt = vt.dot(vm)
 
-The radii are `[0.5, 0.5, 0.5, 0.5]` defined by
+The radii are ``[0.5, 0.5, 0.5, 0.5]`` defined by
 
 ::
 
@@ -2490,7 +2495,7 @@ The solution list is shown below:
      x5 :  4.08248290463863E-01  -8.20070684937081E-18
     == err :  5.471E-16 = rco :  1.448E-17 = res :  3.682E-16 =
 
-Observe the `m : 4` which indicates the multiplicy four
+Observe the ``m : 4`` which indicates the multiplicy four
 of each solution.
 
 the tangent lines
@@ -2523,7 +2528,7 @@ and the moment vectors from which the tangent lines can be computed.
             result.append((pntcrd, tancrd))
         return result
 
-The input to the `tangent_lines` function is computed below:
+The input to the ``tangent_lines`` function is computed below:
 
 ::
 
@@ -2742,7 +2747,7 @@ the seed of the random number generator is fixed.
     set_seed(12871)
     print('the seed :', get_seed())
 
-What is printed is `the seed : 12871`.
+What is printed is ``the seed : 12871``.
 
 The system that will be solved is defined as follows:
 
@@ -2770,7 +2775,7 @@ Then here is the start system:
 
     print('number of start solutions :', len(qsols))
 
-and `4` is printed.
+and ``4`` is printed.
 
 ::
 
@@ -2858,7 +2863,7 @@ and shows then the plot
 Typically, with an adaptive step size control, 
 the points are closer to each other at the start 
 and end of the paths, and where the paths turn.
-The `trackers` module exports the original path trackers, 
+The ``trackers`` module exports the original path trackers, 
 which use *aposteriori step size control*.  
 An aposteriori step size control algorithm 
 determines the step size based on the performance of the corrector.
@@ -2945,7 +2950,7 @@ Then the homotopy is constructed:
 
 ::
 
-    initialize_double_artificial_homotopy(p, q, False)"
+    initialize_double_artificial_homotopy(p, q, False)
 
 Then the code below
 
@@ -3334,7 +3339,7 @@ In verbose mode, the progress of the algorithm is printed:
     calculated sum at samples :  2.68414486121697E-01  -5.27451814780890E-01
     value at the linear trace :  2.68414486121697E-01  -5.27451814780890E-01
 
-As a summary, the contents of `deco` is written as
+As a summary, the contents of ``deco`` is written as
 
 ::
 
@@ -3380,7 +3385,7 @@ with complex arithmetic.
     from cmath import exp
     from sympy import var
 
-From `phcpy`, the following functions are imported:
+From ``phcpy``, the following functions are imported:
 
 ::
 
@@ -3496,10 +3501,10 @@ Now, let us call the blackbox solver:
     sols = solve(generic)
     print('found', len(sols), 'solutions')
 
-which prints `found 18 solutions`.
+which prints ``found 18 solutions``.
 
-A condition table is a frequency table of the `err`,
-`rco`, and `res` fields of the solutions.
+A condition table is a frequency table of the ``err``,
+``rco``, and ``res`` fields of the solutions.
 
 ::
 
@@ -3600,23 +3605,23 @@ leads to
 
 ::
 
-    0.710358341606049*t1 + 0.46*t2 - 0.41*t3 + 0.240761300555115 + 1.07248215701824*I;\n",
-    t2*(-0.11 + 0.49*I) + 0.41*t3 - 0.502195181179589*t4 + 0.41*t5;\n",
-    0.502195181179589*t4 + t5*(-0.0980434782608696 + 0.436739130434783*I) - 0.775518556663656*t6 - 1.2;\n",
-    0.710358341606049*t1**(-1) + 0.46*t2**(-1) - 0.41*t3**(-1) + 0.240761300555115 - 1.07248215701824*I;\n",
-    t2**(-1)*(-0.11 - 0.49*I) + 0.41*t3**(-1) - 0.502195181179589*t4**(-1) + 0.41*t5**(-1);\n",
-    0.502195181179589*t4**(-1) + t5**(-1)*(-0.0980434782608696 - 0.436739130434783*I) - 0.775518556663656*t6**(-1) - 1.2;\n"
+    0.710358341606049*t1 + 0.46*t2 - 0.41*t3 + 0.240761300555115 + 1.07248215701824*I;
+    t2*(-0.11 + 0.49*I) + 0.41*t3 - 0.502195181179589*t4 + 0.41*t5;
+    0.502195181179589*t4 + t5*(-0.0980434782608696 + 0.436739130434783*I) - 0.775518556663656*t6 - 1.2;
+    0.710358341606049*t1**(-1) + 0.46*t2**(-1) - 0.41*t3**(-1) + 0.240761300555115 - 1.07248215701824*I;
+    t2**(-1)*(-0.11 - 0.49*I) + 0.41*t3**(-1) - 0.502195181179589*t4**(-1) + 0.41*t5**(-1);
+    0.502195181179589*t4**(-1) + t5**(-1)*(-0.0980434782608696 - 0.436739130434783*I) - 0.775518556663656*t6**(-1) - 1.2;
 
 
-Running the `solve` of the `solver` module and printing
+Running the ``solve`` of the ``solver`` module and printing
 the number of solutions
 
 ::
 
     sols = solve(special)
-    print('found', len(sols), 'solutions')"
+    print('found', len(sols), 'solutions')
 
-shows `found 6 solutions`.
+shows ``found 6 solutions``.
 Let us look at all solutions, executing
 
 ::
@@ -3710,7 +3715,7 @@ is
      [2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6])
 
-The `solve` of the solver module misses the component, but finds all isolated solutions.
+The ``solve`` of the solver module misses the component, but finds all isolated solutions.
 
 
 a numerical irreducible decomposition
@@ -4265,7 +4270,7 @@ with output in
      + (9.04264731472024E-01-4.26972241973442E-01*i)*t1 + (9.93763178327739E-01-1.11511189572842E-01*i)*t2 + (8.26568833449879E-01 + 5.62835645254728E-01*i)*t3 + (8.13748932516514E-01 + 5.81216547276687E-01*i)*t4 + (9.60611770393053E-01 + 2.77893912459997E-01*i)*t5 + (-5.80987954131586E-02 + 9.98310838352234E-01*i)*t6 + (1.86846899315945E-02 + 9.99825425943029E-01*i)*zz1+(-9.99671453748700E-01 + 2.56317100475435E-02*i);
 
 Observe that we have seven equation in seven variables,
-where the last variable is the slack variable `zz1`.
+where the last variable is the slack variable ``zz1``.
 
 The code in
 
@@ -4396,8 +4401,7 @@ With matplotlib a plot is made of the tangent lines.
 a witness set of the circle
 ---------------------------
 
-Consider the following system of polynomial equations:\n",
-
+Consider the following system of polynomial equations:
 
 .. math::
 
@@ -4840,7 +4844,7 @@ of the witness points for :math:`L_1` and :math:`L_2`.
 
 The function below adds to the solutions the values 
 for the :math:`L_1` and :math:`L_2`, 
-and adds two additional slack variables `zz2` and `zz3`.
+and adds two additional slack variables ``zz2`` and ``zz3``.
 
 ::
 
@@ -5087,7 +5091,7 @@ The code below
 plots the circle with radius 1, centered at (3, 2),
 along with its two lines tangent through (0, 0),
 with the plot shown in :numref:`touchcirclefig2`.
-The two solutions `sol1` and `sol2` define 3-tuples of
+The two solutions ``sol1`` and ``sol2`` define 3-tuples of
 x and y coordinates and a slope.
 
 ::

@@ -1,6 +1,6 @@
 Tue 30 Jan 2024 : added the 2-by-2 minors test to the phcpy tutorial,
   added the sevenbar test, and finally, the touchcircle test is
-  added to the phcpy tutorial.
+  added to the phcpy tutorial.  Edited tutorial.rst for markdown use.
 
 Mon 29 Jan 2024 : fixed missing entry in README.md of tests folder.
   Added the plotting of paths and poles to the documentation,
