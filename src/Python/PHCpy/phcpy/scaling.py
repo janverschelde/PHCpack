@@ -11,6 +11,10 @@ from phcpy.polynomials import set_double_double_system
 from phcpy.polynomials import get_double_double_system
 from phcpy.polynomials import set_quad_double_system
 from phcpy.polynomials import get_quad_double_system
+from phcpy.solutions import set_double_solutions, get_double_solutions
+from phcpy.solutions import clear_double_solutions
+from phcpy.solver import solve
+from phcpy.solutions import verify
 
 def double_scale_polynomials(mode, dim, vrblvl=0):
     """
@@ -159,6 +163,41 @@ def quad_double_scale_system(pols, vrblvl=0):
     spol = get_quad_double_system(vrblvl-1)
     return (spol, cffs)
 
+def double_scale_solutions(nvar, sols, cffs, vrblvl=0):
+    r"""
+    Scales the solutions in the list *sols* using the coefficients in *cffs*,
+    using standard double precision arithmetic.
+    The number of variables is given in the parameter *nvar*.
+    If the *sols* are the solutions of the polynomials in the output of
+    double_scale_system(pols), then the solutions on return will be
+    solutions of the original polynomials in the list pols.
+    """
+    if vrblvl > 0:
+        print('in double_scale_solutions, nvar :', nvar)
+        print('the solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+        print('the coefficients :', cffs)
+    clear_double_solutions(vrblvl-1)
+    set_double_solutions(nvar, sols, vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
+    adim = pointer(c_int32(len(cffs)))
+    bbasis = pointer(c_int32(10))
+    lencffs = len(cffs)
+    parcffs = (c_double * lencffs)()
+    for (idx, coefficient) in enumerate(cffs):
+        parcffs[idx] = c_double(coefficient)
+    pcff = pointer(parcffs)
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> double_scale_solutions calls phc', end='')
+    retval = phc(594, adim, bbasis, pcff, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    result = get_double_solutions(vrblvl-1)
+    return result
+
 def test_double_scale_polynomial(vrblvl=0):
     """
     Runs a test on scaling a polynomial in double precision.
@@ -166,13 +205,34 @@ def test_double_scale_polynomial(vrblvl=0):
     if vrblvl > 0:
         print('in test_double_scale_polynomial ...')
     orgp = ['100*x^2 + 10*x + 1;']
-    print('a badly scaled problem :', orgp)
-    print('scaling a polynomial in double precision')
+    if vrblvl > 0:
+        print('a badly scaled problem :', orgp)
+        print('scaling a polynomial in double precision')
     (scp, cff) = double_scale_system(orgp, vrblvl)
-    print('the scaled polynomial', scp)
-    print('the scaling coefficients :', cff[0:-2])
-    print('estimated inverse condition number :', cff[-2:-1])
-    return int(cff[0] != -1.0) # set x = 10^(-1)*y
+    if vrblvl > 0:
+        print('the scaled polynomial', scp)
+        print('the scaling coefficients :', cff[0:-2])
+        print('estimated inverse condition number :', cff[-2:-1])
+    fail = int(cff[0] != -1.0) # set x = 10^(-1)*y
+    if vrblvl > 0:
+        print('solving the scaled problem ...')
+    scpsols = solve(scp, vrblvl=vrblvl-1)
+    if vrblvl > 0:
+        print('the solutions of the scaled problem :')
+        for (idx, sol) in enumerate(scpsols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    orgpsols = double_scale_solutions(len(scp), scpsols, cff[0:-2], vrblvl)
+    if vrblvl > 0:
+        print('the solutions of the original problem :')
+        for (idx, sol) in enumerate(orgpsols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    err = verify(orgp, orgpsols, vrblvl-1)
+    if vrblvl > 0:
+        print('the error :', err)
+    fail = fail + int(err.real > 1.0e-8) + int(err.imag > 1.0e-8)
+    return fail
 
 def test_double_double_scale_polynomial(vrblvl=0):
     """

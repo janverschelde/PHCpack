@@ -1,5 +1,6 @@
 Wed 31 Jan 2024 : new module scaling for equation and variable scaling
   for systems with coefficients of varying magnitudes.
+  Added scaling of solutions in double precision to scaling.py.
 
 Tue 30 Jan 2024 : added the 2-by-2 minors test to the phcpy tutorial,
   added the sevenbar test, and finally, the touchcircle test is
