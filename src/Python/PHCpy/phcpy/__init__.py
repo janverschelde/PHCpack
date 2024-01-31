@@ -38,8 +38,8 @@ examples
 families
     polynomial system often occur in families and are defined for any
     number of equations and variables, e.g.: the cyclic n-roots system.
-deflation
-    restores quadratic convergence at an isolated singular solution.
+scaling
+    equation and variable scaling of polynomials.
 starters
     constructors of start systems for artificial parameter homotopies.
 homotopies
@@ -51,6 +51,8 @@ series
     defined by polynomial homotopies.
 curves
     exports apriori step size control path trackers.
+deflation
+    restores quadratic convergence at an isolated singular solution.
 schubert
     numerical Schubert calculus defines homotopies for enumerative geometry.
 sets
@@ -144,10 +146,11 @@ def set_phcfun(vrblvl=0):
 
 phc = set_phcfun()
 from phcpy import version, dimension, polynomials, solutions
-from phcpy import solver, volumes, examples, families, deflation
-from phcpy import starters, homotopies, trackers, series, curves
-from phcpy import schubert, sets, cascades, diagonal, factor, decomposition
-from phcpy import binomials
+from phcpy import solver, volumes, examples, families
+from phcpy import scaling, starters, homotopies, trackers
+from phcpy import series, curves, deflation, schubert
+from phcpy import sets, cascades, diagonal, factor
+from phcpy import decomposition, binomials
 
 # The version number is defined as a data attribute.
 __version__ = '1.1.3'

@@ -15,11 +15,11 @@ setup(
     py_modules = ['phcpy/version', 'phcpy/dimension', \
         'phcpy/polynomials', 'phcpy/solutions', 'phcpy/volumes', \
         'phcpy/solver', 'phcpy/examples', 'phcpy/families', \
-        'phcpy/deflation', 'phcpy/starters', 'phcpy/homotopies', \
+        'phcpy/scaling', 'phcpy/starters', 'phcpy/homotopies', \
         'phcpy/trackers', 'phcpy/series', 'phcpy/curves', \
-        'phcpy/schubert', 'phcpy/sets', 'phcpy/cascades', \
-        'phcpy/diagonal', 'phcpy/factor', 'phcpy/decomposition' \
-        'phcpy/binomials' ],
+        'phcpy/deflation', 'phcpy/schubert', 'phcpy/sets', \
+        'phcpy/cascades', 'phcpy/diagonal', 'phcpy/factor', \
+        'phcpy/decomposition' , 'phcpy/binomials' ],
     license = 'GNU GENERAL PUBLIC LICENSE version 3' ,
     package_data = {'phcpy':['libPHCpack.so', 'libPHCpack.dll', \
         'libPHCpack.dylib']} ,

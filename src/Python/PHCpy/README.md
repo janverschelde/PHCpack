@@ -16,12 +16,13 @@ in the phcpy folder.
 | solver         | exports the blackbox solver                      |
 | examples       | runs some examples                               |
 | families       | families of systems, for any dimension           |
-| deflation      | quadratic convergence at isolated singularity    |
+| scaling        | equation and variable scaling of polynomials     |
 | starters       | constructing start systems for homotopies        |
 | homotopies     | homotopies are systems in one parameter          |
 | trackers       | aposteriori step size control path trackers      |
 | series         | series expansions of solution curves             |
 | curves         | apriori step size control path trackers          |
+| deflation      | quadratic convergence at isolated singularity    |
 | schubert       | homotopies for enumerative geometry              |
 | sets           | representing positive dimensional solution sets  |
 | cascades       | generic points on all solution components        |
