@@ -1,3 +1,6 @@
+Thu 1 Feb 2024 : completed the scaling module in scaling.py, fixed errors
+  and added scaling of solutions with double doubles and quad doubles.
+
 Wed 31 Jan 2024 : new module scaling for equation and variable scaling
   for systems with coefficients of varying magnitudes.
   Added scaling of solutions in double precision to scaling.py.
