@@ -7,6 +7,7 @@ from math import pi, sin, cos
 from phcpy.version import get_phcfun
 from phcpy.version import int4a2nbr, nbr2int4a, int4a2str
 from phcpy.polynomials import get_double_polynomial
+from phcpy.polynomials import get_double_system
 from phcpy.solutions import get_double_solutions, clear_double_solutions
 from phcpy.solutions import verify
 
@@ -277,7 +278,86 @@ def run_pieri_homotopies(mdim, pdim, qdeg, planes, vrblvl=0, *pts):
             print(sol)
     return (pols, sols)
 
-def test_pieri(vrblvl=0):
+def double_littlewood_richardson_homotopies(ndim, kdim, brackets, \
+    verbose=True, vrfcnd=False, minrep=True, tosqr=False, outputfilename='',
+    vrblvl=0):
+    r"""
+    In n-dimensional space we consider k-dimensional planes,
+    subject to intersection conditions represented by brackets.
+    The parameters *ndim* and *kdim* give values for n and k respectively.
+    The parameter brackets is a list of brackets.  A bracket is a list
+    of as many natural numbers (in the range 1..*ndim*) as *kdim*.
+    The Littlewood-Richardson homotopies compute k-planes that
+    meet the flags at spaces of dimensions prescribed by the brackets,
+    in standard double precision.  Four options are passed as Booleans:
+
+    *verbose*: for adding extra output during computations,
+
+    *vrfcnd*: for extra diagnostic verification of Schubert conditions,
+
+    *minrep*: for a minimial representation of the problem formulation,
+
+    *tosqr*: to square the overdetermined systems.
+
+    On return is a 4-tuple.  The first item of the tuple is the
+    formal root count, sharp for general flags, then as second
+    item the coordinates of the flags.  The coordinates of the
+    flags are stored row wise in a list of real and imaginary parts.
+    The third and fourth item of the tuple on return are respectively
+    the polynomial system that has been solved and its solutions.
+    The length of the list of solution should match the root count.
+    """
+    if vrblvl > 0:
+        print('in double_littlewood_richardson_homotopies ...')
+        print('ndim :', ndim, '  kdim :', kdim)
+        print('the brackets :')
+        for bracket in brackets:
+            print(bracket)
+    clear_double_solutions(vrblvl-1)
+    phc = get_phcfun(vrblvl-1)
+    adims = (c_int32 * 8)()
+    adims[0] = c_int32(ndim)
+    adims[1] = c_int32(kdim)
+    adims[2] = c_int32(len(brackets))
+    adims[3] = c_int32(int(verbose))
+    adims[4] = c_int32(int(vrfcnd))
+    adims[5] = c_int32(len(outputfilename))
+    adims[6] = c_int32(int(minrep))
+    adims[7] = c_int32(int(tosqr))
+    pdims = pointer(adims)
+    nbc = len(brackets)*kdim
+    bcnd = (c_int32 * nbc)()
+    idx = 0
+    for bracket in brackets:
+        for num in bracket:
+            bcnd[idx] = c_int32(num)
+            idx = idx + 1
+    pcnd = pointer(bcnd)
+    size = 4*(len(brackets) - 2)*ndim*ndim+1
+    name = (c_double * size)()
+    for (idx, letter) in enumerate(outputfilename):
+        name[idx] = letter
+    pname = pointer(name)
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> double_littlewood_richardson_homotopies calls phc ...')
+    retval = phc(229, pdims, pcnd, pname, vrb)
+    if vrblvl > 0:
+        print('the return value of phc :', retval)
+    roco = int(pname[0][0])
+    if vrblvl > 0:
+        print('the root count :', roco)
+    allcffs = pname[0][1:size] 
+    flgs = []
+    for idx in range(size, 2):
+        realnbr = allcffs[0][idx]
+        imagnbr = allcffs[0][idx+1]
+        flgs.append(complex(realnbr, imagnbr))
+    fsys = get_double_system(vrblvl-1)
+    sols = get_double_solutions(vrblvl-1)
+    return (roco, flgs, fsys, sols)
+
+def test_pieri_count(vrblvl=0):
     """
     Tests the Pieri root count.
     """
@@ -371,15 +451,51 @@ def test_pieri_homotopies(vrblvl=0):
             print('The error is too large.')
     return 1
 
+def test_littlewood_richardson_homotopies(vrblvl=0):
+    """
+    Performs a test on the Littlewood-Richardson homotopies.
+    """
+    if vrblvl > 0:
+        print('in test_littlewood_richardson_homotopies ...')
+    brk = [[2, 4, 6], [2, 4, 6], [2, 4, 6]]
+    (roco, flags, fsys, sols) \
+        = double_littlewood_richardson_homotopies\
+             (6, 3, brk, vrblvl=vrblvl)
+    if vrblvl > 0:
+        print('the root count :', roco)
+    if vrblvl > 0:
+        print('the flags :', flags)
+    if vrblvl > 0:
+        print('the solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    err = verify(fsys, sols, vrblvl)
+    if vrblvl > 0:
+        print('the error sum :', err)
+    if len(sols) == 2 and abs(err.real + err.imag) < 1.0e-10:
+        if vrblvl > 0:
+            print('Found 2 solutions and error is okay.')
+        return 0
+    if len(sols) != 2:
+        if vrblvl > 0:
+            print('Number of solutions is not 2 :', len(sols))
+        return 1
+    if abs(err.real + err.imag) >= 1.0e-10:
+        if vrblvl > 0:
+            print('The error is too large.')
+    return 1
+
 def main():
     """
     Runs some tests.
     """
     lvl = 1
-    fail = test_pieri(lvl)
+    fail = test_pieri_count(lvl)
     fail = fail + test_littlewood_richardson_rule(lvl)
     fail = fail + test_pieri_problem(lvl)
     fail = fail + test_pieri_homotopies(lvl)
+    fail = fail + test_littlewood_richardson_homotopies(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:

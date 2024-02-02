@@ -1,5 +1,8 @@
 Thu 1 Feb 2024 : completed the scaling module in scaling.py, fixed errors
   and added scaling of solutions with double doubles and quad doubles.
+  Added code snippets.py to prepare for the phcpy user manual.
+  Extended schubert.py with a function to run Littlewood-Richardson
+  homotopies in double precision.
 
 Wed 31 Jan 2024 : new module scaling for equation and variable scaling
   for systems with coefficients of varying magnitudes.
