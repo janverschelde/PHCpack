@@ -1,3 +1,5 @@
+Fri 2 Feb 2024 : start of new module sweepers.py.
+
 Thu 1 Feb 2024 : completed the scaling module in scaling.py, fixed errors
   and added scaling of solutions with double doubles and quad doubles.
   Added code snippets.py to prepare for the phcpy user manual.
