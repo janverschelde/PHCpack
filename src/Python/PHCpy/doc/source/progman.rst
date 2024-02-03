@@ -129,6 +129,7 @@ an artificial parameter homotopy.  Solution paths
 start at the known solutions of the start system
 and end at the solutions of the system that has
 to be solved, called the target system.
+
 Path tracking algorithms compute approximations for
 the points on the solution paths, 
 using predictor-corrector methods.
@@ -137,6 +138,8 @@ based on the performance of the corrector;
 or *apriori*, using a predictor which estimates the
 distance to the nearest path and the convergence radius
 of the power series expansions of the solution curves.
+For natural parameter homotopies, arc length parameter
+continuation with aposteriori step size control is available.
 
 functions in the module homotopies
 ----------------------------------
@@ -154,6 +157,12 @@ functions in the module trackers
 --------------------------------
 
 .. automodule:: trackers
+   :members:
+
+functions in the module sweepers
+--------------------------------
+
+.. automodule:: sweepers
    :members:
 
 functions in the module series
