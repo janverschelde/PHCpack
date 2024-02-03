@@ -486,6 +486,30 @@ def test_littlewood_richardson_homotopies(vrblvl=0):
             print('The error is too large.')
     return 1
 
+def test_pieri_curves(vrblvl=0):
+    """
+    Computes all line producing curves that meet given lines in 3-space,
+    at given interpolation points, computed with Pieri homotopies.
+    """
+    if vrblvl > 0:
+        print('in test_pieri_curves ...')
+    (m, p, q) = (2, 2, 1)
+    dim = m*p + q*(m+p)
+    roco = pieri_root_count(m, p, q)
+    if vrblvl > 0:
+        print('the root count :', roco)
+    L = [random_complex_matrix(m+p, m) for _ in range(dim)]
+    points = random_complex_matrix(dim, 1)
+    (f, fsols) = run_pieri_homotopies(m, p, q, L, vrblvl, points)
+    if vrblvl > 0:
+        print('number of solutions :', len(fsols))
+    fail = int(roco != len(fsols))
+    err = verify(f, fsols, vrblvl-1)
+    if vrblvl > 0:
+        print('the error :', err)
+    fail = fail + int(err.real > 1.0e-8) + int(err.imag > 1.0e-8)
+    return fail
+
 def main():
     """
     Runs some tests.
@@ -496,6 +520,7 @@ def main():
     fail = fail + test_pieri_problem(lvl)
     fail = fail + test_pieri_homotopies(lvl)
     fail = fail + test_littlewood_richardson_homotopies(lvl)
+    fail = fail + test_pieri_curves(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:
