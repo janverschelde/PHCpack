@@ -20,6 +20,7 @@ in the phcpy folder.
 | starters       | constructing start systems for homotopies        |
 | homotopies     | homotopies are systems in one parameter          |
 | trackers       | aposteriori step size control path trackers      |
+| sweepers       | arc length parameter continuation for real       |
 | series         | series expansions of solution curves             |
 | curves         | apriori step size control path trackers          |
 | deflation      | quadratic convergence at isolated singularity    |

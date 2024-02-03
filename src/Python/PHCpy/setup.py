@@ -16,7 +16,7 @@ setup(
         'phcpy/polynomials', 'phcpy/solutions', 'phcpy/volumes', \
         'phcpy/solver', 'phcpy/examples', 'phcpy/families', \
         'phcpy/scaling', 'phcpy/starters', 'phcpy/homotopies', \
-        'phcpy/trackers', 'phcpy/series', 'phcpy/curves', \
+        'phcpy/trackers', 'phcpy/sweepers', 'phcpy/series', 'phcpy/curves', \
         'phcpy/deflation', 'phcpy/schubert', 'phcpy/sets', \
         'phcpy/cascades', 'phcpy/diagonal', 'phcpy/factor', \
         'phcpy/decomposition' , 'phcpy/binomials' ],
