@@ -2,6 +2,7 @@ Sat 3 Feb 2024 : completed sweepers.py, updated __init__.py and setup.py.
   Updated the programmer manual with the auto generated documentation
   on the sweepers module.  To the schubert.py, added test on Pieri homotopies
   to compute line producing curves that meet lines at interpolation points.
+  Extended snippets.py with four examples on the schubert module.
 
 Fri 2 Feb 2024 : start of new module sweepers.py.
 

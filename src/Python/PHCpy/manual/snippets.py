@@ -226,11 +226,82 @@ def blackbox_solver():
     print("I.7 equation and variable scaling")
     equation_and_variable_scaling()
 
+def lines_meeting_four_lines():
+    """
+    Applies Pieri homotopies to compute all lines meeting
+    four given lines in 3-space.
+    """
+    from phcpy.schubert import pieri_root_count
+    from phcpy.schubert import random_complex_matrix, run_pieri_homotopies
+    (m, p, q) = (2, 2, 0)
+    dim = m*p + q*(m+p)
+    roco = pieri_root_count(m, p, q)
+    print('the root count :', roco)
+    L = [random_complex_matrix(m+p, m) for _ in range(dim)]
+    (f, fsols) = run_pieri_homotopies(m, p, q, L)
+    for sol in fsols: print(sol)
+    print('number of solutions :', len(fsols))
+
+def line_producing_interpolating_curves():
+    """
+    Applies Pieri homotopies to compute line producing curves,
+    interpolating at given lines in 3-space.
+    """
+    from phcpy.schubert import pieri_root_count
+    from phcpy.schubert import random_complex_matrix, run_pieri_homotopies
+    (m, p, q) = (2, 2, 1)
+    dim = m*p + q*(m+p)
+    roco = pieri_root_count(m, p, q)
+    print('the root count :', roco)
+    L = [random_complex_matrix(m+p, m) for _ in range(dim)]
+    points = random_complex_matrix(dim, 1)
+    (f, fsols) = run_pieri_homotopies(m, p, q, L, 0, points)
+    print('number of solutions :', len(fsols))
+
+def resolve_some_schubert_conditions():
+    """
+    Resolves an example of a Schubert condition,
+    applying the Littlewood-Richardson rule.
+    """
+    from phcpy.schubert import resolve_schubert_conditions
+    brackets = [[2, 4, 6], [2, 4, 6], [2, 4, 6]]
+    roco = resolve_schubert_conditions(6, 3, brackets)
+    print('number of solutions :', roco)
+
+def solve_generic_schubert_problem():
+    """
+    Runs the Littlewood-Richardson homotopies to solve
+    a generic instance of a Schubert problem.
+    """
+    brackets = [[2, 4, 6], [2, 4, 6], [2, 4, 6]]
+    from phcpy.schubert import double_littlewood_richardson_homotopies as lrh
+    (count, flags, sys, sols) = lrh(6, 3, brackets, verbose=False)
+    print('the root count :', count)
+    for sol in sols: print(sol)
+    print('the number of solutions :', len(sols))
+
+def schubert_calculus():
+    """
+    Runs the code snippets on the schubert module.
+    """
+    print("II. schubert calculus")
+    print("II.1 Pieri homotopies")
+    print("II.1.1 lines meeting four given lines")
+    lines_meeting_four_lines()
+    print("II.1.2 line producing interpolating curves")
+    line_producing_interpolating_curves()
+    print("II.2 Littlewood-Richardson homotopies")
+    print("II.2.1 resolving Schubert conditions")
+    resolve_some_schubert_conditions()
+    print("II.2.2 solving a generic Schubert problem")
+    solve_generic_schubert_problem()
+
 def main():
     """
     Runs all code snippets.
     """
     blackbox_solver()
+    schubert_calculus()
 
 if __name__=='__main__':
     main()
