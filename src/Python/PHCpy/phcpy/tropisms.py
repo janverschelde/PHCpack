@@ -6,6 +6,11 @@ in a polyhedral end game with aposteriori step size control.
 from ctypes import c_int32, c_double, pointer
 from random import randint, uniform
 from phcpy.version import get_phcfun
+from phcpy.dimension import set_seed
+from phcpy.trackers import set_parameter_value, show_parameters
+from phcpy.trackers import double_track
+from phcpy.trackers import double_double_track, quad_double_track
+from phcpy.solver import solve
 
 def double_initialize_tropisms(nbt, dim, wnd, dirs, errs, vrblvl=0):
     r"""
@@ -628,6 +633,138 @@ def test_quad_double_tropisms_data(vrblvl=0):
     clear_quad_double_tropisms(vrblvl)
     return fail
 
+def test_double_endgame(vrblvl=0):
+    """
+    Tests the numerical computation of a tropism,
+    in double precision.
+    """
+    if vrblvl > 0:
+        print('in test_double_endgame ...')
+    pols = ['x*z-y*z-z^2+x;', 'z^3-x*y-y*z-z^2-x;', 'x;']
+    start = [ 'x*z-y*z-z^2+x;', 'z^3-x*y-y*z-z^2-x;', \
+              '(-8.16462369561530E-01 - 5.77398648327108E-01*i)*x' \
+           +  '+( 6.63704141654579E-01 - 7.47995195406065E-01*i);']
+    startsols = solve(start)
+    if vrblvl > 0:
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    if vrblvl > 0:
+        print('setting the order of the extrapolator ...')
+    set_parameter_value(5, 4, vrblvl-1)
+    if vrblvl > 0:
+        print('settings of the parameter :')
+        show_parameters(vrblvl-1)
+    gmm = complex(-0.9669413930172692, 0.25499871072188346)
+    gamma, sols = double_track(pols, start, startsols, \
+        gamma=gmm, pwt=1, vrblvl=vrblvl-1)
+    if vrblvl > 0:
+        print('gamma :', gamma)
+        print('the solutions at the end :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    size = double_tropisms_number(vrblvl-1)
+    if vrblvl > 0:
+        print('the number of tropisms :', size)
+    (wnd, dirs, errs) = get_double_tropisms(len(sols), len(pols), vrblvl)
+    if vrblvl > 0:
+        print('the winding numbers :', wnd)
+        print('the directions :')
+        for direction in dirs:
+            print(direction)
+        print('the errors :', errs)
+    return int(sum(wnd) != 10)
+
+def test_double_double_endgame(vrblvl=0):
+    """
+    Tests the numerical computation of a tropism,
+    in double double precision.
+    """
+    if vrblvl > 0:
+        print('in test_double_double_endgame ...')
+    pols = ['x*z-y*z-z^2+x;', 'z^3-x*y-y*z-z^2-x;', 'x;']
+    start = [ 'x*z-y*z-z^2+x;', 'z^3-x*y-y*z-z^2-x;', \
+              '(-8.16462369561530E-01 - 5.77398648327108E-01*i)*x' \
+           +  '+( 6.63704141654579E-01 - 7.47995195406065E-01*i);']
+    startsols = solve(start)
+    if vrblvl > 0:
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    if vrblvl > 0:
+        print('setting the order of the extrapolator ...')
+    set_parameter_value(5, 4, vrblvl-1)
+    if vrblvl > 0:
+        print('settings of the parameter :')
+        show_parameters(vrblvl-1)
+    gmm = complex(-0.9669413930172692, 0.25499871072188346)
+    gamma, sols = double_double_track(pols, start, startsols, \
+        gamma=gmm, pwt=1, vrblvl=vrblvl-1)
+    if vrblvl > 0:
+        print('the solutions at the end :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    size = double_double_tropisms_number(vrblvl-1)
+    if vrblvl > 0:
+        print('the number of tropisms :', size)
+    (wnd, dirs, errs) = get_double_double_tropisms(len(sols), len(pols), \
+        vrblvl)
+    if vrblvl > 0:
+        print('the winding numbers :', wnd)
+        print('the directions :')
+        for direction in dirs:
+            print(direction)
+        print('the errors :', errs)
+    return int(sum(wnd) != 10)
+
+def test_quad_double_endgame(vrblvl=0):
+    """
+    Tests the numerical computation of a tropism,
+    in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in test_quad_double_endgame ...')
+    pols = ['x*z-y*z-z^2+x;', 'z^3-x*y-y*z-z^2-x;', 'x;']
+    start = [ 'x*z-y*z-z^2+x;', 'z^3-x*y-y*z-z^2-x;', \
+              '(-8.16462369561530E-01 - 5.77398648327108E-01*i)*x' \
+           +  '+( 6.63704141654579E-01 - 7.47995195406065E-01*i);']
+    startsols = solve(start)
+    if vrblvl > 0:
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    if vrblvl > 0:
+        print('setting the order of the extrapolator ...')
+    set_parameter_value(5, 4, vrblvl-1)
+    if vrblvl > 0:
+        print('settings of the parameter :')
+        show_parameters(vrblvl-1)
+    gmm = complex(-0.9669413930172692, 0.25499871072188346)
+    gamma, sols = quad_double_track(pols, start, startsols, \
+        gamma=gmm, pwt=1, vrblvl=vrblvl-1)
+    if vrblvl > 0:
+        print('the solutions at the end :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    size = quad_double_tropisms_number(vrblvl-1)
+    if vrblvl > 0:
+        print('the number of tropisms :', size)
+    (wnd, dirs, errs) = get_quad_double_tropisms(len(sols), len(pols), \
+        vrblvl)
+    if vrblvl > 0:
+        print('the winding numbers :', wnd)
+        print('the directions :')
+        for direction in dirs:
+            print(direction)
+        print('the errors :', errs)
+    return int(sum(wnd) != 10)
+
 def main():
     """
     Runs some tests.
@@ -636,6 +773,9 @@ def main():
     fail = test_double_tropisms_data(lvl)
     fail = fail + test_double_double_tropisms_data(lvl)
     fail = fail + test_quad_double_tropisms_data(lvl)
+    fail = fail + test_double_endgame(lvl)
+    fail = fail + test_double_double_endgame(lvl)
+    fail = fail + test_quad_double_endgame(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:

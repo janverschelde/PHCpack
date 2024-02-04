@@ -46,6 +46,8 @@ homotopies
     a homotopy connects the target system to a start system.
 trackers
     path trackers with aposteriori step size control.
+tropisms
+    polyhedral end game with aposteriori step size control.
 sweepers
     arc length parameter continuation in sweep homotopies.
 series
@@ -149,7 +151,8 @@ def set_phcfun(vrblvl=0):
 phc = set_phcfun()
 from phcpy import version, dimension, polynomials, solutions
 from phcpy import solver, volumes, examples, families
-from phcpy import scaling, starters, homotopies, trackers, sweepers
+from phcpy import scaling, starters, homotopies, trackers
+from phcpy import tropisms, sweepers
 from phcpy import series, curves, deflation, schubert
 from phcpy import sets, cascades, diagonal, factor
 from phcpy import decomposition, binomials
