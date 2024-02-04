@@ -1,3 +1,5 @@
+Sun 4 Feb 2024 : added computation of multiplicity structure to deflation.py.
+
 Sat 3 Feb 2024 : completed sweepers.py, updated __init__.py and setup.py.
   Updated the programmer manual with the auto generated documentation
   on the sweepers module.  To the schubert.py, added test on Pieri homotopies
