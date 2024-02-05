@@ -3,6 +3,8 @@ The functions in this module export the code snippets of the menus
 of the Jupyter notebook extension of PHCpy.
 Every function is self contained and illustrates one particular feature.
 """
+# I. snippets on the blackbox solver
+
 def solve_random_trinomials():
     """
     Illustrates the solution of random trinomials.
@@ -154,7 +156,6 @@ def newton_and_deflation():
     sd = double_deflate(p, [s])
     print(sd[0])
 
-
 def overconstrained_deflation():
     """
     Illustrates deflation of an overconstrained system.
@@ -226,6 +227,218 @@ def blackbox_solver():
     print("I.7 equation and variable scaling")
     equation_and_variable_scaling()
 
+# snippets on the path trackers
+
+def total_degree_start_system():
+    """
+    The product of the degrees of the polynomials (the total degree)
+    provide an upper bound on the number of solutions.
+    A total degree start system is a simple system that has
+    as many solutions as the product of the degrees.
+    """
+    from phcpy.starters import total_degree
+    from phcpy.starters import total_degree_start_system
+    from phcpy.trackers import double_track
+    p = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
+    d = total_degree(p)
+    print('the total degree :', d)
+    (q, qsols) = total_degree_start_system(p)
+    print('the number of start solutions :', len(qsols))
+    print('the start system :', q)
+    s = double_track(p, q, qsols)
+    print('the number of solutions :', len(s))
+    for sol in s: print(sol)
+
+def track_one_path():
+    """
+    Illustrates the tracking of one solution path.
+    The order in which the solutions appear at the end
+    depends on the gamma constant.
+    """
+    from phcpy.starters import total_degree_start_system
+    from phcpy.trackers import double_track
+    p = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
+    (q, qsols) = total_degree_start_system(p)
+    g1, s1 = double_track(p, q, [qsols[2]])
+    print('first gamma :', g1)
+    print(s1[0])
+    g2, s2 = double_track(p, q, [qsols[2]])
+    print('second gamma :', g2)
+    print(s2[0])
+
+def track_with_fixed_gamma():
+    """
+    Fixing the gamma in the homotopies fixes the order
+    in which the solutions appear at the end of the paths.
+    """
+    from phcpy.starters import total_degree_start_system
+    from phcpy.trackers import double_track
+    p = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
+    (q, qsols) = total_degree_start_system(p)
+    g3, s3 = double_track(p, q, [qsols[2]], \
+        gamma=complex(0.824372806319,0.56604723848934))
+    print('gamma :', g3)
+    print('the solution at the end:')
+    print(s3[0])
+
+def get_next_point_on_path():
+    """
+    A step-by-step path tracker gives control to the user
+    who can ask for the next point on a path.
+    """
+    from phcpy.starters import total_degree_start_system
+    p = ['x**2 + 4*x**2 - 4;', '2*y**2 - x;']
+    (q, s) = total_degree_start_system(p)
+    from phcpy.trackers import initialize_double_tracker
+    from phcpy.trackers import initialize_double_solution
+    from phcpy.trackers import next_double_solution
+    initialize_double_tracker(p, q)
+    initialize_double_solution(len(p), s[0])
+    s1 = next_double_solution()
+    print('the next point on the solution path :')
+    print(s1)
+    print(next_double_solution())
+    print(next_double_solution())
+    initialize_double_solution(len(p), s[1])
+    points = [next_double_solution() for i in range(11)]
+    from phcpy.solutions import strsol2dict
+    dicpts = [strsol2dict(sol) for sol in points]
+    xvals = [sol['x'] for sol in dicpts]
+    print('the x-coordinates on the path :')
+    for x in xvals: print(x)
+
+def plot_trajectories():
+    """
+    The step-by-step path tracker is applied to plot the
+    trajectories of the solutions using matplotlib.
+    """
+    import matplotlib.pyplot as plt
+    p = ['x^2 + y - 3;', 'x + 0.125*y^2 - 1.5;']
+    print('constructing a total degree start system ...')
+    from phcpy.starters import total_degree_start_system
+    q, qsols = total_degree_start_system(p)
+    print('number of start solutions :', len(qsols))
+    from phcpy.trackers import initialize_double_tracker
+    from phcpy.trackers import initialize_double_solution
+    from phcpy.trackers import next_double_solution
+    initialize_double_tracker(p, q, False)
+    from phcpy.solutions import strsol2dict
+    plt.ion()
+    fig = plt.figure()
+    for k in range(len(qsols)):
+        if(k == 0):
+           axs = fig.add_subplot(221)
+        elif(k == 1):
+           axs = fig.add_subplot(222)
+        elif(k == 2):
+            axs = fig.add_subplot(223)
+        elif(k == 3):
+           axs = fig.add_subplot(224)
+        startsol = qsols[k]
+        initialize_double_solution(len(p),startsol)
+        dictsol = strsol2dict(startsol)
+        xpoints =  [dictsol['x']]
+        ypoints =  [dictsol['y']]
+        for k in range(300):
+            ns = next_double_solution()
+            dictsol = strsol2dict(ns)
+            xpoints.append(dictsol['x'])
+            ypoints.append(dictsol['y'])
+            tval = dictsol['t'].real
+            if(tval >= 1.0):
+                break
+        print(ns)
+        xre = [point.real for point in xpoints]
+        yre = [point.real for point in ypoints]
+        axs.set_xlim(min(xre)-0.3, max(xre)+0.3)
+        axs.set_ylim(min(yre)-0.3, max(yre)+0.3)
+        dots, = axs.plot(xre,yre,'r-')
+        fig.canvas.draw()
+    fig.canvas.draw()
+    ans = input('hit return to continue')
+
+def polyhedral_homotopies():
+    """
+    Polyhedral homotopies solve random coefficient systems
+    tracking an optimal number of solution paths,
+    that is equal to the mixed volume.
+    """
+    from phcpy.volumes import mixed_volume
+    from phcpy.volumes import double_polyhedral_homotopies
+    from phcpy.trackers import double_track
+    p = ['x^3*y^2 - 3*x^3 + 7;','x*y^3 + 6*y^3 - 9;']
+    print('the mixed volume :', mixed_volume(p))
+    (q, qsols) = double_polyhedral_homotopies()
+    print('the number of start solutions :', len(qsols))
+    gamma, psols = double_track(p, q, qsols)
+    print('the number of solutions at the end :', len(psols))
+    for sol in psols: print(sol)
+
+def path_trackers():
+    """
+    Runs the snippets on the path trackers.
+    """
+    print("II path trackers")
+    print("II.1 total degree start system")
+    total_degree_start_system()
+    print("II.2 track one path")
+    track_one_path()
+    print("II.3 track with fixed gamma")
+    track_with_fixed_gamma()
+    print("II.4 get next point on path")
+    get_next_point_on_path()
+    print("II.5 plot trajectories")
+    plot_trajectories()
+    print("II.6 polyhedral homotopies")
+    polyhedral_homotopies()
+
+# snippets on the sweep homotopies
+
+def quadratic_turning_point():
+    """
+    Arc length parameter continuation is applied in a real sweep
+    which ends at a quadratic turning point.
+    """
+    from phcpy.sweepers import double_real_sweep
+    from phcpy.solutions import make_solution
+    circle = ['x^2 + y^2 - 1;', 'y*(1-s) + (y-2)*s;']
+    first = make_solution(['x', 'y', 's'], [1.0, 0.0, 0.0])
+    second = make_solution(['x', 'y', 's'], [-1.0, 0.0, 0.0])
+    startsols = [first, second]
+    newsols = double_real_sweep(circle, startsols)
+    for sol in newsols: print(sol)
+
+def complex_parameter_homotopy_continuation():
+    """
+    Sweeps the parameter space with a convex linear combination
+    of the parameters.  By a random gamma constant, no singularities
+    are encountered during this complex sweep.
+    """
+    from phcpy.sweepers import double_complex_sweep
+    from phcpy.solutions import make_solution
+    circle = ['x^2 + y^2 - 1;']
+    first = make_solution(['x', 'y'], [1.0, 0.0])
+    second = make_solution(['x', 'y'], [-1.0, 0.0])
+    startsols = [first, second]
+    par = ['y']
+    start = [0, 0]
+    target = [2, 0]
+    newsols = double_complex_sweep(circle, startsols, 2, par, start, target)
+    for sol in newsols: print(sol)
+
+def sweep_homotopies():
+    """
+    We distinguish between real and complex sweeps
+    through the parameter space.
+    """
+    print("III sweep homotopies")
+    print("III.1 computing a quadratic turning point")
+    quadratic_turning_point()
+    print("III.2 convex parameter homotopy continuation")
+    complex_parameter_homotopy_continuation()
+
+# snippets on schubert calculus
+
 def lines_meeting_four_lines():
     """
     Applies Pieri homotopies to compute all lines meeting
@@ -284,16 +497,16 @@ def schubert_calculus():
     """
     Runs the code snippets on the schubert module.
     """
-    print("II. schubert calculus")
-    print("II.1 Pieri homotopies")
-    print("II.1.1 lines meeting four given lines")
+    print("IV. schubert calculus")
+    print("IV.1 Pieri homotopies")
+    print("IV.1.1 lines meeting four given lines")
     lines_meeting_four_lines()
-    print("II.1.2 line producing interpolating curves")
+    print("IV.1.2 line producing interpolating curves")
     line_producing_interpolating_curves()
-    print("II.2 Littlewood-Richardson homotopies")
-    print("II.2.1 resolving Schubert conditions")
+    print("IV.2 Littlewood-Richardson homotopies")
+    print("IV.2.1 resolving Schubert conditions")
     resolve_some_schubert_conditions()
-    print("II.2.2 solving a generic Schubert problem")
+    print("IV.2.2 solving a generic Schubert problem")
     solve_generic_schubert_problem()
 
 def main():
@@ -301,6 +514,8 @@ def main():
     Runs all code snippets.
     """
     blackbox_solver()
+    path_trackers()
+    sweep_homotopies()
     schubert_calculus()
 
 if __name__=='__main__':
