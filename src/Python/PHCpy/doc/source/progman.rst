@@ -159,6 +159,12 @@ functions in the module trackers
 .. automodule:: trackers
    :members:
 
+functions in the module tropisms
+--------------------------------
+
+.. automodule:: tropisms
+   :members:
+
 functions in the module sweepers
 --------------------------------
 
