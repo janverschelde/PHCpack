@@ -1,4 +1,5 @@
 Tue 6 Feb 2024 : used vrblvl-1 consistently in the phc calls in solver.py.
+  Fix in documentation string of solver.solve() function.
 
 Mon 5 Feb 2024 : added an entry in progman.rst for the tropisms module.
   Broke tutorial.rst up into nine files, one for each use case.

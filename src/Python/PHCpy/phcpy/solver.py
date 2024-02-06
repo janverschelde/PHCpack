@@ -258,7 +258,7 @@ def solve(pols, tasks=0, mvfocus=0, precision='d',
     r"""
     Calls the blackbox solver to compute all isolated solutions.
     To compute all solutions, also all positive dimensional solution sets,
-    with a numerical irreducible decomposition, use solve in phcpy.factor.
+    with a numerical irreducible decomposition, see phcpy.decomposition.
     On input in *pols* is a list of strings.
     The number of tasks for multithreading is given by *tasks*.
     The default zero value for *tasks* indicates no multithreading.
