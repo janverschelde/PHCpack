@@ -51,7 +51,9 @@ def real_random_trinomials(sys, vrblvl=0):
     monomial structure but with random real coefficients in [-1,+1].
     """
     if vrblvl > 0:
-        print('in real_random_trinomials ...')
+        print('in real_random_trinomials, the system :')
+        for pol in sys:
+            print(pol)
     result = []
     for pol in sys:
         terms = pol.split(')')
@@ -83,7 +85,7 @@ def solve_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     for i in range(12):
         broco[i] = bpars[i]
     ccc = pointer(c_double(0.0))
-    vlvl = c_int32(vrblvl)
+    vlvl = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> solve_double_system calls phc', end='')
     retval = phc(77, apars, broco, ccc, vlvl)
@@ -111,7 +113,7 @@ def solve_double_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     for i in range(12):
         broco[i] = bpars[i]
     ccc = pointer(c_double(0.0))
-    vlvl = c_int32(vrblvl)
+    vlvl = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> solve_double_double_system calls phc', end='')
     retval = phc(700, apars, broco, ccc, vlvl)
@@ -139,7 +141,7 @@ def solve_quad_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     for i in range(12):
         broco[i] = bpars[i]
     ccc = pointer(c_double(0.0))
-    vlvl = c_int32(vrblvl)
+    vlvl = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> solve_quad_double_system calls phc', end='')
     retval = phc(702, apars, broco, ccc, vlvl)
@@ -167,7 +169,7 @@ def solve_double_laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
     for i in range(12):
         broco[i] = bpars[i]
     ccc = pointer(c_double(0.0))
-    vlvl = c_int32(vrblvl)
+    vlvl = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> solve_double_laurent_system calls phc', end='')
     retval = phc(75, apars, broco, ccc, vlvl)
@@ -195,7 +197,7 @@ def solve_double_double_laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
     for i in range(12):
         broco[i] = bpars[i]
     ccc = pointer(c_double(0.0))
-    vlvl = c_int32(vrblvl)
+    vlvl = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> solve_double_double_laurent_system calls phc', end='')
     retval = phc(701, apars, broco, ccc, vlvl)
@@ -223,7 +225,7 @@ def solve_quad_double_laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
     for i in range(12):
         broco[i] = bpars[i]
     ccc = pointer(c_double(0.0))
-    vlvl = c_int32(vrblvl)
+    vlvl = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> solve_quad_double_laurent_system calls phc', end='')
     retval = phc(703, apars, broco, ccc, vlvl)
@@ -492,7 +494,8 @@ def test_solve(vrblvl=0):
     sols = solve(polynomials, vrblvl=vrblvl)
     if vrblvl > 0:
         print('the solutions :')
-        for sol in sols:
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
             print(sol)
     fail = int(len(sols) != 3)
     return fail
