@@ -309,6 +309,8 @@ def verify(pols, sols, vrblvl=0):
     r"""
     Verifies whether the solutions in *sols*
     satisfy the polynomials of the system in *pols*.
+    Returns the sum of the absolute values of the 
+    residuals in all polynomials.
     """
     if vrblvl > 0:
         print('in verify, pols :')
@@ -321,7 +323,8 @@ def verify(pols, sols, vrblvl=0):
     dictsols = [strsol2dict(sol, vrblvl=vrblvl) for sol in sols]
     checksum = 0
     for (idx, sol) in enumerate(dictsols):
-        sumeval = sum(evaluate(pols, sol, vrblvl))
+        eva = evaluate(pols, sol, vrblvl-1)
+        sumeval = sum(abs(nbr) for nbr in eva)
         if vrblvl > 0:
             print('sum at solution', idx, ':', sumeval)
         checksum = checksum + sumeval
@@ -563,11 +566,11 @@ def append_double_solution_string(nvr, sol, vrblvl=0):
         print('-> append_double_solution_string, nvr =', nvr)
         print('The solution string :')
         print(sol)
-    phc = get_phcfun(vrblvl)
+    phc = get_phcfun(vrblvl-1)
     apars = int4a2nbr([nvr, len(sol)], vrblvl=vrblvl-1)
     bsol = str2int4a(sol, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> append_double_solution_string calls phc', end='')
     retval = phc(208, apars, bsol, ccc, vrb)
@@ -584,11 +587,11 @@ def append_double_double_solution_string(nvr, sol, vrblvl=0):
         print('-> append_double_double_solution_string, nvr =', nvr)
         print('The solution string :')
         print(sol)
-    phc = get_phcfun(vrblvl)
+    phc = get_phcfun(vrblvl-1)
     apars = int4a2nbr([nvr, len(sol)], vrblvl=vrblvl-1)
     bsol = str2int4a(sol, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> append_double_double_solution_string calls phc', end='')
     retval = phc(378, apars, bsol, ccc, vrb)
@@ -605,11 +608,11 @@ def append_quad_double_solution_string(nvr, sol, vrblvl=0):
         print('-> append_quad_double_solution_string, nvr =', nvr)
         print('The solution string :')
         print(sol)
-    phc = get_phcfun(vrblvl)
+    phc = get_phcfun(vrblvl-1)
     apars = int4a2nbr([nvr, len(sol)], vrblvl=vrblvl-1)
     bsol = str2int4a(sol, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> append_quad_double_solution_string calls phc', end='')
     retval = phc(428, apars, bsol, ccc, vrb)
@@ -623,11 +626,11 @@ def clear_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print('in clear_double_solutions ...')
-    phc = get_phcfun(vrblvl)
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> clear_double_solutions calls phc', end='')
     retval = phc(37, aaa, bbb, ccc, vrb)
@@ -641,11 +644,11 @@ def clear_double_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print('in clear_double_double_solutions ...')
-    phc = get_phcfun(vrblvl)
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> clear_double_double_solutions calls phc', end='')
     retval = phc(347, aaa, bbb, ccc, vrb)
@@ -659,11 +662,11 @@ def clear_quad_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print('in clear_quad_double_solutions ...')
-    phc = get_phcfun(vrblvl)
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> clear_quad_double_solutions calls phc', end='')
     retval = phc(397, aaa, bbb, ccc, vrb)
@@ -723,11 +726,11 @@ def number_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print('in number_double_solutions ...')
-    phc = get_phcfun(vrblvl)
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> number_double_solutions calls phc', end='')
     retval = phc(32, aaa, bbb, ccc, vrb)
@@ -742,11 +745,11 @@ def number_double_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print('in number_double_double_solutions ...')
-    phc = get_phcfun(vrblvl)
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> number_double_double_solutions calls phc', end='')
     retval = phc(342, aaa, bbb, ccc, vrb)
@@ -761,11 +764,11 @@ def number_quad_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print('in number_quad_double_solutions ...')
-    phc = get_phcfun(vrblvl)
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> number_quad_double_solutions calls phc', end='')
     retval = phc(392, aaa, bbb, ccc, vrb)
@@ -781,11 +784,11 @@ def get_next_double_solution(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in get_next_double_solution, idx :', idx)
-    phc = get_phcfun(vrblvl)
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(idx)) # at the given index
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> get_next_double_solution calls phc', end='')
     retval = phc(525, aaa, bbb, ccc, vrb)
@@ -810,11 +813,11 @@ def get_next_double_double_solution(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in get_next_double_double_solution, idx :', idx)
-    phc = get_phcfun(vrblvl)
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(idx)) # at the given index
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> get_next_double_double_solution calls phc', end='')
     retval = phc(526, aaa, bbb, ccc, vrb)
@@ -839,11 +842,11 @@ def get_next_quad_double_solution(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in get_next_quad_double_solution, idx :', idx)
-    phc = get_phcfun(vrblvl)
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(idx)) # at the given index
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> get_next_quad_double_solution calls phc', end='')
     retval = phc(527, aaa, bbb, ccc, vrb)
@@ -867,11 +870,11 @@ def move_double_solution_cursor(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in move_double_solution_cursor, idx :', idx)
-    phc = get_phcfun(vrblvl)
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(idx)) # at the given index
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> move_double_solution_cursor calls phc', end='')
     retval = phc(454, aaa, bbb, ccc, vrb)
@@ -886,11 +889,11 @@ def move_double_double_solution_cursor(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in move_double_double_solution_cursor, idx :', idx)
-    phc = get_phcfun(vrblvl)
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(idx)) # at the given index
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> move_double_double_solution_cursor calls phc', end='')
     retval = phc(455, aaa, bbb, ccc, vrb)
@@ -905,11 +908,11 @@ def move_quad_double_solution_cursor(idx, vrblvl=0):
     """
     if vrblvl > 0:
         print('in move_quad_double_solution_cursor, idx :', idx)
-    phc = get_phcfun(vrblvl)
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(idx)) # at the given index
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> move_quad_double_solution_cursor calls phc', end='')
     retval = phc(456, aaa, bbb, ccc, vrb)
@@ -1001,11 +1004,11 @@ def write_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print('in write_double_solutions, vrblvl :', vrblvl)
-    phc = get_phcfun(vrblvl)
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> write_double_solutions calls phc', end='')
     retval = phc(31, aaa, bbb, ccc, vrb)
@@ -1019,11 +1022,11 @@ def write_double_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print('in write_double_double_solutions, vrblvl :', vrblvl)
-    phc = get_phcfun(vrblvl)
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> write_double_double_solutions calls phc', end='')
     retval = phc(341, aaa, bbb, ccc, vrb)
@@ -1037,11 +1040,11 @@ def write_quad_double_solutions(vrblvl=0):
     """
     if vrblvl > 0:
         print('in write_quad_double_solutions, vrblvl :', vrblvl)
-    phc = get_phcfun(vrblvl)
+    phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> write_quad_double_solutions calls phc', end='')
     retval = phc(391, aaa, bbb, ccc, vrb)

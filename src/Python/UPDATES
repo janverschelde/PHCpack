@@ -1,6 +1,7 @@
 Mon 5 Feb 2024 : added an entry in progman.rst for the tropisms module.
   Broke tutorial.rst up into nine files, one for each use case.
   Add numericalsolutions.ipynb to the manual folder.
+  In the verify() of the solutions.py returned absolute values.
 
 Sun 4 Feb 2024 : added computation of multiplicity structure to deflation.py.
   Wrote start of new module tropisms ... and completed it, updated
