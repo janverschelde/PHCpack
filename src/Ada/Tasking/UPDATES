@@ -1,3 +1,6 @@
+Wed 7 Feb 2024 : fixed tuning of parameters to the default values,
+  instead of taking into account the decimal places.
+
 Fri 8 Dec 2023 : updated tasking.gpr for less obsolete files.
   Extended multitasked_{algodiff,newton}_convolutions,
   multitasked_series_linearization, multitasked_power_newton,

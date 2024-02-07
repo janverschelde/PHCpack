@@ -626,7 +626,8 @@ package body Multitasking_Continuation is
       end if;
     end;
     new_line;
-    Continuation_Parameters.Tune(0,deci);
+   -- Continuation_Parameters.Tune(0,deci); -- too severe
+    Continuation_Parameters.Tune(0);
     Driver_for_Continuation_Parameters(file);
     new_line;
     put("Do you want to monitor the progress on screen ? (y/n) ");
@@ -742,7 +743,8 @@ package body Multitasking_Continuation is
       end if;
     end;
     new_line;
-    Continuation_Parameters.Tune(0,deci);
+   -- Continuation_Parameters.Tune(0,deci); -- too severe
+    Continuation_Parameters.Tune(0);
     Driver_for_Continuation_Parameters(file);
     new_line;
     put("Do you want to monitor the progress on screen ? (y/n) ");
