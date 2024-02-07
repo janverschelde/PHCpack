@@ -1,5 +1,7 @@
 Wed 7 Feb 2024 : small edits in the phcpy user manual files 
   reproducibleruns.rst and numericalsolutions.rst.
+  Updated starters.py, sweepers.py, trackers.py, solutions.py, scaling.py,
+  and schubert.py for the simplification of solutions.verify and pylint.
 
 Tue 6 Feb 2024 : used vrblvl-1 consistently in the phc calls in solver.py.
   Fix in documentation string of solver.solve() function.

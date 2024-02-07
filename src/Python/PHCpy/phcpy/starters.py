@@ -33,7 +33,7 @@ def total_degree(pols, vrblvl=0):
     deg = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> total_degree calls phc', end='')
     retval = phc(28, deg, bbb, ccc, vrb)
@@ -88,7 +88,7 @@ def m_homogeneous_bezout_number(pols, vrblvl=0):
     deg = pointer(c_int32(0))
     pbuffer = create_string_buffer(b"", 4*256)
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> m_homogeneous_bezout_number calls phc', end='')
     retval = phc(530, deg, pbuffer, ccc, vrb)
@@ -120,7 +120,7 @@ def m_partition_bezout_number(pols, partition, vrblvl=0):
     deg = pointer(c_int32(len(partition)))
     pbuffer = str2int4a(partition, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> m_partition_bezout_number calls phc', end='')
     retval = phc(531, deg, pbuffer, ccc, vrb)
@@ -159,7 +159,7 @@ def m_homogeneous_start_system(pols, partition, checkin=True, vrblvl=0):
     deg = pointer(c_int32(len(partition)))
     pbuffer = str2int4a(partition, vrblvl=vrblvl-1)
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> m_partition_start_system calls phc', end='')
     retval = phc(532, deg, pbuffer, ccc, vrb)
@@ -174,7 +174,7 @@ def m_homogeneous_start_system(pols, partition, checkin=True, vrblvl=0):
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> m_partition_start_system calls phc', end='')
         print(' to solve system')
@@ -211,7 +211,7 @@ def linear_product_root_count(pols, checkin=True, vrblvl=0):
     roco = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> linear_product_root_count calls phc', end='')
     retval = phc(110, roco, bbb, ccc, vrb)
@@ -259,7 +259,7 @@ def random_linear_product_system(pols, checkin=True, tosolve=True, vrblvl=0):
     roco = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> random_linear_product_system calls phc', end='')
     retval = phc(110, roco, bbb, ccc, vrb)

@@ -24,7 +24,7 @@ def pieri_root_count(mdim, pdim, qdeg, vrblvl=0):
     apars = int4a2nbr([mdim, pdim, qdeg], vrblvl=vrblvl-1)
     roco = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> pieri_root_count calls phc ...')
         print('apars =', nbr2int4a(apars))
@@ -50,7 +50,7 @@ def pieri_localization_poset(mdim, pdim, qdeg, size=10240, vrblvl=0):
     apars = int4a2nbr([mdim, pdim, qdeg], vrblvl=vrblvl-1)
     poset = create_string_buffer(b"", 4*size)
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> pieri_localization_poset calls phc ...')
         print('apars =', nbr2int4a(apars))
@@ -89,7 +89,7 @@ def resolve_schubert_conditions(ndim, kdim, brackets, vrblvl=0):
     apars = int4a2nbr([ndim, kdim, len(brackets)], vrblvl=vrblvl-1)
     brk = pointer(cds)
     roco = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> resolve_schubert_conditions calls phc ...')
         print('apars =', nbr2int4a(apars))
@@ -121,7 +121,7 @@ def real_osculating_planes(mdim, pdim, qdeg, vrblvl=0):
     apars = int4a2nbr([mdim, pdim, qdeg], vrblvl=vrblvl-1)
     bbb = pointer(c_int32(0))
     cff = pointer(cpts)
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> real_osculating_planes calls phc ...')
         print('apars =', nbr2int4a(apars))
@@ -196,7 +196,7 @@ def make_pieri_system(mdim, pdim, qdeg, planes, is_real=False, vrblvl=0):
                     cpts[idx] = c_double(nbr.imag)
                     idx = idx + 1
     cff = pointer(cpts)
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> make_pieri_system calls phc ...')
         print('apars =', nbr2int4a(apars))
@@ -435,10 +435,10 @@ def test_pieri_homotopies(vrblvl=0):
             print(pol)
         for sol in sols:
             print(sol)
-    err = verify(pols, sols, vrblvl)
+    err = verify(pols, sols, vrblvl-1)
     if vrblvl > 0:
         print('the error sum :', err)
-    if len(sols) == 2 and abs(err.real + err.imag) < 1.0e-10:
+    if len(sols) == 2 and err < 1.0e-10:
         if vrblvl > 0:
             print('Found 2 solutions and error is okay.')
         return 0
@@ -446,7 +446,7 @@ def test_pieri_homotopies(vrblvl=0):
         if vrblvl > 0:
             print('Number of solutions is not 2 :', len(sols))
         return 1
-    if abs(err.real + err.imag) >= 1.0e-10:
+    if err >= 1.0e-10:
         if vrblvl > 0:
             print('The error is too large.')
     return 1
@@ -470,10 +470,10 @@ def test_littlewood_richardson_homotopies(vrblvl=0):
         for (idx, sol) in enumerate(sols):
             print('Solution', idx+1, ':')
             print(sol)
-    err = verify(fsys, sols, vrblvl)
+    err = verify(fsys, sols, vrblvl-1)
     if vrblvl > 0:
         print('the error sum :', err)
-    if len(sols) == 2 and abs(err.real + err.imag) < 1.0e-10:
+    if len(sols) == 2 and err < 1.0e-10:
         if vrblvl > 0:
             print('Found 2 solutions and error is okay.')
         return 0
@@ -481,7 +481,7 @@ def test_littlewood_richardson_homotopies(vrblvl=0):
         if vrblvl > 0:
             print('Number of solutions is not 2 :', len(sols))
         return 1
-    if abs(err.real + err.imag) >= 1.0e-10:
+    if err >= 1.0e-10:
         if vrblvl > 0:
             print('The error is too large.')
     return 1
@@ -507,7 +507,7 @@ def test_pieri_curves(vrblvl=0):
     err = verify(f, fsols, vrblvl-1)
     if vrblvl > 0:
         print('the error :', err)
-    fail = fail + int(err.real > 1.0e-8) + int(err.imag > 1.0e-8)
+    fail = fail + int(err > 1.0e-8)
     return fail
 
 def main():

@@ -48,7 +48,6 @@ def set_double_start(start, vrblvl=0):
     pars[0] = 0 # double precision
     pars[1] = 0 # start values
     apar = pointer(pars)
-    aprc = pointer(c_int32(0))
     bnum = pointer(c_int32(size))
     vals = (c_double * size)()
     for (idx, coefficient) in enumerate(start):
@@ -80,7 +79,6 @@ def set_double_double_start(start, vrblvl=0):
     pars[0] = 1 # double double precision
     pars[1] = 0 # start values
     apar = pointer(pars)
-    aprc = pointer(c_int32(0))
     bnum = pointer(c_int32(size))
     vals = (c_double * size)()
     for (idx, coefficient) in enumerate(start):
@@ -112,7 +110,6 @@ def set_quad_double_start(start, vrblvl=0):
     pars[0] = 2 # quad double precision
     pars[1] = 0 # start values
     apar = pointer(pars)
-    aprc = pointer(c_int32(0))
     bnum = pointer(c_int32(size))
     vals = (c_double * size)()
     for (idx, coefficient) in enumerate(start):
@@ -688,7 +685,7 @@ def test_double_complex_sweep(vrblvl=0):
     err = verify(circle, newsols, vrblvl-1)
     if vrblvl > 0:
         print('the error :', err)
-    fail = int(err.real > 1.0e-8) + int(err.imag > 1.0e-8)
+    fail = int(err > 1.0e-8)
     return fail
 
 def test_double_double_complex_sweep(vrblvl=0):
@@ -719,7 +716,7 @@ def test_double_double_complex_sweep(vrblvl=0):
     err = verify(circle, newsols, vrblvl-1)
     if vrblvl > 0:
         print('the error :', err)
-    fail = int(err.real > 1.0e-8) + int(err.imag > 1.0e-8)
+    fail = int(err > 1.0e-8)
     return fail
 
 def test_quad_double_complex_sweep(vrblvl=0):
@@ -750,7 +747,7 @@ def test_quad_double_complex_sweep(vrblvl=0):
     err = verify(circle, newsols, vrblvl-1)
     if vrblvl > 0:
         print('the error :', err)
-    fail = int(err.real > 1.0e-8) + int(err.imag > 1.0e-8)
+    fail = int(err > 1.0e-8)
     return fail
 
 def test_double_real_sweep(vrblvl=0):
@@ -776,7 +773,7 @@ def test_double_real_sweep(vrblvl=0):
     err = verify(circle, newsols, vrblvl-1)
     if vrblvl > 0:
         print('the error :', err)
-    fail = int(err.real > 1.0e-8) + int(err.imag > 1.0e-8)
+    fail = int(err > 1.0e-8)
     sqrt5 = sqrt(5)
     sweepline = f'(y - {sqrt5:.15e})*(1-s) + y*s;'
     circle = ['x^2 + y^2 - 1;', sweepline]
@@ -791,7 +788,7 @@ def test_double_real_sweep(vrblvl=0):
     err = verify(circle, newsols, vrblvl-1)
     if vrblvl > 0:
         print('the error :', err)
-    fail = fail + int(err.real > 1.0e-8) + int(err.imag > 1.0e-8)
+    fail = fail + int(err > 1.0e-8)
     return fail
 
 def test_double_double_real_sweep(vrblvl=0):
@@ -817,7 +814,7 @@ def test_double_double_real_sweep(vrblvl=0):
     err = verify(circle, newsols, vrblvl-1)
     if vrblvl > 0:
         print('the error :', err)
-    fail = int(err.real > 1.0e-8) + int(err.imag > 1.0e-8)
+    fail = int(err > 1.0e-8)
     sqrt5 = sqrt(5)
     sweepline = f'(y - {sqrt5:.15e})*(1-s) + y*s;'
     circle = ['x^2 + y^2 - 1;', sweepline]
@@ -832,7 +829,7 @@ def test_double_double_real_sweep(vrblvl=0):
     err = verify(circle, newsols, vrblvl-1)
     if vrblvl > 0:
         print('the error :', err)
-    fail = fail + int(err.real > 1.0e-8) + int(err.imag > 1.0e-8)
+    fail = fail + int(err > 1.0e-8)
     return fail
 
 def test_quad_double_real_sweep(vrblvl=0):
@@ -858,7 +855,7 @@ def test_quad_double_real_sweep(vrblvl=0):
     err = verify(circle, newsols, vrblvl-1)
     if vrblvl > 0:
         print('the error :', err)
-    fail = int(err.real > 1.0e-8) + int(err.imag > 1.0e-8)
+    fail = int(err > 1.0e-8)
     sqrt5 = sqrt(5)
     sweepline = f'(y - {sqrt5:.15e})*(1-s) + y*s;'
     circle = ['x^2 + y^2 - 1;', sweepline]
@@ -873,7 +870,7 @@ def test_quad_double_real_sweep(vrblvl=0):
     err = verify(circle, newsols, vrblvl-1)
     if vrblvl > 0:
         print('the error :', err)
-    fail = fail + int(err.real > 1.0e-8) + int(err.imag > 1.0e-8)
+    fail = fail + int(err > 1.0e-8)
     return fail
 
 def main():

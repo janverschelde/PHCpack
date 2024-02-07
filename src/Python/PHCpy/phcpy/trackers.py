@@ -10,8 +10,6 @@ for predictor and corrector suffice, otherwise they must be tuned.
 Reruns of paths must happen with the same value of the gamma constant.
 """
 from ctypes import c_int32, c_double, pointer
-from random import uniform
-from cmath import exp, pi
 from phcpy.version import get_phcfun
 from phcpy.polynomials import number_of_symbols
 from phcpy.solutions import set_double_solutions
@@ -67,7 +65,7 @@ def show_parameters(vrblvl=0):
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> show_parameters calls phc', end='')
     retval = phc(194, aaa, bbb, ccc, vrb)
@@ -88,7 +86,7 @@ def autotune_parameters(difficulty_level, digits_of_precision, vrblvl=0):
     aaa = pointer(c_int32(difficulty_level))
     bbb = pointer(c_int32(digits_of_precision))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> set_parameter_value calls phc', end='')
     retval = phc(193, aaa, bbb, ccc, vrb)
@@ -107,7 +105,7 @@ def interactive_tune(vrblvl=0):
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> set_parameter_value calls phc', end='')
     retval = phc(70, aaa, bbb, ccc, vrb)
@@ -127,7 +125,7 @@ def set_parameter_value(idx, value, vrblvl=0):
     aaa = pointer(c_int32(idx))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(value))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> set_parameter_value calls phc', end='')
     retval = phc(190, aaa, bbb, ccc, vrb)
@@ -146,7 +144,7 @@ def get_parameter_value(idx, vrblvl=0):
     aaa = pointer(c_int32(idx))
     bbb = pointer(c_int32(0))
     value = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> set_parameter_value calls phc', end='')
     retval = phc(189, aaa, bbb, value, vrb)
@@ -177,7 +175,7 @@ def clear_double_track_data(vrblvl=0):
     with an artificial parameter homotopy.
     """
     if vrblvl > 0:
-         print('in clear_double_track_data ...')
+        print('in clear_double_track_data ...')
     phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
@@ -196,7 +194,7 @@ def clear_double_double_track_data(vrblvl=0):
     with an artificial parameter homotopy.
     """
     if vrblvl > 0:
-         print('in clear_double_double_track_data ...')
+        print('in clear_double_double_track_data ...')
     phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
@@ -215,7 +213,7 @@ def clear_quad_double_track_data(vrblvl=0):
     with an artificial parameter homotopy.
     """
     if vrblvl > 0:
-         print('in clear_quad_double_track_data ...')
+        print('in clear_quad_double_track_data ...')
     phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
@@ -234,12 +232,12 @@ def clear_double_laurent_track_data(vrblvl=0):
     with an artificial parameter Laurent homotopy.
     """
     if vrblvl > 0:
-         print('in clear_double_laurent_track_data ...')
+        print('in clear_double_laurent_track_data ...')
     phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> clear_double_laurent_track_data calls phc', end='')
     retval = phc(771, aaa, bbb, ccc, vrb)
@@ -253,7 +251,7 @@ def clear_double_double_laurent_track_data(vrblvl=0):
     with an artificial parameter Laurent homotopy.
     """
     if vrblvl > 0:
-         print('in clear_double_double_laurent_track_data ...')
+        print('in clear_double_double_laurent_track_data ...')
     phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
@@ -272,7 +270,7 @@ def clear_quad_double_laurent_track_data(vrblvl=0):
     with an artificial parameter Laurent homotopy.
     """
     if vrblvl > 0:
-         print('in clear_quad_double_laurent_track_data ...')
+        print('in clear_quad_double_laurent_track_data ...')
     phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
@@ -432,7 +430,7 @@ def double_track(target, start, startsols, \
     """
     if vrblvl > 0:
         print('in double_track, with gamma :', gamma, end='')
-        print(', pwt :', pwt, end=''),
+        print(', pwt :', pwt, end='')
         print(', tasks :', tasks)
         print('the target system :')
         for pol in target:
@@ -481,7 +479,7 @@ def double_double_track(target, start, startsols, \
     """
     if vrblvl > 0:
         print('in double_double_track, with gamma :', gamma, end='')
-        print(', pwt :', pwt, end=''),
+        print(', pwt :', pwt, end='')
         print(', tasks :', tasks)
         print('the target system :')
         for pol in target:
@@ -530,7 +528,7 @@ def quad_double_track(target, start, startsols, \
     """
     if vrblvl > 0:
         print('in quad_double_track, with gamma :', gamma, end='')
-        print(', pwt :', pwt, end=''),
+        print(', pwt :', pwt, end='')
         print(', tasks :', tasks)
         print('the target system :')
         for pol in target:
@@ -577,7 +575,7 @@ def double_laurent_track(target, start, startsols, \
     """
     if vrblvl > 0:
         print('in double_laurent_track, with gamma :', gamma, end='')
-        print(', pwt :', pwt, end=''),
+        print(', pwt :', pwt, end='')
         print(', tasks :', tasks)
         print('the target system :')
         for pol in target:
@@ -625,9 +623,8 @@ def double_double_laurent_track(target, start, startsols, \
     Note: tasks=0 does not work ...
     """
     if vrblvl > 0:
-        print('in double_double_laurent_track, with gamma :', gamma, \
-            end='')
-        print(', pwt :', pwt, end=''),
+        print('in double_double_laurent_track, with gamma :', gamma, end='')
+        print(', pwt :', pwt, end='')
         print(', tasks :', tasks)
         print('the target system :')
         for pol in target:
@@ -676,7 +673,7 @@ def quad_double_laurent_track(target, start, startsols, \
     """
     if vrblvl > 0:
         print('in quad_double_laurent_track, with gamma :', gamma, end='')
-        print(', pwt :', pwt, end=''),
+        print(', pwt :', pwt, end='')
         print(', tasks :', tasks)
         print('the target system :')
         for pol in target:
@@ -692,7 +689,7 @@ def quad_double_laurent_track(target, start, startsols, \
     set_quad_double_laurent_start_system(start, vrblvl-1)
     nvr = number_of_symbols(start, vrblvl-1)
     set_quad_double_start_solutions(nvr, startsols, vrblvl-1)
-    usedgamma = set_quad_double_homotopy(gamma, pwt, vrblvl-1)
+    usedgamma = set_quad_double_laurent_homotopy(gamma, pwt, vrblvl-1)
     do_quad_double_laurent_track(tasks, vrblvl)
     sols = get_quad_double_target_solutions(vrblvl-1)
     clear_quad_double_laurent_homotopy(vrblvl-1)
@@ -731,7 +728,7 @@ def initialize_double_tracker(target, start, fixedgamma=True, \
     c_gamma[0] = c_double(regamma)
     c_gamma[1] = c_double(imgamma)
     ptr_gamma = pointer(c_gamma)
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> initialize_double_tracker calls phc', end='')
     retval = phc(500, afix, bbb, ptr_gamma, vrb)
@@ -771,7 +768,7 @@ def initialize_double_double_tracker(target, start, fixedgamma=True, \
     c_gamma[0] = c_double(regamma)
     c_gamma[1] = c_double(imgamma)
     ptr_gamma = pointer(c_gamma)
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> initialize_double_double_tracker calls phc', end='')
     retval = phc(501, afix, bbb, ptr_gamma, vrb)
@@ -811,7 +808,7 @@ def initialize_quad_double_tracker(target, start, fixedgamma=True, \
     c_gamma[0] = c_double(regamma)
     c_gamma[1] = c_double(imgamma)
     ptr_gamma = pointer(c_gamma)
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> initialize_quad_double_tracker calls phc', end='')
     retval = phc(502, afix, bbb, ptr_gamma, vrb)
@@ -834,7 +831,7 @@ def initialize_double_solution(nvr, sol, vrblvl=0):
     aidx = pointer(c_int32(1))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> initialize_double_solution calls phc', end='')
     retval = phc(503, aidx, bbb, ccc, vrb)
@@ -857,7 +854,7 @@ def initialize_double_double_solution(nvr, sol, vrblvl=0):
     aidx = pointer(c_int32(1))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> initialize_double_double_solution calls phc', end='')
     retval = phc(504, aidx, bbb, ccc, vrb)
@@ -880,7 +877,7 @@ def initialize_quad_double_solution(nvr, sol, vrblvl=0):
     aidx = pointer(c_int32(1))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> initialize_quad_double_solution calls phc', end='')
     retval = phc(505, aidx, bbb, ccc, vrb)
@@ -901,7 +898,7 @@ def next_double_solution(vrblvl=0):
     aidx = pointer(c_int32(1))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> next_double_solution calls phc', end='')
     retval = phc(506, aidx, bbb, ccc, vrb)
@@ -923,7 +920,7 @@ def next_double_double_solution(vrblvl=0):
     aidx = pointer(c_int32(1))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> next_double_double_solution calls phc', end='')
     retval = phc(507, aidx, bbb, ccc, vrb)
@@ -945,7 +942,7 @@ def next_quad_double_solution(vrblvl=0):
     aidx = pointer(c_int32(1))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
-    vrb = c_int32(vrblvl)
+    vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> next_quad_double_solution calls phc', end='')
     retval = phc(508, aidx, bbb, ccc, vrb)
@@ -973,6 +970,7 @@ def test_double_track(vrblvl=0):
             print(sol)
     gamma, sols = double_track(mickey, start, startsols, vrblvl=vrblvl-1)
     if vrblvl > 0:
+        print('gamma :', gamma)
         print('the solutions :')
         for (idx, sol) in enumerate(sols):
             print('Solution', idx+1, ':')
@@ -980,7 +978,7 @@ def test_double_track(vrblvl=0):
     err = verify(mickey, sols, vrblvl-1)
     if vrblvl > 0:
         print('the error sum :', err)
-    if len(sols) == 4 and abs(err.real + err.imag) < 1.0e-10:
+    if len(sols) == 4 and err < 1.0e-10:
         if vrblvl > 0:
             print('Found 4 solutions and error is okay.')
         return 0
@@ -988,7 +986,7 @@ def test_double_track(vrblvl=0):
         if vrblvl > 0:
             print('Number of solutions is not 4 :', len(sols))
         return 1
-    if abs(err.real + err.imag) >= 1.0e-10:
+    if err >= 1.0e-10:
         if vrblvl > 0:
             print('The error is too large.')
     return 1
@@ -1012,14 +1010,15 @@ def test_double_double_track(vrblvl=0):
     gamma, sols = double_double_track(mickey, start, startsols, \
         tasks=4, vrblvl=vrblvl)
     if vrblvl > 0:
+        print('gamma :', gamma)
         print('the solutions :')
         for (idx, sol) in enumerate(sols):
             print('Solution', idx+1, ':')
             print(sol)
-    err = verify(mickey, sols, vrblvl)
+    err = verify(mickey, sols, vrblvl-1)
     if vrblvl > 0:
         print('the error sum :', err)
-    if len(sols) == 4 and abs(err.real + err.imag) < 1.0e-10:
+    if len(sols) == 4 and err < 1.0e-10:
         if vrblvl > 0:
             print('Found 4 solutions and error is okay.')
         return 0
@@ -1027,7 +1026,7 @@ def test_double_double_track(vrblvl=0):
         if vrblvl > 0:
             print('Number of solutions is not 4 :', len(sols))
         return 1
-    if abs(err.real + err.imag) >= 1.0e-10:
+    if err >= 1.0e-10:
         if vrblvl > 0:
             print('The error is too large.')
     return 1
@@ -1041,23 +1040,26 @@ def test_quad_double_track(vrblvl=0):
         print('in test_quad_double_track ...')
     mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
     start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
-    print('the start system :')
-    for pol in start:
-        print(pol)
-    print('the start solutions :')
-    for (idx, sol) in enumerate(startsols):
-        print('Solution', idx+1, ':')
-        print(sol)
-    gamma, sols = quad_double_track(mickey, start, startsols, 
+    if vrblvl > 0:
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    gamma, sols = quad_double_track(mickey, start, startsols, \
         tasks=2, vrblvl=vrblvl)
-    print('the solutions :')
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
-    err = verify(mickey, sols, vrblvl)
+    if vrblvl > 0:
+        print('gamma :', gamma)
+        print('the solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    err = verify(mickey, sols, vrblvl-1)
     if vrblvl > 0:
         print('the error sum :', err)
-    if len(sols) == 4 and abs(err.real + err.imag) < 1.0e-10:
+    if len(sols) == 4 and err < 1.0e-10:
         if vrblvl > 0:
             print('Found 4 solutions and error is okay.')
         return 0
@@ -1065,7 +1067,7 @@ def test_quad_double_track(vrblvl=0):
         if vrblvl > 0:
             print('Number of solutions is not 4 :', len(sols))
         return 1
-    if abs(err.real + err.imag) >= 1.0e-10:
+    if err >= 1.0e-10:
         if vrblvl > 0:
             print('The error is too large.')
     return 1
@@ -1209,6 +1211,7 @@ def test_double_laurent_track(vrblvl=0):
     gamma, sols = double_laurent_track(mickey, start, startsols, \
         vrblvl=vrblvl-1)
     if vrblvl > 0:
+        print('gamma :', gamma)
         print('the solutions :')
         for (idx, sol) in enumerate(sols):
             print('Solution', idx+1, ':')
@@ -1216,7 +1219,7 @@ def test_double_laurent_track(vrblvl=0):
     err = verify(mickey, sols, vrblvl-1)
     if vrblvl > 0:
         print('the error sum :', err)
-    if len(sols) == 4 and abs(err.real + err.imag) < 1.0e-10:
+    if len(sols) == 4 and err < 1.0e-10:
         if vrblvl > 0:
             print('Found 4 solutions and error is okay.')
         return 0
@@ -1224,7 +1227,7 @@ def test_double_laurent_track(vrblvl=0):
         if vrblvl > 0:
             print('Number of solutions is not 4 :', len(sols))
         return 1
-    if abs(err.real + err.imag) >= 1.0e-10:
+    if err >= 1.0e-10:
         if vrblvl > 0:
             print('The error is too large.')
     return 1
@@ -1248,14 +1251,15 @@ def test_double_double_laurent_track(vrblvl=0):
     gamma, sols = double_double_laurent_track(mickey, start, startsols, \
         tasks=4, vrblvl=vrblvl)
     if vrblvl > 0:
+        print('gamma :', gamma)
         print('the solutions :')
         for (idx, sol) in enumerate(sols):
             print('Solution', idx+1, ':')
             print(sol)
-    err = verify(mickey, sols, vrblvl)
+    err = verify(mickey, sols, vrblvl-1)
     if vrblvl > 0:
         print('the error sum :', err)
-    if len(sols) == 4 and abs(err.real + err.imag) < 1.0e-10:
+    if len(sols) == 4 and err < 1.0e-10:
         if vrblvl > 0:
             print('Found 4 solutions and error is okay.')
         return 0
@@ -1263,7 +1267,7 @@ def test_double_double_laurent_track(vrblvl=0):
         if vrblvl > 0:
             print('Number of solutions is not 4 :', len(sols))
         return 1
-    if abs(err.real + err.imag) >= 1.0e-10:
+    if err >= 1.0e-10:
         if vrblvl > 0:
             print('The error is too large.')
     return 1
@@ -1277,23 +1281,26 @@ def test_quad_double_laurent_track(vrblvl=0):
         print('in test_quad_double_laurent_track ...')
     mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
     start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl)
-    print('the start system :')
-    for pol in start:
-        print(pol)
-    print('the start solutions :')
-    for (idx, sol) in enumerate(startsols):
-        print('Solution', idx+1, ':')
-        print(sol)
-    gamma, sols = quad_double_laurent_track(mickey, start, startsols, 
+    if vrblvl > 0:
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    gamma, sols = quad_double_laurent_track(mickey, start, startsols, \
         tasks=2, vrblvl=vrblvl)
-    print('the solutions :')
-    for (idx, sol) in enumerate(sols):
-        print('Solution', idx+1, ':')
-        print(sol)
-    err = verify(mickey, sols, vrblvl)
+    if vrblvl > 0:
+        print('gamma :', gamma)
+        print('the solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    err = verify(mickey, sols, vrblvl-1)
     if vrblvl > 0:
         print('the error sum :', err)
-    if len(sols) == 4 and abs(err.real + err.imag) < 1.0e-10:
+    if len(sols) == 4 and err < 1.0e-10:
         if vrblvl > 0:
             print('Found 4 solutions and error is okay.')
         return 0
@@ -1301,7 +1308,7 @@ def test_quad_double_laurent_track(vrblvl=0):
         if vrblvl > 0:
             print('Number of solutions is not 4 :', len(sols))
         return 1
-    if abs(err.real + err.imag) >= 1.0e-10:
+    if err >= 1.0e-10:
         if vrblvl > 0:
             print('The error is too large.')
     return 1

@@ -308,7 +308,7 @@ def test_double_scale_polynomial(vrblvl=0):
     err = verify(orgp, orgpsols, vrblvl-1)
     if vrblvl > 0:
         print('the error :', err)
-    fail = fail + int(err.real > 1.0e-8) + int(err.imag > 1.0e-8)
+    fail = fail + int(err > 1.0e-8)
     return fail
 
 def test_double_double_scale_polynomial(vrblvl=0):
@@ -344,7 +344,7 @@ def test_double_double_scale_polynomial(vrblvl=0):
     err = verify(orgp, orgpsols, vrblvl-1)
     if vrblvl > 0:
         print('the error :', err)
-    fail = fail + int(err.real > 1.0e-8) + int(err.imag > 1.0e-8)
+    fail = fail + int(err > 1.0e-8)
     return fail
 
 def test_quad_double_scale_polynomial(vrblvl=0):
@@ -380,7 +380,7 @@ def test_quad_double_scale_polynomial(vrblvl=0):
     err = verify(orgp, orgpsols, vrblvl-1)
     if vrblvl > 0:
         print('the error :', err)
-    fail = fail + int(err.real > 1.0e-8) + int(err.imag > 1.0e-8)
+    fail = fail + int(err > 1.0e-8)
     return fail
 
 def main():

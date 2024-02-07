@@ -330,7 +330,7 @@ def verify(pols, sols, vrblvl=0):
         checksum = checksum + sumeval
     if vrblvl > 0:
         print('the total check sum :', checksum)
-    return checksum
+    return checksum.real
 
 def make_solution(names, values, \
     err=0.0, rco=1.0, res=0.0, tval=0, multiplicity=1, vrblvl=0):
