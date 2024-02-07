@@ -58,8 +58,6 @@ perpendicular to each other, as in the next session:
     s = solve(p)
     print(s[0])
 
-::
-
 with the output of the print statement:
 
 ::

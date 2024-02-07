@@ -1,5 +1,5 @@
 Reproducible Runs
-================
+=================
 
 The correctness of a polynomial homotopy relies on the choice 
 of random complex constants.  Except for an algebraic set of 
