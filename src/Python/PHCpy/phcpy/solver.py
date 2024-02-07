@@ -93,7 +93,8 @@ def solve_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
         print(', return value :', retval)
     roco = int.from_bytes(apars[0], "big")
     result = int4a2str(broco, vrblvl=vrblvl-1)
-    return (roco, result)
+    resultend = result.find('\0')
+    return (roco, result[:resultend])
 
 def solve_double_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     """
@@ -121,7 +122,8 @@ def solve_double_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
         print(', return value :', retval)
     roco = int.from_bytes(apars[0], "big")
     result = int4a2str(broco, vrblvl=vrblvl-1)
-    return (roco, result)
+    resultend = result.find('\0')
+    return (roco, result[:resultend])
 
 def solve_quad_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
     """
@@ -149,7 +151,8 @@ def solve_quad_double_system(nbtasks=0, mvfocus=0, vrblvl=0):
         print(', return value :', retval)
     roco = int.from_bytes(apars[0], "big")
     result = int4a2str(broco, vrblvl=vrblvl-1)
-    return (roco, result)
+    resultend = result.find('\0')
+    return (roco, result[:resultend])
 
 def solve_double_laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
     """
@@ -177,7 +180,8 @@ def solve_double_laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
         print(', return value :', retval)
     roco = int.from_bytes(apars[0], "big")
     result = int4a2str(broco, vrblvl=vrblvl-1)
-    return (roco, result)
+    resultend = result.find('\0')
+    return (roco, result[:resultend])
 
 def solve_double_double_laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
     """
@@ -205,7 +209,8 @@ def solve_double_double_laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
         print(', return value :', retval)
     roco = int.from_bytes(apars[0], "big")
     result = int4a2str(broco, vrblvl=vrblvl-1)
-    return (roco, result)
+    resultend = result.find('\0')
+    return (roco, result[:resultend])
 
 def solve_quad_double_laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
     """
@@ -233,7 +238,8 @@ def solve_quad_double_laurent_system(nbtasks=0, mvfocus=0, vrblvl=0):
         print(', return value :', retval)
     roco = int.from_bytes(apars[0], "big")
     result = int4a2str(broco, vrblvl=vrblvl-1)
-    return (roco, result)
+    resultend = result.find('\0')
+    return (roco, result[:resultend])
 
 def solve_checkin(pols, msg, vrblvl=0):
     r"""
