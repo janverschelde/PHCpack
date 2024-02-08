@@ -1162,10 +1162,11 @@ package body QuadDobl_Root_Refiners is
                 nd : in QuadDobl_Jacobian_Trees.Link_to_Eval_Node;
                 monkeys : in Standard_Natural64_VecVecs.VecVec;
                 nv,nq,R1 : in out Standard_Natural_Vectors.Vector;
-                nbitr,nbdef : out natural32; fail : out boolean ) is
+                nbitr,nbdef : out natural32; fail : out boolean;
+                verbose : in integer32 := 0 ) is
 
   -- DECRIPTION :
-  --   Performs deflation on a system with intermediate output.
+  --   Performs deflation on a system without intermediate output.
 
     use QuadDobl_Complex_Jaco_Matrices;
     use QuadDobl_Deflation_Methods;
@@ -1179,6 +1180,9 @@ package body QuadDobl_Root_Refiners is
     rsd : quad_double;
 
   begin
+    if verbose > 0
+     then put_line("-> in quaddobl_root_refiners.Silent_Deflate ...");
+    end if;
     nbitr := 0;
     nbdef := 0;
     loop
@@ -1200,6 +1204,9 @@ package body QuadDobl_Root_Refiners is
       Add_Deflation_Data(k,m,nv,nq,R1,B,h);
       Add_Multipliers(f,jf,nd,monkeys,k,nv(0..k),
                       nq(0..k),R1(1..k),B(1..k),h(1..k),x(0..k),rsd);
+      if rsd > 0.1
+       then done := true; -- do not report failure if deflation fails!
+      end if;
       exit when (rsd > 0.1); -- deflation fails
     end loop;
     QuadDobl_Complex_Vectors.Clear(x(0));
@@ -1229,7 +1236,8 @@ package body QuadDobl_Root_Refiners is
                 nd : in QuadDobl_Jacobian_Trees.Link_to_Eval_Node;
                 monkeys : in Standard_Natural64_VecVecs.VecVec;
                 nv,nq,R1 : in out Standard_Natural_Vectors.Vector;
-                nbitr,nbdef : out natural32; fail : out boolean ) is
+                nbitr,nbdef : out natural32; fail : out boolean;
+                verbose : in integer32 := 0 ) is
 
   -- DECRIPTION :
   --   Performs deflation on a system with intermediate output.
@@ -1247,6 +1255,9 @@ package body QuadDobl_Root_Refiners is
     rsd : quad_double;
 
   begin
+    if verbose > 0
+     then put_line("-> in quaddobl_root_refiners.Reporting_Deflate ...");
+    end if;
     nbitr := 0;
     nbdef := 0;
     loop
@@ -1269,6 +1280,9 @@ package body QuadDobl_Root_Refiners is
       Add_Deflation_Data(k,m,nv,nq,R1,B,h);
       Add_Multipliers(file,output,f,jf,nd,monkeys,k,nv(0..k),
                       nq(0..k),R1(1..k),B(1..k),h(1..k),x(0..k),rsd);
+      if rsd > 0.1
+       then done := true; -- do not report failure if deflation fails!
+      end if;
       exit when (rsd > 0.1); -- deflation fails
     end loop;
     QuadDobl_Complex_Vectors.Clear(x(0));
@@ -1353,8 +1367,8 @@ package body QuadDobl_Root_Refiners is
       if not infty and ls.res < 0.1 and ls.err < 0.1 then
         if deflate then
           backup := ls.all;
-          Silent_Deflate(max,f,jf,ls,order,
-                         tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          Silent_Deflate(max,f,jf,ls,order,tolrnk,nd,monkeys,
+                         nv,nq,R1,numb,nbdef,fail,verbose-1);
          -- reinstate Newton after deflation
           if (ls.err > epsxa) and (ls.res > epsfa) then
             Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
@@ -1454,8 +1468,8 @@ package body QuadDobl_Root_Refiners is
       if not infty and ls.res < 0.1 and ls.err < 0.1 then
         if deflate then
           backup := ls.all;
-          Silent_Deflate(max,f,jf,ls,order,
-                         tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          Silent_Deflate(max,f,jf,ls,order,tolrnk,nd,monkeys,
+                         nv,nq,R1,numb,nbdef,fail,verbose-1);
          -- reinstate Newton after deflation
           if (ls.err > epsxa) and (ls.res > epsfa) then
             Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
@@ -1568,8 +1582,8 @@ package body QuadDobl_Root_Refiners is
       if not infty and ls.res < 0.1 and ls.err < 0.1 then
         if deflate then
           backup := ls.all;
-          Reporting_Deflate(file,wout,max,f,jf,ls,order,
-                            tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          Reporting_Deflate(file,wout,max,f,jf,ls,order,tolrnk,nd,monkeys,
+                            nv,nq,R1,numb,nbdef,fail,verbose-1);
          -- reinstate Newton after deflation
           if (ls.err > epsxa) and (ls.res > epsfa) then
             if wout
@@ -1693,8 +1707,8 @@ package body QuadDobl_Root_Refiners is
       if not infty and ls.res < 0.1 and ls.err < 0.1 then
         if deflate then
           backup := ls.all;
-          Reporting_Deflate(file,wout,max,f,jf,ls,order,
-                            tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          Reporting_Deflate(file,wout,max,f,jf,ls,order,tolrnk,nd,monkeys,
+                            nv,nq,R1,numb,nbdef,fail,verbose-1);
          -- reinstate Newton after deflation
           if (ls.err > epsxa) and (ls.res > epsfa) then
             if wout
@@ -1823,8 +1837,8 @@ package body QuadDobl_Root_Refiners is
       if not infty and ls.res < 0.1 and ls.err < 0.1 then
         if deflate then
           backup := ls.all;
-          Reporting_Deflate(file,wout,max,f,jf,ls,order,
-                            tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          Reporting_Deflate(file,wout,max,f,jf,ls,order,tolrnk,nd,monkeys,
+                            nv,nq,R1,numb,nbdef,fail,verbose-1);
          -- reinstate Newton after deflation
           if (ls.err > epsxa) and (ls.res > epsfa) then
             if wout then

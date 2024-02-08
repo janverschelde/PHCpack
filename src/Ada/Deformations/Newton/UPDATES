@@ -1,3 +1,6 @@
+Thu 8 Feb 2024 : in {standard,dobldobl,quaddobl}_root_refiners.adb fixed bug
+  in application of deflation: do not report a failure if deflation fails.
+
 Mon 25 Dec 2023 : {standard,dobldobl,quaddobl}_root_refiners.a*,
   added the verbose level.  Fixed {dobldobl,quaddobl}_root_refiners.adb,
   reinstating after deflation only if tolerances are not reached.

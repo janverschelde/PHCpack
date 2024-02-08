@@ -89,8 +89,7 @@ package body Standard_Root_Refiners is
         if deflate then
           if ls.m = 1
            then put_line(file,"single ==");
-           else put_line(file,"multiple ==");
-                nbsing := nbsing + 1;
+           else put_line(file,"multiple =="); nbsing := nbsing + 1;
           end if;
           nbreg := nbreg + 1;
         else
@@ -905,7 +904,8 @@ package body Standard_Root_Refiners is
                 tolrnk : in double_float; nd : in Link_to_Eval_Node;
                 monkeys : in Standard_Natural64_VecVecs.VecVec;
                 nv,nq,R1 : in out Standard_Natural_Vectors.Vector;
-                nbitr,nbdef : out natural32; fail : out boolean ) is
+                nbitr,nbdef : out natural32; fail : out boolean;
+                verbose : in integer32 := 0 ) is
 
   -- DECRIPTION :
   --   Performs deflation on a system without intermediate output.
@@ -921,6 +921,9 @@ package body Standard_Root_Refiners is
     rsd : double_float;
 
   begin
+    if verbose > 0
+     then put_line("-> in standard_root_refiners.Silent_Deflate ...");
+    end if;
     nbitr := 0;
     nbdef := 0;
     loop
@@ -942,6 +945,9 @@ package body Standard_Root_Refiners is
       Add_Deflation_Data(k,m,nv,nq,R1,B,h);
       Add_Multipliers(f,jf,nd,monkeys,k,nv(0..k),
                       nq(0..k),R1(1..k),B(1..k),h(1..k),x(0..k),rsd);
+      if rsd > 0.1
+       then done := true; -- do not report failure if deflation fails!
+      end if;
       exit when (rsd > 0.1); -- deflation fails
     end loop;
     Standard_Complex_Vectors.Clear(x(0));
@@ -969,7 +975,8 @@ package body Standard_Root_Refiners is
                 tolrnk : in double_float; nd : in Link_to_Eval_Node;
                 monkeys : in Standard_Natural64_VecVecs.VecVec;
                 nv,nq,R1 : in out Standard_Natural_Vectors.Vector;
-                nbitr,nbdef : out natural32; fail : out boolean ) is
+                nbitr,nbdef : out natural32; fail : out boolean;
+                verbose : in integer32 := 0 ) is
 
   -- DECRIPTION :
   --   Performs deflation on a system with intermediate output.
@@ -985,6 +992,9 @@ package body Standard_Root_Refiners is
     rsd : double_float;
 
   begin
+    if verbose > 0
+     then put_line("-> in standard_root_refiners.Reporting_Deflate ...");
+    end if;
     nbitr := 0;
     nbdef := 0;
     loop
@@ -1007,6 +1017,9 @@ package body Standard_Root_Refiners is
       Add_Deflation_Data(k,m,nv,nq,R1,B,h);
       Add_Multipliers(file,output,f,jf,nd,monkeys,k,nv(0..k),
                       nq(0..k),R1(1..k),B(1..k),h(1..k),x(0..k),rsd);
+      if rsd > 0.1
+       then done := true; -- do not report failure if deflation fails!
+      end if;
       exit when (rsd > 0.1); -- deflation fails
     end loop;
     Standard_Complex_Vectors.Clear(x(0));
@@ -1445,8 +1458,8 @@ package body Standard_Root_Refiners is
         begin
           if deflate then
             backup := ls.all;
-            Silent_Deflate(max,p_eval,jac_eval,ls,order,
-                           tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+            Silent_Deflate(max,p_eval,jac_eval,ls,order,tolrnk,nd,monkeys,
+                           nv,nq,R1,numb,nbdef,fail,verbose-1);
            -- Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
            --                   tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
            -- reinstate Newton after deflation
@@ -1656,8 +1669,8 @@ package body Standard_Root_Refiners is
       if not infty and ls.res < 0.1 and ls.err < 0.1 then
         if deflate then
           backup := ls.all;
-          Silent_Deflate(max,p_eval,jac_eval,ls,order,
-                         tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          Silent_Deflate(max,p_eval,jac_eval,ls,order,tolrnk,nd,monkeys,
+                         nv,nq,R1,numb,nbdef,fail,verbose-1);
          -- Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
          --                   tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
          -- reinstate Newton after deflation
@@ -2031,8 +2044,8 @@ package body Standard_Root_Refiners is
         begin
           if deflate then
             backup := ls.all;
-            Silent_Deflate(max,p_eval,jac_eval,ls,order,
-                           tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+            Silent_Deflate(max,p_eval,jac_eval,ls,order,tolrnk,nd,monkeys,
+                           nv,nq,R1,numb,nbdef,fail,verbose-1);
            -- Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
            --                   tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
            -- reinstate Newton after deflation
@@ -2550,8 +2563,8 @@ package body Standard_Root_Refiners is
       if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
         if deflate then
           backup := sa(i).all;
-          Silent_Deflate(max,p_eval,jac_eval,sa(i),order,
-                         tol_rnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          Silent_Deflate(max,p_eval,jac_eval,sa(i),order,tol_rnk,nd,monkeys,
+                         nv,nq,R1,numb,nbdef,fail); -- verbose-1);
          -- Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
          --                   tol_rnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
          -- reinstate Gauss-Newton after deflation
@@ -2676,8 +2689,8 @@ package body Standard_Root_Refiners is
       if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
         if deflate then
           backup := sa(i).all;
-          Silent_Deflate(max,p_eval,jac_eval,sa(i),order,
-                         tol_rnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          Silent_Deflate(max,p_eval,jac_eval,sa(i),order,tol_rnk,nd,monkeys,
+                         nv,nq,R1,numb,nbdef,fail); -- ,verbose-1);
          -- Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
          --                   tol_rnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
          -- reinstate Gauss-Newton after deflation

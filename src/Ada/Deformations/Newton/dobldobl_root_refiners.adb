@@ -1186,7 +1186,8 @@ package body DoblDobl_Root_Refiners is
                 nd : in DoblDobl_Jacobian_Trees.Link_to_Eval_Node;
                 monkeys : in Standard_Natural64_VecVecs.VecVec;
                 nv,nq,R1 : in out Standard_Natural_Vectors.Vector;
-                nbitr,nbdef : out natural32; fail : out boolean ) is
+                nbitr,nbdef : out natural32; fail : out boolean;
+                verbose : in integer32 := 0 ) is
 
   -- DECRIPTION :
   --   Performs deflation on a system with intermediate output.
@@ -1203,6 +1204,9 @@ package body DoblDobl_Root_Refiners is
     rsd : double_double;
 
   begin
+    if verbose > 0
+     then put_line("-> in dobldobl_root_refiners.Silent_Deflate ...");
+    end if;
     nbitr := 0;
     nbdef := 0;
     loop
@@ -1219,11 +1223,24 @@ package body DoblDobl_Root_Refiners is
         ls.v := x(0).all;
         done := (rank = nv(k));
       end if;
+      if verbose > 0 then
+        if done or (k >= order) then
+          put_line("exit loop because done or (k >= order)");
+        end if;
+      end if;
       exit when done or (k >= order);
       k := k + 1; m := rank + 1;
       Add_Deflation_Data(k,m,nv,nq,R1,B,h);
       Add_Multipliers(f,jf,nd,monkeys,k,nv(0..k),
                       nq(0..k),R1(1..k),B(1..k),h(1..k),x(0..k),rsd);
+      if verbose > 0 then
+        if rsd > 0.1 
+         then put_line("exit loop because deflation fails");
+        end if;
+      end if;
+      if rsd > 0.1
+       then done := true; -- do not report failure if deflation fails!
+      end if;
       exit when (rsd > 0.1); -- deflation fails
     end loop;
     DoblDobl_Complex_Vectors.Clear(x(0));
@@ -1233,6 +1250,12 @@ package body DoblDobl_Root_Refiners is
       DoblDobl_Complex_Vectors.Clear(x(i));
     end loop;
     fail := not done;
+    if verbose > 0 then
+      if fail
+       then put_line("Silent_Deflate reports failure.");
+       else put_line("Silent_Deflate does not report a failure.");
+      end if;
+    end if;
     nbdef := natural32(k);
   exception
    -- when constraint_error -- same underflow as in Reporting_Newton may occur
@@ -1253,7 +1276,8 @@ package body DoblDobl_Root_Refiners is
                 nd : in DoblDobl_Jacobian_Trees.Link_to_Eval_Node;
                 monkeys : in Standard_Natural64_VecVecs.VecVec;
                 nv,nq,R1 : in out Standard_Natural_Vectors.Vector;
-                nbitr,nbdef : out natural32; fail : out boolean ) is
+                nbitr,nbdef : out natural32; fail : out boolean;
+                verbose : in integer32 := 0 ) is
 
   -- DECRIPTION :
   --   Performs deflation on a system with intermediate output.
@@ -1271,6 +1295,9 @@ package body DoblDobl_Root_Refiners is
     rsd : double_double;
 
   begin
+    if verbose > 0
+     then put_line("-> in dobldobl_root_refiners.Reporting_Deflate ...");
+    end if;
     nbitr := 0;
     nbdef := 0;
     loop
@@ -1293,6 +1320,9 @@ package body DoblDobl_Root_Refiners is
       Add_Deflation_Data(k,m,nv,nq,R1,B,h);
       Add_Multipliers(file,output,f,jf,nd,monkeys,k,nv(0..k),
                       nq(0..k),R1(1..k),B(1..k),h(1..k),x(0..k),rsd);
+      if rsd > 0.1
+       then done := true; -- do not report failure if deflation fails!
+      end if;
       exit when (rsd > 0.1); -- deflation fails
     end loop;
     DoblDobl_Complex_Vectors.Clear(x(0));
@@ -1378,7 +1408,7 @@ package body DoblDobl_Root_Refiners is
         if deflate then
           backup := ls.all;
           Silent_Deflate(max,f,jf,ls,order,
-                         tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+                         tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail,verbose-1);
          -- reinstate Newton after deflation
           Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
           if fail and backup.res < ls.res then
@@ -1452,6 +1482,8 @@ package body DoblDobl_Root_Refiners is
     if verbose > 0 then
       put("-> in dobldobl_root_refiners.");
       put_line("Silent_Root_Refiner 6 ...");
+      put("Number of solutions : ");
+      put(Length_Of(s),1); new_line;
     end if;
     DoblDobl_Random_Vectors.Random_Vector(seed,h1);
     DoblDobl_Random_Vectors.Random_Vector(seed,h2);
@@ -1477,27 +1509,72 @@ package body DoblDobl_Root_Refiners is
         if deflate then
           backup := ls.all;
           Silent_Deflate(max,f,jf,ls,order,
-                         tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+                         tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail,verbose-1);
+          if verbose > 0 then
+            if fail then
+              put("Failure at solution "); put(cnt,1);
+              put_line(" after call to Silent_Deflate.");
+            end if;
+          end if;
          -- reinstate Newton after deflation
           if (ls.err > epsxa) and (ls.res > epsfa) then
             Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+            if verbose > 0 then
+              if fail then
+                put("Failure at solution "); put(cnt,1);
+                put_line(" after call to Silent_Newton 1.");
+              end if;
+            end if;
             if fail and backup.res < ls.res then
               ls.all := backup;
               Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+              if verbose > 0 then
+                if fail then
+                  put("Failure at solution "); put(cnt,1);
+                  put_line(" after call to Silent_Newton 2.");
+                end if;
+              end if;
             end if;
           end if;
         else
           Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+          if verbose > 0 then
+            if fail then
+              put("Failure at solution "); put(cnt,1);
+              put_line(" after call to Silent_Newton 3.");
+            end if;
+          end if;
         end if;
         numit := numit + nb;
       else
         fail := true;
+        if verbose > 0 then
+          put("Failure at solution "); put(cnt,1); put_line(" : ");
+          put(ls.all);
+        end if;
+      end if;
+      if verbose > 0 then
+        if fail then
+          put("Failure at solution "); put(cnt,1);
+          put_line(" before call to Multiplicty.");
+        end if;
       end if;
       Multiplicity(h1,h2,pl,ls,cnt,s,fail,infty,deflate,tolsing,epsxa);
+      if verbose > 0 then
+        if fail then
+          put("Failure at solution "); put(cnt,1);
+          put_line(" after call to Multiplicty.");
+        end if;
+      end if;
       if not fail then
         Append(refs,refs_last,ls.all);
         if deflate
          then merge := merge and (ls.m > 1);
+        end if;
+      else
+        if verbose > 0 then
+          put("Failure at solution "); put(cnt,1); put_line(" : ");
+          put(ls.all);
         end if;
       end if;
       solsptr := Tail_Of(solsptr);
@@ -1590,8 +1667,8 @@ package body DoblDobl_Root_Refiners is
       if not infty and ls.res < 0.1 and ls.err < 0.1 then
         if deflate then
           backup := ls.all;
-          Reporting_Deflate(file,wout,max,f,jf,ls,order,
-                            tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          Reporting_Deflate(file,wout,max,f,jf,ls,order,tolrnk,nd,monkeys,
+                            nv,nq,R1,numb,nbdef,fail,verbose-1);
          -- reinstate Newton after deflation
           if (ls.err > epsxa) and (ls.res > epsfa) then
             if wout
@@ -1715,8 +1792,8 @@ package body DoblDobl_Root_Refiners is
       if not infty and ls.res < 0.1 and ls.err < 0.1 then
         if deflate then
           backup := ls.all;
-          Reporting_Deflate(file,wout,max,f,jf,ls,order,
-                            tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          Reporting_Deflate(file,wout,max,f,jf,ls,order,tolrnk,nd,monkeys,
+                            nv,nq,R1,numb,nbdef,fail,verbose-1);
          -- reinstate Newton after deflation
           if (ls.err > epsxa) and (ls.res > epsfa) then
             if wout
@@ -1846,8 +1923,8 @@ package body DoblDobl_Root_Refiners is
       if not infty and ls.res < 0.1 and ls.err < 0.1 then
         if deflate then
           backup := ls.all;
-          Reporting_Deflate(file,wout,max,f,jf,ls,order,
-                            tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          Reporting_Deflate(file,wout,max,f,jf,ls,order,tolrnk,nd,monkeys,
+                            nv,nq,R1,numb,nbdef,fail,verbose-1);
          -- reinstate Newton after deflation
           if (ls.err > epsxa) and (ls.res > epsfa) then
             if wout then
