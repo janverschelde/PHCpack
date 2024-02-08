@@ -1,5 +1,10 @@
 """
 Exports functions to compute mixed volumes and stable mixed volumes.
+The mixed volume of a polynomial system is a generically sharp upper bound
+on the number of isolated solutions with nonzero coordinates.
+Stable mixed volumes count solutions with zero coordinates as well.
+Polyhedral homotopies solve random coefficient systems,
+tracking exactly as many paths as the mixed volume.
 """
 from ctypes import c_int32, c_double, pointer
 from phcpy.version import get_phcfun
@@ -15,22 +20,23 @@ from phcpy.solutions import clear_double_double_solutions
 from phcpy.solutions import get_quad_double_solutions
 from phcpy.solutions import clear_quad_double_solutions
 
-def mixed_volume(demics=True, vrblvl=0):
+def compute_mixed_volume(demics=True, vrblvl=0):
     """
-    Returns the mixed volume of the polynomial system in double precision.
+    Returns the mixed volume of the polynomial system,
+    set in double precision.
     The demics flag indicates if dynamic enumeration as implemented by
     the software DEMiCs will be used, otherwise MixedVol is called.
     The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
-        print('in mixed_volume, demics flag :', demics)
+        print('in compute_mixed_volume, demics flag :', demics)
     phc = get_phcfun(vrblvl-1)
     mixvol = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
-        print('-> mixed_volume calls phc', end='')
+        print('-> compute_mixed_volume calls phc', end='')
     if demics:
         retval = phc(843, mixvol, bbb, ccc, vrb)
     else:
@@ -39,23 +45,23 @@ def mixed_volume(demics=True, vrblvl=0):
         print(', return value :', retval)
     return mixvol[0]
 
-def stable_mixed_volume(demics=True, vrblvl=0):
+def compute_stable_mixed_volume(demics=True, vrblvl=0):
     """
     Returns the mixed and the stable mixed volume of the polynomial system
-    in double precision.
+    set in double precision.
     The demics flag indicates if dynamic enumeration as implemented by
     the software DEMiCs will be used, otherwise MixedVol is called.
     The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
-        print('in stable_mixed_volume, demics flag :', demics)
+        print('in compute_stable_mixed_volume, demics flag :', demics)
     phc = get_phcfun(vrblvl-1)
     mixvol = pointer(c_int32(0))
     stablemv = pointer(c_int32(0))
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
-        print('-> stable_mixed_volume calls phc', end='')
+        print('-> compute_stable_mixed_volume calls phc', end='')
     if demics:
         retval = phc(844, mixvol, stablemv, ccc, vrb)
     else:
@@ -63,6 +69,39 @@ def stable_mixed_volume(demics=True, vrblvl=0):
     if vrblvl > 0:
         print(', return value :', retval)
     return (mixvol[0], stablemv[0])
+
+def mixed_volume(pols, demics=True, vrblvl=0):
+    """
+    Returns the mixed volume of the polynomial system in the list pols.
+    The polynomial system must have as many equations as unknowns.
+    The demics flag indicates if dynamic enumeration as implemented by
+    the software DEMiCs will be used, otherwise MixedVol is called.
+    The verbose level is given by vrblvl.
+    """
+    if vrblvl > 0:
+        print('in mixed_volume, demics flag :', demics)
+        print('the polynomials :')
+        for pol in pols:
+            print(pol)
+    set_double_system(len(pols), pols, vrblvl-1)
+    return compute_mixed_volume(demics, vrblvl)
+
+def stable_mixed_volume(pols, demics=True, vrblvl=0):
+    """
+    Returns the mixed and the stable mixed volume of the polynomial system
+    in the list pols.
+    The polynomial system must have as many equations as unknowns.
+    The demics flag indicates if dynamic enumeration as implemented by
+    the software DEMiCs will be used, otherwise MixedVol is called.
+    The verbose level is given by vrblvl.
+    """
+    if vrblvl > 0:
+        print('in stable_mixed_volume, demics flag :', demics)
+        print('the polynomials :')
+        for pol in pols:
+            print(pol)
+    set_double_system(len(pols), pols, vrblvl-1)
+    return compute_stable_mixed_volume(demics, vrblvl)
 
 def clear_cells(vrblvl=0):
     """
@@ -660,6 +699,34 @@ def quad_double_polyhedral_homotopies(vrblvl=0):
     sols = get_quad_double_solutions(vrblvl-1)
     return (rndcffsys, sols)
 
+def make_random_coefficient_system(pols, demics=True, precision='d', \
+    vrblvl=0):
+    """
+    For a polynomial system in the list pols with as many equations
+    as unknowns, computes the mixed volume (by default by DEMiCs)
+    and runs the polyhedral homotopies to solve a random coefficient
+    system in double, double double, or quad double precision,
+    if the precision flag is set to 'd', 'dd', or 'qd' respectively.
+    Returns a tuple with the mixed volume, random coefficient system,
+    and the solutions of the random coefficient system.
+    """
+    if vrblvl > 0:
+        print('make_random_coefficient_system, demics flag :', demics)
+        print('precision :', precision)
+        print('the polynomials :')
+        for pol in pols:
+            print(pol)
+    mv = mixed_volume(pols, demics, vrblvl)
+    if precision == 'd':
+        rndcffsys, sols = double_polyhedral_homotopies(vrblvl)
+    elif precision == 'dd':
+        rndcffsys, sols = double_double_polyhedral_homotopies(vrblvl)
+    elif precision == 'qd':
+        rndcffsys, sols = quad_double_polyhedral_homotopies(vrblvl)
+    else:
+        print('Wrong value of precision flag.')
+    return (mv, rndcffsys, sols)
+
 def test_mixed_volume(vrblvl=0):
     """
     Computes the mixed volume of a simple example.
@@ -668,8 +735,7 @@ def test_mixed_volume(vrblvl=0):
     if vrblvl > 0:
         print('in test_mixed_volume ...')
     polynomials = ["x^3 + 2*x*y - 1;", "x + y - 1;"]
-    set_double_system(2, polynomials, vrblvl)
-    mvl = mixed_volume(True, vrblvl)
+    mvl = mixed_volume(polynomials, True, vrblvl)
     nbr = number_of_cells(vrblvl)
     if vrblvl > 0:
         print('the mixed volume by DEMiCs :', mvl)
@@ -682,7 +748,7 @@ def test_mixed_volume(vrblvl=0):
         print('sum of mixed volumes of cells :', mvcells)
     fail = fail + int(mvcells != 3)
     clear_cells(vrblvl)
-    mvl = mixed_volume(False, vrblvl)
+    mvl = mixed_volume(polynomials, False, vrblvl)
     nbr = number_of_cells(vrblvl)
     if vrblvl > 0:
         print('the mixed volume by MixedVol :', mvl)
@@ -704,8 +770,7 @@ def test_stable_mixed_volume(vrblvl=0):
     if vrblvl > 0:
         print('in test_stable_mixed_volume ...')
     polynomials = ["x^3 + 2*x*y - x^2*y;", "x + y - x^3;"]
-    set_double_system(2, polynomials, vrblvl)
-    mvl, smv = stable_mixed_volume(True, vrblvl)
+    mvl, smv = stable_mixed_volume(polynomials, True, vrblvl)
     nbr = number_of_cells(vrblvl)
     stbnbr = number_of_stable_cells(vrblvl)
     if vrblvl > 0:
@@ -720,7 +785,7 @@ def test_stable_mixed_volume(vrblvl=0):
         print('sum of mixed volumes of cells :', mvcells)
     fail = int(mvl != 3) + int(smv != 5) + int(mvcells != 5)
     clear_cells(vrblvl)
-    mvl, smv = stable_mixed_volume(False, vrblvl)
+    mvl, smv = stable_mixed_volume(polynomials, False, vrblvl)
     nbr = number_of_cells(vrblvl)
     stbnbr = number_of_stable_cells(vrblvl)
     if vrblvl > 0:
@@ -745,7 +810,7 @@ def test_double_polyhedral_homotopies(vrblvl=0):
     if vrblvl > 0:
         print('in test_double_polyhedral_homotopies ...')
     polynomials = ["x^3 + 2*x*y - 1;", "x + y - 1;"]
-    mv = mixed_volume(True, vrblvl)
+    mv = mixed_volume(polynomials, True, vrblvl)
     rndcffsys, sols = double_polyhedral_homotopies(vrblvl)
     fail = int(mv != len(sols))
     if vrblvl > 0:
@@ -759,7 +824,7 @@ def test_double_polyhedral_homotopies(vrblvl=0):
     err = verify(rndcffsys, sols, vrblvl-1)
     if vrblvl > 0:
         print('the sum of errors :', err)
-    fail = fail + int(abs(err.real) > 1.0e-8) + int(abs(err.imag) > 1.0e-8)
+    fail = fail + int(err > 1.0e-8)
     return fail
 
 def test_double_double_polyhedral_homotopies(vrblvl=0):
@@ -771,7 +836,7 @@ def test_double_double_polyhedral_homotopies(vrblvl=0):
     if vrblvl > 0:
         print('in test_double_double_polyhedral_homotopies ...')
     polynomials = ["x^3 + 2*x*y - 1;", "x + y - 1;"]
-    mv = mixed_volume(True, vrblvl)
+    mv = mixed_volume(polynomials, True, vrblvl)
     rndcffsys, sols = double_double_polyhedral_homotopies(vrblvl)
     fail = int(mv != len(sols))
     if vrblvl > 0:
@@ -785,7 +850,7 @@ def test_double_double_polyhedral_homotopies(vrblvl=0):
     err = verify(rndcffsys, sols, vrblvl-1)
     if vrblvl > 0:
         print('the sum of errors :', err)
-    fail = fail + int(abs(err.real) > 1.0e-8) + int(abs(err.imag) > 1.0e-8)
+    fail = fail + int(err > 1.0e-8)
     return fail
 
 def test_quad_double_polyhedral_homotopies(vrblvl=0):
@@ -797,7 +862,7 @@ def test_quad_double_polyhedral_homotopies(vrblvl=0):
     if vrblvl > 0:
         print('in test_quad_double_polyhedral_homotopies ...')
     polynomials = ["x^3 + 2*x*y - 1;", "x + y - 1;"]
-    mv = mixed_volume(True, vrblvl)
+    mv = mixed_volume(polynomials, True, vrblvl)
     rndcffsys, sols = quad_double_polyhedral_homotopies(vrblvl)
     fail = int(mv != len(sols))
     if vrblvl > 0:
@@ -811,7 +876,32 @@ def test_quad_double_polyhedral_homotopies(vrblvl=0):
     err = verify(rndcffsys, sols, vrblvl-1)
     if vrblvl > 0:
         print('the sum of errors :', err)
-    fail = fail + int(abs(err.real) > 1.0e-8) + int(abs(err.imag) > 1.0e-8)
+    fail = fail + int(err > 1.0e-8)
+    return fail
+
+def test_make_random_coefficient_system(vrblvl=0):
+    """
+    Test the making of a random coefficient system.
+    The verbose level is given by vrblvl.
+    """
+    if vrblvl > 0:
+        print('in test_make_random_coefficient_system ...')
+    pols = ["x^3 + 2*x*y - 1;", "x + y - 1;"]
+    mv, rndcffsys, sols = make_random_coefficient_system(pols, vrblvl)
+    fail = int(mv != len(sols))
+    if vrblvl > 0:
+        print('the mixed volume :', mv)
+        print('a random coefficient system :')
+        for pol in rndcffsys:
+            print(pol)
+        print('its solutions :')
+        for (idx, sol) in enumerate(sols):
+            print('Solution', idx+1, ':')
+            print(sol)
+    err = verify(rndcffsys, sols, vrblvl-1)
+    if vrblvl > 0:
+        print('the sum of errors :', err)
+    fail = fail + int(err > 1.0e-8)
     return fail
 
 def main():
@@ -824,6 +914,7 @@ def main():
     fail = fail + test_double_polyhedral_homotopies(lvl)
     fail = fail + test_double_double_polyhedral_homotopies(lvl)
     fail = fail + test_quad_double_polyhedral_homotopies(lvl)
+    fail = fail + test_make_random_coefficient_system(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:
