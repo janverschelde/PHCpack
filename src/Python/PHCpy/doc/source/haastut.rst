@@ -38,7 +38,7 @@ From ``phcpy`` we import the following functions:
     from phcpy.solver import solve
     from phcpy.solutions import filter_real
 
-Solving the System on Many Cores
+solving the system on many cores
 --------------------------------
 
 The example of Bertrand Haas is defined as
@@ -101,7 +101,7 @@ The output of the above code cell is
 
 Compared the `elapsed :` above with the previous one.
 
-Extracting the Real Roots
+extracting the real roots
 -------------------------
 
 Rather than eyeballing all 11,664 complex solutions ourselves, 
@@ -170,7 +170,7 @@ We observe (0, 0) and five additional real positive roots.
 According to the Koushnirenko conjecture, we would expect
 no more than four real positive roots.
 
-Plotting the Curves
+plotting the curves
 -------------------
 
 In converting the strings in the polynomial system ``H`` 
