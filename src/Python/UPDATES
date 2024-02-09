@@ -1,5 +1,6 @@
 Thu 8 Feb 2024 : to volumes.py, added wrappers for the mixed volume,
   stable mixed volume, and to make a random coefficient system.
+  Added speedup.py and qualityup to PHCpy/manual.
 
 Wed 7 Feb 2024 : small edits in the phcpy user manual files 
   reproducibleruns.rst and numericalsolutions.rst.
