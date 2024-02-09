@@ -1,3 +1,5 @@
+Fri 9 Feb 2024 : truncated returned strings properly in starters.py.
+
 Thu 8 Feb 2024 : to volumes.py, added wrappers for the mixed volume,
   stable mixed volume, and to make a random coefficient system.
   Added speedup.py and qualityup to PHCpy/manual.

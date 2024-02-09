@@ -95,7 +95,9 @@ def m_homogeneous_bezout_number(pols, vrblvl=0):
     if vrblvl > 0:
         print(', return value :', retval)
         print('an m-homogeneous Bezout number :', deg[0])
-    partition = int4a2str(pbuffer, vrblvl=vrblvl-1)
+    wholepartition = int4a2str(pbuffer, vrblvl=vrblvl-1)
+    endidx = wholepartition.find('\0')
+    partition = wholepartition[:endidx]
     if vrblvl > 0:
         print('the partition :', partition)
     return (deg[0], partition)
@@ -228,7 +230,9 @@ def linear_product_root_count(pols, checkin=True, vrblvl=0):
     if vrblvl > 0:
         print('-> linear_product_root_count calls phc', end='')
     retval = phc(116, roco, strsets, ccc, vrb)
-    sets = int4a2str(strsets, vrblvl=vrblvl-1)
+    wholesets = int4a2str(strsets, vrblvl=vrblvl-1)
+    endidx = wholesets.find('\0')
+    sets = wholesets[:endidx]
     if vrblvl > 0:
         print(', return value :', retval)
         print('supporting set structure :')
