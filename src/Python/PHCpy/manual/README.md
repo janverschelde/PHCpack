@@ -6,4 +6,7 @@ This folder contains scripts and notebooks to prepare the user manual.
 | numericalpolynomials.ipynb | documents the input to the solver             |
 | numericalsolutions.ipynb   | explains what a numerical solution is         |
 | reproducibleruns.ipynb     | on seeding the random number generator        |
+| speedup.py                 | script to illustrate speed up                 |
+| qualityup.py               | compensating for double double arithmetic     |
+| parallelruns.ipynb         | speed up and quality up with parallel runs    |
 | snippets.py                | code snippets from the Jupyter notebook menus |
