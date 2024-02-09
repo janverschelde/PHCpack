@@ -9,4 +9,5 @@ This folder contains scripts and notebooks to prepare the user manual.
 | speedup.py                 | script to illustrate speed up                 |
 | qualityup.py               | compensating for double double arithmetic     |
 | parallelruns.ipynb         | speed up and quality up with parallel runs    |
+| rootcounts.ipynb           | root counts and start systems                 |
 | snippets.py                | code snippets from the Jupyter notebook menus |
