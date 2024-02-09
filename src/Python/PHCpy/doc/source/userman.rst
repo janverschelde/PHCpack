@@ -14,3 +14,4 @@ isolated solutions, but also all positive dimensional solutions.
    numericalpolynomials
    numericalsolutions
    reproducibleruns
+   parallelruns
