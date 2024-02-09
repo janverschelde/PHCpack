@@ -15,3 +15,4 @@ isolated solutions, but also all positive dimensional solutions.
    numericalsolutions
    reproducibleruns
    parallelruns
+   rootcounts
