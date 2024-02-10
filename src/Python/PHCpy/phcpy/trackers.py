@@ -153,6 +153,75 @@ def get_parameter_value(idx, vrblvl=0):
         print('Value of parameter', idx, ':', value[0])
     return value[0]
 
+def write_parameters(vrblvl=0):
+    """
+    Writes the parameters with repeated calls to get_parameter_value(),
+    as the show_parameters() does not work in a Jupyter notebook.
+    """
+    pars = [get_parameter_value(idx, vrblvl) for idx in range(35)]
+    print('GLOBAL MONITOR :')
+    print('  1. the condition of the homotopy           :', int(pars[1]))
+    print('  2. number of paths tracked simultaneously  :', int(pars[2]))
+    print('  3. maximum number of steps along a path    :', int(pars[3]))
+    print('  4. distance from target to start end game  :', end='')
+    print(f' {pars[4]:1.3e}')
+    print('  5. order of extrapolator in end game       :', int(pars[5]))
+    print('  6. maximum number of re-runs               :', int(pars[6]))
+    print('STEP CONTROL (PREDICTOR) :                    along path : end game')
+    s1s = '( x:Sec,t:Rea )' # secant for x, real for t
+    s1c = '( x:Sec,t:Com )' # secant for x, complex for t
+    s1g = '( x:Sec,t:Geo )' # second for x, geometric for t
+    t1s = '( x:Tan,t:Rea )' # tangent for x, real for t
+    t1c = '( x:Tan,t:Com )' # tangent for x, complex for t
+    t1g = '( x:Tan,t:Geo )' # tangent for x, geometric for t
+    h3s = '( x:Her,t:Rea )' # Hermite for x, real for t
+    q2s = '( x:Qu2,t:Rea )' # quadratic for for x, real for t
+    c3s = '( x:Cub,t:Rea )' # cubic for x, real for t
+    ptp = [s1s, s1c, s1g, t1s, t1c, t1g, h3s, q2s, c3s]
+    uuu = 'no predictor'
+    if int(pars[7]) in range(9):
+        if int(pars[8]) in range(9):
+            print(f'  7: 8. type {ptp[int(pars[7])]}:{ptp[int(pars[8])]} :',
+                  end=' ')
+        else:
+            print(f'  7: 8. type {ptp[int(pars[7])]}:{uuu} :', end=' ')
+    else:
+        if int(pars[8]) in range(9):
+            print(f'  7: 8. type {uuu}:{ptp[int(pars[8])]} :',
+                  end=' ')
+        else:
+            print(f'  7: 8. type {uuu}:{uuu} :', end=' ')
+    print(int(pars[7]), '        :', int(pars[8]))
+    print('  9:10. minimum step size                    :', end='')
+    print(f' {pars[9]:1.3e} : {pars[10]:1.3e}')
+    print(' 11:12. maximum step size                    :', end='')
+    print(f' {pars[11]:1.3e} : {pars[12]:1.3e}')
+    print(' 13:14. reduction factor for step size       :', end='')
+    print(f' {pars[13]:1.3e} : {pars[14]:1.3e}')
+    print(' 15:16. expansion factor for step size       :', end='')
+    print(f' {pars[15]:1.3e} : {pars[16]:1.3e}')
+    print(' 17:18. expansion threshold                  :', end=' ')
+    print(int(pars[17]), '        :', int(pars[18]))
+    print('PATH CLOSENESS (CORRECTOR) :                  along path : end game')
+    print(' 19:20. maximum number of iterations         :', end=' ')
+    print(int(pars[19]), '        :', int(pars[20]))
+    print(' 21:22. relative precision for residuals     :', end='')
+    print(f' {pars[21]:1.3e} : {pars[22]:1.3e}')
+    print(' 23:24. absolute precision for residuals     :', end='')
+    print(f' {pars[23]:1.3e} : {pars[24]:1.3e}')
+    print(' 25:26. relative precision for corrections   :', end='')
+    print(f' {pars[25]:1.3e} : {pars[26]:1.3e}')
+    print(' 27:28. absolute precision for corrections   :', end='')
+    print(f' {pars[27]:1.3e} : {pars[28]:1.3e}')
+    print('SOLUTION TOLERANCES :                         along path : end game')
+    print(' 29:30. inverse condition of Jacobian        :', end='')
+    print(f' {pars[29]:1.3e} : {pars[30]:1.3e}')
+    print(' 31:32. clustering of solutions              :', end='')
+    print(f' {pars[31]:1.3e} : {pars[32]:1.3e}')
+    print(' 33:34. solution at infinity                 :', end='')
+    print(f' {pars[33]:1.3e} : {pars[34]:1.3e}')
+    return 0
+
 def set_condition_level(level, vrblvl=0):
     r"""
     Sets the parameter that represents the difficulty level of the
@@ -1336,6 +1405,15 @@ def test_tuning(vrblvl=0):
         show_parameters(vrblvl)
     return fail
 
+def test_write_parameters(vrblvl=0):
+    """
+    Tests the writing of the parameters.
+    """
+    if vrblvl > 0:
+        show_parameters(vrblvl)
+        write_parameters(vrblvl)
+    return 0
+
 def main():
     """
     Runs some tests on tuning and tracking.
@@ -1351,6 +1429,7 @@ def main():
     fail = fail + test_double_laurent_track(lvl)
     fail = fail + test_double_double_laurent_track(lvl)
     fail = fail + test_quad_double_laurent_track(lvl)
+    fail = fail + test_write_parameters(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:
