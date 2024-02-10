@@ -455,7 +455,7 @@ def double_track(target, start, startsols, \
     return (usedgamma, sols)
 
 def double_double_track(target, start, startsols, \
-    gamma=0, pwt=2, tasks=1, vrblvl=0):
+    gamma=0, pwt=2, tasks=0, vrblvl=0):
     r"""
     Tracks paths in double double precision.
     On input are a target system, a start system with solutions,
@@ -504,7 +504,7 @@ def double_double_track(target, start, startsols, \
     return (usedgamma, sols)
 
 def quad_double_track(target, start, startsols, \
-    gamma=0, pwt=2, tasks=1, vrblvl=0):
+    gamma=0, pwt=2, tasks=0, vrblvl=0):
     r"""
     Tracks paths in quad double precision.
     On input are a target system, a start system with solutions,
@@ -600,7 +600,7 @@ def double_laurent_track(target, start, startsols, \
     return (usedgamma, sols)
 
 def double_double_laurent_track(target, start, startsols, \
-    gamma=0, pwt=2, tasks=1, vrblvl=0):
+    gamma=0, pwt=2, tasks=0, vrblvl=0):
     r"""
     Tracks paths in double double precision, for Laurent systems.
     On input are a target system, a start system with solutions,
@@ -649,7 +649,7 @@ def double_double_laurent_track(target, start, startsols, \
     return (usedgamma, sols)
 
 def quad_double_laurent_track(target, start, startsols, \
-    gamma=0, pwt=2, tasks=1, vrblvl=0):
+    gamma=0, pwt=2, tasks=0, vrblvl=0):
     r"""
     Tracks paths in quad double precision, for Laurent systems.
     On input are a target system, a start system with solutions,
@@ -1000,15 +1000,16 @@ def test_double_double_track(vrblvl=0):
         print('in test_double_double_track ...')
     mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
     start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl-1)
-    print('the start system :')
-    for pol in start:
-        print(pol)
-    print('the start solutions :')
-    for (idx, sol) in enumerate(startsols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
     gamma, sols = double_double_track(mickey, start, startsols, \
-        tasks=4, vrblvl=vrblvl)
+        vrblvl=vrblvl)
     if vrblvl > 0:
         print('gamma :', gamma)
         print('the solutions :')
@@ -1049,7 +1050,7 @@ def test_quad_double_track(vrblvl=0):
             print('Solution', idx+1, ':')
             print(sol)
     gamma, sols = quad_double_track(mickey, start, startsols, \
-        tasks=2, vrblvl=vrblvl)
+        vrblvl=vrblvl)
     if vrblvl > 0:
         print('gamma :', gamma)
         print('the solutions :')
@@ -1241,15 +1242,16 @@ def test_double_double_laurent_track(vrblvl=0):
         print('in test_double_double_laurent_track ...')
     mickey = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
     start, startsols = total_degree_start_system(mickey, vrblvl=vrblvl-1)
-    print('the start system :')
-    for pol in start:
-        print(pol)
-    print('the start solutions :')
-    for (idx, sol) in enumerate(startsols):
-        print('Solution', idx+1, ':')
-        print(sol)
+    if vrblvl > 0:
+        print('the start system :')
+        for pol in start:
+            print(pol)
+        print('the start solutions :')
+        for (idx, sol) in enumerate(startsols):
+            print('Solution', idx+1, ':')
+            print(sol)
     gamma, sols = double_double_laurent_track(mickey, start, startsols, \
-        tasks=4, vrblvl=vrblvl)
+        vrblvl=vrblvl)
     if vrblvl > 0:
         print('gamma :', gamma)
         print('the solutions :')
@@ -1290,7 +1292,7 @@ def test_quad_double_laurent_track(vrblvl=0):
             print('Solution', idx+1, ':')
             print(sol)
     gamma, sols = quad_double_laurent_track(mickey, start, startsols, \
-        tasks=2, vrblvl=vrblvl)
+        vrblvl=vrblvl)
     if vrblvl > 0:
         print('gamma :', gamma)
         print('the solutions :')
@@ -1319,17 +1321,20 @@ def test_tuning(vrblvl=0):
     """
     if vrblvl > 0:
         print('in test_tuning ...')
-    show_parameters(vrblvl-1)
-    print('setting the condition level to 2 ...')
-    set_condition_level(2, vrblvl-1)
+        show_parameters(vrblvl-1)
+        print('setting the condition level to 2 ...')
+    fail = set_condition_level(2, vrblvl-1)
     level = get_condition_level(vrblvl-1)
-    print('the condition level :', level)
-    autotune_parameters(level, 14, vrblvl-1)
-    show_parameters(vrblvl-1)
+    if vrblvl > 0:
+        print('the condition level :', level)
+    fail = fail + autotune_parameters(level, 14, vrblvl-1)
+    if vrblvl > 0:
+        show_parameters(vrblvl-1)
     # interactive_tune(vrblvl)
-    autotune_parameters(0, 14, vrblvl-1)
-    show_parameters(vrblvl)
-    return 0
+    fail = fail + autotune_parameters(0, 14, vrblvl-1)
+    if vrblvl > 0:
+        show_parameters(vrblvl)
+    return fail
 
 def main():
     """
