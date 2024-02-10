@@ -543,13 +543,17 @@ package PHCpack_Operations is
   --   crash     true if some exception occurred.
 
   function Solve_by_Standard_Homotopy_Continuation 
-             ( number_of_tasks : natural32 ) return integer32;
+             ( number_of_tasks : natural32;
+               vrblvl : integer32 := 0 ) return integer32;
   function Solve_by_DoblDobl_Homotopy_Continuation
-             ( number_of_tasks : natural32 ) return integer32;
+             ( number_of_tasks : natural32;
+               vrblvl : integer32 := 0 ) return integer32;
   function Solve_by_QuadDobl_Homotopy_Continuation
-             ( number_of_tasks : natural32 ) return integer32;
+             ( number_of_tasks : natural32;
+               vrblvl : integer32 := 0 ) return integer32;
   function Solve_by_Multprec_Homotopy_Continuation
-             ( decimals : natural32 ) return integer32;
+             ( decimals : natural32;
+               vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Tracks the paths starting at the current start solutions.
@@ -562,11 +566,14 @@ package PHCpack_Operations is
   --   multiprecision version equals the value of decimals.
 
   function Solve_by_Standard_Laurent_Homotopy_Continuation 
-             ( number_of_tasks : natural32 ) return integer32;
+             ( number_of_tasks : natural32;
+               vrblvl : integer32 := 0 ) return integer32;
   function Solve_by_DoblDobl_Laurent_Homotopy_Continuation
-             ( number_of_tasks : natural32 ) return integer32;
+             ( number_of_tasks : natural32;
+               vrblvl : integer32 := 0 ) return integer32;
   function Solve_by_QuadDobl_Laurent_Homotopy_Continuation
-             ( number_of_tasks : natural32 ) return integer32;
+             ( number_of_tasks : natural32;
+               vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
   --   Tracks the paths starting a the stored start solutions,

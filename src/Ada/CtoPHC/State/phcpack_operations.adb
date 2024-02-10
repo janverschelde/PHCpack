@@ -2454,7 +2454,8 @@ package body PHCpack_Operations is
   end Reporting_Laurent_Path_Tracker;
 
   function Solve_by_Standard_Homotopy_Continuation
-             ( number_of_tasks : natural32 ) return integer32 is
+             ( number_of_tasks : natural32;
+               vrblvl : integer32 := 0 ) return integer32 is
 
     use Standard_Complex_Numbers,Standard_Complex_Norms_Equals;
     use Standard_IncFix_Continuation;
@@ -2499,6 +2500,10 @@ package body PHCpack_Operations is
              Standard_Homotopy.Diff,Standard_Homotopy.Diff);
 
   begin
+    if vrblvl > 0 then
+      put("in phcpack_operations.");
+      put_line("Solve_by_Standard_Homotopy_Continuation ...");
+    end if;
     if zero_standard_constant
      then r := Create(0.793450603947633,-0.608634651572795);
      else r := st_gamma_constant;
@@ -2606,7 +2611,8 @@ package body PHCpack_Operations is
   end Solve_by_Standard_Homotopy_Continuation;
 
   function Solve_by_DoblDobl_Homotopy_Continuation
-             ( number_of_tasks : natural32 ) return integer32 is
+             ( number_of_tasks : natural32;
+               vrblvl : integer32 := 0 ) return integer32 is
 
     use DoblDobl_Complex_Numbers,DoblDobl_Complex_Vector_Norms;
     use DoblDobl_IncFix_Continuation;
@@ -2651,21 +2657,32 @@ package body PHCpack_Operations is
              DoblDobl_Homotopy.Diff,DoblDobl_Homotopy.Diff);
 
   begin
-    put_line("in Solve_by_DoblDobl_Homotopy_Continuation ...");
-    if zero_dobldobl_constant
-     then r := DoblDobl_Complex_Numbers.Create
-                 (Double_Double_Numbers.create(0.793450603947633),
-                  Double_Double_Numbers.create(-0.608634651572795));
-         -- put_line("zero_dobldobl_constant is true");
-     else r := dd_gamma_constant;
-         -- put_line("zero_dobldobl_constant is false");
-         -- put_line("The target system :");
-         -- put(dd_target_sys.all);
-         -- put_line("The start system :");
-         -- put(dd_start_sys.all);
+    if vrblvl > 0 then
+      put("in phcpack_operations.");
+      put_line("Solve_by_DoblDobl_Homotopy_Continuation ...");
+    end if;
+    if zero_dobldobl_constant then
+      r := DoblDobl_Complex_Numbers.Create
+             (Double_Double_Numbers.create(0.793450603947633),
+              Double_Double_Numbers.create(-0.608634651572795));
+      if vrblvl > 0 
+       then put_line("zero_dobldobl_constant is true");
+      end if;
+    else
+      r := dd_gamma_constant;
+      if vrblvl > 0 then
+        put_line("zero_dobldobl_constant is false");
+        put("The gamma constant : "); put(r); new_line;
+        put_line("The target system :");
+        put(dd_target_sys.all);
+        put_line("The start system :");
+        put(dd_start_sys.all);
+      end if;
     end if;
     if empty_dobldobl_homotopy then
-      put_line("empty_dobldobl_homotopy is true");
+      if vrblvl > 0
+       then put_line("empty_dobldobl_homotopy is true");
+      end if;
       DoblDobl_Homotopy.Create(dd_target_sys.all,dd_start_sys.all,k,r);
       empty_dobldobl_homotopy := false; -- for dynamic load balancing
       if file_okay then
@@ -2676,18 +2693,24 @@ package body PHCpack_Operations is
         put(output_file,"  gamma : "); put(output_file,r);
         new_line(output_file); new_line(output_file);
       end if;
-   -- else
-   --   put_line("empty_dobldobl_homotopy is false");
-   --   put_line("The target system :");
-   --   put(DoblDobl_Homotopy.Target_System);
-   --   put_line("The start system :");
-   --   put(DoblDobl_Homotopy.Start_System);
-   --   put("The relaxation power : ");
-   --   put(DoblDobl_Homotopy.Relaxation_Power,1); new_line;
-   --   put("The gamma constant : ");
-   --   put(DoblDobl_Homotopy.Accessibility_Constant); new_line;
-   --   put_line("The homotopy system :");
-   --   put(DoblDobl_Homotopy.Homotopy_System);
+    elsif vrblvl > 0 then
+      put_line("empty_dobldobl_homotopy is false");
+      put_line("The target system :");
+      put(DoblDobl_Homotopy.Target_System);
+      put_line("The start system :");
+      put(DoblDobl_Homotopy.Start_System);
+      put("The relaxation power : ");
+      put(DoblDobl_Homotopy.Relaxation_Power,1); new_line;
+      put("The gamma constant : ");
+      put(DoblDobl_Homotopy.Accessibility_Constant); new_line;
+      put_line("The homotopy system :");
+      put(DoblDobl_Homotopy.Homotopy_System);
+    end if;
+    if vrblvl > 0 then
+      if auto_tune
+       then put_line("auto_tune is true");
+       else put_line("auto_tune is false");
+      end if;
     end if;
     if auto_tune
      then Continuation_Parameters.Tune(0); -- (0,32) is too severe
@@ -2705,27 +2728,33 @@ package body PHCpack_Operations is
       if k /= 1
        then DoblDobl_Redefine_Homotopy;
       end if;
-      put_line("order of endgame extrapolator is not zero");
+      if vrblvl > 0
+       then put_line("order of endgame extrapolator is not zero");
+      end if;
     else
-      put_line("order of endgame extrapolator is zero");
+      if vrblvl > 0
+       then put_line("order of endgame extrapolator is zero");
+      end if;
     end if;
     if file_okay then
       tstart(timer);
       if number_of_tasks = 0 then
         if Continuation_Parameters.endext_order = 0 then
-          if nbequ = nbvar
-           then Rep_Cont(output_file,dd_target_sols,Create(integer(1)));
-           else Rep_Cont(output_file,dd_target_sols,nbequ,Create(integer(1)));
+          if nbequ = nbvar then
+            Rep_Cont(output_file,dd_target_sols,target=>Create(integer(1)));
+          else
+            Rep_Cont(output_file,dd_target_sols,nbequ,
+                     target=>Create(integer(1)));
           end if;
         else
           if nbequ = nbvar then
             Rep_Toric_Cont
               (output_file,dd_target_sols,false,
-               wind.all,dirs.all,errv.all,Create(integer(1)));
+               wind.all,dirs.all,errv.all,target=>Create(integer(1)));
           else
             Rep_Toric_Cont
               (output_file,dd_target_sols,false,
-               wind.all,dirs.all,errv.all,nbequ,Create(integer(1)));
+               wind.all,dirs.all,errv.all,nbequ,target=>Create(integer(1)));
           end if;
           Write_Directions(output_file,wind.all,dirs.all,errv.all);
         end if;
@@ -2742,26 +2771,32 @@ package body PHCpack_Operations is
     else
       if number_of_tasks = 0 then
         if Continuation_Parameters.endext_order = 0 then
-          if nbequ = nbvar
-           then Sil_Cont(dd_target_sols,Create(integer(1)));
-          -- JV 01/01/2024
-          -- then 
-          --    put_line("The solutions at the start :");
-          --    DoblDobl_Complex_Solutions_io.Write(standard_output,dd_target_sols);
-          --    Rep_Cont(standard_output,dd_target_sols,Create(integer(1)));
-          --    put_line("The solutions at the end :");
-          --    DoblDobl_Complex_Solutions_io.Write(standard_output,dd_target_sols);
-           else Sil_Cont(dd_target_sols,nbequ,Create(integer(1)));
+          if nbequ = nbvar then
+           -- Sil_Cont(dd_target_sols,Create(integer(1)));
+            if vrblvl > 0 then
+              put_line("The solutions at the start :");
+              DoblDobl_Complex_Solutions_io.Write
+                (standard_output,dd_target_sols);
+              Rep_Cont(standard_output,dd_target_sols,
+                       target=>Create(integer(1)));
+              put_line("The solutions at the end :");
+              DoblDobl_Complex_Solutions_io.Write
+                (standard_output,dd_target_sols);
+            else
+              Sil_Cont(dd_target_sols,target=>Create(integer(1)));
+            end if;
+          else
+            Sil_Cont(dd_target_sols,nbequ,target=>Create(integer(1)));
           end if;
         else
           if nbequ = nbvar then
             Sil_Toric_Cont
               (dd_target_sols,false,
-               wind.all,dirs.all,errv.all,Create(integer(1)));
+               wind.all,dirs.all,errv.all,target=>Create(integer(1)));
           else
             Sil_Toric_Cont
               (dd_target_sols,false,
-               wind.all,dirs.all,errv.all,nbequ,Create(integer(1)));
+               wind.all,dirs.all,errv.all,nbequ,target=>Create(integer(1)));
           end if;
         end if;
       else
@@ -2784,7 +2819,8 @@ package body PHCpack_Operations is
   end Solve_by_DoblDobl_Homotopy_Continuation;
 
   function Solve_by_QuadDobl_Homotopy_Continuation
-             ( number_of_tasks : natural32 ) return integer32 is
+             ( number_of_tasks : natural32;
+               vrblvl : integer32 := 0 ) return integer32 is
 
     use QuadDobl_Complex_Numbers,QuadDobl_Complex_Vector_Norms;
     use QuadDobl_IncFix_Continuation;
@@ -2829,6 +2865,10 @@ package body PHCpack_Operations is
              QuadDobl_Homotopy.Diff,QuadDobl_Homotopy.Diff);
 
   begin
+    if vrblvl > 0 then
+      put("in phcpack_operations.");
+      put_line("Solve_by_QuadDobl_Homotopy_Continuation ...");
+    end if;
     if zero_quaddobl_constant
      then r := QuadDobl_Complex_Numbers.Create
                  (Quad_Double_Numbers.create(0.793450603947633),
@@ -2868,19 +2908,21 @@ package body PHCpack_Operations is
       tstart(timer);
       if number_of_tasks = 0 then
         if Continuation_Parameters.endext_order = 0 then
-          if nbequ = nbvar
-           then Rep_Cont(output_file,qd_target_sols,Create(integer(1)));
-           else Rep_Cont(output_file,qd_target_sols,nbequ,Create(integer(1)));
+          if nbequ = nbvar then
+            Rep_Cont(output_file,qd_target_sols,target=>Create(integer(1)));
+          else
+            Rep_Cont(output_file,qd_target_sols,nbequ,
+                     target=>Create(integer(1)));
           end if;
         else
           if nbequ = nbvar then
             Rep_Toric_Cont
               (output_file,qd_target_sols,false,
-               wind.all,dirs.all,errv.all,Create(integer(1)));
+               wind.all,dirs.all,errv.all,target=>Create(integer(1)));
           else
             Rep_Toric_Cont
               (output_file,qd_target_sols,false,
-               wind.all,dirs.all,errv.all,Create(integer(1)));
+               wind.all,dirs.all,errv.all,target=>Create(integer(1)));
           end if;
           Write_Directions(output_file,wind.all,dirs.all,errv.all);
         end if;
@@ -2898,18 +2940,18 @@ package body PHCpack_Operations is
       if number_of_tasks = 0 then
         if Continuation_Parameters.endext_order = 0 then
           if nbequ = nbvar
-           then Sil_Cont(qd_target_sols,Create(integer(1)));
-           else Sil_Cont(qd_target_sols,nbequ,Create(integer(1)));
+           then Sil_Cont(qd_target_sols,target=>Create(integer(1)));
+           else Sil_Cont(qd_target_sols,nbequ,target=>Create(integer(1)));
           end if;
         else
           if nbequ = nbvar then
             Sil_Toric_Cont
               (qd_target_sols,false,
-               wind.all,dirs.all,errv.all,Create(integer(1)));
+               wind.all,dirs.all,errv.all,target=>Create(integer(1)));
           else
             Sil_Toric_Cont
               (qd_target_sols,false,
-               wind.all,dirs.all,errv.all,nbequ,Create(integer(1)));
+               wind.all,dirs.all,errv.all,nbequ,target=>Create(integer(1)));
           end if;
         end if;
       else
@@ -2932,7 +2974,8 @@ package body PHCpack_Operations is
   end Solve_by_QuadDobl_Homotopy_Continuation;
 
   function Solve_by_Multprec_Homotopy_Continuation
-             ( decimals : in natural32 ) return integer32 is
+             ( decimals : natural32;
+               vrblvl : integer32 := 0 ) return integer32 is
 
     use Multprec_Complex_Numbers;
     use Multprec_Complex_Norms_Equals;
@@ -2954,6 +2997,10 @@ package body PHCpack_Operations is
                              Multprec_Homotopy.Diff,Multprec_Homotopy.Diff);
 
   begin
+    if vrblvl > 0 then
+      put("in phcpack_operations.");
+      put_line("Solve_by_Multprec_Homotopy_Continuation ...");
+    end if;
     if zero_multprec_constant then
       mp_re := Multprec_Floating_Numbers.Create(df_re);
       mp_im := Multprec_Floating_Numbers.Create(df_im);
@@ -2995,7 +3042,8 @@ package body PHCpack_Operations is
   end Solve_by_Multprec_Homotopy_Continuation;
 
   function Solve_by_Standard_Laurent_Homotopy_Continuation
-             ( number_of_tasks : natural32 ) return integer32 is
+             ( number_of_tasks : natural32;
+               vrblvl : integer32 := 0 ) return integer32 is
 
     use Standard_Complex_Numbers,Standard_Complex_Norms_Equals;
     use Standard_IncFix_Continuation;
@@ -3024,6 +3072,10 @@ package body PHCpack_Operations is
              Standard_Laurent_Homotopy.Diff,Standard_Laurent_Homotopy.Diff);
 
   begin
+    if vrblvl > 0 then
+      put("in phcpack_operations.");
+      put_line("Solve_by_Standard_Laurent_Homotopy_Continuation ...");
+    end if;
     if zero_standard_constant
      then r := Create(0.793450603947633,-0.608634651572795);
      else r := st_gamma_constant;
@@ -3092,7 +3144,8 @@ package body PHCpack_Operations is
   end Solve_by_Standard_Laurent_Homotopy_Continuation;
 
   function Solve_by_DoblDobl_Laurent_Homotopy_Continuation
-             ( number_of_tasks : natural32 ) return integer32 is
+             ( number_of_tasks : natural32;
+               vrblvl : integer32 := 0 ) return integer32 is
 
     use DoblDobl_Complex_Numbers,DoblDobl_Complex_Vector_Norms;
     use DoblDobl_IncFix_Continuation;
@@ -3115,6 +3168,10 @@ package body PHCpack_Operations is
              DoblDobl_Laurent_Homotopy.Diff,DoblDobl_Laurent_Homotopy.Diff);
 
   begin
+    if vrblvl > 0 then
+      put("in phcpack_operations.");
+      put_line("Solve_by_DoblDobl_Laurent_Homotopy_Continuation ...");
+    end if;
     if zero_dobldobl_constant
      then r := DoblDobl_Complex_Numbers.Create
                  (Double_Double_Numbers.create(0.793450603947633),
@@ -3144,9 +3201,11 @@ package body PHCpack_Operations is
     if file_okay then
       tstart(timer);
       if number_of_tasks = 0 then
-        if nbequ = nbvar
-         then Rep_Cont(output_file,dd_target_sols,Create(integer(1)));
-         else Rep_Cont(output_file,dd_target_sols,nbequ,Create(integer(1)));
+        if nbequ = nbvar then
+          Rep_Cont(output_file,dd_target_sols,target=>Create(integer(1)));
+        else
+          Rep_Cont(output_file,dd_target_sols,nbequ,
+                   target=>Create(integer(1)));
         end if;
       else
         Silent_Multitasking_Path_Tracker
@@ -3158,8 +3217,8 @@ package body PHCpack_Operations is
     else
       if number_of_tasks = 0 then
         if nbequ = nbvar
-         then Sil_Cont(dd_target_sols,Create(integer(1)));
-         else Sil_Cont(dd_target_sols,nbequ,Create(integer(1)));
+         then Sil_Cont(dd_target_sols,target=>Create(integer(1)));
+         else Sil_Cont(dd_target_sols,nbequ,target=>Create(integer(1)));
         end if;
       else
         Silent_Multitasking_Path_Tracker
@@ -3174,7 +3233,8 @@ package body PHCpack_Operations is
   end Solve_by_DoblDobl_Laurent_Homotopy_Continuation;
 
   function Solve_by_QuadDobl_Laurent_Homotopy_Continuation
-             ( number_of_tasks : natural32 ) return integer32 is
+             ( number_of_tasks : natural32;
+               vrblvl : integer32 := 0 ) return integer32 is
 
     use QuadDobl_Complex_Numbers,QuadDobl_Complex_Vector_Norms;
     use QuadDobl_IncFix_Continuation;
@@ -3197,6 +3257,10 @@ package body PHCpack_Operations is
              QuadDobl_Laurent_Homotopy.Diff,QuadDobl_Laurent_Homotopy.Diff);
 
   begin
+    if vrblvl > 0 then
+      put("in phcpack_operations.");
+      put_line("Solve_by_QuadDobl_Laurent_Homotopy_Continuation ...");
+    end if;
     if zero_quaddobl_constant
      then r := QuadDobl_Complex_Numbers.Create
                  (Quad_Double_Numbers.create(0.793450603947633),
@@ -3226,9 +3290,11 @@ package body PHCpack_Operations is
     if file_okay then
       tstart(timer);
       if number_of_tasks = 0 then
-        if nbequ = nbvar
-         then Rep_Cont(output_file,qd_target_sols,Create(integer(1)));
-         else Rep_Cont(output_file,qd_target_sols,nbequ,Create(integer(1)));
+        if nbequ = nbvar then
+          Rep_Cont(output_file,qd_target_sols,target=>Create(integer(1)));
+        else
+          Rep_Cont(output_file,qd_target_sols,nbequ,
+                   target=>Create(integer(1)));
         end if;
       else
         Silent_Multitasking_Path_Tracker
@@ -3240,8 +3306,8 @@ package body PHCpack_Operations is
     else
       if number_of_tasks = 0 then
         if nbequ = nbvar
-         then Sil_Cont(qd_target_sols,Create(integer(1)));
-         else Sil_Cont(qd_target_sols,nbequ,Create(integer(1)));
+         then Sil_Cont(qd_target_sols,target=>Create(integer(1)));
+         else Sil_Cont(qd_target_sols,nbequ,target=>Create(integer(1)));
         end if;
       else
         Silent_Multitasking_Path_Tracker

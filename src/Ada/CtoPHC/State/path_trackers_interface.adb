@@ -944,7 +944,8 @@ package body Path_Trackers_Interface is
       put("-> in path_trackers_interface.");
       put_line("Path_Trackers_Standard_Polynomial_Solve ...");
     end if;
-    rtr := PHCpack_Operations.Solve_by_Standard_Homotopy_Continuation(nbt);
+    rtr := PHCpack_Operations.Solve_by_Standard_Homotopy_Continuation
+             (nbt,vrblvl-1);
     return rtr;
   exception
     when others => 
@@ -969,7 +970,8 @@ package body Path_Trackers_Interface is
       put("-> in path_trackers_interface.");
       put_line("Path_Trackers_DoblDobl_Polynomial_Solve ...");
     end if;
-    rtr := PHCpack_Operations.Solve_by_DoblDobl_Homotopy_Continuation(nbt);
+    rtr := PHCpack_Operations.Solve_by_DoblDobl_Homotopy_Continuation
+             (nbt,vrblvl-1);
     return rtr;
   exception
     when others => 
@@ -994,7 +996,8 @@ package body Path_Trackers_Interface is
       put("-> in path_trackers_interface.");
       put_line("Path_Trackers_QuadDobl_Polynomial_Solve ...");
     end if;
-    rtr := PHCpack_Operations.Solve_by_QuadDobl_Homotopy_Continuation(nbt);
+    rtr := PHCpack_Operations.Solve_by_QuadDobl_Homotopy_Continuation
+             (nbt,vrblvl-1);
     return rtr;
   exception
     when others => 
@@ -1019,7 +1022,8 @@ package body Path_Trackers_Interface is
       put("-> in path_trackers_interface.");
       put_line("Path_Trackers_Multprec_Polynomial_Solve ...");
     end if;
-    rtr := PHCpack_Operations.Solve_by_Multprec_Homotopy_Continuation(deci);
+    rtr := PHCpack_Operations.Solve_by_Multprec_Homotopy_Continuation
+             (deci,vrblvl-1);
     return rtr;
   exception
     when others => 
@@ -1046,7 +1050,8 @@ package body Path_Trackers_Interface is
       put("-> in path_trackers_interface.");
       put_line("Path_Trackers_Standard_Laurent_Solve ...");
     end if;
-    rtr := Solve_by_Standard_Laurent_Homotopy_Continuation(nbr);
+    rtr := PHCpack_Operations.Solve_by_Standard_Laurent_Homotopy_Continuation
+             (nbr,vrblvl-1);
     return rtr;
   exception
     when others => 
@@ -1073,7 +1078,8 @@ package body Path_Trackers_Interface is
       put("-> in path_trackers_interface.");
       put_line("Path_Trackers_DoblDobl_Laurent_Solve ...");
     end if;
-    rtr := Solve_by_DoblDobl_Laurent_Homotopy_Continuation(nbr);
+    rtr := PHCpack_Operations.Solve_by_DoblDobl_Laurent_Homotopy_Continuation
+             (nbr,vrblvl-1);
     return rtr;
   exception
     when others => 
@@ -1100,7 +1106,8 @@ package body Path_Trackers_Interface is
       put("-> in path_trackers_interface.");
       put_line("Path_Trackers_QuadDobl_Laurent_Solve ...");
     end if;
-    rtr := Solve_by_QuadDobl_Laurent_Homotopy_Continuation(nbr);
+    rtr := PHCpack_Operations.Solve_by_QuadDobl_Laurent_Homotopy_Continuation
+             (nbr,vrblvl-1);
     return rtr;
   exception
     when others => 

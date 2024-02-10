@@ -1,3 +1,8 @@
+Sat 10 Feb 2024 : fixed bugs in phcpack_operations.adb to call the
+  increment-and-fix continuation procedures correctly with the target.
+  Added verbose level in phcpack_operations.ads.  Updated
+  path_trackers_interface.adb for the passing of the verbose level.
+
 Tue 23 Jan 2024 : extended cells_interface.adb with error message when
   verbose level is positive when the mixed volume of a cell procedure fails.
   Patched a bug in cells_interface.adb on retrieving a mixed cells when
