@@ -10,4 +10,5 @@ This folder contains scripts and notebooks to prepare the user manual.
 | qualityup.py               | compensating for double double arithmetic     |
 | parallelruns.ipynb         | speed up and quality up with parallel runs    |
 | rootcounts.ipynb           | root counts and start systems                 |
+| incfixaposteriori.ipynb    | increment-fix a posteriori step control       |
 | snippets.py                | code snippets from the Jupyter notebook menus |

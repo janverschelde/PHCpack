@@ -1,6 +1,7 @@
 Sat 10 Feb 2024 : fixed verbose level use in trackers.py so that all
   test functions are mute when the verbose level is set to zero.
   Added write_parameters function to trackers.py.
+  New incfixaposteriori.ipynb to prepare section in user manual.
 
 Fri 9 Feb 2024 : truncated returned strings properly in starters.py.
   Added rootcounts.ipynb to the PHCpy/manual folder.
