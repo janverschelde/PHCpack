@@ -17,3 +17,4 @@ isolated solutions, but also all positive dimensional solutions.
    parallelruns
    rootcounts
    incfixaposteriori
+   schubert
