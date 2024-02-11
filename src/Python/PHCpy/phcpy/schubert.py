@@ -11,7 +11,7 @@ from phcpy.polynomials import get_double_system
 from phcpy.solutions import get_double_solutions, clear_double_solutions
 from phcpy.solutions import verify
 
-def pieri_root_count(mdim, pdim, qdeg, vrblvl=0):
+def pieri_root_count(mdim, pdim, qdeg=0, vrblvl=0):
     r"""
     Computes the number of *pdim*-plane producing maps of degree *qdeg*
     that meet *mdim*-planes at mdim*pdim + qdeg*(mdim+pdim) points.
@@ -34,7 +34,7 @@ def pieri_root_count(mdim, pdim, qdeg, vrblvl=0):
         print('the Pieri root count :', roco[0])
     return roco[0]
 
-def pieri_localization_poset(mdim, pdim, qdeg, size=10240, vrblvl=0):
+def pieri_localization_poset(mdim, pdim, qdeg=0, size=10240, vrblvl=0):
     r"""
     Returns the string representation of the localization poset
     used to compute the Pieri root count, for the number of *pdim*-plane
@@ -99,7 +99,7 @@ def resolve_schubert_conditions(ndim, kdim, brackets, vrblvl=0):
         print('the root count :', int(roco[0]))
     return int(roco[0])
 
-def real_osculating_planes(mdim, pdim, qdeg, vrblvl=0):
+def real_osculating_planes(mdim, pdim, qdeg=0, vrblvl=0):
     """
     Returns m*p + qdeg*(m+p) real m-planes osculating
     a rational normal curve.
@@ -347,7 +347,7 @@ def double_littlewood_richardson_homotopies(ndim, kdim, brackets, \
     roco = int(pname[0][0])
     if vrblvl > 0:
         print('the root count :', roco)
-    allcffs = pname[0][1:size] 
+    allcffs = pname[0][1:size]
     flgs = []
     for idx in range(size, 2):
         realnbr = allcffs[0][idx]
@@ -493,18 +493,18 @@ def test_pieri_curves(vrblvl=0):
     """
     if vrblvl > 0:
         print('in test_pieri_curves ...')
-    (m, p, q) = (2, 2, 1)
-    dim = m*p + q*(m+p)
-    roco = pieri_root_count(m, p, q)
+    (mdim, pdim, qdeg) = (2, 2, 1)
+    dim = mdim*pdim + qdeg*(mdim+pdim)
+    roco = pieri_root_count(mdim, pdim, qdeg)
     if vrblvl > 0:
         print('the root count :', roco)
-    L = [random_complex_matrix(m+p, m) for _ in range(dim)]
+    pls = [random_complex_matrix(mdim+pdim, mdim) for _ in range(dim)]
     points = random_complex_matrix(dim, 1)
-    (f, fsols) = run_pieri_homotopies(m, p, q, L, vrblvl, points)
+    (fsys, fsols) = run_pieri_homotopies(mdim, pdim, qdeg, pls, vrblvl, points)
     if vrblvl > 0:
         print('number of solutions :', len(fsols))
     fail = int(roco != len(fsols))
-    err = verify(f, fsols, vrblvl-1)
+    err = verify(fsys, fsols, vrblvl-1)
     if vrblvl > 0:
         print('the error :', err)
     fail = fail + int(err > 1.0e-8)
