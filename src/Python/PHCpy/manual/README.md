@@ -11,4 +11,5 @@ This folder contains scripts and notebooks to prepare the user manual.
 | parallelruns.ipynb         | speed up and quality up with parallel runs    |
 | rootcounts.ipynb           | root counts and start systems                 |
 | incfixaposteriori.ipynb    | increment-fix a posteriori step control       |
+| schubert.ipynb             | Pieri and Littlewood-Richardson homotopies    |
 | snippets.py                | code snippets from the Jupyter notebook menus |
