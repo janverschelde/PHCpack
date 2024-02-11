@@ -1993,7 +1993,7 @@ def next_double_track(target, start, sols, homogeneous=False, \
             step = double_step_size(vrblvl-1)
             frp = double_pole_radius(vrblvl-1)
             if vrblvl > 0:
-                print("t : %.3e, step : %.3e, frp : %.3e" % (tval, step, frp))
+                print(f't : {tval:.3e}, step : {step:.3e}, frp : {frp:.3e}')
             cfp = double_closest_pole(vrblvl-1)
             if vrblvl > 0:
                 print('For the previous t value', previoustval, ':')
@@ -2074,7 +2074,7 @@ def next_double_double_track(target, start, sols, homogeneous=False, \
             step = double_double_step_size(vrblvl-1)
             frp = double_double_pole_radius(vrblvl-1)
             if vrblvl > 0:
-                print("t : %.3e, step : %.3e, frp : %.3e" % (tval, step, frp))
+                print(f't : {tval:.3e}, step : {step:.3e}, frp : {frp:.3e}')
             cfp = double_double_closest_pole(vrblvl-1)
             if vrblvl > 0:
                 print('For the previous t value', previoustval, ':')
@@ -2154,7 +2154,7 @@ def next_quad_double_track(target, start, sols, homogeneous=False, \
             frp = quad_double_pole_radius(vrblvl-1)
             if vrblvl > 0:
                 print('step', step, end=', ')
-                print("t : %.3e, step : %.3e, frp : %.3e" % (tval, step, frp))
+                print(f't : {tval:.3e}, step : {step:.3e}, frp : {frp:.3e}')
             cfp = quad_double_closest_pole(vrblvl-1)
             if vrblvl > 0:
                 print('For the previous t value', previoustval, ':')
@@ -2229,8 +2229,7 @@ def next_double_loop(hom, idx, sols, interactive=False, vrblvl=0):
             step = double_step_size(vrblvl-1)
             frp = double_pole_radius(vrblvl-1)
             if vrblvl > 0:
-                print('t : %.3e, step : %.3e, frp : %.3e' \
-                    % (tval, step, frp))
+                print(f't : {tval:.3e}, step : {step:.3e}, frp : {frp:.3e}')
             cfp = double_closest_pole(vrblvl-1)
             if vrblvl > 0:
                 print('For the previous t value', previoustval, ':')
@@ -2304,7 +2303,7 @@ def next_double_double_loop(hom, idx, sols, interactive=False, vrblvl=0):
             step = double_double_step_size(vrblvl-1)
             frp = double_double_pole_radius(vrblvl-1)
             if vrblvl > 0:
-                print('t : %.3e, step : %.3e, frp : %.3e' % (tval, step, frp))
+                print(f't : {tval:.3e}, step : {step:.3e}, frp : {frp:.3e}')
             cfp = double_double_closest_pole(vrblvl-1)
             if vrblvl > 0:
                 print('For the previous t value', previoustval, ':')
@@ -2378,7 +2377,7 @@ def next_quad_double_loop(hom, idx, sols, interactive=False, vrblvl=0):
             step = quad_double_step_size(vrblvl-1)
             frp = quad_double_pole_radius(vrblvl-1)
             if vrblvl > 0:
-                print('t : %.3e, step : %.3e, frp : %.3e' % (tval, step, frp))
+                print(f't : {tval:.3e}, step : {step:.3e}, frp : {frp:.3e}')
             cfp = quad_double_closest_pole(vrblvl-1)
             if vrblvl > 0:
                 print('For the previous t value', previoustval, ':')
