@@ -57,7 +57,12 @@ def pieri_localization_poset(mdim, pdim, qdeg=0, size=10240, vrblvl=0):
     retval = phc(224, apars, poset, ccc, vrb)
     if vrblvl > 0:
         print('the return value of phc :', retval)
-    result = int4a2str(poset, (vrblvl > 0))
+    allresult = int4a2str(poset, (vrblvl > 0))
+    endidx = allresult.find('\0')
+    result = allresult[:endidx]
+    if vrblvl > 0:
+        print('the localization poset :')
+        print(result)
     return result
 
 def resolve_schubert_conditions(ndim, kdim, brackets, vrblvl=0):

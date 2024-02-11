@@ -1,5 +1,7 @@
 Sun 11 Feb 2024 : as suggested by pylint, used f-strings in curves.py.
   In schubert.py, added =0 as the default value for qdeg to some functions.
+  Truncated the string for the Pieri localization poset properly
+  in schubert.py.
 
 Sat 10 Feb 2024 : fixed verbose level use in trackers.py so that all
   test functions are mute when the verbose level is set to zero.
