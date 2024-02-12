@@ -12,4 +12,5 @@ This folder contains scripts and notebooks to prepare the user manual.
 | rootcounts.ipynb           | root counts and start systems                 |
 | incfixaposteriori.ipynb    | increment-fix a posteriori step control       |
 | schubert.ipynb             | Pieri and Littlewood-Richardson homotopies    |
+| newtondeflation.ipynb      | Newton's method, deflation and multiplicity   |
 | snippets.py                | code snippets from the Jupyter notebook menus |

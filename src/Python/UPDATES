@@ -1,3 +1,5 @@
+Mon 12 Feb 2024 : added newtondeflation.ipynb to the PHCpy/manual folder.
+
 Sun 11 Feb 2024 : as suggested by pylint, used f-strings in curves.py.
   In schubert.py, added =0 as the default value for qdeg to some functions.
   Truncated the string for the Pieri localization poset properly
