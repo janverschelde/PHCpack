@@ -1,3 +1,6 @@
+Tue 13 Feb 2024 : to polynomials.py, added a function to count the number
+  of semicolons, applied it in the checkin of the solve of solver.py.
+
 Mon 12 Feb 2024 : added newtondeflation.ipynb to the PHCpy/manual folder.
 
 Sun 11 Feb 2024 : as suggested by pylint, used f-strings in curves.py.

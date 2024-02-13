@@ -754,13 +754,34 @@ def number_of_symbols(pols, vrblvl=0):
         print('-> number_of_symbols, result :', slen[0])
     return slen[0]
 
-def is_square(pols):
+def check_semicolons(pols, vrblvl=0):
+    """
+    Counts the number of semicolons and writes a warning
+    if the number of semicolons in pols does not match len(pols).
+    This warning may prevent unwanted concatenation, e.g., as in
+    pols = ['x^2 + 4*y^2 - 4;' '2*y^2 - x;']
+    where the omitted comma results in one polynomial in two variables.
+    """
+    if vrblvl > 0:
+        print('in check_semicolons, pols :')
+        for pol in pols:
+            print(pol)
+    checksum = sum(pol.count(';') for pol in pols)
+    if checksum != len(pols):
+        print('#semicolons :', checksum, '!=', len(pols), 'polynomials.')
+    return int(checksum != len(pols))
+
+def is_square(pols, vrblvl=0):
     r"""
     Given in the list *pols* are string representations 
     of Laurent polynomials.
     A system is square if it has as many unknowns as equations.
     Returns True if the system is square, False otherwise.
     """
+    if vrblvl > 0:
+        print('in is_square, pols :')
+        for pol in pols:
+            print(pol)
     nbrvar = number_of_symbols(pols)
     nbreqs = len(pols)
     return nbrvar == nbreqs
@@ -1654,6 +1675,21 @@ def test_quad_double_number_laurent_terms(vrblvl=0):
         fail = fail + int(nbterms != idx+1)
     return fail
 
+def test_is_square(vrblvl=0):
+    """
+    Tests on catching an omitted comma between the polynomials.
+    """
+    pols = ['x^2 + 4*y^2 - 4;' '2*y^2 - x;']
+    retval = check_semicolons(pols, vrblvl)
+    fail = int(retval != 1)
+    retval = is_square(pols, vrblvl)
+    if retval:
+        print('The system is square.')
+    else:
+        print('The system is not square.')
+    fail = fail + int(retval)
+    return fail
+
 def main():
     """
     Runs tests on the set/get polynomials.
@@ -1681,6 +1717,7 @@ def main():
     fail = fail + test_double_double_number_laurent_terms(lvl)
     fail = fail + test_quad_double_number_terms(lvl)
     fail = fail + test_quad_double_number_laurent_terms(lvl)
+    fail = fail + test_is_square(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:

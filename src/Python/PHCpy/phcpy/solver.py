@@ -13,6 +13,7 @@ from phcpy.polynomials import set_double_double_system
 from phcpy.polynomials import set_double_double_laurent_system
 from phcpy.polynomials import set_quad_double_system
 from phcpy.polynomials import set_quad_double_laurent_system
+from phcpy.polynomials import check_semicolons
 from phcpy.polynomials import is_square, number_of_symbols
 from phcpy.solutions import clear_double_solutions
 from phcpy.solutions import clear_double_double_solutions
@@ -249,13 +250,17 @@ def solve_checkin(pols, msg, vrblvl=0):
     """
     if vrblvl > 0:
         print('in solve_checkin ...')
-    if is_square(pols):
+    mismatch = check_semicolons(pols, vrblvl-1)
+    if mismatch:
+        print('Warning: mismatched number of semicolons.')
+        return False
+    if is_square(pols, vrblvl-1):
         return True
     print(msg)
-    dim = number_of_symbols(pols)
+    dim = number_of_symbols(pols, vrblvl-1)
     neq = len(pols)
     print(f'got {neq} polynomials in {dim} variables.')
-    print('Either correct the input, or use phcpy.factor.solve')
+    print('Either correct the input, or consider phcpy.decomposition')
     print('to solve polynomial systems that are not square.')
     return False
 
@@ -357,8 +362,7 @@ def test_trinomial_solve(vrblvl=0):
         print('two random trinomials :')
         print(pols)
     set_seed(12345678)
-    set_double_system(2, pols, vrblvl-1)
-    (mixvol, stable_mixvol) = stable_mixed_volume(vrblvl-1)
+    (mixvol, stable_mixvol) = stable_mixed_volume(pols, vrblvl-1)
     if vrblvl > 0:
         print('its mixed volume :', mixvol)
         print('its stable mixed volume :', stable_mixvol)
