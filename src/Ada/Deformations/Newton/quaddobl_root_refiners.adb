@@ -154,7 +154,8 @@ package body QuadDobl_Root_Refiners is
               ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double ) is
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
@@ -173,6 +174,10 @@ package body QuadDobl_Root_Refiners is
     info : integer32;
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("QuadDobl_SVD_Newton_Step 1 ...");
+    end if;
     QuadDobl_Complex_Singular_Values.SVD(A,n,p,sv,e,u,v,job,info);
     rco := QuadDobl_Complex_Singular_Values.Inverse_Condition_Number(sv);
     QuadDobl_Complex_Vectors.Min(y);
@@ -187,7 +192,8 @@ package body QuadDobl_Root_Refiners is
               ( f,abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double ) is
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
@@ -211,6 +217,10 @@ package body QuadDobl_Root_Refiners is
         := QuadDobl_Complex_Numbers.Create(qd_one);
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("QuadDobl_SVD_Newton_Step 2 ...");
+    end if;
     QuadDobl_Complex_Singular_Values.SVD(A,n,p,sv,e,u,v,job,info);
     rco := QuadDobl_Complex_Singular_Values.Inverse_Condition_Number(sv);
     QuadDobl_Complex_Vectors.Min(y);
@@ -228,7 +238,8 @@ package body QuadDobl_Root_Refiners is
               ( f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double ) is
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Laur_SysFun;
     use QuadDobl_Complex_Laur_JacoMats;
@@ -247,6 +258,10 @@ package body QuadDobl_Root_Refiners is
     info : integer32;
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("QuadDobl_SVD_Newton_Step 3 ...");
+    end if;
     QuadDobl_Complex_Singular_Values.SVD(A,n,p,sv,e,u,v,job,info);
     rco := QuadDobl_Complex_Singular_Values.Inverse_Condition_Number(sv);
     QuadDobl_Complex_Vectors.Min(y);
@@ -261,7 +276,8 @@ package body QuadDobl_Root_Refiners is
               ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys; 
                 jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double ) is
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
@@ -273,6 +289,10 @@ package body QuadDobl_Root_Refiners is
     Anorm : constant quad_double := Norm1(A);
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("QuadDobl_LU_Newton_Step 1 ...");
+    end if;
     QuadDobl_Complex_Vectors.Min(y);
     lufac(A,A'last(1),ipvt,info);
     estco(A,A'last(1),ipvt,Anorm,rco);
@@ -287,7 +307,8 @@ package body QuadDobl_Root_Refiners is
               ( f,abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys; 
                 jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double ) is
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Complex_Jaco_Matrices;
@@ -304,6 +325,10 @@ package body QuadDobl_Root_Refiners is
         := QuadDobl_Complex_Numbers.Create(qd_one);
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("QuadDobl_LU_Newton_Step 2 ...");
+    end if;
     QuadDobl_Complex_Vectors.Min(y);
     lufac(A,A'last(1),ipvt,info);
     estco(A,A'last(1),ipvt,Anorm,rco);
@@ -321,7 +346,8 @@ package body QuadDobl_Root_Refiners is
               ( f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys; 
                 jf : in QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double ) is
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Laur_SysFun;
     use QuadDobl_Complex_Laur_JacoMats;
@@ -333,6 +359,10 @@ package body QuadDobl_Root_Refiners is
     Anorm : constant quad_double := Norm1(A);
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("QuadDobl_LU_Newton_Step 3 ...");
+    end if;
     QuadDobl_Complex_Vectors.Min(y);
     lufac(A,A'last(1),ipvt,info);
     estco(A,A'last(1),ipvt,Anorm,rco);
@@ -348,7 +378,8 @@ package body QuadDobl_Root_Refiners is
                 jf : in QuadDobl_Jacobian_Circuits.Circuit;
                 x : in out QuadDobl_Complex_Vectors.Vector;
                 wrk : in out QuadDobl_Complex_VecVecs.VecVec;
-                err,rco,res : out quad_double ) is
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Jacobian_Circuits;
@@ -367,6 +398,10 @@ package body QuadDobl_Root_Refiners is
     info : integer32;
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("QuadDobl_SVD_Newton_Step 4 ...");
+    end if;
     EvalDiff(jf,x,wrk,y,A);
     QuadDobl_Complex_Singular_Values.SVD(A,n,p,sv,e,u,v,job,info);
     rco := QuadDobl_Complex_Singular_Values.Inverse_Condition_Number(sv);
@@ -383,7 +418,8 @@ package body QuadDobl_Root_Refiners is
                 jf : in QuadDobl_Jacobian_Circuits.Circuit;
                 x : in out QuadDobl_Complex_Vectors.Vector;
                 wrk : in out QuadDobl_Complex_VecVecs.VecVec;
-                err,rco,res : out quad_double ) is
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Poly_SysFun;
     use QuadDobl_Jacobian_Circuits;
@@ -395,6 +431,10 @@ package body QuadDobl_Root_Refiners is
     Anorm : quad_double;
 
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("QuadDobl_LU_Newton_Step 4 ...");
+    end if;
     EvalDiff(jf,x,wrk,y,A);
     QuadDobl_Complex_Vectors.Min(y);
     lufac(A,A'last(1),ipvt,info);
@@ -413,11 +453,16 @@ package body QuadDobl_Root_Refiners is
               ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double ) is
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 ) is
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("QuadDobl_Newton_Step 1 ...");
+    end if;
     if f'last > x'last
-     then QuadDobl_SVD_Newton_Step(f,jf,x,err,rco,res);
-     else QuadDobl_LU_Newton_Step(f,jf,x,err,rco,res);
+     then QuadDobl_SVD_Newton_Step(f,jf,x,err,rco,res,verbose-1);
+     else QuadDobl_LU_Newton_Step(f,jf,x,err,rco,res,verbose-1);
     end if;
   end QuadDobl_Newton_Step;
 
@@ -425,11 +470,16 @@ package body QuadDobl_Root_Refiners is
               ( f,abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double ) is
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 ) is
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("QuadDobl_Newton_Step 2 ...");
+    end if;
     if f'last > x'last
-     then QuadDobl_SVD_Newton_Step(f,abh,jf,x,err,rco,res);
-     else QuadDobl_LU_Newton_Step(f,abh,jf,x,err,rco,res);
+     then QuadDobl_SVD_Newton_Step(f,abh,jf,x,err,rco,res,verbose-1);
+     else QuadDobl_LU_Newton_Step(f,abh,jf,x,err,rco,res,verbose-1);
     end if;
   end QuadDobl_Newton_Step;
 
@@ -437,11 +487,16 @@ package body QuadDobl_Root_Refiners is
               ( f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double ) is
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 ) is
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("QuadDobl_Newton_Step 3 ...");
+    end if;
     if f'last > x'last
-     then QuadDobl_SVD_Newton_Step(f,jf,x,err,rco,res);
-     else QuadDobl_LU_Newton_Step(f,jf,x,err,rco,res);
+     then QuadDobl_SVD_Newton_Step(f,jf,x,err,rco,res,verbose-1);
+     else QuadDobl_LU_Newton_Step(f,jf,x,err,rco,res,verbose-1);
     end if;
   end QuadDobl_Newton_Step;
 
@@ -450,11 +505,16 @@ package body QuadDobl_Root_Refiners is
                 jf : in QuadDobl_Jacobian_Circuits.Circuit;
                 x : in out QuadDobl_Complex_Vectors.Vector;
                 wrk : in out QuadDobl_Complex_VecVecs.VecVec;
-                err,rco,res : out quad_double ) is
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 ) is
   begin
+    if verbose > 0 then
+      put("-> in quaddobl_root_refiners.");
+      put_line("QuadDobl_Newton_Step 4 ...");
+    end if;
     if f'last > x'last
-     then QuadDobl_SVD_Newton_Step(f,jf,x,wrk,err,rco,res);
-     else QuadDobl_LU_Newton_Step(f,jf,x,wrk,err,rco,res);
+     then QuadDobl_SVD_Newton_Step(f,jf,x,wrk,err,rco,res,verbose-1);
+     else QuadDobl_LU_Newton_Step(f,jf,x,wrk,err,rco,res,verbose-1);
     end if;
   end QuadDobl_Newton_Step;
 

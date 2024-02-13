@@ -1,3 +1,6 @@
+Tue 13 Feb 2024 : in newton_interface.adb, passed the verbose level value
+  to the root refiners.
+
 Mon 12 Feb 2024 : added print statements to newton_interface.adb.
 
 Sat 10 Feb 2024 : fixed bugs in phcpack_operations.adb to call the

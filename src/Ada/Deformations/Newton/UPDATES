@@ -1,3 +1,5 @@
+Tue 13 Feb 2024 : to {dobldobl,quaddobl}_root_refiners, added verbose level.
+
 Thu 8 Feb 2024 : in {standard,dobldobl,quaddobl}_root_refiners.adb fixed bug
   in application of deflation: do not report a failure if deflation fails.
 

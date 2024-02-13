@@ -2,6 +2,7 @@ with text_io;                           use text_io;
 with Interfaces.C;
 with String_Splitters;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Multprec_Floating_Numbers;
 with Characters_and_Numbers;
@@ -202,10 +203,16 @@ package body Newton_Interface is
         deflate : boolean := false;
         nit : natural32 := 0;
       begin
+        if vrblvl > 0 then
+          put("the number of equations : "); put(nbequ,1); new_line;
+          put("the number of variables : "); put(nbvar,1); new_line;
+        end if;
         if nbequ = nbvar then
-          Silent_Root_Refiner(lp.all,work,epsxa,epsfa,tolsi,nit,1,deflate);
+          Silent_Root_Refiner
+            (lp.all,work,epsxa,epsfa,tolsi,nit,1,deflate,vrblvl-1);
         else
-          Silent_Root_Sharpener(lp.all,work,epsxa,epsfa,tolsi,nit,1,deflate);
+          Silent_Root_Sharpener
+            (lp.all,work,epsxa,epsfa,tolsi,nit,1,deflate); --,vrblvl-1);
         end if;
         Standard_Solutions_Container.Clear;
         Standard_Solutions_Container.Initialize(work);
@@ -264,7 +271,7 @@ package body Newton_Interface is
       begin
         while not Is_Null(tmp) loop
           ls := Head_Of(tmp);
-          DoblDobl_Newton_Step(f,jf,ls.v,ls.err,ls.rco,ls.res);
+          DoblDobl_Newton_Step(f,jf,ls.v,ls.err,ls.rco,ls.res,vrblvl-1);
           tmp := Tail_Of(tmp);
         end loop;
         Clear(f); Clear(jm); Clear(jf);
@@ -321,14 +328,19 @@ package body Newton_Interface is
       begin
         while not Is_Null(tmp) loop
           ls := Head_Of(tmp);
-          QuadDobl_Newton_Step(f,jf,ls.v,ls.err,ls.rco,ls.res);
+          QuadDobl_Newton_Step(f,jf,ls.v,ls.err,ls.rco,ls.res,vrblvl-1);
           tmp := Tail_Of(tmp);
         end loop;
         Clear(f); Clear(jm); Clear(jf);
         QuadDobl_Solutions_Container.Clear;
         QuadDobl_Solutions_Container.Initialize(work);
       exception
-        when others => return 197;
+        when others => 
+          if vrblvl > 0 then
+            put("Exception raised in newton_interface.");
+            put_line("Newton_QuadDobl_Polynomial_Step.");
+          end if;
+          return 197;
       end;
       return 0;
     end if;
@@ -336,7 +348,7 @@ package body Newton_Interface is
     when others => 
       if vrblvl > 0 then
         put("Exception raised in newton_interface.");
-        put_line("Newton_Standard_Polynomial_Step.");
+        put_line("Newton_QuadDobl_Polynomial_Step.");
       end if;
       return 197;
   end Newton_QuadDobl_Polynomial_Step;

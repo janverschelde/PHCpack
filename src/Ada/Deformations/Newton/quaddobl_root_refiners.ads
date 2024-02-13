@@ -141,17 +141,20 @@ package QuadDobl_Root_Refiners is
               ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double );
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 );
   procedure QuadDobl_SVD_Newton_Step
               ( f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double );
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 );
   procedure QuadDobl_SVD_Newton_Step
               ( f,abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double );
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 );
 
   -- DESCRPTION :
   --   Does one Newton step in quad double complex arithmetic,
@@ -164,7 +167,8 @@ package QuadDobl_Root_Refiners is
   --   f        evaluable form of a (Laurent) polynomial system;
   --   abh      homotopy polynmials with absolute value coefficients;
   --   jf       Jacobian matrix of f;
-  --   x        current approximate solution.
+  --   x        current approximate solution;
+  --   verbose  is the verbose level.
 
   -- ON RETURN :
   --   x        updated approximate solution;
@@ -177,17 +181,20 @@ package QuadDobl_Root_Refiners is
               ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double );
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 );
   procedure QuadDobl_LU_Newton_Step
               ( f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double );
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 );
   procedure QuadDobl_LU_Newton_Step
               ( f,abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double );
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Does one Newton step in quad double complex arithmetic,
@@ -201,7 +208,8 @@ package QuadDobl_Root_Refiners is
   --   f        evaluable form of a (Laurent) polynomial system;
   --   abh      homotopy polynomials with absolute value coefficients;
   --   jf       Jacobian matrix of f;
-  --   x        current approximate solution.
+  --   x        current approximate solution;
+  --   verbose  is the verbose level.
 
   -- ON RETURN :
   --   x        updated approximate solution;
@@ -215,7 +223,8 @@ package QuadDobl_Root_Refiners is
                 jf : in QuadDobl_Jacobian_Circuits.Circuit;
                 x : in out QuadDobl_Complex_Vectors.Vector;
                 wrk : in out QuadDobl_Complex_VecVecs.VecVec;
-                err,rco,res : out quad_double );
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 );
 
   -- DESCRPTION :
   --   Does one Newton step in quad double complex arithmetic,
@@ -228,7 +237,8 @@ package QuadDobl_Root_Refiners is
   --   f        evaluable form of a polynomial system;
   --   jf       Jacobian matrix of f, defined as a circuit;
   --   x        current approximate solution;
-  --   wrk      work space allocated for evaluated monomials.
+  --   wrk      work space allocated for evaluated monomials;
+  --   verbose  is the verbose level.
 
   -- ON RETURN :
   --   x        updated approximate solution;
@@ -241,7 +251,8 @@ package QuadDobl_Root_Refiners is
                 jf : in QuadDobl_Jacobian_Circuits.Circuit;
                 x : in out QuadDobl_Complex_Vectors.Vector;
                 wrk : in out QuadDobl_Complex_VecVecs.VecVec;
-                err,rco,res : out quad_double );
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Does one Newton step using a circuit to evaluate and differentiate,
@@ -254,7 +265,8 @@ package QuadDobl_Root_Refiners is
   --   f        evaluable form of a polynomial system;
   --   jf       Jacobian matrix of f, defined as a circuit;
   --   x        current approximate solution;
-  --   wrk      work space allocated for evaluated monomials.
+  --   wrk      work space allocated for evaluated monomials;
+  --   verbose  is the verbose level.
 
   -- ON RETURN :
   --   x        updated approximate solution;
@@ -268,17 +280,20 @@ package QuadDobl_Root_Refiners is
               ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in  QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double );
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 );
   procedure QuadDobl_Newton_Step
               ( f,abh : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in  QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double );
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 );
   procedure QuadDobl_Newton_Step
               ( f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in  QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
-                err,rco,res : out quad_double );
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Does one Newton step in quad double complex arithmetic,
@@ -289,7 +304,8 @@ package QuadDobl_Root_Refiners is
   --   f        evaluable form of a (Laurent) polynomial system;
   --   abh      homotopy polynomials with absolute coefficients;
   --   jf       Jacobian matrix of f;
-  --   x        current approximate solution.
+  --   x        current approximate solution;
+  --   verbose  is the verbose level.
 
   -- ON RETURN :
   --   x        updated approximate solution;
@@ -303,7 +319,8 @@ package QuadDobl_Root_Refiners is
                 jf : in QuadDobl_Jacobian_Circuits.Circuit;
                 x : in out QuadDobl_Complex_Vectors.Vector;
                 wrk : in out QuadDobl_Complex_VecVecs.VecVec;
-                err,rco,res : out quad_double );
+                err,rco,res : out quad_double;
+                verbose : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Does one Newton step in quad double complex arithmetic,
@@ -313,7 +330,8 @@ package QuadDobl_Root_Refiners is
   --   f        evaluable form of a (Laurent) polynomial system;
   --   jf       Jacobian matrix of f, defined as a circuit;
   --   x        current approximate solution;
-  --   wrk      work space for the evaluated monomials.
+  --   wrk      work space for the evaluated monomials;
+  --   verbose  is the verbose level.
 
   -- ON RETURN :
   --   x        updated approximate solution;
