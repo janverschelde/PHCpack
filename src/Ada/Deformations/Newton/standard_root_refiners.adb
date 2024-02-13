@@ -452,7 +452,7 @@ package body Standard_Root_Refiners is
                  j_eval : in Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                  zero : in out Solution; epsxa,epsfa : in double_float; 
                  numit : in out natural32; max : in natural32;
-                 fail : out boolean ) is
+                 fail : out boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Jaco_Matrices;
 
@@ -504,7 +504,7 @@ package body Standard_Root_Refiners is
                  j_eval : in Standard_Complex_Laur_Jacomats.Eval_Jaco_Mat;
                  zero : in out Solution; epsxa,epsfa : in double_float; 
                  numit : in out natural32; max : in natural32;
-                 fail : out boolean ) is
+                 fail : out boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Laur_Jacomats;
 
@@ -556,7 +556,7 @@ package body Standard_Root_Refiners is
                  j_eval : in Standard_Complex_Jaco_Matrices.Evaluator;
                  zero : in out Solution; epsxa,epsfa : in double_float;
                  numit : in out natural32; max : in natural32;
-                 fail : out boolean ) is
+                 fail : out boolean; verbose : in integer32 := 0 ) is
 
     n : constant integer32 := zero.n;
     jacobian : matrix(1..n,1..n);
@@ -774,7 +774,7 @@ package body Standard_Root_Refiners is
                  j_eval : in Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                  zero : in out Solution; epsxa,epsfa : in double_float; 
                  numit : in out natural32; max : in natural32;
-                 fail : out boolean ) is
+                 fail : out boolean; verbose : in integer32 := 0 ) is
 
     use Standard_Complex_Jaco_Matrices;
 
@@ -1104,20 +1104,29 @@ package body Standard_Root_Refiners is
             (max,p_eval,jac_eval,ls,order,tolrnk,nd,monkeys,nv,nq,R1,
              numb,nbdef,fail);
          -- reinstate Newton after deflation
-          Silent_Newton(p_eval,jac_eval,ls.all,epsxa,epsfa,nit,max,fail);
+          Silent_Newton
+            (p_eval,jac_eval,ls.all,epsxa,epsfa,nit,max,fail,verbose-1);
           if fail and backup.res < ls.res then
             ls.all := backup;
-            Silent_Newton(p_eval,jac_eval,ls.all,epsxa,epsfa,nit,max,fail);
+            Silent_Newton
+              (p_eval,jac_eval,ls.all,epsxa,epsfa,nit,max,fail,verbose-1);
           end if;
         else
-          Silent_Newton(p_eval,jac_eval,ls.all,epsxa,epsfa,numb,max,fail);
+          Silent_Newton
+            (p_eval,jac_eval,ls.all,epsxa,epsfa,numb,max,fail,verbose-1);
         end if;
       else
         fail := true;
       end if;
      -- Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
      --              infty,deflate,tolsing,epsxa);
+      if verbose > 0 then
+        put("ls.m : "); put(ls.m,1); put_line(" before Multiplicity.");
+      end if;
       Multiplicity(h1,h2,pl,ls,cnt,sols,fail,infty,deflate,tolsing,epsxa);
+      if verbose > 0 then
+        put("ls.m : "); put(ls.m,1); put_line(" after Multiplicity.");
+      end if;
       if not fail and then deflate
        then merge := merge or (ls.m > 1);
       end if;

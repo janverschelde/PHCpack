@@ -289,19 +289,19 @@ package Standard_Root_Refiners is
                  j_eval : in Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                  zero : in out Solution; epsxa,epsfa : in double_float; 
                  numit : in out natural32; max : in natural32;
-                 fail : out boolean );
+                 fail : out boolean; verbose : in integer32 := 0 );
   procedure Silent_Newton 
                ( p_eval : in Eval_Laur_Sys;
                  j_eval : in Standard_Complex_Laur_Jacomats.Eval_Jaco_Mat;
                  zero : in out Solution; epsxa,epsfa : in double_float; 
                  numit : in out natural32; max : in natural32;
-                 fail : out boolean );
+                 fail : out boolean; verbose : in integer32 := 0 );
   procedure Silent_Newton 
                ( p_eval : in Standard_Complex_Poly_SysFun.Evaluator;
                  j_eval : in Standard_Complex_Jaco_Matrices.Evaluator;
                  zero : in out Solution; epsxa,epsfa : in double_float; 
                  numit : in out natural32; max : in natural32;
-                 fail : out boolean );
+                 fail : out boolean; verbose : in integer32 := 0 );
 
   procedure Reporting_Newton
                ( file : in file_type; p_eval : in Eval_Poly_Sys;
@@ -354,7 +354,7 @@ package Standard_Root_Refiners is
                  j_eval : in Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                  zero : in out Solution; epsxa,epsfa : in double_float; 
                  numit : in out natural32; max : in natural32;
-                 fail : out boolean );
+                 fail : out boolean; verbose : in integer32 := 0 );
   procedure Reporting_Newton
                ( file : in file_type; p_eval,abh : in Eval_Poly_Sys;
                  j_eval : in Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat;
