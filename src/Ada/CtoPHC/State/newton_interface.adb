@@ -187,7 +187,7 @@ package body Newton_Interface is
   begin
     if vrblvl > 0 then
       put("-> in newton_interface.");
-      put_line("Newton_Standard_Laurent_Step ...");
+      put_line("Newton_Standard_Polynomial_Step ...");
     end if;
     if lp = null or Is_Null(sols) then
       return 199;             
@@ -241,7 +241,16 @@ package body Newton_Interface is
       put("-> in newton_interface.");
       put_line("Newton_DoblDobl_Polynomial_Step ...");
     end if;
-    if lp = null or Is_Null(sols) then
+    if lp = null then
+      if vrblvl > 0
+       then put_line("No polynomial system in dobldobl container?");
+      end if;
+      return 198;
+    end if;
+    if Is_Null(sols) then
+      if vrblvl > 0
+       then put_line("No solutions in dobldobl container?");
+      end if;
       return 198;             
     else
       Copy(sols,work);
@@ -262,7 +271,12 @@ package body Newton_Interface is
         DoblDobl_Solutions_Container.Clear;
         DoblDobl_Solutions_Container.Initialize(work);
       exception
-        when others => return 198;
+        when others => 
+          if vrblvl > 0 then
+            put("Exception raised in newton_interface.");
+            put_line("Newton_DoblDobl_Polynomial_Step.");
+          end if;
+          return 198;
       end;
       return 0;
     end if;

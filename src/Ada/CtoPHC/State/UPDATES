@@ -1,3 +1,5 @@
+Mon 12 Feb 2024 : added print statements to newton_interface.adb.
+
 Sat 10 Feb 2024 : fixed bugs in phcpack_operations.adb to call the
   increment-and-fix continuation procedures correctly with the target.
   Added verbose level in phcpack_operations.ads.  Updated
