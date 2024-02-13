@@ -18,4 +18,5 @@ isolated solutions, but also all positive dimensional solutions.
    rootcounts
    incfixaposteriori
    schubert
+   newtondeflation
    snippets
