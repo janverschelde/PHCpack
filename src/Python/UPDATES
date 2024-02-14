@@ -1,5 +1,6 @@
 Wed 14 Feb 2024 : made sweephomotopies.ipynb in PHCpy/manual on arc length
   parameter continuation.  Added sweephomotopies.rst to the user manual.
+  New notebook scaling.ipynb in PHCpy/manual.
 
 Tue 13 Feb 2024 : to polynomials.py, added a function to count the number
   of semicolons, applied it in the checkin of the solve of solver.py.
