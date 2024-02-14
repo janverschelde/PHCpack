@@ -19,4 +19,5 @@ isolated solutions, but also all positive dimensional solutions.
    incfixaposteriori
    schubert
    newtondeflation
+   sweephomotopies
    snippets
