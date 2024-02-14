@@ -13,4 +13,5 @@ This folder contains scripts and notebooks to prepare the user manual.
 | incfixaposteriori.ipynb    | increment-fix a posteriori step control       |
 | schubert.ipynb             | Pieri and Littlewood-Richardson homotopies    |
 | newtondeflation.ipynb      | Newton's method, deflation and multiplicity   |
+| sweephomotopies.ipynb      | arc length parameter continuation             |
 | snippets.py                | code snippets from the Jupyter notebook menus |
