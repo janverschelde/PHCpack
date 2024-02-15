@@ -509,6 +509,73 @@ def schubert_calculus():
     print("IV.2.2 solving a generic Schubert problem")
     solve_generic_schubert_problem()
 
+def example4pade():
+    """
+    The function f(z) = ((1 + 1/2*z)/(1 + 2*z))^(1/2) is
+    a solution x(s) of (1-s)*(x^2 - 1) + s*(3*x^2 - 3/2) = 0
+    """
+    from phcpy.solutions import make_solution
+    from phcpy.series import double_newton_at_point
+    from phcpy.series import double_pade_approximants
+    pol = ['(x^2 - 1)*(1-s) + (3*x^2 - 3/2)*s;']
+    variables = ['x', 's']
+    sol1 = make_solution(variables, [1, 0])
+    sol2 = make_solution(variables, [-1, 0])
+    sols = [sol1, sol2]
+    print('start solutions :')
+    for sol in sols: print(sol)
+    srs = double_newton_at_point(pol, sols, idx=2)
+    print('The series :')
+    for ser in srs: print(ser)
+    pad = double_pade_approximants(pol, sols, idx=2)
+    print('the Pade approximants :')
+    for app in pad: print(app)
+
+def viviani_expansion(vrblvl=0):
+    """
+    Computes the power series expansion for the Viviani curve,
+    from a natural parameter perspective, in double precision.
+    """
+    from phcpy.series import double_newton_at_series
+    pols = [ '2*t^2 - x;', \
+             'x^2 + y^2 + z^2 - 4;' , \
+             '(x-1)^2 + y^2 - 1;']
+    lser = [ '2*t^2;', '2*t;', '2;']
+    nser = double_newton_at_series(pols, lser, maxdeg=12, nbr=8)
+    variables = ['x', 'y', 'z']
+    for (var, pol) in zip(variables, nser): print(var, '=', pol)
+
+def apollonius_expansions():
+    """
+    Compare the series expansions at two solutions
+    for the problem of Apollonius.
+    """
+    from phcpy.series import double_newton_at_series
+    pols = [ 'x1^2 + 3*x2^2 - r^2 - 2*r - 1;', \
+             'x1^2 + 3*x2^2 - r^2 - 4*x1 - 2*r + 3;', \
+       '3*t^2 + x1^2 - 6*t*x2 + 3*x2^2 - r^2 + 6*t - 2*x1 - 6*x2 + 2*r + 3;']
+    lser1 = ['1;', '1 + 0.536*t;', '1 + 0.904*t;']
+    lser2 = ['1;', '1 + 7.464*t;', '1 + 11.196*t;']
+    nser1 = double_newton_at_series(pols, lser1, idx=4, nbr=7)
+    nser2 = double_newton_at_series(pols, lser2, idx=4, nbr=7)
+    variables = ['x', 'y', 'z']
+    print('the first solution series :')
+    for (var, pol) in zip(variables, nser1): print(var, '=', pol)
+    print('the second solution series :')
+    for (var, pol) in zip(variables, nser2): print(var, '=', pol)
+
+def power_series():
+    """
+    Runs the code snippets on the series module.
+    """
+    print("V. power series")
+    print("V.1 example for Pade approximants")
+    example4pade()
+    print("V.2 series expansion for the Viviani curve")
+    viviani_expansion()
+    print("V.3 series expansions for the problem of Apollonius")
+    apollonius_expansions()
+
 def main():
     """
     Runs all code snippets.
@@ -517,6 +584,7 @@ def main():
     path_trackers()
     sweep_homotopies()
     schubert_calculus()
+    power_series()
 
 if __name__=='__main__':
     main()
