@@ -14,6 +14,7 @@ isolated solutions, but also all positive dimensional solutions.
    numericalpolynomials
    numericalsolutions
    reproducibleruns
+   scaling
    parallelruns
    rootcounts
    incfixaposteriori
