@@ -15,4 +15,5 @@ This folder contains scripts and notebooks to prepare the user manual.
 | schubert.ipynb             | Pieri and Littlewood-Richardson homotopies    |
 | newtondeflation.ipynb      | Newton's method, deflation and multiplicity   |
 | sweephomotopies.ipynb      | arc length parameter continuation             |
+| seriesexpansions.ipynb     | power series expansions of algebraic curves   |
 | snippets.py                | code snippets from the Jupyter notebook menus |
