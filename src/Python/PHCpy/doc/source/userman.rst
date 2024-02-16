@@ -21,4 +21,5 @@ isolated solutions, but also all positive dimensional solutions.
    schubert
    newtondeflation
    sweephomotopies
+   seriesexpansions
    snippets
