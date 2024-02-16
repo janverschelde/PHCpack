@@ -1,6 +1,11 @@
+Fri 16 Feb 2024 : added incfixapriori.ipynb to PHCpy/manual folder,
+  updated incfixaposteriori.pynb.
+
 Thu 15 Feb 2024 : added a section on scaling in the user manual chapter.
   Three functions added to snippets.py on power series expansions.
   Added seriesexpansions.ipynb to the PHCpy/manual folder.
+  To the user manual, added the section seriesexpansions.rst.
+  Extended snippets.rst for the user manual with functions on series.
 
 Wed 14 Feb 2024 : made sweephomotopies.ipynb in PHCpy/manual on arc length
   parameter continuation.  Added sweephomotopies.rst to the user manual.

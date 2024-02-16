@@ -11,7 +11,8 @@ This folder contains scripts and notebooks to prepare the user manual.
 | qualityup.py               | compensating for double double arithmetic     |
 | parallelruns.ipynb         | speed up and quality up with parallel runs    |
 | rootcounts.ipynb           | root counts and start systems                 |
-| incfixaposteriori.ipynb    | increment-fix a posteriori step control       |
+| incfixaposteriori.ipynb    | increment-fix aposteriori step control        |
+| incfixapriori.ipynb        | increment-fix apriori step control            |
 | schubert.ipynb             | Pieri and Littlewood-Richardson homotopies    |
 | newtondeflation.ipynb      | Newton's method, deflation and multiplicity   |
 | sweephomotopies.ipynb      | arc length parameter continuation             |
