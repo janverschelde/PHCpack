@@ -1564,7 +1564,7 @@ def quad_double_decomposition(deg, vrblvl=0):
         result.append((witpts, trace))
     return result
 
-def write_decomposition(deco):
+def write_factorization(deco):
     """
     Writes the decomposition in deco.
     """
@@ -1644,7 +1644,7 @@ def double_monodromy_breakup(embsys, esols, dim, \
             print(f'number of factors : {nb0} -> {nb1}')
             deco = double_decomposition(deg, vrblvl)
             print('the decomposition :')
-            write_decomposition(deco)
+            write_factorization(deco)
         done = double_trace_test(vrblvl)
         if done:
             break
@@ -1725,7 +1725,7 @@ def double_double_monodromy_breakup(embsys, esols, dim, \
             print(f'number of factors : {nb0} -> {nb1}')
             deco = double_double_decomposition(deg, vrblvl)
             print('the decomposition :')
-            write_decomposition(deco)
+            write_factorization(deco)
         done = double_double_trace_test(vrblvl)
         if done:
             break
@@ -1806,7 +1806,7 @@ def quad_double_monodromy_breakup(embsys, esols, dim, \
             print(f'number of factors : {nb0} -> {nb1}')
             deco = quad_double_decomposition(deg, vrblvl)
             print('the decomposition :')
-            write_decomposition(deco)
+            write_factorization(deco)
         done = quad_double_trace_test(vrblvl)
         if done:
             break
@@ -1994,7 +1994,7 @@ def test_quad_double_monodromy(vrblvl=0):
         verbose=True, nbloops=15, vrblvl=vrblvl)
     if vrblvl > 0:
         print('the decomposition :')
-        write_decomposition(deco)
+        write_factorization(deco)
     fail = fail + int(len(deco) != 2)
     return fail
 
