@@ -414,6 +414,56 @@ def quad_double_laurent_solve(pols, topdim=-1, \
         witsols.append(witset)
     return witsols
 
+def solve(pols, topdim=-1, filtsols=True, factor=True, tasks=0, 
+    precision='d', verbose=True, vrblvl=0):
+    """
+    Computes an irreducible decomposition of the polynomials in pols.
+    The default top dimension topdim is the number of variables 
+    in pols minus one.  The other parameters are 
+    (1) filtsols, to filter the spurious solutions,
+    (2) factor, to factor the positive dimensional components,
+    (3) tasks, is the number of tasks (0 for no multithreading),
+    (4) is the precision, by default double,
+    (5) verbose, to write extra information during the decomposition.
+    The verbose level is given by vrblvl.
+    """
+    if vrblvl > 0:
+        print('in solve, topdim :', topdim, end='')
+        print(', filtsols :', filtsols, ', factor :', factor)
+        print('tasks :', tasks, ', verbose :', verbose)
+        print('the polynomials on input :')
+        for pol in pols:
+            print(pol)
+    if precision == 'd':
+        return double_laurent_solve\
+            (pols, topdim, filtsols, factor, tasks, verbose, vrblvl)
+    if precision == 'dd':
+        return double_double_laurent_solve\
+            (pols, topdim, filtsols, factor, tasks, verbose, vrblvl)
+    if precision == 'qd':
+        return double_double_laurent_solve\
+            (pols, topdim, filtsols, factor, tasks, verbose, vrblvl)
+    print('Wrong value for the precision given.')
+    return 1
+
+def write_decomposition(deco, vrblvl=0):
+    """
+    Writes the decomposition in deco.
+    """
+    if vrblvl > 0:
+        print('in write_decomposition ...')
+    for (dim, witset) in enumerate(deco):
+        deg = len(witset[1])
+        print('set of dimension', dim, 'has degree', deg)
+        print('the polynomials :')
+        for pol in witset[0]:
+            print(pol)
+        print('the generic points :')
+        for (idx, sol) in enumerate(witset[1]):
+            print('Solution', idx+1, ':')
+            print(sol)
+    return 0
+
 def test_double_solve(vrblvl=0):
     """
     Runs a test on solving in double precision.
@@ -442,7 +492,7 @@ def test_double_double_solve(vrblvl=0):
     pols = ['(x - 1)*(y-x^2);', \
             '(x - 1)*(z-x^3);', \
             '(x^2 - 1)*(y-x^2);' ]
-    sols = double_double_solve(pols, tasks=2, vrblvl=vrblvl)
+    sols = double_double_solve(pols, verbose=False, vrblvl=vrblvl)
     fail = 0
     degs = [0, 3, 1] # degrees of the components
     for (dim, witset) in enumerate(sols):
@@ -460,7 +510,7 @@ def test_quad_double_solve(vrblvl=0):
     pols = ['(x - 1)*(y-x^2);', \
             '(x - 1)*(z-x^3);', \
             '(x^2 - 1)*(y-x^2);' ]
-    sols = quad_double_solve(pols, tasks=2, vrblvl=vrblvl)
+    sols = quad_double_solve(pols, verbose=False, vrblvl=vrblvl)
     fail = 0
     degs = [0, 3, 1] # degrees of the components
     for (dim, witset) in enumerate(sols):
@@ -478,7 +528,7 @@ def test_double_laurent_solve(vrblvl=0):
     pols = ['(x^(-1) - 1)*(y-x^2);', \
             '(x^(-1) - 1)*(z-x^3);', \
             '(x^(-2) - 1)*(y-x^2);' ]
-    sols = double_laurent_solve(pols, vrblvl=vrblvl)
+    sols = double_laurent_solve(pols, verbose=False, vrblvl=vrblvl)
     fail = 0
     degs = [0, 3, 1] # degrees of the components
     for (dim, witset) in enumerate(sols):
@@ -496,7 +546,7 @@ def test_double_double_laurent_solve(vrblvl=0):
     pols = ['(x^(-1) - 1)*(y-x^2);', \
             '(x^(-1) - 1)*(z-x^3);', \
             '(x^(-2) - 1)*(y-x^2);' ]
-    sols = double_double_laurent_solve(pols, vrblvl=vrblvl)
+    sols = double_double_laurent_solve(pols, verbose=False, vrblvl=vrblvl)
     fail = 0
     degs = [0, 3, 1] # degrees of the components
     for (dim, witset) in enumerate(sols):
@@ -514,7 +564,7 @@ def test_quad_double_laurent_solve(vrblvl=0):
     pols = ['(x^(-1) - 1)*(y-x^2);', \
             '(x^(-1) - 1)*(z-x^3);', \
             '(x^(-2) - 1)*(y-x^2);' ]
-    sols = quad_double_laurent_solve(pols, vrblvl=vrblvl)
+    sols = quad_double_laurent_solve(pols, verbose=False, vrblvl=vrblvl)
     fail = 0
     degs = [0, 3, 1] # degrees of the components
     for (dim, witset) in enumerate(sols):
@@ -523,17 +573,43 @@ def test_quad_double_laurent_solve(vrblvl=0):
         print('degree of solution set at dimension', dim, ':', deg)
     return fail
 
+def test_solve(vrblvl=0):
+    """
+    Runs a test on the wrapper solve.
+    """
+    if vrblvl > 0:
+        print('in test_double_solve ...')
+    pols = ['(x1-1)*(x1-2)*(x1-3)*(x1-4);', \
+            '(x1-1)*(x2-1)*(x2-2)*(x2-3);', \
+            '(x1-1)*(x1-2)*(x3-1)*(x3-2);', \
+            '(x1-1)*(x2-1)*(x3-1)*(x4-1);']
+    deco = solve(pols, verbose=False, vrblvl=vrblvl)
+    write_decomposition(deco)
+    fail = 0
+    degs = [4, 12, 1, 1] # degrees of the components
+    for (dim, witset) in enumerate(deco):
+        deg = len(witset[1])
+        fail = fail + int(deg != degs[dim])
+        print('degree of solution set at dimension', dim, ':', deg)
+    return fail
+
 def main():
     """
-    Runs some tests.
+    Runs some tests.  Because of the sensitivity on tolerances,
+    the seed of the random number generators are set.
     """
+    from phcpy.dimension import set_seed
+    set_seed(20240217)
     lvl = 1
     fail = test_double_solve(lvl)
     fail = fail + test_double_laurent_solve(lvl)
     fail = fail + test_double_double_solve(lvl)
+    set_seed(20240217)
     fail = fail + test_double_double_laurent_solve(lvl)
     fail = fail + test_quad_double_solve(lvl)
+    set_seed(20240217)
     fail = fail + test_quad_double_laurent_solve(lvl)
+    fail = fail + test_solve(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:
