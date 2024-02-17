@@ -78,6 +78,13 @@ A start system based on the total degree is constructed.
 
 The ``len(startsols)`` returns ``4`` and thus we have 4 paths.
 
+For deterministic runs, we set the seed of the random number generators:
+
+::
+
+    from phcpy.dimension import set_seed
+    set_seed(2024)
+
 let the path trackers run
 -------------------------
 
@@ -152,6 +159,7 @@ in quad double precision.
 
 Even if we track only one path, the start solution must be given 
 in a list of one element.
+Observe that we use the same value of ``gamma`` as before.
 
 ::
 
@@ -363,11 +371,12 @@ In the code cell below, the loop continues
 calling ``next_double_solution`` until the value 
 of the continuation parameter is less than 1.0.
 The real part and imaginary part of the gamma constant 
-are fixed for a deterministic run.
+are set to the same value of ``gamma`` as in the first run.
 
 ::
 
-    initialize_double_tracker(target, start, regamma=0.345, imgamma=-0.765)
+    initialize_double_tracker(target, start, fixedgamma=False, \
+                              regamma=gamma.real, imgamma=gamma.imag)
     initialize_double_solution(len(target), startsols[0])
     tval = 0.0
     path = [startsols[0]]
