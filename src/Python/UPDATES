@@ -1,5 +1,6 @@
 Fri 16 Feb 2024 : added incfixapriori.ipynb to PHCpy/manual folder,
-  updated incfixaposteriori.pynb.
+  updated incfixaposteriori.pynb.  Added the section about the apriori
+  step control trackers incfixapriori.rst to the user manual.
 
 Thu 15 Feb 2024 : added a section on scaling in the user manual chapter.
   Three functions added to snippets.py on power series expansions.
