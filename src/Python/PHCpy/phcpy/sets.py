@@ -1073,6 +1073,7 @@ def double_hypersurface_set(nvr, hpol, vrblvl=0):
     The number of solutions on return should equal
     the degree of the polynomial in *hpol*.
     """
+    clear_symbol_table(vrblvl-1)
     if vrblvl > 0:
         print('in double_hypersurface_set, nvr :', nvr)
         print('the polynomial :', hpol)
@@ -1105,6 +1106,7 @@ def double_double_hypersurface_set(nvr, hpol, vrblvl=0):
     if vrblvl > 0:
         print('in double_double_hypersurface_set, nvr :', nvr)
         print('the polynomial :', hpol)
+    clear_symbol_table(vrblvl-1)
     phc = get_phcfun(vrblvl-1)
     nbc = (c_int32 * 2)()
     nbc[0] = nvr
@@ -1134,6 +1136,7 @@ def quad_double_hypersurface_set(nvr, hpol, vrblvl=0):
     if vrblvl > 0:
         print('in quad_double_hypersurface_set, nvr :', nvr)
         print('the polynomial :', hpol)
+    clear_symbol_table(vrblvl-1)
     phc = get_phcfun(vrblvl-1)
     nbc = (c_int32 * 2)()
     nbc[0] = nvr
