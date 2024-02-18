@@ -5,6 +5,8 @@ Sat 17 Feb 2024 : corrected incfixaposteriori.rst and .ipynb for the
   into write_factorization.  In sets.py, added clear_symbol_table()
   in the making of a witness set of a hypersurface.
   Added tests to diagonal.py, and fixed some bugs.
+  To snippets.py in PHCpy/manual, added functions to illustrate the
+  numerical irreducible decomposition of positive dimensional solution sets.
 
 Fri 16 Feb 2024 : added incfixapriori.ipynb to PHCpy/manual folder,
   updated incfixaposteriori.pynb.  Added the section about the apriori

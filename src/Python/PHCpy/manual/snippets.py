@@ -576,6 +576,125 @@ def power_series():
     print("V.3 series expansions for the problem of Apollonius")
     apollonius_expansions()
 
+def twisted_cubic_witness_set():
+    """
+    Makes a witness set for the twisted cubic.
+    """
+    twisted = ['x^2 - y;', 'x^3 - z;']
+    from phcpy.sets import double_embed
+    embtwist = double_embed(3, 1, twisted)
+    print('embedded system augmented with a random hyperplane :')
+    for pol in embtwist:
+        print(pol)
+    from phcpy.solver import solve
+    sols = solve(embtwist)
+    print('number of generic points :', len(sols))
+    for sol in sols: print(sol)
+
+def homotopy_membership_test():
+    """
+    Homotopies to decide whether a point belongs to a positive
+    dimensional solution set.
+    """
+    from phcpy.families import cyclic
+    c4 = cyclic(4)
+    from phcpy.sets import double_embed
+    c4e1 = double_embed(4, 1, c4)
+    from phcpy.solver import solve
+    sols = solve(c4e1)
+    from phcpy.solutions import filter_zero_coordinates as filter
+    genpts = filter(sols, 'zz1', 1.0e-8, 'select')
+    print('generic points on the cyclic 4-roots set :')
+    for sol in genpts: print(sol)
+    from phcpy.sets import double_membertest
+    pt0 = [1, 0, -1, 0, 1, 0, -1, 0]
+    ismbr = double_membertest(c4e1, sols, 1, pt0)
+    print('Is', pt0, 'a member?', ismbr)
+    pt1 = [1, 0, 1, 0, -1, 0, -1, 0]
+    ismbr = double_membertest(c4e1, sols, 1, pt1)
+    print('Is', pt1, 'a member?', ismbr)
+
+def factor_a_cubic():
+    """
+    Illustrates the numerical factorization of a cubic.
+    """
+    cubic = '(x+1)*(x^2 + y^2 + 1);'
+    from phcpy.sets import double_hypersurface_set
+    (wit, pts) = double_hypersurface_set(2, cubic)
+    for pol in wit:
+        print(pol)
+    print('number of witness points :', len(pts))
+    for (idx, sol) in enumerate(pts):
+        print('Solution', idx+1, ':')
+        print(sol)
+    from phcpy.factor import double_monodromy_breakup, write_factorization
+    deco = double_monodromy_breakup(wit, pts, dim=1)
+    write_factorization(deco)
+
+def cascades_of_homotopies():
+    """
+    A cascade of homotopies computes generic points on all positive
+    components of the solution set, for all dimensions.
+    """
+    pol1 = '(x^2 + y^2 + z^2 - 1)*(y - x^2)*(x - 0.5);'
+    pol2 = '(x^2 + y^2 + z^2 - 1)*(z - x^3)*(y - 0.5);'
+    pol3 = '(x^2 + y^2 + z^2 - 1)*(z - x*y)*(z - 0.5);'
+    pols = [pol1, pol2, pol3]
+    from phcpy.cascades import double_top_cascade, double_cascade_filter
+    (embpols, sols0, sols1) = double_top_cascade(3, 2, pols)
+    print('at dimension 2, degree :', len(sols0))
+    (wp1, ws0, ws1) = double_cascade_filter(2, embpols, sols1, tol=1.0e-8)
+    print('at dimension 1, candidate generic points :', len(ws0))
+    (wp0, ws0, ws1) = double_cascade_filter(1, wp1, ws1, tol=1.0e-8)
+    print('candidate isolated points :', len(ws0))
+
+def numerical_irreducible_decomposition():
+    """
+    Runs a test example on a numerical irreducible decomposition.
+    """
+    pol0 = '(x1-1)*(x1-2)*(x1-3)*(x1-4);'
+    pol1 = '(x1-1)*(x2-1)*(x2-2)*(x2-3);'
+    pol2 = '(x1-1)*(x1-2)*(x3-1)*(x3-2);'
+    pol3 = '(x1-1)*(x2-1)*(x3-1)*(x4-1);'
+    pols = [pol0, pol1, pol2, pol3]
+    from phcpy.decomposition import solve, write_decomposition
+    deco = solve(pols, verbose=False)
+    write_decomposition(deco)
+
+def sphere_cylinder_intersection():
+    """
+    A sphere intersected by a cylinder defines a quartic curve.
+    """
+    sphere = 'X^2 + Y^2 + Z^2 - 1;'
+    cylinder = 'X^2 + 1.0e-14*Y^2 + (Z - 0.5)^2 - 1;'
+    from phcpy.sets import double_hypersurface_set
+    (spheqs, sphpts) = double_hypersurface_set(3, sphere)
+    (cyleqs, cylpts) = double_hypersurface_set(3, cylinder)
+    from phcpy.diagonal import double_diagonal_solve
+    quaeqs, quapts = double_diagonal_solve\
+        (3, 2, spheqs, sphpts, 2, cyleqs, cylpts)
+    for pol in quaeqs: print(pol)
+    for sol in quapts: print(sol)
+
+def positive_dimensional_sets():
+    """
+    Runs the code snippets on the methods to compute
+    a numerical irreducible decomposition.
+    """
+    print("VI. positive dimensional solution sets")
+    print("VI.1 witnes set for twisted cubic")
+    twisted_cubic_witness_set()
+    print("VI.2 homotopy membership test")
+    homotopy_membership_test()
+    print("VI.3 cascades of homotopies")
+    cascades_of_homotopies()
+    print("VI.4 factor a cubic polynomial")
+    factor_a_cubic()
+    print("VI.5 numerical irreducible decomposition")
+    numerical_irreducible_decomposition()
+    print("VI.6 diagonal homotopies")
+    sphere_cylinder_intersection()
+
 def main():
     """
     Runs all code snippets.
@@ -585,6 +704,7 @@ def main():
     sweep_homotopies()
     schubert_calculus()
     power_series()
+    positive_dimensional_sets()
 
 if __name__=='__main__':
     main()
