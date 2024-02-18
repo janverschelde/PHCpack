@@ -23,4 +23,5 @@ isolated solutions, but also all positive dimensional solutions.
    newtondeflation
    sweephomotopies
    seriesexpansions
+   posdimsolsets
    snippets
