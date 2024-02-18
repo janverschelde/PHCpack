@@ -7,6 +7,8 @@ Sat 17 Feb 2024 : corrected incfixaposteriori.rst and .ipynb for the
   Added tests to diagonal.py, and fixed some bugs.
   To snippets.py in PHCpy/manual, added functions to illustrate the
   numerical irreducible decomposition of positive dimensional solution sets.
+  Extended snippets.rst for the user manual.  New posdimsolsets.ipynb to
+  prepare another extension of the user manual.
 
 Fri 16 Feb 2024 : added incfixapriori.ipynb to PHCpy/manual folder,
   updated incfixaposteriori.pynb.  Added the section about the apriori

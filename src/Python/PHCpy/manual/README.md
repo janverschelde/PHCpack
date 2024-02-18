@@ -17,4 +17,5 @@ This folder contains scripts and notebooks to prepare the user manual.
 | newtondeflation.ipynb      | Newton's method, deflation and multiplicity   |
 | sweephomotopies.ipynb      | arc length parameter continuation             |
 | seriesexpansions.ipynb     | power series expansions of algebraic curves   |
+| posdimsolsets.ipynb        | positive dimensional solution sets            |
 | snippets.py                | code snippets from the Jupyter notebook menus |
