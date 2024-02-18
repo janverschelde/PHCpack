@@ -1,3 +1,5 @@
+with String_Splitters;
+with Characters_and_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
@@ -205,5 +207,69 @@ package body Path_Counts_Table is
       end if;
     end loop;
   end Write_Decomposition;
+
+  function Factorization_Banner ( idx : integer32 ) return string is
+
+  -- DESCRIPTION :
+  --   Returns the banner of the factorization of index idx.
+
+    result : constant string
+           := "factors of dimension "
+            & Characters_and_Numbers.Convert(idx) & " :" & ASCII.LF;
+
+  begin
+    return result;
+  end Factorization_Banner;
+
+  function Points_Banner ( cnt : natural32 ) return string is
+
+  -- DESCRIPTION :
+  --   Returns the banner of the points in a factor.
+
+    result : constant string
+           := "  points in factor "
+            & Characters_and_Numbers.Convert(integer32(cnt)) & " :";
+
+  begin
+    return result;
+  end Points_Banner;
+
+  function Decomposition_String 
+             ( deco : Standard_Natural_VecVecs.Array_of_VecVecs )
+             return string is
+
+    result : String_Splitters.Link_to_String;
+
+    use Standard_Natural_VecVecs;
+    use Standard_Natural_Vectors;
+
+    cnt,nbr : natural32;
+
+  begin
+    for i in reverse 1..deco'last loop
+      if deco(i) /= null then
+        String_Splitters.Append(result,Factorization_Banner(i));
+        cnt := 0;
+        for j in deco(i)'range loop
+          if(deco(i)(j) /= null) then
+            cnt := cnt + 1;
+            String_Splitters.Append(result,Points_banner(cnt));
+            for k in deco(i)(j)'range loop
+              String_Splitters.Append(result," ");
+              nbr := deco(i)(j)(k);
+              declare
+                strnbr : constant string
+                       := Characters_and_Numbers.Convert(integer32(nbr));
+              begin
+                String_Splitters.Append(result,strnbr);
+              end;
+            end loop;
+            String_Splitters.Append(result,"" & ASCII.LF);
+          end if;
+        end loop;
+      end if;
+    end loop;
+    return result.all;
+  end Decomposition_String;
 
 end Path_Counts_Table;

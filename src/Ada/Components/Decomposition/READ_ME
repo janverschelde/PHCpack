@@ -1,4 +1,4 @@
-A Numerical Irreducible Decomposition with PHCv2.4.87
+A Numerical Irreducible Decomposition with PHCv2.4.89
 
 This directory is entirely new in release 2.1 and contains homotopies to
 compute witness points on all positive dimensional solution components.
@@ -25,6 +25,7 @@ ts_irdeco                        : test on witness generate and classify
 ------------------------------------------------------------------------------
 standard_affine_planes           : intrinsic <-> extrinsic affine planes
 standard_affine_solutions        : intrinsic <-> extrinsic solutions
+multihomogeneous_solutions       : representing multi-homogeneous solutions
 standard_diagonal_polynomials    : polynomials in diagonal homotopies
 dobldobl_diagonal_polynomials    : dd polynomials in diagonal homotopies
 quaddobl_diagonal_polynomials    : qd polynomials in diagonal homotopies
@@ -34,6 +35,9 @@ quaddobl_diagonal_solutions      : qd solutions in diagonal homotopies
 extrinsic_diagonal_homotopies    : extrinsic version of diagonal homotopies 
 extrinsic_diagonal_homotopies_io : tools to double symbol table
 extrinsic_diagonal_solvers       : drivers for extrinsic diagonal homotopies
+p_intrinsic_diagonal_continuation: premature intrinsic diagonal continuation
+p_intrinsic_diagonal_homotopies  : premature intrinsic diagonal homotopies
+p_intrinsic_diagonal_solvers     : solving with intrinsic diagonal homotopies
 ts_diahom                        : test on diagonal homotopies
 extrinsic_diagonal_continuation  : track paths of extrinsic diagonal homotopies
 intrinsic_diagonal_continuation  : track paths of intrinsic diagonal homotopies

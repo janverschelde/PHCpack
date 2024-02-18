@@ -85,4 +85,12 @@ package Path_Counts_Table is
   --   Writes the factors in the irreducible decomposition,
   --   represented by deco, of range 1..topdim.
 
+  function Decomposition_String 
+             ( deco : Standard_Natural_VecVecs.Array_of_VecVecs )
+             return string;
+
+  -- DESCRIPTION :
+  --   Returns the string representation of the decomposition,
+  --   in the same format as in Write_Decomposition.
+
 end Path_Counts_Table;

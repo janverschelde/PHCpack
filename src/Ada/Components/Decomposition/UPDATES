@@ -1,14 +1,5 @@
-Wed 22 Mar 2023 : removed the filter_and_split_solutions procedure.
-  Removed the package multihomogeneous_solutions.
-
-Tue 21 Mar 2023 : fixed ts_diahom.adb by removing calls to intrinsic solvers,
-  updated decomposition.gpr.  Removed ts_squeeze, ts_sqem, ts_intcas.
-  Fixed decomposition.gpr to work on Windows.
-  Moved ts_filfac.adb to ../Factorization, removed ts_fillit.adb.
-  Removed premature p_intrinsic_diagonal_continuation,
-  p_intrinsic_diagonal_homotopes and p_intrinsic_diagonal_solvers.
-  Removed intrinsic_diagonal_{homotopies, solvers},
-  and drivers_to_intrinsic_solvers.
+Sun 18 Feb 2024 : extended path_counts_table with a function to return
+  the decomposition string.
 
 Fri 11 Jun 2021 : fixed ts_dimred.adb, defined decomposition.gpr to
   build the test procedures.
