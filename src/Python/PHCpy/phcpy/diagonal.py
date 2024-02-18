@@ -24,7 +24,7 @@ from phcpy.solutions import clear_double_double_solutions
 from phcpy.solutions import set_quad_double_solutions
 from phcpy.solutions import get_quad_double_solutions
 from phcpy.solutions import clear_quad_double_solutions
-from phcpy.solutions import filter_vanishing
+from phcpy.solutions import filter_vanishing, verify
 from phcpy.homotopies import copy_double_system_into_start
 from phcpy.homotopies import copy_double_solutions_into_start
 from phcpy.homotopies import copy_double_system_into_target
@@ -73,6 +73,18 @@ def top_diagonal_dimension(kdm, dim1, dim2):
     if dim1 + dim2 < kdm:
         return dim2
     return kdm - dim1
+
+def bottom_diagonal_dimension(kdm, dim1, dim2):
+    """
+    Returns the lowest dimension of the solution when intersecting
+    two systems of dimensions dim1 and dim2 in dimension kdm.
+    """
+    codim1 = kdm - dim1
+    codim2 = kdm - dim2
+    dim = kdm - codim1 - codim2
+    if dim < 0:
+        return 0
+    return dim
 
 def set_double_diagonal_homotopy(dim1, dim2, vrblvl=0):
     """
@@ -626,6 +638,9 @@ def double_diagonal_solve(dim, dm1, sys1, sols1, dm2, sys2, sols2,
         for (idx, sol) in enumerate(startsols):
             print('Solution', idx+1, ':')
             print(sol)
+    botdiagdim = bottom_diagonal_dimension(kdm, dm1, dm2)
+    if vrblvl > 0:
+        print('the bottom diagonal dimension :', botdiagdim)
     for k in range(topdiagdim, 0, -1):
         endsols = double_cascade_step(k, topsys, startsols, tasks=tasks, \
             vrblvl=vrblvl)
@@ -653,7 +668,7 @@ def double_diagonal_solve(dim, dm1, sys1, sols1, dm2, sys2, sols2,
             for pol in nextsys:
                 print(pol)
         (topsys, startsols) = (nextsys[:-1], endsolsf2)
-    double_collapse_diagonal(0, 0, vrblvl)
+    double_collapse_diagonal(0, botdiagdim, vrblvl)
     rsys = get_double_system(vrblvl-1)
     sols = get_double_solutions(vrblvl-1)
     return (rsys, sols)
@@ -705,6 +720,9 @@ def double_double_diagonal_solve(dim, dm1, sys1, sols1, dm2, sys2, sols2,
         for (idx, sol) in enumerate(startsols):
             print('Solution', idx+1, ':')
             print(sol)
+    botdiagdim = bottom_diagonal_dimension(kdm, dm1, dm2)
+    if vrblvl > 0:
+        print('the bottom diagonal dimension :', botdiagdim)
     for k in range(topdiagdim, 0, -1):
         endsols = double_double_cascade_step(k, topsys, startsols, \
             tasks=tasks, vrblvl=vrblvl)
@@ -732,7 +750,7 @@ def double_double_diagonal_solve(dim, dm1, sys1, sols1, dm2, sys2, sols2,
             for pol in nextsys:
                 print(pol)
         (topsys, startsols) = (nextsys[:-1], endsolsf2)
-    double_double_collapse_diagonal(0, 0, vrblvl)
+    double_double_collapse_diagonal(0, botdiagdim, vrblvl)
     rsys = get_double_double_system(vrblvl-1)
     sols = get_double_double_solutions(vrblvl-1)
     return (rsys, sols)
@@ -784,6 +802,9 @@ def quad_double_diagonal_solve(dim, dm1, sys1, sols1, dm2, sys2, sols2,
         for (idx, sol) in enumerate(startsols):
             print('Solution', idx+1, ':')
             print(sol)
+    botdiagdim = bottom_diagonal_dimension(kdm, dm1, dm2)
+    if vrblvl > 0:
+        print('the bottom diagonal dimension :', botdiagdim)
     for k in range(topdiagdim, 0, -1):
         endsols = quad_double_cascade_step(k, topsys, startsols, \
             tasks=tasks, vrblvl=vrblvl)
@@ -811,7 +832,7 @@ def quad_double_diagonal_solve(dim, dm1, sys1, sols1, dm2, sys2, sols2,
             for pol in nextsys:
                 print(pol)
         (topsys, startsols) = (nextsys[:-1], endsolsf2)
-    quad_double_collapse_diagonal(0, 0, vrblvl)
+    quad_double_collapse_diagonal(0, botdiagdim, vrblvl)
     rsys = get_quad_double_system(vrblvl-1)
     sols = get_quad_double_solutions(vrblvl-1)
     return (rsys, sols)
@@ -820,6 +841,8 @@ def test_double_diagonal_homotopy(vrblvl=0):
     """
     Tests the diagonal homotopy in double precision.
     """
+    if vrblvl > 0:
+        print('in test_double_diagonal_homotopy ...')
     hyp1 = 'x1*x2;'
     hyp2 = 'x1 - x2;'
     (w1sys, w1sols) = double_hypersurface_set(2, hyp1, vrblvl-1)
@@ -853,6 +876,8 @@ def test_double_double_diagonal_homotopy(vrblvl=0):
     """
     Tests the diagonal homotopy in double double precision.
     """
+    if vrblvl > 0:
+        print('in test_double_double_diagonal_homotopy ...')
     hyp1 = 'x1*x2;'
     hyp2 = 'x1 - x2;'
     (w1sys, w1sols) = double_double_hypersurface_set(2, hyp1, vrblvl-1)
@@ -886,6 +911,8 @@ def test_quad_double_diagonal_homotopy(vrblvl=0):
     """
     Tests the diagonal homotopy in quad double precision.
     """
+    if vrblvl > 0:
+        print('in test_quad_double_diagonal_homotopy ...')
     hyp1 = 'x1*x2;'
     hyp2 = 'x1 - x2;'
     (w1sys, w1sols) = quad_double_hypersurface_set(2, hyp1, vrblvl-1)
@@ -915,6 +942,81 @@ def test_quad_double_diagonal_homotopy(vrblvl=0):
         print(sol)
     return int(len(sols) != 2)
 
+def test_double_hypersurface_intersection(vrblvl=0):
+    """
+    Tests the intersection of a cylinder and a sphere,
+    in double precision.
+    """
+    if vrblvl > 0:
+        print('in test_double_hypersurface_intersection ...')
+    sphere = 'X^2 + Y^2 + Z^2 - 1;'
+    cylinder = 'X^2 + 1.0e-14*Y^2 + (Z - 0.5)^2 - 1;'
+    (spheqs, sphpts) = double_hypersurface_set(3, sphere, vrblvl-1)
+    (cyleqs, cylpts) = double_hypersurface_set(3, cylinder, vrblvl-1)
+    quaeqs, quapts = double_diagonal_solve\
+        (3, 2, spheqs, sphpts, 2, cyleqs, cylpts, vrblvl=vrblvl)
+    if vrblvl > 0:
+        for pol in quaeqs:
+            print(pol)
+        print('the generic points :')
+        for (idx, sol) in enumerate(quapts):
+            print('Solution', idx+1, ':')
+            print(sol)
+    err = verify(quaeqs, quapts, vrblvl-1)
+    if vrblvl > 0:
+        print('the error :', err)
+    return int(err > 1.0e-8) + int(len(quapts) != 4)
+
+def test_double_double_hypersurface_intersection(vrblvl=0):
+    """
+    Tests the intersection of a cylinder and a sphere,
+    in double double precision.
+    """
+    if vrblvl > 0:
+        print('in test_double_double_hypersurface_intersection ...')
+    sphere = 'X^2 + Y^2 + Z^2 - 1;'
+    cylinder = 'X^2 + 1.0e-14*Y^2 + (Z - 0.5)^2 - 1;'
+    (spheqs, sphpts) = double_double_hypersurface_set(3, sphere, vrblvl-1)
+    (cyleqs, cylpts) = double_double_hypersurface_set(3, cylinder, vrblvl-1)
+    quaeqs, quapts = double_double_diagonal_solve\
+        (3, 2, spheqs, sphpts, 2, cyleqs, cylpts, vrblvl=vrblvl)
+    if vrblvl > 0:
+        for pol in quaeqs:
+            print(pol)
+        print('the generic points :')
+        for (idx, sol) in enumerate(quapts):
+            print('Solution', idx+1, ':')
+            print(sol)
+    err = verify(quaeqs, quapts, vrblvl-1)
+    if vrblvl > 0:
+        print('the error :', err)
+    return int(err > 1.0e-8) + int(len(quapts) != 4)
+
+def test_quad_double_hypersurface_intersection(vrblvl=0):
+    """
+    Tests the intersection of a cylinder and a sphere,
+    in quad double precision.
+    """
+    if vrblvl > 0:
+        print('in test_quad_double_hypersurface_intersection ...')
+    sphere = 'X^2 + Y^2 + Z^2 - 1;'
+    cylinder = 'X^2 + 1.0e-14*Y^2 + (Z - 0.5)^2 - 1;'
+    (spheqs, sphpts) = quad_double_hypersurface_set(3, sphere, vrblvl-1)
+    (cyleqs, cylpts) = quad_double_hypersurface_set(3, cylinder, vrblvl-1)
+    quaeqs, quapts = quad_double_diagonal_solve\
+        (3, 2, spheqs, sphpts, 2, cyleqs, cylpts, vrblvl=vrblvl)
+    if vrblvl > 0:
+        for pol in quaeqs:
+            print(pol)
+        print('the generic points :')
+        for (idx, sol) in enumerate(quapts):
+            print('Solution', idx+1, ':')
+            print(sol)
+    err = verify(quaeqs, quapts, vrblvl-1)
+    if vrblvl > 0:
+        print('the error :', err)
+    return int(err > 1.0e-8) + int(len(quapts) != 4)
+
 def main():
     """
     Runs some tests.
@@ -923,6 +1025,9 @@ def main():
     fail = test_double_diagonal_homotopy(lvl)
     fail = fail + test_double_double_diagonal_homotopy(lvl)
     fail = fail + test_quad_double_diagonal_homotopy(lvl)
+    fail = fail + test_double_hypersurface_intersection(lvl)
+    fail = fail + test_double_double_hypersurface_intersection(lvl)
+    fail = fail + test_quad_double_hypersurface_intersection(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:
