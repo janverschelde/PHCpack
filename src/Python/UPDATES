@@ -1,3 +1,6 @@
+Mon 19 Feb 2024 : different gamma in last test in tropisms.py makes
+  all test pass.
+
 Sat 17 Feb 2024 : corrected incfixaposteriori.rst and .ipynb for the
   initialization of the homotopy in the step-by-step path tracker.
   To decomposition.py, added a wrapper solve() function and a function

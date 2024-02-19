@@ -6,7 +6,6 @@ in a polyhedral end game with aposteriori step size control.
 from ctypes import c_int32, c_double, pointer
 from random import randint, uniform
 from phcpy.version import get_phcfun
-from phcpy.dimension import set_seed
 from phcpy.trackers import set_parameter_value, show_parameters
 from phcpy.trackers import double_track
 from phcpy.trackers import double_double_track, quad_double_track
@@ -704,6 +703,7 @@ def test_double_double_endgame(vrblvl=0):
     gamma, sols = double_double_track(pols, start, startsols, \
         gamma=gmm, pwt=1, vrblvl=vrblvl-1)
     if vrblvl > 0:
+        print('gamma :', gamma)
         print('the solutions at the end :')
         for (idx, sol) in enumerate(sols):
             print('Solution', idx+1, ':')
@@ -744,9 +744,10 @@ def test_quad_double_endgame(vrblvl=0):
     if vrblvl > 0:
         print('settings of the parameter :')
         show_parameters(vrblvl-1)
-    gmm = complex(-0.9669413930172692, 0.25499871072188346)
+    gmm = complex(0.1401011540077633, -0.990137195870195)
     gamma, sols = quad_double_track(pols, start, startsols, \
         gamma=gmm, pwt=1, vrblvl=vrblvl-1)
+    print(gamma)
     if vrblvl > 0:
         print('the solutions at the end :')
         for (idx, sol) in enumerate(sols):
