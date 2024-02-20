@@ -142,6 +142,16 @@ On Linux and Mac OS X, for the ``libPHCpack`` it is best
 to select a native GNAT compiler,
 which can be obtained from the package managers of the OS.
 
+Since version 2.4.88, PHCpack is among the catalog of ready-to-use
+Ada/Spark libraries.  Once ``alr`` is installed, then typing
+
+::
+
+   alr get phcpack
+
+will retrieve and build the executable ``phc`` and the
+library ``libPHCpack``.
+
 Project History
 ===============
 
@@ -200,6 +210,12 @@ computes the mixed volume at a faster pace than MixedVol.
 Since version 2.4.53, DEMiCs is distributed with PHCpack.
 Triple, penta, octo, and deca double arithmetic were added
 in version 2.4.80.
+
+The effort to replace makefiles by project files to build the
+``phc`` executable and the ``libPHCpack`` with ``gprbuild``
+culminated into the addition of version 2.4.88 to the catalog
+of ready-to-use Ada/SPARK libraries, distributed with ``ALIRE``,
+via <https://alire.ada.dev>.
 
 phcpy: An Application Programming Interface to PHCpack
 ======================================================
