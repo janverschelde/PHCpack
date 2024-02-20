@@ -27,6 +27,7 @@ function use_witsols ( job : integer32;
       when 12 => return Standard_WitSet_Clear(vrblvl);
       when 13 => return DoblDobl_WitSet_Clear(vrblvl);
       when 14 => return QuadDobl_WitSet_Clear(vrblvl);
+      when 15 => return Irreducible_Factor_String(a,b,vrblvl);
       when others => return -1;
     end case;
   end do_jobs;

@@ -89,6 +89,9 @@ function use_witsols ( job : integer32;
 --   job = 12 : clears the witness solutions for standard double precision.
 --   job = 13 : clears the witness solutions for double double precision.
 --   job = 14 : clears the witness solutions for quad double precision.
+--   job = 15 : given in b[0], the number of characters in the string,
+--              return the string representation of the factors in b,
+--              returns in a[0] the number of characters in b.
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

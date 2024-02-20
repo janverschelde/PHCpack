@@ -786,6 +786,7 @@ function use_c2phc4c ( job : integer32;
      -- when 844 => return use_outdata(10,a,b,c); -- stable mv by DEMiCs
      -- numerical irreducible decomposition
       when 845..859 => return use_witsols(job-845,a,b,c,vrblvl-1); -- solvers
+     -- for the irreducible factor string, use job 993
      -- Pade continuation in a step wise fashion
       when 860 => return use_padcon(5,a,b,c,vrblvl-1); -- init homotopy
       when 861 => return use_padcon(6,a,b,c,vrblvl-1); -- set start solution
@@ -850,6 +851,8 @@ function use_c2phc4c ( job : integer32;
       when 924 => return use_track(72,a,b,c,vrblvl-1);
       when 925 => return use_track(73,a,b,c,vrblvl-1);
       when 926 => return use_track(74,a,b,c,vrblvl-1);
+     -- get string representation of irreducible factors
+      when 993 => return use_witsols(15,a,b,c,vrblvl-1);
      -- get number of available CPUs
       when 994 => return Job_Handlers.Get_Core_Count(a,vrblvl-1);
      -- get and set the gamma constant

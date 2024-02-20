@@ -3008,6 +3008,9 @@ function use_c2phc4c ( job : integer32;
 --        =  857 : clears the witness solutions for standard double precision.
 --        =  858 : clears the witness solutions for double double precision.
 --        =  859 : clears the witness solutions for quad double precision.
+--        =  993 : given in b[0], the number of characters in the string,
+--                 return the string representation of the factors in b,
+--                 returns in a[0] the number of characters in b.
 --
 -- passing tableau forms to the systems containers :
 --

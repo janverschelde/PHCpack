@@ -25,6 +25,10 @@ package Irreducible_Components_Interface is
   --           if verbose, then output is written to screen;
   --   vrblvl  is the verbose level.
 
+  -- ON RETURN :
+  --   b       b[0] has the size of the string representation of
+  --           the irreducible factors, if factoring was requested.
+
   function Standard_Laurent_Solver
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;
@@ -42,6 +46,10 @@ package Irreducible_Components_Interface is
   --   b       in b[0] is the verbose flag, 0 for false, 1 for true,
   --           if verbose, then output is written to screen;
   --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       b[0] has the size of the string representation of
+  --           the irreducible factors, if factoring was requested.
 
   function DoblDobl_Polynomial_Solver
              ( a : C_intarrs.Pointer;
@@ -61,6 +69,10 @@ package Irreducible_Components_Interface is
   --           if verbose, then output is written to screen;
   --   vrblvl  is the verbose level.
 
+  -- ON RETURN :
+  --   b       b[0] has the size of the string representation of
+  --           the irreducible factors, if factoring was requested.
+
   function DoblDobl_Laurent_Solver
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;
@@ -78,6 +90,10 @@ package Irreducible_Components_Interface is
   --   b       in b[0] is the verbose flag, 0 for false, 1 for true,
   --           if verbose, then output is written to screen;
   --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       b[0] has the size of the string representation of
+  --           the irreducible factors, if factoring was requested.
 
   function QuadDobl_Polynomial_Solver
              ( a : C_intarrs.Pointer;
@@ -97,6 +113,10 @@ package Irreducible_Components_Interface is
   --           if verbose, then output is written to screen;
   --   vrblvl  is the verbose level.
 
+  -- ON RETURN :
+  --   b       b[0] has the size of the string representation of
+  --           the irreducible factors, if factoring was requested.
+
   function QuadDobl_Laurent_Solver
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;
@@ -114,6 +134,10 @@ package Irreducible_Components_Interface is
   --   b       in b[0] is the verbose flag, 0 for false, 1 for true,
   --           if verbose, then output is written to screen;
   --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   b       b[0] has the size of the string representation of
+  --           the irreducible factors, if factoring was requested.
 
   function Standard_Polynomial_WitSet_Copy
              ( a : C_intarrs.Pointer;
@@ -206,6 +230,18 @@ package Irreducible_Components_Interface is
 
   -- DESCRIPTION :
   --   Deallocates the witness solutions in quad double precision.
+  --   The verbose level is given in vrblvl.
+
+  function Irreducible_Factor_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Given in b the number of characters in the string representation
+  --   of the irreducible factors, returns this string representation.
+  --   Assigns to a[0], the number of characters in the computed
+  --   string representation, for later verification.
   --   The verbose level is given in vrblvl.
 
 end Irreducible_Components_Interface;

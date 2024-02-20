@@ -3,6 +3,7 @@ with text_io;                             use text_io;
 with Standard_Natural_Numbers;            use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;         use Standard_Natural_Numbers_io;
 with Standard_Natural_VecVecs;
+with Standard_Integer_Vectors;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;    use Standard_Complex_Poly_Systems_io;
@@ -39,6 +40,8 @@ with DoblDobl_Witness_Solutions;
 with QuadDobl_Witness_Solutions;
 with Store_Witness_Solutions;             use Store_Witness_Solutions;
 with Write_Witness_Solutions;             use Write_Witness_Solutions;
+with Path_Counts_Table;
+with Assignments_in_Ada_and_C;            use Assignments_in_Ada_and_C;
 
 package body Irreducible_Components_Interface is
 
@@ -83,14 +86,32 @@ package body Irreducible_Components_Interface is
     end if;
   end extract_solver_options;
 
+  procedure Store_Factors
+               ( b : in C_intarrs.Pointer;
+                 idxfac : in Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
+                 vrblvl : in integer32 := 0 ) is
+
+  -- DESCRTIPTION :
+  --   Stores the factors in idxfac for later retrieval.
+  --   Assigns to the pointer b the number of characters
+  --   in the string representation of the decomposition.
+
+    strdeco : constant string
+            := Path_Counts_Table.Decomposition_String(idxfac.all);
+
+  begin
+    if vrblvl > 0 then
+      put_line("The irreducible factors in the decomposition :");
+      put_line(strdeco);
+    end if;
+    Path_Counts_Table.Store_Decomposition(idxfac);
+    Assign(integer32(strdeco'last),b);
+  end Store_Factors;
+
   function Standard_Polynomial_Solver
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Runs the cascade homotopies on a polynomial system, in standard
-  --   double precision, eventually followed by a filter and a factor.
 
     use Standard_Complex_Polynomials;
     use Standard_Complex_Poly_Systems;
@@ -128,6 +149,10 @@ package body Irreducible_Components_Interface is
         Standard_Write(topdim,lowdim);
         Write_Counts(filter,factor,pc,fc,idxfac);
       end if;
+      if factor
+       then Store_Factors(b,idxfac,vrblvl);
+       else Assign(0,b);
+      end if;
     end if;
     return 0;
   exception
@@ -143,10 +168,6 @@ package body Irreducible_Components_Interface is
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Runs the cascade homotopies on a Laurent system, in standard
-  --   double precision, eventually followed by a filter and a factor.
 
     use Standard_Complex_Laurentials;
     use Standard_Complex_Laur_Systems;
@@ -184,6 +205,10 @@ package body Irreducible_Components_Interface is
         Standard_Write(topdim,lowdim);
         Write_Counts(filter,factor,pc,fc,idxfac);
       end if;
+      if factor
+       then Store_Factors(b,idxfac,vrblvl);
+       else Assign(0,b);
+      end if;
     end if;
     return 0;
   exception
@@ -199,10 +224,6 @@ package body Irreducible_Components_Interface is
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Runs the cascade homotopies on a polynomial system, in double
-  --   double precision, eventually followed by a filter and a factor.
 
     use DoblDobl_Complex_Polynomials;
     use DoblDobl_Complex_Poly_Systems;
@@ -240,6 +261,10 @@ package body Irreducible_Components_Interface is
         DoblDobl_Write(topdim,lowdim);
         Write_Counts(filter,factor,pc,fc,idxfac);
       end if;
+      if factor
+       then Store_Factors(b,idxfac,vrblvl);
+       else Assign(0,b);
+      end if;
     end if;
     return 0;
   exception
@@ -255,10 +280,6 @@ package body Irreducible_Components_Interface is
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Runs the cascade homotopies on a Laurent system, in double
-  --   double precision, eventually followed by a filter and a factor.
 
     use DoblDobl_Complex_Laurentials;
     use DoblDobl_Complex_Laur_Systems;
@@ -296,6 +317,10 @@ package body Irreducible_Components_Interface is
         DoblDobl_Write(topdim,lowdim);
         Write_Counts(filter,factor,pc,fc,idxfac);
       end if;
+      if factor
+       then Store_Factors(b,idxfac,vrblvl);
+       else Assign(0,b);
+      end if;
     end if;
     return 0;
   exception
@@ -311,10 +336,6 @@ package body Irreducible_Components_Interface is
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Runs the cascade homotopies on a polynomial system, in quad
-  --   double precision, eventually followed by a filter and a factor.
 
     use QuadDobl_Complex_Polynomials;
     use QuadDobl_Complex_Poly_Systems;
@@ -352,6 +373,10 @@ package body Irreducible_Components_Interface is
         QuadDobl_Write(topdim,lowdim);
         Write_Counts(filter,factor,pc,fc,idxfac);
       end if;
+      if factor
+       then Store_Factors(b,idxfac,vrblvl);
+       else Assign(0,b);
+      end if;
     end if;
     return 0;
   exception
@@ -367,10 +392,6 @@ package body Irreducible_Components_Interface is
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Runs the cascade homotopies on a Laurent system, in quad
-  --   double precision, eventually followed by a filter and a factor.
 
     use QuadDobl_Complex_Laurentials;
     use QuadDobl_Complex_Laur_Systems;
@@ -408,6 +429,10 @@ package body Irreducible_Components_Interface is
         QuadDobl_Write(topdim,lowdim);
         Write_Counts(filter,factor,pc,fc,idxfac);
       end if;
+      if factor
+       then Store_Factors(b,idxfac,vrblvl);
+       else Assign(0,b);
+      end if;
     end if;
     return 0;
   exception
@@ -422,10 +447,6 @@ package body Irreducible_Components_Interface is
   function Standard_Polynomial_WitSet_Copy
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Retrieves a witness set stored for a polynomial system in
-  --   standard double precision and copies it into the containers.
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -462,10 +483,6 @@ package body Irreducible_Components_Interface is
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
 
-  -- DESCRIPTION :
-  --   Retrieves a witness set stored for a Laurent polynomial system in
-  --   standard double precision and copies it into the containers.
-
     use Standard_Complex_Laur_Systems;
     use Standard_Complex_Solutions;
 
@@ -500,10 +517,6 @@ package body Irreducible_Components_Interface is
   function DoblDobl_Polynomial_WitSet_Copy
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Retrieves a witness set stored for a polynomial system in
-  --   double double precision and copies it into the containers.
 
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
@@ -540,10 +553,6 @@ package body Irreducible_Components_Interface is
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
 
-  -- DESCRIPTION :
-  --   Retrieves a witness set stored for a Laurent polynomial system in
-  --   double double precision and copies it into the containers.
-
     use DoblDobl_Complex_Laur_Systems;
     use DoblDobl_Complex_Solutions;
 
@@ -578,10 +587,6 @@ package body Irreducible_Components_Interface is
   function QuadDobl_Polynomial_WitSet_Copy
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Retrieves a witness set stored for a polynomial system in
-  --   quad double precision and copies it into the containers.
 
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
@@ -618,10 +623,6 @@ package body Irreducible_Components_Interface is
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
 
-  -- DESCRIPTION :
-  --   Retrieves a witness set stored for a Laurent polynomial system in
-  --   quad double precision and copies it into the containers.
-
     use QuadDobl_Complex_Laur_Systems;
     use QuadDobl_Complex_Solutions;
 
@@ -655,17 +656,13 @@ package body Irreducible_Components_Interface is
 
   function Standard_WitSet_Clear
              ( vrblvl : integer32 := 0 ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Deallocates the witness solutions in standard double precision.
-  --   The verbose level is given in vrblvl.
-
   begin
     if vrblvl > 0 then
       put("-> in irreducible_components_interface.");
       put_line("Standard_WitSet_Clear ...");
     end if;
     Standard_Witness_Solutions.Clear;
+    Path_Counts_Table.Clear_Decomposition;
     return 0;
   exception
     when others =>
@@ -678,17 +675,13 @@ package body Irreducible_Components_Interface is
 
   function DoblDobl_WitSet_Clear
              ( vrblvl : integer32 := 0 ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Deallocates the witness solutions in double double precision.
-  --   The verbose level is given in vrblvl.
-
   begin
     if vrblvl > 0 then
       put("-> in irreducible_components_interface.");
       put_line("DoblDobl_WitSet_Clear ...");
     end if;
     DoblDobl_Witness_Solutions.Clear;
+    Path_Counts_Table.Clear_Decomposition;
     return 0;
   exception
     when others =>
@@ -701,17 +694,13 @@ package body Irreducible_Components_Interface is
 
   function QuadDobl_WitSet_Clear
              ( vrblvl : integer32 := 0 ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Deallocates the witness solutions in quad double precision.
-  --   The verbose level is given in vrblvl.
-
   begin
     if vrblvl > 0 then
       put("-> in irreducible_components_interface.");
       put_line("QuadDobl_Witness_Solutions_Clear ...");
     end if;
     QuadDobl_Witness_Solutions.Clear;
+    Path_Counts_Table.Clear_Decomposition;
     return 0;
   exception
     when others =>
@@ -721,5 +710,48 @@ package body Irreducible_Components_Interface is
       end if;
     return 859;
   end QuadDobl_WitSet_Clear;
+
+  function Irreducible_Factor_String
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    size : constant integer32 := integer32(v_b(v_b'first));
+    deco : constant Standard_Natural_VecVecs.Link_to_Array_of_VecVecs
+         := Path_Counts_Table.Get_Decomposition;
+
+    use Standard_Natural_VecVecs;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in irreducible_components_interface.");
+      put_line("Irreducible_Factor_String ...");
+    end if;
+    if deco = null then
+      if size /= 0 then
+        put("Retrieval of factors failed.");
+        put_line("  Cannot make the factor string!");
+      end if;
+    else
+      declare
+        strdeco : constant string
+                := Path_Counts_Table.Decomposition_String(deco.all);
+        sv : constant Standard_Integer_Vectors.Vector
+           := String_to_Integer_Vector(strdeco);
+      begin
+        Assign(integer32(sv'last),a);
+        Assign(sv,b);
+      end;
+    end if;
+    return 0;
+  exception
+    when others =>
+      if vrblvl > 0 then
+        put("Exception raised in irreducible_components_interface.");
+        put_line("Irreducible_Factor_String.");
+      end if;
+    return 993;
+  end Irreducible_Factor_String;
 
 end Irreducible_Components_Interface;

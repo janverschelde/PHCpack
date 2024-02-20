@@ -1,3 +1,6 @@
+Tue 20 Feb 2024 : extended irreducible_components_interface, use_witsols,
+  and use_c4phc with a function to write the irreducible factor string.
+
 Tue 13 Feb 2024 : in newton_interface.adb, passed the verbose level value
   to the root refiners.
 
