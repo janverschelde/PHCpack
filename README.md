@@ -47,9 +47,6 @@ The restructured text source for the documentation for PHCpack starts at
 and for phcpy at
 <https://github.com/janverschelde/PHCpack/tree/master/src/Python/PHCpy/doc/source>.
 
-To try phcpy in a python or SageMath kernel of a jupyter notebook,
-visit <http://www.phcpack.org>.
-
 An alire (<https://alire.ada.dev>) workspace is provided.
 
 The default configuration is for windows.
