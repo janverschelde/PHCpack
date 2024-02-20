@@ -8,6 +8,8 @@ with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 
 package body Path_Counts_Table is
 
+  ptr2deco : Standard_Natural_VecVecs.Link_to_Array_of_VecVecs := null;
+
   procedure Update_Path_Counts
               ( cnts : in out Standard_Natural_VecVecs.VecVec;
                 dim,nsols,nsols0,nsols1 : in natural32 ) is
@@ -271,5 +273,34 @@ package body Path_Counts_Table is
     end loop;
     return result.all;
   end Decomposition_String;
+
+  procedure Store_Decomposition
+               ( deco : in Standard_Natural_VecVecs.Link_to_Array_of_VecVecs )
+    is
+  begin
+    ptr2deco := deco;
+  end Store_Decomposition;
+
+  procedure Store_Decomposition
+               ( deco : in Standard_Natural_VecVecs.Array_of_VecVecs ) is
+  begin
+    ptr2deco := new Standard_Natural_VecVecs.Array_of_VecVecs'(deco);
+  end Store_Decomposition;
+
+  function Get_Decomposition
+             return Standard_Natural_VecVecs.Link_to_Array_of_VecVecs is
+  begin
+    return ptr2deco;
+  end Get_Decomposition;
+
+  procedure Clear_Decomposition is
+
+    use Standard_Natural_VecVecs;
+
+  begin
+    if ptr2deco /= null
+     then Standard_Natural_VecVecs.Deep_Clear(ptr2deco);
+    end if;
+  end Clear_Decomposition;
 
 end Path_Counts_Table;

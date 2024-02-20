@@ -1,3 +1,6 @@
+Tue 20 Feb 2024 : extended path_counts_table with functions and procedures
+  to store, retrieve and clear the irreducible factors.
+
 Sun 18 Feb 2024 : extended path_counts_table with a function to return
   the decomposition string.
 

@@ -84,6 +84,9 @@ package Path_Counts_Table is
   -- DESCRIPTION :
   --   Writes the factors in the irreducible decomposition,
   --   represented by deco, of range 1..topdim.
+  --   At every dimension, the number of factors is in deco(i)'last,
+  --   the labels of the points in the j-th factor at dimension i
+  --   are stored in the vector deco(i)(j).
 
   function Decomposition_String 
              ( deco : Standard_Natural_VecVecs.Array_of_VecVecs )
@@ -92,5 +95,25 @@ package Path_Counts_Table is
   -- DESCRIPTION :
   --   Returns the string representation of the decomposition,
   --   in the same format as in Write_Decomposition.
+
+  procedure Store_Decomposition
+               ( deco : in Standard_Natural_VecVecs.Array_of_VecVecs );
+  procedure Store_Decomposition
+               ( deco : in Standard_Natural_VecVecs.Link_to_Array_of_VecVecs );
+
+  -- DESCRIPTION :
+  --   Stores the factors in the irreducibile decomposition
+  --   for later retrieval. 
+  --
+  function Get_Decomposition
+             return Standard_Natural_VecVecs.Link_to_Array_of_VecVecs;
+
+  -- DESCRIPTION :
+  --   Returns the link to the decomposition that was stored.
+
+  procedure Clear_Decomposition;
+
+  -- DESCRIPTION :
+  --   Clears the decomposition.
 
 end Path_Counts_Table;
