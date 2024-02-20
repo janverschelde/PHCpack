@@ -1,8 +1,8 @@
 """
 Exports functions to compute a numerical irreducible decomposition.
 """
-from ctypes import c_int32, c_double, pointer
-from phcpy.version import get_phcfun
+from ctypes import c_int32, c_double, pointer, create_string_buffer
+from phcpy.version import get_phcfun, int4a2str
 from phcpy.polynomials import number_of_symbols
 from phcpy.polynomials import set_double_system, get_double_system
 from phcpy.polynomials import set_double_laurent_system
@@ -132,6 +132,34 @@ def copy_quad_double_laurent_witset(dim, vrblvl=0):
         print(', return value :', retval)
     return retval
 
+def get_factors(size, vrblvl=0):
+    """
+    Returns the string representation of the irreducible factors,
+    given in size is the number of characters in the string.
+    """
+    if vrblvl > 0:
+        print('in get_factors, size :', size)
+    phc = get_phcfun(vrblvl-1)
+    asize = pointer(c_int32(0))
+    strdeco = create_string_buffer(b"", size*4)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> get_factors calls phc', end='')
+    retval = phc(993, asize, strdeco, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+        print('size of computed result :', asize[0], end='')
+        if size == asize[0]:
+            print(' match')
+        else:
+            print(' no match!')
+    result = int4a2str(strdeco, vrblvl=vrblvl-1)
+    if vrblvl > 0:
+        print('the irreducible factor string :')
+        print(result)
+    return result
+
 def double_solve(pols, topdim=-1, \
     filtsols=True, factor=True, tasks=0, verbose=True, vrblvl=0):
     """
@@ -142,6 +170,9 @@ def double_solve(pols, topdim=-1, \
     (2) factor, to factor the positive dimensional components,
     (3) tasks, is the number of tasks (0 for no multithreading),
     (4) verbose, to write extra information during the decomposition.
+    The list on return contains a witness set for every dimension.
+    If factor, then the last element in the list on return is
+    the string representation of the irreducible factors.
     The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
@@ -170,6 +201,11 @@ def double_solve(pols, topdim=-1, \
     retval = phc(845, pars, bvrb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
+        if factor:
+            print('size of string representation of factors :', bvrb[0])
+    strfactors = ''
+    if factor:
+        strfactors = get_factors(bvrb[0], vrblvl)
     witsols = []
     for soldim in range(topdim+1):
         copy_double_witset(soldim, vrblvl=vrblvl-1)
@@ -177,6 +213,7 @@ def double_solve(pols, topdim=-1, \
         witpts = get_double_solutions(vrblvl-1)
         witset = (witpol, witpts)
         witsols.append(witset)
+    witsols.append(strfactors)
     return witsols
 
 def double_laurent_solve(pols, topdim=-1, \
@@ -189,6 +226,9 @@ def double_laurent_solve(pols, topdim=-1, \
     (2) factor, to factor the positive dimensional components,
     (3) tasks, is the number of tasks (0 for no multithreading),
     (4) verbose, to write extra information during the decomposition.
+    The list on return contains a witness set for every dimension.
+    If factor, then the last element in the list on return is
+    the string representation of the irreducible factors.
     The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
@@ -217,6 +257,11 @@ def double_laurent_solve(pols, topdim=-1, \
     retval = phc(846, pars, bvrb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
+        if factor:
+            print('size of string representation of factors :', bvrb[0])
+    strfactors = ''
+    if factor:
+        strfactors = get_factors(bvrb[0], vrblvl)
     witsols = []
     for soldim in range(topdim+1):
         copy_double_laurent_witset(soldim)
@@ -224,6 +269,7 @@ def double_laurent_solve(pols, topdim=-1, \
         witpts = get_double_solutions(vrblvl-1)
         witset = (witpol, witpts)
         witsols.append(witset)
+    witsols.append(strfactors)
     return witsols
 
 def double_double_solve(pols, topdim=-1, \
@@ -236,6 +282,9 @@ def double_double_solve(pols, topdim=-1, \
     (2) factor, to factor the positive dimensional components,
     (3) tasks, is the number of tasks (0 for no multithreading),
     (4) verbose, to write extra information during the decomposition.
+    The list on return contains a witness set for every dimension.
+    If factor, then the last element in the list on return is
+    the string representation of the irreducible factors.
     The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
@@ -264,6 +313,11 @@ def double_double_solve(pols, topdim=-1, \
     retval = phc(847, pars, bvrb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
+        if factor:
+            print('size of string representation of factors :', bvrb[0])
+    strfactors = ''
+    if factor:
+        strfactors = get_factors(bvrb[0], vrblvl)
     witsols = []
     for soldim in range(topdim+1):
         copy_double_double_witset(soldim)
@@ -271,6 +325,7 @@ def double_double_solve(pols, topdim=-1, \
         witpts = get_double_double_solutions(vrblvl-1)
         witset = (witpol, witpts)
         witsols.append(witset)
+    witsols.append(strfactors)
     return witsols
 
 def double_double_laurent_solve(pols, topdim=-1, \
@@ -283,6 +338,9 @@ def double_double_laurent_solve(pols, topdim=-1, \
     (2) factor, to factor the positive dimensional components,
     (3) tasks, is the number of tasks (0 for no multithreading),
     (4) verbose, to write extra information during the decomposition.
+    The list on return contains a witness set for every dimension.
+    If factor, then the last element in the list on return is
+    the string representation of the irreducible factors.
     The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
@@ -311,6 +369,11 @@ def double_double_laurent_solve(pols, topdim=-1, \
     retval = phc(848, pars, bvrb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
+        if factor:
+            print('size of string representation of factors :', bvrb[0])
+    strfactors = ''
+    if factor:
+        strfactors = get_factors(bvrb[0], vrblvl)
     witsols = []
     for soldim in range(topdim+1):
         copy_double_double_laurent_witset(soldim)
@@ -318,6 +381,7 @@ def double_double_laurent_solve(pols, topdim=-1, \
         witpts = get_double_double_solutions(vrblvl-1)
         witset = (witpol, witpts)
         witsols.append(witset)
+    witsols.append(strfactors)
     return witsols
 
 def quad_double_solve(pols, topdim=-1, \
@@ -330,6 +394,9 @@ def quad_double_solve(pols, topdim=-1, \
     (2) factor, to factor the positive dimensional components,
     (3) tasks, is the number of tasks (0 for no multithreading),
     (4) verbose, to write extra information during the decomposition.
+    The list on return contains a witness set for every dimension.
+    If factor, then the last element in the list on return is
+    the string representation of the irreducible factors.
     The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
@@ -358,6 +425,11 @@ def quad_double_solve(pols, topdim=-1, \
     retval = phc(849, pars, bvrb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
+        if factor:
+            print('size of string representation of factors :', bvrb[0])
+    strfactors = ''
+    if factor:
+        strfactors = get_factors(bvrb[0], vrblvl)
     witsols = []
     for soldim in range(topdim+1):
         copy_quad_double_witset(soldim)
@@ -365,6 +437,7 @@ def quad_double_solve(pols, topdim=-1, \
         witpts = get_quad_double_solutions(vrblvl-1)
         witset = (witpol, witpts)
         witsols.append(witset)
+    witsols.append(strfactors)
     return witsols
 
 def quad_double_laurent_solve(pols, topdim=-1, \
@@ -377,6 +450,9 @@ def quad_double_laurent_solve(pols, topdim=-1, \
     (2) factor, to factor the positive dimensional components,
     (3) tasks, is the number of tasks (0 for no multithreading),
     (4) verbose, to write extra information during the decomposition.
+    The list on return contains a witness set for every dimension.
+    If factor, then the last element in the list on return is
+    the string representation of the irreducible factors.
     The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
@@ -405,6 +481,11 @@ def quad_double_laurent_solve(pols, topdim=-1, \
     retval = phc(850, pars, bvrb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
+        if factor:
+            print('size of string representation of factors :', bvrb[0])
+    strfactors = ''
+    if factor:
+        strfactors = get_factors(bvrb[0], vrblvl)
     witsols = []
     for soldim in range(topdim+1):
         copy_quad_double_laurent_witset(soldim)
@@ -412,6 +493,7 @@ def quad_double_laurent_solve(pols, topdim=-1, \
         witpts = get_quad_double_solutions(vrblvl-1)
         witset = (witpol, witpts)
         witsols.append(witset)
+    witsols.append(strfactors)
     return witsols
 
 def solve(pols, topdim=-1, filtsols=True, factor=True, tasks=0, 
@@ -425,6 +507,9 @@ def solve(pols, topdim=-1, filtsols=True, factor=True, tasks=0,
     (3) tasks, is the number of tasks (0 for no multithreading),
     (4) is the precision, by default double,
     (5) verbose, to write extra information during the decomposition.
+    The list on return contains a witness set for every dimension.
+    If factor, then the last element in the list on return is
+    the string representation of the irreducible factors.
     The verbose level is given by vrblvl.
     """
     if vrblvl > 0:
@@ -452,7 +537,7 @@ def write_decomposition(deco, vrblvl=0):
     """
     if vrblvl > 0:
         print('in write_decomposition ...')
-    for (dim, witset) in enumerate(deco):
+    for (dim, witset) in enumerate(deco[:-1]):
         deg = len(witset[1])
         print('set of dimension', dim, 'has degree', deg)
         print('the polynomials :')
@@ -462,6 +547,9 @@ def write_decomposition(deco, vrblvl=0):
         for (idx, sol) in enumerate(witset[1]):
             print('Solution', idx+1, ':')
             print(sol)
+    if deco[-1] != '':
+        print('irreducible factors :')
+        print(deco[-1])
     return 0
 
 def test_double_solve(vrblvl=0):
@@ -477,7 +565,7 @@ def test_double_solve(vrblvl=0):
     sols = double_solve(pols, verbose=False, vrblvl=vrblvl)
     fail = 0
     degs = [4, 12, 1, 1] # degrees of the components
-    for (dim, witset) in enumerate(sols):
+    for (dim, witset) in enumerate(sols[:-1]):
         deg = len(witset[1])
         fail = fail + int(deg != degs[dim])
         print('degree of solution set at dimension', dim, ':', deg)
@@ -495,7 +583,7 @@ def test_double_double_solve(vrblvl=0):
     sols = double_double_solve(pols, verbose=False, vrblvl=vrblvl)
     fail = 0
     degs = [0, 3, 1] # degrees of the components
-    for (dim, witset) in enumerate(sols):
+    for (dim, witset) in enumerate(sols[:-1]):
         deg = len(witset[1])
         fail = fail + int(deg != degs[dim])
         print('degree of solution set at dimension', dim, ':', deg)
@@ -513,7 +601,7 @@ def test_quad_double_solve(vrblvl=0):
     sols = quad_double_solve(pols, verbose=False, vrblvl=vrblvl)
     fail = 0
     degs = [0, 3, 1] # degrees of the components
-    for (dim, witset) in enumerate(sols):
+    for (dim, witset) in enumerate(sols[:-1]):
         deg = len(witset[1])
         fail = fail + int(deg != degs[dim])
         print('degree of solution set at dimension', dim, ':', deg)
@@ -531,7 +619,7 @@ def test_double_laurent_solve(vrblvl=0):
     sols = double_laurent_solve(pols, verbose=False, vrblvl=vrblvl)
     fail = 0
     degs = [0, 3, 1] # degrees of the components
-    for (dim, witset) in enumerate(sols):
+    for (dim, witset) in enumerate(sols[:-1]):
         deg = len(witset[1])
         fail = fail + int(deg != degs[dim])
         print('degree of solution set at dimension', dim, ':', deg)
@@ -549,7 +637,7 @@ def test_double_double_laurent_solve(vrblvl=0):
     sols = double_double_laurent_solve(pols, verbose=False, vrblvl=vrblvl)
     fail = 0
     degs = [0, 3, 1] # degrees of the components
-    for (dim, witset) in enumerate(sols):
+    for (dim, witset) in enumerate(sols[:-1]):
         deg = len(witset[1])
         fail = fail + int(deg != degs[dim])
         print('degree of solution set at dimension', dim, ':', deg)
@@ -567,7 +655,7 @@ def test_quad_double_laurent_solve(vrblvl=0):
     sols = quad_double_laurent_solve(pols, verbose=False, vrblvl=vrblvl)
     fail = 0
     degs = [0, 3, 1] # degrees of the components
-    for (dim, witset) in enumerate(sols):
+    for (dim, witset) in enumerate(sols[:-1]):
         deg = len(witset[1])
         fail = fail + int(deg != degs[dim])
         print('degree of solution set at dimension', dim, ':', deg)
@@ -587,7 +675,7 @@ def test_solve(vrblvl=0):
     write_decomposition(deco)
     fail = 0
     degs = [4, 12, 1, 1] # degrees of the components
-    for (dim, witset) in enumerate(deco):
+    for (dim, witset) in enumerate(deco[:-1]):
         deg = len(witset[1])
         fail = fail + int(deg != degs[dim])
         print('degree of solution set at dimension', dim, ':', deg)
