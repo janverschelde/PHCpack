@@ -12,7 +12,7 @@ function use_c2phc4c ( job : integer32;
 --   Provides a gateway from C to the operations in PHCpack.
 
 -- ON ENTRY :
---   job   =   0 : display the menu of all available options;
+--   job   =   0 : writes the welcome banner.
 --         = 998 : sets the seed of the random number generator,
 --                 on entry in a[0] is the value for the seed;
 --         = 997 : returns the seed of the random number generator in a;

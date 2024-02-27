@@ -1,3 +1,6 @@
+Tue 27 Feb 2024 : in use_c2phc4c, replaced the procedure write_menu 
+  by the procedure write_welcome, which defines the action for job #0.
+
 Tue 20 Feb 2024 : extended irreducible_components_interface, use_witsols,
   and use_c4phc with a function to write the irreducible factor string.
 
