@@ -1,3 +1,6 @@
+Tue 27 Feb 2024 : new file welcome.c to illustrate the linking of the
+  shared object libPHCpack in a C program.
+
 Sun 29 May 2022 : added verbose level to the embed functions in witset.h
   and witset.c, fixed lib_witset.c.  Added "return 0;" to two functions
   in phc_solve.c, for compiler complaints.

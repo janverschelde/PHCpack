@@ -1,4 +1,4 @@
-PHCpack as a library of C functions with a state machine in PHCv2.4.86
+PHCpack as a library of C functions with a state machine in PHCv2.4.90
 
 This directory collects header files and definitions of C which bind the
 operations of PHCpack as a state machine in a systematic manner.
@@ -23,6 +23,8 @@ Files starting with the prefix lib_ are test files.
 
 ------------------------------------------------------------------------------
 file name            : short description
+------------------------------------------------------------------------------
+welcome.c            : illustrates call to use_c2phc of libPHCpack
 ------------------------------------------------------------------------------
 phcpack.h            : prototypes for basic operations in PHCpack
 phcpack.c            : definitions of functions in phcpack.h, use_c2phc
