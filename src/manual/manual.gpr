@@ -1,0 +1,184 @@
+project manual is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    source := "../Ada";
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+            (
+                ".",
+                source & "/System",
+                source & "/System/Unix_Timer",
+                source & "/Math_Lib/Numbers",
+                source & "/Math_Lib/QD",
+                source & "/Math_Lib/Vectors",
+                source & "/Math_Lib/Matrices",
+                source & "/Math_Lib/Reduction",
+                source & "/Math_Lib/Divisors",
+                source & "/Math_Lib/Polynomials",
+                source & "/Math_Lib/Functions",
+                source & "/Math_Lib/Supports",
+                source & "/Math_Lib/Series",
+                source & "/Math_Lib/Circuits",
+                source & "/Math_Lib/Laurent",
+                source & "/Deformations/Solutions",
+                source & "/Deformations/Homotopy",
+                source & "/Deformations/Newton",
+                source & "/Deformations/Curves",
+                source & "/Deformations/End_Games",
+                source & "/Deformations/Trackers",
+                source & "/Deformations/Sweep",
+                source & "/Deformations/Continuation",
+                source & "/Root_Counts/Product",
+                source & "/Root_Counts/Binomials",
+                source & "/Root_Counts/Implift",
+                source & "/Root_Counts/Stalift",
+                source & "/Root_Counts/Dynlift",
+                source & "/Root_Counts/Symmetry",
+                source & "/Root_Counts/MixedVol",
+                source & "/Root_Counts/Puiseux",
+                source & "/Root_Counts/DEMiCs",
+                source & "/Schubert/SAGBI",
+                source & "/Schubert/Pieri",
+                source & "/Schubert/Induction",
+                source & "/Components/Samplers",
+                source & "/Components/Interpolators",
+                source & "/Components/Factorization",
+                source & "/Components/Decomposition",
+                source & "/Components/Solver",
+                source & "/Components/Tropical",
+                source & "/CtoPHC/Types",
+                source & "/CtoPHC/Structures",
+                source & "/CtoPHC/Funky",
+                source & "/CtoPHC/State",
+                source & "/Tasking",
+                source & "/../Feedback"
+            );
+            for Excluded_Source_Files use
+            (
+                "ts_use_syscon.c", "corecount.c", "corecountwindows.c",
+                "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c",
+                "ts_diahom.adb", "ts_elim.adb",
+                "ts_itrack.adb", "ts_ilocal.adb", "ts_inewt.adb",
+                "rewrite_polynomials.ads", "rewrite_polynomials.adb",
+                "ts_rwpoly.adb", "pieri_solver_trf.adb"
+            );
+            for Languages use ("Ada", "C++", "C");
+        when "windows" =>
+            for Source_Dirs use
+            (
+                ".",
+                source & "/System",
+                source & "/System/Basic_Timer",
+                source & "/Math_Lib/Numbers",
+                source & "/Math_Lib/QD",
+                source & "/Math_Lib/Vectors",
+                source & "/Math_Lib/Matrices",
+                source & "/Math_Lib/Reduction",
+                source & "/Math_Lib/Divisors",
+                source & "/Math_Lib/Polynomials",
+                source & "/Math_Lib/Functions",
+                source & "/Math_Lib/Supports",
+                source & "/Math_Lib/Series",
+                source & "/Math_Lib/Circuits",
+                source & "/Math_Lib/Laurent",
+                source & "/Deformations/Solutions",
+                source & "/Deformations/Homotopy",
+                source & "/Deformations/Newton",
+                source & "/Deformations/Curves",
+                source & "/Deformations/End_Games",
+                source & "/Deformations/Trackers",
+                source & "/Deformations/Sweep",
+                source & "/Deformations/Continuation",
+                source & "/Root_Counts/Product",
+                source & "/Root_Counts/Binomials",
+                source & "/Root_Counts/Implift",
+                source & "/Root_Counts/Stalift",
+                source & "/Root_Counts/Dynlift",
+                source & "/Root_Counts/Symmetry",
+                source & "/Root_Counts/MixedVol",
+                source & "/Root_Counts/Puiseux",
+                source & "/Root_Counts/DEMiCs",
+                source & "/Schubert/SAGBI",
+                source & "/Schubert/Pieri",
+                source & "/Schubert/Induction",
+                source & "/Components/Samplers",
+                source & "/Components/Interpolators",
+                source & "/Components/Factorization",
+                source & "/Components/Decomposition",
+                source & "/Components/Solver",
+                source & "/Components/Tropical",
+                source & "/CtoPHC/Types",
+                source & "/CtoPHC/Structures",
+                source & "/CtoPHC/Funky",
+                source & "/CtoPHC/State",
+                source & "/Tasking",
+                source & "/../Feedback"
+            );
+            for Excluded_Source_Files use
+            (
+                "corecount.c",
+                "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c",
+                "ts_diahom.adb", "ts_elim.adb",
+                "ts_itrack.adb", "ts_ilocal.adb", "ts_inewt.adb",
+                "rewrite_polynomials.ads", "rewrite_polynomials.adb",
+                "ts_rwpoly.adb", "pieri_solver_trf.adb"
+            );
+            for Languages use ("Ada", "C", "C++");
+    end case;
+
+    for Object_Dir use "../Objects";
+    for Exec_Dir use "../bin";
+
+    for Main use
+    (
+        "errorfree.adb"  -- illustrates error free transformations
+    );
+
+    package Compiler is
+
+       -- for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+        for Default_Switches ("Ada") use ("-O3", "-gnatv", "-gnatp", "-gnatf");
+
+        for Switches ("use_c2phc.adb") use ("-c");
+
+        for Switches ("simplex.cpp") use 
+        (
+            "-Dcompilewgpp=1", "-Dcompile4phc=1"
+        );
+        for Switches ("mvc.cpp") use
+        (
+            "-Dcompilewgpp=1", "-Dcompile4phc=1"
+        );
+        for Switches ("demicsrun.cpp") use 
+        (
+            "-Dcompilewgpp=1", "-Dcompile4phc"
+        );
+        for Switches ("outputData.cpp") use ("-Dcompilewgpp=1");
+
+    end Compiler;
+
+    package Binder is
+
+        for Switches ("use_c2phc.adb") use ("-n");
+
+        for Switches ("pieri_solver.adb") use ("-n");
+
+    end Binder;
+
+    package Linker is
+
+        for Switches ("main.cpp") use ("-o demics");
+
+    end Linker;
+
+    package Builder is
+
+       for Executable ("phctop.adb") use "phc";
+
+    end Builder;
+
+end manual;

@@ -1,0 +1,17 @@
+Manual to demonstrate the capabilities of PHCv2.4.90
+
+This folder is new in release 2.4.90.
+Its goal is to demonstrate the use of the code from outside the
+internal code folders.
+
+Run "gprbuild manual.gpr" to make the programs.
+On windows, type "gprbuild manual.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean manual.gpr" removes all files created by gprbuild.
+On windows, add the "-Xos=windows" at the end of the gprclean command.
+
+------------------------------------------------------------------------------
+file name                         : short description
+------------------------------------------------------------------------------
+errorfree                         : illustrates error free transformations
+------------------------------------------------------------------------------
