@@ -55,6 +55,7 @@ project manual is
                 source & "/CtoPHC/Funky",
                 source & "/CtoPHC/State",
                 source & "/Tasking",
+                source & "/Main",
                 source & "/../Feedback"
             );
             for Excluded_Source_Files use
@@ -116,6 +117,7 @@ project manual is
                 source & "/CtoPHC/Funky",
                 source & "/CtoPHC/State",
                 source & "/Tasking",
+                source & "/Main",
                 source & "/../Feedback"
             );
             for Excluded_Source_Files use
@@ -135,7 +137,8 @@ project manual is
 
     for Main use
     (
-        "errorfree.adb"  -- illustrates error free transformations
+        "errorfree.adb",  -- illustrates error free transformations
+        "blackbox.adb"  -- the blackbox sover
     );
 
     package Compiler is

@@ -14,4 +14,5 @@ On windows, add the "-Xos=windows" at the end of the gprclean command.
 file name                         : short description
 ------------------------------------------------------------------------------
 errorfree                         : illustrates error free transformations
+blackbox                          : run the blackbox solver
 ------------------------------------------------------------------------------
