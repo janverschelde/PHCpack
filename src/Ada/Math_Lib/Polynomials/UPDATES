@@ -1,6 +1,7 @@
 Sat 2 Mar 2024 : in all top level parse functions of strings into 
   polynomial and Laurent polynomial systems, initialized the symbol table
-  whenever needed, changing all *strings.adb files.
+  whenever needed, changing all *strings.adb files.  Factored tests out 
+  of ts_parse.adb into the new package test_parse_polynomials.
 
 Sat 9 Dec 2023 : new hexadobl_random_polynomials, hexadobl_complex_poly_
   randomizers, test_hexadobl_random_systems; extended random_polynomial_

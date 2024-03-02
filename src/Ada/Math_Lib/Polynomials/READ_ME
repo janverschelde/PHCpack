@@ -275,6 +275,8 @@ dobldobl_complex_hessians         : Hessians in double double precision
 quaddobl_complex_hessians         : Hessians in quad double precision
 ts_hessian                        : test on Hessian matrices
 -------------------------------------------------------------------------------
+test_parse_polynomials            : tests for parsing string to polynomials
+-------------------------------------------------------------------------------
 ts_poly                           : test on polynomials and polynomial systems
 ts_rpol                           : test polynomials with real coefficients
 ts_laurpoly                       : test on Laurent polynomials and systems
@@ -305,6 +307,6 @@ is just a two-dimensional array of polynomials.  To perform algebraic
 manipulations, one should convert to the matrix type of the package matrices
 instantiated with the polynomial ring.
 
-The Laurent polynomials only differ from the usual polynomials by the
-type definition of the exponents and require the instantiation of a field
-for evaluation.
+The Laurent polynomials differ substantially from the usual polynomials:
+(1) by the type definition of the exponents, and 
+(2) require the instantiation of a field for the evaluation.
