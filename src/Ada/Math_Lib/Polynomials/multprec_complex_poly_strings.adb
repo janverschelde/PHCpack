@@ -1030,6 +1030,14 @@ package body Multprec_Complex_Poly_Strings is
         := Standard_Complex_Poly_Strings.Delimiters(n,s);
 
   begin
+   -- This function may be called when the symbol table has not yet
+   -- been initialized and then it should not crash.
+    if Symbol_Table.Number < m then
+      if not Symbol_Table.Empty
+       then Symbol_Table.Clear;
+      end if;
+      Symbol_Table.Init(m);
+    end if;
     res(1) := Parse(m,size,s(s'first..integer(ind(1))));
     for i in 2..integer32(n) loop
       res(i) := Parse(m,size,s(integer(ind(i-1)+1)..integer(ind(i))));
@@ -1043,6 +1051,12 @@ package body Multprec_Complex_Poly_Strings is
     res : Poly_Sys(integer32(s'first)..integer32(s'last));
  
   begin
+    if Symbol_Table.Number < m then -- same comment as other Parse
+      if not Symbol_Table.Empty
+       then Symbol_Table.Clear;
+      end if;
+      Symbol_Table.Init(m);
+    end if;
     for i in s'range loop
       declare
       begin
@@ -1062,6 +1076,12 @@ package body Multprec_Complex_Poly_Strings is
     res : Array_of_Term_Lists(integer32(s'first)..integer32(s'last));
  
   begin
+    if Symbol_Table.Number < m then -- same comment as other Parse
+      if not Symbol_Table.Empty
+       then Symbol_Table.Clear;
+      end if;
+      Symbol_Table.Init(m);
+    end if;
     for i in s'range loop
       declare
       begin
