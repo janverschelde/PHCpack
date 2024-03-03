@@ -34,11 +34,46 @@ package Test_Parse_Polynomials is
   --   parses the string for a polynomial using double double precision
   --   to compute the coefficients.
 
+  procedure Parse_TripDobl_Polynomial;
+
+  -- DESCRIPTION :
+  --   Prompts for a string, the number of variables, and then
+  --   parses the string for a polynomial using triple double precision
+  --   to compute the coefficients.
+
   procedure Parse_QuadDobl_Polynomial;
 
   -- DESCRIPTION :
   --   Prompts for a string, the number of variables, and then
   --   parses the string for a polynomial using quad double precision
+  --   to compute the coefficients.
+
+  procedure Parse_PentDobl_Polynomial;
+
+  -- DESCRIPTION :
+  --   Prompts for a string, the number of variables, and then
+  --   parses the string for a polynomial using penta double precision
+  --   to compute the coefficients.
+
+  procedure Parse_OctoDobl_Polynomial;
+
+  -- DESCRIPTION :
+  --   Prompts for a string, the number of variables, and then
+  --   parses the string for a polynomial using octo double precision
+  --   to compute the coefficients.
+
+  procedure Parse_DecaDobl_Polynomial;
+
+  -- DESCRIPTION :
+  --   Prompts for a string, the number of variables, and then
+  --   parses the string for a polynomial using deca double precision
+  --   to compute the coefficients.
+
+  procedure Parse_HexaDobl_Polynomial;
+
+  -- DESCRIPTION :
+  --   Prompts for a string, the number of variables, and then
+  --   parses the string for a polynomial using hexa double precision
   --   to compute the coefficients.
 
   procedure Parse_Multprec_Polynomial;
@@ -68,6 +103,34 @@ package Test_Parse_Polynomials is
   --   Prompts for a string, the number of variables,
   --   and then parses the string for a Laurent polynomial,
   --   with complex coefficients in quad double precision.
+
+  procedure Parse_PentDobl_Laurent_Polynomial;
+
+  -- DESCRIPTION :
+  --   Prompts for a string, the number of variables,
+  --   and then parses the string for a Laurent polynomial,
+  --   with complex coefficients in penta double precision.
+
+  procedure Parse_OctoDobl_Laurent_Polynomial;
+
+  -- DESCRIPTION :
+  --   Prompts for a string, the number of variables,
+  --   and then parses the string for a Laurent polynomial,
+  --   with complex coefficients in octo double precision.
+
+  procedure Parse_DecaDobl_Laurent_Polynomial;
+
+  -- DESCRIPTION :
+  --   Prompts for a string, the number of variables,
+  --   and then parses the string for a Laurent polynomial,
+  --   with complex coefficients in deca double precision.
+
+  procedure Parse_HexaDobl_Laurent_Polynomial;
+
+  -- DESCRIPTION :
+  --   Prompts for a string, the number of variables,
+  --   and then parses the string for a Laurent polynomial,
+  --   with complex coefficients in hexa double precision.
 
   procedure Parse_Multprec_Laurent_Polynomial;
 
@@ -131,6 +194,14 @@ package Test_Parse_Polynomials is
   --   Reads strings from file, prompts for the size of the numbers,
   --   and parses the strings into a Laurent polynomial system
   --   with complex coefficients in multiprecision.
+
+  function Prompt_for_Precision return character;
+
+  -- DESCRIPTION :
+  --   Returns the character corresponding to double, double double,
+  --   triple double, quad double, penta double, octo double,
+  --   deca double, hexa double or arbitrary multiprecision,
+  --   respectively '0', '1', '2', '3', '4', '5', '6', '7', or '8'.
 
   procedure Main;
 

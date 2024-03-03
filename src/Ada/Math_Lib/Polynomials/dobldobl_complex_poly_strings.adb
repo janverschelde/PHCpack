@@ -4,7 +4,6 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Complex_Poly_Strings;
 with DoblDobl_Complex_Numbers_cv;        use DoblDobl_Complex_Numbers_cv;
-with Multprec_DoblDobl_Convertors;       use Multprec_DoblDobl_Convertors;
 with Multprec_Complex_Polynomials;
 with Multprec_Complex_Term_Lists;
 with Multprec_Complex_Poly_Strings;
@@ -55,11 +54,23 @@ package body DoblDobl_Complex_Poly_Strings is
                     n : in natural32; p,p_last : in out Term_List ) is
 
     q,q_last : Multprec_Complex_Term_Lists.Term_List;
+    first,second : DoblDobl_Complex_Term_Lists.Term_List;
 
   begin
     Multprec_Complex_Poly_Strings.Parse(s,k,n,size,q,q_last);
     p := Multprec_Terms_to_DoblDobl_Complex(q);
     Multprec_Complex_Term_Lists.Clear(q);
+    if DoblDobl_Complex_Term_Lists.Is_Null(p) then
+      p_last := p;
+    else
+      first := p;
+      second := Tail_Of(first);
+      while not Is_Null(second) loop
+        first := second;
+        second := Tail_Of(second);
+      end loop;
+      p_last := first;
+    end if;
   end Parse;
 
   function Parse ( n : natural32; s : string ) return Poly is

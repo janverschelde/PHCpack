@@ -6,13 +6,13 @@ with Symbol_Table;
 with Standard_Complex_Poly_Strings;
 with Multprec_Complex_Laurentials;
 with Multprec_Complex_Laur_Strings;
-with QuadDobl_Polynomial_Convertors;     use QuadDobl_Polynomial_Convertors;
+with TripDobl_Polynomial_Convertors;     use TripDobl_Polynomial_Convertors;
 
-package body QuadDobl_Complex_Laur_Strings is
+package body TripDobl_Complex_Laur_Strings is
 
 -- NOTE : The implementation is a wrapper to Multprec_Complex_Laur_Strings.
 
-  size : constant natural32 := 10;
+  size : constant natural32 := 8;
 
   procedure Parse ( s : in string; k : in out integer;
                     n : in natural32; p : in out Poly ) is
@@ -21,7 +21,7 @@ package body QuadDobl_Complex_Laur_Strings is
 
   begin
     Multprec_Complex_Laur_Strings.Parse(s,k,n,size,q);
-    p := Multprec_Laurential_to_QuadDobl_Complex(q);
+    p := Multprec_Laurential_to_TripDobl_Complex(q);
     Multprec_Complex_Laurentials.Clear(q);
   end Parse;
 
@@ -86,7 +86,7 @@ package body QuadDobl_Complex_Laur_Strings is
     nbtrm : constant natural64 := natural64(Number_of_Terms(p));
     nbvar : constant natural64 := natural64(Number_of_Unknowns(p));
     symsz : constant natural64 := 5;
-    cffsz : constant natural64 := 160;
+    cffsz : constant natural64 := 80;
     bound : constant natural64 := 2**31 - 1;
     res : constant natural64 := nbtrm*nbvar*symsz*cffsz;
 
@@ -100,7 +100,7 @@ package body QuadDobl_Complex_Laur_Strings is
   function Write ( p : Poly ) return string is
 
     q : Multprec_Complex_Laurentials.Poly
-      := QuadDobl_Complex_to_Multprec_Laurential(p);
+      := TripDobl_Complex_to_Multprec_Laurential(p);
     res : constant string := Multprec_Complex_Laur_Strings.Write(q);
 
   begin
@@ -131,4 +131,4 @@ package body QuadDobl_Complex_Laur_Strings is
     return res;
   end Write;
 
-end QuadDobl_Complex_Laur_Strings;
+end TripDobl_Complex_Laur_Strings;

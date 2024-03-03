@@ -25,12 +25,42 @@ with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Laurentials_io;  use DoblDobl_Complex_Laurentials_io;
 with DoblDobl_Complex_Poly_Strings;    use DoblDobl_Complex_Poly_Strings;
 with DoblDobl_Complex_Laur_Strings;    use DoblDobl_Complex_Laur_Strings;
+with TripDobl_Complex_Polynomials;
+with TripDobl_Complex_Polynomials_io;  use TripDobl_Complex_Polynomials_io;
+with TripDobl_Complex_Laurentials;
+with TripDobl_Complex_Laurentials_io;  use TripDobl_Complex_Laurentials_io;
+with TripDobl_Complex_Poly_Strings;    use TripDobl_Complex_Poly_Strings;
+with TripDobl_Complex_Laur_Strings;    use TripDobl_Complex_Laur_Strings;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Polynomials_io;  use QuadDobl_Complex_Polynomials_io;
 with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Laurentials_io;  use QuadDobl_Complex_Laurentials_io;
 with QuadDobl_Complex_Poly_Strings;    use QuadDobl_Complex_Poly_Strings;
 with QuadDobl_Complex_Laur_Strings;    use QuadDobl_Complex_Laur_Strings;
+with PentDobl_Complex_Polynomials;
+with PentDobl_Complex_Polynomials_io;  use PentDobl_Complex_Polynomials_io;
+with PentDobl_Complex_Laurentials;
+with PentDobl_Complex_Laurentials_io;  use PentDobl_Complex_Laurentials_io;
+with PentDobl_Complex_Poly_Strings;    use PentDobl_Complex_Poly_Strings;
+with PentDobl_Complex_Laur_Strings;    use PentDobl_Complex_Laur_Strings;
+with OctoDobl_Complex_Polynomials;
+with OctoDobl_Complex_Polynomials_io;  use OctoDobl_Complex_Polynomials_io;
+with OctoDobl_Complex_Laurentials;
+with OctoDobl_Complex_Laurentials_io;  use OctoDobl_Complex_Laurentials_io;
+with OctoDobl_Complex_Poly_Strings;    use OctoDobl_Complex_Poly_Strings;
+with OctoDobl_Complex_Laur_Strings;    use OctoDobl_Complex_Laur_Strings;
+with DecaDobl_Complex_Polynomials;
+with DecaDobl_Complex_Polynomials_io;  use DecaDobl_Complex_Polynomials_io;
+with DecaDobl_Complex_Laurentials;
+with DecaDobl_Complex_Laurentials_io;  use DecaDobl_Complex_Laurentials_io;
+with DecaDobl_Complex_Poly_Strings;    use DecaDobl_Complex_Poly_Strings;
+with DecaDobl_Complex_Laur_Strings;    use DecaDobl_Complex_Laur_Strings;
+with HexaDobl_Complex_Polynomials;
+with HexaDobl_Complex_Polynomials_io;  use HexaDobl_Complex_Polynomials_io;
+with HexaDobl_Complex_Laurentials;
+with HexaDobl_Complex_Laurentials_io;  use HexaDobl_Complex_Laurentials_io;
+with HexaDobl_Complex_Poly_Strings;    use HexaDobl_Complex_Poly_Strings;
+with HexaDobl_Complex_Laur_Strings;    use HexaDobl_Complex_Laur_Strings;
 with Multprec_Complex_Polynomials;
 with Multprec_Complex_Polynomials_io;  use Multprec_Complex_Polynomials_io;
 with Multprec_Complex_Laurentials;
@@ -125,6 +155,31 @@ package body Test_Parse_Polynomials is
     end;
   end Parse_DoblDobl_Polynomial;
 
+  procedure Parse_TripDobl_Polynomial is
+
+    use TripDobl_Complex_Polynomials;
+
+    n : natural32 := 0;
+    s : constant string := Read_String;
+    p : Poly;
+
+  begin
+    put("-> Your string : "); put_line(s);
+    put("Give the number of variables : "); get(n);
+    Symbol_Table.Init(n);
+    p := Parse(n,s);
+    put_line("The parsed polynomial : "); put(p); new_line;
+    new_line;
+    declare
+      ps : constant string := Write(p);
+      sp : Poly;
+    begin
+      put("The polynomial : "); put(ps); new_line;
+      sp := Parse(n,ps);
+      put("-> After parsing : "); put(sp); new_line;
+    end;
+  end Parse_TripDobl_Polynomial;
+
   procedure Parse_QuadDobl_Polynomial is
 
     use QuadDobl_Complex_Polynomials;
@@ -149,6 +204,106 @@ package body Test_Parse_Polynomials is
       put("-> After parsing : "); put(sp); new_line;
     end;
   end Parse_QuadDobl_Polynomial;
+
+  procedure Parse_PentDobl_Polynomial is
+
+    use PentDobl_Complex_Polynomials;
+
+    n : natural32 := 0;
+    s : constant string := Read_String;
+    p : Poly;
+
+  begin
+    put("-> Your string : "); put_line(s);
+    put("Give the number of variables : "); get(n);
+    Symbol_Table.Init(n);
+    p := Parse(n,s);
+    put_line("The parsed polynomial : "); put(p); new_line;
+    new_line;
+    declare
+      ps : constant string := Write(p);
+      sp : Poly;
+    begin
+      put("The polynomial : "); put(ps); new_line;
+      sp := Parse(n,ps);
+      put("-> After parsing : "); put(sp); new_line;
+    end;
+  end Parse_PentDobl_Polynomial;
+
+  procedure Parse_OctoDobl_Polynomial is
+
+    use OctoDobl_Complex_Polynomials;
+
+    n : natural32 := 0;
+    s : constant string := Read_String;
+    p : Poly;
+
+  begin
+    put("-> Your string : "); put_line(s);
+    put("Give the number of variables : "); get(n);
+    Symbol_Table.Init(n);
+    p := Parse(n,s);
+    put_line("The parsed polynomial : "); put(p); new_line;
+    new_line;
+    declare
+      ps : constant string := Write(p);
+      sp : Poly;
+    begin
+      put("The polynomial : "); put(ps); new_line;
+      sp := Parse(n,ps);
+      put("-> After parsing : "); put(sp); new_line;
+    end;
+  end Parse_OctoDobl_Polynomial;
+
+  procedure Parse_DecaDobl_Polynomial is
+
+    use DecaDobl_Complex_Polynomials;
+
+    n : natural32 := 0;
+    s : constant string := Read_String;
+    p : Poly;
+
+  begin
+    put("-> Your string : "); put_line(s);
+    put("Give the number of variables : "); get(n);
+    Symbol_Table.Init(n);
+    p := Parse(n,s);
+    put_line("The parsed polynomial : "); put(p); new_line;
+    new_line;
+    declare
+      ps : constant string := Write(p);
+      sp : Poly;
+    begin
+      put("The polynomial : "); put(ps); new_line;
+      sp := Parse(n,ps);
+      put("-> After parsing : "); put(sp); new_line;
+    end;
+  end Parse_DecaDobl_Polynomial;
+
+  procedure Parse_HexaDobl_Polynomial is
+
+    use HexaDobl_Complex_Polynomials;
+
+    n : natural32 := 0;
+    s : constant string := Read_String;
+    p : Poly;
+
+  begin
+    put("-> Your string : "); put_line(s);
+    put("Give the number of variables : "); get(n);
+    Symbol_Table.Init(n);
+    p := Parse(n,s);
+    put_line("The parsed polynomial : "); put(p); new_line;
+    new_line;
+    declare
+      ps : constant string := Write(p);
+      sp : Poly;
+    begin
+      put("The polynomial : "); put(ps); new_line;
+      sp := Parse(n,ps);
+      put("-> After parsing : "); put(sp); new_line;
+    end;
+  end Parse_HexaDobl_Polynomial;
 
   procedure Parse_Multprec_Polynomial is
 
@@ -229,6 +384,31 @@ package body Test_Parse_Polynomials is
     end;
   end Parse_DoblDobl_Laurent_Polynomial;
 
+  procedure Parse_TripDobl_Laurent_Polynomial is
+
+    use TripDobl_Complex_Laurentials;
+
+    n : natural32 := 0;
+    s : constant string := Read_String;
+    p : Poly;
+
+  begin
+    put("-> Your string : "); put_line(s);
+    put("Give the number of variables : "); get(n);
+    Symbol_Table.Init(n);
+    p := Parse(n,s);
+    put_line("The parsed polynomial : "); put(p); new_line;
+    new_line;
+    declare
+      ps : constant string := Write(p);
+      sp : Poly;
+    begin
+      put("The polynomial : "); put(ps); new_line;
+      sp := Parse(n,ps);
+      put("-> After parsing : "); put(sp); new_line;
+    end;
+  end Parse_TripDobl_Laurent_Polynomial;
+
   procedure Parse_QuadDobl_Laurent_Polynomial is
 
     use QuadDobl_Complex_Laurentials;
@@ -253,6 +433,106 @@ package body Test_Parse_Polynomials is
       put("-> After parsing : "); put(sp); new_line;
     end;
   end Parse_QuadDobl_Laurent_Polynomial;
+
+  procedure Parse_PentDobl_Laurent_Polynomial is
+
+    use PentDobl_Complex_Laurentials;
+
+    n : natural32 := 0;
+    s : constant string := Read_String;
+    p : Poly;
+
+  begin
+    put("-> Your string : "); put_line(s);
+    put("Give the number of variables : "); get(n);
+    Symbol_Table.Init(n);
+    p := Parse(n,s);
+    put_line("The parsed polynomial : "); put(p); new_line;
+    new_line;
+    declare
+      ps : constant string := Write(p);
+      sp : Poly;
+    begin
+      put("The polynomial : "); put(ps); new_line;
+      sp := Parse(n,ps);
+      put("-> After parsing : "); put(sp); new_line;
+    end;
+  end Parse_PentDobl_Laurent_Polynomial;
+
+  procedure Parse_OctoDobl_Laurent_Polynomial is
+
+    use OctoDobl_Complex_Laurentials;
+
+    n : natural32 := 0;
+    s : constant string := Read_String;
+    p : Poly;
+
+  begin
+    put("-> Your string : "); put_line(s);
+    put("Give the number of variables : "); get(n);
+    Symbol_Table.Init(n);
+    p := Parse(n,s);
+    put_line("The parsed polynomial : "); put(p); new_line;
+    new_line;
+    declare
+      ps : constant string := Write(p);
+      sp : Poly;
+    begin
+      put("The polynomial : "); put(ps); new_line;
+      sp := Parse(n,ps);
+      put("-> After parsing : "); put(sp); new_line;
+    end;
+  end Parse_OctoDobl_Laurent_Polynomial;
+
+  procedure Parse_DecaDobl_Laurent_Polynomial is
+
+    use DecaDobl_Complex_Laurentials;
+
+    n : natural32 := 0;
+    s : constant string := Read_String;
+    p : Poly;
+
+  begin
+    put("-> Your string : "); put_line(s);
+    put("Give the number of variables : "); get(n);
+    Symbol_Table.Init(n);
+    p := Parse(n,s);
+    put_line("The parsed polynomial : "); put(p); new_line;
+    new_line;
+    declare
+      ps : constant string := Write(p);
+      sp : Poly;
+    begin
+      put("The polynomial : "); put(ps); new_line;
+      sp := Parse(n,ps);
+      put("-> After parsing : "); put(sp); new_line;
+    end;
+  end Parse_DecaDobl_Laurent_Polynomial;
+
+  procedure Parse_HexaDobl_Laurent_Polynomial is
+
+    use HexaDobl_Complex_Laurentials;
+
+    n : natural32 := 0;
+    s : constant string := Read_String;
+    p : Poly;
+
+  begin
+    put("-> Your string : "); put_line(s);
+    put("Give the number of variables : "); get(n);
+    Symbol_Table.Init(n);
+    p := Parse(n,s);
+    put_line("The parsed polynomial : "); put(p); new_line;
+    new_line;
+    declare
+      ps : constant string := Write(p);
+      sp : Poly;
+    begin
+      put("The polynomial : "); put(ps); new_line;
+      sp := Parse(n,ps);
+      put("-> After parsing : "); put(sp); new_line;
+    end;
+  end Parse_HexaDobl_Laurent_Polynomial;
 
   procedure Parse_Multprec_Laurent_Polynomial is
 
@@ -427,51 +707,146 @@ package body Test_Parse_Polynomials is
     end;
   end Parse_Multprec_Laurent_Strings_from_File;
 
-  procedure Main is
+  function Prompt_for_Precision return character is
 
-    ans : character;
+    res : character;
 
   begin
     new_line;
-    put_line("Conversion of strings into polynomials, and vice versa.");
+    put_line("MENU for the precision : ");
+    put_line("  0. double precision");
+    put_line("  1. double double precision");
+    put_line("  2. triple double precision");
+    put_line("  3. quad double precision");
+    put_line("  4. penta double precision");
+    put_line("  5. octo double precision");
+    put_line("  6. deca double precision");
+    put_line("  7. hexa double precision");
+    put_line("  8. arbitrary multiprecision");
+    put("Type 0, 1, 2, 3, 4, 5, 6, 7, or 8 to select the precision : ");
+    Ask_Alternative(res,"012345678");
+    return res;
+  end Prompt_for_Precision;
+
+  procedure Main is
+
+    ans,prc : character;
+
+  begin
+    new_line;
+    put_line("Parsing strings for polynomials ...");
+    prc := Prompt_for_Precision;
     new_line;
     put_line("MENU to test parsing : ");
-    put_line("  1. parse a string for a standard hardware number;");
-    put_line("  2. parse a string for a multiprecision number;");
-    put_line("  3. test parsing of one standard common polynomial;");
-    put_line("  4. test parsing of one double double common polynomial;");
-    put_line("  5. test parsing of one quad double common polynomial;");
-    put_line("  6. test parsing of one multiprecision common polynomial;");
-    put_line("  7. test parsing of one Laurent polynomial;");
-    put_line("  8. test parsing of one double double Laurent polynomial;");
-    put_line("  9. test parsing of one quad double Laurent polynomial;");
-    put_line("  A. test parsing of one multiprecision Laurent polynomial;");
-    put_line("  B. parse a polynomial system, given from file;");
-    put_line("  C. parse a string from file into a polynomial system;");
-    put_line("  D. read strings from file, parse standard complex system;");
-    put_line("  E. read strings from file, parse standard Laurent system;");
-    put_line("  F. read strings from file, parse multprec complex system;");
-    put_line("  G. read strings from file, parse multprec Laurent system.");
-    put("Type 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F, or G : ");
-    Ask_Alternative(ans,"123456789ABCDEFG");
-    new_line;
-    case ans is
-      when '1' => Parse_Standard_Number;
-      when '2' => Parse_Multiprecision_Number;
-      when '3' => Parse_Standard_Polynomial;
-      when '4' => Parse_DoblDobl_Polynomial;
-      when '5' => Parse_QuadDobl_Polynomial;
-      when '6' => Parse_Multprec_Polynomial;
-      when '7' => Parse_Standard_Laurent_Polynomial;
-      when '8' => Parse_DoblDobl_Laurent_Polynomial;
-      when '9' => Parse_QuadDobl_Laurent_Polynomial;
-      when 'A' => Parse_Multprec_Laurent_Polynomial;
-      when 'B' => Parse_String_from_System;
-      when 'C' => Parse_String_from_File;
-      when 'D' => Parse_Standard_Complex_Strings_from_File;
-      when 'E' => Parse_Standard_Laurent_Strings_from_File;
-      when 'F' => Parse_Multprec_Complex_Strings_from_File;
-      when 'G' => Parse_Multprec_Laurent_Strings_from_File;
+    case prc is
+      when '0' =>
+        put_line("  1. parse a string for a double number");
+        put_line("  2. parse for one polynomial");
+        put_line("  3. parse for one Laurent polynomial");
+        put_line("  4. parse a system, given from file");
+        put_line("  5. parse a string from file into a system");
+        put_line("  6. read strings from file, parse system");
+        put_line("  7. read strings from file, parse Laurent system");
+        put("Type 1, 2, 3, 4, 5, 6, or 7 : ");
+        Ask_Alternative(ans,"1234567");
+        new_line;
+        case ans is 
+          when '1' => Parse_Standard_Number;
+          when '2' => Parse_Standard_Polynomial;
+          when '3' => Parse_Standard_Laurent_Polynomial;
+          when '4' => Parse_String_from_System;
+          when '5' => Parse_String_from_File;
+          when '6' => Parse_Standard_Complex_Strings_from_File;
+          when '7' => Parse_Standard_Laurent_Strings_from_File;
+          when others => null;
+        end case;
+      when '1' =>
+        put_line("  1. parse for one double double polynomial");
+        put_line("  2. parse for one double double Laurent polynomial");
+        put("Type 1 or 2 : "); Ask_Alternative(ans,"12");
+        new_line;
+        case ans is
+          when '1' => Parse_DoblDobl_Polynomial;
+          when '2' => Parse_DoblDobl_Laurent_Polynomial;
+          when others => null;
+        end case;
+      when '2' => null;
+        put_line("  1. parse for one triple double polynomial");
+        put_line("  2. parse for one triple double Laurent polynomial");
+        put("Type 1 or 2 : "); Ask_Alternative(ans,"12");
+        new_line;
+        case ans is
+          when '1' => Parse_TripDobl_Polynomial;
+          when '2' => Parse_TripDobl_Laurent_Polynomial;
+          when others => null;
+        end case;
+      when '3' => 
+        put_line("  1. parse for one quad double polynomial");
+        put_line("  2. parse for one quad double Laurent polynomial");
+        put("Type 1 or 2 : "); Ask_Alternative(ans,"12");
+        new_line;
+        case ans is
+          when '1' => Parse_QuadDobl_Polynomial;
+          when '2' => Parse_QuadDobl_Laurent_Polynomial;
+          when others => null;
+        end case;
+      when '4' =>
+        put_line("  1. parse for one penta double polynomial");
+        put_line("  2. parse for one penta double Laurent polynomial");
+        put("Type 1 or 2 : "); Ask_Alternative(ans,"12");
+        new_line;
+        case ans is
+          when '1' => Parse_PentDobl_Polynomial;
+          when '2' => Parse_PentDobl_Laurent_Polynomial;
+          when others => null;
+        end case;
+      when '5' =>
+        put_line("  1. parse for one octo double polynomial");
+        put_line("  2. parse for one octo double Laurent polynomial");
+        put("Type 1 or 2 : "); Ask_Alternative(ans,"12");
+        new_line;
+        case ans is
+          when '1' => Parse_OctoDobl_Polynomial;
+          when '2' => Parse_OctoDobl_Laurent_Polynomial;
+          when others => null;
+        end case;
+      when '6' => 
+        put_line("  1. parse for one deca double polynomial");
+        put_line("  2. parse for one deca double Laurent polynomial");
+        put("Type 1 or 2 : "); Ask_Alternative(ans,"12");
+        new_line;
+        case ans is
+          when '1' => Parse_DecaDobl_Polynomial;
+          when '2' => Parse_DecaDobl_Laurent_Polynomial;
+          when others => null;
+        end case;
+      when '7' =>
+        put_line("  1. parse for one hexa double polynomial");
+        put_line("  2. parse for one hexa double Laurent polynomial");
+        put("Type 1 or 2 : "); Ask_Alternative(ans,"12");
+        new_line;
+        case ans is
+          when '1' => Parse_HexaDobl_Polynomial;
+          when '2' => Parse_HexaDobl_Laurent_Polynomial;
+          when others => null;
+        end case;
+      when '8' =>
+        put_line("  1. parse a string for a multiprecision number");
+        put_line("  2. parse for one multiprecision polynomial");
+        put_line("  3. parse for one multiprecision Laurent polynomial");
+        put_line("  4. read strings from file, parse multprec system");
+        put_line("  5. read strings from file, parse multprec Laurent system");
+        put("Type 1, 2, 3, 4, or 5 : ");
+        Ask_Alternative(ans,"12345");
+        new_line;
+        case ans is
+          when '1' => Parse_Multiprecision_Number;
+          when '2' => Parse_Multprec_Polynomial;
+          when '3' => Parse_Multprec_Laurent_Polynomial;
+          when '4' => Parse_Multprec_Complex_Strings_from_File;
+          when '5' => Parse_Multprec_Laurent_Strings_from_File;
+          when others => null;
+        end case;
       when others => null;
     end case;
   end Main;

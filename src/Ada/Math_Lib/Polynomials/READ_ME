@@ -102,6 +102,7 @@ dobldobl_complex_poly_systems_io  : basic output for dd complex poly systems
 dobldobl_complex_jaco_matrices    : Jacobian matrices of double complex
 dobldobl_complex_laurentials      : Laurent polynomials for dd complex
 dobldobl_complex_laurentials_io   : basic output for dd complex Laurentials
+dobldobl_complex_laur_strings     : string representations of dd Laurentials
 dobldobl_complex_laur_systems     : double double Laurent systems
 dobldobl_complex_laur_systems_io  : basic output for dd complex Laur systems
 dobldobl_complex_laur_jacomats    : Jacobians of double double Laurent systems
@@ -130,6 +131,7 @@ quaddobl_complex_poly_systems_io  : basic output for qd complex poly systems
 quaddobl_complex_jaco_matrices    : Jacobian matrices of quad double complex
 quaddobl_complex_laurentials      : Laurent polynomials for qd complex
 quaddobl_complex_laurentials_io   : basic output for qd complex Laurentials
+quaddobl_complex_laur_strings     : string representations of qd Laurentials
 quaddobl_complex_laur_systems     : systems of quad double Laurent polynomials
 quaddobl_complex_laur_systems_io  : basic output for qd complex laur systems
 quaddobl_complex_laur_jacomats    : Jacobians of quad double Laurent systems
@@ -183,6 +185,7 @@ triple_double_polynomials         : polynomials with triple double coeffs
 triple_double_poly_systems        : poly systems with triple double coeffs
 tripdobl_complex_polynomials      : polynomials with tripdobl complex coeffs
 tripdobl_complex_polynomials_io   : i/o for tripdobl complex polynomials
+tripdobl_complex_poly_strings     : string representations of td complex poly
 tripdobl_complex_laurentials      : tripdobl complex Laurent polynomials
 tripdobl_complex_laurentials_io   : i/o for tripdobl complex Laurentials
 tripdobl_complex_poly_systems     : systems of tripdobl complex polynomials
@@ -196,9 +199,11 @@ ts_tdpol                          : main test on tripdobl polynomials
 penta_double_polynomials          : polynomials with penta double coeffs
 penta_double_poly_systems         : poly systems with penta double coeffs
 pentdobl_complex_polynomials      : polynomials with pentdobl complex coeffs
+pentdobl_complex_poly_strings     : string representations of pd complex poly
 pentdobl_complex_polynomials_io   : i/o for pentdobl complex polynomials
 pentdobl_complex_laurentials      : pentdobl complex Laurent polynomials
 pentdobl_complex_lauentials_io    : i/o for pentdobl complex Laurentials
+pentdobl_complex_laur_strings     : string representations of pd Laurentials
 pentdobl_complex_poly_systems     : systems of pentdobl complex polynomials
 pentdobl_complex_poly_systems_io  : i/o for pentdobl complex poly systems
 pentdobl_complex_jaco_matrices    : Jacobian matrices for pentdobl complex
@@ -211,8 +216,10 @@ octo_double_polynomials           : polynomials with octo double coeffs
 octo_double_poly_systems          : poly systems with octo double coeffs
 octodobl_complex_polynomials      : polynomials with octodobl complex coeffs
 octodobl_complex_polynomials_io   : i/o for octodobl complex polynomials
+octodobl_complex_poly_strings     : string representations of od complex poly
 octodobl_complex_laurentials      : octodobl complex Laurent polynomials
 octodobl_complex_laurentials_io   : i/o for octodobl complex Laurentials
+octodobl_complex_laur_strings     : string representations of od Laurentials
 octodobl_complex_poly_systems     : systems of octodobl complex polynomials
 octodobl_complex_poly_systems_io  : basic output for od complex poly systems
 octodobl_complex_jaco_matrices    : Jacobian matrices for octodobl complex
@@ -225,8 +232,10 @@ deca_double_polynomials           : polynomials with deca double coeffs
 deca_double_poly_systems          : poly systems with deca double coeffs
 decadobl_complex_polynomials      : polynomials with decadobl complex coeffs
 decadobl_complex_polynomials_io   : i/o for decadobl complex polynomials
+decadobl_complex_poly_strings     : string representations of da complex poly
 decadobl_complex_laurentials      : decadobl complex Laurent polynomials
 decadobl_complex_laurentials_io   : i/o for decadobl complex Laurentials
+decadobl_complex_laur_strings     : string representations of da Laurentials
 decadobl_complex_poly_systems     : systems of decadobl complex polynomials
 decadobl_complex_poly_systems_io  : basic output for da complex poly systems
 decadobl_complex_jaco_matrices    : Jacobian matrices for decadobl complex
@@ -239,8 +248,10 @@ hexa_double_polynomials           : polynomials with hexa double coeffs
 hexa_double_poly_systems          : poly systems with hexa double coeffs
 hexadobl_complex_polynomials      : polynomials with hexadobl complex coeffs
 hexadobl_complex_polynomials_io   : i/o for hexadobl complex polynomials
+hexadobl_complex_poly_strings     : string representations of hd complex poly
 hexadobl_complex_laurentials      : hexadobl complex Laurent polynomials
 hexadobl_complex_laurentials_io   : i/o for hexadobl complex Laurentials
+hexadobl_complex_laur_strings     : string representations of hd Laurentials
 hexadobl_complex_poly_systems     : systems of hexadobl complex polynomials
 hexadobl_complex_poly_systems_io  : basic output for da complex poly systems
 hexadobl_complex_jaco_matrices    : Jacobian matrices for hexadobl complex

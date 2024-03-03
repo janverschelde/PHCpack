@@ -3,23 +3,23 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Natural_Vectors;
 with Standard_Complex_Poly_Strings;
-with QuadDobl_Complex_Numbers_cv;        use QuadDobl_Complex_Numbers_cv;
+with DecaDobl_Complex_Numbers_cv;        use DecaDobl_Complex_Numbers_cv;
 with Multprec_Complex_Polynomials;
 with Multprec_Complex_Term_Lists;
 with Multprec_Complex_Poly_Strings;
-with QuadDobl_Polynomial_Convertors;     use QuadDobl_Polynomial_Convertors;
+with DecaDobl_Polynomial_Convertors;     use DecaDobl_Polynomial_Convertors;
 
-package body QuadDobl_Complex_Poly_Strings is
+package body DecaDobl_Complex_Poly_Strings is
 
 -- NOTE : The implementation is a wrapper to Multprec_Complex_Poly_Strings.
 
-  size : constant natural32 := 10;
+  size : constant natural32 := 30;
 
-  function Multprec_Terms_to_QuadDobl_Complex
+  function Multprec_Terms_to_DecaDobl_Complex
              ( p : Multprec_Complex_Term_Lists.Term_List )
-             return QuadDobl_Complex_Term_Lists.Term_List is
+             return DecaDobl_Complex_Term_Lists.Term_List is
 
-    res,res_last : QuadDobl_Complex_Term_Lists.Term_List;
+    res,res_last : DecaDobl_Complex_Term_Lists.Term_List;
     tmp : Multprec_Complex_Term_Lists.Term_List := p;
     mpt : Multprec_Complex_Polynomials.Term;
 
@@ -27,17 +27,17 @@ package body QuadDobl_Complex_Poly_Strings is
     while not Multprec_Complex_Term_Lists.Is_Null(tmp) loop
       mpt := Multprec_Complex_Term_Lists.Head_Of(tmp);
       declare
-        ddt : QuadDobl_Complex_Polynomials.Term;
+        ddt : DecaDobl_Complex_Polynomials.Term;
       begin
-        ddt.cf := Multprec_to_QuadDobl_Complex(mpt.cf);
-        ddt.dg := QuadDobl_Complex_Polynomials.Degrees(mpt.dg);
+        ddt.cf := Multprec_to_DecaDobl_Complex(mpt.cf);
+        ddt.dg := DecaDobl_Complex_Polynomials.Degrees(mpt.dg);
         -- the Append makes a copy anyway
-        QuadDobl_Complex_Term_Lists.Append(res,res_last,ddt);
+        DecaDobl_Complex_Term_Lists.Append(res,res_last,ddt);
       end;
       tmp := Multprec_Complex_Term_Lists.Tail_Of(tmp);
     end loop;
     return res;
-  end Multprec_Terms_to_QuadDobl_Complex;
+  end Multprec_Terms_to_DecaDobl_Complex;
 
   procedure Parse ( s : in string; k : in out integer;
                     n : in natural32; p : in out Poly ) is
@@ -46,7 +46,7 @@ package body QuadDobl_Complex_Poly_Strings is
 
   begin
     Multprec_Complex_Poly_Strings.Parse(s,k,n,size,q);
-    p := Multprec_Polynomial_to_QuadDobl_Complex(q);
+    p := Multprec_Polynomial_to_DecaDobl_Complex(q);
     Multprec_Complex_Polynomials.Clear(q);
   end Parse;
 
@@ -54,13 +54,13 @@ package body QuadDobl_Complex_Poly_Strings is
                     n : in natural32; p,p_last : in out Term_List ) is
 
     q,q_last : Multprec_Complex_Term_Lists.Term_List;
-    first,second : QuadDobl_Complex_Term_Lists.Term_List;
+    first,second : DecaDobl_Complex_Term_Lists.Term_List;
 
   begin
     Multprec_Complex_Poly_Strings.Parse(s,k,n,size,q,q_last);
-    p := Multprec_Terms_to_QuadDobl_Complex(q);
+    p := Multprec_Terms_to_DecaDobl_Complex(q);
     Multprec_Complex_Term_Lists.Clear(q);
-    if QuadDobl_Complex_Term_Lists.Is_Null(p) then
+    if DecaDobl_Complex_Term_Lists.Is_Null(p) then
       p_last := p;
     else
       first := p;
@@ -204,7 +204,7 @@ package body QuadDobl_Complex_Poly_Strings is
   function Write ( p : Poly ) return string is
 
     q : Multprec_Complex_Polynomials.Poly
-      := QuadDobl_Complex_to_Multprec_Polynomial(p);
+      := DecaDobl_Complex_to_Multprec_Polynomial(p);
     res : constant string := Multprec_Complex_Poly_Strings.Write(q);
 
   begin
@@ -215,7 +215,7 @@ package body QuadDobl_Complex_Poly_Strings is
   function Write ( p : Poly; s : Array_of_Symbols ) return string is
 
     q : Multprec_Complex_Polynomials.Poly
-      := QuadDobl_Complex_to_Multprec_Polynomial(p);
+      := DecaDobl_Complex_to_Multprec_Polynomial(p);
     res : constant string := Multprec_Complex_Poly_Strings.Write(q,s);
 
   begin
@@ -270,4 +270,4 @@ package body QuadDobl_Complex_Poly_Strings is
     return res;
   end Write;
 
-end QuadDobl_Complex_Poly_Strings;
+end DecaDobl_Complex_Poly_Strings;
