@@ -13,7 +13,7 @@ package body PentDobl_Complex_Poly_Strings is
 
 -- NOTE : The implementation is a wrapper to Multprec_Complex_Poly_Strings.
 
-  size : constant natural32 := 13;
+  size : constant natural32 := 10;
 
   function Multprec_Terms_to_PentDobl_Complex
              ( p : Multprec_Complex_Term_Lists.Term_List )

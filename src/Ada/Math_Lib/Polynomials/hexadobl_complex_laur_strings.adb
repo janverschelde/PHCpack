@@ -12,7 +12,7 @@ package body HexaDobl_Complex_Laur_Strings is
 
 -- NOTE : The implementation is a wrapper to Multprec_Complex_Laur_Strings.
 
-  size : constant natural32 := 40;
+  size : constant natural32 := 32;
 
   procedure Parse ( s : in string; k : in out integer;
                     n : in natural32; p : in out Poly ) is

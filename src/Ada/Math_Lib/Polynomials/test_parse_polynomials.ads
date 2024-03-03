@@ -20,6 +20,48 @@ package Test_Parse_Polynomials is
   --   and then extract the complex number from the string
   --   in the precision of the given size.
 
+  procedure Parse_DoblDobl_Number;
+
+  -- DESCRIPTION :
+  --   Prompts for a string an extracts the complex number
+  --   from the string in double double precision.
+
+  procedure Parse_TripDobl_Number;
+
+  -- DESCRIPTION :
+  --   Prompts for a string an extracts the complex number
+  --   from the string in triple double precision.
+
+  procedure Parse_QuadDobl_Number;
+
+  -- DESCRIPTION :
+  --   Prompts for a string an extracts the complex number
+  --   from the string in quad double precision.
+
+  procedure Parse_PentDobl_Number;
+
+  -- DESCRIPTION :
+  --   Prompts for a string an extracts the complex number
+  --   from the string in penta double precision.
+
+  procedure Parse_OctoDobl_Number;
+
+  -- DESCRIPTION :
+  --   Prompts for a string an extracts the complex number
+  --   from the string in octo double precision.
+
+  procedure Parse_DecaDobl_Number;
+
+  -- DESCRIPTION :
+  --   Prompts for a string an extracts the complex number
+  --   from the string in deca double precision.
+
+  procedure Parse_HexaDobl_Number;
+
+  -- DESCRIPTION :
+  --   Prompts for a string an extracts the complex number
+  --   from the string in hexa double precision.
+
   procedure Parse_Standard_Polynomial;
 
   -- DESCRIPTION :
@@ -202,6 +244,46 @@ package Test_Parse_Polynomials is
   --   triple double, quad double, penta double, octo double,
   --   deca double, hexa double or arbitrary multiprecision,
   --   respectively '0', '1', '2', '3', '4', '5', '6', '7', or '8'.
+
+  procedure Double_Test;
+
+  -- DESCRIPTION :
+  --   Runs the tests in double precision.
+
+  procedure Double_Double_Test;
+
+  -- DESCRIPTION :
+  --   Runs the tests in double double precision.
+
+  procedure Triple_Double_Test;
+
+  -- DESCRIPTION :
+  --   Runs the tests in triple double precision.
+
+  procedure Quad_Double_Test;
+
+  -- DESCRIPTION :
+  --   Runs the tests in quad double precision.
+
+  procedure Penta_Double_Test;
+
+  -- DESCRIPTION :
+  --   Runs the tests in penta double precision.
+
+  procedure Octo_Double_Test;
+
+  -- DESCRIPTION :
+  --   Runs the tests in octo double precision.
+
+  procedure Hexa_Double_Test;
+
+  -- DESCRIPTION :
+  --   Runs the tests in hexa double precision.
+
+  procedure Multiprecision_Test;
+
+  -- DESCRIPTION :
+  --   Runs the tests in multiprecision.
 
   procedure Main;
 

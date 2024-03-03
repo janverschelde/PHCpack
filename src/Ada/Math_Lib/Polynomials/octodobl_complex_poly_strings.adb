@@ -13,7 +13,7 @@ package body OctoDobl_Complex_Poly_Strings is
 
 -- NOTE : The implementation is a wrapper to Multprec_Complex_Poly_Strings.
 
-  size : constant natural32 := 20;
+  size : constant natural32 := 16;
 
   function Multprec_Terms_to_OctoDobl_Complex
              ( p : Multprec_Complex_Term_Lists.Term_List )

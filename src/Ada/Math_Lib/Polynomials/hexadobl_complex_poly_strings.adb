@@ -13,7 +13,7 @@ package body HexaDobl_Complex_Poly_Strings is
 
 -- NOTE : The implementation is a wrapper to Multprec_Complex_Poly_Strings.
 
-  size : constant natural32 := 40;
+  size : constant natural32 := 32;
 
   function Multprec_Terms_to_HexaDobl_Complex
              ( p : Multprec_Complex_Term_Lists.Term_List )

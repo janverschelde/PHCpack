@@ -1,3 +1,7 @@
+Sun 3 Mar 2024 : extended the tests in test_parse_polynomials.
+  Fixed the sizes of the multiprecision numbers
+  in {pent,octo,deca,hexa}dobl_complex_{poly,laur}_strings.adb.
+
 Sat 2 Mar 2024 : in all top level parse functions of strings into 
   polynomial and Laurent polynomial systems, initialized the symbol table
   whenever needed, changing all *strings.adb files.  Factored tests out 
