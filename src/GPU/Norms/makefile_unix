@@ -4,7 +4,7 @@ gpp=/usr/bin/g++
 gcc=/usr/bin/gcc
 CUDA=/usr/local/cuda/include
 CUDALIB=/usr/local/cuda/lib64
-QDsrc=../../Ada/Math_Lib/QD
+QDsrc=../../Ada/Math_Lib/QD/C
 
 # the architecture flag for Tesla C2050
 # smflag=sm_20
