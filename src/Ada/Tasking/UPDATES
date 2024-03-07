@@ -1,3 +1,5 @@
+Thu 7 Mar 2024 : fixed tasking.gpr so it works on windows.
+
 Wed 7 Feb 2024 : fixed tuning of parameters to the default values,
   instead of taking into account the decimal places.
 
