@@ -157,6 +157,11 @@ deca_double_functions.obj:
 	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
              deca_double_functions.cpp /Fo: deca_double_functions.obj /EHsc
 
+hexa_double_functions.obj:
+	@-echo ">>> compiling hexa_double_functions ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
+             hexa_double_functions.cpp /Fo: hexa_double_functions.obj /EHsc
+
 test_double_doubles: double_double.obj double_double_functions.obj \
 	             dbl2_sqrt_kernels.obj
 	@-echo ">>> compiling test_double_doubles ..."
@@ -225,6 +230,18 @@ test_deca_doubles: deca_double_functions.obj double_double_functions.obj \
              double_double_functions.obj deca_double_functions.obj \
 	     quad_double_functions.obj octo_double_functions.obj \
              dbl10_sqrt_kernels.obj test_deca_doubles.obj
+
+test_hexa_doubles: hexa_double_functions.obj double_double_functions.obj \
+	           quad_double_functions.obj octo_double_functions.obj
+	@-echo ">>> compiling test_hexa_doubles ..."
+	$(CL)\cl /c -I$(CUDASDK)/include -I$(QDsrc) -I$(winkitucrt) \
+                    -I$(includepath) -O2 \
+                    test_hexa_doubles.cpp /Fo: test_hexa_doubles.obj /EHsc
+	@-echo ">>> linking test_hexa_doubles ..."
+	nvcc -ccbin=$(CL) -o test_hexa_doubles.exe \
+             double_double_functions.obj hexa_double_functions.obj \
+	     quad_double_functions.obj octo_double_functions.obj \
+             test_hexa_doubles.obj
 
 dbl_norm_host.obj:
 	@-echo ">>> compiling dbl_norm_host ..."

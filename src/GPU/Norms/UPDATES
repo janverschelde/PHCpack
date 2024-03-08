@@ -1,5 +1,6 @@
-Thu 7 Mar 2024 : updated makefile_unix for the change of the C folder
-  into src/Ada/Math_Lib/QD/C.
+Fri 8 Mar 2024 : new hexa_double_functions.h, hexa_double_functions.cpp,
+  and test_hexa_doubles.cpp as a first step to define data staging
+  algorithms for hexa double arithmetic.  Updated makefiles.
 
 Wed 7 Jun 2023 : added makefile_windows2 to compile on RTX 4080 with
   the 2022 Community edition of Microsoft Visual Studio.

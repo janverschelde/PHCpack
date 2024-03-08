@@ -1,4 +1,4 @@
-Accelerated Vector Norm computation in PHCv2.4.90
+Accelerated Vector Norm computation in PHCv2.4.90.
 
 The code in this folder is to experiment with GPU accelerated algorithms
 to compute 2-norms of vectors in multiple double precision.
@@ -30,6 +30,8 @@ deca_double_functions   : deca double precision arithmetic on host
 deca_double_gpufun      : deca double precision arithmetic on device
 dbl10_sqrt_kernels      : sqrt in deca double precision on device
 test_deca_doubles       : a test on deca double_functions
+hexa_double_functions   : hexa double precision arithmetic on host
+test_hexa_doubles       : a test on hexa double_functions
 -----------------------------------------------------------------------------
 random_numbers          : generators of random doubles and random angles
 random_numbers_windows  : specific include for windows MS VC

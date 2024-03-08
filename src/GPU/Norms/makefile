@@ -3,9 +3,9 @@
 # to use the makefile_windows or the makefile_unix,
 # respectively for a Windows or GNU Linux/Unix computer.
 
+MAKEFILE = makefile_windows2
 # MAKEFILE = makefile_windows2
-# MAKEFILE = makefile_windows
-MAKEFILE = makefile_unix
+# MAKEFILE = makefile_unix
 
 test_double_doubles:
 	make -f $(MAKEFILE) test_double_doubles
@@ -24,6 +24,9 @@ test_octo_doubles:
 
 test_deca_doubles:
 	make -f $(MAKEFILE) test_deca_doubles
+
+test_hexa_doubles:
+	make -f $(MAKEFILE) test_hexa_doubles
 
 run_dbl_norm:
 	make -f $(MAKEFILE) run_dbl_norm

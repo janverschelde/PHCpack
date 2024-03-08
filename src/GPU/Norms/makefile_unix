@@ -127,6 +127,10 @@ deca_double_functions.o:
 	@-echo ">>> compiling deca double functions ..."
 	$(gpp) -O3 -c deca_double_functions.cpp
 
+hexa_double_functions.o:
+	@-echo ">>> compiling hexa double functions ..."
+	$(gpp) -O3 -c hexa_double_functions.cpp
+
 test_double_doubles: double_double.o double_double_functions.o \
                      dbl2_sqrt_kernels.o
 	@-echo ">>> compiling test_double_doubles ..."
@@ -184,6 +188,16 @@ test_deca_doubles: deca_double_functions.o double_double_functions.o \
                   quad_double_functions.o octo_double_functions.o \
                   deca_double_functions.o dbl10_sqrt_kernels.o \
                   test_deca_doubles.o -lcuda -lcudart -L$(CUDALIB)
+
+test_hexa_doubles: hexa_double_functions.o double_double_functions.o \
+                   quad_double_functions.o octo_double_functions.o 
+	@-echo ">>> compiling test_hexa_doubles ..."
+	$(gpp) -c -I$(QDsrc) test_hexa_doubles.cpp
+	@-echo ">>> linking test_hexa_doubles ..."
+	$(gpp) -o test_hexa_doubles double_double_functions.o \
+                  quad_double_functions.o octo_double_functions.o \
+                  hexa_double_functions.o \
+                  test_hexa_doubles.o
 
 random_numbers.o:
 	@-echo ">>> compiling random number generators ..."
@@ -734,3 +748,5 @@ clean:
 	/bin/rm -f -r test_dbl10_norm.o test_dbl10_norm
 	/bin/rm -f -r cmplx10_norm_host.o cmplx10_norm_kernels.o
 	/bin/rm -f -r test_cmplx10_norm.o test_cmplx10_norm 
+	/bin/rm -f -r hexa_double_functions.o
+	/bin/rm -f -r test_hexa_doubles.o test_hexa_doubles
