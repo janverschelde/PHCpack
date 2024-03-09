@@ -108,9 +108,9 @@ int main ( void )
       cout << "  error : " << err << endl; 
 
       if(err < 1.0e-240)
-         cout << "GPU test on octo doubles passed." << endl;
+         cout << "GPU test on hexa doubles passed." << endl;
       else
-         cout << "GPU test on octo doubles failed!" << endl;
+         cout << "GPU test on hexa doubles failed!" << endl;
 
    }
    return 0;
