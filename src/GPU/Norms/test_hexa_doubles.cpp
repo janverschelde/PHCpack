@@ -5,7 +5,9 @@
 #include <iomanip>
 #include <cstdlib>
 #include <cmath>
+#include <vector_types.h>
 #include "hexa_double_functions.h"
+#include "dbl16_sqrt_kernels.h"
 
 using namespace std;
 
@@ -44,6 +46,22 @@ int main ( void )
    double twolohilolo_h = 0.0;
    double twohilololo_h = 0.0;
    double twololololo_h = 0.0;
+   double twohihihihi_d = 2.0;
+   double twolohihihi_d = 0.0;
+   double twohilohihi_d = 0.0;
+   double twololohihi_d = 0.0;
+   double twohihilohi_d = 0.0;
+   double twolohilohi_d = 0.0;
+   double twohilolohi_d = 0.0;
+   double twolololohi_d = 0.0;
+   double twohihihilo_d = 0.0;
+   double twolohihilo_d = 0.0;
+   double twohilohilo_d = 0.0;
+   double twololohilo_d = 0.0;
+   double twohihilolo_d = 0.0;
+   double twolohilolo_d = 0.0;
+   double twohilololo_d = 0.0;
+   double twololololo_d = 0.0;
 
    int fail;
 
@@ -55,8 +73,46 @@ int main ( void )
    if(fail != 0)
       cout << "Test failed!" << endl;
    else
+   {
       cout << "Test passed." << endl;
 
+      GPU_dbl16_sqrt
+         (&twohihihihi_d,&twolohihihi_d,&twohilohihi_d,&twololohihi_d,
+          &twohihilohi_d,&twolohilohi_d,&twohilolohi_d,&twolololohi_d,
+          &twohihihilo_d,&twolohihilo_d,&twohilohilo_d,&twololohilo_d,
+          &twohihilolo_d,&twolohilolo_d,&twohilololo_d,&twololololo_d,max);
+
+      cout << "GPU computed sqrt :" << endl;
+      hdf_write_doubles
+         (twohihihihi_d,twolohihihi_d,twohilohihi_d,twololohihi_d,
+          twohihilohi_d,twolohilohi_d,twohilolohi_d,twolololohi_d,
+          twohihihilo_d,twolohihilo_d,twohilohilo_d,twololohilo_d,
+          twohihilolo_d,twolohilolo_d,twohilololo_d,twololololo_d);
+
+      double err = abs(twohihihihi_h - twohihihihi_d)
+                 + abs(twolohihihi_h - twolohihihi_d)
+                 + abs(twohilohihi_h - twohilohihi_d)
+                 + abs(twololohihi_h - twololohihi_d)
+                 + abs(twohihilohi_h - twohihilohi_d)
+                 + abs(twolohilohi_h - twolohilohi_d)
+                 + abs(twohilolohi_h - twohilolohi_d)
+                 + abs(twolololohi_h - twolololohi_d)
+                 + abs(twohihihilo_h - twohihihilo_d)
+                 + abs(twolohihilo_h - twolohihilo_d)
+                 + abs(twohilohilo_h - twohilohilo_d)
+                 + abs(twololohilo_h - twololohilo_d)
+                 + abs(twohihilolo_h - twohihilolo_d)
+                 + abs(twolohilolo_h - twolohilolo_d)
+                 + abs(twohilololo_h - twohilololo_d)
+                 + abs(twololololo_h - twololololo_d);
+      cout << "  error : " << err << endl; 
+
+      if(err < 1.0e-240)
+         cout << "GPU test on octo doubles passed." << endl;
+      else
+         cout << "GPU test on octo doubles failed!" << endl;
+
+   }
    return 0;
 }
 

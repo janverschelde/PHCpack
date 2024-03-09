@@ -1,3 +1,7 @@
+Sat 9 Mar 2024 : new hexa_double_gpufun.h with stubs provided in
+  hexa_double_gpufun.cu, dbl16_sqrt_kernels.cu, extended
+  test_hexa_doubles.cpp, updated makefiles.
+
 Fri 8 Mar 2024 : new hexa_double_functions.h, hexa_double_functions.cpp,
   and test_hexa_doubles.cpp as a first step to define data staging
   algorithms for hexa double arithmetic.  Updated makefiles.

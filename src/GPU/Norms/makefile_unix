@@ -13,7 +13,9 @@ QDsrc=../../Ada/Math_Lib/QD/C
 # the architecture flag for Pascal P100
 # smflag=sm_60
 # the architecture flag for Volta V100
-smflag=sm_70
+# smflag=sm_70
+# the architecture flag for RTX 4080
+smflag=sm_89
 
 double_double_gpufun.o:
 	@-echo ">>> compiling double double gpu functions ..."
@@ -42,6 +44,10 @@ dbl8_sqrt_kernels.o:
 dbl10_sqrt_kernels.o:
 	@-echo ">>> compiling sqrt kernels for deca doubles ..."
 	nvcc -ccbin=$(gcc) -arch=$(smflag) -c dbl10_sqrt_kernels.cu
+
+dbl16_sqrt_kernels.o:
+	@-echo ">>> compiling sqrt kernels for hexa doubles ..."
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c dbl16_sqrt_kernels.cu
 
 dbl_norm_kernels.o:
 	@-echo ">>> compiling vector norm kernels for doubles ..."
@@ -139,7 +145,7 @@ test_double_doubles: double_double.o double_double_functions.o \
 	$(gpp) -o test_double_doubles \
                   double_double.o double_double_functions.o \
                   test_double_doubles.o dbl2_sqrt_kernels.o \
-               -lcuda -lcudart -L$(CUDALIB)
+		  -lcudart -L$(CUDALIB)
 
 test_triple_doubles: triple_double_functions.o double_double_functions.o \
                      dbl3_sqrt_kernels.o
@@ -148,7 +154,7 @@ test_triple_doubles: triple_double_functions.o double_double_functions.o \
 	@-echo ">>> linking test_triple_doubles ..."
 	$(gpp) -o test_triple_doubles double_double_functions.o \
                   triple_double_functions.o dbl3_sqrt_kernels.o \
-                  test_triple_doubles.o -lcuda -lcudart -L$(CUDALIB)
+                  test_triple_doubles.o -lcudart -L$(CUDALIB)
 
 test_quad_doubles: quad_double_functions.o double_double_functions.o \
                    dbl4_sqrt_kernels.o
@@ -157,7 +163,7 @@ test_quad_doubles: quad_double_functions.o double_double_functions.o \
 	@-echo ">>> linking test_quad_doubles ..."
 	$(gpp) -o test_quad_doubles double_double_functions.o \
                   quad_double_functions.o dbl4_sqrt_kernels.o \
-                  test_quad_doubles.o -lcuda -lcudart -L$(CUDALIB)
+                  test_quad_doubles.o -lcudart -L$(CUDALIB)
 
 test_penta_doubles: penta_double_functions.o double_double_functions.o \
                     dbl5_sqrt_kernels.o
@@ -166,7 +172,7 @@ test_penta_doubles: penta_double_functions.o double_double_functions.o \
 	@-echo ">>> linking test_penta_doubles ..."
 	$(gpp) -o test_penta_doubles double_double_functions.o \
                   penta_double_functions.o dbl5_sqrt_kernels.o \
-                  test_penta_doubles.o -lcuda -lcudart -L$(CUDALIB)
+                  test_penta_doubles.o -lcudart -L$(CUDALIB)
 
 test_octo_doubles: octo_double_functions.o double_double_functions.o \
                    quad_double_functions.o dbl8_sqrt_kernels.o
@@ -176,7 +182,7 @@ test_octo_doubles: octo_double_functions.o double_double_functions.o \
 	$(gpp) -o test_octo_doubles double_double_functions.o \
                   quad_double_functions.o octo_double_functions.o \
                   test_octo_doubles.o dbl8_sqrt_kernels.o \
-               -lcuda -lcudart -L$(CUDALIB)
+               -lcudart -L$(CUDALIB)
 
 test_deca_doubles: deca_double_functions.o double_double_functions.o \
                    quad_double_functions.o octo_double_functions.o \
@@ -187,17 +193,18 @@ test_deca_doubles: deca_double_functions.o double_double_functions.o \
 	$(gpp) -o test_deca_doubles double_double_functions.o \
                   quad_double_functions.o octo_double_functions.o \
                   deca_double_functions.o dbl10_sqrt_kernels.o \
-                  test_deca_doubles.o -lcuda -lcudart -L$(CUDALIB)
+                  test_deca_doubles.o -lcudart -L$(CUDALIB)
 
 test_hexa_doubles: hexa_double_functions.o double_double_functions.o \
-                   quad_double_functions.o octo_double_functions.o 
+                   quad_double_functions.o octo_double_functions.o \
+                   dbl16_sqrt_kernels.o
 	@-echo ">>> compiling test_hexa_doubles ..."
-	$(gpp) -c -I$(QDsrc) test_hexa_doubles.cpp
+	$(gpp) -c -I$(QDsrc) -I$(CUDA) test_hexa_doubles.cpp
 	@-echo ">>> linking test_hexa_doubles ..."
 	$(gpp) -o test_hexa_doubles double_double_functions.o \
                   quad_double_functions.o octo_double_functions.o \
-                  hexa_double_functions.o \
-                  test_hexa_doubles.o
+                  hexa_double_functions.o dbl16_sqrt_kernels.o \
+                  test_hexa_doubles.o -lcudart -L$(CUDALIB)
 
 random_numbers.o:
 	@-echo ">>> compiling random number generators ..."
@@ -699,6 +706,8 @@ clean:
 	/bin/rm -f -r test_octo_doubles.o test_octo_doubles
 	/bin/rm -f -r deca_double_functions.o dbl10_sqrt_kernels.o
 	/bin/rm -f -r test_deca_doubles.o test_deca_doubles
+	/bin/rm -f -r hexa_double_functions.o dbl16_sqrt_kernels.o
+	/bin/rm -f -r test_hexa_doubles.o test_hexa_doubles
 	/bin/rm -f -r parse_run_arguments.o 
 	/bin/rm -f -r random_numbers.o 
 	/bin/rm -f -r random_vectors.o random2_vectors.o
@@ -748,5 +757,3 @@ clean:
 	/bin/rm -f -r test_dbl10_norm.o test_dbl10_norm
 	/bin/rm -f -r cmplx10_norm_host.o cmplx10_norm_kernels.o
 	/bin/rm -f -r test_cmplx10_norm.o test_cmplx10_norm 
-	/bin/rm -f -r hexa_double_functions.o
-	/bin/rm -f -r test_hexa_doubles.o test_hexa_doubles

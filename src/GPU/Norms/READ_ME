@@ -31,6 +31,8 @@ deca_double_gpufun      : deca double precision arithmetic on device
 dbl10_sqrt_kernels      : sqrt in deca double precision on device
 test_deca_doubles       : a test on deca double_functions
 hexa_double_functions   : hexa double precision arithmetic on host
+hexa_double_gpufun      : hexa double precision arithmetic on device
+dbl16_sqrt_kernels      : sqrt in hexa double precision on device
 test_hexa_doubles       : a test on hexa double_functions
 -----------------------------------------------------------------------------
 random_numbers          : generators of random doubles and random angles
