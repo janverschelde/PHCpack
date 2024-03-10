@@ -6368,20 +6368,21 @@ void hdf_write_doubles
    double a_hihilolo, double a_lohilolo,
    double a_hilololo, double a_lolololo )
 {
-   printf("  hihihihi = %21.14e",  a_hihihihi);
-   printf("  lohihihi = %21.14e\n",a_lohihihi);
-   printf("  hilohihi = %21.14e",  a_hilohihi);
-   printf("  lolohihi = %21.14e\n",a_lolohihi);
-   printf("  hihilohi = %21.14e",  a_hihilohi);
-   printf("  lohilohi = %21.14e\n",a_lohilohi);
-   printf("  hilolohi = %21.14e",  a_hilolohi);
-   printf("  lololohi = %21.14e\n",a_lololohi);
-   printf("  hihihilo = %21.14e",  a_hihihilo);
-   printf("  lohihilo = %21.14e\n",a_lohihilo);
-   printf("  hilohilo = %21.14e",  a_hilohilo);
-   printf("  lolohilo = %21.14e\n",a_lolohilo);
-   printf("  hihilolo = %21.14e",  a_hihilolo);
-   printf("  lohilolo = %21.14e\n",a_lohilolo);
-   printf("  hilololo = %21.14e",  a_hilololo);
-   printf("  lolololo = %21.14e\n",a_lolololo);
+   std::cout << std::scientific << std::setprecision(16);
+   std::cout << "  hihihihi : " << a_hihihihi;
+   std::cout << "  lohihihi : " << a_lohihihi << std::endl;
+   std::cout << "  hilohihi : " << a_hilohihi;
+   std::cout << "  lolohihi : " << a_lolohihi << std::endl;
+   std::cout << "  hihilohi : " << a_hihilohi;
+   std::cout << "  lohilohi : " << a_lohilohi << std::endl;
+   std::cout << "  hilolohi : " << a_hilolohi;
+   std::cout << "  lololohi : " << a_lololohi << std::endl;
+   std::cout << "  hihihilo : " << a_hihihilo;
+   std::cout << "  lohihilo : " << a_lohihilo << std::endl;
+   std::cout << "  hilohilo : " << a_hilohilo;
+   std::cout << "  lolohilo : " << a_lolohilo << std::endl;
+   std::cout << "  hihilolo : " << a_hihilolo;
+   std::cout << "  lohilolo : " << a_lohilolo << std::endl;
+   std::cout << "  hilololo : " << a_hilololo;
+   std::cout << "  lolololo : " << a_lolololo << std::endl;
 }

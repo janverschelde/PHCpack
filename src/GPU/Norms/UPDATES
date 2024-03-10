@@ -1,3 +1,5 @@
+Sun 10 Mar 2024 : fixed output in hexa_double_functions.cpp.
+
 Sat 9 Mar 2024 : new hexa_double_gpufun.h with stubs provided in
   hexa_double_gpufun.cu, dbl16_sqrt_kernels.cu, extended
   test_hexa_doubles.cpp, updated makefiles.
