@@ -1860,7 +1860,7 @@ def symbolic_pade_approximant(cff):
     (nuq, deq) = cff
     num = ['+' + str(nuq[k]) + (f"*t**{k}") for k in range(len(nuq))]
     numerator = ''.join(num)
-    den = ['+' + str(nuq[k]) + (f"*t**{k}") for k in range(len(deq))]
+    den = ['+' + str(deq[k]) + (f"*t**{k}") for k in range(len(deq))]
     denominator = ''.join(den)
     result = '(' + numerator + ')/(' + denominator + ')'
     return result
