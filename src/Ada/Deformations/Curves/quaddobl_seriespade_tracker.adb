@@ -49,7 +49,8 @@ package body QuadDobl_SeriesPade_Tracker is
   jm : QuadDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
   hs : QuadDobl_Complex_Hessians.Link_to_Array_of_Hessians;
   current_poles : QuadDobl_Complex_VecVecs.Link_to_VecVec;
-  current : Link_to_Solution;
+  predicted : Link_to_Solution; -- predicted solution
+  current : Link_to_Solution;   -- current solution
   current_servec : QuadDobl_Complex_Series_Vectors.Link_to_Vector;
   current_padvec : QuadDobl_Pade_Approximants.Link_to_Pade_Vector;
   current_frp,solnrm,eta : quad_double;
@@ -150,12 +151,14 @@ package body QuadDobl_SeriesPade_Tracker is
     end if;
     if not homcoord then
       current := s;
+      predicted := new Solution'(s.all);
     else
       declare
         p1s : constant Solution(s.n+1)
             := Projective_Transformations.Projective_Transformation(s.all);
       begin
         current := new Solution'(p1s);
+        predicted := new Solution'(p1s);
       end;
     end if;
     QuadDobl_CSeries_Poly_Systems.Clear(htp);
@@ -305,6 +308,9 @@ package body QuadDobl_SeriesPade_Tracker is
       end if;
     end loop;
     dd_t := Quad_Double_Numbers.Create(t);
+    predicted.t := QuadDobl_Complex_Numbers.Create(dd_t);
+    predicted.v := sol;
+    predicted.res := Quad_Double_Numbers.Create(predres);
     current.t := QuadDobl_Complex_Numbers.Create(dd_t);
     current.v := sol;
   end Predictor_Feedback_Loop;
@@ -388,6 +394,11 @@ package body QuadDobl_SeriesPade_Tracker is
     return current;
   end Get_Current_Solution;
 
+  function Get_Predicted_Solution return Link_to_Solution is
+  begin
+    return predicted;
+  end Get_Predicted_Solution;
+
   function Get_Current_Series_Vector
     return QuadDobl_Complex_Series_Vectors.Link_to_Vector is
   begin
@@ -458,6 +469,7 @@ package body QuadDobl_SeriesPade_Tracker is
     QuadDobl_Complex_VecVecs.Deep_Clear(current_poles);
     QuadDobl_Complex_Series_Vectors.Clear(current_servec);
     QuadDobl_Pade_Approximants.Clear(current_padvec);
+    QuadDobl_Complex_Solutions.Clear(predicted);
   end Clear;
 
 end QuadDobl_SeriesPade_Tracker;

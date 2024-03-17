@@ -1,3 +1,7 @@
+Sun 17 Mar 2024 : extended {standard,dobldobl,quaddobl}_seriespade_tracker
+  with a function to return the predicted solution.  Updated the
+  interactive_path_trackers.adb to print the predicted solution.
+
 Thu 7 Dec 2023 : new hexadobl_newton_convolution_steps and
   test_hexadobl_newtconvsteps, extended ts_sernewcnv.adb.
   New hexadobl_fabry_on_homotopy and hexadobl_homotopy_convolutions_io;

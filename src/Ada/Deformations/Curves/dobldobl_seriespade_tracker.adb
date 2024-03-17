@@ -49,7 +49,8 @@ package body DoblDobl_SeriesPade_Tracker is
   jm : DoblDobl_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
   hs : DoblDobl_Complex_Hessians.Link_to_Array_of_Hessians;
   current_poles : DoblDobl_Complex_VecVecs.Link_to_VecVec;
-  current : Link_to_Solution;
+  predicted : Link_to_Solution; -- predicted solution
+  current : Link_to_Solution;   -- current solution
   current_servec : DoblDobl_Complex_Series_Vectors.Link_to_Vector;
   current_padvec : DoblDobl_Pade_Approximants.Link_to_Pade_Vector;
   current_frp,solnrm,eta : double_double;
@@ -150,12 +151,14 @@ package body DoblDobl_SeriesPade_Tracker is
     end if;
     if not homcoord then
       current := s;
+      predicted := new Solution'(s.all);
     else
       declare
         p1s : constant Solution(s.n+1)
             := Projective_Transformations.Projective_Transformation(s.all);
       begin
         current := new Solution'(p1s);
+        predicted := new Solution'(p1s);
       end;
     end if;
     DoblDobl_CSeries_Poly_Systems.Clear(htp);
@@ -304,6 +307,9 @@ package body DoblDobl_SeriesPade_Tracker is
       end if;
     end loop;
     dd_t := Double_Double_Numbers.Create(t);
+    predicted.t := DoblDobl_Complex_Numbers.Create(dd_t);
+    predicted.v := sol;
+    predicted.res := Double_Double_Numbers.Create(predres);
     current.t := DoblDobl_Complex_Numbers.Create(dd_t);
     current.v := sol;
   end Predictor_Feedback_Loop;
@@ -387,6 +393,11 @@ package body DoblDobl_SeriesPade_Tracker is
     return current;
   end Get_Current_Solution;
 
+  function Get_Predicted_Solution return Link_to_Solution is
+  begin
+    return predicted;
+  end Get_Predicted_Solution;
+
   function Get_Current_Series_Vector
     return DoblDobl_Complex_Series_Vectors.Link_to_Vector is
   begin
@@ -457,6 +468,7 @@ package body DoblDobl_SeriesPade_Tracker is
     DoblDobl_Complex_VecVecs.Deep_Clear(current_poles);
     DoblDobl_Complex_Series_Vectors.Clear(current_servec);
     DoblDobl_Pade_Approximants.Clear(current_padvec);
+    DoblDobl_Complex_Solutions.Clear(predicted);
   end Clear;
 
 end DoblDobl_SeriesPade_Tracker;

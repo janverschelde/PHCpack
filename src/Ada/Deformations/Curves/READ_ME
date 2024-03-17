@@ -1,4 +1,4 @@
-Univariate solvers and algebraic curves in PHCpack version 2.4.87
+Univariate solvers and algebraic curves in PHCpack version 2.4.90
 
 The numerical treatment of plane algebraic curves needs the solution of
 polynomial equations in one variable.  To solve univariate polynomials,
@@ -120,6 +120,7 @@ quaddobl_homotopy_convolutions_io : prompts for quaddobl homotopy convolutions
 pentdobl_homotopy_convolutions_io : prompts for pentdobl homotopy convolutions
 octodobl_homotopy_convolutions_io : prompts for octodobl homotopy convolutions
 decadobl_homotopy_convolutions_io : prompts for decadobl homotopy convolutions
+hexadobl_homotopy_convolutions_io : prompts for hexadobl homotopy convolutions
 fabry_on_homotopy_helpers         : helpers for convergence radius packages
 standard_fabry_on_homotopy        : convergence radius with doubles
 dobldobl_fabry_on_homotopy        : convergence radius with double doubles
@@ -128,6 +129,7 @@ quaddobl_fabry_on_homotopy        : convergence radius with quad doubles
 pentdobl_fabry_on_homotopy        : convergence radius with penta doubles
 octodobl_fabry_on_homotopy        : convergence radius with octo doubles
 decadobl_fabry_on_homotopy        : convergence radius with deca doubles
+hexadobl_fabry_on_homotopy        : convergence radius with hexa doubles
 ts_fabryhom                       : tests Newton-Fabry on a homotopy
 -----------------------------------------------------------------------------
 singular_values_of_hessians       : wraps SVD for the Hessian criterion

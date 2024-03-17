@@ -45,7 +45,8 @@ package body Standard_SeriesPade_Tracker is
   jm : Standard_Complex_Jaco_Matrices.Link_to_Jaco_Mat;
   hs : Standard_Complex_Hessians.Link_to_Array_of_Hessians;
   current_poles : Standard_Complex_VecVecs.Link_to_VecVec;
-  current : Link_to_Solution;
+  predicted : Link_to_Solution; -- predicted solution
+  current : Link_to_Solution;   -- current solution
   current_servec : Standard_Complex_Series_Vectors.Link_to_Vector;
   current_padvec : Standard_Pade_Approximants.Link_to_Pade_Vector;
   current_frp,solnrm,eta : double_float;
@@ -143,12 +144,14 @@ package body Standard_SeriesPade_Tracker is
     end if;
     if not homcoord then
       current := s;
+      predicted := new Solution'(s.all);
     else
       declare
         p1s : constant Solution(s.n+1)
             := Projective_Transformations.Projective_Transformation(s.all);
       begin
         current := new Solution'(p1s);
+        predicted := new Solution'(p1s);
       end;
     end if;
     Standard_CSeries_Poly_Systems.Clear(htp);
@@ -291,6 +294,9 @@ package body Standard_SeriesPade_Tracker is
        then fail := true; exit;
       end if;
     end loop;
+    predicted.t := Standard_Complex_Numbers.Create(t);
+    predicted.v := sol;
+    predicted.res := predres;
     current.t := Standard_Complex_Numbers.Create(t);
     current.v := sol;
   end Predictor_Feedback_Loop;
@@ -358,6 +364,11 @@ package body Standard_SeriesPade_Tracker is
   begin
     return current;
   end Get_Current_Solution;
+
+  function Get_Predicted_Solution return Link_to_Solution is
+  begin
+    return predicted;
+  end Get_Predicted_Solution;
 
   function Get_Current_Series_Vector
     return Standard_Complex_Series_Vectors.Link_to_Vector is
@@ -432,6 +443,7 @@ package body Standard_SeriesPade_Tracker is
     Standard_Complex_VecVecs.Deep_Clear(current_poles);
     Standard_Complex_Series_Vectors.Clear(current_servec);
     Standard_Pade_Approximants.Clear(current_padvec);
+    Standard_Complex_Solutions.Clear(predicted);
   end Clear;
 
 end Standard_SeriesPade_Tracker;

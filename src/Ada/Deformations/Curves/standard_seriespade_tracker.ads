@@ -115,6 +115,11 @@ package Standard_SeriesPade_Tracker is
   -- DESCRIPTION :
   --   Returns the current solution.
 
+  function Get_Predicted_Solution return Link_to_Solution;
+
+  -- DESCRIPTION :
+  --   Returns the predicted solution.
+
   function Get_Current_Series_Vector
     return Standard_Complex_Series_Vectors.Link_to_Vector;
 

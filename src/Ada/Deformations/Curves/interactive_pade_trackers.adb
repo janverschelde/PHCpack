@@ -61,6 +61,9 @@ package body Interactive_Pade_Trackers is
           put(Standard_SeriesPade_Tracker.Get_Current_Hessian_Step,2);
           new_line;
           if verbose then
+            put_line("The predicted solution : ");
+            ls := Standard_SeriesPade_Tracker.Get_Predicted_Solution;
+            Standard_Complex_Solutions_io.put(ls.all); new_line;
             put_line("The solution : ");
             ls := Standard_SeriesPade_Tracker.Get_Current_Solution;
             Standard_Complex_Solutions_io.put(ls.all); new_line;
@@ -114,6 +117,9 @@ package body Interactive_Pade_Trackers is
           put(DoblDobl_SeriesPade_Tracker.Get_Current_Hessian_Step,2);
           new_line;
           if verbose then
+            put_line("The predicted solution : ");
+            ls := DoblDobl_SeriesPade_Tracker.Get_Predicted_Solution;
+            DoblDobl_Complex_Solutions_io.put(ls.all); new_line;
             put_line("The solution : ");
             ls := DoblDobl_SeriesPade_Tracker.Get_Current_Solution;
             DoblDobl_Complex_Solutions_io.put(ls.all); new_line;
@@ -283,10 +289,10 @@ package body Interactive_Pade_Trackers is
       put_line("Reading the target system ..."); get(target);
       new_line;
       put_line("Reading the start system and its solutions ...");
+      DoblDobl_System_and_Solutions_io.get(start,sols);
       nvr := DoblDobl_Complex_Solutions.Head_Of(sols).n;
       mhom := Series_Path_Trackers.Prompt_for_Homogenization(natural32(nvr));
       homgen := (mhom > 0);
-      DoblDobl_System_and_Solutions_io.get(start,sols);
       DoblDobl_SeriesPade_Tracker.Init(target,start,homgen);
       DoblDobl_Loop(sols,true);
     else
@@ -341,10 +347,10 @@ package body Interactive_Pade_Trackers is
       put_line("Reading the target system ..."); get(target);
       new_line;
       put_line("Reading the start system and its solutions ...");
+      QuadDobl_System_and_Solutions_io.get(start,sols);
       nvr := QuadDobl_Complex_Solutions.Head_Of(sols).n;
       mhom := Series_Path_Trackers.Prompt_for_Homogenization(natural32(nvr));
       homgen := (mhom > 0);
-      QuadDobl_System_and_Solutions_io.get(start,sols);
       QuadDobl_SeriesPade_Tracker.Init(target,start,homgen);
       QuadDobl_Loop(sols,true);
     else
