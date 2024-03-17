@@ -936,6 +936,78 @@ def get_quad_double_solution(vrblvl=0):
     sol = get_next_quad_double_solution(1, vrblvl)
     return sol
 
+def get_double_predicted_solution(vrblvl=0):
+    """
+    Returns the predicted solution on the path, in double precision,
+    which starts at the solution set with set_double_solution().
+    If vrblvl > 0, then extra output is written.
+    """
+    if vrblvl > 0:
+        print('in get_double_predicted_solution ...')
+    phc = get_phcfun(vrblvl-1)
+    apars = (c_int32 * 2)()
+    apars[0] = c_int32(0)
+    apars[1] = c_int32(1)
+    apar = pointer(apars)
+    bvrb = pointer(c_int32(vrblvl))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> get_double_predicted_solution calls phc', end='')
+    retval = phc(919, apar, bvrb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    sol = get_next_double_solution(1, vrblvl)
+    return sol
+
+def get_double_double_predicted_solution(vrblvl=0):
+    """
+    Returns the predicted solution on the path, in double double precision,
+    which starts at the solution set with set_double_double_solution().
+    If vrblvl > 0, then extra output is written.
+    """
+    if vrblvl > 0:
+        print('in get_double_double_predicted_solution ...')
+    phc = get_phcfun(vrblvl-1)
+    apars = (c_int32 * 2)()
+    apars[0] = c_int32(1)
+    apars[1] = c_int32(1)
+    apar = pointer(apars)
+    bvrb = pointer(c_int32(vrblvl))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> get_double_double_predicted_solution calls phc', end='')
+    retval = phc(919, apar, bvrb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    sol = get_next_double_double_solution(1, vrblvl)
+    return sol
+
+def get_quad_double_predicted_solution(vrblvl=0):
+    """
+    Returns the predicted solution on the path, in quad double precision,
+    which starts at the solution set with set_quad_double_solution().
+    If vrblvl > 0, then extra output is written.
+    """
+    if vrblvl > 0:
+        print('in get_quad_double_predicted_solution ...')
+    phc = get_phcfun(vrblvl-1)
+    apars = (c_int32 * 2)()
+    apars[0] = c_int32(2)
+    apars[1] = c_int32(1)
+    apar = pointer(apars)
+    bvrb = pointer(c_int32(vrblvl))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> get_quad_double_predicted_solution calls phc', end='')
+    retval = phc(919, apar, bvrb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    sol = get_next_quad_double_solution(1, vrblvl)
+    return sol
+
 def double_predict_correct(vrblvl=0):
     """
     Performs one predictor and one corrector step on the set homotopy
@@ -2002,8 +2074,12 @@ def next_double_track(target, start, sols, homogeneous=False, \
                     double_series_coefficients(dim, vrblvl-1))
                 print('3) Pade vector:', double_pade_vector(dim, vrblvl-1))
                 print('4) poles:', double_poles(dim, vrblvl-1))
+            predsol = get_double_predicted_solution(vrblvl-1)
             sol = get_double_solution(vrblvl-1)
             if vrblvl > 0:
+                print('the predicted solution :')
+                print(predsol)
+                print('the current solution :')
                 print(sol)
     gamma = get_gamma_constant(vrblvl-1)
     clear_double_solutions(vrblvl-1)
@@ -2084,8 +2160,12 @@ def next_double_double_track(target, start, sols, homogeneous=False, \
                 print('3) Pade vector:', \
                     double_double_pade_vector(dim, vrblvl-1))
                 print('4) poles:', double_double_poles(dim, vrblvl-1))
+            predsol = get_double_double_predicted_solution(vrblvl-1)
             sol = get_double_double_solution(vrblvl-1)
             if vrblvl > 0:
+                print('the predicted solution :')
+                print(predsol)
+                print('the current solution :')
                 print(sol)
     clear_double_double_solutions(vrblvl-1)
     clear_double_double_data(vrblvl-1)
@@ -2164,8 +2244,12 @@ def next_quad_double_track(target, start, sols, homogeneous=False, \
                 print('3) Pade vector:', \
                     quad_double_pade_vector(dim, vrblvl-1))
                 print('4) poles:', quad_double_poles(dim, vrblvl-1))
+            predsol = get_quad_double_predicted_solution(vrblvl-1)
             sol = get_quad_double_solution(vrblvl-1)
             if vrblvl > 0:
+                print('the predicted solution :')
+                print(predsol)
+                print('the current solution :')
                 print(sol)
     clear_quad_double_solutions(vrblvl-1)
     clear_quad_double_data(vrblvl-1)
@@ -2238,8 +2322,12 @@ def next_double_loop(hom, idx, sols, interactive=False, vrblvl=0):
                     double_series_coefficients(dim, vrblvl-1))
                 print('3) Pade vector:', double_pade_vector(dim, vrblvl-1))
                 print('4) poles:', double_poles(dim, vrblvl-1))
+            predsol = get_double_predicted_solution(vrblvl-1)
             sol = get_double_solution(vrblvl-1)
             if vrblvl > 0:
+                print('the predicted solution :')
+                print(predsol)
+                print('the current solution :')
                 print(sol)
     clear_double_solutions(vrblvl-1)
     clear_double_data(vrblvl-1)
@@ -2313,7 +2401,11 @@ def next_double_double_loop(hom, idx, sols, interactive=False, vrblvl=0):
                 print('3) Pade vector:', \
                     double_double_pade_vector(dim, vrblvl-1))
                 print('4) poles:', double_double_poles(dim, vrblvl-1))
+                predsol = get_double_double_predicted_solution(vrblvl-1)
                 sol = get_double_double_solution(vrblvl-1)
+                print('the predicted solution :')
+                print(predsol)
+                print('the current solution :')
                 print(sol)
     clear_double_double_solutions(vrblvl-1)
     clear_double_double_data(vrblvl-1)
@@ -2387,8 +2479,12 @@ def next_quad_double_loop(hom, idx, sols, interactive=False, vrblvl=0):
                 print('3) Pade vector:', \
                     quad_double_pade_vector(dim, vrblvl-1))
                 print('4) poles:', quad_double_poles(dim, vrblvl-1))
+            predsol = get_quad_double_predicted_solution(vrblvl-1)
             sol = get_quad_double_solution(vrblvl-1)
             if vrblvl > 0:
+                print('the predicted solution :')
+                print(predsol)
+                print('the current solution :')
                 print(sol)
     clear_quad_double_solutions(vrblvl-1)
     clear_quad_double_data(vrblvl-1)
