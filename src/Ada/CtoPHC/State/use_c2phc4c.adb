@@ -515,6 +515,7 @@ function use_c2phc4c ( job : integer32;
       when 913..915 => return use_solcon(job,a,b,c,vrblvl-1);
      -- reading solutions from file with given name
       when 916..918 => return use_solcon(job,a,b,c,vrblvl-1);
+      when 919 => return use_padcon(24,a,b,c,vrblvl-1);
       when 920 => return Job_Handlers.Standard_Condition_Report(a,b,c,vrblvl-1);
      -- making and clearing Laurent homotopies
       when 921 => return use_track(69,a,b,c,vrblvl-1);

@@ -1054,6 +1054,69 @@ package body Pade_Continuation_Interface is
       return 863;
   end Pade_Continuation_Set_Solution;
 
+  function Pade_Continuation_Set_Predicted_Solution
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    prc : constant natural32 := natural32(v_a(v_a'first));
+    idx : constant natural32 := natural32(v_a(v_a'first+1));
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(1));
+    vrb : constant natural32 := natural32(v_b(v_b'first));
+    verbose : constant boolean := (vrb = 1);
+    st_ls : Standard_Complex_Solutions.Link_to_Solution;
+    dd_ls : DoblDobl_Complex_Solutions.Link_to_Solution;
+    qd_ls : QuadDobl_Complex_Solutions.Link_to_Solution;
+    fail : boolean;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in pade_continuation_interface.");
+      put_line("Pade_Continuation_Set_Predicted_Solution ...");
+    end if;
+    if verbose then
+      put("Retrieving the predicted solution, at index "); put(idx,1);
+      put_line(" ...");
+    end if;
+    case prc is
+      when 0 =>
+        st_ls := Standard_SeriesPade_Tracker.Get_Predicted_Solution;
+        Standard_Solutions_Container.Replace(idx,st_ls,fail);
+      when 1 =>
+        dd_ls := DoblDobl_SeriesPade_Tracker.Get_Predicted_Solution;
+        DoblDobl_Solutions_Container.Replace(idx,dd_ls,fail);
+      when 2 =>
+        qd_ls := QuadDobl_SeriesPade_Tracker.Get_Predicted_Solution;
+        QuadDobl_Solutions_Container.Replace(idx,qd_ls,fail);
+      when others =>
+        put_line("Wrong value for the precision.");
+    end case;
+    if fail then
+      if verbose
+       then put_line("Placement of the predicted solution failed.");
+      end if;
+      assign(1,a);
+    else
+      if verbose
+       then put_line("Placement of the predicted solution succeeded.");
+      end if;
+      assign(0,a);
+    end if;
+    return 0;
+  exception
+    when others =>
+      if vrblvl > 0 then
+        put("Exception raised in pade_continuation_interface.");
+        put_line("Pade_Continuation_Set_Predicted_Solution");
+      end if;
+      return 919;
+  end Pade_Continuation_Set_Predicted_Solution;
+
   function Pade_Continuation_Pole_Radius
              ( a : C_intarrs.Pointer;
                c : C_dblarrs.Pointer;

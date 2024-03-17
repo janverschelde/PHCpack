@@ -38,6 +38,7 @@ function use_padcon ( job : integer32;
       when 21 => return Pade_Continuation_Estimated_Distance(a,c,vrblvl);
       when 22 => return Pade_Continuation_Hessian_Step(a,c,vrblvl);
       when 23 => return Pade_Continuation_Parameters_Reset_Values(a,vrblvl);
+      when 24 => return Pade_Continuation_Set_Predicted_Solution(a,b,vrblvl);
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   exception

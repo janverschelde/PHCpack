@@ -208,6 +208,24 @@ package Pade_Continuation_Interface is
   -- ON RETURN :
   --   a       in a[0] is the failure code of the placement.
 
+  function Pade_Continuation_Set_Predicted_Solution
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Places the predicted solution at the given index in the container.
+ 
+  -- ON ENTRY :
+  --   a       in a[0] is 0, 1, or 2, respectively for double, double double,
+  --           or quad double precision;
+  --           in a[1] is the index of the solution;
+  --   b       in b[0] is the verbose flag;
+  --   vrblvl  is the verbose level.
+
+  -- ON RETURN :
+  --   a       in a[0] is the failure code of the placement.
+
   function Pade_Continuation_Pole_Radius
              ( a : C_intarrs.Pointer;
                c : C_dblarrs.Pointer;

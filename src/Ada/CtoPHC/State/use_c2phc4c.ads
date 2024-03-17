@@ -1103,6 +1103,13 @@ function use_c2phc4c ( job : integer32;
 --                 the current solution is placed at position index in
 --                 the solutions container and the failure code of the
 --                 placement is returned in a[0];
+--   job   = 919 : gets the predicted solution at index a[1], 
+--                 in double, double double, or quad double precision,
+--                 depending whether a[0] is 0, 1, or 2,
+--                 the verbose option is in b[0],
+--                 the predicted solution is placed at position index in
+--                 the solutions container and the failure code of the
+--                 placement is returned in a[0];
 --   job   = 864 : clears the data in the series-pade tracker,
 --                 in double, double double, or quad double precision,
 --                 depending on whether a[0] is 0, 1, or 2;

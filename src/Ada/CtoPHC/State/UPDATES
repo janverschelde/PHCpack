@@ -1,3 +1,6 @@
+Sun 17 Mar 2024 : extended pade_continuation_interface, use_padcon,
+  and use_c2phc4c with a function to return the predicted solution.
+
 Tue 27 Feb 2024 : in use_c2phc4c, replaced the procedure write_menu 
   by the procedure write_welcome, which defines the action for job #0.
 

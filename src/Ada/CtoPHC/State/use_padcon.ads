@@ -145,6 +145,13 @@ function use_padcon ( job : integer32;
 --   job   =  23 : resets the homotopy continuation parameters for the
 --                 step-by-step path tracker, using the value for a[0]
 --                 for double (0), double double (1), or quad double (2).
+--   job   =  24 : gets the predicted solution at index a[1], 
+--                 in double, double double, or quad double precision,
+--                 depending whether a[0] is 0, 1, or 2,
+--                 the verbose option is in b[0],
+--                 the predicted solution is placed at position index in
+--                 the solutions container and the failure code of the
+--                 placement is returned in a[0];
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
