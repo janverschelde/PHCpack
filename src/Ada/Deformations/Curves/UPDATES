@@ -1,3 +1,6 @@
+Mon 18 Mar 2024 : modified {standard,dobldobl,quaddobl}_seriespade_tracker.adb
+  so the power tpow in the homotopy is set always to 1, and not 2.
+
 Sun 17 Mar 2024 : extended {standard,dobldobl,quaddobl}_seriespade_tracker
   with a function to return the predicted solution.  Updated the
   interactive_path_trackers.adb to print the predicted solution.

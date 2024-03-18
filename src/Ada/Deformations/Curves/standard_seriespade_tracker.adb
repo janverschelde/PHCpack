@@ -85,7 +85,7 @@ package body Standard_SeriesPade_Tracker is
 
   procedure Init ( p,q : in Link_to_Poly_Sys; homogeneous : in boolean ) is
 
-    tpow : constant natural32 := 2;
+    tpow : constant natural32 := 1; -- 2 may introduce extra singularities
     gamma : constant Complex_Number := homconpars.gamma;
     vp : Link_to_Poly_Sys := p;
     vq : Link_to_Poly_Sys := q;

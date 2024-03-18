@@ -89,7 +89,7 @@ package body DoblDobl_SeriesPade_Tracker is
 
   procedure Init ( p,q : in Link_to_Poly_Sys; homogeneous : in boolean ) is
 
-    tpow : constant natural32 := 2;
+    tpow : constant natural32 := 1; -- := 2; may introduce singularities
     d_gamma : constant Standard_Complex_Numbers.Complex_Number
             := homconpars.gamma;
     dd_gamma : constant DoblDobl_Complex_Numbers.Complex_Number
