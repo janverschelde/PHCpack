@@ -63,6 +63,6 @@ and then navigate to the src/Julia folder and do
 
 julia showVersion.jl
 
-or navigate to the src/Python/Ctypes folder and do
+or navigate to the src/Python/PHCpy/phcpy folder and do
 
 python version.py
