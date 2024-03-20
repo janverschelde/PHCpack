@@ -1180,7 +1180,18 @@ Macaulay2 workshops, with the help of
 Taylor Brysiewicz, Diego Cifuentes, Corey Harris, Kaie Kubjas,
 Anne Seigal, and Jeff Sommars.
 
-The software has been developed with GNAT GPL, the gnu-ada compiler.
+Jasmine Otto helped with the setup of the JupyterHub and
+the development of the code snippets for the menu structure
+of the notebook interface to phcpy.
+
+Thanks to the efforts of Doug Torrance, both PHCpack and phcpy
+can be installed with the package managers of Ubuntu.
+
+The software has been developed with GNAT GPL, the gnu-ada compiler,
+and belongs to the catalog of ready-to-use Ada/SPARK libraries
+available through the package manager Alire.
+The development benefited from participation to the Ada devroom
+at various FOSDEM conferences.
 
 This material is based upon work supported by the 
 National Science Foundation under Grants No. 9804846, 0105739, 0134611,
