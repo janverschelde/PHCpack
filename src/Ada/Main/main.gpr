@@ -89,6 +89,7 @@ project main is
 
     for Main use
     (
+        "use_phc.adb",
         "phctop.adb"    -- the main program
     );
 

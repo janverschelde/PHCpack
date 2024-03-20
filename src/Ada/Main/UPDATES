@@ -1,4 +1,5 @@
 Wed 20 Mar 2024 : updated greeting_banners for version 2.4.90.
+  Extended main.gpr to allow for the building of use_phc.
 
 Tue 20 Feb 2024 : updated greeting_banners for version 2.4.89.
 
