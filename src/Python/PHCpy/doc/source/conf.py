@@ -22,7 +22,7 @@ copyright = u'2016-2024, Jan Verschelde'
 author = 'Jan Verschelde'
 
 # The full version, including alpha/beta/rc tags
-release = '1.1.3'
+release = '1.1.4'
 
 # -- General configuration ---------------------------------------------------
 
