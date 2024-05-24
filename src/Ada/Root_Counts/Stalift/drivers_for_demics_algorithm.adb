@@ -17,6 +17,9 @@ with DEMiCs_Output_Data;
 with DEMiCs_Algorithm;                   use DEMiCs_Algorithm;
 with Pipelined_Polyhedral_Homotopies;    use Pipelined_Polyhedral_Homotopies;
 
+with Standard_Floating_Numbers_io;
+ use Standard_Floating_Numbers_io;
+
 package body Drivers_for_DEMiCs_Algorithm is
 
   procedure DEMiCs_Algorithm_Info is
@@ -43,12 +46,17 @@ package body Drivers_for_DEMiCs_Algorithm is
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 mix : out Standard_Integer_Vectors.Link_to_Vector;
               lif : out Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
-                mcc : out Mixed_Subdivision; mv : out natural32 ) is  
+                mcc : out Mixed_Subdivision; mv : out natural32;
+                vrblvl : in integer32 := 0 ) is  
 
     dim : constant integer32 := p'last;
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_demics_algorithm.");
+      put_line("Blackbox_DEMiCs_Algorithm 1 ...");
+    end if;
     Extract_Supports(p,mix,sup,false); -- verbose is false
     Call_DEMiCs(mix,sup,false);
     declare
@@ -64,12 +72,17 @@ package body Drivers_for_DEMiCs_Algorithm is
               ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 mix : out Standard_Integer_Vectors.Link_to_Vector;
               lif : out Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
-                mcc : out Mixed_Subdivision; mv : out natural32 ) is  
+                mcc : out Mixed_Subdivision; mv : out natural32;
+                vrblvl : in integer32 := 0 ) is  
 
     dim : constant integer32 := p'last;
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_demics_algorithm.");
+      put_line("Blackbox_DEMiCs_Algorithm 2 ...");
+    end if;
     Extract_Supports(p,mix,sup,false);  -- verbose is false
     Call_DEMiCs(mix,sup,false);
     declare
@@ -85,14 +98,19 @@ package body Drivers_for_DEMiCs_Algorithm is
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 mix : out Standard_Integer_Vectors.Link_to_Vector;
               lif : out Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
-                mcc : out Mixed_Subdivision; mv,smv,tmv : out natural32 ) is  
+                mcc : out Mixed_Subdivision; mv,smv,tmv : out natural32;
+                vrblvl : in integer32 := 0 ) is  
 
     dim : constant integer32 := p'last;
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
     stlb : constant double_float
-         := Floating_Lifting_Functions.Lifting_Bound(p);
+         := Floating_Lifting_Functions.Lifting_Bound(p); -- ,1.0e+10);
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_demics_algorithm.");
+      put_line("Blackbox_DEMiCs_Algorithm 3 ...");
+    end if;
     Extract_Supports(p,mix,sup,false);    -- verbose is false
     Call_DEMiCs(mix,sup,true,stlb,false); -- stable is true
     declare
@@ -108,8 +126,13 @@ package body Drivers_for_DEMiCs_Algorithm is
   procedure Write_Random_Coefficient_System
               ( file : in file_type; ranfile : in out file_type;
                 q : in Standard_Complex_Laur_Systems.Laur_Sys;
-                qsols : in Standard_Complex_Solutions.Solution_List ) is
+                qsols : in Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_demics_algorithm.");
+      put_line("Write_Random_Coefficient_System 1 ...");
+    end if;
     new_line(file);
     put_line(file,"RANDOM COEFFICIENT SYSTEM :");
     Standard_System_and_Solutions_io.put_line(file,q,qsols);
@@ -120,8 +143,13 @@ package body Drivers_for_DEMiCs_Algorithm is
   procedure Write_Random_Coefficient_System
               ( file : in file_type; ranfile : in out file_type;
                 q : in Standard_Complex_Laur_Systems.Laur_Sys;
-                qsols,qsols0 : in Standard_Complex_Solutions.Solution_List ) is
+                qsols,qsols0 : in Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_demics_algorithm.");
+      put_line("Write_Random_Coefficient_System 2 ...");
+    end if;
     new_line(file);
     put_line(file,"RANDOM COEFFICIENT SYSTEM :");
     Standard_System_and_Solutions_io.put_line(file,q,qsols);
@@ -156,7 +184,8 @@ package body Drivers_for_DEMiCs_Algorithm is
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List;
                 qsols0 : out Standard_Complex_Solutions.Solution_List;
-                mv,smv,tmv : out natural32 ) is
+                mv,smv,tmv : out natural32;
+                vrblvl : in integer32 := 0 ) is
 
     lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
     mcc,orgmcc,stbmcc : Mixed_Subdivision;
@@ -166,6 +195,10 @@ package body Drivers_for_DEMiCs_Algorithm is
     use Drivers_for_MixedVol_Algorithm;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_demics_algorithm");
+      put_line("Run_Polyhedral_Homotopies ...");
+    end if;
     Process_Output(dim,mix,sup,lifsup,mcc,false);
     new_line(file);
     put_line(file,"The lifted supports :");
@@ -216,7 +249,8 @@ package body Drivers_for_DEMiCs_Algorithm is
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List;
                 qsols0 : out Standard_Complex_Solutions.Solution_List;
-                mv,smv,tmv : out natural32 ) is
+                mv,smv,tmv : out natural32;
+                vrblvl : in integer32 := 0 ) is
 
     timer : Timing_Widget;
     lif : Standard_Floating_VecVecs.Link_to_VecVec;
@@ -227,6 +261,10 @@ package body Drivers_for_DEMiCs_Algorithm is
     contrep : boolean;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_demics_algorithm.");
+      put_line("Run_DEMiCs_Algorithm ...");
+    end if;
    -- start system based on supports without artificial origin: orgsup
     if stable
      then Arrays_of_Integer_Vector_Lists.Copy(sup,orgsup);
@@ -282,7 +320,8 @@ package body Drivers_for_DEMiCs_Algorithm is
                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List;
                 qsols0 : out Standard_Complex_Solutions.Solution_List;
-                mv,smv,tmv : out natural32 ) is
+                mv,smv,tmv : out natural32;
+                vrblvl : in integer32 := 0 ) is
 
     lp,lq : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
 
@@ -290,6 +329,10 @@ package body Drivers_for_DEMiCs_Algorithm is
     use Standard_Laur_Poly_Convertors;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_demics_algorithm.");
+      put_line("Driver_for_DEMiCs_Algorithm 1 ...");
+    end if;
     lp := Polynomial_to_Laurent_System(p);
     Driver_for_DEMiCs_Algorithm(file,nt,lp,lq,qsols,qsols0,mv,smv,tmv);
     q := Positive_Laurent_Polynomial_System(lq);
@@ -303,7 +346,8 @@ package body Drivers_for_DEMiCs_Algorithm is
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List;
                 qsols0 : out Standard_Complex_Solutions.Solution_List;
-                mv,smv,tmv : out natural32 ) is
+                mv,smv,tmv : out natural32;
+                vrblvl : in integer32 := 0 ) is
 
     dim : constant integer32 := p'last;
     mix,perm : Standard_Integer_Vectors.Link_to_Vector;
@@ -319,6 +363,10 @@ package body Drivers_for_DEMiCs_Algorithm is
     stlb : double_float;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_demics_algorithm.");
+      put_line("Driver_for_DEMiCs_Algorithm 2 ...");
+    end if;
     new_line;
     Drivers_for_Static_Lifting.Prompt_for_File(mcc2file,subfile);
     if genuine then
@@ -328,9 +376,13 @@ package body Drivers_for_DEMiCs_Algorithm is
       put("Do you want to compute the stable mixed volume ? (y/n) ");
       Ask_Yes_or_No(ans);
       stable := (ans = 'y');
-      if stable
-       then stlb := Floating_Lifting_Functions.Lifting_Bound(p);
-       else stlb := 0.0;
+      if stable then
+        stlb := Floating_Lifting_Functions.Lifting_Bound(p); -- ,1.0e+10);
+        if vrblvl > 0
+         then put("The lifting bound :"); put(stlb); new_line;
+        end if;
+      else
+        stlb := 0.0;
       end if;
     end if;
     new_line;
@@ -355,14 +407,20 @@ package body Drivers_for_DEMiCs_Algorithm is
 
   procedure Driver_for_DEMiCs_Algorithm
               ( file : in file_type; nt : in integer32;
-                p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                vrblvl : in integer32 := 0 ) is
 
     q : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
     qsols,qsols0 : Standard_Complex_Solutions.Solution_List;
     mv,smv,tmv : natural32;
 
   begin
-    Driver_for_DEMiCs_Algorithm(file,nt,p,q,qsols,qsols0,mv,smv,tmv);
+    if vrblvl > 0 then
+      put("-> in drivers_for_demics_algorithm.");
+      put_line("Driver_for_DEMiCs_Algorithm 3 ...");
+    end if;
+    Driver_for_DEMiCs_Algorithm
+      (file,nt,p,q,qsols,qsols0,mv,smv,tmv,vrblvl-1);
   end Driver_for_DEMiCs_Algorithm;
 
 end Drivers_for_DEMiCs_Algorithm;

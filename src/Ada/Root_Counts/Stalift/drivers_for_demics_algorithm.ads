@@ -26,19 +26,22 @@ package Drivers_for_DEMiCs_Algorithm is
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 mix : out Standard_Integer_Vectors.Link_to_Vector;
               lif : out Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
-                mcc : out Mixed_Subdivision; mv : out natural32 );
+                mcc : out Mixed_Subdivision; mv : out natural32;
+                vrblvl : in integer32 := 0 );
   procedure BlackBox_DEMiCs_Algorithm
               ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 mix : out Standard_Integer_Vectors.Link_to_Vector;
               lif : out Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
-                mcc : out Mixed_Subdivision; mv : out natural32 );
+                mcc : out Mixed_Subdivision; mv : out natural32;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calls the DEMiCs algorithm to compute the mixed volume of the
   --   Newton polytopes spanned by the supports of the system p.
 
   -- ON ENTRY :
-  --   p        an ordinary polynomial or a Laurent polynomial system.
+  --   p        an ordinary polynomial or a Laurent polynomial system;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   mix      type of mixture of the supports;
@@ -50,14 +53,16 @@ package Drivers_for_DEMiCs_Algorithm is
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 mix : out Standard_Integer_Vectors.Link_to_Vector;
               lif : out Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
-                mcc : out Mixed_Subdivision; mv,smv,tmv : out natural32 );
+                mcc : out Mixed_Subdivision; mv,smv,tmv : out natural32;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calls the DEMiCs algorithm to compute the stable mixed volume of
   --   the Newton polytopes spanned by the supports of the system p.
 
   -- ON ENTRY :
-  --   p        an ordinary polynomial system.
+  --   p        an ordinary polynomial system;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   mix      type of mixture of the supports;
@@ -71,11 +76,13 @@ package Drivers_for_DEMiCs_Algorithm is
   procedure Write_Random_Coefficient_System
               ( file : in file_type; ranfile : in out file_type;
                 q : in Standard_Complex_Laur_Systems.Laur_Sys;
-                qsols : in Standard_Complex_Solutions.Solution_List );
+                qsols : in Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
   procedure Write_Random_Coefficient_System
               ( file : in file_type; ranfile : in out file_type;
                 q : in Standard_Complex_Laur_Systems.Laur_Sys;
-                qsols,qsols0 : in Standard_Complex_Solutions.Solution_List );
+                qsols,qsols0 : in Standard_Complex_Solutions.Solution_List;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Writes the random coefficient system q and its solutions qsols,
@@ -97,7 +104,8 @@ package Drivers_for_DEMiCs_Algorithm is
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List;
                 qsols0 : out Standard_Complex_Solutions.Solution_List;
-                mv,smv,tmv : out natural32 );
+                mv,smv,tmv : out natural32;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Runs polyhedral homotopies on the output of the DEMiCs algorithm.
@@ -117,7 +125,8 @@ package Drivers_for_DEMiCs_Algorithm is
   --   orgsup   original supports without artificial origin (in case stable);
   --   stable   if the stable mixed volume is wanted;
   --   stlb     value of the lifting bound if stable;
-  --   timer    contains timings of the DEMiCs algorithm.
+  --   timer    contains timings of the DEMiCs algorithm;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   q        a random coefficient system, if ranstart;
@@ -140,7 +149,8 @@ package Drivers_for_DEMiCs_Algorithm is
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List;
                 qsols0 : out Standard_Complex_Solutions.Solution_List;
-                mv,smv,tmv : out natural32 );
+                mv,smv,tmv : out natural32;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Runs the DEMiCs Algorithm, followed by the application of polyhedral
@@ -160,7 +170,8 @@ package Drivers_for_DEMiCs_Algorithm is
   --   perm     permutation used to put same supports consecutively;
   --   sup      points in the supports;
   --   stable   if the stable mixed volume is wanted;
-  --   stlb     value of the lifting bound if stable.
+  --   stlb     value of the lifting bound if stable;
+  --   vrblvl   the verbose level.
 
   -- ON RETURN :
   --   sup      supports with artificial origins added if stable.
@@ -178,14 +189,16 @@ package Drivers_for_DEMiCs_Algorithm is
                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List;
                 qsols0 : out Standard_Complex_Solutions.Solution_List;
-                mv,smv,tmv : out natural32 );
+                mv,smv,tmv : out natural32;
+                vrblvl : in integer32 := 0 );
   procedure Driver_for_DEMiCs_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List;
                 qsols0 : out Standard_Complex_Solutions.Solution_List;
-                mv,smv,tmv : out natural32 );
+                mv,smv,tmv : out natural32;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Interactive driver to run the DEMiCs algorithm.
@@ -193,7 +206,8 @@ package Drivers_for_DEMiCs_Algorithm is
   -- ON ENTRY :
   --   file     output file;
   --   nt       number of tasks;
-  --   p        a (Laurent) polynomial system.
+  --   p        a (Laurent) polynomial system;
+  --   vrblvl   the verbose level.
   --
   -- ON RETURN :
   --   q        a random coefficient system, if asked for by user;
@@ -203,7 +217,8 @@ package Drivers_for_DEMiCs_Algorithm is
 
   procedure Driver_for_DEMiCs_Algorithm
               ( file : in file_type; nt : in integer32;
-                p : in Standard_Complex_Laur_Systems.Laur_Sys );
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Interactive driver to the MixedVol Algorithm,
@@ -213,6 +228,7 @@ package Drivers_for_DEMiCs_Algorithm is
   -- ON ENTRY :
   --   file     for intermediate output and diagnostics;
   --   nt       number of tasks, 0 for no multitasking;
-  --   p        a polynomial system.
+  --   p        a polynomial system;
+  --   vrblvl   is the verbose level.
 
 end Drivers_for_DEMiCs_Algorithm;
