@@ -50,7 +50,8 @@ project series is
         "ts_seritp.adb",     -- tests interpolation on linear series systems
         "ts_sersin.adb",     -- tests solving of singular matrix series
         "ts_serpol.adb",     -- tests series polynomials
-        "ts_sersys.adb"      -- tests systems of series polynomials
+        "ts_sersys.adb",     -- tests systems of series polynomials
+        "ts_taymon.adb"      -- tests Taylor series of monomials
     );
 
     package Compiler is

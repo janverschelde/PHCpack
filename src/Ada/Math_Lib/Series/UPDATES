@@ -1,3 +1,5 @@
+Sun 26 May 2024 : new ts_taymon.adb for Taylor expansions of monomials.
+
 Tue 5 Dec 2023 : new hexadobl_polyomial_cseries, hexadobl_cseries_polynomials,
   hexadobl_cseries_polynomials_io, hexadobl_cseries_poly_functions,
   hexadobl_cseries_poly_systems, hexadobl_poly_systems_io,
