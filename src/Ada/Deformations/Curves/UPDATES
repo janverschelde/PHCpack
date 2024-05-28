@@ -1,3 +1,6 @@
+Mon 27 May 2024 : new ts_fliphom.adb to develop homotopies with real powers
+  of the continuation parameter.
+
 Mon 18 Mar 2024 : modified {standard,dobldobl,quaddobl}_seriespade_tracker.adb
   so the power tpow in the homotopy is set always to 1, and not 2.
 

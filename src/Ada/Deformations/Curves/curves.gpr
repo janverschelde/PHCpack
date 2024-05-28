@@ -56,7 +56,8 @@ project curves is
         "ts_scalecnv.adb",   -- tests scaling of solutions
         "ts_serpath.adb",    -- tests series path tracker
         "ts_nxtpadsol.adb",  -- tests the get_next() trackers
-        "ts_wrappade.adb"    -- tests the wrapping
+        "ts_wrappade.adb",   -- tests the wrapping
+        "ts_fliphom.adb"     -- tests homotopy with real power
     );
 
     package Compiler is
