@@ -1,3 +1,6 @@
+Mon 27 May 2024 : new package double_taylor_developments with code
+  extracted from ts_taymon.adb.
+
 Sun 26 May 2024 : new ts_taymon.adb for Taylor expansions of monomials.
 
 Tue 5 Dec 2023 : new hexadobl_polyomial_cseries, hexadobl_cseries_polynomials,

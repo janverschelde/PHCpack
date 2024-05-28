@@ -33,6 +33,7 @@ standard_truncated_series          : defines basic operations on power series
 ts_pstrunc                         : tests proof-of-concept power series
 binomial_coefficients              : export binomial() function
 ts_bincff                          : test on binomial coefficients
+double_taylor_developments         : Taylor series of real exponent monomials
 ts_taymon                          : expand monomials with real exponents
 ------------------------------------------------------------------------------
 generic_dense_series               : series over any ring with division
