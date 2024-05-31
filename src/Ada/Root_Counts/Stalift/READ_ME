@@ -94,6 +94,8 @@ lifted_configurations             : for balancing the lifting values
 test_balance_lifting              : development of balancing lifting values
 ts_balance                        : calls the main test on balancing
 -------------------------------------------------------------------------------
+ts_rptmccsol                      : tests robust polyhedral continuation
+-------------------------------------------------------------------------------
 
 Subdivisions induced by integer lifting functions have to be recursive,
 since one cannot guarantee that all cells will be fine mixed.

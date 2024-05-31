@@ -1,4 +1,5 @@
 Fri 31 May 2024 : added verbose level to drivers_for_static_lifting.
+  New ts_rptmccsol to develop robust polyhedral continuation.
 
 Fri 24 May 2024 : added verbose level to drivers_for_demics_algorithm.
 

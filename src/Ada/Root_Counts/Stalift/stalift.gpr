@@ -62,7 +62,8 @@ project stalift is
         "ts_mixlab.adb",        -- tests coordinate/labeled subdivisions
         "ts_jpmix.adb",         -- tests jumpstarting
         "ts_exptrack.adb",      -- tests exponential continuation parameters
-        "ts_balance.adb"        -- tests balancing lifting values
+        "ts_balance.adb",       -- tests balancing lifting values
+        "ts_rptmccsol.adb"      -- tests robust polyhedral continuation
     );
 
     package Compiler is
