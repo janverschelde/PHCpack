@@ -72,11 +72,15 @@ package body Drivers_for_Static_Lifting is
               ( file : in file_type; n : in integer32; compmix : in boolean;
                 sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 mix : in out Standard_Integer_Vectors.Link_to_Vector;
-                permsys : in out Poly_Sys ) is
+                permsys : in out Poly_Sys;
+                vrblvl : in integer32 := 0 ) is
 
     perm : Standard_Integer_Vectors.Link_to_Vector;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in drivers_for_static_lifting.Compute_Mixture 1 ...");
+    end if;
     if compmix
      then Compute_Mixture(sup,mix,perm);
      else perm := Compute_Permutation(n,mix.all,sup);
@@ -99,11 +103,15 @@ package body Drivers_for_Static_Lifting is
               ( file : in file_type; n : in integer32; compmix : in boolean;
                 sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 mix : in out Standard_Integer_Vectors.Link_to_Vector;
-                permsys : in out Laur_Sys ) is
+                permsys : in out Laur_Sys;
+                vrblvl : in integer32 := 0 ) is
 
     perm : Standard_Integer_Vectors.Link_to_Vector;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in drivers_for_static_lifting.Compute_Mixture 2 ...");
+    end if;
     if compmix
      then Compute_Mixture(sup,mix,perm);
      else perm := Compute_Permutation(n,mix.all,sup);
@@ -159,10 +167,11 @@ package body Drivers_for_Static_Lifting is
   end Write_Cardinalities;
 
   procedure Integer_Create_Mixed_Cells
-             ( n : in integer32;
-               mix : in Standard_Integer_Vectors.Vector;
-               lifted : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
-               mixsub : in out Integer_Mixed_Subdivisions.Mixed_Subdivision ) is
+              ( n : in integer32;
+                mix : in Standard_Integer_Vectors.Vector;
+                lifted : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                mixsub : in out Integer_Mixed_Subdivisions.Mixed_Subdivision;
+                vrblvl : in integer32 := 0 ) is
 
     use Integer_Faces_of_Polytope;
     afa : Array_of_Faces(mix'range);
@@ -171,6 +180,10 @@ package body Drivers_for_Static_Lifting is
     timer : timing_widget;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_static_lifting.");
+      put_line("Integer_Create_Mixed_Cells 1 ...");
+    end if;
     for i in afa'range loop
       afa(i) := Create_Lower(mix(i),n+1,lifted(i));
     end loop;
@@ -178,11 +191,12 @@ package body Drivers_for_Static_Lifting is
   end Integer_Create_Mixed_Cells;
 
   procedure Integer_Create_Mixed_Cells
-             ( file : in file_type; n : in integer32;
-               mix : in Standard_Integer_Vectors.Vector;
-               report : in boolean;
-               lifted : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
-               mixsub : in out Integer_Mixed_Subdivisions.Mixed_Subdivision ) is
+              ( file : in file_type; n : in integer32;
+                mix : in Standard_Integer_Vectors.Vector;
+                report : in boolean;
+                lifted : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                mixsub : in out Integer_Mixed_Subdivisions.Mixed_Subdivision;
+                vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   The pruning algorithm will be applied to compute the mixed cells.
@@ -219,6 +233,10 @@ package body Drivers_for_Static_Lifting is
     procedure Report_and_Create1_CS is new Gen1_Create_CS(Write_Cell);
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_static_lifting.");
+      put_line("Integer_Create_Mixed_Cells 2 ...");
+    end if;
     tstart(timer);
     for i in afa'range loop
       afa(i) := Create_Lower(mix(i),n+1,lifted(i));
@@ -245,12 +263,13 @@ package body Drivers_for_Static_Lifting is
   end Integer_Create_Mixed_Cells;
 
   procedure Floating_Create_Mixed_Cells
-            ( file : in file_type;
-              n : in integer32; mix : in Standard_Integer_Vectors.Vector;
-              fltsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
-              lilifu : in Standard_Floating_VecVecs.Link_to_VecVec;
-              lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
-              fltsub : in out Floating_Mixed_Subdivisions.Mixed_Subdivision ) is
+              ( file : in file_type;
+                n : in integer32; mix : in Standard_Integer_Vectors.Vector;
+                fltsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                lilifu : in Standard_Floating_VecVecs.Link_to_VecVec;
+                lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                fltsub : in out Floating_Mixed_Subdivisions.Mixed_Subdivision;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Floating_VecVecs;
     use Floating_Faces_of_Polytope;
@@ -262,6 +281,10 @@ package body Drivers_for_Static_Lifting is
                   := (mix'range => 0.0);
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_static_lifting.");
+      put_line("Floating_Create_Mixed_Cells ...");
+    end if;
     tstart(timer);
     if lilifu /= null then
       for i in supfa'range loop
@@ -297,8 +320,12 @@ package body Drivers_for_Static_Lifting is
                 compmisu : in boolean;
                 lifpts : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 mixsub : in out Integer_Mixed_Subdivisions.Mixed_Subdivision;
-                mv : out natural32 ) is
+                mv : out natural32; vrblvl : in integer32 := 0 ) is
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_static_lifting.");
+      put_line("Integer_Volume_Computation 1 ...");
+    end if;
     if not compmisu then
       Mixed_Volume(n,mix,mixsub,mv);
     else
@@ -313,12 +340,16 @@ package body Drivers_for_Static_Lifting is
                 compmisu : in boolean;
                 lifpts : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 mixsub : in out Integer_Mixed_Subdivisions.Mixed_Subdivision;
-                mv : out natural32 ) is
+                mv : out natural32; vrblvl : in integer32 := 0 ) is
 
     timer : timing_widget;
     mixvol : natural32;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_static_lifting.");
+      put_line("Integer_Volume_Computation 2 ...");
+    end if;
     new_line(file);
     put_line(file,"VOLUMES OF MIXED CELLS :");
     new_line(file);
@@ -350,7 +381,8 @@ package body Drivers_for_Static_Lifting is
                 mix : in Standard_Integer_Vectors.Vector;
                 mixsub : in out Floating_Mixed_Subdivisions.Mixed_Subdivision;
                 mv : out natural32;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     res : natural32 := 0;
     use Floating_Mixed_Subdivisions;
@@ -359,6 +391,10 @@ package body Drivers_for_Static_Lifting is
     vol : natural32;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_static_lifting.");
+      put_line("Floating_Volume_Computation 1 ...");
+    end if;
     while not Is_Null(tmp) loop
       mic := Head_Of(tmp);
       Mixed_Volume(n,mix,mic,vol,multprec_hermite);
@@ -373,7 +409,8 @@ package body Drivers_for_Static_Lifting is
                 mix : in Standard_Integer_Vectors.Vector;
                 mixsub : in out Floating_Mixed_Subdivisions.Mixed_Subdivision;
                 mv : out natural32;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Wraps a timer around the computation of the volumes of all cells.
@@ -382,6 +419,10 @@ package body Drivers_for_Static_Lifting is
     timer : timing_widget;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_static_lifting.");
+      put_line("Floating_Volume_Computation 2 ...");
+    end if;
     new_line(file);
     put_line(file,"THE MIXED SUBDIVISION : ");
     new_line(file);
@@ -400,7 +441,8 @@ package body Drivers_for_Static_Lifting is
                 mix : in Standard_Integer_Vectors.Vector;
                 mixsub : in out Floating_Mixed_Subdivisions.Mixed_Subdivision;
                 mv,smv,tmv : out natural32;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Computes the mixed volume of the given mixed-cell configuration.
@@ -412,6 +454,10 @@ package body Drivers_for_Static_Lifting is
     vol : natural32;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_static_lifting.");
+      put_line("Floating_Volume_Computation 3 ...");
+    end if;
     if stlb = 0.0 then
       Floating_Volume_Computation(n,mix,mixsub,mv);
       smv := 0; tmv := 0;
@@ -439,7 +485,8 @@ package body Drivers_for_Static_Lifting is
                 mix : in Standard_Integer_Vectors.Vector;
                 mixsub : in out Floating_Mixed_Subdivisions.Mixed_Subdivision;
                 mv,smv,tmv : out natural32;
-                multprec_hermite : in boolean := false ) is
+                multprec_hermite : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Wraps a timer around the computation of the volumes of all cells.
@@ -448,6 +495,10 @@ package body Drivers_for_Static_Lifting is
     timer : timing_widget;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_static_lifting.");
+      put_line("Floating_Volume_Computation 4 ...");
+    end if;
     new_line(file);
     put_line(file,"THE MIXED SUBDIVISION : ");
     new_line(file);
@@ -476,7 +527,8 @@ package body Drivers_for_Static_Lifting is
                  n : in integer32; mix : in Standard_Integer_Vectors.Vector;
                  q : in out Poly_Sys; qsols : in out Solution_List;
                  lifted : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
-                 mixsub : in Integer_Mixed_Subdivisions.Mixed_Subdivision ) is
+                 mixsub : in Integer_Mixed_Subdivisions.Mixed_Subdivision;
+                 vrblvl : in integer32 := 0 ) is
 
     timer : timing_widget;
     lifted_lq,lq : Laur_Sys(q'range);
@@ -487,6 +539,10 @@ package body Drivers_for_Static_Lifting is
     m : Mult_Factors(j'range(1),j'range(2));
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_static_lifting.");
+      put_line("Integer_Polyhedral_Homotopy_Continuation 1 ...");
+    end if;
     new_line(file);
     put_line(file,"POLYHEDRAL HOMOTOPY CONTINUATION :");
     lq := Polynomial_to_Laurent_System(q);
@@ -526,7 +582,8 @@ package body Drivers_for_Static_Lifting is
                 n : in integer32; mix : in Standard_Integer_Vectors.Vector;
                 q : in out Laur_Sys; qsols : in out Solution_List;
                 lifted : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
-                mixsub : in Integer_Mixed_Subdivisions.Mixed_Subdivision ) is
+                mixsub : in Integer_Mixed_Subdivisions.Mixed_Subdivision;
+                vrblvl : in integer32 := 0 ) is
 
     timer : timing_widget;
     lifted_q : Laur_Sys(q'range);
@@ -537,6 +594,10 @@ package body Drivers_for_Static_Lifting is
     m : Mult_Factors(j'range(1),j'range(2));
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_static_lifting.");
+      put_line("Integer_Polyhedral_Homotopy_Continuation 2 ...");
+    end if;
     new_line(file);
     put_line(file,"POLYHEDRAL HOMOTOPY CONTINUATION :");
     lifted_q := Perform_Lifting(n,mix,lifted,q);
@@ -574,7 +635,8 @@ package body Drivers_for_Static_Lifting is
                 n : in integer32; mix : in Standard_Integer_Vectors.Vector;
                 q : in Poly_Sys; qsols : in out Solution_List;
                 lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
-                fltsub : in Floating_Mixed_Subdivisions.Mixed_Subdivision ) is
+                fltsub : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
+                vrblvl : in integer32 := 0 ) is
 
     lq : constant Laur_Sys(q'range) := Polynomial_to_Laurent_System(q);
     h : Eval_Coeff_Laur_Sys(q'range);
@@ -585,6 +647,10 @@ package body Drivers_for_Static_Lifting is
     timer : timing_widget;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_static_lifting.");
+      put_line("Floating_Polyhedral_Homotopy_Continuation 1 ...");
+    end if;
     new_line(file);
     if nt = 0 then
       put_line(file,"POLYHEDRAL HOMOTOPY CONTINUATION without tasking :");
@@ -627,7 +693,8 @@ package body Drivers_for_Static_Lifting is
                 n : in integer32; mix : in Standard_Integer_Vectors.Vector;
                 q : in Laur_Sys; qsols : in out Solution_List;
                 lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
-                fltsub : in Floating_Mixed_Subdivisions.Mixed_Subdivision ) is
+                fltsub : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
+                vrblvl : in integer32 := 0 ) is
 
     h : Eval_Coeff_Laur_Sys(q'range);
     c : Standard_Complex_VecVecs.VecVec(h'range);
@@ -637,6 +704,10 @@ package body Drivers_for_Static_Lifting is
     timer : timing_widget;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_static_lifting.");
+      put_line("Floating_Polyhedral_Homotopy_Continuation 2 ...");
+    end if;
     new_line(file);
     if nt = 0 then
       put_line(file,"POLYHEDRAL HOMOTOPY CONTINUATION without tasking :");
@@ -679,7 +750,8 @@ package body Drivers_for_Static_Lifting is
                 mix : in out Standard_Integer_Vectors.Link_to_Vector;
                 imixsub : out Integer_Mixed_Subdivisions.Mixed_Subdivision;
                 fmixsub : out Floating_Mixed_Subdivisions.Mixed_Subdivision;
-                compmisu,compmix,fltlif : out boolean ) is
+                compmisu,compmix,fltlif : out boolean;
+                vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   This procedure allows to use previously computed mixed subdivisions.
@@ -688,6 +760,9 @@ package body Drivers_for_Static_Lifting is
     m : natural32 := 0;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in drivers_for_static_lifting.Data_Management ...");
+    end if;
     new_line;
     put("Do you already have a mixed subdivision ? (y/n) ");
     Ask_Yes_or_No(ans);
@@ -909,7 +984,7 @@ package body Drivers_for_Static_Lifting is
                  q : out Poly_Sys; qsols : out Solution_List;
                  gft,solsft : in out file_type;
                  tosolve,ranstart,contrep : out boolean;
-                 mv : out natural32 ) is
+                 mv : out natural32; vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   After rearranging the input supports to compute the mixture,
@@ -921,6 +996,10 @@ package body Drivers_for_Static_Lifting is
     outsubft : file_type;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_static_lifting.");
+      put_line("Polyhedral_Homotopies_with_Integer_Lifting 1 ...");
+    end if;
     if compmisu
      then Prompt_for_Options(report,misufile,outsubft);
      else lif := Induced_Lifting(n,mix,points,mcc);
@@ -929,16 +1008,16 @@ package body Drivers_for_Static_Lifting is
       (file,p,0,byebye,q,gft,solsft,tosolve,ranstart,contrep);
     if compmisu
      -- then Integer_Create_Mixed_Cells(file,n,mix,report,mixpts,lif,mcc);
-     then Integer_Create_Mixed_Cells(file,n,mix,report,lif,mcc);
+     then Integer_Create_Mixed_Cells(file,n,mix,report,lif,mcc,vrblvl-1);
     end if;
     if not Integer_Mixed_Subdivisions.Is_Null(mcc) then
-      Integer_Volume_Computation(file,n,mix,compmisu,lif,mcc,mv);
+      Integer_Volume_Computation(file,n,mix,compmisu,lif,mcc,mv,vrblvl-1);
       if compmisu and then misufile
        then put(outsubft,natural32(n),mix,mcc);
       end if;
       if tosolve
        then Integer_Polyhedral_Homotopy_Continuation
-               (file,contrep,n,mix,q,qsols,lif,mcc);
+               (file,contrep,n,mix,q,qsols,lif,mcc,vrblvl-1);
       end if;
     end if;
   end Polyhedral_Homotopies_with_Integer_Lifting;
@@ -954,7 +1033,7 @@ package body Drivers_for_Static_Lifting is
                  q : out Laur_Sys; qsols : out Solution_List;
                  gft,solsft : in out file_type;
                  tosolve,ranstart,contrep : out boolean;
-                 mv : out natural32 ) is
+                 mv : out natural32; vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   After rearranging the input supports to compute the mixture,
@@ -967,6 +1046,10 @@ package body Drivers_for_Static_Lifting is
     outsubft : file_type;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_static_lifting.");
+      put_line("Polyhedral_Homotopies_with_Integer_Lifting 2 ...");
+    end if;
     if compmisu
      then Prompt_for_Options(report,misufile,outsubft);
      else lif := Induced_Lifting(n,mix,points,mcc);
@@ -975,16 +1058,16 @@ package body Drivers_for_Static_Lifting is
       (file,p,0,byebye,q,gft,solsft,tosolve,ranstart,contrep);
     if compmisu
      -- then Integer_Create_Mixed_Cells(file,n,mix,report,mixpts,lif,mcc);
-     then Integer_Create_Mixed_Cells(file,n,mix,report,lif,mcc);
+     then Integer_Create_Mixed_Cells(file,n,mix,report,lif,mcc,vrblvl-1);
     end if;
     if not Integer_Mixed_Subdivisions.Is_Null(mcc) then
-      Integer_Volume_Computation(file,n,mix,compmisu,lif,mcc,mv);
+      Integer_Volume_Computation(file,n,mix,compmisu,lif,mcc,mv,vrblvl-1);
       if compmisu and then misufile
        then put(outsubft,natural32(n),mix,mcc);
       end if;
       if tosolve
        then Integer_Polyhedral_Homotopy_Continuation
-              (file,contrep,n,mix,q,qsols,lif,mcc);
+              (file,contrep,n,mix,q,qsols,lif,mcc,vrblvl-1);
       end if;
     end if;
   end Polyhedral_Homotopies_with_Integer_Lifting;
@@ -1002,7 +1085,7 @@ package body Drivers_for_Static_Lifting is
                 q : out Poly_Sys; qsols,qsols0 : out Solution_List;          
                 gft,solsft : in out file_type;
                 tosolve,ranstart,contrep : out boolean;
-                mv,smv,tmv : out natural32 ) is
+                mv,smv,tmv : out natural32; vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   This is the analogue driver for floating-point lifting functions.
@@ -1019,6 +1102,10 @@ package body Drivers_for_Static_Lifting is
     use Floating_Mixed_Subdivisions;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_static_lifting.");
+      put_line("Polyhedral_Homotopies_with_Float_Lifting 1 ...");
+    end if;
     if compmisu then
       new_line;
       Prompt_for_File(misufile,outsubft);
@@ -1042,17 +1129,19 @@ package body Drivers_for_Static_Lifting is
     Driver_for_Coefficient_System
       (file,p,0,byebye,q,gft,solsft,tosolve,ranstart,contrep);
     if compmisu then
-      Floating_Create_Mixed_Cells(file,n,mix.all,points,flili,lif,mcc);
+      Floating_Create_Mixed_Cells
+        (file,n,mix.all,points,flili,lif,mcc,vrblvl-1);
       if misufile
        then put(outsubft,natural32(n),mix.all,mcc);
       end if;
     end if;
     if not Floating_Mixed_Subdivisions.Is_Null(mcc) then
-      Floating_Volume_Computation(file,n,bnd,mix.all,mcc,mv,smv,tmv);
+      Floating_Volume_Computation
+        (file,n,bnd,mix.all,mcc,mv,smv,tmv,vrblvl=>vrblvl-1);
       if tosolve then
         if bnd = 0.0 then
           Floating_Polyhedral_Homotopy_Continuation
-              (file,nt,contrep,n,mix.all,q,qsols,lif,mcc);
+              (file,nt,contrep,n,mix.all,q,qsols,lif,mcc,vrblvl-1);
         else
           Split_Original_Cells(mcc,bnd,orgmcc,stbmcc,orgcnt,stbcnt);
           new_line(file);
@@ -1061,7 +1150,7 @@ package body Drivers_for_Static_Lifting is
           put(file,"#extra stable cells with artificial origin : ");
           put(file,stbcnt,1); new_line(file);
           Floating_Polyhedral_Homotopy_Continuation
-              (file,nt,contrep,n,mix.all,q,qsols,lif,orgmcc);
+              (file,nt,contrep,n,mix.all,q,qsols,lif,orgmcc,vrblvl-1);
           lq := Polynomial_to_Laurent_System(q);
           if contrep then
             Reporting_Polyhedral_Continuation
@@ -1087,7 +1176,7 @@ package body Drivers_for_Static_Lifting is
                 q : out Laur_Sys; qsols,qsols0 : out Solution_List;          
                 gft,solsft : in out file_type;
                 tosolve,ranstart,contrep : out boolean;
-                mv,smv,tmv : out natural32 ) is
+                mv,smv,tmv : out natural32; vrblvl : in integer32 := 0 ) is
 
    -- DESCRIPTION :
    --   This is the analogue driver for floating-point lifting functions,
@@ -1104,6 +1193,10 @@ package body Drivers_for_Static_Lifting is
     use Floating_Mixed_Subdivisions;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_static_lifting.");
+      put_line("Polyhedral_Homotopies_with_Float_Lifting 2 ...");
+    end if;
     if compmisu then
       new_line;
       Prompt_for_File(misufile,outsubft);
@@ -1130,17 +1223,18 @@ package body Drivers_for_Static_Lifting is
     Driver_for_Coefficient_System
       (file,p,0,byebye,q,gft,solsft,tosolve,ranstart,contrep);
     if compmisu then
-      Floating_Create_Mixed_Cells(file,n,mix.all,points,flili,lif,mcc);
+      Floating_Create_Mixed_Cells(file,n,mix.all,points,flili,lif,mcc,vrblvl-1);
       if misufile
        then put(outsubft,natural32(n),mix.all,mcc);
       end if;
     end if;
     if not Floating_Mixed_Subdivisions.Is_Null(mcc) then
-      Floating_Volume_Computation(file,n,bnd,mix.all,mcc,mv,smv,tmv);
+      Floating_Volume_Computation
+        (file,n,bnd,mix.all,mcc,mv,smv,tmv,vrblvl=>vrblvl-1);
       if tosolve then
         if bnd = 0.0 then
           Floating_Polyhedral_Homotopy_Continuation
-              (file,nt,contrep,n,mix.all,q,qsols,lif,mcc);
+              (file,nt,contrep,n,mix.all,q,qsols,lif,mcc,vrblvl-1);
         else
           Split_Original_Cells(mcc,bnd,orgmcc,stbmcc,orgcnt,stbcnt);
           new_line(file);
@@ -1149,7 +1243,7 @@ package body Drivers_for_Static_Lifting is
           put(file,"#extra stable cells with artificial origin : ");
           put(file,stbcnt,1); new_line(file);
           Floating_Polyhedral_Homotopy_Continuation
-              (file,nt,contrep,n,mix.all,q,qsols,lif,orgmcc);
+            (file,nt,contrep,n,mix.all,q,qsols,lif,orgmcc,vrblvl-1);
           if contrep then
             Reporting_Polyhedral_Continuation
               (file,q,bnd,mix,lif,stbmcc,qsols0);
@@ -1172,7 +1266,8 @@ package body Drivers_for_Static_Lifting is
                 ilili : out Standard_Integer_VecVecs.Link_to_VecVec;
                 flili : out Standard_Floating_VecVecs.Link_to_VecVec;
                 fltlif : in out boolean; stlb : out double_float;
-                compmisu,compmix : in boolean; sp : out Poly_Sys ) is
+                compmisu,compmix : in boolean; sp : out Poly_Sys;
+                vrblvl : in integer32 := 0 ) is
 
   -- DESRIPTION :
   --   To prepare the supports for mixed-volume computation, the type
@@ -1182,6 +1277,9 @@ package body Drivers_for_Static_Lifting is
     mixpts1 : Arrays_of_Integer_Vector_Lists.Link_to_Array_of_Lists;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in drivers_for_static_lifting.Prepare_Supports 1 ...");
+    end if;
     if compmisu then
       Compute_Mixture(file,n,compmix,sup,mix,permp);
       mixpts1 := new Arrays_of_Integer_Vector_Lists.
@@ -1230,7 +1328,8 @@ package body Drivers_for_Static_Lifting is
                 ilili : out Standard_Integer_VecVecs.Link_to_VecVec;
                 flili : out Standard_Floating_VecVecs.Link_to_VecVec;
                 fltlif : in out boolean; stlb : out double_float;
-                compmisu,compmix : in boolean; sp : out Laur_Sys ) is
+                compmisu,compmix : in boolean; sp : out Laur_Sys;
+                vrblvl : in integer32 := 0 ) is
 
   -- DESRIPTION :
   --   To prepare the supports for mixed-volume computation, the type
@@ -1241,6 +1340,9 @@ package body Drivers_for_Static_Lifting is
     mixpts1 : Arrays_of_Integer_Vector_Lists.Link_to_Array_of_Lists;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in drivers_for_static_lifting.Prepare_Supports 2 ...");
+    end if;
     if compmisu then
       Compute_Mixture(file,n,compmix,sup,mix,permp);
       mixpts1 := new Arrays_of_Integer_Vector_Lists.
@@ -1282,7 +1384,8 @@ package body Drivers_for_Static_Lifting is
                ( file : in file_type; nt : in integer32;
                  p : in Poly_Sys; byebye : in boolean;
                  q : out Poly_Sys; qsols,qsols0 : out Solution_List;
-                 mv,smv,tmv : out natural32 ) is
+                 mv,smv,tmv : out natural32;
+                 vrblvl : in integer32 := 0 ) is
 
     welcome : constant string := "Mixed-Volume Computation by Static Lifting";
     mix : Standard_Integer_Vectors.Link_to_Vector;
@@ -1306,22 +1409,26 @@ package body Drivers_for_Static_Lifting is
     fpts,flifpts : Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_static_lifting.");
+      put_line("Driver_for_Mixed_Volume_Computation 1 ...");
+    end if;
     new_line; put_line(welcome);
     tstart(totaltimer);
     points := Create(p);
-    Data_Management(file,mix,imixsub,fmixsub,compmisu,compmix,fltlif);
+    Data_Management(file,mix,imixsub,fmixsub,compmisu,compmix,fltlif,vrblvl-1);
     Prepare_Supports(file,n,p,mix,points,mixpts,ilifpts,fpts,flifpts,
-                     ilili,flili,fltlif,stlb,compmisu,compmix,sp);
+                     ilili,flili,fltlif,stlb,compmisu,compmix,sp,vrblvl-1);
     if fltlif then
       Polyhedral_Homotopies_with_Float_Lifting
         (file,nt,compmisu,byebye,n,sp,stlb,mix,fpts.all,mixpts.all,flili,
          flifpts.all,fmixsub,q,qsols,qsols0,gft,solsft,
-         tosolve,ranstart,contrep,mv,smv,tmv);
+         tosolve,ranstart,contrep,mv,smv,tmv,vrblvl-1);
     else
       Polyhedral_Homotopies_with_Integer_Lifting
        -- (file,compmisu,byebye,n,sp,mix.all,points,mixpts.all,ilifpts.all,
         (file,compmisu,byebye,n,sp,mix.all,points,ilifpts.all,
-         imixsub,q,qsols,gft,solsft,tosolve,ranstart,contrep,mv);
+         imixsub,q,qsols,gft,solsft,tosolve,ranstart,contrep,mv,vrblvl-1);
      end if;
     if tosolve
      then Write_Results(file,n,ranstart,gft,solsft,q,qsols,qsols0);
@@ -1335,7 +1442,8 @@ package body Drivers_for_Static_Lifting is
                ( file : in file_type; nt : in integer32;
                  p : in Laur_Sys; byebye : in boolean;
                  q : out Laur_Sys; qsols,qsols0 : out Solution_List;
-                 mv,smv,tmv : out natural32 ) is
+                 mv,smv,tmv : out natural32;
+                 vrblvl : in integer32 := 0 ) is
 
     welcome : constant string := "Mixed-Volume Computation by Static Lifting";
     mix : Standard_Integer_Vectors.Link_to_Vector;
@@ -1359,22 +1467,26 @@ package body Drivers_for_Static_Lifting is
     fpts,flifpts : Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
 
   begin
+    if vrblvl > 0 then
+      put("-> in drivers_for_static_lifting.");
+      put_line("Driver_for_Mixed_Volume_Computation 2 ...");
+    end if;
     new_line; put_line(welcome);
     tstart(totaltimer);
     points := Create(p);
-    Data_Management(file,mix,imixsub,fmixsub,compmisu,compmix,fltlif);
+    Data_Management(file,mix,imixsub,fmixsub,compmisu,compmix,fltlif,vrblvl-1);
     Prepare_Supports(file,n,p,mix,points,mixpts,ilifpts,fpts,flifpts,
-                     ilili,flili,fltlif,stlb,compmisu,compmix,sp);
+                     ilili,flili,fltlif,stlb,compmisu,compmix,sp,vrblvl-1);
     if fltlif then
       Polyhedral_Homotopies_with_Float_Lifting
         (file,nt,compmisu,byebye,n,sp,stlb,mix,fpts.all,mixpts.all,flili,
          flifpts.all,fmixsub,q,qsols,qsols0,gft,solsft,
-         tosolve,ranstart,contrep,mv,smv,tmv);
+         tosolve,ranstart,contrep,mv,smv,tmv,vrblvl-1);
     else
       Polyhedral_Homotopies_with_Integer_Lifting
        -- (file,compmisu,byebye,n,sp,mix.all,points,mixpts.all,ilifpts.all,
         (file,compmisu,byebye,n,sp,mix.all,points,ilifpts.all,
-         imixsub,q,qsols,gft,solsft,tosolve,ranstart,contrep,mv);
+         imixsub,q,qsols,gft,solsft,tosolve,ranstart,contrep,mv,vrblvl-1);
      end if;
     if tosolve
      then Write_Results(file,n,ranstart,gft,solsft,q,qsols,qsols0);

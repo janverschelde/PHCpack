@@ -1,3 +1,6 @@
+Fri 31 May 2024 : in mixed_volume_calculator.adb, applied verbose level 
+  parameters in the calls to the drivers.
+
 Sat 26 Jun 2021 : updated symmetry.gpr not to exclude double_double.c.
 
 Sun 13 Jun 2021 : fixed orbits_of_solutions_io.adb.

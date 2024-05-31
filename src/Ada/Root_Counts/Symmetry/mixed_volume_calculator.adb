@@ -195,7 +195,8 @@ package body Mixed_Volume_Calculator is
       when 0 =>
         put_line(outft,"Static lifting applies lift-and-prune algorithms");
         Driver_for_Mixed_Volume_Computation
-          (outft,integer32(nt),lq.all,true,qq,qsols,qsols0,mv,smv,tmv);
+          (outft,integer32(nt),lq.all,true,qq,qsols,qsols0,mv,smv,tmv,
+           vrblvl=>v-1);
       when 1 =>
         put_line(outft,
           "Implicit lifting applies a recursive formula for the mixed volume");
@@ -211,11 +212,11 @@ package body Mixed_Volume_Calculator is
           (outft,lq.all,true,qq,qsols,mv);
       when 4 =>
         put_line(outft,"MixedVol Algorithm to compute the mixed volume");
-        Call_MixedVol(outft,nt,lq,v);
+        Call_MixedVol(outft,nt,lq,v=>v-1);
       when 5 =>
         put_line(outft,
           "DEMiCs Algorithm applies dynamic enumeration for all mixed cells");
-        Driver_for_DEMiCs_Algorithm(outft,integer32(nt),lq.all);
+        Driver_for_DEMiCs_Algorithm(outft,integer32(nt),lq.all,vrblvl=>v-1);
       when others => null;
     end case;
     if Standard_Complex_Solutions.Length_Of(qsols) > 0 then

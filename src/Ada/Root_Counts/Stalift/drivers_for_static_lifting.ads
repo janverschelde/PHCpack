@@ -22,12 +22,14 @@ package Drivers_for_Static_Lifting is
               ( file : in file_type; n : in integer32; compmix : in boolean;
                 sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 mix : in out Standard_Integer_Vectors.Link_to_Vector;
-                permsys : in out Poly_Sys );
+                permsys : in out Poly_Sys;
+                vrblvl : in integer32 := 0 );
   procedure Compute_Mixture 
               ( file : in file_type; n : in integer32; compmix : in boolean;
                 sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 mix : in out Standard_Integer_Vectors.Link_to_Vector;
-                permsys : in out Laur_Sys );
+                permsys : in out Laur_Sys;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Computes the type of mixture and permutes if necessary,
@@ -39,7 +41,8 @@ package Drivers_for_Static_Lifting is
                  compmisu : in boolean;
                  lifpts : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                  mixsub : in out Integer_Mixed_Subdivisions.Mixed_Subdivision;
-                 mv : out natural32 );
+                 mv : out natural32;
+                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Computes the volumes of the mixed cells in mixsub.
@@ -65,7 +68,8 @@ package Drivers_for_Static_Lifting is
                  compmisu : in boolean;
                  lifpts : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                  mixsub : in out Integer_Mixed_Subdivisions.Mixed_Subdivision;
-                 mv : out natural32 );
+                 mv : out natural32;
+                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Computes the volumes of the mixed cells in mixsub.
@@ -89,7 +93,8 @@ package Drivers_for_Static_Lifting is
               ( n : in integer32;
                 mix : in Standard_Integer_Vectors.Vector;
                 lifted : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
-                mixsub : in out Integer_Mixed_Subdivisions.Mixed_Subdivision );
+                mixsub : in out Integer_Mixed_Subdivisions.Mixed_Subdivision;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   The pruning algorithm will be applied to compute the mixed cells.
@@ -100,7 +105,8 @@ package Drivers_for_Static_Lifting is
                 mix : in Standard_Integer_Vectors.Vector;
                 report : in boolean;
                 lifted : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
-                mixsub : in out Integer_Mixed_Subdivisions.Mixed_Subdivision );
+                mixsub : in out Integer_Mixed_Subdivisions.Mixed_Subdivision;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   The pruning algorithm will be applied to compute the mixed cells.
@@ -110,26 +116,30 @@ package Drivers_for_Static_Lifting is
                ( n : in integer32; mix : in Standard_Integer_Vectors.Vector;
                  mixsub : in out Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  mv : out natural32;
-                 multprec_hermite : in boolean := false );
+                 multprec_hermite : in boolean := false;
+                 vrblvl : in integer32 := 0 );
   procedure Floating_Volume_Computation
-              ( file : in file_type; n : in integer32;
-                mix : in Standard_Integer_Vectors.Vector;
-                mixsub : in out Floating_Mixed_Subdivisions.Mixed_Subdivision;
-                mv : out natural32;
-                multprec_hermite : in boolean := false );
+               ( file : in file_type; n : in integer32;
+                 mix : in Standard_Integer_Vectors.Vector;
+                 mixsub : in out Floating_Mixed_Subdivisions.Mixed_Subdivision;
+                 mv : out natural32;
+                 multprec_hermite : in boolean := false;
+                 vrblvl : in integer32 := 0 );
   procedure Floating_Volume_Computation
                ( n : in integer32; stlb : in double_float;
                  mix : in Standard_Integer_Vectors.Vector;
                  mixsub : in out Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  mv,smv,tmv : out natural32;
-                 multprec_hermite : in boolean := false );
+                 multprec_hermite : in boolean := false;
+                 vrblvl : in integer32 := 0 );
   procedure Floating_Volume_Computation
                ( file : in file_type;
                  n : in integer32; stlb : in double_float;
                  mix : in Standard_Integer_Vectors.Vector;
                  mixsub : in out Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  mv,smv,tmv : out natural32;
-                 multprec_hermite : in boolean := false );
+                 multprec_hermite : in boolean := false;
+                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Writes the mixed-cell configuration to file (if provided)
@@ -170,13 +180,15 @@ package Drivers_for_Static_Lifting is
                  n : in integer32; mix : in Standard_Integer_Vectors.Vector;
                  q : in out Poly_Sys; qsols : in out Solution_List;
                  lifted : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
-                 mixsub : in Integer_Mixed_Subdivisions.Mixed_Subdivision );
+                 mixsub : in Integer_Mixed_Subdivisions.Mixed_Subdivision;
+                 vrblvl : in integer32 := 0 );
   procedure Integer_Polyhedral_Homotopy_Continuation
                ( file : in file_type; contrep : in boolean;
                  n : in integer32; mix : in Standard_Integer_Vectors.Vector;
                  q : in out Laur_Sys; qsols : in out Solution_List;
                  lifted : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
-                 mixsub : in Integer_Mixed_Subdivisions.Mixed_Subdivision );
+                 mixsub : in Integer_Mixed_Subdivisions.Mixed_Subdivision;
+                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Solves a random coefficient (Laurent) polynomial systems, using a
@@ -200,13 +212,15 @@ package Drivers_for_Static_Lifting is
                  n : in integer32; mix : in Standard_Integer_Vectors.Vector;
                  q : in Poly_Sys; qsols : in out Solution_List;
                  lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
-                 fltsub : in Floating_Mixed_Subdivisions.Mixed_Subdivision );
+                 fltsub : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
+                 vrblvl : in integer32 := 0 );
   procedure Floating_Polyhedral_Homotopy_Continuation
                ( file : in file_type; nt : in integer32; contrep : in boolean;
                  n : in integer32; mix : in Standard_Integer_Vectors.Vector;
                  q : in Laur_Sys; qsols : in out Solution_List;
                  lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
-                 fltsub : in Floating_Mixed_Subdivisions.Mixed_Subdivision );
+                 fltsub : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
+                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Solves a random coefficient (Laurent) polynomial system, using a
@@ -231,12 +245,14 @@ package Drivers_for_Static_Lifting is
                ( file : in file_type; nt : in integer32;
                  p : in Poly_Sys; byebye : in boolean;
                  q : out Poly_Sys; qsols,qsols0 : out Solution_List;
-                 mv,smv,tmv : out natural32 );
+                 mv,smv,tmv : out natural32;
+                 vrblvl : in integer32 := 0 );
   procedure Driver_for_Mixed_Volume_Computation 
                ( file : in file_type; nt : in integer32;
                  p : in Laur_Sys; byebye : in boolean;
                  q : out Laur_Sys; qsols,qsols0 : out Solution_List;
-                 mv,smv,tmv : out natural32 );
+                 mv,smv,tmv : out natural32;
+                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Interactive driver for the computation of the mixed volume.
