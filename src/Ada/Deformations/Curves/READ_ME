@@ -179,5 +179,7 @@ ts_nxtpadsol                        : test on the get_next() trackers
 wrapped_pade_trackers               : wrapping of the trackers
 ts_wrappade                         : test on the wrapping
 -------------------------------------------------------------------------------
+double_taylor_homotopies            : Taylor homotopies in double precision
+double_taylor_homotopies_io         : output of Taylor homotopies
 ts_fliphom                          : tests real-power continuation parameter
 -------------------------------------------------------------------------------

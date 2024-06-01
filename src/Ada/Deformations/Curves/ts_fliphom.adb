@@ -22,8 +22,10 @@ with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Solutions;
 with Standard_Homotopy;
-with Standard_Fabry_on_Homotopy;
+-- with Standard_Fabry_on_Homotopy;
 with Double_Taylor_Developments;         use Double_Taylor_Developments;
+with Double_Taylor_Homotopies;           use Double_Taylor_Homotopies;
+with Double_Taylor_Homotopies_io;        use Double_Taylor_Homotopies_io;
 
 procedure ts_fliphom is
 
@@ -134,6 +136,63 @@ procedure ts_fliphom is
     s := rhs;
   end Solve_Linear_System;
 
+  function Make_Taylor_Monomial_Vector
+             ( p : Poly; deg : integer32; alpha,point : double_float )
+             return Taylor_Monomial_Vector is
+
+   -- len : constant integer32 := integer32(Number_of_Terms(p));
+    len : constant integer32 := 4;
+    res : Taylor_Monomial_Vector(1..len);
+    idx : integer32 := 0;
+
+    procedure Visit_Term ( t : in Term; continue : out boolean ) is
+
+      tm : Taylor_Monomial(2,deg);
+      dg : Standard_Integer_Vectors.Vector(1..2);
+
+    begin
+      if t.dg(1) = 0 then
+        idx := idx + 1; 
+        dg(1) := integer32(t.dg(2));
+        dg(2) := integer32(t.dg(3));
+        if dg(1) = 1 and dg(2) = 1
+         then tm := Make(deg,alpha,point,t.cf,dg);
+         else tm := Make(deg,0.0,point,t.cf,dg);
+        end if;
+        res(idx) := new Taylor_Monomial'(tm);
+      end if;
+      continue := true;
+    end Visit_Term;
+    procedure Visit_Terms is new Visiting_Iterator(Visit_Term);
+
+  begin
+    Visit_Terms(p);
+    return res;
+  end Make_Taylor_Monomial_Vector;
+
+  function Make_Taylor_Homotopy
+             ( p : Poly_Sys; deg : integer32; alpha,point : double_float )
+             return Taylor_Homotopy is
+
+  -- DESCRIPTION :
+  --   Makes a Taylor homotopy, using t^alpha developed at the point,
+  --   as power series truncated at degree deg,
+  --   for the monomial with support (1, 1).
+
+    res : Taylor_Homotopy(p'range);
+
+  begin
+    for i in p'range loop
+      declare
+        tmv : constant Taylor_Monomial_Vector
+            := Make_Taylor_Monomial_Vector(p(i),deg,alpha,point);
+      begin
+        res(i) := new Taylor_Monomial_Vector'(tmv);
+      end;
+    end loop;
+    return res;
+  end Make_Taylor_Homotopy;
+
   procedure Double_Test
               ( deg : in integer32; alpha, point : in double_float ) is
 
@@ -145,6 +204,8 @@ procedure ts_fliphom is
     sys : constant Poly_Sys := Random_Square_System(cff);
     sol : Standard_Complex_Solutions.Solution(2);
     sols : Standard_Complex_Solutions.Solution_List;
+    thm : Taylor_Homotopy(sys'range)
+        := Make_Taylor_Homotopy(sys,deg,alpha,point);
 
   begin
     Symbol_Table.Init(3);
@@ -160,7 +221,9 @@ procedure ts_fliphom is
     sol.m := 1;
     sol.t := Standard_Complex_Numbers.Create(point);
     Standard_Complex_Solutions.Add(sols,sol);
-    Standard_Fabry_on_Homotopy.Run(0,2,1,deg,sols);
+   -- Standard_Fabry_on_Homotopy.Run(0,2,1,deg,sols);
+    put_line("The Taylor homotopy :"); put(thm);
+    Clear(thm);
   end Double_Test;
 
   procedure Main is
