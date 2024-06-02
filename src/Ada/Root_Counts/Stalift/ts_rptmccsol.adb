@@ -3,6 +3,7 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
@@ -13,9 +14,12 @@ with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Lists_of_Floating_Vectors;          use Lists_of_Floating_Vectors;
 with Arrays_of_Floating_Vector_Lists;
+with Standard_Complex_Series_VecVecs;
 with Standard_Complex_Laur_Functions;
 with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
+with Standard_CSeries_Poly_Systems;
+with Standard_CSeries_Poly_Systems_io;   use Standard_CSeries_Poly_Systems_io;
 with Floating_Lifting_Utilities;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;     use Floating_Mixed_Subdivisions_io;
@@ -23,9 +27,12 @@ with Supports_of_Polynomial_Systems;
 with Random_Coefficient_Systems;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with Series_and_Solutions;
 with Standard_Simpomial_Solvers;
+with Run_Power_Series_Methods;
 with Double_Taylor_Homotopies;           use Double_Taylor_Homotopies;
 with Double_Taylor_Homotopies_io;        use Double_Taylor_Homotopies_io;
+with Taylor_Homotopy_Series;
 
 procedure ts_rptmccsol is
 
@@ -161,7 +168,7 @@ procedure ts_rptmccsol is
   end Make_Homotopy;
 
   procedure Track
-              ( file : in file_type; q : in Laur_Sys;
+              ( file : in file_type; deg : in integer32; q : in Laur_Sys;
                 cfq : in Standard_Complex_VecVecs.VecVec;
                 qsols,qsols_last : in out Solution_List;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
@@ -173,6 +180,7 @@ procedure ts_rptmccsol is
  
   -- ON ENTRY :
   --   file     must be opened for input;
+  --   deg      truncation degree of the series;
   --   q        a random coefficient system;
   --   cfq      coefficient vectors of q;
   --   mv       the mixed volume.
@@ -189,9 +197,9 @@ procedure ts_rptmccsol is
     sqsols : Solution_List;
     tol_zero : constant double_float := 1.0e-12;
     fail,zero_y : boolean;
-    deg : constant integer32 := 4;
     point : constant double_float := 0.01;
     thm : Taylor_Homotopy(q'range);
+    hom : Standard_CSeries_Poly_Systems.Poly_Sys(q'range);
 
   begin
     put(file,natural32(sq'last),sq);
@@ -204,15 +212,26 @@ procedure ts_rptmccsol is
       put_line(file," start solutions.");
       put(file,Length_Of(sqsols),natural32(sq'last),sqsols);
       Make_Homotopy(file,deg,point,cfq,mix,lif,mic,thm);
-      put_line(file,"The Taylor monomial homotopy :");
-      put(file,thm);
+      put_line(file,"The Taylor monomial homotopy :"); put(file,thm);
+      hom := Taylor_Homotopy_Series.Make(thm);
+      put_line(file,"The Taylor homotopy as series system :"); put(file,hom);
+      declare
+        len : constant integer32 := integer32(Length_Of(sqsols));
+        srv : constant Standard_Complex_Series_VecVecs.VecVec(1..len)
+            := Series_and_Solutions.Create(sqsols,0);
+      begin
+        Run_Power_Series_Methods.Run_Newton(file,false,hom,srv);
+      end;
       Concat(qsols,qsols_last,sqsols);
     end if;
     Clear(sq);
+    Clear(thm);
+    Standard_CSeries_Poly_Systems.Clear(hom);
   end Track;
 
   procedure Polyhedral_Continuation
-              ( file : in file_type; q : out Link_to_Laur_Sys;
+              ( file : in file_type; deg : in integer32;
+                q : out Link_to_Laur_Sys;
                 qsols,qsols_last : out Solution_List;
                 n,mv : in natural32;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
@@ -223,7 +242,7 @@ procedure ts_rptmccsol is
  
   -- ON ENTRY :
   --   file     must be opened for input;
-  --   p        a polynomial system;
+  --   deg      truncation degree for the series;
   --   n        number of variables;
   --   mv       the mixed volume.
   --   mix      type of mixture;
@@ -231,7 +250,8 @@ procedure ts_rptmccsol is
 
   -- ON RETURN :
   --   q        a random coefficient system;
-  --   qsols    solutions of q.
+  --   qsols    solutions of q;
+  --   qsols_last points to the last solution of qsols.
 
     cfq : Standard_Complex_VecVecs.VecVec(1..integer32(n));
     lif : constant Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
@@ -257,7 +277,7 @@ procedure ts_rptmccsol is
       put(file,"PROCESSING CELL "); put(file,cnt,1);
       put_line(file," :");
       mic := Head_Of(tmp);
-      Track(file,q.all,cfq,qsols,qsols_last,mix,lif,mic);
+      Track(file,deg,q.all,cfq,qsols,qsols_last,mix,lif,mic);
       tmp := Tail_of(tmp);
     end loop;
     Standard_Complex_VecVecs.Clear(cfq);
@@ -275,6 +295,7 @@ procedure ts_rptmccsol is
     mix : Standard_Integer_Vectors.Link_to_Vector;
     mcc : Mixed_Subdivision;
     infile,outfile : file_type;
+    deg : integer32 := 0;
 
   begin
     new_line;
@@ -293,8 +314,10 @@ procedure ts_rptmccsol is
     Read_Name_and_Create_File(outfile);
     Confirm_Input(outfile,lp,n,mix,mcc,mv);
     new_line;
-    put("The mixed volume : "); put(mv,1); new_line;
-    Polyhedral_Continuation(outfile,lq,qsols,qsols_last,n,mv,mix,mcc);
+    put("-> the mixed volume : "); put(mv,1); new_line;
+    new_line;
+    put("Give the truncation degree of the series : "); get(deg);
+    Polyhedral_Continuation(outfile,deg,lq,qsols,qsols_last,n,mv,mix,mcc);
   end Main;
 
 begin

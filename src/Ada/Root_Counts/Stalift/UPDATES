@@ -1,3 +1,5 @@
+Sun 2 Jun 2024 : applied power series Newton in ts_rptmccsol.
+
 Sat 1 Jun 2024 : defined the Taylor homotopy in ts_rptmccsol and
   updated stalift.gpr to include the Math_Lib/Series source folder.
 
