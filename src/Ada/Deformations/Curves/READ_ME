@@ -181,5 +181,6 @@ ts_wrappade                         : test on the wrapping
 -------------------------------------------------------------------------------
 double_taylor_homotopies            : Taylor homotopies in double precision
 double_taylor_homotopies_io         : output of Taylor homotopies
+taylor_homotopy_series              : Taylor homotopies as series systems
 ts_fliphom                          : tests real-power continuation parameter
 -------------------------------------------------------------------------------

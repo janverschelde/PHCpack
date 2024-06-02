@@ -22,10 +22,13 @@ with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Solutions;
 with Standard_Homotopy;
+with Standard_CSeries_Poly_Systems;
+with Standard_CSeries_Poly_Systems_io;   use Standard_CSeries_Poly_Systems_io;
 -- with Standard_Fabry_on_Homotopy;
 with Double_Taylor_Developments;         use Double_Taylor_Developments;
 with Double_Taylor_Homotopies;           use Double_Taylor_Homotopies;
 with Double_Taylor_Homotopies_io;        use Double_Taylor_Homotopies_io;
+with Taylor_Homotopy_Series;
 
 procedure ts_fliphom is
 
@@ -206,6 +209,8 @@ procedure ts_fliphom is
     sols : Standard_Complex_Solutions.Solution_List;
     thm : Taylor_Homotopy(sys'range)
         := Make_Taylor_Homotopy(sys,deg,alpha,point);
+    hom : Standard_CSeries_Poly_Systems.Poly_Sys(sys'range)
+        := Taylor_Homotopy_Series.Make(thm);
 
   begin
     Symbol_Table.Init(3);
@@ -223,7 +228,9 @@ procedure ts_fliphom is
     Standard_Complex_Solutions.Add(sols,sol);
    -- Standard_Fabry_on_Homotopy.Run(0,2,1,deg,sols);
     put_line("The Taylor homotopy :"); put(thm);
+    put_line("The Taylor homotopy as series system :"); put(hom);
     Clear(thm);
+    Standard_CSeries_Poly_Systems.Clear(hom);
   end Double_Test;
 
   procedure Main is

@@ -1,3 +1,6 @@
+Sun 2 Jun 2024 : new taylor_homotopy_series to make cseries systems from
+  Taylor monomial homotopies, tested in ts_fliphom.
+
 Sat 1 Jun 2024 : new double_taylor_homotopies and double_taylor_homotopies_io,
   called in ts_fliphom.
 
