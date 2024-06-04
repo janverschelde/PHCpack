@@ -29,7 +29,7 @@ with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Series_and_Solutions;
 with Standard_Simpomial_Solvers;
-with Run_Power_Series_Methods;
+with Power_Series_Methods;
 with Double_Taylor_Homotopies;           use Double_Taylor_Homotopies;
 with Double_Taylor_Homotopies_io;        use Double_Taylor_Homotopies_io;
 with Taylor_Homotopy_Series;
@@ -200,6 +200,8 @@ procedure ts_rptmccsol is
     point : constant double_float := 0.01;
     thm : Taylor_Homotopy(q'range);
     hom : Standard_CSeries_Poly_Systems.Poly_Sys(q'range);
+    verbose : constant boolean := true;
+    nbrit : constant integer32 := deg;
 
   begin
     put(file,natural32(sq'last),sq);
@@ -219,8 +221,9 @@ procedure ts_rptmccsol is
         len : constant integer32 := integer32(Length_Of(sqsols));
         srv : constant Standard_Complex_Series_VecVecs.VecVec(1..len)
             := Series_and_Solutions.Create(sqsols,0);
+       -- idx = 0 => copy all coordinates of the solution
       begin
-        Run_Power_Series_Methods.Run_Newton(file,false,hom,srv);
+        Power_Series_Methods.Run_SVD_Newton(file,deg,nbrit,hom,srv,verbose);
       end;
       Concat(qsols,qsols_last,sqsols);
     end if;
