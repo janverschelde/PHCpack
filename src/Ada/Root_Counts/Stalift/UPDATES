@@ -1,3 +1,6 @@
+Fri 7 Jun 2024 : added scaling to ts_rptmccsol.adb to obtain power series
+  with decaying coefficients.
+
 Tue 4 Jun 2024 : lifted one wrapper to running power series Newton
   in ts_rptmccsol.adb.
 
