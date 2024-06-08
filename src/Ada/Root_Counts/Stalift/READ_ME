@@ -94,6 +94,7 @@ lifted_configurations             : for balancing the lifting values
 test_balance_lifting              : development of balancing lifting values
 ts_balance                        : calls the main test on balancing
 -------------------------------------------------------------------------------
+taylor_polyhedral_homotopies      : making of Taylor coefficient homotopies
 ts_rptmccsol                      : tests robust polyhedral continuation
 -------------------------------------------------------------------------------
 

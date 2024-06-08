@@ -1,3 +1,6 @@
+Sat 8 Jun 2024 : new package taylor_polyhedral_homotopies with code
+  extracted from ts_rptmccsol.
+
 Fri 7 Jun 2024 : added scaling to ts_rptmccsol.adb to obtain power series
   with decaying coefficients.
 
