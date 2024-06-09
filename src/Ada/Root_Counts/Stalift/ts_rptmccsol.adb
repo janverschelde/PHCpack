@@ -5,6 +5,7 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
@@ -84,7 +85,8 @@ procedure ts_rptmccsol is
   end Coefficient_Vectors;
 
   procedure Track
-              ( file : in file_type; deg : in integer32; q : in Laur_Sys;
+              ( file : in file_type; deg : in integer32;
+                pnt : in double_float; q : in Laur_Sys;
                 cfq : in Standard_Complex_VecVecs.VecVec;
                 qsols,qsols_last : in out Solution_List;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
@@ -97,6 +99,7 @@ procedure ts_rptmccsol is
   -- ON ENTRY :
   --   file     must be opened for input;
   --   deg      truncation degree of the series;
+  --   pnt      expansion point of the Taylor series;
   --   q        a random coefficient system;
   --   cfq      coefficient vectors of q;
   --   mv       the mixed volume.
@@ -113,7 +116,6 @@ procedure ts_rptmccsol is
     sqsols : Solution_List;
     tol_zero : constant double_float := 1.0e-12;
     fail,zero_y : boolean;
-    point : constant double_float := 0.01;
     thm : Taylor_Homotopy(q'range);
     hom : Standard_CSeries_Poly_Systems.Poly_Sys(q'range);
     verbose : constant boolean := true;
@@ -129,7 +131,7 @@ procedure ts_rptmccsol is
       put(file,"Computed "); put(file,Length_Of(sqsols),1);
       put_line(file," start solutions.");
       put(file,Length_Of(sqsols),natural32(sq'last),sqsols);
-      Make_Homotopy(file,deg,point,cfq,mix,lif,mic,thm);
+      Make_Homotopy(file,deg,pnt,cfq,mix,lif,mic,thm);
       put_line(file,"The Taylor monomial homotopy :"); put(file,thm);
       hom := Taylor_Homotopy_Series.Make(thm);
       put_line(file,"The Taylor homotopy as series system :"); put(file,hom);
@@ -150,6 +152,7 @@ procedure ts_rptmccsol is
 
   procedure Polyhedral_Continuation
               ( file : in file_type; deg : in integer32;
+                pnt : in double_float;
                 q : out Link_to_Laur_Sys;
                 qsols,qsols_last : out Solution_List;
                 n,mv : in natural32;
@@ -162,6 +165,7 @@ procedure ts_rptmccsol is
   -- ON ENTRY :
   --   file     must be opened for input;
   --   deg      truncation degree for the series;
+  --   pnt      expansion point of the Taylor series;
   --   n        number of variables;
   --   mv       the mixed volume.
   --   mix      type of mixture;
@@ -196,7 +200,7 @@ procedure ts_rptmccsol is
       put(file,"PROCESSING CELL "); put(file,cnt,1);
       put_line(file," :");
       mic := Head_Of(tmp);
-      Track(file,deg,q.all,cfq,qsols,qsols_last,mix,lif,mic);
+      Track(file,deg,pnt,q.all,cfq,qsols,qsols_last,mix,lif,mic);
       tmp := Tail_of(tmp);
     end loop;
     Standard_Complex_VecVecs.Clear(cfq);
@@ -215,6 +219,7 @@ procedure ts_rptmccsol is
     mcc : Mixed_Subdivision;
     infile,outfile : file_type;
     deg : integer32 := 0;
+    pnt : double_float := 1.0e-2;
 
   begin
     new_line;
@@ -236,7 +241,9 @@ procedure ts_rptmccsol is
     put("-> the mixed volume : "); put(mv,1); new_line;
     new_line;
     put("Give the truncation degree of the series : "); get(deg);
-    Polyhedral_Continuation(outfile,deg,lq,qsols,qsols_last,n,mv,mix,mcc);
+    new_line;
+    put("Give the expansion point : "); get(pnt);
+    Polyhedral_Continuation(outfile,deg,pnt,lq,qsols,qsols_last,n,mv,mix,mcc);
   end Main;
 
 begin

@@ -64,7 +64,8 @@ package Taylor_Polyhedral_Homotopies is
   -- REQUIRED : val /= 0.0.
 
   procedure Make_Homotopy
-              ( deg : in integer32;
+              ( file : in file_type;
+                deg : in integer32;
                 pnt : in double_float;
                 cfq : in Standard_Complex_VecVecs.VecVec;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
@@ -77,6 +78,7 @@ package Taylor_Polyhedral_Homotopies is
   --   defines the Taylor monomial homotopy.
 
   -- ON ENTRY :
+  --   file     opened for output;
   --   deg      truncation degree of the series;
   --   pnt      expansion point for the Taylor series;
   --   cfq      coefficient vectors of the random coefficient system;

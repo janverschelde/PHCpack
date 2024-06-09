@@ -111,7 +111,8 @@ package body Taylor_Polyhedral_Homotopies is
   end Scale_Powers;
 
   procedure Make_Homotopy
-              ( deg : in integer32;
+              ( file : in file_type;
+                deg : in integer32;
                 pnt : in double_float;
                 cfq : in Standard_Complex_VecVecs.VecVec;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
@@ -126,6 +127,7 @@ package body Taylor_Polyhedral_Homotopies is
     monidx : integer32;   -- index of a monomial coefficient
     cff : Standard_Complex_Numbers.Complex_Number;
     exp : Standard_Integer_Vectors.Vector(cfq'range);
+    tol_zero : constant double_float := 1.0e-14;
 
   begin
     for k in lif'range loop
@@ -135,6 +137,7 @@ package body Taylor_Polyhedral_Homotopies is
         declare
           len : constant integer32 := integer32(Length_Of(lif(k)));
           tmv : Taylor_Monomial_Vector(1..len);
+          cnt : integer32 := 0;
         begin
           monidx := 0;
           while not Is_Null(tmp) loop
@@ -149,12 +152,25 @@ package body Taylor_Polyhedral_Homotopies is
               tm : constant Link_to_Taylor_Monomial
                  := Make(deg,pwr,pnt,cff,exp);
             begin
-             -- put(file,tm);
-              tmv(monidx) := tm;
+              if pwr = 0.0 then -- initial monomial
+                put_line(file,"added initial monomial");
+                cnt := cnt + 1;
+                tmv(cnt) := tm;
+              else
+                put(file,"lead coefficient of series :");
+                put(file,tm.cff(0));
+                if abs(tm.cff(0)) < tol_zero then
+                  put_line(file," ignore");
+                else
+                  put_line(file," added");
+                  cnt := cnt + 1;
+                  tmv(cnt) := tm;
+                end if;
+              end if;
             end;
             tmp := Tail_Of(tmp);
           end loop;
-          thm(idx) := new Taylor_Monomial_Vector'(tmv);
+          thm(idx) := new Taylor_Monomial_Vector'(tmv(1..cnt));
         end;
       end loop;
     end loop;
@@ -180,7 +196,7 @@ package body Taylor_Polyhedral_Homotopies is
     Scale_Powers(powers,minpwr);
     put_line(file,"The powers of t in the homotopy after scaling :");
     put(file,powers);
-    Make_Homotopy(deg,pnt,cfq,mix,lif,powers,thm);
+    Make_Homotopy(file,deg,pnt,cfq,mix,lif,powers,thm);
     Standard_Floating_VecVecs.Clear(powers);
   end Make_Homotopy;
 
