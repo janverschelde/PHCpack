@@ -1083,11 +1083,11 @@ package body Power_Series_Methods is
 -- SVD NEWTON :
 
   procedure Run_SVD_Newton
-             ( maxdeg,nbrit : in integer32;
-               p : in Standard_CSeries_Poly_Systems.Poly_Sys;
-               s : in out Standard_Complex_Series_Vectors.Vector;
-               rcond : out double_float; verbose : in boolean := false;
-               vrblvl : in integer32 := 0 ) is
+              ( maxdeg,nbrit : in integer32;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                s : in out Standard_Complex_Series_Vectors.Vector;
+                rcond : out double_float; verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
      then put_line("-> in power_series_methods.Run_SVD_Newton 1 ...");
@@ -1096,11 +1096,29 @@ package body Power_Series_Methods is
   end Run_SVD_Newton;
 
   procedure Run_SVD_Newton
-             ( file : in file_type; maxdeg,nbrit : in integer32;
-               p : in Standard_CSeries_Poly_Systems.Poly_Sys;
-               s : in out Standard_Complex_Series_Vectors.Vector;
-               rcond : out double_float; verbose : in boolean := false;
-               vrblvl : in integer32 := 0 ) is
+              ( maxdeg,nbrit : in integer32;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                s : in out Standard_Complex_Series_Vectors.Vector;
+                rcond : out double_float;
+                evp : out Standard_Complex_Series_Vectors.Vector;
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_SVD_Newton 2 ...");
+    end if;
+    Run_SVD_Newton(standard_output,maxdeg,nbrit,p,s,rcond,verbose,vrblvl-1);
+    if 1.0 + rcond /= 1.0
+     then evp := Standard_CSeries_Poly_SysFun.Eval(p,s);
+    end if;
+  end Run_SVD_Newton;
+
+  procedure Run_SVD_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                s : in out Standard_Complex_Series_Vectors.Vector;
+                rcond : out double_float; verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
 
     use Standard_Newton_Matrix_Series; -- use Standard_Newton_Series;
 
@@ -1111,7 +1129,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 2 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 3 ...");
     end if;
     if not verbose then
       SVD_Newton_Steps(p,order,maxdeg,nbrit,s,info,rcond,vrblvl-1);
@@ -1132,6 +1150,42 @@ package body Power_Series_Methods is
   end Run_SVD_Newton;
 
   procedure Run_SVD_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                s : in out Standard_Complex_Series_Vectors.Vector;
+                rcond : out double_float;
+                evp : out Standard_Complex_Series_Vectors.Vector;
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 ) is
+
+    use Standard_Newton_Matrix_Series; -- use Standard_Newton_Series;
+
+    order : integer32 := 1;
+    info : integer32;
+    tol : constant double_float := 1.0E-12;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in power_series_methods.Run_SVD_Newton 4 ...");
+    end if;
+    if not verbose then
+      Run_SVD_Newton(maxdeg,nbrit,p,s,rcond,evp,verbose,vrblvl-1);
+    else
+      SVD_Newton_Steps(file,p,order,maxdeg,nbrit,s,info,rcond,vrblvl-1);
+      put(file,"rcond = "); put(file,rcond,3); new_line(file);
+      if 1.0 + rcond /= 1.0 then
+        Complex_Series_and_Polynomials.Filter(s,tol);
+        put_line(file,"The updated power series solution :");
+        Complex_Series_and_Polynomials_io.put(file,s);
+        evp := Standard_CSeries_Poly_SysFun.Eval(p,s);
+        Complex_Series_and_Polynomials.Filter(evp,tol);
+        put_line(file,"The evaluated solution :");
+        Complex_Series_and_Polynomials_io.put(file,evp);
+      end if;
+    end if;
+  end Run_SVD_Newton;
+
+  procedure Run_SVD_Newton
              ( maxdeg,nbrit : in integer32;
                p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;
                s : in out DoblDobl_Complex_Series_Vectors.Vector;
@@ -1139,7 +1193,7 @@ package body Power_Series_Methods is
                vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 3 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 5 ...");
     end if;
     Run_SVD_Newton(standard_output,maxdeg,nbrit,p,s,rcond,verbose,vrblvl-1);
   end Run_SVD_Newton;
@@ -1161,7 +1215,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 4 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 6 ...");
     end if;
     if not verbose then
       SVD_Newton_Steps(p,order,maxdeg,nbrit,s,info,rcond,vrblvl-1);
@@ -1189,7 +1243,7 @@ package body Power_Series_Methods is
                vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 5 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 7 ...");
     end if;
     Run_SVD_Newton(standard_output,maxdeg,nbrit,p,s,rcond,verbose,vrblvl-1);
   end Run_SVD_Newton;
@@ -1211,7 +1265,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 6 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 8 ...");
     end if;
     if not verbose then
       SVD_Newton_Steps(p,order,maxdeg,nbrit,s,info,rcond,vrblvl-1);
@@ -1239,7 +1293,7 @@ package body Power_Series_Methods is
                vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 7 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 9 ...");
     end if;
     Run_SVD_Newton(standard_output,maxdeg,nbrit,p,s,rcond,verbose,vrblvl-1);
   end Run_SVD_Newton;
@@ -1261,7 +1315,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 8 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 10 ...");
     end if;
     if not verbose then
       SVD_Newton_Steps(p,order,maxdeg,nbrit,s,info,rcond,vrblvl-1);
@@ -1289,7 +1343,7 @@ package body Power_Series_Methods is
                vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 9 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 11 ...");
     end if;
     Run_SVD_Newton(standard_output,maxdeg,nbrit,p,s,rcond,verbose,vrblvl-1);
   end Run_SVD_Newton;
@@ -1311,7 +1365,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 10 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 12 ...");
     end if;
     if not verbose then
       SVD_Newton_Steps(p,order,maxdeg,nbrit,s,info,rcond,vrblvl-1);
@@ -1339,7 +1393,7 @@ package body Power_Series_Methods is
                vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 11 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 13 ...");
     end if;
     Run_SVD_Newton(standard_output,maxdeg,nbrit,p,s,rcond,verbose,vrblvl-1);
   end Run_SVD_Newton;
@@ -1361,7 +1415,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 12 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 14 ...");
     end if;
     if not verbose then
       SVD_Newton_Steps(p,order,maxdeg,nbrit,s,info,rcond,vrblvl-1);
@@ -1389,7 +1443,7 @@ package body Power_Series_Methods is
                vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 13 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 15 ...");
     end if;
     Run_SVD_Newton(standard_output,maxdeg,nbrit,p,s,rcond,verbose,vrblvl-1);
   end Run_SVD_Newton;
@@ -1411,7 +1465,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 14 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 16 ...");
     end if;
     if not verbose then
       SVD_Newton_Steps(p,order,maxdeg,nbrit,s,info,rcond,vrblvl-1);
@@ -2176,7 +2230,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 15 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 17 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -2214,7 +2268,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 16 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 18 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -2252,7 +2306,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 17 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 19 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -2290,7 +2344,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 18 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 20 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -2328,7 +2382,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 19 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 21 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -2366,7 +2420,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 20 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 22 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -2404,7 +2458,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 21 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 23 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -2440,7 +2494,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 22 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 24 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -2471,7 +2525,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 23 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 25 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -2502,7 +2556,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 24 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 26 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -2533,7 +2587,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 25 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 27 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -2564,7 +2618,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 26 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 28 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -2595,7 +2649,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 27 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 29 ...");
     end if;
     for i in v'range loop
       if verbose then
@@ -2626,7 +2680,7 @@ package body Power_Series_Methods is
 
   begin
     if vrblvl > 0
-     then put_line("-> in power_series_methods.Run_SVD_Newton 28 ...");
+     then put_line("-> in power_series_methods.Run_SVD_Newton 30 ...");
     end if;
     for i in v'range loop
       if verbose then

@@ -10,12 +10,15 @@ with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Arrays_of_Floating_Vector_Lists;
+with Standard_Complex_Series_Norms;
+with Standard_Complex_Series_Vectors;
 with Standard_Complex_Series_VecVecs;
 with Standard_Complex_Laur_Functions;
 with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_CSeries_Poly_Systems;
 with Standard_CSeries_Poly_Systems_io;   use Standard_CSeries_Poly_Systems_io;
+-- with Complex_Series_and_Polynomials_io;
 with Floating_Lifting_Utilities;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;     use Floating_Mixed_Subdivisions_io;
@@ -118,7 +121,7 @@ procedure ts_rptmccsol is
     fail,zero_y : boolean;
     thm : Taylor_Homotopy(q'range);
     hom : Standard_CSeries_Poly_Systems.Poly_Sys(q'range);
-    verbose : constant boolean := true;
+    verbose : constant boolean := false;
     nbrit : constant integer32 := deg;
 
   begin
@@ -140,8 +143,25 @@ procedure ts_rptmccsol is
         srv : constant Standard_Complex_Series_VecVecs.VecVec(1..len)
             := Series_and_Solutions.Create(sqsols,0);
        -- idx = 0 => copy all coordinates of the solution
+        eva : Standard_Complex_Series_Vectors.Vector(q'range);
+        rco,nrm : double_float;
       begin
-        Power_Series_Methods.Run_SVD_Newton(file,deg,nbrit,hom,srv,verbose);
+        for i in 1..len loop
+          put(file,"Running on solution "); put(file,i,1);
+          put_line(file," ...");
+          Power_Series_Methods.Run_SVD_Newton
+            (file,deg,nbrit,hom,srv(i).all,rco,eva,verbose);
+          put(file,"rcond :"); put(file,rco,3); new_line(file);
+         -- put_line(file,"The evaluated solution :");
+         -- Complex_Series_and_Polynomials_io.put(file,eva);
+          put(file,"norms :");
+          for i in eva'range loop
+            nrm := Standard_Complex_Series_Norms.Max_Norm(eva(i).all);
+            put(file," "); put(file,nrm,3);
+          end loop;
+          new_line(file);
+          Standard_Complex_Series_Vectors.Clear(eva);
+        end loop;
       end;
       Concat(qsols,qsols_last,sqsols);
     end if;

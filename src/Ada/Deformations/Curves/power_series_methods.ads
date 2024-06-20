@@ -475,11 +475,52 @@ package Power_Series_Methods is
                 rcond : out double_float; verbose : in boolean := false;
                 vrblvl : in integer32 := 0 );
   procedure Run_SVD_Newton
+              ( maxdeg,nbrit : in integer32;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                s : in out Standard_Complex_Series_Vectors.Vector;
+                rcond : out double_float;
+                evp : out Standard_Complex_Series_Vectors.Vector;
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
+  procedure Run_SVD_Newton
               ( file : in file_type; maxdeg,nbrit : in integer32;
                 p : in Standard_CSeries_Poly_Systems.Poly_Sys;
                 s : in out Standard_Complex_Series_Vectors.Vector;
                 rcond : out double_float; verbose : in boolean := false;
                 vrblvl : in integer32 := 0 );
+  procedure Run_SVD_Newton
+              ( file : in file_type; maxdeg,nbrit : in integer32;
+                p : in Standard_CSeries_Poly_Systems.Poly_Sys;
+                s : in out Standard_Complex_Series_Vectors.Vector;
+                rcond : out double_float;
+                evp : out Standard_Complex_Series_Vectors.Vector;
+                verbose : in boolean := false;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Applies as many steps with Newton's method as the value of nbrit,
+  --   starting at the solution in s to the system p,
+  --   applying Singular Value Decomposition to compute the Newton updates,
+  --   in double precision.
+
+  -- ON ENTRY :
+  --   file     must be opened for output, to write results,
+  --            if not provided, then output is written to screen;
+  --   maxdeg   maximal degree of the series;
+  --   nbrit    number of new iterations;
+  --   p        a polynomial system with series coefficients;
+  --   s        leading coefficients for a power series solution;
+  --   verbose  indicates if results of intermediate Newton steps
+  --            need to be written to file or to standard output;
+  --   vrblvl   verbose level to indicate name of the procedure.
+
+  -- ON RETURN :
+  --   s        a power series solution to p, up to some order;
+  --   rcond    the inverse condition number computed from the singular values,
+  --            if 1.0 + rcond = 1.0, then the problem is singular;
+  --   evp      if the problem is nonsingular, then evp contains
+  --            the solution s evaluated at p.
+
   procedure Run_SVD_Newton
               ( maxdeg,nbrit : in integer32;
                 p : in DoblDobl_CSeries_Poly_Systems.Poly_Sys;

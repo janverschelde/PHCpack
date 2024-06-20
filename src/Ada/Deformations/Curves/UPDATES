@@ -1,3 +1,6 @@
+Wed 19 Jun 2024 : added two procedures to power_series_methods to return
+  the evaluated power series at the end solution.
+
 Sun 2 Jun 2024 : new taylor_homotopy_series to make cseries systems from
   Taylor monomial homotopies, tested in ts_fliphom.
 

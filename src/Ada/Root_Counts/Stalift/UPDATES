@@ -1,3 +1,6 @@
+Wed 19 Jun 2024 : updated ts_rptmccsol with the max norm computation of
+  the evaluated power series solutions after the first Newton run.
+
 Sun 9 Jun 2024 : changed taylor_polyhedral_homotopies to not add monomials
   with too small leading series coefficients, updated ts_rptmccsol.
 
