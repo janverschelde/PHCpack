@@ -1,0 +1,16 @@
+Series with complex coefficients and real powers for PHCv2.4.91
+
+An exponential series is a sequence of two vectors:
+(1) nonzero complex coefficients for the terms in the series; and
+(2) corresponding real exponents sorted in increasing order.
+
+Run "gprbuild exponentials.gpr" to make all test programs.
+On windows, type "gprbuild exponentials.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean exponentials.gpr" removes all files created by gprbuild.
+
+------------------------------------------------------------------------------
+file name                          : short description
+------------------------------------------------------------------------------
+ts_expops                          : tests arithmetical operations
+------------------------------------------------------------------------------

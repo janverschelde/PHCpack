@@ -1,0 +1,36 @@
+project exponentials is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Matrices",
+                 "../Reduction", "../Supports", "../Polynomials",
+                 "../Functions", "../Series");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../Numbers", "../QD", "../Vectors", "../Matrices",
+                 "../Reduction", "../Supports", "../Polynomials",
+                 "../Functions", "../Series");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+    for Exec_Dir use "../../../bin";
+
+    for Main use
+    (
+        "ts_expops.adb"     -- tests arithmetic on exponenials
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+    end Compiler;
+
+end exponentials;

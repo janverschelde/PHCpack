@@ -1,4 +1,4 @@
-Mathematical library in PHCpack version 2.4.85
+Mathematical library in PHCpack version 2.4.91
 
 The mathematical library contains general tools that are not specific
 for polynomial homotopy continuation.
@@ -42,7 +42,7 @@ The Laurent folder with code for Laurent series was added in v2.4.85.
      |-- Series        : 1.B. manipulating truncated power series
      |-- Laurent       : 1.C. series with integer leading exponents
      |-- AD            : 1.D. algorithmic differentiation of the Path library
-     
+     |-- Exponentials  : 1.E. series with real powers
 
 The directory Numbers specifies the coefficient rings and contains
 definitions of floating-point and complex numbers.
