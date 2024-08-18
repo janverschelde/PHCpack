@@ -115,6 +115,272 @@ procedure ts_expops is
     return res;
   end Convolute;
 
+  procedure Add ( acf,bcf : in Standard_Complex_Vectors.Vector;
+                  axp,bxp : in Standard_Floating_Vectors.Vector;
+                  ccf : out Standard_Complex_Vectors.Vector;
+                  cxp : out Standard_Floating_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Computes the sum of two exponential series,
+  --   truncated at the same degree.
+
+  -- ON ENTRY :
+  --   acf        coefficients of the first series;
+  --   bcf        coefficients of the second series;
+  --   axp        exponents of the first series;
+  --   bxp        exponents of the second series.
+
+  -- ON RETURN :
+  --   ccf        coefficients of the sum;
+  --   cxp        exponents of the sum.
+
+    aix : integer32 := acf'first;
+    bix : integer32 := bcf'first;
+
+  begin
+    for i in ccf'range loop
+      if axp(aix) < bxp(bix) then
+        ccf(i) := acf(aix);
+        cxp(i) := axp(aix);
+        aix := aix + 1;
+      elsif axp(aix) > bxp(bix) then
+        ccf(i) := bcf(bix);
+        cxp(i) := bxp(bix);
+        bix := bix + 1;
+      else -- axp(aix) = bxp(bix) 
+        ccf(i) := acf(aix) + bcf(bix);
+        cxp(i) := axp(aix);
+        aix := aix + 1;
+        bix := bix + 1;
+      end if;
+    end loop;
+  end Add;
+
+  procedure Sub ( acf,bcf : in Standard_Complex_Vectors.Vector;
+                  axp,bxp : in Standard_Floating_Vectors.Vector;
+                  ccf : out Standard_Complex_Vectors.Vector;
+                  cxp : out Standard_Floating_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Computes the difference of two exponential series,
+  --   truncated at the same degree.
+
+  -- ON ENTRY :
+  --   acf        coefficients of the first series;
+  --   bcf        coefficients of the second series;
+  --   axp        exponents of the first series;
+  --   bxp        exponents of the second series.
+
+  -- ON RETURN :
+  --   ccf        coefficients of the difference;
+  --   cxp        exponents of the difference.
+
+    aix : integer32 := acf'first;
+    bix : integer32 := bcf'first;
+
+  begin
+    for i in ccf'range loop
+      if axp(aix) < bxp(bix) then
+        ccf(i) := acf(aix);
+        cxp(i) := axp(aix);
+        aix := aix + 1;
+      elsif axp(aix) > bxp(bix) then
+        ccf(i) := -bcf(bix);
+        cxp(i) := bxp(bix);
+        bix := bix + 1;
+      else -- axp(aix) = bxp(bix) 
+        ccf(i) := acf(aix) - bcf(bix);
+        cxp(i) := axp(aix);
+        aix := aix + 1;
+        bix := bix + 1;
+      end if;
+    end loop;
+  end Sub;
+
+  procedure Inc ( acf : in out Standard_Complex_Vectors.Vector;
+                  bcf : in Standard_Complex_Vectors.Vector;
+                  axp : in out Standard_Floating_Vectors.Vector;
+                  bxp : in Standard_Floating_Vectors.Vector;
+                  wrkcf : in out Standard_Complex_Vectors.Vector;
+                  wrkxp : in out Standard_Floating_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Increments the first series (acf, axp) with (bcf, bxp),
+  --   truncated at the same degree.
+
+  -- ON ENTRY :
+  --   acf        coefficients of the first series;
+  --   bcf        coefficients of the second series;
+  --   axp        exponents of the first series;
+  --   bxp        exponents of the second series.
+
+  -- ON RETURN :
+  --   acf        coefficients of the sum;
+  --   axp        exponents of the sum.
+  --   wrkcf      work space coefficients;
+  --   wrkxp      work space exponents.
+
+  begin
+    Add(acf,bcf,axp,bxp,wrkcf,wrkxp);
+    for i in acf'range loop
+      acf(i) := wrkcf(i);
+      axp(i) := wrkxp(i);
+    end loop;
+  end Inc;
+
+  procedure Mul ( acf,bcf : in Standard_Complex_Vectors.Vector;
+                  axp,bxp : in Standard_Floating_Vectors.Vector;
+                  ccf : out Standard_Complex_Vectors.Vector;
+                  cxp : out Standard_Floating_Vectors.Vector;
+                  prdcf,wrkcf : in out Standard_Complex_Vectors.Vector;
+                  prdxp,wrkxp : in out Standard_Floating_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Computes the product of two exponential series,
+  --   truncated at the same degree.
+
+  -- ON ENTRY :
+  --   acf        coefficients of the first series;
+  --   bcf        coefficients of the second series;
+  --   axp        exponents of the first series;
+  --   bxp        exponents of the second series.
+
+  -- ON RETURN :
+  --   ccf        coefficients of the product;
+  --   cxp        exponents of the product.
+  --   prdcf      work space coefficients for product term;
+  --   prdxp      work space exponents for product term;
+  --   wrkcf      work space coefficients for increment;
+  --   wrkxp      work space exponents for increment.
+
+  begin
+    for i in ccf'range loop
+      ccf(i) := acf(0)*bcf(i);
+      cxp(i) := axp(0)+bxp(i);
+    end loop;
+    for i in 1..ccf'last loop
+      for j in bcf'range loop
+        prdcf(j) := acf(i)*bcf(j);
+        prdxp(j) := axp(i)+bxp(j);
+      end loop;
+      Inc(ccf,prdcf,cxp,prdxp,wrkcf,wrkxp);
+    end loop;
+  end Mul;
+
+  procedure Div ( acf,bcf : in Standard_Complex_Vectors.Vector;
+                  axp,bxp : in Standard_Floating_Vectors.Vector;
+                  ccf : out Standard_Complex_Vectors.Vector;
+                  cxp : out Standard_Floating_Vectors.Vector;
+                  invbcf,prdcf,wrkcf : in out Standard_Complex_Vectors.Vector;
+                  prdxp,wrkxp : in out Standard_Floating_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Computes the quotient of two exponential series,
+  --   truncated at the same degree.
+
+  -- REQUIRED : bcf(0) is nonzero.
+
+  -- ON ENTRY :
+  --   acf        coefficients of the first series;
+  --   bcf        coefficients of the second series;
+  --   axp        exponents of the first series;
+  --   bxp        exponents of the second series.
+
+  -- ON RETURN :
+  --   ccf        coefficients of the quotient;
+  --   cxp        exponents of the quotient;
+  --   invbcf     coefficients of inverse of second series;
+  --   prdcf      work space coefficients for product term;
+  --   prdxp      work space exponents for product term;
+  --   wrkcf      work space coefficients for increment;
+  --   wrkxp      work space exponents for increment.
+
+  begin
+    invbcf := Inverse(bcf);
+    Mul(acf,invbcf,axp,bxp,ccf,cxp,prdcf,wrkcf,prdxp,wrkxp);
+  end Div;
+
+  procedure Test_Inverse ( deg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Makes a random series truncated at degree deg,
+  --   computes its inverse and the product to check.
+
+    cff : Standard_Complex_Vectors.Vector(0..deg);
+    invcff : Standard_Complex_Vectors.Vector(0..deg);
+    prd : Standard_Complex_Vectors.Vector(0..deg);
+    exp : Standard_Floating_Vectors.Vector(0..deg);
+
+  begin
+    Make_Random_Exponentials(deg,cff,exp);
+    put_line("Random coefficients :"); put_line(cff);
+    put_line("Random exponentials :"); put_line(exp);
+    put_line("A random exponential series :");
+    Write_Exponential_Series(standard_output,cff,exp);
+    invcff := Inverse(cff);
+    put_line("The inverse of the exponential series :");
+    Write_Exponential_Series(standard_output,invcff,exp);
+    prd := Convolute(cff,invcff);
+    put_line("The product with the inverse of the exponential series :");
+    Write_Exponential_Series(standard_output,prd,exp);
+  end Test_Inverse;
+
+  procedure Test_Sum ( deg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Makes two random series truncated at degree deg,
+  --   computes their sum and the difference to check.
+
+    acf,bcf,sumcf,difcf : Standard_Complex_Vectors.Vector(0..deg);
+    axp,bxp,sumxp,difxp : Standard_Floating_Vectors.Vector(0..deg);
+
+  begin
+    Make_Random_Exponentials(deg,acf,axp);
+    put_line("The first series :");
+    Write_Exponential_Series(standard_output,acf,axp);
+    Make_Random_Exponentials(deg,bcf,bxp);
+    put_line("The second series :");
+    Write_Exponential_Series(standard_output,bcf,bxp);
+    Add(acf,bcf,axp,bxp,sumcf,sumxp);
+    put_line("The sum of the two series :");
+    Write_Exponential_Series(standard_output,sumcf,sumxp);
+    Sub(sumcf,bcf,sumxp,bxp,difcf,difxp);
+    put_line("After subtracting second series from the sum :");
+    Write_Exponential_Series(standard_output,difcf,difxp);
+    Sub(difcf,acf,difxp,axp,sumcf,sumxp);
+    put_line("After subtracting first series from the difference :");
+    Write_Exponential_Series(standard_output,sumcf,sumxp);
+  end Test_Sum;
+
+  procedure Test_Product ( deg : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Makes two random series truncated at degree deg,
+  --   computes their product and the quotient to check.
+
+    acf,bcf,prodcf,quotcf,difcf : Standard_Complex_Vectors.Vector(0..deg);
+    axp,bxp,prodxp,quotxp,difxp : Standard_Floating_Vectors.Vector(0..deg);
+    prdcf,wrkcf,invbcf : Standard_Complex_Vectors.Vector(0..deg);
+    prdxp,wrkxp : Standard_Floating_Vectors.Vector(0..deg);
+
+  begin
+    Make_Random_Exponentials(deg,acf,axp);
+    put_line("The first series :");
+    Write_Exponential_Series(standard_output,acf,axp);
+    Make_Random_Exponentials(deg,bcf,bxp);
+    put_line("The second series :");
+    Write_Exponential_Series(standard_output,bcf,bxp);
+    Mul(acf,bcf,axp,bxp,prodcf,prodxp,prdcf,wrkcf,prdxp,wrkxp);
+    put_line("The product of the two series :");
+    Write_Exponential_Series(standard_output,prodcf,prodxp);
+    Div(prodcf,bcf,prodxp,bxp,quotcf,quotxp,invbcf,prdcf,wrkcf,prdxp,wrkxp);
+    put_line("After dividing second series from the product :");
+    Write_Exponential_Series(standard_output,quotcf,quotxp);
+    Sub(quotcf,acf,quotxp,axp,difcf,difxp);
+    put_line("After subtracting first series from the difference :");
+    Write_Exponential_Series(standard_output,difcf,difxp);
+  end Test_Product;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -140,24 +406,9 @@ procedure ts_expops is
     put("Give the truncation degree of the exponential series : ");
     get(deg);
     put("-> generating series of degree "); put(deg,1); put_line(" ...");
-    declare
-      cff : Standard_Complex_Vectors.Vector(0..deg);
-      invcff : Standard_Complex_Vectors.Vector(0..deg);
-      prd : Standard_Complex_Vectors.Vector(0..deg);
-      exp : Standard_Floating_Vectors.Vector(0..deg);
-    begin
-      Make_Random_Exponentials(deg,cff,exp);
-      put_line("Random coefficients :"); put_line(cff);
-      put_line("Random exponentials :"); put_line(exp);
-      put_line("A random exponential series :");
-      Write_Exponential_Series(standard_output,cff,exp);
-      invcff := Inverse(cff);
-      put_line("The inverse of the exponential series :");
-      Write_Exponential_Series(standard_output,invcff,exp);
-      prd := Convolute(cff,invcff);
-      put_line("The product with the inverse of the exponential series :");
-      Write_Exponential_Series(standard_output,prd,exp);
-    end;
+    Test_Inverse(deg);
+    Test_Sum(deg);
+    Test_Product(deg);
   end Main;
 
 begin

@@ -1,1 +1,2 @@
 Sat 17 Aug 2024 : new ts_expops.adb and exponentials.gpr.
+  Added sum and product operations to ts_expops.adb.

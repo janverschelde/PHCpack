@@ -1,4 +1,5 @@
 Sat 17 Aug 2024 : new folder Exponentials.
+  Updated math_lib.gpr with the exponentials.gpr.
 
 Mon 14 Jun 2021 : added math_lib.gpr to build all test procedures.
 
