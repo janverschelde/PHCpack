@@ -7,7 +7,7 @@ with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
-with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
+-- with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Random_Numbers;
 with Standard_Floating_Vectors;
 with Standard_Floating_Vectors_io;       use Standard_Floating_Vectors_io;
@@ -47,17 +47,32 @@ procedure ts_expops is
   --   Writes the exponential series to file.
 
   begin
-    if REAL_PART(cff(0)) >= 0.0
-     then put(file,"    ");
-     else put(file,"   ");
+    if exp(0) /= 0.0 then
+      put("  (");
+      if REAL_PART(cff(0)) >= 0.0
+       then put(file," ");
+      end if;
+      put(file,REAL_PART(cff(0)),1,16,3);
+      if IMAG_PART(cff(0)) >= 0.0
+       then put(file," + ");
+       else put(file," - ");
+      end if;
+      put(file,abs(IMAG_PART(cff(0))),1,16,3);
+      put(file,"*I)*t^");
+      put(file,exp(0),1,16,3); new_line(file);
+    else
+      if REAL_PART(cff(0)) >= 0.0
+       then put(file,"    ");
+       else put(file,"   ");
+      end if;
+      put(file,REAL_PART(cff(0)),1,16,3);
+      if IMAG_PART(cff(0)) >= 0.0
+       then put(file," + ");
+       else put(file," - ");
+      end if;
+      put(file,abs(IMAG_PART(cff(0))),1,16,3);
+      put_line(file,"*I");
     end if;
-    put(file,REAL_PART(cff(0)),1,16,3);
-    if IMAG_PART(cff(0)) >= 0.0
-     then put(file," + ");
-     else put(file," - ");
-    end if;
-    put(file,abs(IMAG_PART(cff(0))),1,16,3);
-    put_line(file,"*I");
     for i in 1..cff'last loop
       put(file,"+ (");
       if REAL_PART(cff(i)) >= 0.0
@@ -120,17 +135,22 @@ procedure ts_expops is
   procedure Add ( acf,bcf : in Standard_Complex_Vectors.Vector;
                   axp,bxp : in Standard_Floating_Vectors.Vector;
                   ccf : out Standard_Complex_Vectors.Vector;
-                  cxp : out Standard_Floating_Vectors.Vector ) is
+                  cxp : out Standard_Floating_Vectors.Vector;
+                  tol : in double_float := 1.0e-14 ) is
 
   -- DESCRIPTION :
   --   Computes the sum of two exponential series,
   --   truncated at the same degree.
+  --   If ccf'last equals twice the truncation degree,
+  --   then the result contains all terms of the sum,
+  --   and (a + b) - b - a = (a + b) - a - b = 0. 
 
   -- ON ENTRY :
   --   acf        coefficients of the first series;
   --   bcf        coefficients of the second series;
   --   axp        exponents of the first series;
-  --   bxp        exponents of the second series.
+  --   bxp        exponents of the second series;
+  --   tol        tolerance used to omit zero coefficients.
 
   -- ON RETURN :
   --   ccf        coefficients of the sum;
@@ -157,7 +177,7 @@ procedure ts_expops is
         cxp(cix) := axp(aix);
         aix := aix + 1;
         bix := bix + 1;
-        if AbsVal(ccf(cix)) > 1.0e-14
+        if AbsVal(ccf(cix)) > tol
          then cix := cix + 1;
         end if;
       end if;
@@ -192,17 +212,22 @@ procedure ts_expops is
   procedure Sub ( acf,bcf : in Standard_Complex_Vectors.Vector;
                   axp,bxp : in Standard_Floating_Vectors.Vector;
                   ccf : out Standard_Complex_Vectors.Vector;
-                  cxp : out Standard_Floating_Vectors.Vector ) is
+                  cxp : out Standard_Floating_Vectors.Vector;
+                  tol : in double_float := 1.0e-14 ) is
 
   -- DESCRIPTION :
   --   Computes the difference of two exponential series,
   --   truncated at the same degree.
+  --   If ccf'last equals twice the truncation degree,
+  --   then the result contains all terms of the difference,
+  --   and (a + b) - b - a = (a + b) - a - b = 0. 
 
   -- ON ENTRY :
   --   acf        coefficients of the first series;
   --   bcf        coefficients of the second series;
   --   axp        exponents of the first series;
-  --   bxp        exponents of the second series.
+  --   bxp        exponents of the second series;
+  --   tol        tolerance used to omit zero coefficients.
 
   -- ON RETURN :
   --   ccf        coefficients of the difference;
@@ -229,23 +254,14 @@ procedure ts_expops is
         cxp(cix) := axp(aix);
         aix := aix + 1;
         bix := bix + 1;
-        if AbsVal(ccf(cix)) > 1.0e-14 then
-          cix := cix + 1;
-        else
-          put("aix : "); put(aix,1);
-          put("  bix : "); put(bix,1);
-          put("  cix : "); put(cix,1); new_line;
-          put(ccf(cix)); new_line;
+        if AbsVal(ccf(cix)) > tol
+         then cix := cix + 1;
         end if;
       end if;
       exit when (aix > acf'last) or (bix > bcf'last);
     end loop;
     if cix <= ccf'last then
-     -- put("at end, aix : "); put(aix,1);
-     -- put("  bix : "); put(bix,1);
-     -- put("  cix : "); put(cix,1); new_line;
       if aix <= acf'last then
-       -- put_line("copying from a ...");
         while cix <= ccf'last loop
           ccf(cix) := acf(aix);
           cxp(cix) := axp(aix);
@@ -254,7 +270,6 @@ procedure ts_expops is
           exit when (aix > acf'last);
         end loop;
       elsif bix <= bcf'last then
-       -- put_line("copying from b ...");
         while cix <= ccf'last loop
           ccf(cix) := -bcf(bix);
           cxp(cix) := bxp(bix);
@@ -265,59 +280,35 @@ procedure ts_expops is
       end if;
       while cix <= ccf'last loop
         ccf(cix) := create(0.0);
-        cxp(cix) := cxp(cix-1) + 1.0;
+        if cix = 0
+         then cxp(cix) := 1.0;
+         else cxp(cix) := cxp(cix-1) + 1.0;
+        end if;
         cix := cix + 1;
       end loop;
     end if;
   end Sub;
-
-  procedure Inc ( acf : in out Standard_Complex_Vectors.Vector;
-                  bcf : in Standard_Complex_Vectors.Vector;
-                  axp : in out Standard_Floating_Vectors.Vector;
-                  bxp : in Standard_Floating_Vectors.Vector;
-                  wrkcf : in out Standard_Complex_Vectors.Vector;
-                  wrkxp : in out Standard_Floating_Vectors.Vector ) is
-
-  -- DESCRIPTION :
-  --   Increments the first series (acf, axp) with (bcf, bxp),
-  --   truncated at the same degree.
-
-  -- ON ENTRY :
-  --   acf        coefficients of the first series;
-  --   bcf        coefficients of the second series;
-  --   axp        exponents of the first series;
-  --   bxp        exponents of the second series.
-
-  -- ON RETURN :
-  --   acf        coefficients of the sum;
-  --   axp        exponents of the sum.
-  --   wrkcf      work space coefficients;
-  --   wrkxp      work space exponents.
-
-  begin
-    Add(acf,bcf,axp,bxp,wrkcf,wrkxp);
-    for i in acf'range loop
-      acf(i) := wrkcf(i);
-      axp(i) := wrkxp(i);
-    end loop;
-  end Inc;
 
   procedure Mul ( acf,bcf : in Standard_Complex_Vectors.Vector;
                   axp,bxp : in Standard_Floating_Vectors.Vector;
                   ccf : out Standard_Complex_Vectors.Vector;
                   cxp : out Standard_Floating_Vectors.Vector;
                   prdcf,wrkcf : in out Standard_Complex_Vectors.Vector;
-                  prdxp,wrkxp : in out Standard_Floating_Vectors.Vector ) is
+                  prdxp,wrkxp : in out Standard_Floating_Vectors.Vector;
+                  tol : in double_float := 1.0e-14 ) is
 
   -- DESCRIPTION :
   --   Computes the product of two exponential series,
   --   truncated at the same degree.
+  --   If ccf'last is (deg+1)*deg, where deg is the truncation degree,
+  --   then all terms of the product can be stored.
 
   -- ON ENTRY :
   --   acf        coefficients of the first series;
   --   bcf        coefficients of the second series;
   --   axp        exponents of the first series;
-  --   bxp        exponents of the second series.
+  --   bxp        exponents of the second series;
+  --   tol        tolerance to omit zero coefficients.
 
   -- ON RETURN :
   --   ccf        coefficients of the product;
@@ -361,7 +352,9 @@ procedure ts_expops is
           wrkxp(wix) := cxp(cix);
           cix := cix + 1;
           pix := pix + 1;
-          wix := wix + 1;
+          if AbsVal(wrkcf(wix)) > tol
+           then wix := wix + 1;
+          end if;
         end if;
         exit when (pix > deg) or (cix > i*deg);
       end loop;
@@ -384,9 +377,6 @@ procedure ts_expops is
           end loop;
         end if;
       end if;
-      put("i = "); put(i,1); 
-      put("  deg = "); put(deg,1); 
-      put("  (i+1)*deg = "); put((i+1)*deg,1); new_line;
       for j in 0..(i+1)*deg loop
         ccf(j) := wrkcf(j);
         cxp(j) := wrkxp(j);
@@ -519,6 +509,10 @@ procedure ts_expops is
     put_line("The first series :");
     Write_Exponential_Series(standard_output,acf,axp);
     Make_Random_Exponentials(deg,bcf,bxp);
+   -- make sure exponents of second series are large enough
+    for i in 1..bxp'last loop
+      bxp(i) := bxp(i) + axp(axp'last);
+    end loop;
     put_line("The second series :");
     Write_Exponential_Series(standard_output,bcf,bxp);
     Mul(acf,bcf,axp,bxp,prodcf,prodxp,prdcf,wrkcf,prdxp,wrkxp);
