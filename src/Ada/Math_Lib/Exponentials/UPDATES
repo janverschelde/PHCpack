@@ -1,3 +1,6 @@
+Tue 20 Aug 2024 : new packages double_exponential_arithmetic and
+  test_double_exponentials with code factored out from ts_expops.adb.
+
 Mon 19 Aug 2024 : improved test operations in ts_expops.adb.
 
 Sun 18 Aug 2024 : improved accuracy of operations in ts_expops.adb.

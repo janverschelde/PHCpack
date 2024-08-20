@@ -12,5 +12,7 @@ The "gprclean exponentials.gpr" removes all files created by gprbuild.
 ------------------------------------------------------------------------------
 file name                          : short description
 ------------------------------------------------------------------------------
+double_exponential_arithmetic      : arithmetic on exponential series
+test_double_exponentials           : test operations on exponentials
 ts_expops                          : tests arithmetical operations
 ------------------------------------------------------------------------------
