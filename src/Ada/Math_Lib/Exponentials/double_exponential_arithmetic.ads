@@ -34,9 +34,8 @@ package Double_Exponential_Arithmetic is
                   tol : in double_float := 1.0e-14 );
 
   -- DESCRIPTION :
-  --   Computes the sum of two exponential series,
-  --   truncated at the same degree.
-  --   If ccf'last equals twice the truncation degree,
+  --   Computes the sum of two exponential series.
+  --   If ccf'last equals the sum of the truncation degrees,
   --   then the result contains all terms of the sum,
   --   and (a + b) - b - a = (a + b) - a - b = 0. 
 
@@ -58,9 +57,8 @@ package Double_Exponential_Arithmetic is
                   tol : in double_float := 1.0e-14 );
 
   -- DESCRIPTION :
-  --   Computes the difference of two exponential series,
-  --   truncated at the same degree.
-  --   If ccf'last equals twice the truncation degree,
+  --   Computes the difference of two exponential series.
+  --   If ccf'last equals the sum of the truncation degrees,
   --   then the result contains all terms of the difference,
   --   and (a + b) - b - a = (a + b) - a - b = 0. 
 

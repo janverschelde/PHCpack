@@ -97,19 +97,22 @@ package body Test_Double_Exponentials is
     put("-> max norm of the coefficients :"); put(nrm); new_line;
   end Test_Inverse;
 
-  procedure Test_Sum ( deg : in integer32 ) is
+  procedure Test_Sum ( adeg,bdeg : in integer32 ) is
 
-    acf,bcf : Standard_Complex_Vectors.Vector(0..deg);
-    sumcf,difcf : Standard_Complex_Vectors.Vector(0..2*deg);
-    axp,bxp : Standard_Floating_Vectors.Vector(0..deg);
-    sumxp,difxp : Standard_Floating_Vectors.Vector(0..2*deg);
+    sumdeg : constant integer32 := adeg + bdeg;
+    acf : Standard_Complex_Vectors.Vector(0..adeg);
+    axp : Standard_Floating_Vectors.Vector(0..adeg);
+    bcf : Standard_Complex_Vectors.Vector(0..bdeg);
+    bxp : Standard_Floating_Vectors.Vector(0..bdeg);
+    sumcf,difcf : Standard_Complex_Vectors.Vector(0..sumdeg);
+    sumxp,difxp : Standard_Floating_Vectors.Vector(0..sumdeg);
     nrm : double_float;
 
   begin
-    Make_Random_Exponentials(deg,acf,axp);
+    Make_Random_Exponentials(adeg,acf,axp);
     put_line("The first series :");
     Write_Exponential_Series(standard_output,acf,axp);
-    Make_Random_Exponentials(deg,bcf,bxp);
+    Make_Random_Exponentials(bdeg,bcf,bxp);
     put_line("The second series :");
     Write_Exponential_Series(standard_output,bcf,bxp);
     Add(acf,bcf,axp,bxp,sumcf,sumxp);
@@ -175,7 +178,7 @@ package body Test_Double_Exponentials is
 
   procedure Main is
 
-    deg : integer32 := 0;
+    deg,adeg,bdeg : integer32 := 0;
     now : constant Time := Clock;
     year,month,day : integer;
     seconds : Duration;
@@ -195,8 +198,10 @@ package body Test_Double_Exponentials is
     put("-> generating series of degree "); put(deg,1); put_line(" ...");
     put_line("****** testing the inverse ******");
     Test_Inverse(deg);
+    put("Give the degree of the first series : "); get(adeg);
+    put("Give the degree of the second series : "); get(bdeg);
     put_line("****** testing the sum ******");
-    Test_Sum(deg);
+    Test_Sum(adeg,bdeg);
     put_line("****** testing the product ******");
     Test_Product(deg);
   end Main;

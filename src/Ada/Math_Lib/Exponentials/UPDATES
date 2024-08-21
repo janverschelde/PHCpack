@@ -1,5 +1,8 @@
 Tue 20 Aug 2024 : new packages double_exponential_arithmetic and
   test_double_exponentials with code factored out from ts_expops.adb.
+  Updated test_double_exponentials to verify that the Add/Sub operations
+  work for series truncated at different degrees.
+  Adjusted the documentation in double_exponential_arithmetic.ads.
 
 Mon 19 Aug 2024 : improved test operations in ts_expops.adb.
 
