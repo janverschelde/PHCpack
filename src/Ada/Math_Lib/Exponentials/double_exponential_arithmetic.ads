@@ -1,3 +1,4 @@
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
@@ -27,7 +28,8 @@ package Double_Exponential_Arithmetic is
 
   -- REQUIRED : a'last = b'last.
 
-  procedure Add ( acf,bcf : in Standard_Complex_Vectors.Vector;
+  procedure Add ( adeg,bdeg,cdeg : in integer32;
+                  acf,bcf : in Standard_Complex_Vectors.Vector;
                   axp,bxp : in Standard_Floating_Vectors.Vector;
                   ccf : out Standard_Complex_Vectors.Vector;
                   cxp : out Standard_Floating_Vectors.Vector;
@@ -35,11 +37,14 @@ package Double_Exponential_Arithmetic is
 
   -- DESCRIPTION :
   --   Computes the sum of two exponential series.
-  --   If ccf'last equals the sum of the truncation degrees,
+  --   If cdeg equals the sum of the truncation degrees, adeg + bdeg,
   --   then the result contains all terms of the sum,
   --   and (a + b) - b - a = (a + b) - a - b = 0. 
 
   -- ON ENTRY :
+  --   adeg       truncation degree of the first series;
+  --   bdeg       truncation degree of the second series;
+  --   cdeg       truncation degree of the sum of the series;
   --   acf        coefficients of the first series;
   --   bcf        coefficients of the second series;
   --   axp        exponents of the first series;
@@ -50,7 +55,8 @@ package Double_Exponential_Arithmetic is
   --   ccf        coefficients of the sum;
   --   cxp        exponents of the sum.
 
-  procedure Sub ( acf,bcf : in Standard_Complex_Vectors.Vector;
+  procedure Sub ( adeg,bdeg,cdeg : in integer32;
+                  acf,bcf : in Standard_Complex_Vectors.Vector;
                   axp,bxp : in Standard_Floating_Vectors.Vector;
                   ccf : out Standard_Complex_Vectors.Vector;
                   cxp : out Standard_Floating_Vectors.Vector;
@@ -63,6 +69,9 @@ package Double_Exponential_Arithmetic is
   --   and (a + b) - b - a = (a + b) - a - b = 0. 
 
   -- ON ENTRY :
+  --   adeg       truncation degree of the first series;
+  --   bdeg       truncation degree of the second series;
+  --   cdeg       truncation degree of the difference of the series;
   --   acf        coefficients of the first series;
   --   bcf        coefficients of the second series;
   --   axp        exponents of the first series;
@@ -73,7 +82,8 @@ package Double_Exponential_Arithmetic is
   --   ccf        coefficients of the difference;
   --   cxp        exponents of the difference.
 
-  procedure Mul ( acf,bcf : in Standard_Complex_Vectors.Vector;
+  procedure Mul ( adeg,bdeg,cdeg : in integer32;
+                  acf,bcf : in Standard_Complex_Vectors.Vector;
                   axp,bxp : in Standard_Floating_Vectors.Vector;
                   ccf : out Standard_Complex_Vectors.Vector;
                   cxp : out Standard_Floating_Vectors.Vector;
@@ -88,6 +98,9 @@ package Double_Exponential_Arithmetic is
   --   then all terms of the product can be stored.
 
   -- ON ENTRY :
+  --   adeg       truncation degree of the first series;
+  --   bdeg       truncation degree of the second series;
+  --   cdeg       truncation degree of the product of the series;
   --   acf        coefficients of the first series;
   --   bcf        coefficients of the second series;
   --   axp        exponents of the first series;
@@ -102,7 +115,8 @@ package Double_Exponential_Arithmetic is
   --   wrkcf      work space coefficients for increment;
   --   wrkxp      work space exponents for increment.
 
-  procedure Div ( acf,bcf : in Standard_Complex_Vectors.Vector;
+  procedure Div ( adeg,bdeg,cdeg : in integer32;
+                  acf,bcf : in Standard_Complex_Vectors.Vector;
                   axp,bxp : in Standard_Floating_Vectors.Vector;
                   ccf : out Standard_Complex_Vectors.Vector;
                   cxp : out Standard_Floating_Vectors.Vector;
@@ -115,6 +129,9 @@ package Double_Exponential_Arithmetic is
   -- REQUIRED : bcf(0) is nonzero.
 
   -- ON ENTRY :
+  --   adeg       truncation degree of the first series;
+  --   bdeg       truncation degree of the second series;
+  --   cdeg       truncation degree of the quotient of the series;
   --   acf        coefficients of the first series;
   --   bcf        coefficients of the second series;
   --   axp        exponents of the first series;

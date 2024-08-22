@@ -1,4 +1,3 @@
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 
 package body Double_Exponential_Arithmetic is
@@ -35,7 +34,8 @@ package body Double_Exponential_Arithmetic is
     return res;
   end Convolute;
 
-  procedure Add ( acf,bcf : in Standard_Complex_Vectors.Vector;
+  procedure Add ( adeg,bdeg,cdeg : in integer32;
+                  acf,bcf : in Standard_Complex_Vectors.Vector;
                   axp,bxp : in Standard_Floating_Vectors.Vector;
                   ccf : out Standard_Complex_Vectors.Vector;
                   cxp : out Standard_Floating_Vectors.Vector;
@@ -46,7 +46,7 @@ package body Double_Exponential_Arithmetic is
     cix : integer32 := ccf'first;
 
   begin
-    while cix <= ccf'last loop
+    while cix <= cdeg loop
       if axp(aix) < bxp(bix) then
         ccf(cix) := acf(aix);
         cxp(cix) := axp(aix);
@@ -66,27 +66,27 @@ package body Double_Exponential_Arithmetic is
          then cix := cix + 1;
         end if;
       end if;
-      exit when (aix > acf'last) or (bix > bcf'last);
+      exit when (aix > adeg) or (bix > bdeg);
     end loop;
-    if cix <= ccf'last then
-      if aix <= acf'last then
-        while cix <= ccf'last loop
+    if cix <= cdeg then
+      if aix <= adeg then
+        while cix <= cdeg loop
           ccf(cix) := acf(aix);
           cxp(cix) := axp(aix);
           cix := cix + 1;
           aix := aix + 1;
-          exit when (aix > acf'last);
+          exit when (aix > adeg);
         end loop;
-      elsif bix <= bcf'last then
-        while cix <= ccf'last loop
+      elsif bix <= bdeg then
+        while cix <= cdeg loop
           ccf(cix) := bcf(bix);
           cxp(cix) := bxp(bix);
           cix := cix + 1;
           bix := bix + 1;
-          exit when (bix > bcf'last);
+          exit when (bix > bdeg);
         end loop;
       end if;
-      while cix <= ccf'last loop
+      while cix <= cdeg loop
         ccf(cix) := create(0.0);
         cxp(cix) := cxp(cix-1) + 1.0;
         cix := cix + 1;
@@ -94,7 +94,8 @@ package body Double_Exponential_Arithmetic is
     end if;
   end Add;
 
-  procedure Sub ( acf,bcf : in Standard_Complex_Vectors.Vector;
+  procedure Sub ( adeg,bdeg,cdeg : in integer32;
+                  acf,bcf : in Standard_Complex_Vectors.Vector;
                   axp,bxp : in Standard_Floating_Vectors.Vector;
                   ccf : out Standard_Complex_Vectors.Vector;
                   cxp : out Standard_Floating_Vectors.Vector;
@@ -105,7 +106,7 @@ package body Double_Exponential_Arithmetic is
     cix : integer32 := ccf'first;
 
   begin
-    while cix <= ccf'last loop
+    while cix <= cdeg loop
       if axp(aix) < bxp(bix) then
         ccf(cix) := acf(aix);
         cxp(cix) := axp(aix);
@@ -125,27 +126,27 @@ package body Double_Exponential_Arithmetic is
          then cix := cix + 1;
         end if;
       end if;
-      exit when (aix > acf'last) or (bix > bcf'last);
+      exit when (aix > adeg) or (bix > bdeg);
     end loop;
-    if cix <= ccf'last then
-      if aix <= acf'last then
-        while cix <= ccf'last loop
+    if cix <= cdeg then
+      if aix <= adeg then
+        while cix <= cdeg loop
           ccf(cix) := acf(aix);
           cxp(cix) := axp(aix);
           cix := cix + 1;
           aix := aix + 1;
-          exit when (aix > acf'last);
+          exit when (aix > adeg);
         end loop;
-      elsif bix <= bcf'last then
-        while cix <= ccf'last loop
+      elsif bix <= bdeg then
+        while cix <= cdeg loop
           ccf(cix) := -bcf(bix);
           cxp(cix) := bxp(bix);
           cix := cix + 1;
           bix := bix + 1;
-          exit when (bix > bcf'last);
+          exit when (bix > bdeg);
         end loop;
       end if;
-      while cix <= ccf'last loop
+      while cix <= cdeg loop
         ccf(cix) := create(0.0);
         if cix = 0
          then cxp(cix) := 1.0;
@@ -156,7 +157,8 @@ package body Double_Exponential_Arithmetic is
     end if;
   end Sub;
 
-  procedure Mul ( acf,bcf : in Standard_Complex_Vectors.Vector;
+  procedure Mul ( adeg,bdeg,cdeg : in integer32;
+                  acf,bcf : in Standard_Complex_Vectors.Vector;
                   axp,bxp : in Standard_Floating_Vectors.Vector;
                   ccf : out Standard_Complex_Vectors.Vector;
                   cxp : out Standard_Floating_Vectors.Vector;
@@ -164,8 +166,6 @@ package body Double_Exponential_Arithmetic is
                   prdxp,wrkxp : in out Standard_Floating_Vectors.Vector;
                   tol : in double_float := 1.0e-14 ) is
 
-    adeg : constant integer32 := acf'last;
-    bdeg : constant integer32 := bcf'last;
     cix,pix,wix : integer32;
 
   begin
@@ -202,6 +202,7 @@ package body Double_Exponential_Arithmetic is
           end if;
         end if;
         exit when (pix > bdeg) or (cix > i*bdeg);
+        exit when (cix > cdeg) or (wix > cdeg);
       end loop;
       if wix <= (i+1)*bdeg then
         if pix <= bdeg then
@@ -218,18 +219,20 @@ package body Double_Exponential_Arithmetic is
             wrkxp(wix) := cxp(cix);
             wix := wix + 1;
             cix := cix + 1;
-            exit when (cix > i*bdeg);
+            exit when (cix > i*bdeg) or (cix > cdeg);
           end loop;
         end if;
       end if;
       for j in 0..(i+1)*bdeg loop
+        exit when (j > cdeg);
         ccf(j) := wrkcf(j);
         cxp(j) := wrkxp(j);
       end loop;
     end loop;
   end Mul;
 
-  procedure Div ( acf,bcf : in Standard_Complex_Vectors.Vector;
+  procedure Div ( adeg,bdeg,cdeg : in integer32;
+                  acf,bcf : in Standard_Complex_Vectors.Vector;
                   axp,bxp : in Standard_Floating_Vectors.Vector;
                   ccf : out Standard_Complex_Vectors.Vector;
                   cxp : out Standard_Floating_Vectors.Vector;
@@ -237,7 +240,7 @@ package body Double_Exponential_Arithmetic is
                   prdxp,wrkxp : in out Standard_Floating_Vectors.Vector ) is
   begin
     invbcf := Inverse(bcf);
-    Mul(acf,invbcf,axp,bxp,ccf,cxp,prdcf,wrkcf,prdxp,wrkxp);
+    Mul(adeg,bdeg,cdeg,acf,invbcf,axp,bxp,ccf,cxp,prdcf,wrkcf,prdxp,wrkxp);
   end Div;
 
 end Double_Exponential_Arithmetic;

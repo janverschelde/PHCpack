@@ -115,24 +115,24 @@ package body Test_Double_Exponentials is
     Make_Random_Exponentials(bdeg,bcf,bxp);
     put_line("The second series :");
     Write_Exponential_Series(standard_output,bcf,bxp);
-    Add(acf,bcf,axp,bxp,sumcf,sumxp);
+    Add(adeg,bdeg,sumdeg,acf,bcf,axp,bxp,sumcf,sumxp);
     put_line("The sum of the two series :");
     Write_Exponential_Series(standard_output,sumcf,sumxp);
-    Sub(sumcf,bcf,sumxp,bxp,difcf,difxp);
+    Sub(sumdeg,bdeg,sumdeg,sumcf,bcf,sumxp,bxp,difcf,difxp);
     put_line("After subtracting second series from the sum :");
     Write_Exponential_Series(standard_output,difcf,difxp);
-    Sub(difcf,acf,difxp,axp,sumcf,sumxp);
+    Sub(sumdeg,adeg,sumdeg,difcf,acf,difxp,axp,sumcf,sumxp);
     put_line("After subtracting first series from the difference :");
     Write_Exponential_Series(standard_output,sumcf,sumxp);
     nrm := Max_Norm(sumcf);
     put("-> max norm of the coefficients :"); put(nrm); new_line;
-    Add(acf,bcf,axp,bxp,sumcf,sumxp);
+    Add(adeg,bdeg,sumdeg,acf,bcf,axp,bxp,sumcf,sumxp);
     put_line("The sum of the two series :");
     Write_Exponential_Series(standard_output,sumcf,sumxp);
-    Sub(sumcf,acf,sumxp,axp,difcf,difxp);
+    Sub(sumdeg,adeg,sumdeg,sumcf,acf,sumxp,axp,difcf,difxp);
     put_line("After subtracting first series from the sum :");
     Write_Exponential_Series(standard_output,difcf,difxp);
-    Sub(difcf,bcf,difxp,bxp,sumcf,sumxp);
+    Sub(sumdeg,bdeg,sumdeg,difcf,bcf,difxp,bxp,sumcf,sumxp);
     put_line("After subtracting second series from the difference :");
     Write_Exponential_Series(standard_output,sumcf,sumxp);
     nrm := Max_Norm(sumcf);
@@ -164,14 +164,15 @@ package body Test_Double_Exponentials is
     end loop;
     put_line("The second series :");
     Write_Exponential_Series(standard_output,bcf,bxp);
-    Mul(acf,bcf,axp,bxp,prodcf,prodxp,prdcf,wrkcf,prdxp,wrkxp);
+    Mul(adeg,bdeg,maxdeg,acf,bcf,axp,bxp,
+        prodcf,prodxp,prdcf,wrkcf,prdxp,wrkxp);
     put_line("The product of the two series :");
     Write_Exponential_Series(standard_output,prodcf,prodxp);
-    Div(prodcf(0..adeg),bcf,prodxp(0..adeg),bxp,
+    Div(adeg,bdeg,adeg,prodcf(0..adeg),bcf,prodxp(0..adeg),bxp,
         quotcf,quotxp,invbcf,prdcf,wrkcf,prdxp,wrkxp);
     put_line("After dividing second series from the product :");
     Write_Exponential_Series(standard_output,quotcf,quotxp);
-    Sub(quotcf(0..adeg),acf,quotxp(0..adeg),axp,difcf,difxp);
+    Sub(adeg,adeg,maxdeg,quotcf(0..adeg),acf,quotxp(0..adeg),axp,difcf,difxp);
     put_line("After subtracting first series from the difference :");
     Write_Exponential_Series(standard_output,difcf(0..adeg),difxp(0..adeg));
     nrm := Max_Norm(difcf);
