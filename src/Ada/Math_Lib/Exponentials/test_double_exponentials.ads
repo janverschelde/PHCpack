@@ -37,10 +37,10 @@ package Test_Double_Exponentials is
   --   Makes two random series truncated at degree adeg and bdeg,
   --   computes their sum and the difference to check.
 
-  procedure Test_Product ( deg : in integer32 );
+  procedure Test_Product ( adeg,bdeg : in integer32 );
 
   -- DESCRIPTION :
-  --   Makes two random series truncated at degree deg,
+  --   Makes two random series truncated at degree adeg and bdeg,
   --   computes their product and the quotient to check.
 
   procedure Main;

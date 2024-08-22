@@ -83,8 +83,8 @@ package Double_Exponential_Arithmetic is
 
   -- DESCRIPTION :
   --   Computes the product of two exponential series,
-  --   truncated at the same degree.
-  --   If ccf'last is (deg+1)*deg, where deg is the truncation degree,
+  --   truncated at degrees adeg and bdeg.
+  --   If ccf'last is (adeg+1)*bdeg,
   --   then all terms of the product can be stored.
 
   -- ON ENTRY :
@@ -110,8 +110,7 @@ package Double_Exponential_Arithmetic is
                   prdxp,wrkxp : in out Standard_Floating_Vectors.Vector );
 
   -- DESCRIPTION :
-  --   Computes the quotient of two exponential series,
-  --   truncated at the same degree.
+  --   Computes the quotient of two exponential series.
 
   -- REQUIRED : bcf(0) is nonzero.
 

@@ -139,23 +139,25 @@ package body Test_Double_Exponentials is
     put("-> max norm of the coefficients :"); put(nrm); new_line;
   end Test_Sum;
 
-  procedure Test_Product ( deg : in integer32 ) is
+  procedure Test_Product ( adeg,bdeg : in integer32 ) is
 
-    maxdeg : constant integer32 := (deg+1)*deg;
-    acf,bcf : Standard_Complex_Vectors.Vector(0..deg);
+    maxdeg : constant integer32 := (adeg+1)*bdeg;
+    acf : Standard_Complex_Vectors.Vector(0..adeg);
+    axp : Standard_Floating_Vectors.Vector(0..adeg);
+    bcf : Standard_Complex_Vectors.Vector(0..bdeg);
+    bxp : Standard_Floating_Vectors.Vector(0..bdeg);
     prodcf,quotcf,difcf : Standard_Complex_Vectors.Vector(0..maxdeg);
-    axp,bxp : Standard_Floating_Vectors.Vector(0..deg);
     prodxp,quotxp,difxp : Standard_Floating_Vectors.Vector(0..maxdeg);
-    invbcf : Standard_Complex_Vectors.Vector(0..deg);
+    invbcf : Standard_Complex_Vectors.Vector(0..bdeg);
     prdcf,wrkcf : Standard_Complex_Vectors.Vector(0..maxdeg);
     prdxp,wrkxp : Standard_Floating_Vectors.Vector(0..maxdeg);
     nrm : double_float;
 
   begin
-    Make_Random_Exponentials(deg,acf,axp);
+    Make_Random_Exponentials(adeg,acf,axp);
     put_line("The first series :");
     Write_Exponential_Series(standard_output,acf,axp);
-    Make_Random_Exponentials(deg,bcf,bxp);
+    Make_Random_Exponentials(bdeg,bcf,bxp);
    -- make sure exponents of second series are large enough
     for i in 1..bxp'last loop
       bxp(i) := bxp(i) + axp(axp'last);
@@ -165,13 +167,13 @@ package body Test_Double_Exponentials is
     Mul(acf,bcf,axp,bxp,prodcf,prodxp,prdcf,wrkcf,prdxp,wrkxp);
     put_line("The product of the two series :");
     Write_Exponential_Series(standard_output,prodcf,prodxp);
-    Div(prodcf(0..deg),bcf,prodxp(0..deg),bxp,
+    Div(prodcf(0..adeg),bcf,prodxp(0..adeg),bxp,
         quotcf,quotxp,invbcf,prdcf,wrkcf,prdxp,wrkxp);
     put_line("After dividing second series from the product :");
     Write_Exponential_Series(standard_output,quotcf,quotxp);
-    Sub(quotcf(0..deg),acf,quotxp(0..deg),axp,difcf,difxp);
+    Sub(quotcf(0..adeg),acf,quotxp(0..adeg),axp,difcf,difxp);
     put_line("After subtracting first series from the difference :");
-    Write_Exponential_Series(standard_output,difcf(0..deg),difxp(0..deg));
+    Write_Exponential_Series(standard_output,difcf(0..adeg),difxp(0..adeg));
     nrm := Max_Norm(difcf);
     put("-> max norm of the coefficients :"); put(nrm); new_line;
   end Test_Product;
@@ -203,7 +205,7 @@ package body Test_Double_Exponentials is
     put_line("****** testing the sum ******");
     Test_Sum(adeg,bdeg);
     put_line("****** testing the product ******");
-    Test_Product(deg);
+    Test_Product(adeg,bdeg);
   end Main;
 
 end Test_Double_Exponentials;

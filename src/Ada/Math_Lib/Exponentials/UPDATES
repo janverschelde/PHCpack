@@ -1,3 +1,7 @@
+Thu 22 Aug 2024 : updated double_exponential_arithmetic for the product
+  to work for series truncated at different degrees.
+  Updated test_double_exponentials.
+
 Tue 20 Aug 2024 : new packages double_exponential_arithmetic and
   test_double_exponentials with code factored out from ts_expops.adb.
   Updated test_double_exponentials to verify that the Add/Sub operations

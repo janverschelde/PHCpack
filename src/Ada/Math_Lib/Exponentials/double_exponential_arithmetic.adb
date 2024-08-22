@@ -164,25 +164,24 @@ package body Double_Exponential_Arithmetic is
                   prdxp,wrkxp : in out Standard_Floating_Vectors.Vector;
                   tol : in double_float := 1.0e-14 ) is
 
-    deg : constant integer32 := acf'last;
+    adeg : constant integer32 := acf'last;
+    bdeg : constant integer32 := bcf'last;
     cix,pix,wix : integer32;
 
   begin
-    for i in ccf'range loop
-      exit when (i > bcf'last);
+    for i in bcf'range loop   -- product of a(0) with b series
       ccf(i) := acf(0)*bcf(i);
       cxp(i) := axp(0)+bxp(i);
     end loop;
-    for i in 1..deg loop
-      for j in bcf'range loop
-        exit when (i > acf'last);
+    for i in 1..adeg loop
+      for j in bcf'range loop -- product of a(i) with b series
         prdcf(j) := acf(i)*bcf(j);
         prdxp(j) := axp(i)+bxp(j);
       end loop;
       cix := ccf'first;
       pix := prdcf'first;
       wix := wrkcf'first;
-      while wix <= (i+1)*deg loop
+      while wix <= (i+1)*bdeg loop
         if cxp(cix) < prdxp(pix) then
           wrkcf(wix) := ccf(cix);
           wrkxp(wix) := cxp(cix);
@@ -202,28 +201,28 @@ package body Double_Exponential_Arithmetic is
            then wix := wix + 1;
           end if;
         end if;
-        exit when (pix > deg) or (cix > i*deg);
+        exit when (pix > bdeg) or (cix > i*bdeg);
       end loop;
-      if wix <= (i+1)*deg then
-        if pix <= deg then
-          while wix <= (i+1)*deg loop
+      if wix <= (i+1)*bdeg then
+        if pix <= bdeg then
+          while wix <= (i+1)*bdeg loop
             wrkcf(wix) := prdcf(pix);
             wrkxp(wix) := prdxp(pix);
             wix := wix + 1;
             pix := pix + 1;
-            exit when (pix > deg);
+            exit when (pix > bdeg);
           end loop;
-        elsif cix <= i*deg then
-          while wix <= (i+1)*deg loop
+        elsif cix <= i*bdeg then
+          while wix <= (i+1)*bdeg loop
             wrkcf(wix) := ccf(cix);
             wrkxp(wix) := cxp(cix);
             wix := wix + 1;
             cix := cix + 1;
-            exit when (cix > i*deg);
+            exit when (cix > i*bdeg);
           end loop;
         end if;
       end if;
-      for j in 0..(i+1)*deg loop
+      for j in 0..(i+1)*bdeg loop
         ccf(j) := wrkcf(j);
         cxp(j) := wrkxp(j);
       end loop;
