@@ -141,16 +141,19 @@ package body Test_Double_Exponentials is
 
   procedure Test_Product ( adeg,bdeg : in integer32 ) is
 
-    maxdeg : constant integer32 := (adeg+1)*bdeg;
+    proddeg : constant integer32 := (adeg+1)*bdeg;
     acf : Standard_Complex_Vectors.Vector(0..adeg);
     axp : Standard_Floating_Vectors.Vector(0..adeg);
     bcf : Standard_Complex_Vectors.Vector(0..bdeg);
     bxp : Standard_Floating_Vectors.Vector(0..bdeg);
-    prodcf,quotcf,difcf : Standard_Complex_Vectors.Vector(0..maxdeg);
-    prodxp,quotxp,difxp : Standard_Floating_Vectors.Vector(0..maxdeg);
+    prodcf : Standard_Complex_Vectors.Vector(0..proddeg);
+    prodxp : Standard_Floating_Vectors.Vector(0..proddeg);
+    quotdeg : constant integer32 := (proddeg+1)*bdeg;
+    quotcf,difcf : Standard_Complex_Vectors.Vector(0..quotdeg);
+    quotxp,difxp : Standard_Floating_Vectors.Vector(0..quotdeg);
     invbcf : Standard_Complex_Vectors.Vector(0..bdeg);
-    prdcf,wrkcf : Standard_Complex_Vectors.Vector(0..maxdeg);
-    prdxp,wrkxp : Standard_Floating_Vectors.Vector(0..maxdeg);
+    prdcf,wrkcf : Standard_Complex_Vectors.Vector(0..quotdeg);
+    prdxp,wrkxp : Standard_Floating_Vectors.Vector(0..quotdeg);
     nrm : double_float;
 
   begin
@@ -164,15 +167,17 @@ package body Test_Double_Exponentials is
     end loop;
     put_line("The second series :");
     Write_Exponential_Series(standard_output,bcf,bxp);
-    Mul(adeg,bdeg,maxdeg,acf,bcf,axp,bxp,
+    Mul(adeg,bdeg,proddeg,acf,bcf,axp,bxp,
         prodcf,prodxp,prdcf,wrkcf,prdxp,wrkxp);
     put_line("The product of the two series :");
     Write_Exponential_Series(standard_output,prodcf,prodxp);
-    Div(adeg,bdeg,adeg,prodcf(0..adeg),bcf,prodxp(0..adeg),bxp,
+    Div(proddeg,bdeg,quotdeg,prodcf,bcf,prodxp,bxp,
         quotcf,quotxp,invbcf,prdcf,wrkcf,prdxp,wrkxp);
+    put_line("the inverse of the second series :");
+    Write_Exponential_Series(standard_output,invbcf,bxp);
     put_line("After dividing second series from the product :");
     Write_Exponential_Series(standard_output,quotcf,quotxp);
-    Sub(adeg,adeg,maxdeg,quotcf(0..adeg),acf,quotxp(0..adeg),axp,difcf,difxp);
+    Sub(adeg,adeg,adeg,quotcf(0..adeg),acf,quotxp(0..adeg),axp,difcf,difxp);
     put_line("After subtracting first series from the difference :");
     Write_Exponential_Series(standard_output,difcf(0..adeg),difxp(0..adeg));
     nrm := Max_Norm(difcf);

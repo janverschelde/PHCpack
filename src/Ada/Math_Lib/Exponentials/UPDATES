@@ -1,3 +1,5 @@
+Sat 24 Aug 2024 : improved tests with setting of quotient degree.
+
 Thu 22 Aug 2024 : updated double_exponential_arithmetic for the product
   to work for series truncated at different degrees.
   Updated test_double_exponentials.  In double_exponential_arithmetic,

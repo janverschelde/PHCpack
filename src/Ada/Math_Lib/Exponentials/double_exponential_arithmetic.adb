@@ -169,6 +169,8 @@ package body Double_Exponential_Arithmetic is
     cix,pix,wix : integer32;
 
   begin
+    ccf := (0..cdeg => Create(0.0));
+    wrkcf := (wrkcf'range => Create(0.0));
     for i in bcf'range loop   -- product of a(0) with b series
       ccf(i) := acf(0)*bcf(i);
       cxp(i) := axp(0)+bxp(i);
