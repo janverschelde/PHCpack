@@ -139,16 +139,47 @@ package body Test_Double_Exponentials is
     put("-> max norm of the coefficients :"); put(nrm); new_line;
   end Test_Sum;
 
+  procedure Test_Multiplicative_Commutativity
+              ( adeg,bdeg : in integer32;
+                acf,bcf : in Standard_Complex_Vectors.Vector;
+                axp,bxp : in Standard_Floating_Vectors.Vector ) is
+
+    proddeg : constant integer32 := (adeg+1)*(bdeg+1);
+    abprodcf,baprodcf : Standard_Complex_Vectors.Vector(0..proddeg);
+    abprodxp,baprodxp : Standard_Floating_Vectors.Vector(0..proddeg);
+    prdcf,wrkcf,difcf : Standard_Complex_Vectors.Vector(0..proddeg);
+    prdxp,wrkxp,difxp : Standard_Floating_Vectors.Vector(0..proddeg);
+    nrm : double_float;
+
+  begin
+    Mul(adeg,bdeg,proddeg,acf,bcf,axp,bxp,
+        abprodcf,abprodxp,prdcf,wrkcf,prdxp,wrkxp);
+    put_line("The product of the first with the second series :");
+    Write_Exponential_Series
+      (standard_output,abprodcf(0..proddeg-1),abprodxp(0..proddeg-1));
+    Mul(bdeg,adeg,proddeg,bcf,acf,bxp,axp,
+        baprodcf,baprodxp,prdcf,wrkcf,prdxp,wrkxp);
+    put_line("The product of the second with the first series :");
+    Write_Exponential_Series
+      (standard_output,baprodcf(0..proddeg-1),baprodxp(0..proddeg-1));
+    Sub(proddeg,proddeg,proddeg,abprodcf,baprodcf,abprodxp,baprodxp,
+        difcf,difxp);
+    put_line("After subtracting the products :");
+    Write_Exponential_Series(standard_output,difcf,difxp);
+    nrm := Max_Norm(difcf);
+    put("-> max norm of the coefficients :"); put(nrm); new_line;
+  end Test_Multiplicative_Commutativity;
+
   procedure Test_Product ( adeg,bdeg : in integer32 ) is
 
-    proddeg : constant integer32 := (adeg+1)*bdeg;
+    proddeg : constant integer32 := (adeg+1)*(bdeg+1);
     acf : Standard_Complex_Vectors.Vector(0..adeg);
     axp : Standard_Floating_Vectors.Vector(0..adeg);
     bcf : Standard_Complex_Vectors.Vector(0..bdeg);
     bxp : Standard_Floating_Vectors.Vector(0..bdeg);
     prodcf : Standard_Complex_Vectors.Vector(0..proddeg);
     prodxp : Standard_Floating_Vectors.Vector(0..proddeg);
-    quotdeg : constant integer32 := (proddeg+1)*bdeg;
+    quotdeg : constant integer32 := (proddeg+1)*(bdeg+1);
     quotcf,difcf : Standard_Complex_Vectors.Vector(0..quotdeg);
     quotxp,difxp : Standard_Floating_Vectors.Vector(0..quotdeg);
     invbcf : Standard_Complex_Vectors.Vector(0..bdeg);
@@ -162,16 +193,17 @@ package body Test_Double_Exponentials is
     Write_Exponential_Series(standard_output,acf,axp);
     Make_Random_Exponentials(bdeg,bcf,bxp);
    -- make sure exponents of second series are large enough
-    for i in 1..bxp'last loop
-      bxp(i) := bxp(i) + axp(axp'last);
-    end loop;
+   -- for i in 1..bxp'last loop
+   --   bxp(i) := bxp(i) + axp(axp'last);
+   -- end loop;
     put_line("The second series :");
     Write_Exponential_Series(standard_output,bcf,bxp);
+    Test_Multiplicative_Commutativity(adeg,bdeg,acf,bcf,axp,bxp);
     Mul(adeg,bdeg,proddeg,acf,bcf,axp,bxp,
         prodcf,prodxp,prdcf,wrkcf,prdxp,wrkxp);
     put_line("The product of the two series :");
     Write_Exponential_Series(standard_output,prodcf,prodxp);
-    Div(proddeg,bdeg,quotdeg,prodcf,bcf,prodxp,bxp,
+    Div(proddeg-1,bdeg,quotdeg,prodcf,bcf,prodxp,bxp,
         quotcf,quotxp,invbcf,prdcf,wrkcf,prdxp,wrkxp);
     put_line("the inverse of the second series :");
     Write_Exponential_Series(standard_output,invbcf,bxp);
@@ -182,6 +214,8 @@ package body Test_Double_Exponentials is
     Write_Exponential_Series(standard_output,difcf(0..adeg),difxp(0..adeg));
     nrm := Max_Norm(difcf);
     put("-> max norm of the coefficients :"); put(nrm); new_line;
+    put_line("the first series :");
+    Write_Exponential_Series(standard_output,acf,axp);
   end Test_Product;
 
   procedure Main is

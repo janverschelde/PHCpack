@@ -1,3 +1,6 @@
+Sun 25 Aug 2024 : added test on multiplicative commutativity to
+  test_double_exponentials.  Improved double_exponential_arithmetic.adb.
+
 Sat 24 Aug 2024 : improved tests with setting of quotient degree.
 
 Thu 22 Aug 2024 : updated double_exponential_arithmetic for the product

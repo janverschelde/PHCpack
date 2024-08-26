@@ -37,6 +37,15 @@ package Test_Double_Exponentials is
   --   Makes two random series truncated at degree adeg and bdeg,
   --   computes their sum and the difference to check.
 
+  procedure Test_Multiplicative_Commutativity
+              ( adeg,bdeg : in integer32;
+                acf,bcf : in Standard_Complex_Vectors.Vector;
+                axp,bxp : in Standard_Floating_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Tests whether multiplying the first series with the second
+  --   is the same as the second series with the first.
+
   procedure Test_Product ( adeg,bdeg : in integer32 );
 
   -- DESCRIPTION :
