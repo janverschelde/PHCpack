@@ -1,3 +1,6 @@
+Tue 27 Aug 2024 : in double_exponential_arithmetic.adb, fixed superfluous
+  zeros in the product.  Improved tests in test_double_exponentials.
+
 Sun 25 Aug 2024 : added test on multiplicative commutativity to
   test_double_exponentials.  Improved double_exponential_arithmetic.adb.
 

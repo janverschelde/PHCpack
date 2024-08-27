@@ -11,19 +11,26 @@ package Test_Double_Exponentials is
   procedure Make_Random_Exponentials
               ( deg : in integer32;
                 cff : out Standard_Complex_Vectors.Vector;
-                exp : out Standard_Floating_Vectors.Vector );
+                sxp : out Standard_Floating_Vectors.Vector );
 
   -- DESCRIPTION :
-  --   Generates deg+1 random complex coefficients and
-  --   corresponding exponents for the terms in the series.
+  --   Generates deg+1 random complex coefficients cff and
+  --   corresponding exponents sxp for the terms in the series.
+
+  function Is_Sorted ( xp : Standard_Floating_Vectors.Vector ) return boolean;
+
+  -- DESCRIPTION :
+  --   Returns true if the sequence xp is sorted in increasing order,
+  --   false otherwise.
 
   procedure Write_Exponential_Series
               ( file : in file_type;
                 cff : in Standard_Complex_Vectors.Vector;
-                exp : in Standard_Floating_Vectors.Vector );
+                sxp : in Standard_Floating_Vectors.Vector );
 
   -- DESCRIPTION :
-  --   Writes the exponential series to file.
+  --   Writes the exponential series given by coefficients cff
+  --   and corresponding exponents sxp to file.
 
   procedure Test_Inverse ( deg : in integer32 );
 

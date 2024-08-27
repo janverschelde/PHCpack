@@ -34,6 +34,26 @@ package body Double_Exponential_Arithmetic is
     return res;
   end Convolute;
 
+  procedure Zero_Padding
+              ( deg : in integer32; idx : in out integer32;
+                cff : in out Standard_Complex_Vectors.Vector;
+                sxp : in out Standard_Floating_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Adds extra zeroes at the end as long as idx <= deg.
+  --   The corresponding exponents are raised by one each time.
+
+  begin
+    while idx <= deg loop
+      cff(idx) := create(0.0);
+      if idx = 0
+       then sxp(idx) := 1.0;
+       else sxp(idx) := sxp(idx-1) + 1.0;
+      end if;
+      idx := idx + 1;
+    end loop;
+  end Zero_Padding;
+
   procedure Add ( adeg,bdeg,cdeg : in integer32;
                   acf,bcf : in Standard_Complex_Vectors.Vector;
                   axp,bxp : in Standard_Floating_Vectors.Vector;
@@ -86,11 +106,7 @@ package body Double_Exponential_Arithmetic is
           exit when (bix > bdeg);
         end loop;
       end if;
-      while cix <= cdeg loop
-        ccf(cix) := create(0.0);
-        cxp(cix) := cxp(cix-1) + 1.0;
-        cix := cix + 1;
-      end loop;
+      Zero_Padding(cdeg,cix,ccf,cxp);
     end if;
   end Add;
 
@@ -146,14 +162,7 @@ package body Double_Exponential_Arithmetic is
           exit when (bix > bdeg);
         end loop;
       end if;
-      while cix <= cdeg loop
-        ccf(cix) := create(0.0);
-        if cix = 0
-         then cxp(cix) := 1.0;
-         else cxp(cix) := cxp(cix-1) + 1.0;
-        end if;
-        cix := cix + 1;
-      end loop;
+      Zero_Padding(cdeg,cix,ccf,cxp);
     end if;
   end Sub;
 
@@ -171,23 +180,25 @@ package body Double_Exponential_Arithmetic is
   begin
     ccf := (0..cdeg => Create(0.0));
     cxp := (0..cdeg => 0.0);
+    prdcf := (prdcf'range => Create(0.0));
+    prdxp := (prdxp'range => 0.0);
     wrkcf := (wrkcf'range => Create(0.0));
     wrkxp := (wrkxp'range => 0.0);
     for i in bcf'range loop   -- product of a(0) with b series
-      ccf(i) := acf(0)*bcf(i);
-      cxp(i) := axp(0)+bxp(i);
+      ccf(i) := acf(0) * bcf(i);
+      cxp(i) := axp(0) + bxp(i);
     end loop;
     for i in 1..adeg loop
       prdcf := (prdcf'range => create(0.0));
       prdxp := (prdxp'range => 0.0);
       for j in bcf'range loop -- product of a(i) with b series
-        prdcf(j) := acf(i)*bcf(j);
-        prdxp(j) := axp(i)+bxp(j);
+        prdcf(j) := acf(i) * bcf(j);
+        prdxp(j) := axp(i) + bxp(j);
       end loop;
       cix := ccf'first;
       pix := prdcf'first;
       wix := wrkcf'first;
-      while wix <= (i+1)*(bdeg+1) loop
+      while wix <= bdeg + i*(bdeg+1) loop
         if cxp(cix) < prdxp(pix) then
           wrkcf(wix) := ccf(cix);
           wrkxp(wix) := cxp(cix);
@@ -199,39 +210,39 @@ package body Double_Exponential_Arithmetic is
           pix := pix + 1;
           wix := wix + 1;
         else -- cxp(cix) = prdxp(pix)
-          wrkcf(wix) := ccf(cix) + prdcf(pix);
-          wrkxp(wix) := cxp(cix);
+          wrkcf(wix) := ccf(cix) + prdcf(pix); -- accumulate products
+          wrkxp(wix) := cxp(cix);              -- with same exponent
           cix := cix + 1;
           pix := pix + 1;
           if AbsVal(wrkcf(wix)) > tol
            then wix := wix + 1;
           end if;
         end if;
-        exit when (pix > bdeg+1) or (cix > i*(bdeg+1));
+        exit when (pix > bdeg) or (cix > bdeg + (i-1)*(bdeg+1));
         exit when (cix > cdeg) or (wix > cdeg);
       end loop;
-      if wix <= (i+1)*(bdeg+1) then
-        if pix <= (bdeg+1) then
-          while wix <= (i+1)*(bdeg+1) loop
+      if wix <= bdeg + i*(bdeg+1) then
+        if pix <= bdeg then
+          while wix <= bdeg + i*(bdeg+1) loop
             wrkcf(wix) := prdcf(pix);
             wrkxp(wix) := prdxp(pix);
             wix := wix + 1;
             pix := pix + 1;
-            exit when (pix > bdeg+1);
+            exit when (pix > bdeg);
           end loop;
         end if;
-        if cix <= i*(bdeg+1) then
-          while wix <= (i+1)*(bdeg+1) loop
+        if cix <= bdeg + i*(bdeg+1) then
+          while wix <= bdeg + i*(bdeg+1) loop
             wrkcf(wix) := ccf(cix);
             wrkxp(wix) := cxp(cix);
             wix := wix + 1;
             cix := cix + 1;
-            exit when (cix > i*(bdeg+1)) or (cix > cdeg);
+            exit when (cix > bdeg + i*(bdeg+1)) or (cix > cdeg);
           end loop;
         end if;
       end if;
       cix := ccf'first;
-      for j in 0..(i+1)*(bdeg+1) loop
+      for j in 0..bdeg+i*(bdeg+1) loop
         exit when (cix > cdeg);
         ccf(cix) := wrkcf(j);
         cxp(cix) := wrkxp(j);
@@ -240,6 +251,9 @@ package body Double_Exponential_Arithmetic is
         end if;
       end loop;
     end loop;
+    if cix <= cdeg
+     then Zero_Padding(cdeg,cix,ccf,cxp);
+    end if;
   end Mul;
 
   procedure Div ( adeg,bdeg,cdeg : in integer32;
