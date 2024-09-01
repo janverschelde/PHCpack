@@ -1,3 +1,5 @@
+Sun 1 Sep 2024 : added extension of series to compute higher order inverses.
+
 Tue 27 Aug 2024 : in double_exponential_arithmetic.adb, fixed superfluous
   zeros in the product.  Improved tests in test_double_exponentials.
 

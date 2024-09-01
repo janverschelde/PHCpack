@@ -38,6 +38,28 @@ package body Test_Double_Exponentials is
     return true;
   end Is_Sorted;
 
+  procedure Normalize
+              ( cff : in out Standard_Complex_Vectors.Vector;
+                sxp : in out Standard_Floating_Vectors.Vector ) is
+
+    cfftmp : Complex_Number;
+    sxptmp : double_float;
+    swapped : boolean;
+
+  begin
+    loop
+      swapped := false;
+      for i in sxp'first+1..sxp'last loop
+        if sxp(i) < sxp(i-1) then
+          sxptmp := sxp(i); sxp(i) := sxp(i-1); sxp(i-1) := sxptmp;
+          cfftmp := cff(i); cff(i) := cff(i-1); cff(i-1) := cfftmp;
+          swapped := true;
+        end if;
+      end loop;
+      exit when not swapped;
+    end loop;
+  end Normalize;
+
   procedure Write_Exponential_Series
               ( file : in file_type;
                 cff : in Standard_Complex_Vectors.Vector;
@@ -85,22 +107,17 @@ package body Test_Double_Exponentials is
     end loop;
   end Write_Exponential_Series;
 
-  procedure Test_Inverse ( deg : in integer32 ) is
+  procedure Test_Inverse
+              ( cff : in Standard_Complex_Vectors.Vector;
+                sxp : in Standard_Floating_Vectors.Vector ) is                 
 
-    cff : Standard_Complex_Vectors.Vector(0..deg);
+    deg : constant integer32 := cff'last;
     invcff : Standard_Complex_Vectors.Vector(0..deg);
     prd : Standard_Complex_Vectors.Vector(0..deg);
-    sxp : Standard_Floating_Vectors.Vector(0..deg);
     nrm : double_float;
 
   begin
-    Make_Random_Exponentials(deg,cff,sxp);
-    if not Is_Sorted(sxp)
-     then put_line("Exponents are NOT in increasing order!");
-    end if;
-    put_line("Random coefficients :"); put_line(cff);
-    put_line("Random exponentials :"); put_line(sxp);
-    put_line("A random exponential series :");
+    put_line("An exponential series :");
     Write_Exponential_Series(standard_output,cff,sxp);
     invcff := Inverse(cff);
     put_line("The inverse of the exponential series :");
@@ -110,6 +127,41 @@ package body Test_Double_Exponentials is
     Write_Exponential_Series(standard_output,prd,sxp);
     nrm := Max_Norm(prd);
     put("-> max norm of the coefficients :"); put(nrm); new_line;
+  end Test_Inverse;
+
+  procedure Test_Inverse ( deg : in integer32 ) is
+
+    cff : Standard_Complex_Vectors.Vector(0..deg);
+    sxp : Standard_Floating_Vectors.Vector(0..deg);
+    extdeg : integer32 := 0;
+
+  begin
+    Make_Random_Exponentials(deg,cff,sxp);
+    if not Is_Sorted(sxp)
+     then put_line("Exponents are NOT in increasing order!");
+    end if;
+    put_line("Random coefficients :"); put_line(cff);
+    put_line("Random exponentials :"); put_line(sxp);
+    Test_Inverse(cff,sxp);
+    put("Give the extension degree : "); get(extdeg);
+    if extdeg > 0 then
+      declare
+        newdeg : constant integer32 := deg + extdeg;
+        extcff : Standard_Complex_Vectors.Vector(0..newdeg);
+        extsxp : Standard_Floating_Vectors.Vector(0..newdeg);
+	idx : integer32 := deg + 1;
+      begin
+        extcff(cff'range) := cff;
+        extsxp(sxp'range) := sxp;
+        extcff(cff'last+1..newdeg) := (cff'last+1..newdeg => create(0.0));
+        while idx <= newdeg loop
+          extsxp(idx) := 2.0*extsxp(idx-deg);
+          idx := idx + 1;
+        end loop;
+        Normalize(extcff,extsxp);
+        Test_Inverse(extcff,extsxp);
+      end;
+    end if;
   end Test_Inverse;
 
   procedure Test_Sum ( adeg,bdeg : in integer32 ) is

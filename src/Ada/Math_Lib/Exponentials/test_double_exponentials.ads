@@ -23,6 +23,13 @@ package Test_Double_Exponentials is
   --   Returns true if the sequence xp is sorted in increasing order,
   --   false otherwise.
 
+  procedure Normalize
+              ( cff : in out Standard_Complex_Vectors.Vector;
+                sxp : in out Standard_Floating_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Sorts the exponents and corresponding coefficients.
+
   procedure Write_Exponential_Series
               ( file : in file_type;
                 cff : in Standard_Complex_Vectors.Vector;
@@ -31,6 +38,14 @@ package Test_Double_Exponentials is
   -- DESCRIPTION :
   --   Writes the exponential series given by coefficients cff
   --   and corresponding exponents sxp to file.
+
+  procedure Test_Inverse
+              ( cff : in Standard_Complex_Vectors.Vector;
+                sxp : in Standard_Floating_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Computes and tests the inverse for the series defined
+  --   by the coefficients in cff and exponents in sxp.
 
   procedure Test_Inverse ( deg : in integer32 );
 
