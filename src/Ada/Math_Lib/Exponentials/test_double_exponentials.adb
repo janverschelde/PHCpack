@@ -149,13 +149,19 @@ package body Test_Double_Exponentials is
         newdeg : constant integer32 := deg + extdeg;
         extcff : Standard_Complex_Vectors.Vector(0..newdeg);
         extsxp : Standard_Floating_Vectors.Vector(0..newdeg);
-	idx : integer32 := deg + 1;
+	idx,degidx : integer32;
       begin
         extcff(cff'range) := cff;
         extsxp(sxp'range) := sxp;
         extcff(cff'last+1..newdeg) := (cff'last+1..newdeg => create(0.0));
+        idx := deg + 1;
         while idx <= newdeg loop
-          extsxp(idx) := 2.0*extsxp(idx-deg);
+          if idx <= 2*deg then
+            extsxp(idx) := 2.0*extsxp(idx-deg);
+          else
+            degidx := (idx mod deg) + 1;
+            extsxp(idx) := extsxp(idx-deg) + extsxp(degidx);
+          end if;
           idx := idx + 1;
         end loop;
         Normalize(extcff,extsxp);
