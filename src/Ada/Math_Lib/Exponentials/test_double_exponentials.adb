@@ -129,6 +129,37 @@ package body Test_Double_Exponentials is
     put("-> max norm of the coefficients :"); put(nrm); new_line;
   end Test_Inverse;
 
+  procedure Extend ( deg,extdeg : in integer32;
+                     cff : in Standard_Complex_Vectors.Vector;
+                     sxp : in Standard_Floating_Vectors.Vector;
+                     extcff : out Standard_Complex_Vectors.Vector;
+                     extsxp : out Standard_Floating_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Extends the series with coefficients in cff and corresponding
+  --   exponents of truncation degree to the new degree extdeg,
+  --   returning in extcff and extsxp the extended series.
+
+    newdeg : constant integer32 := deg + extdeg;
+    idx,degidx : integer32;
+
+  begin
+    extcff(cff'range) := cff;
+    extsxp(sxp'range) := sxp;
+    extcff(cff'last+1..newdeg) := (cff'last+1..newdeg => create(0.0));
+    idx := deg + 1;
+    while idx <= newdeg loop
+      if idx <= 2*deg then
+        extsxp(idx) := 2.0*extsxp(idx-deg);
+      else
+        degidx := (idx mod deg) + 1;
+        extsxp(idx) := extsxp(idx-deg) + extsxp(degidx);
+      end if;
+      idx := idx + 1;
+    end loop;
+    Normalize(extcff,extsxp);
+  end Extend;
+
   procedure Test_Inverse ( deg : in integer32 ) is
 
     cff : Standard_Complex_Vectors.Vector(0..deg);
@@ -149,22 +180,8 @@ package body Test_Double_Exponentials is
         newdeg : constant integer32 := deg + extdeg;
         extcff : Standard_Complex_Vectors.Vector(0..newdeg);
         extsxp : Standard_Floating_Vectors.Vector(0..newdeg);
-	idx,degidx : integer32;
       begin
-        extcff(cff'range) := cff;
-        extsxp(sxp'range) := sxp;
-        extcff(cff'last+1..newdeg) := (cff'last+1..newdeg => create(0.0));
-        idx := deg + 1;
-        while idx <= newdeg loop
-          if idx <= 2*deg then
-            extsxp(idx) := 2.0*extsxp(idx-deg);
-          else
-            degidx := (idx mod deg) + 1;
-            extsxp(idx) := extsxp(idx-deg) + extsxp(degidx);
-          end if;
-          idx := idx + 1;
-        end loop;
-        Normalize(extcff,extsxp);
+        Extend(deg,extdeg,cff,sxp,extcff,extsxp);
         Test_Inverse(extcff,extsxp);
       end;
     end if;
@@ -277,38 +294,40 @@ package body Test_Double_Exponentials is
 
   procedure Test_Product ( adeg,bdeg : in integer32 ) is
 
-    proddeg : constant integer32 := (adeg+1)*(bdeg+1) - 1;
+    extdeg : constant integer32 := 4*bdeg;
+    proddeg : constant integer32 := (adeg+1)*(bdeg+extdeg+1) - 1;
     acf : Standard_Complex_Vectors.Vector(0..adeg);
     axp : Standard_Floating_Vectors.Vector(0..adeg);
-    bcf : Standard_Complex_Vectors.Vector(0..bdeg);
-    bxp : Standard_Floating_Vectors.Vector(0..bdeg);
+    bcf : Standard_Complex_Vectors.Vector(0..bdeg + extdeg);
+    bxp : Standard_Floating_Vectors.Vector(0..bdeg + extdeg);
     prodcf : Standard_Complex_Vectors.Vector(0..proddeg);
     prodxp : Standard_Floating_Vectors.Vector(0..proddeg);
-    quotdeg : constant integer32 := (proddeg+1)*(bdeg+1) - 1;
+    quotdeg : constant integer32 := (proddeg+1)*(bdeg+extdeg+1) - 1;
     quotcf,difcf : Standard_Complex_Vectors.Vector(0..quotdeg);
     quotxp,difxp : Standard_Floating_Vectors.Vector(0..quotdeg);
-    invbcf : Standard_Complex_Vectors.Vector(0..bdeg);
+    invbcf : Standard_Complex_Vectors.Vector(0..bdeg+extdeg);
     prdcf,wrkcf : Standard_Complex_Vectors.Vector(0..quotdeg);
     prdxp,wrkxp : Standard_Floating_Vectors.Vector(0..quotdeg);
     nrm : double_float;
 
   begin
     Make_Random_Exponentials(adeg,acf,axp);
+    put_line("The first series :");
+    Write_Exponential_Series(standard_output,acf,axp);
     if not Is_Sorted(axp)
      then put_line("Exponents are NOT in increasing order!");
     end if;
-    put_line("The first series :");
-    Write_Exponential_Series(standard_output,acf,axp);
     Make_Random_Exponentials(bdeg,bcf,bxp);
+   -- make sure exponents of second series are large enough
+   -- for i in 1..bxp'last loop
+   --   bxp(i) := bxp(i) + axp(axp'last);
+   -- end loop;
+    Extend(bdeg,extdeg,bcf(0..bdeg),bxp(0..bdeg),bcf,bxp);
+    put_line("The second series :");
+    Write_Exponential_Series(standard_output,bcf,bxp);
     if not Is_Sorted(bxp)
      then put_line("Exponents are NOT in increasing order!");
     end if;
-   -- make sure exponents of second series are large enough
-    for i in 1..bxp'last loop
-      bxp(i) := bxp(i) + axp(axp'last);
-    end loop;
-    put_line("The second series :");
-    Write_Exponential_Series(standard_output,bcf,bxp);
     Test_Multiplicative_Commutativity(adeg,bdeg,acf,bcf,axp,bxp);
     Mul(adeg,bdeg,proddeg,acf,bcf,axp,bxp,
         prodcf,prodxp,prdcf,wrkcf,prdxp,wrkxp);
