@@ -1,3 +1,5 @@
+Wed 4 Sep 2024 : bug fixed in calling test on multiplicative commutivativity.
+
 Tue 3 Sep 2024 : experimented with extension degree in test on product in
   test_double_exponentials.adb.
 

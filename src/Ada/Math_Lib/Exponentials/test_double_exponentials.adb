@@ -328,15 +328,15 @@ package body Test_Double_Exponentials is
     if not Is_Sorted(bxp)
      then put_line("Exponents are NOT in increasing order!");
     end if;
-    Test_Multiplicative_Commutativity(adeg,bdeg,acf,bcf,axp,bxp);
-    Mul(adeg,bdeg,proddeg,acf,bcf,axp,bxp,
+    Test_Multiplicative_Commutativity(adeg,bdeg+extdeg,acf,bcf,axp,bxp);
+    Mul(adeg,bdeg+extdeg,proddeg,acf,bcf,axp,bxp,
         prodcf,prodxp,prdcf,wrkcf,prdxp,wrkxp);
     if not Is_Sorted(prodxp)
      then put_line("Exponents are NOT in increasing order!");
     end if;
     put_line("The product of the two series :");
     Write_Exponential_Series(standard_output,prodcf,prodxp);
-    Div(proddeg-1,bdeg,quotdeg,prodcf,bcf,prodxp,bxp,
+    Div(proddeg-1,bdeg+extdeg,quotdeg,prodcf,bcf,prodxp,bxp,
         quotcf,quotxp,invbcf,prdcf,wrkcf,prdxp,wrkxp);
     if not Is_Sorted(quotxp)
      then put_line("Exponents are NOT in increasing order!");
