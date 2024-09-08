@@ -3,7 +3,6 @@ with Ada.unchecked_conversion;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Random_Numbers;
@@ -21,7 +20,9 @@ package body Test_Double_Exponentials is
   begin
     sxp(0) := 0.0;
     cff(0) := Standard_Random_Numbers.Random1;
-    for i in 1..deg loop
+    sxp(1) := 1.0 + abs(Standard_Random_Numbers.Random);
+    cff(1) := Standard_Random_Numbers.Random1;
+    for i in 2..deg loop
       cff(i) := Standard_Random_Numbers.Random1;
       sxp(i) := sxp(i-1) + abs(Standard_Random_Numbers.Random); 
     end loop;
@@ -106,6 +107,38 @@ package body Test_Double_Exponentials is
       put(file,sxp(i),1,16,3); new_line(file);
     end loop;
   end Write_Exponential_Series;
+
+  function Extension_Degree ( alpha,beta : double_float ) return integer32 is
+
+    res : integer32 := 0;
+
+  begin
+    if beta = 0.0 then
+      return 0;
+    else
+      res := integer32(alpha/beta);
+      while double_float(res)*beta < alpha loop
+        res := res + 1;
+      end loop;
+      return res;
+    end if;
+  end Extension_Degree;
+
+  function Extension_Degree
+	     ( alpha : double_float;
+               beta : Standard_Floating_Vectors.Vector) return integer32 is
+
+    res,deg : integer32 := 0;
+
+  begin
+    for i in beta'range loop
+      deg := Extension_Degree(alpha,beta(i));
+      if deg > res
+       then res := deg;
+      end if;
+    end loop;
+    return res;
+  end Extension_Degree;
 
   procedure Test_Inverse
               ( cff : in Standard_Complex_Vectors.Vector;
@@ -292,14 +325,16 @@ package body Test_Double_Exponentials is
     put("-> max norm of the coefficients :"); put(nrm); new_line;
   end Test_Multiplicative_Commutativity;
 
-  procedure Test_Product ( adeg,bdeg : in integer32 ) is
+  procedure Test_Product
+              ( adeg,bdeg : in integer32;
+                acf,bcf : in Standard_Complex_Vectors.Vector;
+                axp,bxp : in Standard_Floating_Vectors.Vector ) is
 
-    extdeg : constant integer32 := 4*bdeg;
+    extdeg : constant integer32 
+           := Extension_Degree(axp(axp'last),bxp(0..bdeg));
     proddeg : constant integer32 := (adeg+1)*(bdeg+extdeg+1) - 1;
-    acf : Standard_Complex_Vectors.Vector(0..adeg);
-    axp : Standard_Floating_Vectors.Vector(0..adeg);
-    bcf : Standard_Complex_Vectors.Vector(0..bdeg + extdeg);
-    bxp : Standard_Floating_Vectors.Vector(0..bdeg + extdeg);
+    ebcf : Standard_Complex_Vectors.Vector(0..bdeg + extdeg);
+    ebxp : Standard_Floating_Vectors.Vector(0..bdeg + extdeg);
     prodcf : Standard_Complex_Vectors.Vector(0..proddeg);
     prodxp : Standard_Floating_Vectors.Vector(0..proddeg);
     quotdeg : constant integer32 := (proddeg+1)*(bdeg+extdeg+1) - 1;
@@ -309,6 +344,52 @@ package body Test_Double_Exponentials is
     prdcf,wrkcf : Standard_Complex_Vectors.Vector(0..quotdeg);
     prdxp,wrkxp : Standard_Floating_Vectors.Vector(0..quotdeg);
     nrm : double_float;
+    ans : character;
+
+  begin
+    put("-> the computed extension degree : "); put(extdeg,1); new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    Extend(bdeg,extdeg,bcf,bxp,ebcf,ebxp);
+    put_line("The second series, extended :");
+    Write_Exponential_Series(standard_output,ebcf,ebxp);
+    if not Is_Sorted(ebxp)
+     then put_line("Exponents are NOT in increasing order!");
+    end if;
+    Mul(adeg,bdeg+extdeg,proddeg,acf,ebcf,axp,ebxp,
+        prodcf,prodxp,prdcf,wrkcf,prdxp,wrkxp);
+    if not Is_Sorted(prodxp)
+     then put_line("Exponents are NOT in increasing order!");
+    end if;
+    put_line("The product of the two series :");
+    Write_Exponential_Series(standard_output,prodcf,prodxp);
+    Div(proddeg-1,bdeg+extdeg,quotdeg,prodcf,ebcf,prodxp,ebxp,
+        quotcf,quotxp,invbcf,prdcf,wrkcf,prdxp,wrkxp);
+    if not Is_Sorted(quotxp)
+     then put_line("Exponents are NOT in increasing order!");
+    end if;
+    put_line("the inverse of the second series :");
+    Write_Exponential_Series(standard_output,invbcf,ebxp);
+    put_line("After dividing second series from the product :");
+    Write_Exponential_Series(standard_output,quotcf,quotxp);
+    Sub(adeg,adeg,adeg,quotcf(0..adeg),acf,quotxp(0..adeg),axp,difcf,difxp);
+    if not Is_Sorted(difxp(0..adeg))
+     then put_line("Exponents are NOT in increasing order!");
+    end if;
+    put_line("After subtracting first series from the difference :");
+    Write_Exponential_Series(standard_output,difcf(0..adeg),difxp(0..adeg));
+    nrm := Max_Norm(difcf(0..adeg));
+    put("-> max norm of the coefficients :"); put(nrm); new_line;
+   -- put_line("the first series :");
+   -- Write_Exponential_Series(standard_output,acf,axp);
+  end Test_Product;
+
+  procedure Test_Product ( adeg,bdeg : in integer32 ) is
+
+    acf : Standard_Complex_Vectors.Vector(0..adeg);
+    axp : Standard_Floating_Vectors.Vector(0..adeg);
+    bcf : Standard_Complex_Vectors.Vector(0..bdeg);
+    bxp : Standard_Floating_Vectors.Vector(0..bdeg);
+    ans : character;
 
   begin
     Make_Random_Exponentials(adeg,acf,axp);
@@ -322,39 +403,15 @@ package body Test_Double_Exponentials is
    -- for i in 1..bxp'last loop
    --   bxp(i) := bxp(i) + axp(axp'last);
    -- end loop;
-    Extend(bdeg,extdeg,bcf(0..bdeg),bxp(0..bdeg),bcf,bxp);
     put_line("The second series :");
     Write_Exponential_Series(standard_output,bcf,bxp);
     if not Is_Sorted(bxp)
      then put_line("Exponents are NOT in increasing order!");
     end if;
-    Test_Multiplicative_Commutativity(adeg,bdeg+extdeg,acf,bcf,axp,bxp);
-    Mul(adeg,bdeg+extdeg,proddeg,acf,bcf,axp,bxp,
-        prodcf,prodxp,prdcf,wrkcf,prdxp,wrkxp);
-    if not Is_Sorted(prodxp)
-     then put_line("Exponents are NOT in increasing order!");
-    end if;
-    put_line("The product of the two series :");
-    Write_Exponential_Series(standard_output,prodcf,prodxp);
-    Div(proddeg-1,bdeg+extdeg,quotdeg,prodcf,bcf,prodxp,bxp,
-        quotcf,quotxp,invbcf,prdcf,wrkcf,prdxp,wrkxp);
-    if not Is_Sorted(quotxp)
-     then put_line("Exponents are NOT in increasing order!");
-    end if;
-    put_line("the inverse of the second series :");
-    Write_Exponential_Series(standard_output,invbcf,bxp);
-    put_line("After dividing second series from the product :");
-    Write_Exponential_Series(standard_output,quotcf,quotxp);
-    Sub(adeg,adeg,adeg,quotcf(0..adeg),acf,quotxp(0..adeg),axp,difcf,difxp);
-    if not Is_Sorted(difxp(0..adeg))
-     then put_line("Exponents are NOT in increasing order!");
-    end if;
-    put_line("After subtracting first series from the difference :");
-    Write_Exponential_Series(standard_output,difcf(0..adeg),difxp(0..adeg));
-    nrm := Max_Norm(difcf(0..adeg));
-    put("-> max norm of the coefficients :"); put(nrm); new_line;
-   -- put_line("the first series :");
-   -- Write_Exponential_Series(standard_output,acf,axp);
+    put_line("Testing commutativity ...");
+    Test_Multiplicative_Commutativity(adeg,bdeg,acf,bcf,axp,bxp);
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    Test_Product(adeg,bdeg,acf,bcf,axp,bxp);
   end Test_Product;
 
   procedure Main is

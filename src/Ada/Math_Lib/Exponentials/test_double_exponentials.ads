@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 
@@ -39,6 +40,20 @@ package Test_Double_Exponentials is
   --   Writes the exponential series given by coefficients cff
   --   and corresponding exponents sxp to file.
 
+  function Extension_Degree ( alpha,beta : double_float ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the smallest integer k such that k*beta > alpha,
+  --   or zero if beta is zero.
+
+  function Extension_Degree
+	     ( alpha : double_float;
+               beta : Standard_Floating_Vectors.Vector) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the smallest integer k such that k*beta(i) > alpha,
+  --   for all i in beta'range.
+
   procedure Test_Inverse
               ( cff : in Standard_Complex_Vectors.Vector;
                 sxp : in Standard_Floating_Vectors.Vector );
@@ -67,6 +82,17 @@ package Test_Double_Exponentials is
   -- DESCRIPTION :
   --   Tests whether multiplying the first series with the second
   --   is the same as the second series with the first.
+
+  procedure Test_Product
+              ( adeg,bdeg : in integer32;
+                acf,bcf : in Standard_Complex_Vectors.Vector;
+                axp,bxp : in Standard_Floating_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Tests on the series of degrees adeg and bdeg,
+  --   with coefficients in acf and bcf,
+  --   and corresponding exponents in axp and bxp,
+  --   after extending the second series.
 
   procedure Test_Product ( adeg,bdeg : in integer32 );
 
