@@ -9,7 +9,40 @@ package Double_Exponential_Arithmetic is
 --   Provides basic arithmetic operations on complex exponential series,
 --   in double precision.  An exponential series is represented by
 --   (1) a complex vector of coefficients; and
---   (2) a corresponding vector of real exponents.
+--   (2) a corresponding vector of real exponents,
+--   sorted in increasing order.
+
+  function Extension_Degree ( alpha,beta : double_float ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the smallest integer k such that k*beta > alpha,
+  --   or zero if beta is zero.
+
+  function Extension_Degree
+	     ( alpha : double_float;
+               beta : Standard_Floating_Vectors.Vector) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the smallest integer k such that k*beta(i) > alpha,
+  --   for all i in beta'range.
+
+  procedure Normalize
+              ( cff : in out Standard_Complex_Vectors.Vector;
+                sxp : in out Standard_Floating_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Sorts the exponents and corresponding coefficients.
+
+  procedure Extend ( deg,extdeg : in integer32;
+                     cff : in Standard_Complex_Vectors.Vector;
+                     sxp : in Standard_Floating_Vectors.Vector;
+                     extcff : out Standard_Complex_Vectors.Vector;
+                     extsxp : out Standard_Floating_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Extends the series with coefficients in cff and corresponding
+  --   exponents of truncation degree to the new degree extdeg,
+  --   returning in extcff and extsxp the extended series.
 
   function Inverse ( cff : Standard_Complex_Vectors.Vector )
                     return Standard_Complex_Vectors.Vector;

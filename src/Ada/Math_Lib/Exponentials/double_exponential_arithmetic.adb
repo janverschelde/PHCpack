@@ -2,6 +2,86 @@ with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 
 package body Double_Exponential_Arithmetic is
 
+  function Extension_Degree ( alpha,beta : double_float ) return integer32 is
+
+    res : integer32 := 0;
+
+  begin
+    if beta = 0.0 then
+      return 0;
+    else
+      res := integer32(alpha/beta);
+      while double_float(res)*beta < alpha loop
+        res := res + 1;
+      end loop;
+      return res;
+    end if;
+  end Extension_Degree;
+
+  function Extension_Degree
+	     ( alpha : double_float;
+               beta : Standard_Floating_Vectors.Vector) return integer32 is
+
+    res,deg : integer32 := 0;
+
+  begin
+    for i in beta'range loop
+      deg := Extension_Degree(alpha,beta(i));
+      if deg > res
+       then res := deg;
+      end if;
+    end loop;
+    return res;
+  end Extension_Degree;
+
+  procedure Normalize
+              ( cff : in out Standard_Complex_Vectors.Vector;
+                sxp : in out Standard_Floating_Vectors.Vector ) is
+
+    cfftmp : Complex_Number;
+    sxptmp : double_float;
+    swapped : boolean;
+
+  begin
+    loop
+      swapped := false;
+      for i in sxp'first+1..sxp'last loop
+        if sxp(i) < sxp(i-1) then
+          sxptmp := sxp(i); sxp(i) := sxp(i-1); sxp(i-1) := sxptmp;
+          cfftmp := cff(i); cff(i) := cff(i-1); cff(i-1) := cfftmp;
+          swapped := true;
+        end if;
+      end loop;
+      exit when not swapped;
+    end loop;
+  end Normalize;
+
+  procedure Extend ( deg,extdeg : in integer32;
+                     cff : in Standard_Complex_Vectors.Vector;
+                     sxp : in Standard_Floating_Vectors.Vector;
+                     extcff : out Standard_Complex_Vectors.Vector;
+                     extsxp : out Standard_Floating_Vectors.Vector ) is
+
+    newdeg : constant integer32 := deg + extdeg;
+    idx,degidx : integer32;
+
+  begin
+    extcff(cff'range) := cff;
+    extsxp(sxp'range) := sxp;
+    extcff(cff'last+1..newdeg) := (cff'last+1..newdeg => create(0.0));
+    idx := deg + 1;
+    while idx <= newdeg loop
+      if idx <= 2*deg then
+        extsxp(idx) := 2.0*extsxp(idx-deg);
+      else
+        degidx := (idx mod deg) + 1;
+        extsxp(idx) := extsxp(idx-deg) + extsxp(degidx);
+      end if;
+      idx := idx + 1;
+    end loop;
+    Normalize(extcff,extsxp);
+  end Extend;
+
   function Inverse ( cff : Standard_Complex_Vectors.Vector )
                     return Standard_Complex_Vectors.Vector is
 

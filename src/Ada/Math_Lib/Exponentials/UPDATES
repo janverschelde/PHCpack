@@ -1,3 +1,6 @@
+Tue 10 Sep 2024 : moved functions/procedures from test_double_exponentials
+  to double_exponential_arithmetic.
+
 Sun 8 Sep 2024 : in test_double_exponentials, added functions to compute
   extended series to ensure an accurate division.
 

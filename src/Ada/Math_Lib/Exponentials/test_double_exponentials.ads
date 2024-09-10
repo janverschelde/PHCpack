@@ -1,6 +1,5 @@
 with text_io;                            use text_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 
@@ -24,13 +23,6 @@ package Test_Double_Exponentials is
   --   Returns true if the sequence xp is sorted in increasing order,
   --   false otherwise.
 
-  procedure Normalize
-              ( cff : in out Standard_Complex_Vectors.Vector;
-                sxp : in out Standard_Floating_Vectors.Vector );
-
-  -- DESCRIPTION :
-  --   Sorts the exponents and corresponding coefficients.
-
   procedure Write_Exponential_Series
               ( file : in file_type;
                 cff : in Standard_Complex_Vectors.Vector;
@@ -39,20 +31,6 @@ package Test_Double_Exponentials is
   -- DESCRIPTION :
   --   Writes the exponential series given by coefficients cff
   --   and corresponding exponents sxp to file.
-
-  function Extension_Degree ( alpha,beta : double_float ) return integer32;
-
-  -- DESCRIPTION :
-  --   Returns the smallest integer k such that k*beta > alpha,
-  --   or zero if beta is zero.
-
-  function Extension_Degree
-	     ( alpha : double_float;
-               beta : Standard_Floating_Vectors.Vector) return integer32;
-
-  -- DESCRIPTION :
-  --   Returns the smallest integer k such that k*beta(i) > alpha,
-  --   for all i in beta'range.
 
   procedure Test_Inverse
               ( cff : in Standard_Complex_Vectors.Vector;
