@@ -21,12 +21,11 @@ package body Test_Double_Exponentials is
   begin
     sxp(0) := 0.0;
     cff(0) := Standard_Random_Numbers.Random1;
-    sxp(1) := 1.0 + abs(Standard_Random_Numbers.Random);
-    cff(1) := Standard_Random_Numbers.Random1;
-    for i in 2..deg loop
+    for i in 1..deg loop
       cff(i) := Standard_Random_Numbers.Random1;
-      sxp(i) := sxp(i-1) + abs(Standard_Random_Numbers.Random); 
+      sxp(i) := 1.0 + abs(Standard_Random_Numbers.Random); 
     end loop;
+    Normalize(cff,sxp);
   end Make_Random_Exponentials;
 
   function Is_Sorted ( xp : Standard_Floating_Vectors.Vector )
@@ -248,12 +247,13 @@ package body Test_Double_Exponentials is
 
     extdeg : constant integer32 
            := Extension_Degree(axp(axp'last),bxp(0..bdeg));
-    proddeg : constant integer32 := (adeg+1)*(bdeg+extdeg+1) - 1;
+    proddeg0 : constant integer32 := (adeg+1)*(bdeg+1) - 1;
+    proddeg1 : constant integer32 := (adeg+1)*(bdeg+extdeg+1) - 1;
     ebcf : Standard_Complex_Vectors.Vector(0..bdeg + extdeg);
     ebxp : Standard_Floating_Vectors.Vector(0..bdeg + extdeg);
-    prodcf : Standard_Complex_Vectors.Vector(0..proddeg);
-    prodxp : Standard_Floating_Vectors.Vector(0..proddeg);
-    quotdeg : constant integer32 := (proddeg+1)*(bdeg+extdeg+1) - 1;
+    prodcf : Standard_Complex_Vectors.Vector(0..proddeg0);
+    prodxp : Standard_Floating_Vectors.Vector(0..proddeg0);
+    quotdeg : constant integer32 := (proddeg1+1)*(bdeg+extdeg+1) - 1;
     quotcf,difcf : Standard_Complex_Vectors.Vector(0..quotdeg);
     quotxp,difxp : Standard_Floating_Vectors.Vector(0..quotdeg);
     invbcf : Standard_Complex_Vectors.Vector(0..bdeg+extdeg);
@@ -274,14 +274,14 @@ package body Test_Double_Exponentials is
     if not Is_Sorted(ebxp)
      then put_line("Exponents are NOT in increasing order!");
     end if;
-    Mul(adeg,bdeg+extdeg,proddeg,acf,ebcf,axp,ebxp,
+    Mul(adeg,bdeg,proddeg0,acf,bcf,axp,bxp,
         prodcf,prodxp,prdcf,wrkcf,prdxp,wrkxp);
     if not Is_Sorted(prodxp)
      then put_line("Exponents are NOT in increasing order!");
     end if;
     put_line("The product of the two series :");
     Write_Exponential_Series(standard_output,prodcf,prodxp);
-    Div(proddeg-1,bdeg+extdeg,quotdeg,prodcf,ebcf,prodxp,ebxp,
+    Div(proddeg0-1,bdeg+extdeg,quotdeg,prodcf,ebcf,prodxp,ebxp,
         quotcf,quotxp,invbcf,prdcf,wrkcf,prdxp,wrkxp);
     if not Is_Sorted(quotxp)
      then put_line("Exponents are NOT in increasing order!");

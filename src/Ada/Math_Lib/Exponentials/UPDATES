@@ -1,3 +1,6 @@
+Sat 14 Sep 2024 : in test_double_exponentials, generated random series
+  with exponents in [1,2] to bound the extension degree to 2.
+
 Tue 10 Sep 2024 : moved functions/procedures from test_double_exponentials
   to double_exponential_arithmetic.
 

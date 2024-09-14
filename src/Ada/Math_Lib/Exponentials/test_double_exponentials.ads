@@ -16,6 +16,8 @@ package Test_Double_Exponentials is
   -- DESCRIPTION :
   --   Generates deg+1 random complex coefficients cff and
   --   corresponding exponents sxp for the terms in the series.
+  --   The leading coefficient has exponent zero,
+  --   all other exponents are in [1,2], sorted in increasing order.
 
   function Is_Sorted ( xp : Standard_Floating_Vectors.Vector ) return boolean;
 
