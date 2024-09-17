@@ -1,4 +1,5 @@
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+-- with Standard_Random_Numbers;
 
 package body Double_Exponential_Arithmetic is
 
@@ -56,31 +57,41 @@ package body Double_Exponential_Arithmetic is
     end loop;
   end Normalize;
 
-  procedure Extend ( deg,extdeg : in integer32;
-                     cff : in Standard_Complex_Vectors.Vector;
-                     sxp : in Standard_Floating_Vectors.Vector;
-                     extcff : out Standard_Complex_Vectors.Vector;
-                     extsxp : out Standard_Floating_Vectors.Vector ) is
+  function Quadratic_Extend_Size ( deg : integer32 ) return integer32 is
 
-    newdeg : constant integer32 := deg + extdeg;
-    idx,degidx : integer32;
+   -- res : constant integer32 := 2*deg + deg*(deg-1)/2;
+    res : constant integer32 := deg*(deg+3)/2;
+
+  begin
+    return res;
+  end Quadratic_Extend_Size;
+
+  procedure Quadratic_Extend
+              ( deg,size : in integer32;
+                cff : in Standard_Complex_Vectors.Vector;
+                sxp : in Standard_Floating_Vectors.Vector;
+                extcff : out Standard_Complex_Vectors.Vector;
+                extsxp : out Standard_Floating_Vectors.Vector ) is
+
+    idx : integer32;
 
   begin
     extcff(cff'range) := cff;
     extsxp(sxp'range) := sxp;
-    extcff(cff'last+1..newdeg) := (cff'last+1..newdeg => create(0.0));
+    extcff(deg+1..size) := (deg+1..size => create(1.0));
     idx := deg + 1;
-    while idx <= newdeg loop
-      if idx <= 2*deg then
-        extsxp(idx) := 2.0*extsxp(idx-deg);
-      else
-        degidx := (idx mod deg) + 1;
-        extsxp(idx) := extsxp(idx-deg) + extsxp(degidx);
-      end if;
+    for i in 1..deg loop
+      for j in i+1..deg loop
+        extsxp(idx) := sxp(i) + sxp(j);
+        idx := idx + 1;
+      end loop;
+    end loop;
+    for i in 1..deg loop
+      extsxp(idx) := 2.0*sxp(i);
       idx := idx + 1;
     end loop;
     Normalize(extcff,extsxp);
-  end Extend;
+  end Quadratic_Extend;
 
   function Inverse ( cff : Standard_Complex_Vectors.Vector )
                     return Standard_Complex_Vectors.Vector is

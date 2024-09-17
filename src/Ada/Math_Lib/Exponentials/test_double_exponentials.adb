@@ -112,7 +112,7 @@ package body Test_Double_Exponentials is
 
     cff : Standard_Complex_Vectors.Vector(0..deg);
     sxp : Standard_Floating_Vectors.Vector(0..deg);
-    extdeg : integer32 := 0;
+    ans : character;
 
   begin
     Make_Random_Exponentials(deg,cff,sxp);
@@ -122,14 +122,15 @@ package body Test_Double_Exponentials is
     put_line("Random coefficients :"); put_line(cff);
     put_line("Random exponentials :"); put_line(sxp);
     Test_Inverse(cff,sxp);
-    put("Give the extension degree : "); get(extdeg);
-    if extdeg > 0 then
+    put("Test the quadratic extension ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
       declare
-        newdeg : constant integer32 := deg + extdeg;
+        newdeg : constant integer32 := Quadratic_Extend_Size(deg);
         extcff : Standard_Complex_Vectors.Vector(0..newdeg);
         extsxp : Standard_Floating_Vectors.Vector(0..newdeg);
       begin
-        Extend(deg,extdeg,cff,sxp,extcff,extsxp);
+        Quadratic_Extend(deg,newdeg,cff,sxp,extcff,extsxp);
         Test_Inverse(extcff,extsxp);
       end;
     end if;
@@ -245,30 +246,26 @@ package body Test_Double_Exponentials is
                 acf,bcf : in Standard_Complex_Vectors.Vector;
                 axp,bxp : in Standard_Floating_Vectors.Vector ) is
 
-    extdeg : constant integer32 
-           := Extension_Degree(axp(axp'last),bxp(0..bdeg));
+    bsize : constant integer32 := Quadratic_Extend_Size(bdeg);
     proddeg0 : constant integer32 := (adeg+1)*(bdeg+1) - 1;
-    proddeg1 : constant integer32 := (adeg+1)*(bdeg+extdeg+1) - 1;
-    ebcf : Standard_Complex_Vectors.Vector(0..bdeg + extdeg);
-    ebxp : Standard_Floating_Vectors.Vector(0..bdeg + extdeg);
+    proddeg1 : constant integer32 := (adeg+1)*(bsize+1) - 1;
+    ebcf : Standard_Complex_Vectors.Vector(0..bsize);
+    ebxp : Standard_Floating_Vectors.Vector(0..bsize);
     prodcf : Standard_Complex_Vectors.Vector(0..proddeg0);
     prodxp : Standard_Floating_Vectors.Vector(0..proddeg0);
-    quotdeg : constant integer32 := (proddeg1+1)*(bdeg+extdeg+1) - 1;
+    quotdeg : constant integer32 := (proddeg1+1)*(bsize+1) - 1;
     quotcf,difcf : Standard_Complex_Vectors.Vector(0..quotdeg);
     quotxp,difxp : Standard_Floating_Vectors.Vector(0..quotdeg);
-    invbcf : Standard_Complex_Vectors.Vector(0..bdeg+extdeg);
+    invbcf : Standard_Complex_Vectors.Vector(0..bsize);
     prdcf,wrkcf : Standard_Complex_Vectors.Vector(0..quotdeg);
     prdxp,wrkxp : Standard_Floating_Vectors.Vector(0..quotdeg);
-    nrm : double_float;
     ans : character;
+    nrm : double_float;
 
   begin
-    put("-> the computed extension degree : "); put(extdeg,1); new_line;
-    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
-    if ans /= 'y'
-     then return;
-    end if;
-    Extend(bdeg,extdeg,bcf,bxp,ebcf,ebxp);
+    put_line("The first series :");
+    Write_Exponential_Series(standard_output,acf,axp);
+    Quadratic_Extend(bdeg,bsize,bcf,bxp,ebcf,ebxp);
     put_line("The second series, extended :");
     Write_Exponential_Series(standard_output,ebcf,ebxp);
     if not Is_Sorted(ebxp)
@@ -281,7 +278,12 @@ package body Test_Double_Exponentials is
     end if;
     put_line("The product of the two series :");
     Write_Exponential_Series(standard_output,prodcf,prodxp);
-    Div(proddeg0-1,bdeg+extdeg,quotdeg,prodcf,ebcf,prodxp,ebxp,
+    put("Continue ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans /= 'y'
+     then return;
+    end if;
+    Div(proddeg0-1,bsize,quotdeg,prodcf,ebcf,prodxp,ebxp,
         quotcf,quotxp,invbcf,prdcf,wrkcf,prdxp,wrkxp);
     if not Is_Sorted(quotxp)
      then put_line("Exponents are NOT in increasing order!");

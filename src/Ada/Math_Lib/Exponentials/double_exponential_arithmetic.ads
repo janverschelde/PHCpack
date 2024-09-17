@@ -33,16 +33,29 @@ package Double_Exponential_Arithmetic is
   -- DESCRIPTION :
   --   Sorts the exponents and corresponding coefficients.
 
-  procedure Extend ( deg,extdeg : in integer32;
-                     cff : in Standard_Complex_Vectors.Vector;
-                     sxp : in Standard_Floating_Vectors.Vector;
-                     extcff : out Standard_Complex_Vectors.Vector;
-                     extsxp : out Standard_Floating_Vectors.Vector );
+  function Quadratic_Extend_Size ( deg : integer32 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the size of a quadratic extension of a series truncated
+  --   at degree deg, adding for each of the deg exponents their double
+  --   and all cross terms, which is 2*deg + deg*(deg-1)/2,
+  --   which simplifies into deg*(deg+3)/2.
+
+  procedure Quadratic_Extend
+              ( deg,size : in integer32;
+                cff : in Standard_Complex_Vectors.Vector;
+                sxp : in Standard_Floating_Vectors.Vector;
+                extcff : out Standard_Complex_Vectors.Vector;
+                extsxp : out Standard_Floating_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Extends the series with coefficients in cff and corresponding
-  --   exponents of truncation degree to the new degree extdeg,
+  --   exponents of truncation degree to the new size
   --   returning in extcff and extsxp the extended series.
+
+  -- REQUIRED :
+  --   size = Quadratic_Extend_Size(deg),
+  --   extcff'last >= size, extsxp'last >= size.
 
   function Inverse ( cff : Standard_Complex_Vectors.Vector )
                     return Standard_Complex_Vectors.Vector;

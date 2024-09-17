@@ -1,3 +1,6 @@
+Tue 17 Sep 2024 : in double_exponential_arithmetic, defined the quadratic
+  size extension, updated test_double_exponentials.adb.
+
 Sat 14 Sep 2024 : in test_double_exponentials, generated random series
   with exponents in [1,2] to bound the extension degree to 2.
 
