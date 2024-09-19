@@ -87,24 +87,34 @@ package body Test_Double_Exponentials is
   end Write_Exponential_Series;
 
   procedure Test_Inverse
-              ( cff : in Standard_Complex_Vectors.Vector;
+              ( deg : in integer32;
+                cff : in Standard_Complex_Vectors.Vector;
                 sxp : in Standard_Floating_Vectors.Vector ) is                 
 
-    deg : constant integer32 := cff'last;
-    invcff : Standard_Complex_Vectors.Vector(0..deg);
-    prd : Standard_Complex_Vectors.Vector(0..deg);
+    invcff : Standard_Complex_Vectors.Vector(cff'range);
     nrm : double_float;
+    thedeg : constant integer32 := cff'last;
+    proddeg : constant integer32 := (thedeg+1)*(thedeg+1) - 1;
+    prodcf : Standard_Complex_Vectors.Vector(0..proddeg);
+    prodxp : Standard_Floating_Vectors.Vector(0..proddeg);
+    prdcf,wrkcf : Standard_Complex_Vectors.Vector(0..proddeg);
+    prdxp,wrkxp : Standard_Floating_Vectors.Vector(0..proddeg);
 
   begin
     put_line("An exponential series :");
     Write_Exponential_Series(standard_output,cff,sxp);
-    invcff := Inverse(cff);
+    if deg = cff'last
+     then invcff := Linear_Inverse(cff);
+     else invcff := Quadratic_Inverse(deg,cff);
+    end if;
     put_line("The inverse of the exponential series :");
     Write_Exponential_Series(standard_output,invcff,sxp);
-    prd := Convolute(cff,invcff);
+   -- prd := Convolute(cff,invcff);
+    Mul(thedeg,thedeg,proddeg,cff,invcff,sxp,sxp,
+        prodcf,prodxp,prdcf,wrkcf,prdxp,wrkxp);
     put_line("The product with the inverse of the exponential series :");
-    Write_Exponential_Series(standard_output,prd,sxp);
-    nrm := Max_Norm(prd);
+    Write_Exponential_Series(standard_output,prodcf,prodxp);
+    nrm := Max_Norm(prodcf(0..thedeg));
     put("-> max norm of the coefficients :"); put(nrm); new_line;
   end Test_Inverse;
 
@@ -121,7 +131,7 @@ package body Test_Double_Exponentials is
     end if;
     put_line("Random coefficients :"); put_line(cff);
     put_line("Random exponentials :"); put_line(sxp);
-    Test_Inverse(cff,sxp);
+    Test_Inverse(deg,cff,sxp);
     put("Test the quadratic extension ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y' then
@@ -131,7 +141,7 @@ package body Test_Double_Exponentials is
         extsxp : Standard_Floating_Vectors.Vector(0..newdeg);
       begin
         Quadratic_Extend(deg,newdeg,cff,sxp,extcff,extsxp);
-        Test_Inverse(extcff,extsxp);
+        Test_Inverse(deg,extcff,extsxp);
       end;
     end if;
   end Test_Inverse;

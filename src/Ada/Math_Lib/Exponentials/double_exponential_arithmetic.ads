@@ -58,10 +58,34 @@ package Double_Exponential_Arithmetic is
   --   extcff'last >= size, extsxp'last >= size.
 
   function Inverse ( cff : Standard_Complex_Vectors.Vector )
-                    return Standard_Complex_Vectors.Vector;
+                   return Standard_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
-  --   Returns the coefficients of the inverse series.
+  --   Returns the coefficients of the inverse series,
+  --   for series where the exponents are multiples of the same
+  --   first nonzero exponent.
+
+  -- REQUIRED : cff(0) is nonzero.
+
+  function Linear_Inverse
+             ( cff : Standard_Complex_Vectors.Vector )
+             return Standard_Complex_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the coefficients of the inverse series,
+  --   for series where all exponents are independent from each other.
+
+  -- REQUIRED : cff(0) is nonzero.
+
+  function Quadratic_Inverse
+             ( deg : integer32;
+               cff : Standard_Complex_Vectors.Vector )
+             return Standard_Complex_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the coefficients of the inverse series,
+  --   for series where the first deg nonzero exponents are independent
+  --   from each other and where the others are quadratic.
 
   -- REQUIRED : cff(0) is nonzero.
 

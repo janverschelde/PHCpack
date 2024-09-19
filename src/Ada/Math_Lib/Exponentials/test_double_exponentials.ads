@@ -35,12 +35,14 @@ package Test_Double_Exponentials is
   --   and corresponding exponents sxp to file.
 
   procedure Test_Inverse
-              ( cff : in Standard_Complex_Vectors.Vector;
+              ( deg : in integer32;
+                cff : in Standard_Complex_Vectors.Vector;
                 sxp : in Standard_Floating_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Computes and tests the inverse for the series defined
   --   by the coefficients in cff and exponents in sxp.
+  --   The deg on input is the number of independent exponents.
 
   procedure Test_Inverse ( deg : in integer32 );
 

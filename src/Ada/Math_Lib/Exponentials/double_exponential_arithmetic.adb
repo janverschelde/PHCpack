@@ -90,11 +90,11 @@ package body Double_Exponential_Arithmetic is
       extsxp(idx) := 2.0*sxp(i);
       idx := idx + 1;
     end loop;
-    Normalize(extcff,extsxp);
+   -- Normalize(extcff,extsxp);
   end Quadratic_Extend;
 
   function Inverse ( cff : Standard_Complex_Vectors.Vector )
-                    return Standard_Complex_Vectors.Vector is
+                   return Standard_Complex_Vectors.Vector is
 
     res : Standard_Complex_Vectors.Vector(cff'range);
 
@@ -110,8 +110,50 @@ package body Double_Exponential_Arithmetic is
     return res;
   end Inverse;
 
+  function Linear_Inverse
+             ( cff : Standard_Complex_Vectors.Vector )
+             return Standard_Complex_Vectors.Vector is
+
+    res : Standard_Complex_Vectors.Vector(cff'range);
+
+  begin
+    res(0) := 1.0/cff(0);
+    for i in 1..res'last loop
+      res(i) := -res(0)*cff(i)/cff(0);
+    end loop;
+    return res;
+  end Linear_Inverse;
+
+  function Quadratic_Inverse
+             ( deg : integer32;
+               cff : Standard_Complex_Vectors.Vector )
+             return Standard_Complex_Vectors.Vector is
+
+    res : Standard_Complex_Vectors.Vector(cff'range);
+    idx : integer32;
+
+  begin
+    res(0) := 1.0/cff(0);
+    for i in 1..deg loop               -- linear terms
+      res(i) := -res(0)*cff(i)/cff(0); 
+    end loop;
+    idx := cff'last - deg + 1;
+    for i in 1..deg loop               -- quadratic terms
+      res(idx) := -(cff(i)*res(i) + cff(idx)*res(0))/cff(0);
+      idx := idx + 1;
+    end loop;
+    idx := deg + 1;
+    for i in 1..deg loop               -- cross terms
+      for j in i+1..deg loop
+        res(idx) := -(cff(i)*res(j) + cff(j)*res(i) + cff(idx)*res(0))/cff(0);
+        idx := idx + 1;
+      end loop;
+    end loop;
+    return res;
+  end Quadratic_Inverse;
+
   function Convolute ( a,b : Standard_Complex_Vectors.Vector )
-                      return Standard_Complex_Vectors.Vector is
+                     return Standard_Complex_Vectors.Vector is
 
     res : Standard_Complex_Vectors.Vector(0..a'last);
 

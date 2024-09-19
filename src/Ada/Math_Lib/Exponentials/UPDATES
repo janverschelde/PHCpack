@@ -1,3 +1,6 @@
+Thu 19 Sep 2024 : in double_exponential_arithmetic, defined linear and
+  quadratic inverses, tested by test_double_exponentials.
+
 Tue 17 Sep 2024 : in double_exponential_arithmetic, defined the quadratic
   size extension, updated test_double_exponentials.adb.
 
