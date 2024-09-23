@@ -25,7 +25,7 @@ package body Test_Double_Exponentials is
       cff(i) := Standard_Random_Numbers.Random1;
       sxp(i) := 1.0 + abs(Standard_Random_Numbers.Random); 
     end loop;
-    Normalize(cff,sxp);
+    Normalize(deg,cff,sxp);
   end Make_Random_Exponentials;
 
   function Is_Sorted ( xp : Standard_Floating_Vectors.Vector )
@@ -278,7 +278,7 @@ package body Test_Double_Exponentials is
     Quadratic_Extend(bdeg,bsize,bcf,bxp,ebcf,ebxp);
     put_line("The second series, extended :");
     Write_Exponential_Series(standard_output,ebcf,ebxp);
-    if not Is_Sorted(ebxp)
+    if not Is_Sorted(ebxp(0..bdeg))
      then put_line("Exponents are NOT in increasing order!");
     end if;
     Mul(adeg,bdeg,proddeg0,acf,bcf,axp,bxp,
@@ -293,7 +293,7 @@ package body Test_Double_Exponentials is
     if ans /= 'y'
      then return;
     end if;
-    Div(proddeg0-1,bsize,quotdeg,prodcf,ebcf,prodxp,ebxp,
+    Div(proddeg0-1,bdeg,bsize,quotdeg,prodcf,ebcf,prodxp,ebxp,
         quotcf,quotxp,invbcf,prdcf,wrkcf,prdxp,wrkxp);
     if not Is_Sorted(quotxp)
      then put_line("Exponents are NOT in increasing order!");

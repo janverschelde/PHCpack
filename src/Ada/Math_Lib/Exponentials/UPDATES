@@ -1,3 +1,6 @@
+Sun 22 Sep 2024 : in double_exponential_arithmetic, applied new inverse,
+  updated test_double_exponentials.adb.
+
 Thu 19 Sep 2024 : in double_exponential_arithmetic, defined linear and
   quadratic inverses, tested by test_double_exponentials.
 

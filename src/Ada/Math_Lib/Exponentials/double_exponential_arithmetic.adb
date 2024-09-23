@@ -36,7 +36,8 @@ package body Double_Exponential_Arithmetic is
   end Extension_Degree;
 
   procedure Normalize
-              ( cff : in out Standard_Complex_Vectors.Vector;
+              ( dim : in integer32;
+                cff : in out Standard_Complex_Vectors.Vector;
                 sxp : in out Standard_Floating_Vectors.Vector ) is
 
     cfftmp : Complex_Number;
@@ -46,7 +47,7 @@ package body Double_Exponential_Arithmetic is
   begin
     loop
       swapped := false;
-      for i in sxp'first+1..sxp'last loop
+      for i in sxp'first+1..dim loop
         if sxp(i) < sxp(i-1) then
           sxptmp := sxp(i); sxp(i) := sxp(i-1); sxp(i-1) := sxptmp;
           cfftmp := cff(i); cff(i) := cff(i-1); cff(i-1) := cfftmp;
@@ -90,7 +91,7 @@ package body Double_Exponential_Arithmetic is
       extsxp(idx) := 2.0*sxp(i);
       idx := idx + 1;
     end loop;
-   -- Normalize(extcff,extsxp);
+   -- Normalize(deg,extcff,extsxp);
   end Quadratic_Extend;
 
   function Inverse ( cff : Standard_Complex_Vectors.Vector )
@@ -389,7 +390,7 @@ package body Double_Exponential_Arithmetic is
     end if;
   end Mul;
 
-  procedure Div ( adeg,bdeg,cdeg : in integer32;
+  procedure Div ( adeg,bdeg,bsize,cdeg : in integer32;
                   acf,bcf : in Standard_Complex_Vectors.Vector;
                   axp,bxp : in Standard_Floating_Vectors.Vector;
                   ccf : out Standard_Complex_Vectors.Vector;
@@ -397,8 +398,11 @@ package body Double_Exponential_Arithmetic is
                   invbcf,prdcf,wrkcf : in out Standard_Complex_Vectors.Vector;
                   prdxp,wrkxp : in out Standard_Floating_Vectors.Vector ) is
   begin
-    invbcf := Inverse(bcf);
-    Mul(adeg,bdeg,cdeg,acf,invbcf,axp,bxp,ccf,cxp,prdcf,wrkcf,prdxp,wrkxp);
+    if bdeg = bsize
+     then invbcf := Linear_Inverse(bcf);
+     else invbcf := Quadratic_Inverse(bdeg,bcf);
+    end if;
+    Mul(adeg,bsize,cdeg,acf,invbcf,axp,bxp,ccf,cxp,prdcf,wrkcf,prdxp,wrkxp);
   end Div;
 
 end Double_Exponential_Arithmetic;

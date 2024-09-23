@@ -27,11 +27,12 @@ package Double_Exponential_Arithmetic is
   --   for all i in beta'range.
 
   procedure Normalize
-              ( cff : in out Standard_Complex_Vectors.Vector;
+              ( dim : in integer32;
+                cff : in out Standard_Complex_Vectors.Vector;
                 sxp : in out Standard_Floating_Vectors.Vector );
 
   -- DESCRIPTION :
-  --   Sorts the exponents and corresponding coefficients.
+  --   Sorts the first dim exponents and corresponding coefficients.
 
   function Quadratic_Extend_Size ( deg : integer32 ) return integer32;
 
@@ -185,7 +186,7 @@ package Double_Exponential_Arithmetic is
   --   wrkcf      work space coefficients for increment;
   --   wrkxp      work space exponents for increment.
 
-  procedure Div ( adeg,bdeg,cdeg : in integer32;
+  procedure Div ( adeg,bdeg,bsize,cdeg : in integer32;
                   acf,bcf : in Standard_Complex_Vectors.Vector;
                   axp,bxp : in Standard_Floating_Vectors.Vector;
                   ccf : out Standard_Complex_Vectors.Vector;
@@ -200,7 +201,8 @@ package Double_Exponential_Arithmetic is
 
   -- ON ENTRY :
   --   adeg       truncation degree of the first series;
-  --   bdeg       truncation degree of the second series;
+  --   bdeg       truncation degree of the original second series;
+  --   bsize      size of the second series;
   --   cdeg       truncation degree of the quotient of the series;
   --   acf        coefficients of the first series;
   --   bcf        coefficients of the second series;
