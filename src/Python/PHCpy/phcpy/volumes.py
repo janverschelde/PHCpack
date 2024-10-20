@@ -225,6 +225,132 @@ def cell_mixed_volume(idx, vrblvl=0):
         print('the mixed volume of cell', idx, 'is', result)
     return result
 
+def cell_inner_normal(idx, dim, vrblvl=0):
+    """
+    Returns the inner normal of cell with index idx,
+    as a list of dim doubles.
+    """
+    if vrblvl > 0:
+        print('in cell_inner_normal, idx :', idx)
+    phc = get_phcfun(vrblvl-1)
+    aidx = pointer(c_int32(idx))
+    bbb = pointer(c_int32(0))
+    cffs = (c_double * dim)()
+    for i in range(dim):
+        cffs[i] = c_double(0.0)
+    normal = pointer(cffs)
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> cell_inner_normal calls phc', end='')
+    retval = phc(87, aidx, bbb, normal, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    vals = normal[0:dim]
+    result = []
+    for i in range(dim):
+        result.append(float(vals[0][i]))
+    if vrblvl > 0:
+        print('the inner normal of cell', idx, 'is')
+        print(result)
+    return result
+
+def cell_mixture_type(dim, vrblvl=0):
+    """
+    Returns a list of integer numbers, where
+    the length of the list equals the number of different supports
+    and the i-th number in the list on return equals the number
+    of occurrences of the (i+1)-th support.
+    The number dim on entry is the dimension,
+    which equals the maximum number of different supports.
+    """
+    if vrblvl > 0:
+        print('in cell_mixture_type, dim :', dim)
+    phc = get_phcfun(vrblvl-1)
+    adim = pointer(c_int32(dim))
+    bmix = (c_int32 * dim)()
+    for idx in range(dim):
+        bmix[idx] = c_int32(0)
+    pmix = pointer(bmix)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> cell_mixture_type calls phc', end='')
+    retval = phc(84, adim, pmix, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    nbr = adim[0]
+    if vrblvl > 0:
+        print('number of different supports :', nbr)
+    vals = pmix[0:nbr]
+    result = []
+    for i in range(nbr):
+        result.append(int(vals[0][i]))
+    if vrblvl > 0:
+        print('the type of mixture is', result)
+    return result
+
+def cell_support_sizes(dim, vrblvl=0):
+    """
+    Returns the number of points of each support.
+    The number dim on entry must equal the dimension,
+    or the maximum number of different supports.
+    """
+    if vrblvl > 0:
+        print('in cell_mixture_type, dim :', dim)
+    phc = get_phcfun(vrblvl-1)
+    adim = pointer(c_int32(dim))
+    bmix = (c_int32 * dim)()
+    for idx in range(dim):
+        bmix[idx] = c_int32(0)
+    pmix = pointer(bmix)
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> cell_support_sizes calls phc', end='')
+    retval = phc(85, adim, pmix, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    nbr = adim[0]
+    if vrblvl > 0:
+        print('number of different supports :', nbr)
+    vals = pmix[0:nbr]
+    result = []
+    for i in range(nbr):
+        result.append(int(vals[0][i]))
+    if vrblvl > 0:
+        print('the support sizes :', result)
+    return result
+
+def cell_lifted_point(supidx, pntidx, dim, vrblvl=0):
+    """
+    Returns the lifted point of support with index supidx
+    at position pntidx, as a list of dim doubles.
+    """
+    if vrblvl > 0:
+        print('in cell_lifted_point, supidx :', supidx, end='')
+        print(', pntidx :', pntidx, ', dim :', dim)
+    phc = get_phcfun(vrblvl-1)
+    aidx = pointer(c_int32(supidx))
+    bidx = pointer(c_int32(pntidx))
+    cffs = (c_double * dim)()
+    for i in range(dim):
+        cffs[i] = c_double(0.0)
+    point = pointer(cffs)
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> cell_lifted_point calls phc', end='')
+    retval = phc(86, aidx, bidx, point, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    vals = point[0:dim]
+    result = []
+    for i in range(dim):
+        result.append(float(vals[0][i]))
+    if vrblvl > 0:
+        print('the lifted point at ', supidx, ',', pntidx, 'is')
+        print(result)
+    return result
+
 def double_random_coefficient_system(vrblvl=0):
     """
     Makes a random coefficient system using the type of mixture
@@ -801,6 +927,55 @@ def test_stable_mixed_volume(vrblvl=0):
     fail = fail + int(mvl != 3) + int(smv != 5) + int(mvcells != 5)
     return fail
 
+def test_mixed_cells(vrblvl=0):
+    """
+    Tests the retrieval of the lifted supports
+    and the inner normals to all mixed cells.
+    """
+    pols = ['x^3 + 2*x*y + z^2 - 1;', 'x^3 - x*y - z^2 + 2;', 'x + y + z - 1;']
+    dim = len(pols)
+    mvl = mixed_volume(pols, True, vrblvl)
+    mix = cell_mixture_type(dim, vrblvl)
+    print('Type of mixture :', mix)
+    fail = int(len(mix) != 2)
+    sizes = cell_support_sizes(dim, vrblvl)
+    print('Sizes of each support :', sizes)
+    fail = fail + int(sizes[0] != 4) + int(sizes[1] != 4)
+    lifted = []
+    for supidx in range(len(sizes)):
+        lifsup = []
+        for pntidx in range(sizes[supidx]):
+            point = cell_lifted_point(supidx+1, pntidx+1, dim+1, vrblvl)
+            lifsup.append(point)
+        lifted.append(lifsup)
+    nbcells = number_of_cells(vrblvl)
+    if vrblvl > 0:
+        print('the mixed volume by DEMiCs :', mvl)
+        print('the number of cells :', nbcells)
+    mvcells = 0
+    normals = []
+    for idx in range(1, nbcells+1):
+        normal = cell_inner_normal(idx, dim+1, vrblvl)
+        print('the inner normal of cell', idx, ' :')
+        for crd in normal:
+            print(crd)
+        normals.append(normal)
+        mvcells = mvcells + cell_mixed_volume(idx, vrblvl)
+    if vrblvl > 0:
+        print('sum of mixed volumes of cells :', mvcells)
+    fail = False
+    print('the lifted supports :')
+    for (idx, support) in enumerate(lifted):
+        print('support', idx+1, ':')
+        for point in support:
+            print(point)
+        fail = fail + int(len(support) != sizes[idx])
+    print('the inner normals :')
+    for normal in normals:
+        print(normal)
+    fail = fail + int(len(normals) != nbcells)
+    return fail
+
 def test_double_polyhedral_homotopies(vrblvl=0):
     """
     Test the polyhedral homotopies in double precision
@@ -911,6 +1086,7 @@ def main():
     lvl = 1
     fail = test_mixed_volume(lvl)
     fail = fail + test_stable_mixed_volume(lvl)
+    fail = fail + test_mixed_cells(lvl)
     fail = fail + test_double_polyhedral_homotopies(lvl)
     fail = fail + test_double_double_polyhedral_homotopies(lvl)
     fail = fail + test_quad_double_polyhedral_homotopies(lvl)
