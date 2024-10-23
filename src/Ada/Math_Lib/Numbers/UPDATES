@@ -1,3 +1,6 @@
+Wed 23 Oct 2024 : added ts_frexp.adb to test the Ada equivalents of the
+  frexp() and ldexp() functions in C.
+
 Mon 30 May 2022 : in strings_and_numbers.adb, fixed unsigned_coefficient,
   which added a superfluous minus for negative integers.
 

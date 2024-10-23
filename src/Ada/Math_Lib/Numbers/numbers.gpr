@@ -30,7 +30,8 @@ project Numbers is
         "ts_numbio.adb",  -- test input/output of numbers
         "ts_mpcst.adb",   -- test multiprecision constants
         "ts_natdiv.adb",  -- test division of natural numbers
-        "ts_intval.adb"   -- test interval arithmetic
+        "ts_intval.adb",  -- test interval arithmetic
+        "ts_frexp.adb"    -- extract fraction and exponent
     );
 
     package Compiler is

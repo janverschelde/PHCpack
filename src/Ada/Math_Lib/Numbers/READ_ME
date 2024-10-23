@@ -146,6 +146,7 @@ ts_intval                        : test interval arithmetic
 ts_mpcst                         : test multiprecision version of Pi
 ts_numbio                        : reading of numbers with exception handling
 ts_isnan                         : test how NaN is recognized
+ts_frexp                         : equivalents to frexp() and ldexp()
 ------------------------------------------------------------------------------
 
 Natural numbers are seen as unsigned integer numbers and are also provided
