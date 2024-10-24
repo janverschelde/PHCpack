@@ -18,14 +18,16 @@ procedure ts_frexp is
   m : constant integer64 := integer64(double_float'truncation(s));
 
 begin
-  put("  The 64-bit float : ");
+  put("   The 64-bit float : ");
   put("x : "); put(x); new_line;
-  put("->    the fraction : ");
+  put("->     the fraction : ");
   put("f : "); put(f); new_line;
-  put("->    the exponent :");
+  put("->     the exponent : ");
   put("e : "); put(e); new_line;
-  put("-> composed number : ");
+  put("->  composed number : ");
   put("c : "); put(c); new_line;
-  put("-> 52-bit fraction : ");
+  put("->  52-bit fraction : ");
   put("m : "); put(m); new_line;
+  put("-> hexadecimal form : ");
+  put(m,dp=>1,b=>16);
 end ts_frexp;

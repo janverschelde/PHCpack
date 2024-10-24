@@ -1,3 +1,6 @@
+Thu 24 Oct 2024 : extended standard_integer_numbers_io to write numbers
+  in hexadecimal format, used in ts_frexp.
+
 Wed 23 Oct 2024 : added ts_frexp.adb to test the Ada equivalents of the
   frexp() and ldexp() functions in C.
 

@@ -48,12 +48,14 @@ package body Standard_Integer_Numbers_io is
     integer32_io.put(i,natural(dp));
   end put;
 
-  procedure put ( file : in file_type; i : in integer32; dp : in natural32 ) is
+  procedure put ( file : in file_type;
+                  i : in integer32; dp : in natural32 ) is
   begin
     integer32_io.put(file,i,natural(dp));
   end put;
 
-  procedure put ( file : in file_type; i : in integer64; dp : in natural32 ) is
+  procedure put ( file : in file_type;
+                  i : in integer64; dp : in natural32 ) is
   begin
     integer64_io.put(file,i,natural(dp));
   end put;
@@ -61,6 +63,28 @@ package body Standard_Integer_Numbers_io is
   procedure put ( i : in integer64; dp : in natural32 ) is
   begin
     integer64_io.put(i,natural(dp));
+  end put;
+
+  procedure put ( i : in integer32; dp,b : in natural32 ) is
+  begin
+    integer32_io.put(i,natural(dp),base=>natural(b));
+  end put;
+
+  procedure put ( file : in file_type;
+                  i : in integer32; dp,b : in natural32 ) is
+  begin
+    integer32_io.put(file,i,natural(dp),base=>natural(b));
+  end put;
+
+  procedure put ( i : in integer64; dp,b : in natural32 ) is
+  begin
+    integer64_io.put(i,natural(dp),base=>natural(b));
+  end put;
+
+  procedure put ( file : in file_type;
+                  i : in integer64; dp,b : in natural32 ) is
+  begin
+    integer64_io.put(file,i,natural(dp),base=>natural(b));
   end put;
 
 end Standard_Integer_Numbers_io;

@@ -33,4 +33,15 @@ package Standard_Integer_Numbers_io is
   --   If the number needs less space in its display,
   --   then blanks are added in front of the number.
 
+  procedure put ( i : in integer32; dp,b : in natural32 );
+  procedure put ( file : in file_type;
+                  i : in integer32; dp,b : in natural32 );
+  procedure put ( i : in integer64; dp,b : in natural32 );
+  procedure put ( file : in file_type;
+                  i : in integer64; dp,b : in natural32 );
+
+  -- DESCRIPTION :
+  --   Writes an integer number on file, using at least dp decimal places,
+  --   using the base b.
+
 end Standard_Integer_Numbers_io;
