@@ -29,7 +29,7 @@ project matrices is
         "ts_tdmat.adb",   -- tests triple double matrices
         "ts_pdmat.adb",   -- tests penta double matrices
         "ts_odmat.adb",   -- tests octo double matrices
-        "ts_damat.adb"    -- tests deca double matrices
+        "ts_damat.adb",   -- tests deca double matrices
         "ts_hdmat.adb"    -- tests hexa double matrices
     );
 

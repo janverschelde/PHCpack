@@ -1,3 +1,5 @@
+Wed 23 Oct 2024 : fixed matrices.gpr by adding missing comma.
+
 Sun 3 Dec 2023 : new hexadobl_complex_vecmats and hexadobl_complex_vecmats_io.
 
 Fri 10 Dec 2021 : added definitions of matrices of hexa double numbers:
