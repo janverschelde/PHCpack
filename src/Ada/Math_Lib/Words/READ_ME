@@ -1,0 +1,17 @@
+Multiple word arithmetic for PHCv2.4.91
+
+This folder was added in version 2.4.91 to experiment with multiple word 
+arithmetic, in preparation for accurate computations on tensor cores.
+
+Run "gprbuild words.gpr" to make all test programs.
+On windows, type "gprbuild numbers.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean words.gpr" removes all files created by gprbuild.
+
+------------------------------------------------------------------------------
+file name                        : short description
+------------------------------------------------------------------------------
+bits_of_doubles                  : manipulating bits of doubles
+test_bits_of_doubles             : teston bit manipulation of doubles
+ts_dblbits                       : testing the bits of a double
+------------------------------------------------------------------------------
