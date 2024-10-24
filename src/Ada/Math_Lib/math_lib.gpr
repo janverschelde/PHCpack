@@ -15,7 +15,8 @@ aggregate project math_lib is
        "Series/series.gpr",            -- power series
        "Laurent/laurent.gpr",          -- Laurent series
        "AD/ad.gpr",                    -- algorithmic differentiation
-       "Exponentials/exponentials.gpr" -- exponential series
+       "Exponentials/exponentials.gpr", -- exponential series
+       "Words/words.gpr"               -- multiple word arithmetic
    );
 
 end math_lib;

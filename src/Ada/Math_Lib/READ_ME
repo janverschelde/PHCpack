@@ -43,6 +43,7 @@ The Laurent folder with code for Laurent series was added in v2.4.85.
      |-- Laurent       : 1.C. series with integer leading exponents
      |-- AD            : 1.D. algorithmic differentiation of the Path library
      |-- Exponentials  : 1.E. series with real powers
+     |-- Words         : 1.F. multiple word arithmetic
 
 The directory Numbers specifies the coefficient rings and contains
 definitions of floating-point and complex numbers.
