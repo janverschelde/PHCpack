@@ -1,0 +1,2 @@
+Fri 25 Oct 2024 : extended test_bits_of_doubles.adb and bits_of_doubles
+  with wrappers to insert bits to the fraction of a double.

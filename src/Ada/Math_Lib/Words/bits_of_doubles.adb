@@ -85,4 +85,51 @@ package body Bits_of_Doubles is
     nbr := double_float'compose(double_float(value), exn);
   end chop_last_bits;
 
+  procedure insert_first_bits
+              ( bits : in out Standard_Natural_Vectors.Vector;
+                firstbits : in natural32;
+                headbits : in Standard_Natural_Vectors.Vector ) is
+  begin
+    for i in 0..firstbits-1 loop
+      bits(integer32(51-i)) := bits(integer32(51-i-firstbits));
+      bits(integer32(51-i-firstbits)) := 0;
+    end loop;
+    for i in 0..firstbits-1 loop
+      bits(integer32(i)) := headbits(integer32(i));
+    end loop;
+  end insert_first_bits;
+
+  procedure insert_first_bits
+              ( nbr : in out double_float;
+                firstbits : in natural32;
+                headbits : in Standard_Natural_Vectors.Vector ) is
+
+    fnbr : constant double_float := double_float'fraction(nbr);
+    enbr : constant integer32 := integer32(double_float'exponent(nbr));
+    snbr : constant double_float := double_float'compose(fnbr, 52);
+    mnbr : constant integer64 := integer64(double_float'truncation(snbr));
+    bits : Standard_Natural_Vectors.Vector(0..51);
+    value : integer64;
+    ifirst : constant integer32 := integer32(firstbits);
+
+  begin
+    expand_52bits(bits, mnbr);
+    insert_first_bits(bits, firstbits, headbits);
+    value := value_52bits(bits);
+    nbr := double_float'compose(double_float(value), enbr + ifirst);
+  end insert_first_bits;
+
+  function insert_first_bits
+             ( nbr : double_float;
+               firstbits : natural32;
+               headbits : Standard_Natural_Vectors.Vector )
+             return double_float is
+
+    res : double_float := nbr;
+  
+  begin
+    insert_first_bits(res,firstbits,headbits);
+    return res;
+  end insert_first_bits;
+
 end Bits_of_Doubles;

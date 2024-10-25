@@ -59,4 +59,64 @@ package Bits_of_Doubles is
   --   headbits are the leading bits which remain unchanged;
   --   tailbits are the last bits of the original number nbr.
 
+  procedure insert_first_bits
+              ( bits : in out Standard_Natural_Vectors.Vector;
+                firstbits : in natural32;
+                headbits : in Standard_Natural_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Inserts the first bits, as many as the value of firstbits,
+  --   of the headbits, into the bits.
+
+  -- REQUIRED : firstbits < 52.
+
+  -- ON ENTRY :
+  --   bits     a sequence of 52 bits, of range 0..51;
+  --   firstbits is the number of bits to be inserted;
+  --   headbits contains the first bits to be inserted.
+
+  -- ON RETURN :
+  --   bits     contains the first bits of headbits,
+  --            with the original bits shifted to the end.
+
+  procedure insert_first_bits
+              ( nbr : in out double_float;
+                firstbits : in natural32;
+                headbits : in Standard_Natural_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Inserts the first bits, as many as the value of firstbits,
+  --   of the headbits, into the fraction of the number nbr.
+
+  -- REQUIRED : firstbits < 52.
+
+  -- ON ENTRY :
+  --   nbr      a 64-bit float;
+  --   firstbits is the number of bits to be inserted;
+  --   headbits contains the first bits to be inserted.
+
+  -- ON RETURN :
+  --   nbr      its fraction contains the first bits of headbits,
+  --            with the original bits shifted to the end.
+
+  function insert_first_bits
+             ( nbr : double_float;
+               firstbits : natural32;
+               headbits : Standard_Natural_Vectors.Vector )
+             return double_float;
+
+  -- DESCRIPTION :
+  --   Inserts the first bits, as many as the value of firstbits,
+  --   of the headbits, into the fraction of the number nbr.
+  --   Returns the number with the original bits of the fraction
+  --   of nbr shifted to the end and the first bits inserted
+  --   from headbits.
+
+  -- REQUIRED : firstbits < 52.
+
+  -- ON ENTRY :
+  --   nbr      a 64-bit float;
+  --   firstbits is the number of bits to be inserted;
+  --   headbits contains the first bits to be inserted.
+
 end Bits_of_Doubles;

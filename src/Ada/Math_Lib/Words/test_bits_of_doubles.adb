@@ -72,7 +72,7 @@ package body Test_Bits_of_Doubles is
     thebits : Standard_Natural_Vectors.Vector(0..51);
     valbits : integer64;
     z : double_float := x;
-    y,fy,sy : double_float;
+    y,fy,sy,w : double_float;
     ey : integer32;
     my : integer64;
 
@@ -113,6 +113,10 @@ package body Test_Bits_of_Doubles is
     valbits := value_52bits(thebits);
     z := double_float'compose(double_float(valbits),ey + 26);
     put("z :"); put(z); new_line;
+    put("x :"); put(x); new_line;
+    put("y :"); put(y); new_line;
+    w := Insert_First_Bits(y,26,firstbits);
+    put("w :"); put(w); new_line;
     put("x :"); put(x); new_line;
   end Add_First_Bits_of_Pi;
 
