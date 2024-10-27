@@ -11,7 +11,10 @@ The "gprclean words.gpr" removes all files created by gprbuild.
 ------------------------------------------------------------------------------
 file name                        : short description
 ------------------------------------------------------------------------------
+mask_bits_of_doubles             : mod last or first bits of doubles
+ts_maskbits                      : test on bit masking
 bits_of_doubles                  : manipulating bits of doubles
 test_bits_of_doubles             : teston bit manipulation of doubles
 ts_dblbits                       : testing the bits of a double
+ts_ddbits                        : splitting high and low parts
 ------------------------------------------------------------------------------

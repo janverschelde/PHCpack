@@ -7,11 +7,11 @@ project Words is
         when "linux" | "macosx" =>
             for Source_Dirs use
                 (".", "../../System", "../../System/Unix_Timer",
-                 "../Numbers", "../Vectors");
+                 "../Numbers", "../Vectors", "../QD");
         when "windows" =>
             for Source_Dirs use
                 (".", "../../System", "../../System/Basic_Timer",
-                 "../Numbers", "../Vectors");
+                 "../Numbers", "../Vectors", "../QD");
             for Languages use ("Ada", "C");
     end case;
 
@@ -20,7 +20,9 @@ project Words is
 
     for Main use
     (
-        "ts_dblbits.adb"  -- remove bits from fraction
+        "ts_maskbits.adb", -- masking of bits
+        "ts_dblbits.adb",  -- remove bits from fraction
+        "ts_ddbits.adb"    -- test bits of double doubles
     );
 
     package Compiler is
