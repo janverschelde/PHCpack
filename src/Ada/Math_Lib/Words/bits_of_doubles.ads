@@ -119,4 +119,18 @@ package Bits_of_Doubles is
   --   firstbits is the number of bits to be inserted;
   --   headbits contains the first bits to be inserted.
 
+  procedure Mod_Split ( x : in double_float;
+                        xhi,xlo : out double_float );
+
+  -- DESCRIPTION :
+  --   Splits the fraction of the double x in two equal halves,
+  --   using modular arithmetic, without vectors of natural numbers.
+
+  procedure Vec_Split ( x : in double_float;
+                        xhi,xlo : out double_float );
+
+  -- DESCRIPTION :
+  --   Splits the fraction of the double x in two equal halves,
+  --   using vectors of natural numbers.
+
 end Bits_of_Doubles;

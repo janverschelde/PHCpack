@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Mask_Bits_of_Doubles;
 
 package body Bits_of_Doubles is
 
@@ -131,5 +132,47 @@ package body Bits_of_Doubles is
     insert_first_bits(res,firstbits,headbits);
     return res;
   end insert_first_bits;
+
+  procedure Mod_Split ( x : in double_float;
+                        xhi,xlo : out double_float ) is
+
+    e : constant integer32 := integer32(double_float'exponent(x));
+    f : constant double_float := double_float'fraction(x);
+    s : constant double_float := double_float'compose(f, 52);
+    m : constant integer64 := integer64(double_float'truncation(s));
+    mlast,mchop : integer64;
+    cnt : integer32 := 0;
+
+  begin
+    mlast := Mask_Bits_of_Doubles.last_bits(m,26);
+    mchop := m - mlast;
+    xhi := double_float'compose(double_float(mchop),e);
+    if mlast /= 0 then
+      while mlast < 2**natural(25-cnt) loop
+        cnt := cnt + 1;
+      end loop;
+    end if;
+    xlo := double_float'compose(double_float(mlast),e-26-cnt);
+  end Mod_Split;
+
+  procedure Vec_Split ( x : in double_float;
+                        xhi,xlo : out double_float ) is
+
+    head,tail : Standard_Natural_Vectors.Vector(0..51);
+    val : integer64;
+    expo : constant integer32 := integer32(double_float'exponent(x));
+    cnt : integer32 := 0;
+
+  begin
+    xhi := x;
+    chop_last_bits(xhi,26,head,tail);
+    val := value_52bits(tail);
+    if val /= 0 then
+      while tail(cnt+26) = 0 loop
+        cnt := cnt + 1;
+      end loop;
+    end if;
+    xlo := double_float'compose(double_float(val),expo-26-cnt);
+  end Vec_Split;
 
 end Bits_of_Doubles;

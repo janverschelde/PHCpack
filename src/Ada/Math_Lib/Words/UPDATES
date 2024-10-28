@@ -1,3 +1,6 @@
+Mon 28 Oct 2024 : move split procedures from ts_ddbits.adb into the
+  package bits_of_doubles, adding a check on a zero last part.
+
 Sat 26 Oct 2024 : new mask_bits_of_doubles to get the last and first bits
   of a 52-bit integer, as a fraction of doubles, tested by ts_maskbits.
   Added two procedures to test_bits_of_doubles, to avoid the arrays of
