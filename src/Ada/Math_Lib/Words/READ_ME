@@ -17,4 +17,5 @@ bits_of_doubles                  : manipulating bits of doubles
 test_bits_of_doubles             : teston bit manipulation of doubles
 ts_dblbits                       : testing the bits of a double
 ts_ddbits                        : splitting high and low parts
+ts_vdda                          : vectorized double double arithmetic
 ------------------------------------------------------------------------------

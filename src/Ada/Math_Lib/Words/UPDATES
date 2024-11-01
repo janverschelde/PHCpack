@@ -1,3 +1,5 @@
+Thu 31 Oct 2024 : new ts_vdda.adb to test vector sum of double doubles.
+
 Mon 28 Oct 2024 : move split procedures from ts_ddbits.adb into the
   package bits_of_doubles, adding a check on a zero last part.
   Fixed ts_ddbits.adb by application of Double_Double_Basics.split.
