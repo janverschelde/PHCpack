@@ -21,14 +21,68 @@ package body Bits_of_Doubles is
 
   procedure write_52bits
               ( bits : in Standard_Natural_Vectors.Vector ) is
+
   begin
     for i in 0..51 loop
-      if i mod 4 = 0
-       then put(" ");
+      if i > 0 then
+        if i mod 4 = 0
+         then put(" ");
+        end if;
       end if;
       put(integer32(bits(integer32(i))));
     end loop;
   end write_52bits;
+
+  procedure write_52bits_expo ( x : in double_float ) is
+
+    f : constant double_float := double_float'fraction(x);
+    e : constant integer32 := integer32(double_float'exponent(x));
+    s : constant double_float := double_float'compose(f, 52);
+    m : constant integer64 := integer64(double_float'truncation(s));
+    b : Standard_Natural_Vectors.Vector(0..51);
+
+  begin
+    expand_52bits(b,m);
+    if x < 0.0
+     then put("-");
+     else put("+");
+    end if;
+    write_52bits(b);
+    put(", "); put(e,1);
+  end write_52bits_expo;
+
+  function Bit_Equal ( x,y : double_float ) return boolean is
+
+    fx : constant double_float := double_float'fraction(x);
+    ex : constant integer32 := integer32(double_float'exponent(x));
+    sx : constant double_float := double_float'compose(fx, 52);
+    mx : constant integer64 := integer64(double_float'truncation(sx));
+    fy : constant double_float := double_float'fraction(y);
+    ey : constant integer32 := integer32(double_float'exponent(y));
+    sy : constant double_float := double_float'compose(fy, 52);
+    my : constant integer64 := integer64(double_float'truncation(sy));
+
+  begin
+    if x < 0.0 and y > 0.0 then
+      return false;
+    elsif x > 0.0 and y < 0.0 then
+      return false;
+    elsif ex /= ey then
+      return false;
+    else
+      return mx = my;
+    end if;
+  end Bit_Equal;
+
+  procedure write_fraction_bits ( nbr : in double_float ) is
+
+    frc : constant double_float := double_float'fraction(nbr);
+    sfr : constant double_float := double_float'compose(frc, 52);
+    mfr : constant integer64 := integer64(double_float'truncation(sfr));
+
+  begin
+    put(mfr,1,b=>2); new_line;
+  end write_fraction_bits;
 
   function value_52bits
              ( bits : Standard_Natural_Vectors.Vector ) return integer64 is
@@ -146,11 +200,15 @@ package body Bits_of_Doubles is
   begin
     mlast := Mask_Bits_of_Doubles.last_bits(m,26);
     mchop := m - mlast;
+    put("m     : "); put(m,1,b=>2); new_line;
+    put("mchop : "); put(mchop,1,b=>2); new_line;
     xhi := double_float'compose(double_float(mchop),e);
     if mlast /= 0 then
       while mlast < 2**natural(25-cnt) loop
         cnt := cnt + 1;
       end loop;
+      put("mlast : "); put(mlast,1,b=>2); new_line;
+      put("cnt : "); put(cnt,1); new_line;
     end if;
     xlo := double_float'compose(double_float(mlast),e-26-cnt);
   end Mod_Split;
@@ -174,5 +232,86 @@ package body Bits_of_Doubles is
     end if;
     xlo := double_float'compose(double_float(val),expo-26-cnt);
   end Vec_Split;
+
+  procedure Split ( x : in double_float;
+                    x0,x1,x2,x3 : out double_float ) is
+
+    f : constant double_float := double_float'fraction(x);
+    e : constant integer32 := integer32(double_float'exponent(x));
+    s : constant double_float := double_float'compose(f, 52);
+    m : constant integer64 := integer64(double_float'truncation(s));
+    thebits,xp0,xp1,xp2,xp3 : Standard_Natural_Vectors.Vector(0..51);
+    part : constant integer32 := 52/4;
+    valbits : integer64;
+    idx,cnt : integer32;
+  
+  begin
+    expand_52bits(thebits,m);
+   -- put("the bits : "); write_52bits(thebits); new_line;
+    for i in 0..(part-1) loop
+      xp0(i) := thebits(i);
+      xp1(i) := 0; xp2(i) := 0; xp3(i) := 0;
+    end loop;
+    for i in part..(2*part-1) loop
+      xp1(i) := thebits(i);
+      xp0(i) := 0; xp2(i) := 0; xp3(i) := 0;
+    end loop;
+    for i in 2*part..(3*part-1) loop
+      xp2(i) := thebits(i);
+      xp0(i) := 0; xp1(i) := 0; xp3(i) := 0;
+    end loop;
+    for i in 3*part..51 loop
+      xp3(i) := thebits(i);
+      xp0(i) := 0; xp1(i) := 0; xp2(i) := 0;
+    end loop;
+   -- put("1st part : "); write_52bits(xp0); new_line;
+   -- put("2nd part : "); write_52bits(xp1); new_line;
+   -- put("3rd part : "); write_52bits(xp2); new_line;
+   -- put("4th part : "); write_52bits(xp3); new_line;
+    valbits := value_52bits(xp0);
+    x0 := double_float'compose(double_float(valbits),e);
+    if x < 0.0
+     then x0 := -x0;
+    end if;
+    valbits := value_52bits(xp1);
+    cnt := 0;
+    if valbits /= 0 then
+      idx := part;
+      while xp1(idx) = 0 loop
+        idx := idx + 1;
+        cnt := cnt + 1;
+      end loop;
+    end if;
+    x1 := double_float'compose(double_float(valbits),e - part - cnt);
+    if x < 0.0
+     then x1 := -x1;
+    end if;
+    valbits := value_52bits(xp2);
+    cnt := 0;
+    if valbits /= 0 then
+      idx := 2*part;
+      while xp2(idx) = 0 loop
+        idx := idx + 1;
+        cnt := cnt + 1;
+      end loop;
+    end if;
+    x2 := double_float'compose(double_float(valbits),e - 2*part - cnt);
+    if x < 0.0
+     then x2 := -x2;
+    end if;
+    valbits := value_52bits(xp3);
+    cnt := 0;
+    if valbits /= 0 then
+      idx := 3*part;
+      while xp3(idx) = 0 loop
+        idx := idx + 1;
+        cnt := cnt + 1;
+      end loop;
+    end if;
+    x3 := double_float'compose(double_float(valbits),e - 3*part - cnt);
+    if x < 0.0
+     then x3 := -x3;
+    end if;
+  end Split;
 
 end Bits_of_Doubles;

@@ -19,19 +19,6 @@ procedure ts_ddbits is
 -- DESCRIPTION :
 --   Test on the bits of double doubles.
 
-  procedure write_fraction_bits ( nbr : in double_float ) is
-
-  -- DESCRIPTION :
-  --   Writes the bits of the fraction of nbr in binary.
-
-    frc : constant double_float := double_float'fraction(nbr);
-    sfr : constant double_float := double_float'compose(frc, 52);
-    mfr : constant integer64 := integer64(double_float'truncation(sfr));
-
-  begin
-    put(mfr,1,b=>2); new_line;
-  end write_fraction_bits;
-
   procedure Test_Mod_Split ( nbr : in double_double ) is
 
   -- DESCRIPTION :

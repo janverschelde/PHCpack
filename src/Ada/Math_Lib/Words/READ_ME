@@ -1,7 +1,7 @@
 Multiple word arithmetic for PHCv2.4.91
 
 This folder was added in version 2.4.91 to experiment with multiple word 
-arithmetic, in preparation for accurate computations on tensor cores.
+arithmetic, in preparation for error free inner products on tensor cores.
 
 Run "gprbuild words.gpr" to make all test programs.
 On windows, type "gprbuild numbers.gpr -Xos=windows"
@@ -18,4 +18,5 @@ test_bits_of_doubles             : teston bit manipulation of doubles
 ts_dblbits                       : testing the bits of a double
 ts_ddbits                        : splitting high and low parts
 ts_vdda                          : vectorized double double arithmetic
+ts_splitdbl                      : test split of doubles in equal parts
 ------------------------------------------------------------------------------

@@ -20,10 +20,11 @@ project Words is
 
     for Main use
     (
-        "ts_maskbits.adb", -- masking of bits
-        "ts_dblbits.adb",  -- remove bits from fraction
-        "ts_ddbits.adb",   -- test bits of double doubles
-        "ts_vdda.adb"      -- vectorized double double arithmetic
+        "ts_maskbits.adb",  -- masking of bits
+        "ts_dblbits.adb",   -- remove bits from fraction
+        "ts_ddbits.adb",    -- test bits of double doubles
+        "ts_splitdbl.adb",  -- splitting a double in equal parts
+        "ts_vdda.adb"       -- vectorized double double arithmetic
     );
 
     package Compiler is

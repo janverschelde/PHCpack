@@ -23,6 +23,24 @@ package Bits_of_Doubles is
   -- DESCRIPTION :
   --   Writes 52 bits in groups of 4.
 
+  procedure write_52bits_expo ( x : in double_float );
+
+  -- DESCRIPTION :
+  --   Shows the bits sequence of the fraction of x, in groups of 4,
+  --   and the decimal representation of the exponent of x.
+
+  function Bit_Equal ( x,y : double_float ) return boolean;
+
+  -- DESCRIPTION :
+  --   Returns true if x and y have the same sign, same exponent,
+  --   and the same bits in their fraction.
+
+  procedure write_fraction_bits ( nbr : in double_float );
+
+  -- DESCRIPTION :
+  --   Writes the bits of the fraction of nbr in binary,
+  --   without the use of an auxiliary vector of natural numbers.
+
   function value_52bits
              ( bits : Standard_Natural_Vectors.Vector ) return integer64;
 
@@ -132,5 +150,13 @@ package Bits_of_Doubles is
   -- DESCRIPTION :
   --   Splits the fraction of the double x in two equal halves,
   --   using vectors of natural numbers.
+
+  procedure Split ( x : in double_float;
+                    x0,x1,x2,x3 : out double_float );
+
+  -- DESCRIPTION :
+  --   Splits the 52 bits in the fraction of x in four equal parts,
+  --   returned in x0, x1, x2, x3, with x0 > x1 > x2 > x3.
+  --   On return: Bit_Equal(x,x0+x1+x2+x3) is true.
 
 end Bits_of_Doubles;
