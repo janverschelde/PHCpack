@@ -9,7 +9,7 @@ package Standard_Floating_Numbers is
 --   This package sets floating-point types to be independent
 --   of the compiler predefined floating-point declarations.
 
-  type single_float is digits 7;                  -- single precision
+  type single_float is digits 6;                  -- single precision
   type double_float is digits 15;                 -- double precision
  -- type extra_float is digits system.Max_Digits; -- extra precision
  -- type double_float is digits system.Max_Digits;

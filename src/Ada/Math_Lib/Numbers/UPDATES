@@ -1,3 +1,5 @@
+Sun 3 Nov 2024 : fixed single_float in standard_floating_numbers.ads.
+
 Thu 24 Oct 2024 : extended standard_integer_numbers_io to write numbers
   in hexadecimal format, used in ts_frexp.
 
