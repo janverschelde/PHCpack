@@ -491,8 +491,8 @@ package body Double_Double_Numbers is
 
   begin
     two_prod(x.hi,y.hi,p1,p2);
-    p2 := p2 + y.lo * x.hi;
-    p2 := p2 + y.hi * x.lo;
+    p2 := p2 + (y.lo * x.hi + x.hi * x.lo);
+   -- p2 := p2 + y.hi * x.lo;
     quick_two_sum(p1,p2,x.hi,x.lo);
   end Mul;
 
