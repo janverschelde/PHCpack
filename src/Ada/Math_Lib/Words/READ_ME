@@ -11,6 +11,10 @@ The "gprclean words.gpr" removes all files created by gprbuild.
 ------------------------------------------------------------------------------
 file name                        : short description
 ------------------------------------------------------------------------------
+bits_of_integers                 : multiword integer arithmetic
+test_bits_of_integers            : test multiword integer arithmetic
+ts_intbits                       : main test on multiword integers
+------------------------------------------------------------------------------
 mask_bits_of_doubles             : mod last or first bits of doubles
 ts_maskbits                      : test on bit masking
 bits_of_doubles                  : manipulating bits of doubles

@@ -1,3 +1,6 @@
+Tue 3 Dec 2024 : new packages bits_of_integers, test_bits_of_integers,
+  with procedure ts_intbits.adb, updated words.gpr.
+
 Sat 2 Nov 2024 : new ts_splitdbl, extended bits_of_doubles, moved 
   procedures of ts_ddbits into bits_of_doubles.
 
