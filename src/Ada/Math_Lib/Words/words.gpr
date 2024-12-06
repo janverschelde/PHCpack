@@ -25,7 +25,8 @@ project Words is
         "ts_ddbits.adb",    -- test bits of double doubles
         "ts_splitdbl.adb",  -- splitting a double in equal parts
         "ts_vdda.adb",      -- vectorized double double arithmetic
-        "ts_intbits.adb"    -- tests multiword integer arithmetic
+        "ts_intbits.adb",   -- split 64-bit integer numbers
+        "ts_dblint.adb"     -- double integer arithmetic
     );
 
     package Compiler is
