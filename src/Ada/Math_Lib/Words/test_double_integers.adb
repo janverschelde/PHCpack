@@ -22,8 +22,7 @@ package body Test_Double_Integers is
     hihi,lohi,hilo,lolo,hicarry,locarry : integer32;
     mphihi,mplohi,mphilo,mplolo : Integer_Number;
     base : constant integer32 := 2**30;
-    mpbase30 : Integer_Number := create(base);
-    mpbase : Integer_Number := 4*mpbase30;
+    mpbase : Integer_Number := create(base);
 
   begin
     Bits_of_Integers.Split_30_Bit_Words(hi,hihi,lohi,hicarry);
@@ -59,14 +58,14 @@ package body Test_Double_Integers is
     Mul(result,mpbase);
     Add(result,mplolo);
     Clear(mphihi); Clear(mplohi); Clear(mphilo); Clear(mplolo);
-    Clear(mpbase30); Clear(mpbase);
+    Clear(mpbase);
     return result;
   end Value;
 
   procedure Test_Double_Sum is
 
     xhi,xlo,yhi,ylo,zhi,zlo,carry : integer64;
-    mpx,mpy,mpsum,mpz,err : Integer_Number;
+    mpx,mpy,mpsum,mpz,err,mpzhi,mpzlo : Integer_Number;
     mpcarry,mpbase30,mpbase60,mpbase120 : Integer_Number;
 
   begin
@@ -81,11 +80,18 @@ package body Test_Double_Integers is
     put("-> x+y : "); put(mpsum); new_line;
     Add(xhi,xlo,yhi,ylo,zhi,zlo,carry);
     mpz := Value(zhi,zlo,false);
+    mpbase30 := Multprec_Integer_Numbers.Create(integer32(2**30));
+    mpbase60 := mpbase30*mpbase30;
+    mpbase120 := mpbase60*mpbase60;
+    mpzlo := Rmd(mpsum,mpbase60);
+    mpzhi := mpsum - mpzlo;
+    Div(mpzhi,mpbase60);
+    put("->   zlo : "); put(zlo); new_line;
+    put("-> mpzlo : "); put(mpzlo); new_line;
+    put("->   zhi : "); put(zhi); new_line;
+    put("-> mpzhi : "); put(mpzhi); new_line;
     if carry > 0 then
       mpcarry := Multprec_Integer_Numbers.Create(integer32(carry));
-      mpbase30 := Multprec_Integer_Numbers.Create(integer32(2**30));
-      mpbase60 := mpbase30*mpbase30;
-      mpbase120 := mpbase60*mpbase60;
       Multprec_Integer_Numbers.Mul(mpcarry,mpbase120);
       Multprec_Integer_Numbers.Add(mpz,mpcarry);
       Clear(mpcarry); Clear(mpbase30); Clear(mpbase60); Clear(mpbase120);

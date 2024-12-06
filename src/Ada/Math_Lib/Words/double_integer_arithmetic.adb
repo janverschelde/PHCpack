@@ -31,7 +31,7 @@ package body Double_Integer_Arithmetic is
       ucarry := uzlo - unsigned_integer64(zlo);
       uzhi := uzhi + ucarry/maxint60;
       if verbose then
-        put("-> carry : "); put(integer64(ucarry/maxint60)); new_line;
+        put("-> locarry : "); put(integer64(ucarry/maxint60)); new_line;
       end if;
     end if;
     if uzhi <= maxint60 then
@@ -42,7 +42,7 @@ package body Double_Integer_Arithmetic is
       ucarry := uzhi - unsigned_integer64(zhi);
       carry := integer64(ucarry/maxint60);
       if verbose then
-        put("-> carry : "); put(carry); new_line;
+        put("-> hicarry : "); put(carry); new_line;
       end if;
     end if;
   end Add;
