@@ -7,6 +7,13 @@ package Bits_of_Integers is
 
   type unsigned_integer64 is mod 2**integer64'size;
 
+  function Bit_Size ( x : integer64 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns -1 if x is zero or negative; 
+  --   otherwise returns the size of x,
+  --   defined as n+1 where 2^n > x >= 2^(n-1).
+
   procedure Split ( nbr : in unsigned_integer64;
                     high,low : out unsigned_integer64 );
   procedure Split ( nbr : in integer64; high,low : out integer64 );

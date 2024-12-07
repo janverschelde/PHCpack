@@ -1,4 +1,25 @@
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+
 package body Bits_of_Integers is
+
+  function Bit_Size ( x : integer64 ) return integer32 is
+
+    pwr : natural32;
+    bnd : unsigned_integer64;
+
+  begin
+    if x <= 0 then
+      return -1;
+    else
+      pwr := 63;
+      bnd := 2**natural(pwr);
+      while unsigned_integer64(x) < bnd loop
+        bnd := bnd / 2;
+        pwr := pwr - 1;
+      end loop;
+      return integer32(pwr)+1;
+    end if;
+  end Bit_Size;
 
   procedure Split ( nbr : in unsigned_integer64;
                     high,low : out unsigned_integer64 ) is

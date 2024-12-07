@@ -107,16 +107,21 @@ package body Test_Double_Integers is
 
     x,y,zhi,zlo,carry : integer64;
     mpx,mpy,mpprd,mpz,err : Integer_Number;
+    sx,sy : integer32;
 
   begin
     put_line("-> testing product of double integers ...");
     Random_Double_Integer(x,y);
-    x := x/4;
+   -- x := 1152921504606846975; -- largest number of 60 bits
+   -- y := 1152921504606846975;
+    x := x/4; -- ensure the number of bits is 60 or less
+    sx := Bits_of_Integers.Bit_Size(x);
     y := y/4;
+    sy := Bits_of_Integers.Bit_Size(y);
     mpx := Value(0,x,false);
     mpy := Value(0,y,false);
-    put("->   x : "); put(mpx); new_line;
-    put("->   y : "); put(mpy); new_line;
+    put("->   x : "); put(mpx); put(" size : "); put(sx); new_line;
+    put("->   y : "); put(mpy); put(" size : "); put(sy); new_line;
     mpprd := mpx * mpy;
     put("-> x*y : "); put(mpprd); new_line;
     Mul(x,y,zhi,zlo,carry);
