@@ -20,16 +20,30 @@ package Test_Double_Integers is
   --   high and low words in hi and lo.
   --   If verbose, then the words of the 64-bit doubles are shown.
 
+  function Value ( hihi,lohi,hilo,lolo : integer64;
+                   verbose : boolean := true ) return Integer_Number;
+
+  -- DESCRIPTION :
+  --   Returns the value of the quadruple integer given by the
+  --   words in hihi, lohi, hilo, and lolo.
+  --   If verbose, then the words of the 64-bit doubles are shown.
+
   procedure Test_Double_Sum;
 
   -- DESCRIPTION :
-  --   Generates two positive numbers and makes their sum
+  --   Generates two positive double integer numbers and makes their sum
+  --   using double integer arithmetic.
+
+  procedure Test_Product;
+
+  -- DESCRIPTION :
+  --   Generates two positive integer numbers and makes their product
   --   using double integer arithmetic.
 
   procedure Test_Double_Product;
 
   -- DESCRIPTION :
-  --   Generates two positive numbers and makes their product
+  --   Generates two positive double integer numbers and makes their product
   --   using double integer arithmetic.
 
   procedure Main;

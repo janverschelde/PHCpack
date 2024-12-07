@@ -18,7 +18,7 @@ package body Test_Double_Integers is
   function Value ( hi,lo : integer64; verbose : boolean := true )
                  return Integer_Number is
 
-    result : Integer_Number;
+    res : Integer_Number;
     hihi,lohi,hilo,lolo,hicarry,locarry : integer32;
     mphihi,mplohi,mphilo,mplolo : Integer_Number;
     base : constant integer32 := 2**30;
@@ -46,20 +46,37 @@ package body Test_Double_Integers is
     mphilo := Create(hilo);
     mplolo := Create(lolo);
     if hicarry = 0 then
-      result := hihi*mpbase;
+      res := hihi*mpbase;
     else
-      result := hicarry*mpbase;
-      Add(result,mphihi);
-      Mul(result,mpbase);
+      res := hicarry*mpbase;
+      Add(res,mphihi);
+      Mul(res,mpbase);
     end if;
-    Add(result,mplohi);
-    Mul(result,mpbase);
-    Add(result,mphilo);
-    Mul(result,mpbase);
-    Add(result,mplolo);
+    Add(res,mplohi);
+    Mul(res,mpbase);
+    Add(res,mphilo);
+    Mul(res,mpbase);
+    Add(res,mplolo);
     Clear(mphihi); Clear(mplohi); Clear(mphilo); Clear(mplolo);
     Clear(mpbase);
-    return result;
+    return res;
+  end Value;
+
+  function Value ( hihi,lohi,hilo,lolo : integer64;
+                   verbose : boolean := true ) return Integer_Number is
+
+    res : Integer_Number := Value(hihi,lohi,verbose);
+    inc : Integer_Number := Value(hilo,lolo,verbose);
+    base : constant integer32 := 2**30;
+    mpbase30 : Integer_Number := create(base);
+    mpbase60 : Integer_Number := mpbase30*mpbase30;
+    mpbase120 : Integer_Number := mpbase60*mpbase60;
+
+  begin
+    Mul(res,mpbase120);
+    Add(res,inc);
+    Clear(inc); Clear(mpbase30); Clear(mpbase60); Clear(mpbase120);
+    return res;
   end Value;
 
   procedure Test_Double_Sum is
@@ -103,14 +120,14 @@ package body Test_Double_Integers is
     Clear(mpx); Clear(mpy); Clear(mpsum); Clear(mpz); Clear(err);
   end Test_Double_Sum;
 
-  procedure Test_Double_Product is
+  procedure Test_Product is
 
     x,y,zhi,zlo,carry : integer64;
     mpx,mpy,mpprd,mpz,err : Integer_Number;
     sx,sy : integer32;
 
   begin
-    put_line("-> testing product of double integers ...");
+    put_line("-> testing product of two 60-bit integers ...");
     Random_Double_Integer(x,y);
    -- x := 1152921504606846975; -- largest number of 60 bits
    -- y := 1152921504606846975;
@@ -126,6 +143,36 @@ package body Test_Double_Integers is
     put("-> x*y : "); put(mpprd); new_line;
     Mul(x,y,zhi,zlo,carry);
     mpz := Value(zhi,zlo,false);
+    put("->   z : "); put(mpz); new_line;
+    err := mpprd - mpz;
+    put("-> err : "); put(err); new_line;
+    Clear(mpx); Clear(mpy); Clear(mpz);
+  end Test_Product;
+
+  procedure Test_Double_Product is
+
+    xhi,xlo,yhi,ylo,zhihi,zlohi,zhilo,zlolo,carry : integer64;
+    mpx,mpy,mpprd,mpz,err : Integer_Number;
+
+  begin
+    put_line("-> testing product of two double integers ...");
+    Random_Double_Integer(xhi,xlo);
+    xhi := xhi/4; xlo := xlo/4;
+    Random_Double_Integer(yhi,ylo);
+    yhi := yhi/4; ylo := ylo/4;
+   -- xhi := 1152921504606846975; -- largest number of 60 bits
+   -- xlo := 1152921504606846975; 
+   -- yhi := 1152921504606846975;
+   -- ylo := 1152921504606846975;
+    mpx := Value(xhi,xlo,false);
+    mpy := Value(yhi,ylo,false);
+    put("->   x : "); put(mpx); new_line;
+    put("->   y : "); put(mpy); new_line;
+    mpprd := mpx * mpy;
+    put("-> x*y : "); put(mpprd); new_line;
+    Dbl_Mul(xhi,xlo,yhi,ylo,zhihi,zlohi,zhilo,zlolo,carry);
+    mpz := Value(zhihi,zlohi,zhilo,zlolo,false);
+    put("-> x*y : "); put(mpprd); new_line;
     put("->   z : "); put(mpz); new_line;
     err := mpprd - mpz;
     put("-> err : "); put(err); new_line;

@@ -92,4 +92,54 @@ package body Double_Integer_Arithmetic is
     carry := 0;
   end Mul;
 
+  procedure Dbl_Mul ( xhi,xlo,yhi,ylo : in integer64; 
+                      zhihi,zlohi,zhilo,zlolo,carry : out integer64;
+                      verbose : in boolean := true ) is
+
+    ahi,alo,acr,bhi,blo,bcr,chi,clo,ccr,dhi,dlo,dcr : integer64;
+    ehi,elo,ecr : integer64;
+
+  begin
+    Mul(xhi,yhi,ahi,alo,acr,verbose);
+    Mul(xhi,ylo,bhi,blo,bcr,verbose);
+    Mul(xlo,yhi,chi,clo,ccr,verbose);
+    Mul(xlo,ylo,dhi,dlo,dcr,verbose);
+    if verbose then
+      put("-> ahi : "); put(ahi); new_line;
+      put("-> alo : "); put(alo); new_line;
+      put("-> acr : "); put(acr); new_line;
+      put("-> bhi : "); put(bhi); new_line;
+      put("-> blo : "); put(blo); new_line;
+      put("-> bcr : "); put(bcr); new_line;
+      put("-> chi : "); put(chi); new_line;
+      put("-> clo : "); put(clo); new_line;
+      put("-> ccr : "); put(ccr); new_line;
+      put("-> dhi : "); put(dhi); new_line;
+      put("-> dlo : "); put(dlo); new_line;
+      put("-> dcr : "); put(dcr); new_line;
+    end if;
+    Add(dhi,dlo,blo,0,ehi,elo,ecr,verbose);
+    Add(ehi,elo,clo,0,zhilo,zlolo,carry,verbose);
+    if verbose then
+      put("-> ehi : "); put(ehi); new_line;
+      put("-> elo : "); put(elo); new_line;
+      put("-> ecr : "); put(ecr); new_line;
+      put("-> zhilo : "); put(zhilo); new_line;
+      put("-> zlolo : "); put(zlolo); new_line;
+      put("-> carry : "); put(carry); new_line;
+    end if;
+    carry := carry + ecr;
+    Add(ahi,alo,0,bhi+carry,ehi,elo,ecr,verbose);
+    Add(ehi,elo,0,chi,zhihi,zlohi,carry,verbose);
+    if verbose then
+      put("-> ehi : "); put(ehi); new_line;
+      put("-> elo : "); put(elo); new_line;
+      put("-> ecr : "); put(ecr); new_line;
+      put("-> zhihi : "); put(zhihi); new_line;
+      put("-> zlohi : "); put(zlohi); new_line;
+      put("-> carry : "); put(carry); new_line;
+    end if;
+    carry := carry + ecr;
+  end Dbl_Mul;
+
 end Double_Integer_Arithmetic;
