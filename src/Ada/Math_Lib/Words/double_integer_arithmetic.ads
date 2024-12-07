@@ -29,17 +29,17 @@ package Double_Integer_Arithmetic is
   --   carry     carry over, if nonzero, then a double integer number
   --             can no longer store the sum correctly.
 
-  procedure Mul ( xhi,xlo,yhi,ylo : in integer64; 
-                  zhi,zlo,carry : out integer64 );
+  procedure Mul ( x,y : in integer64; 
+                  zhi,zlo,carry : out integer64;
+                  verbose : in boolean := true );
 
   -- DESCRIPTION :
-  --   Multiplies two double integer numbers.
+  --   Multiplies two integer number into a double integer number.
 
   -- ON ENTRY :
-  --   xhi       high word of the first integer x;
-  --   xlo       low word of the first integer x;
-  --   yhi       high word of the second integer y;
-  --   ylo       low word of the second integer y.
+  --   x         first integer;
+  --   y         second integer;
+  --   verbose   if verbose, then prints intermediate results.
 
   -- ON RETURN :
   --   zhi       high word of the product x * y;

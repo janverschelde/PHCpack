@@ -105,26 +105,32 @@ package body Test_Double_Integers is
 
   procedure Test_Double_Product is
 
-    xhi,xlo,yhi,ylo : integer64;
-    mpx,mpy,mpprd : Integer_Number;
+    x,y,zhi,zlo,carry : integer64;
+    mpx,mpy,mpprd,mpz,err : Integer_Number;
 
   begin
     put_line("-> testing product of double integers ...");
-    Random_Double_Integer(xhi,xlo);
-    Random_Double_Integer(yhi,ylo);
-    mpx := Value(xhi,xlo,false);
-    mpy := Value(yhi,ylo,false);
+    Random_Double_Integer(x,y);
+    x := x/4;
+    y := y/4;
+    mpx := Value(0,x,false);
+    mpy := Value(0,y,false);
     put("->   x : "); put(mpx); new_line;
     put("->   y : "); put(mpy); new_line;
     mpprd := mpx * mpy;
     put("-> x*y : "); put(mpprd); new_line;
-    Clear(mpx); Clear(mpy);
+    Mul(x,y,zhi,zlo,carry);
+    mpz := Value(zhi,zlo,false);
+    put("->   z : "); put(mpz); new_line;
+    err := mpprd - mpz;
+    put("-> err : "); put(err); new_line;
+    Clear(mpx); Clear(mpy); Clear(mpz);
   end Test_Double_Product;
 
   procedure Main is
   begin
     Test_Double_Sum;
-   -- Test_Double_Product;
+    Test_Double_Product;
   end Main;
 
 end Test_Double_Integers;
