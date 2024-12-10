@@ -5,11 +5,53 @@ with Bits_of_Integers;                   use Bits_of_Integers;
 package body Double_Integer_Arithmetic is
 
   maxint60 : constant unsigned_integer64 := 2**60;
+  maxint52 : constant unsigned_integer64 := 2**52;
   b30 : constant integer64 := 2**30;
 
-  procedure Add ( xhi,xlo,yhi,ylo : in integer64; 
-                  zhi,zlo,carry : out integer64;
-                  verbose : in boolean := true ) is
+  procedure Add52 ( xhi,xlo,yhi,ylo : in integer64; 
+                    zhi,zlo,carry : out integer64;
+                    verbose : in boolean := true ) is
+
+    mask52 : constant unsigned_integer64 := 4503599627370495;
+    uxhi : constant unsigned_integer64 := unsigned_integer64(xhi);
+    uxlo : constant unsigned_integer64 := unsigned_integer64(xlo);
+    uyhi : constant unsigned_integer64 := unsigned_integer64(yhi);
+    uylo : constant unsigned_integer64 := unsigned_integer64(ylo);
+    uzhi,uzlo,ucarry : unsigned_integer64;
+
+  begin
+    uzlo := uxlo + uylo;
+    uzhi := uxhi + uyhi;
+    if verbose then
+      put("-> uzlo : "); put(integer64(uzlo)); new_line;
+      put("-> uzhi : "); put(integer64(uzhi)); new_line;
+    end if;
+    if uzlo <= maxint52 then
+      zlo := integer64(uzlo);
+    else
+      zlo := integer64(uzlo and mask52);
+      ucarry := uzlo - unsigned_integer64(zlo);
+      uzhi := uzhi + ucarry/maxint52;
+      if verbose then
+        put("-> locarry : "); put(integer64(ucarry/maxint52)); new_line;
+      end if;
+    end if;
+    if uzhi <= maxint52 then
+      zhi := integer64(uzhi);
+      carry := 0;
+    else
+      zhi := integer64(uzhi and mask52);
+      ucarry := uzhi - unsigned_integer64(zhi);
+      carry := integer64(ucarry/maxint52);
+      if verbose then
+        put("-> hicarry : "); put(carry); new_line;
+      end if;
+    end if;
+  end Add52;
+
+  procedure Add60 ( xhi,xlo,yhi,ylo : in integer64; 
+                    zhi,zlo,carry : out integer64;
+                    verbose : in boolean := true ) is
 
     mask60 : constant unsigned_integer64 := 1152921504606846975;
     uxhi : constant unsigned_integer64 := unsigned_integer64(xhi);
@@ -46,11 +88,11 @@ package body Double_Integer_Arithmetic is
         put("-> hicarry : "); put(carry); new_line;
       end if;
     end if;
-  end Add;
+  end Add60;
 
-  procedure Mul ( x,y : in integer64; 
-                  zhi,zlo,carry : out integer64;
-                  verbose : in boolean := true ) is
+  procedure Mul60 ( x,y : in integer64; 
+                    zhi,zlo,carry : out integer64;
+                    verbose : in boolean := true ) is
 
     xhi32,xlo32,xcarry32,yhi32,ylo32,ycarry32 : integer32;
     zhihi,zlohi,zhilo,zlolo : unsigned_integer64;
@@ -90,20 +132,20 @@ package body Double_Integer_Arithmetic is
     zlo := integer64(zlolo) + integer64(plo32)*b30 + integer64(qlo32)*b30;
     zhi := integer64(zhihi) + integer64(phi32) + integer64(qhi32);
     carry := 0;
-  end Mul;
+  end Mul60;
 
-  procedure Dbl_Mul ( xhi,xlo,yhi,ylo : in integer64; 
-                      zhihi,zlohi,zhilo,zlolo,carry : out integer64;
-                      verbose : in boolean := true ) is
+  procedure Dbl_Mul60 ( xhi,xlo,yhi,ylo : in integer64; 
+                        zhihi,zlohi,zhilo,zlolo,carry : out integer64;
+                        verbose : in boolean := true ) is
 
     ahi,alo,acr,bhi,blo,bcr,chi,clo,ccr,dhi,dlo,dcr : integer64;
     ehi,elo,ecr : integer64;
 
   begin
-    Mul(xhi,yhi,ahi,alo,acr,verbose);
-    Mul(xhi,ylo,bhi,blo,bcr,verbose);
-    Mul(xlo,yhi,chi,clo,ccr,verbose);
-    Mul(xlo,ylo,dhi,dlo,dcr,verbose);
+    Mul60(xhi,yhi,ahi,alo,acr,verbose);
+    Mul60(xhi,ylo,bhi,blo,bcr,verbose);
+    Mul60(xlo,yhi,chi,clo,ccr,verbose);
+    Mul60(xlo,ylo,dhi,dlo,dcr,verbose);
     if verbose then
       put("-> ahi : "); put(ahi); new_line;
       put("-> alo : "); put(alo); new_line;
@@ -118,8 +160,8 @@ package body Double_Integer_Arithmetic is
       put("-> dlo : "); put(dlo); new_line;
       put("-> dcr : "); put(dcr); new_line;
     end if;
-    Add(dhi,dlo,blo,0,ehi,elo,ecr,verbose);
-    Add(ehi,elo,clo,0,zhilo,zlolo,carry,verbose);
+    Add60(dhi,dlo,blo,0,ehi,elo,ecr,verbose);
+    Add60(ehi,elo,clo,0,zhilo,zlolo,carry,verbose);
     if verbose then
       put("-> ehi : "); put(ehi); new_line;
       put("-> elo : "); put(elo); new_line;
@@ -129,8 +171,8 @@ package body Double_Integer_Arithmetic is
       put("-> carry : "); put(carry); new_line;
     end if;
     carry := carry + ecr;
-    Add(ahi,alo,0,bhi+carry,ehi,elo,ecr,verbose);
-    Add(ehi,elo,0,chi,zhihi,zlohi,carry,verbose);
+    Add60(ahi,alo,0,bhi+carry,ehi,elo,ecr,verbose);
+    Add60(ehi,elo,0,chi,zhihi,zlohi,carry,verbose);
     if verbose then
       put("-> ehi : "); put(ehi); new_line;
       put("-> elo : "); put(elo); new_line;
@@ -140,6 +182,6 @@ package body Double_Integer_Arithmetic is
       put("-> carry : "); put(carry); new_line;
     end if;
     carry := carry + ecr;
-  end Dbl_Mul;
+  end Dbl_Mul60;
 
 end Double_Integer_Arithmetic;

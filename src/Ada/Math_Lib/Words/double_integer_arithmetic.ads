@@ -10,13 +10,14 @@ package Double_Integer_Arithmetic is
 --   can not store the result of the operation correctly.
 --   For the multiplications, the base should be 2^60,
 --   that is: all 64-bit integers should have size no larger than 60.
+--   In the combination of double floats, base 2^52 should be used.
 
-  procedure Add ( xhi,xlo,yhi,ylo : in integer64; 
-                  zhi,zlo,carry : out integer64;
-                  verbose : in boolean := true );
+  procedure Add52 ( xhi,xlo,yhi,ylo : in integer64; 
+                    zhi,zlo,carry : out integer64;
+                    verbose : in boolean := true );
 
   -- DESCRIPTION :
-  --   Adds two double integer numbers.
+  --   Adds two double integer numbers, with base 2^52.
 
   -- ON ENTRY :
   --   xhi       high word of the first integer x;
@@ -31,9 +32,29 @@ package Double_Integer_Arithmetic is
   --   carry     carry over, if nonzero, then a double integer number
   --             can no longer store the sum correctly.
 
-  procedure Mul ( x,y : in integer64; 
-                  zhi,zlo,carry : out integer64;
-                  verbose : in boolean := true );
+  procedure Add60 ( xhi,xlo,yhi,ylo : in integer64; 
+                    zhi,zlo,carry : out integer64;
+                    verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Adds two double integer numbers, with base 2^60.
+
+  -- ON ENTRY :
+  --   xhi       high word of the first integer x;
+  --   xlo       low word of the first integer x;
+  --   yhi       high word of the second integer y;
+  --   ylo       low word of the second integer y;
+  --   verbose   if verbose, then prints intermediate results.
+
+  -- ON RETURN :
+  --   zhi       high word of the sum x + y;
+  --   zlo       low word of the sum x + y;
+  --   carry     carry over, if nonzero, then a double integer number
+  --             can no longer store the sum correctly.
+
+  procedure Mul60 ( x,y : in integer64; 
+                    zhi,zlo,carry : out integer64;
+                    verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Multiplies two integer numbers into a double integer number.
@@ -51,9 +72,9 @@ package Double_Integer_Arithmetic is
   --   carry     carry over, if nonzero, then a double integer number
   --             can no longer store the product correctly.
 
-  procedure Dbl_Mul ( xhi,xlo,yhi,ylo : in integer64; 
-                      zhihi,zlohi,zhilo,zlolo,carry : out integer64;
-                      verbose : in boolean := true );
+  procedure Dbl_Mul60 ( xhi,xlo,yhi,ylo : in integer64; 
+                        zhihi,zlohi,zhilo,zlolo,carry : out integer64;
+                        verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Multiplies two double integer numbers into 

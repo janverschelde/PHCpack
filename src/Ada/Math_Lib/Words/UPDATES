@@ -1,3 +1,6 @@
+Tue 10 Dec 2024 : new Add with base 2^52 in double_integer_arithmetic,
+  tested by test_double_integers.
+
 Sat 7 Dec 2024 : extended bits_of_integers with a bit_size function,
   used in test_double_integers.adb to see that, with 60 bits or less,
   there is no carry over in the multiplication function.
