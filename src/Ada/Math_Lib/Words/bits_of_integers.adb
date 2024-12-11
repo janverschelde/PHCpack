@@ -122,4 +122,20 @@ package body Bits_of_Integers is
     hihi := high - lohi;
   end Quarter;
 
+  procedure Split_Bits ( nbr : in integer64; expbits : integer32;
+                         high,low : out integer64 ) is
+
+    expo : natural;
+    modulus : integer64;
+
+  begin
+    if expbits < 0
+     then expo := natural(-expbits);
+     else expo := natural(expbits);
+    end if;
+    modulus := 2**expo;
+    high := nbr/modulus;
+    low := nbr mod modulus;
+  end Split_Bits;
+
 end Bits_of_Integers;

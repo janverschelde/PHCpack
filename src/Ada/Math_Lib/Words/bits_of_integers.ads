@@ -64,4 +64,19 @@ package Bits_of_Integers is
   --   The lolo stores the last 16 bits of the number.
   --   On return, nbr = hihi + lohi + hilo + lolo.
 
+  procedure Split_Bits ( nbr : in integer64; expbits : integer32;
+                         high,low : out integer64 );
+
+  -- DESCRIPTION :
+  --   Splits the bits in nbr in a high and low word,
+  --
+  -- ON ENTRY :
+  --   nbr        defines the number nbr*2^expbits;
+  --   expbits    negative exponent, where -expbits defines the
+  --              last number of bits that need to go the low word.
+
+  -- ON RETURN :
+  --   high       equals nbr/2^(-expbits);
+  --   low        equals nbr mod 2^(-expbits).
+
 end Bits_of_Integers;

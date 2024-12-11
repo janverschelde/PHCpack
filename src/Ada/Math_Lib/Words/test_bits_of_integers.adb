@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Random_Numbers;
@@ -261,12 +262,40 @@ package body Test_Bits_of_Integers is
     end if;
   end Test_Signed_Quarter;
 
+  procedure Test_Bit_Split is
+
+    maxint : constant integer64 := 2**62;
+    srnd,high,low : integer64;
+    expo : integer32 := 0;
+    bsz : integer32;
+
+  begin
+    put_line("Splitting a random 64-bit integer in bits ...");
+    srnd := 2*Standard_Random_Numbers.Random(0,maxint);
+    put("-> x : "); put(srnd,1); new_line;
+    bsz := Bits_of_Integers.Bit_Size(srnd)+3;
+    put("-> b : "); put(srnd,natural32(bsz),b=>2); new_line;
+    put("Give the number of last bits : "); get(expo);
+    Bits_of_Integers.Split_Bits(srnd,expo,high,low);
+    put("Separating the last ");put(expo,1); put_line(" bits :");
+    put("-> H : "); put(high,1); new_line;
+    put("-> L : "); put(low,1); new_line;
+    put("-> b : "); put(srnd,natural32(bsz),b=>2); new_line;
+    if expo > 0 then
+      put("-> H : "); put(high,natural32(bsz-expo),b=>2); new_line;
+    else
+      put("-> H : "); put(high,natural32(bsz+expo),b=>2); new_line;
+    end if;
+    put("-> L : "); put(low,natural32(bsz),b=>2); new_line;
+  end Test_Bit_Split;
+
   procedure Main is
   begin
     Test_Signed_Split;
     Test_Unsigned_Split;
     Test_30_Bit_Split;
     Test_Signed_Quarter;
+    Test_Bit_Split;
   end Main;
 
 end Test_Bits_of_Integers;

@@ -26,6 +26,12 @@ package Test_Bits_of_Integers is
   -- DESCRIPTION :
   --   Tests the quartering of a 64-bit integer into four words.
 
+  procedure Test_Bit_Split;
+
+  -- DESCRIPTION :
+  --   Generates a random 64-bit integer, prompts for the number of bits,
+  --   and then splits the number.
+
   procedure Main;
 
   -- DESCRIPTION :
