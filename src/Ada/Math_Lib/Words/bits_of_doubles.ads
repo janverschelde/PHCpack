@@ -23,6 +23,15 @@ package Bits_of_Doubles is
   -- DESCRIPTION :
   --   Writes 52 bits in groups of 4.
 
+  procedure Fraction_Exponent
+              ( x : in double_float;
+                f : out integer64; e : out integer32 );
+
+  -- DESCRIPTION :
+  --   Given a double float number x, returns the fraction f
+  --   as a 64-bit integer from the fraction of x, multiplied by 2^52,
+  --   and returns the exponent e as a 32-bit integer.
+
   procedure write_52bits_expo ( x : in double_float );
 
   -- DESCRIPTION :

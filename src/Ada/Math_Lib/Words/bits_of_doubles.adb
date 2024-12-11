@@ -33,15 +33,26 @@ package body Bits_of_Doubles is
     end loop;
   end write_52bits;
 
+  procedure Fraction_Exponent
+              ( x : in double_float;
+                f : out integer64; e : out integer32 ) is
+
+    r : constant double_float := double_float'fraction(x);
+    s : constant double_float := double_float'compose(r, 52);
+
+  begin
+    e := integer32(double_float'exponent(x));
+    f := integer64(double_float'truncation(s));
+  end Fraction_Exponent;
+
   procedure write_52bits_expo ( x : in double_float ) is
 
-    f : constant double_float := double_float'fraction(x);
-    e : constant integer32 := integer32(double_float'exponent(x));
-    s : constant double_float := double_float'compose(f, 52);
-    m : constant integer64 := integer64(double_float'truncation(s));
+    e : integer32;
+    m : integer64;
     b : Standard_Natural_Vectors.Vector(0..51);
 
   begin
+    Fraction_Exponent(x,m,e);
     expand_52bits(b,m);
     if x < 0.0
      then put("-");
@@ -53,34 +64,32 @@ package body Bits_of_Doubles is
 
   function Bit_Equal ( x,y : double_float ) return boolean is
 
-    fx : constant double_float := double_float'fraction(x);
-    ex : constant integer32 := integer32(double_float'exponent(x));
-    sx : constant double_float := double_float'compose(fx, 52);
-    mx : constant integer64 := integer64(double_float'truncation(sx));
-    fy : constant double_float := double_float'fraction(y);
-    ey : constant integer32 := integer32(double_float'exponent(y));
-    sy : constant double_float := double_float'compose(fy, 52);
-    my : constant integer64 := integer64(double_float'truncation(sy));
+    ex,ey : integer32;
+    mx,my : integer64;
 
   begin
     if x < 0.0 and y > 0.0 then
       return false;
     elsif x > 0.0 and y < 0.0 then
       return false;
-    elsif ex /= ey then
-      return false;
     else
-      return mx = my;
+      Fraction_Exponent(x,mx,ex);
+      Fraction_Exponent(y,my,ey);
+      if ex /= ey then
+        return false;
+      else
+        return mx = my;
+      end if;
     end if;
   end Bit_Equal;
 
   procedure write_fraction_bits ( nbr : in double_float ) is
 
-    frc : constant double_float := double_float'fraction(nbr);
-    sfr : constant double_float := double_float'compose(frc, 52);
-    mfr : constant integer64 := integer64(double_float'truncation(sfr));
+    e : integer32;
+    mfr : integer64;
 
   begin
+    Fraction_Exponent(nbr,mfr,e);
     put(mfr,1,b=>2); new_line;
   end write_fraction_bits;
 

@@ -1,3 +1,6 @@
+Wed 11 Dec 2024 : factored out fraction_exponent() function out of the
+  code in the package bits_of_doubles.
+
 Tue 10 Dec 2024 : new Add with base 2^52 in double_integer_arithmetic,
   tested by test_double_integers.
 
