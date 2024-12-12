@@ -1,3 +1,5 @@
+Thu 12 Dec 2024 : bug fixed in the procedure Mul of double_double_numbers.adb.
+
 Sun 3 Nov 2024 : fixed line in double_double_numbers.adb, to make Mul
   procedure the same as the "*" operator.
 

@@ -487,12 +487,11 @@ package body Double_Double_Numbers is
 
   procedure Mul ( x : in out double_double; y : in double_double ) is
 
-    p1,p2 : double_float;
+    p1,p2,rhi,rlo : double_float;
 
   begin
     two_prod(x.hi,y.hi,p1,p2);
-    p2 := p2 + (y.lo * x.hi + x.hi * x.lo);
-   -- p2 := p2 + y.hi * x.lo;
+    p2 := p2 + (y.lo * x.hi + x.lo * y.hi);
     quick_two_sum(p1,p2,x.hi,x.lo);
   end Mul;
 
