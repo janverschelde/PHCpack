@@ -166,6 +166,7 @@ package Bits_of_Doubles is
   -- DESCRIPTION :
   --   Splits the 52 bits in the fraction of x in four equal parts,
   --   returned in x0, x1, x2, x3, with x0 > x1 > x2 > x3.
-  --   On return: Bit_Equal(x,x0+x1+x2+x3) is true.
+  --   On return: Bit_Equal(x,x0+x1+x2+x3) is true
+  --   and x - (x0 + x1 + x2 + x3) is exactly zero.
 
 end Bits_of_Doubles;

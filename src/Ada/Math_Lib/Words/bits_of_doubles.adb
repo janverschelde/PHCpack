@@ -317,10 +317,11 @@ package body Bits_of_Doubles is
         cnt := cnt + 1;
       end loop;
     end if;
-    x3 := double_float'compose(double_float(valbits),e - 3*part - cnt);
-    if x < 0.0
-     then x3 := -x3;
-    end if;
+   -- x3 := double_float'compose(double_float(valbits),e - 3*part - cnt);
+   -- if x < 0.0
+   --  then x3 := -x3;
+   -- end if;
+    x3 := x - (x0 + x1 + x2);
   end Split;
 
 end Bits_of_Doubles;

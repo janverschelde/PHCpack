@@ -1,3 +1,6 @@
+Thu 12 Dec 2024 : fixed the Split procedure in bits_of_doubles so there
+  is no roundoff when adding the four parts of the split.
+
 Wed 11 Dec 2024 : factored out fraction_exponent() function out of the
   code in the package bits_of_doubles.  Added split_bits() to the package
   bits_of_integers, tested by test_bits_of_integers.
