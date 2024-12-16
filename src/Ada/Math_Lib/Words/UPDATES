@@ -1,3 +1,8 @@
+Mon 16 Dec 2024 : moved the code in ts_splitdbl.adb into test_bits_of_doubles,
+  and removed ts_splitdbl from words.gpr.  Similarly, moved ts_maskbits.adb
+  into test_bits_of_doubles, removing ts_maskbits from words.gpr.
+  The files ts_splitdbl.adb and ts_maskbits.adb are then also removed.
+
 Thu 12 Dec 2024 : fixed the Split procedure in bits_of_doubles so there
   is no roundoff when adding the four parts of the split.
   Fixed ts_splitdbl.adb to work out a particular case.

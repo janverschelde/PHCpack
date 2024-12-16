@@ -19,11 +19,9 @@ test_double_integers             : test multiword integer arithmetic
 ts_dblint                        : main test on multiword integers
 ------------------------------------------------------------------------------
 mask_bits_of_doubles             : mod last or first bits of doubles
-ts_maskbits                      : test on bit masking
 bits_of_doubles                  : manipulating bits of doubles
 test_bits_of_doubles             : teston bit manipulation of doubles
 ts_dblbits                       : testing the bits of a double
 ts_ddbits                        : splitting high and low parts
 ts_vdda                          : vectorized double double arithmetic
-ts_splitdbl                      : test split of doubles in equal parts
 ------------------------------------------------------------------------------
