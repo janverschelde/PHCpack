@@ -1,6 +1,7 @@
 Tue 17 Dec 2024 : extended vectored_double_doubles with the inner product
   of two vectors, tested by test_vectored_double_doubles,
   and its main test procedure is called in ts_vdda.adb.
+  Added test on norm to test_vectored_double_doubles.
 
 Mon 16 Dec 2024 : moved the code in ts_splitdbl.adb into test_bits_of_doubles,
   and removed ts_splitdbl from words.gpr.  Similarly, moved ts_maskbits.adb

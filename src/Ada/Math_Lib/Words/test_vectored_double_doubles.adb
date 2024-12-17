@@ -167,6 +167,62 @@ package body Test_Vectored_Double_Doubles is
     err := ddsum0 - ddsum1;
     put(" error : "); put(err,2); new_line;
   end Test_Complex_Product;
+
+  procedure Test_Complex_Norm ( dim : in integer32 ) is
+
+    x : constant DoblDobl_Complex_Vectors.Vector(1..dim)
+      := DoblDobl_Random_Vectors.Random_Vector(1,dim);
+    y : DoblDobl_Complex_Vectors.Vector(1..dim);
+    x0re,x1re,x2re,x3re : Standard_Floating_Vectors.Vector(1..dim);
+    x4re,x5re,x6re,x7re : Standard_Floating_Vectors.Vector(1..dim);
+    x0im,x1im,x2im,x3im : Standard_Floating_Vectors.Vector(1..dim);
+    x4im,x5im,x6im,x7im : Standard_Floating_Vectors.Vector(1..dim);
+    y0re,y1re,y2re,y3re : Standard_Floating_Vectors.Vector(1..dim);
+    y4re,y5re,y6re,y7re : Standard_Floating_Vectors.Vector(1..dim);
+    y0im,y1im,y2im,y3im : Standard_Floating_Vectors.Vector(1..dim);
+    y4im,y5im,y6im,y7im : Standard_Floating_Vectors.Vector(1..dim);
+    s0re,s1re,s2re,s3re,s4re,s5re,s6re,s7re : double_float;
+    s0im,s1im,s2im,s3im,s4im,s5im,s6im,s7im : double_float;
+    ddsum0,ddsum1,err : Dobldobl_Complex_Numbers.Complex_Number;
+
+    use DoblDobl_Complex_Numbers;
+
+  begin
+    for i in 1..dim loop
+      y(i) := Conjugate(x(i));
+    end loop;
+    put("Testing on random complex vectors of dimension "); put(dim,1);
+    if dim > 20 then
+      put_line(" ...");
+    else
+      put_line(", x :"); put_line(x);
+      put_line("y :"); put_line(y);
+    end if;
+    for i in 1..dim loop
+      y(i) := Conjugate(x(i));
+    end loop;
+    Quarter(x,x0re,x1re,x2re,x3re,x4re,x5re,x6re,x7re,
+              x0im,x1im,x2im,x3im,x4im,x5im,x6im,x7im);
+    Quarter(y,y0re,y1re,y2re,y3re,y4re,y5re,y6re,y7re,
+              y0im,y1im,y2im,y3im,y4im,y5im,y6im,y7im);
+    Product(x0re,x1re,x2re,x3re,x4re,x5re,x6re,x7re,
+            x0im,x1im,x2im,x3im,x4im,x5im,x6im,x7im,
+            y0re,y1re,y2re,y3re,y4re,y5re,y6re,y7re,
+            y0im,y1im,y2im,y3im,y4im,y5im,y6im,y7im,
+            s0re,s1re,s2re,s3re,s4re,s5re,s6re,s7re,
+            s0im,s1im,s2im,s3im,s4im,s5im,s6im,s7im);
+    ddsum0 := create(integer32(0));
+    for i in x'range loop
+      ddsum0 := ddsum0 + x(i)*y(i);
+    end loop;
+    ddsum1 := to_Complex_Double_Double
+                (s0re,s1re,s2re,s3re,s4re,s5re,s6re,s7re,
+                 s0im,s1im,s2im,s3im,s4im,s5im,s6im,s7im);
+    put("dd prd : "); put(ddsum0); new_line;
+    put("dd vec : "); put(ddsum1); new_line;
+    err := ddsum0 - ddsum1;
+    put(" error : "); put(err,2); new_line;
+  end Test_Complex_Norm;
   
   procedure Main is
 
@@ -178,6 +234,7 @@ package body Test_Vectored_Double_Doubles is
     Test_Complex_Sum(dim);
     Test_Real_Product(dim);
     Test_Complex_Product(dim);
+    Test_Complex_Norm(dim);
   end Main;
 
 end Test_Vectored_Double_Doubles;
