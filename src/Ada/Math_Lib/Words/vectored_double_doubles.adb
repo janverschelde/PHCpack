@@ -265,7 +265,7 @@ package body Vectored_Double_Doubles is
              ( s0,s1,s2,s3 : double_float;
                verbose : boolean := true ) return double_double is
 
-    shi,slo,err : double_float;
+    shi,slo,err,wpe : double_float;
     res : double_double;
 
   begin
@@ -275,7 +275,12 @@ package body Vectored_Double_Doubles is
       put("shi : "); put(shi); new_line;
       put("err : "); put(err); new_line;
     end if;
-    Double_Double_Basics.quick_two_sum(s2,s3,slo,err);
+    if err = 0.0 then
+      Double_Double_Basics.quick_two_sum(s2,s3,slo,err);
+    else
+      wpe := s2 + err;
+      Double_Double_Basics.quick_two_sum(wpe,s3,slo,err);
+    end if;
     res := res + create(slo,err);
     if verbose then
       put("slo : "); put(slo); new_line;
@@ -289,7 +294,7 @@ package body Vectored_Double_Doubles is
                verbose : boolean := true ) return double_double is
 
     res : double_double;
-    z0,z1,z2,z3 : double_float;
+    z0,z1,z2,z3,wpe : double_float;
     e1,e2,e3,e4 : double_float;
 
   begin
@@ -298,17 +303,32 @@ package body Vectored_Double_Doubles is
       put(" z0 : "); put(z0); new_line;
       put("err : "); put(e1); new_line;
     end if;
-    Double_Double_Basics.two_sum(s2,s3,z1,e2);
+    if e1 = 0.0 then
+      Double_Double_Basics.two_sum(s2,s3,z1,e2);
+    else
+      wpe := s2 + e1;
+      Double_Double_Basics.two_sum(wpe,s3,z1,e2);
+    end if;
     if verbose then
       put(" z1 : "); put(z1); new_line;
       put("err : "); put(e2); new_line;
     end if;
-    Double_Double_Basics.two_sum(s4,s5,z2,e3);
+    if e2 = 0.0 then
+      Double_Double_Basics.two_sum(s4,s5,z2,e3);
+    else
+      wpe := s4 + e2;
+      Double_Double_Basics.two_sum(wpe,s5,z2,e3);
+    end if;
     if verbose then
       put(" z2 : "); put(z2); new_line;
       put("err : "); put(e3); new_line;
     end if;
-    Double_Double_Basics.two_sum(s6,s7,z3,e4);
+    if e3 = 0.0 then
+      Double_Double_Basics.two_sum(s6,s7,z3,e4);
+    else
+      wpe := s6 + e3;
+      Double_Double_Basics.two_sum(wpe,s7,z3,e4);
+    end if;
     if verbose then
       put(" z3 : "); put(z3); new_line;
       put("err : "); put(e4); new_line;
