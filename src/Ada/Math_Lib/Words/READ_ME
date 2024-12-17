@@ -22,6 +22,6 @@ mask_bits_of_doubles             : mod last or first bits of doubles
 bits_of_doubles                  : manipulating bits of doubles
 test_bits_of_doubles             : teston bit manipulation of doubles
 ts_dblbits                       : testing the bits of a double
-ts_ddbits                        : splitting high and low parts
-ts_vdda                          : vectorized double double arithmetic
+vectored_double_doubles          : vectorized double double arithmetic
+ts_vdda                          : tests vectored double doubles
 ------------------------------------------------------------------------------

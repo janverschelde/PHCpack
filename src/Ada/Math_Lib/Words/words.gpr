@@ -23,7 +23,6 @@ project Words is
         "ts_intbits.adb",   -- split 64-bit integer numbers
         "ts_dblint.adb",    -- double integer arithmetic
         "ts_dblbits.adb",   -- remove bits from fraction
-        "ts_ddbits.adb",    -- test bits of double doubles
         "ts_vdda.adb"       -- vectorized double double arithmetic
     );
 

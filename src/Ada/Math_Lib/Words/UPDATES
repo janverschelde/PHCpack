@@ -2,6 +2,8 @@ Mon 16 Dec 2024 : moved the code in ts_splitdbl.adb into test_bits_of_doubles,
   and removed ts_splitdbl from words.gpr.  Similarly, moved ts_maskbits.adb
   into test_bits_of_doubles, removing ts_maskbits from words.gpr.
   The files ts_splitdbl.adb and ts_maskbits.adb are then also removed.
+  New package vectored_double_doubles with code from ts_ddbits.adb
+  and ts_vdda.adb.  Removed ts_ddbits from words.gpr, updated ts_vdda.adb.
 
 Thu 12 Dec 2024 : fixed the Split procedure in bits_of_doubles so there
   is no roundoff when adding the four parts of the split.
