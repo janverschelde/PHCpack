@@ -315,7 +315,7 @@ package body Vectored_Double_Doubles is
              ( s0,s1,s2,s3 : double_float;
                verbose : boolean := true ) return double_double is
 
-    shi,slo,err,wpe : double_float;
+    shi,slo,err : double_float;
     res : double_double;
 
   begin
@@ -325,12 +325,7 @@ package body Vectored_Double_Doubles is
       put("shi : "); put(shi); new_line;
       put("err : "); put(err); new_line;
     end if;
-    if err = 0.0 then
-      Double_Double_Basics.quick_two_sum(s2,s3,slo,err);
-    else
-      wpe := s2 + err;
-      Double_Double_Basics.quick_two_sum(wpe,s3,slo,err);
-    end if;
+    Double_Double_Basics.quick_two_sum(s2,s3,slo,err);
     res := res + create(slo,err);
     if verbose then
       put("slo : "); put(slo); new_line;

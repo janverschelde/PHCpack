@@ -244,10 +244,10 @@ package body Test_Vectored_Double_Doubles is
     end if;
     put("Give the dimension : "); get(dim);
     Test_Real_Sum(dim);
-   -- Test_Complex_Sum(dim);
-   -- Test_Real_Product(dim);
-   -- Test_Complex_Product(dim);
-   -- Test_Complex_Norm(dim);
+    Test_Complex_Sum(dim);
+    Test_Real_Product(dim);
+    Test_Complex_Product(dim);
+    Test_Complex_Norm(dim);
     put("Seed used : "); put(Standard_Random_Numbers.Get_Seed,1); new_line;
   end Main;
 
