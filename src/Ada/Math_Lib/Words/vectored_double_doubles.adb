@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Basics;
 with Bits_of_Doubles;
@@ -20,6 +21,55 @@ package body Vectored_Double_Doubles is
       Double_Double_Basics.Split(flt,v2(i),v3(i));
     end loop;
   end Split;
+
+  procedure Signed_Split
+              ( v : in Double_Double_Vectors.Vector;
+                p0,p1,p2,p3 : out Standard_Floating_Vectors.Vector;
+                m0,m1,m2,m3 : out Standard_Floating_Vectors.Vector;
+                np0,np1,np2,np3,nm0,nm1,nm2,nm3 : out integer32 ) is
+
+    nbr : double_double;
+    flt,hi,lo : double_float;
+
+  begin
+    np0 := 0; np1 := 0; np2 := 0; np3 := 0;
+    nm0 := 0; nm1 := 0; nm2 := 0; nm3 := 0;
+    for i in v'range loop
+      nbr := v(i);
+      flt := hi_part(nbr);
+      Double_Double_Basics.Split(flt,hi,lo);
+      if hi >= 0.0 then
+        np0 := np0 + 1;
+        p0(np0) := hi;
+      else
+        nm0 := nm0 + 1;
+        m0(nm0) := hi;
+      end if;
+      if lo >= 0.0 then
+        np1 := np1 + 1;
+        p1(np1) := lo;
+      else
+        nm1 := nm1 + 1;
+        m1(nm1) := lo;
+      end if;
+      flt := lo_part(nbr);
+      Double_Double_Basics.Split(flt,hi,lo);
+      if hi >= 0.0 then
+        np2 := np2 + 1;
+        p2(np2) := hi;
+      else
+        nm2 := nm2 + 1;
+        m2(nm2) := hi;
+      end if;
+      if lo >= 0.0 then
+        np3 := np3 + 1;
+        p3(np3) := lo;
+      else
+        nm3 := nm3 + 1;
+        m3(nm3) := lo;
+      end if;
+    end loop;
+  end Signed_Split;
 
   procedure Split ( v : in DoblDobl_Complex_Vectors.Vector;
                     v0re,v1re : out Standard_Floating_Vectors.Vector;
@@ -294,8 +344,9 @@ package body Vectored_Double_Doubles is
                verbose : boolean := true ) return double_double is
 
     res : double_double;
-    z0,z1,z2,z3,wpe : double_float;
+    z0,z1,z2,z3 : double_float;
     e1,e2,e3,e4 : double_float;
+    dz0,dz1,dz2,dz3 : double_double;
 
   begin
     Double_Double_Basics.two_sum(s0,s1,z0,e1);
@@ -303,40 +354,26 @@ package body Vectored_Double_Doubles is
       put(" z0 : "); put(z0); new_line;
       put("err : "); put(e1); new_line;
     end if;
-    if e1 = 0.0 then
-      Double_Double_Basics.two_sum(s2,s3,z1,e2);
-    else
-      wpe := s2 + e1;
-      Double_Double_Basics.two_sum(wpe,s3,z1,e2);
-    end if;
+    dz0 := create(z0,e1);
+    Double_Double_Basics.two_sum(s2,s3,z1,e2);
     if verbose then
       put(" z1 : "); put(z1); new_line;
       put("err : "); put(e2); new_line;
     end if;
-    if e2 = 0.0 then
-      Double_Double_Basics.two_sum(s4,s5,z2,e3);
-    else
-      wpe := s4 + e2;
-      Double_Double_Basics.two_sum(wpe,s5,z2,e3);
-    end if;
+    dz1 := create(z1,e2);
+    Double_Double_Basics.two_sum(s4,s5,z2,e3);
     if verbose then
       put(" z2 : "); put(z2); new_line;
       put("err : "); put(e3); new_line;
     end if;
-    if e3 = 0.0 then
-      Double_Double_Basics.two_sum(s6,s7,z3,e4);
-    else
-      wpe := s6 + e3;
-      Double_Double_Basics.two_sum(wpe,s7,z3,e4);
-    end if;
+    dz2 := create(z2,e3);
+    Double_Double_Basics.two_sum(s6,s7,z3,e4);
     if verbose then
       put(" z3 : "); put(z3); new_line;
       put("err : "); put(e4); new_line;
     end if;
-    res := Double_Double_Numbers.create(z3);
-    res := res + z2;
-    res := res + z1;
-    res := res + z0;
+    dz3 := create(z3,e4);
+    res := ((dz3 + dz2) + dz1) + dz0;
     return res;
   end to_Double_Double;
 
@@ -370,5 +407,60 @@ package body Vectored_Double_Doubles is
     res := Create(sre,sim);
     return res;
   end to_Complex_Double_Double;
+
+-- SIGN AWARE WRAPPERS :
+
+  function Sum ( v : Double_Double_Vectors.Vector;
+                 verbose : boolean := true ) return double_double is
+
+    res : double_double := create(0.0);
+    dim : constant integer32 := v'length;
+    p0,p1,p2,p3 : Standard_Floating_Vectors.Vector(1..dim);
+    m0,m1,m2,m3 : Standard_Floating_Vectors.Vector(1..dim);
+    np0,np1,np2,np3,nm0,nm1,nm2,nm3 : integer32;
+    s0,s1,s2,s3,s4,s5,s6,s7 : double_float;
+
+  begin
+    Signed_Split(v,p0,p1,p2,p3,m0,m1,m2,m3,np0,np1,np2,np3,nm0,nm1,nm2,nm3);
+    if verbose then
+      put("np0 : "); put(np0,1); 
+      put(", np1 : "); put(np1,1); 
+      put(", np2 : "); put(np2,1); 
+      put(", np3 : "); put(np3,1); new_line;
+      put("nm0 : "); put(nm0,1); 
+      put(", nm1 : "); put(nm1,1); 
+      put(", nm2 : "); put(nm2,1); 
+      put(", nm3 : "); put(nm3,1); new_line;
+    end if;
+    s0 := 0.0; s1 := 0.0; s2 := 0.0; s3 := 0.0;
+    for i in 1..np0 loop
+      s0 := s0 + p0(i);
+    end loop;
+    for i in 1..np1 loop
+      s1 := s1 + p1(i);
+    end loop;
+    for i in 1..np2 loop
+      s2 := s2 + p2(i);
+    end loop;
+    for i in 1..np3 loop
+      s3 := s3 + p3(i);
+    end loop;
+    res := to_double_double(s0,s1,s2,s3,verbose);
+    s4 := 0.0; s5 := 0.0; s6 := 0.0; s7 := 0.0;
+    for i in 1..nm0 loop
+      s4 := s4 + m0(i);
+    end loop;
+    for i in 1..nm1 loop
+      s5 := s5 + m1(i);
+    end loop;
+    for i in 1..nm2 loop
+      s6 := s6 + m2(i);
+    end loop;
+    for i in 1..nm3 loop
+      s7 := s7 + m3(i);
+    end loop;
+    res := res + to_double_double(s4,s5,s6,s7,verbose);
+    return res;
+  end Sum;
 
 end Vectored_Double_Doubles;

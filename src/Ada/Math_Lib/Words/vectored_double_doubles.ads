@@ -1,3 +1,4 @@
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Vectors;
 with Double_Double_Numbers;              use Double_Double_Numbers;
@@ -10,6 +11,8 @@ package Vectored_Double_Doubles is
 -- DESCRIPTION :
 --   The vectored sum of an array of double doubles postpones
 --   the normalization of the sum to the very end.
+
+-- BASIC PROCEDURES :
 
   procedure Split ( v : in Double_Double_Vectors.Vector;
                     v0,v1,v2,v3 : out Standard_Floating_Vectors.Vector );
@@ -27,6 +30,41 @@ package Vectored_Double_Doubles is
   --   v1       low word of the high double of the numbers in v;
   --   v2       high word of the low double of the numbers in v;
   --   v3       low word of the low double of the numbers in v.
+
+  procedure Signed_Split
+              ( v : in Double_Double_Vectors.Vector;
+                p0,p1,p2,p3 : out Standard_Floating_Vectors.Vector;
+                m0,m1,m2,m3 : out Standard_Floating_Vectors.Vector;
+                np0,np1,np2,np3,nm0,nm1,nm2,nm3 : out integer32 );
+
+  -- DESCRIPTION :
+  --   Splits the doubles in double double numbers of v,
+  --   taking into account their signs.
+
+  -- REQUIRED :
+  --   m0'range = m1'range = m2'range = m4'range can fit all negative numbers,
+  --   and p0'range = p1'range = p2'range = p4'range for all other numbers.
+
+  -- ON ENTRY :
+  --   v        a vector of double double numbers.
+
+  -- ON RETURN :
+  --   p0       high word of the high double of the nonnegative numbers in v;
+  --   p1       low word of the high double of the nonnegative numbers in v;
+  --   p2       high word of the low double of the nonnegative numbers in v;
+  --   p3       low word of the low double of the nonnegative numbers in v;
+  --   m0       high word of the high double of the negative numbers in v;
+  --   m1       low word of the high double of the negative numbers in v;
+  --   m2       high word of the low double of the negative numbers in v;
+  --   m3       low word of the low double of the negative numbers in v.
+  --   np0      number of elements in p0;
+  --   np1      number of elements in p1;
+  --   np2      number of elements in p2;
+  --   np3      number of elements in p3;
+  --   nm0      number of elements in m0;
+  --   nm1      number of elements in m1;
+  --   nm2      number of elements in m2;
+  --   nm3      number of elements in m3.
 
   procedure Split ( v : in DoblDobl_Complex_Vectors.Vector;
                     v0re,v1re : out Standard_Floating_Vectors.Vector;
@@ -270,5 +308,14 @@ package Vectored_Double_Doubles is
   --   and in s0im, s1im, .., s7im the imaginary words of a sum,
   --   returns the complex double double number of the sum.
   --   If verbose, then the errors of the quick sum are shown.
+
+-- SIGN AWARE WRAPPERS :
+
+  function Sum ( v : Double_Double_Vectors.Vector;
+                 verbose : boolean := true ) return double_double;
+
+  -- DESCRIPTION :
+  --   Splits the numbers and returns the sum as a double double.
+  --   For better accuracy, takes into account the signs of the numbers.
 
 end Vectored_Double_Doubles;

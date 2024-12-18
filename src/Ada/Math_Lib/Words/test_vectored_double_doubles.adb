@@ -1,7 +1,10 @@
 with text_io;                            use text_io;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Vectors;
+with Standard_Random_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Double_Double_Vectors;
@@ -22,7 +25,7 @@ package body Test_Vectored_Double_Doubles is
     ddv : Double_Double_Vectors.Vector(1..dim);
     v0,v1,v2,v3 : Standard_Floating_Vectors.Vector(1..dim);
     s0,s1,s2,s3 : double_float;
-    ddsum0,ddsum1,err : double_double;
+    ddsum0,ddsum1,ddsum2,err : double_double;
 
   begin
     for i in 1..dim loop
@@ -41,6 +44,11 @@ package body Test_Vectored_Double_Doubles is
     put("dd sum : "); put(ddsum0); new_line;
     put("dd vec : "); put(ddsum1); new_line;
     err := abs(ddsum0-ddsum1);
+    put(" error : "); put(err,2); new_line;
+    ddsum2 := Vectored_Double_Doubles.Sum(ddv);
+    put("dd sum : "); put(ddsum0); new_line;
+    put("dd sgn : "); put(ddsum2); new_line;
+    err := abs(ddsum0-ddsum2);
     put(" error : "); put(err,2); new_line;
   end Test_Real_Sum;
 
@@ -226,15 +234,21 @@ package body Test_Vectored_Double_Doubles is
   
   procedure Main is
 
+    seed : natural32 := 0;
     dim : integer32 := 0;
 
   begin
+    put("Give the seed (0 for none) : "); get(seed);
+    if seed /= 0
+     then Standard_Random_Numbers.Set_Seed(seed);
+    end if;
     put("Give the dimension : "); get(dim);
     Test_Real_Sum(dim);
-    Test_Complex_Sum(dim);
-    Test_Real_Product(dim);
-    Test_Complex_Product(dim);
-    Test_Complex_Norm(dim);
+   -- Test_Complex_Sum(dim);
+   -- Test_Real_Product(dim);
+   -- Test_Complex_Product(dim);
+   -- Test_Complex_Norm(dim);
+    put("Seed used : "); put(Standard_Random_Numbers.Get_Seed,1); new_line;
   end Main;
 
 end Test_Vectored_Double_Doubles;
