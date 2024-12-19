@@ -458,4 +458,22 @@ package body Vectored_Double_Doubles is
     return res;
   end Sum;
 
+  function Sum ( v : DoblDobl_Complex_Vectors.Vector;
+                 verbose : boolean := true ) return Complex_Number is
+
+    res : Complex_Number;
+    resre,resim : double_double;
+    vre,vim : Double_Double_Vectors.Vector(v'range);
+
+  begin
+    for i in v'range loop
+      vre(i) := REAL_PART(v(i));
+      vim(i) := IMAG_PART(v(i));
+    end loop;
+    resre := Sum(vre,verbose);
+    resim := Sum(vim,verbose);
+    res := Create(resre,resim);
+    return res;
+  end Sum;
+
 end Vectored_Double_Doubles;

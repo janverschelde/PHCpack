@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
@@ -26,11 +27,24 @@ package body Test_Vectored_Double_Doubles is
     v0,v1,v2,v3 : Standard_Floating_Vectors.Vector(1..dim);
     s0,s1,s2,s3 : double_float;
     ddsum0,ddsum1,ddsum2,err : double_double;
+    ans : character;
+    half : integer32;
 
   begin
-    for i in 1..dim loop
-      ddv(i) := DoblDobl_Complex_Numbers.REAL_PART(ddz(i));
-    end loop;
+    put("zero sum ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans /= 'y' then
+      for i in 1..dim loop
+        ddv(i) := DoblDobl_Complex_Numbers.REAL_PART(ddz(i));
+      end loop;
+    else
+      half := dim/2;
+      for i in 1..half loop
+        ddv(i) := DoblDobl_Complex_Numbers.REAL_PART(ddz(i));
+      end loop;
+      for i in half+1..dim loop
+        ddv(i) := -ddv(i-half);
+      end loop;
+    end if;
     put("Testing the sum of a random real vector of dimension ");
     put(dim,1);
     if dim > 20
@@ -59,7 +73,7 @@ package body Test_Vectored_Double_Doubles is
     v0re,v1re,v2re,v3re : Standard_Floating_Vectors.Vector(1..dim);
     v0im,v1im,v2im,v3im : Standard_Floating_Vectors.Vector(1..dim);
     s0re,s1re,s2re,s3re,s0im,s1im,s2im,s3im : double_float;
-    ddsum0,ddsum1,err : Dobldobl_Complex_Numbers.Complex_Number;
+    ddsum0,ddsum1,ddsum2,err : Dobldobl_Complex_Numbers.Complex_Number;
 
     use DoblDobl_Complex_Numbers;
 
@@ -79,6 +93,11 @@ package body Test_Vectored_Double_Doubles is
     put("dd sum : "); put(ddsum0); new_line;
     put("dd vec : "); put(ddsum1); new_line;
     err := ddsum0 - ddsum1;
+    put(" error : "); put(err,2); new_line;
+    ddsum2 := Vectored_Double_Doubles.Sum(ddv);
+    put("dd sum : "); put(ddsum0); new_line;
+    put("dd sgn : "); put(ddsum2); new_line;
+    err := ddsum0 - ddsum2;
     put(" error : "); put(err,2); new_line;
   end Test_Complex_Sum;
 

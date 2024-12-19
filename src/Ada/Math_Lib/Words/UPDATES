@@ -2,6 +2,8 @@ Wed 18 Dec 2024 : added sign aware wrapper to vectored_double_doubles
   and extended test_vectored_double_doubles.adb.
   Bug fixed in to_double_double of vectored_double_doubles,
   updated test_vectored_double_doubles.adb again.
+  Added wrapper for complex sum to vectored_double_doubles,
+  tested in test_vectored_double_doubles.adb.
 
 Tue 17 Dec 2024 : extended vectored_double_doubles with the inner product
   of two vectors, tested by test_vectored_double_doubles,

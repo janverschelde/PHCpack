@@ -318,4 +318,11 @@ package Vectored_Double_Doubles is
   --   Splits the numbers and returns the sum as a double double.
   --   For better accuracy, takes into account the signs of the numbers.
 
+  function Sum ( v : DoblDobl_Complex_Vectors.Vector;
+                 verbose : boolean := true ) return Complex_Number;
+
+  -- DESCRIPTION :
+  --   Splits the numbers and returns the sum as a double double.
+  --   For better accuracy, takes into account the signs of the numbers.
+
 end Vectored_Double_Doubles;
