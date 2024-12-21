@@ -29,11 +29,17 @@ package Test_Vectored_Double_Doubles is
   --   Generates two vectors of random complex double double numbers
   --   of dimension dim and tests their inner product.
 
+  procedure Test_Real_Norm ( dim : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates one vector of random double double numbers
+  --   of dimension dim and tests its squared complex norm.
+
   procedure Test_Complex_Norm ( dim : in integer32 );
 
   -- DESCRIPTION :
   --   Generates one vector of random complex double double numbers
-  --   of dimension dim and tests their complex norm.
+  --   of dimension dim and tests its squared complex norm.
 
   procedure Main;
 

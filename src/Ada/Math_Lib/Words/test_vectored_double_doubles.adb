@@ -113,12 +113,19 @@ package body Test_Vectored_Double_Doubles is
     y0,y1,y2,y3 : Standard_Floating_Vectors.Vector(1..dim);
     y4,y5,y6,y7 : Standard_Floating_Vectors.Vector(1..dim);
     s0,s1,s2,s3,s4,s5,s6,s7 : double_float;
-    ddsum0,ddsum1,err : double_double;
+    ddsum0,ddsum1,ddsum2,err : double_double;
+    cntxpos,cntypos : natural32 := 0;
 
   begin
     for i in 1..dim loop
       x(i) := DoblDobl_Complex_Numbers.REAL_PART(a(i));
+      if x(i) >= 0.0
+       then cntxpos := cntxpos + 1;
+      end if;
       y(i) := DoblDobl_Complex_Numbers.REAL_PART(b(i));
+      if y(i) >= 0.0
+       then cntypos := cntypos + 1;
+      end if;
     end loop;
     put("Testing product of random real vectors of dimension ");
     put(dim,1);
@@ -128,6 +135,8 @@ package body Test_Vectored_Double_Doubles is
       put_line(", x :"); put_line(x);
       put_line("y :"); put_line(y);
     end if;
+    put("# nonnegative x : "); put(cntxpos,1);
+    put(", # nonnegative y : "); put(cntypos,1); new_line;
     Quarter(x,x0,x1,x2,x3,x4,x5,x6,x7);
     Quarter(y,y0,y1,y2,y3,y4,y5,y6,y7);
     Product(x0,x1,x2,x3,x4,x5,x6,x7,y0,y1,y2,y3,y4,y5,y6,y7,
@@ -141,6 +150,11 @@ package body Test_Vectored_Double_Doubles is
     put("dd prd : "); put(ddsum0); new_line;
     put("dd vec : "); put(ddsum1); new_line;
     err := abs(ddsum0-ddsum1);
+    put(" error : "); put(err,2); new_line;
+    ddsum2 := Vectored_Double_Doubles.Product(x,y);
+    put("dd prd : "); put(ddsum0); new_line;
+    put("dd vec : "); put(ddsum2); new_line;
+    err := abs(ddsum0-ddsum2);
     put(" error : "); put(err,2); new_line;
   end Test_Real_Product;
 
@@ -194,6 +208,59 @@ package body Test_Vectored_Double_Doubles is
     err := ddsum0 - ddsum1;
     put(" error : "); put(err,2); new_line;
   end Test_Complex_Product;
+
+  procedure Test_Real_Norm ( dim : in integer32 ) is
+
+    z : constant DoblDobl_Complex_Vectors.Vector(1..dim)
+      := DoblDobl_Random_Vectors.Random_Vector(1,dim);
+    x : Double_Double_Vectors.Vector(1..dim);
+    y : Double_Double_Vectors.Vector(1..dim);
+    x0,x1,x2,x3 : Standard_Floating_Vectors.Vector(1..dim);
+    x4,x5,x6,x7 : Standard_Floating_Vectors.Vector(1..dim);
+    y0,y1,y2,y3 : Standard_Floating_Vectors.Vector(1..dim);
+    y4,y5,y6,y7 : Standard_Floating_Vectors.Vector(1..dim);
+    s0,s1,s2,s3,s4,s5,s6,s7 : double_float;
+    ddsum0,ddsum1,ddsum2,err : double_double;
+    cntxpos : natural32 := 0;
+
+  begin
+    for i in 1..dim loop
+      x(i) := DoblDobl_Complex_Numbers.REAL_PART(z(i));
+      if x(i) >= 0.0
+       then cntxpos := cntxpos + 1;
+      end if;
+      y(i) := x(i);
+    end loop;
+    put("Testing squared norm of a random real vector of dimension ");
+    put(dim,1);
+    if dim > 20
+     then put_line(" ...");
+     else put_line(", x :"); put_line(x);
+    end if;
+    put("# nonnegative x : "); put(cntxpos,1); new_line;
+    Quarter(x,x0,x1,x2,x3,x4,x5,x6,x7);
+    Quarter(y,y0,y1,y2,y3,y4,y5,y6,y7);
+    Product(x0,x1,x2,x3,x4,x5,x6,x7,y0,y1,y2,y3,y4,y5,y6,y7,
+            s0,s1,s2,s3,s4,s5,s6,s7);
+    ddsum0 := create(0.0);
+    for i in x'range loop
+      ddsum0 := ddsum0 + x(i)*y(i);
+    end loop;
+    ddsum1 := Vectored_Double_Doubles.to_double_double
+                (s0,s1,s2,s3,s4,s5,s6,s7);
+    put("dd prd : "); put(ddsum0); new_line;
+    put("dd vec : "); put(ddsum1); new_line;
+    err := abs(ddsum0-ddsum1);
+    put(" error : "); put(err,2); new_line;
+    if dim > 20
+     then ddsum2 := Vectored_Double_Doubles.Squared_Norm(x,false);
+     else ddsum2 := Vectored_Double_Doubles.Squared_Norm(x);
+    end if;
+    put("dd prd : "); put(ddsum0); new_line;
+    put("dd sgn : "); put(ddsum2); new_line;
+    err := abs(ddsum0-ddsum2);
+    put(" error : "); put(err,2); new_line;
+  end Test_Real_Norm;
 
   procedure Test_Complex_Norm ( dim : in integer32 ) is
 
@@ -262,11 +329,12 @@ package body Test_Vectored_Double_Doubles is
      then Standard_Random_Numbers.Set_Seed(seed);
     end if;
     put("Give the dimension : "); get(dim);
-    Test_Real_Sum(dim);
-    Test_Complex_Sum(dim);
-    Test_Real_Product(dim);
-    Test_Complex_Product(dim);
-    Test_Complex_Norm(dim);
+   -- Test_Real_Sum(dim);
+   -- Test_Complex_Sum(dim);
+   -- Test_Real_Product(dim);
+   -- Test_Complex_Product(dim);
+    Test_Real_Norm(dim);
+   -- Test_Complex_Norm(dim);
     put("Seed used : "); put(Standard_Random_Numbers.Get_Seed,1); new_line;
   end Main;
 

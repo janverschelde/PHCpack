@@ -140,6 +140,141 @@ package body Vectored_Double_Doubles is
     end loop;
   end Quarter;
 
+  procedure Signed_Convolutions ( sx : in string ) is
+
+  -- DESCRIPTION :
+  --   Given the arrays of strings for x, writes the sign patterns
+  --   when making the convolution products of x with itself.
+
+  begin
+    put("s0 := s0 + ("); put_line(sx(sx'first) & "," & sx(sx'first) & ")");
+    put("s1 := s1 + (");
+    put(sx(sx'first) & "," & sx(sx'first+1));
+    put_line(") + (" & sx(sx'first+1) & "," & sx(sx'first) & ")");
+    put("s2 := s2 + (");
+    put(sx(sx'first) & "," & sx(sx'first+2));
+    put(") + (" & sx(sx'first+1) & "," & sx(sx'first+1));
+    put_line(") + (" & sx(sx'first+2) & "," & sx(sx'first) & ")");
+    put("s3 := s3 + (");
+    put(sx(sx'first) & "," & sx(sx'first+3));
+    put(") + (" & sx(sx'first+1) & "," & sx(sx'first+2));
+    put(") + (" & sx(sx'first+2) & "," & sx(sx'first+1));
+    put_line(") + (" & sx(sx'first+3) & "," & sx(sx'first) & ")");
+    put("s4 := s4 + (");
+    put(sx(sx'first) & "," & sx(sx'first+4));
+    put(") + (" & sx(sx'first+1) & "," & sx(sx'first+3));
+    put(") + (" & sx(sx'first+2) & "," & sx(sx'first+2));
+    put(") + (" & sx(sx'first+3) & "," & sx(sx'first+1));
+    put_line(") + (" & sx(sx'first+4) & "," & sx(sx'first) & ")");
+    put("s5 := s5 + (");
+    put(sx(sx'first) & "," & sx(sx'first+5));
+    put(") + (" & sx(sx'first+1) & "," & sx(sx'first+4));
+    put(") + (" & sx(sx'first+2) & "," & sx(sx'first+3));
+    put(") + (" & sx(sx'first+3) & "," & sx(sx'first+2));
+    put(") + (" & sx(sx'first+4) & "," & sx(sx'first+1));
+    put_line(") + (" & sx(sx'first+5) & "," & sx(sx'first) & ")");
+    put("s6 := s6 + (");
+    put(sx(sx'first) & "," & sx(sx'first+6));
+    put(") + (" & sx(sx'first+1) & "," & sx(sx'first+5));
+    put(") + (" & sx(sx'first+2) & "," & sx(sx'first+4));
+    put(") + (" & sx(sx'first+3) & "," & sx(sx'first+3));
+    put(") + (" & sx(sx'first+4) & "," & sx(sx'first+2));
+    put(") + (" & sx(sx'first+5) & "," & sx(sx'first+1));
+    put_line(") + (" & sx(sx'first+6) & "," & sx(sx'first) & ")");
+    put("s7 := s7 + (");
+    put(sx(sx'first) & "," & sx(sx'first+7));
+    put(") + (" & sx(sx'first+1) & "," & sx(sx'first+6));
+    put(") + (" & sx(sx'first+2) & "," & sx(sx'first+5));
+    put(") + (" & sx(sx'first+3) & "," & sx(sx'first+4));
+    put(") + (" & sx(sx'first+4) & "," & sx(sx'first+3));
+    put(") + (" & sx(sx'first+5) & "," & sx(sx'first+2));
+    put(") + (" & sx(sx'first+6) & "," & sx(sx'first+1));
+    put_line(") + (" & sx(sx'first+7) & "," & sx(sx'first) & ")");
+  end Signed_Convolutions;
+
+  procedure Signed_Quarter
+              ( v : in Double_Double_Vectors.Vector;
+                x0,x1,x2,x3 : out Standard_Floating_Vectors.Vector;
+                x4,x5,x6,x7 : out Standard_Floating_Vectors.Vector;
+                pm0,pm1,pm2,pm3 : out Standard_Floating_Vectors.Vector;
+                pm4,pm5,pm6,pm7 : out Standard_Floating_Vectors.Vector;
+                mp0,mp1,mp2,mp3 : out Standard_Floating_Vectors.Vector;
+                mp4,mp5,mp6,mp7 : out Standard_Floating_Vectors.Vector;
+                nbx,npm,nmp : out integer32;
+                verbose : in boolean := true ) is
+
+    nbr : double_double;
+    flt,f0,f1,f2,f3,f4,f5,f6,f7 : double_float;
+    sx : String(1..8);
+
+  begin
+    nbx := 0; npm := 0; nmp := 0;
+    for i in v'range loop
+      nbr := v(i);
+      flt := hi_part(nbr);
+      Bits_of_Doubles.Split(flt,f0,f1,f2,f3);
+      flt := lo_part(nbr);
+      Bits_of_Doubles.Split(flt,f4,f5,f6,f7);
+      if f0 >= 0.0 then
+        if f4 >= 0.0 then
+          nbx := nbx + 1;
+          x0(nbx) := f0; x1(nbx) := f1; x2(nbx) := f2; x3(nbx) := f3;
+          x4(nbx) := f4; x5(nbx) := f5; x6(nbx) := f6; x7(nbx) := f7;
+        else -- f4 < 0.0
+          npm := npm + 1;
+          pm0(npm) := f0; pm1(npm) := f1; pm2(npm) := f2; pm3(npm) := f3;
+          pm4(npm) := f4; pm5(npm) := f5; pm6(npm) := f6; pm7(npm) := f7;
+        end if;
+      else -- f0 < 0.0 
+        if f4 < 0.0 then
+          nbx := nbx + 1;
+          x0(nbx) := f0; x1(nbx) := f1; x2(nbx) := f2; x3(nbx) := f3;
+          x4(nbx) := f4; x5(nbx) := f5; x6(nbx) := f6; x7(nbx) := f7;
+        else -- f0 >= 0.0
+          nmp := nmp + 1;
+          mp0(nmp) := f0; mp1(nmp) := f1; mp2(nmp) := f2; mp3(nmp) := f3;
+          mp4(nmp) := f4; mp5(nmp) := f5; mp6(nmp) := f6; mp7(nmp) := f7;
+        end if;
+      end if;
+      if verbose then
+        if f0 >= 0.0
+         then sx(1) := '+';
+         else sx(1) := '-';
+        end if;
+        if f1 >= 0.0
+         then sx(2) := '+';
+         else sx(2) := '-';
+        end if;
+        if f2 >= 0.0
+         then sx(3) := '+';
+         else sx(3) := '-';
+        end if;
+        if f3 >= 0.0
+         then sx(4) := '+';
+         else sx(4) := '-';
+        end if;
+        if f4 >= 0.0
+         then sx(5) := '+';
+         else sx(5) := '-';
+        end if;
+        if f5 >= 0.0
+         then sx(6) := '+';
+         else sx(6) := '-';
+        end if;
+        if f6 >= 0.0
+         then sx(7) := '+';
+         else sx(7) := '-';
+        end if;
+        if f7 >= 0.0
+         then sx(8) := '+';
+         else sx(8) := '-';
+        end if;
+        put_line("sx : " & sx);
+        Signed_Convolutions(sx);
+      end if;
+    end loop;
+  end Signed_Quarter;
+
   procedure Sum ( v0,v1,v2,v3 : in Standard_Floating_Vectors.Vector;
                   s0,s1,s2,s3 : out double_float ) is
   begin
@@ -475,5 +610,141 @@ package body Vectored_Double_Doubles is
     res := Create(resre,resim);
     return res;
   end Sum;
+
+  function Squared_Norm
+             ( x : Double_Double_Vectors.Vector;
+               verbose : boolean := true ) return double_double is
+
+    res : double_double;
+    dim : constant integer32 := x'length;
+    x0,x1,x2,x3 : Standard_Floating_Vectors.Vector(1..dim);
+    x4,x5,x6,x7 : Standard_Floating_Vectors.Vector(1..dim);
+    pm0,pm1,pm2,pm3 : Standard_Floating_Vectors.Vector(1..dim);
+    pm4,pm5,pm6,pm7 : Standard_Floating_Vectors.Vector(1..dim);
+    mp0,mp1,mp2,mp3 : Standard_Floating_Vectors.Vector(1..dim);
+    mp4,mp5,mp6,mp7 : Standard_Floating_Vectors.Vector(1..dim);
+    nbx,npm,nmp : integer32;
+    s0,s1,s2,s3,s4,s5,s6,s7 : double_float;
+
+  begin
+    Signed_Quarter(x,x0,x1,x2,x3,x4,x5,x6,x7,
+                   pm0,pm1,pm2,pm3,pm4,pm5,pm6,pm7,
+                   mp0,mp1,mp2,mp3,mp4,mp5,mp6,mp7,nbx,npm,nmp,verbose);
+    if verbose then
+      put("#x : "); put(nbx,1); 
+      put(", #pm : "); put(npm,1); 
+      put(", #mp : "); put(nmp,1); new_line;
+    end if;
+    s0 := 0.0; s1 := 0.0; s2 := 0.0; s3 := 0.0;
+    s4 := 0.0; s5 := 0.0; s6 := 0.0; s7 := 0.0;
+    for i in 1..nbx loop
+      s0 := s0 + x0(i)*x0(i);
+      s1 := s1 + x0(i)*x1(i) + x1(i)*x0(i);
+      s2 := s2 + x0(i)*x2(i) + x1(i)*x1(i) + x2(i)*x0(i);
+      s3 := s3 + x0(i)*x3(i) + x1(i)*x2(i) + x2(i)*x1(i) + x3(i)*x0(i);
+      s4 := s4 + x0(i)*x4(i) + x1(i)*x3(i) + x2(i)*x2(i) + x3(i)*x1(i)
+               + x4(i)*x0(i);
+      s5 := s5 + x0(i)*x5(i) + x1(i)*x4(i) + x2(i)*x3(i) + x3(i)*x2(i)
+               + x4(i)*x1(i) + x5(i)*x0(i);
+      s6 := s6 + x0(i)*x6(i) + x1(i)*x5(i) + x2(i)*x4(i) + x3(i)*x3(i)
+               + x4(i)*x2(i) + x5(i)*x1(i) + x6(i)*x0(i);
+      s7 := s7 + x0(i)*x7(i) + x1(i)*x6(i) + x2(i)*x5(i) + x3(i)*x4(i)
+               + x4(i)*x3(i) + x5(i)*x2(i) + x6(i)*x1(i) + x7(i)*x0(i);
+    end loop;
+    res := to_double_double(s0,s1,s2,s3,s4,s5,s6,s7,verbose);
+    s0 := 0.0; s1 := 0.0; s2 := 0.0; s3 := 0.0;
+    s4 := 0.0; s5 := 0.0; s6 := 0.0; s7 := 0.0;
+    for i in 1..npm loop
+      s0 := s0 + pm0(i)*pm0(i);
+      s1 := s1 + pm0(i)*pm1(i) + pm1(i)*pm0(i);
+      s2 := s2 + pm0(i)*pm2(i) + pm1(i)*pm1(i) + pm2(i)*pm0(i);
+      s3 := s3 + pm0(i)*pm3(i) + pm1(i)*pm2(i) + pm2(i)*pm1(i) + pm3(i)*pm0(i);
+      s4 := s4 + pm1(i)*pm3(i) + pm2(i)*pm2(i) + pm3(i)*pm1(i);
+      s5 := s5 + pm2(i)*pm3(i) + pm3(i)*pm2(i);
+      s6 := s6 + pm3(i)*pm3(i);
+    end loop;
+    res := res + to_double_double(s0,s1,s2,s3,s4,s5,s6,s7,verbose);
+    s0 := 0.0; s1 := 0.0; s2 := 0.0; s3 := 0.0;
+    s4 := 0.0; s5 := 0.0; s6 := 0.0; s7 := 0.0;
+    for i in 1..nmp loop
+      s0 := s0 + mp0(i)*mp0(i);
+      s1 := s1 + mp0(i)*mp1(i) + mp1(i)*mp0(i);
+      s2 := s2 + mp0(i)*mp2(i) + mp1(i)*mp1(i) + mp2(i)*mp0(i);
+      s3 := s3 + mp0(i)*mp3(i) + mp1(i)*mp2(i) + mp2(i)*mp1(i) + mp3(i)*mp0(i);
+      s4 := s4 + mp1(i)*mp3(i) + mp2(i)*mp2(i) + mp3(i)*mp1(i);
+      s5 := s5 + mp2(i)*mp3(i) + mp3(i)*mp2(i);
+      s6 := s6 + mp3(i)*mp3(i);
+    end loop;
+    res := res + to_double_double(s0,s1,s2,s3,s4,s5,s6,s7,verbose);
+    s0 := 0.0; s1 := 0.0; s2 := 0.0; s3 := 0.0;
+    s4 := 0.0; s5 := 0.0; s6 := 0.0; s7 := 0.0;
+    for i in 1..npm loop
+      s4 := s4 + pm0(i)*pm4(i)
+               + pm4(i)*pm0(i);
+      s5 := s5 + pm0(i)*pm5(i) + pm1(i)*pm4(i)
+               + pm4(i)*pm1(i) + pm5(i)*pm0(i);
+      s6 := s6 + pm0(i)*pm6(i) + pm1(i)*pm5(i) + pm2(i)*pm4(i)
+               + pm4(i)*pm2(i) + pm5(i)*pm1(i) + pm6(i)*pm0(i);
+      s7 := s7 + pm0(i)*pm7(i) + pm1(i)*pm6(i) + pm2(i)*pm5(i) + pm3(i)*pm4(i)
+               + pm4(i)*pm3(i) + pm5(i)*pm2(i) + pm6(i)*pm1(i) + pm7(i)*pm0(i);
+    end loop;
+    res := res + to_double_double(s0,s1,s2,s3,s4,s5,s6,s7,verbose);
+    s0 := 0.0; s1 := 0.0; s2 := 0.0; s3 := 0.0;
+    s4 := 0.0; s5 := 0.0; s6 := 0.0; s7 := 0.0;
+    for i in 1..nmp loop
+      s4 := s4 + mp0(i)*mp4(i)
+               + mp4(i)*mp0(i);
+      s5 := s5 + mp0(i)*mp5(i) + mp1(i)*mp4(i)
+               + mp4(i)*mp1(i) + mp5(i)*mp0(i);
+      s6 := s6 + mp0(i)*mp6(i) + mp1(i)*mp5(i) + mp2(i)*mp4(i)
+               + mp4(i)*mp2(i) + mp5(i)*mp1(i) + mp6(i)*mp0(i);
+      s7 := s7 + mp0(i)*mp7(i) + mp1(i)*mp6(i) + mp2(i)*mp5(i) + mp3(i)*mp4(i)
+               + mp4(i)*mp3(i) + mp5(i)*mp2(i) + mp6(i)*mp1(i) + mp7(i)*mp0(i);
+    end loop;
+    res := res + to_double_double(s0,s1,s2,s3,s4,s5,s6,s7,verbose);
+    return res;
+  end Squared_Norm;
+
+  function Product ( x,y : Double_Double_Vectors.Vector;
+                     verbose : boolean := true ) return double_double is
+
+    res : constant double_double := create(0.0);
+    dim : constant integer32 := x'length;
+    x0,x1,x2,x3 : Standard_Floating_Vectors.Vector(1..dim);
+    x4,x5,x6,x7 : Standard_Floating_Vectors.Vector(1..dim);
+    y0,y1,y2,y3 : Standard_Floating_Vectors.Vector(1..dim);
+    y4,y5,y6,y7 : Standard_Floating_Vectors.Vector(1..dim);
+    xpm0,xpm1,xpm2,xpm3 : Standard_Floating_Vectors.Vector(1..dim);
+    xpm4,xpm5,xpm6,xpm7 : Standard_Floating_Vectors.Vector(1..dim);
+    xmp0,xmp1,xmp2,xmp3 : Standard_Floating_Vectors.Vector(1..dim);
+    xmp4,xmp5,xmp6,xmp7 : Standard_Floating_Vectors.Vector(1..dim);
+    ypm0,ypm1,ypm2,ypm3 : Standard_Floating_Vectors.Vector(1..dim);
+    ypm4,ypm5,ypm6,ypm7 : Standard_Floating_Vectors.Vector(1..dim);
+    ymp0,ymp1,ymp2,ymp3 : Standard_Floating_Vectors.Vector(1..dim);
+    ymp4,ymp5,ymp6,ymp7 : Standard_Floating_Vectors.Vector(1..dim);
+    nbx,nxpm,nxmp : integer32;
+    nby,nypm,nymp : integer32;
+
+  begin
+    Signed_Quarter(x,x0,x1,x2,x3,x4,x5,x6,x7,
+                   xpm0,xpm1,xpm2,xpm3,xpm4,xpm5,xpm6,xpm7,
+                   xmp0,xmp1,xmp2,xmp3,xmp4,xmp5,xmp6,xmp7,
+                   nbx,nxpm,nxmp,verbose);
+    if verbose then
+      put("#x : "); put(nbx,1); 
+      put(", #xpm : "); put(nxpm,1); 
+      put(", #xmp : "); put(nxmp,1); new_line;
+    end if;
+    Signed_Quarter(y,y0,y1,y2,y3,y4,y5,y6,y7,
+                   ypm0,ypm1,ypm2,ypm3,ypm4,ypm5,ypm6,ypm7,
+                   ymp0,ymp1,ymp2,ymp3,ymp4,ymp5,ymp6,ymp7,
+                   nby,nypm,nymp,verbose);
+    if verbose then
+      put("#y : "); put(nby,1); 
+      put(", #ypm : "); put(nypm,1); 
+      put(", #ymp : "); put(nymp,1); new_line;
+    end if;
+    return res;
+  end Product;
 
 end Vectored_Double_Doubles;

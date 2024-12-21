@@ -56,7 +56,7 @@ package Vectored_Double_Doubles is
   --   m0       high word of the high double of the negative numbers in v;
   --   m1       low word of the high double of the negative numbers in v;
   --   m2       high word of the low double of the negative numbers in v;
-  --   m3       low word of the low double of the negative numbers in v.
+  --   m3       low word of the low double of the negative numbers in v;
   --   np0      number of elements in p0;
   --   np1      number of elements in p1;
   --   np2      number of elements in p2;
@@ -112,6 +112,36 @@ package Vectored_Double_Doubles is
   -- ON RETURN :
   --   v0,v1,v2,v3 are the words of the highest doubles in v;
   --   v4,v5,v6,v7 are the words of the lowest doubles in v.
+
+  procedure Signed_Quarter
+              ( v : in Double_Double_Vectors.Vector;
+                x0,x1,x2,x3 : out Standard_Floating_Vectors.Vector;
+                x4,x5,x6,x7 : out Standard_Floating_Vectors.Vector;
+                pm0,pm1,pm2,pm3 : out Standard_Floating_Vectors.Vector;
+                pm4,pm5,pm6,pm7 : out Standard_Floating_Vectors.Vector;
+                mp0,mp1,mp2,mp3 : out Standard_Floating_Vectors.Vector;
+                mp4,mp5,mp6,mp7 : out Standard_Floating_Vectors.Vector;
+                nbx,npm,nmp : out integer32;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Quarters the numbers in v, taking into account their sign.
+
+  -- REQUIRED : 
+  --   All output vectors have the same range as v.
+
+  -- ON ENTRY :
+  --   v        a vector of double double numbers.
+
+  -- ON RETURN :
+  --   x0, .., x7 : all quarters have the same sign;
+  --   pm0, .., pm7 : first four quarters are nonnegative,
+  --                  last four quarters are negative;
+  --   mp0, .., mp7 : first four quarters are negative,
+  --                  last four quarters are nonnegative;
+  --   nbx      number of quarters of the same sign;
+  --   npm      number of quarters of the type (+, -);
+  --   nmp      number of quarters of the type (-, +).
 
   procedure Quarter ( v : in DoblDobl_Complex_Vectors.Vector;
                       v0re,v1re : out Standard_Floating_Vectors.Vector;
@@ -324,5 +354,19 @@ package Vectored_Double_Doubles is
   -- DESCRIPTION :
   --   Splits the numbers and returns the sum as a double double.
   --   For better accuracy, takes into account the signs of the numbers.
+
+  function Squared_Norm
+             ( x : Double_Double_Vectors.Vector;
+               verbose : boolean := true ) return double_double;
+ 
+  -- DESCRIPTION :
+  --   Returns the product of x with itself, with sign aware quartering.
+
+  function Product ( x,y : Double_Double_Vectors.Vector;
+                     verbose : boolean := true ) return double_double;
+
+  -- DESCRIPTION :
+  --   Returns the inner product of the vectors of x and y,
+  --   via sign aware quartering.
 
 end Vectored_Double_Doubles;
