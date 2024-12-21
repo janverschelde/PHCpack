@@ -1,3 +1,6 @@
+Sat 21 Dec 2024 : added wrapper to vectored_double_doubles to compute the
+  complex squared norm, updated test_vectored_double_doubles.adb.
+
 Fri 20 Dec 2024 : extended vectored_double_doubles with a wrapper for
   compute squared norms, taking signs of the quarters into account,
   extended test_vectored_double_doubles.

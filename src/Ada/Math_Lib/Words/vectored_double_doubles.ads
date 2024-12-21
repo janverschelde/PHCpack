@@ -362,6 +362,14 @@ package Vectored_Double_Doubles is
   -- DESCRIPTION :
   --   Returns the product of x with itself, with sign aware quartering.
 
+  function Squared_Norm
+             ( x : DoblDobl_Complex_Vectors.Vector;
+               verbose : boolean := true ) return double_double;
+ 
+  -- DESCRIPTION :
+  --   Returns the product of x with itself, with sign aware quartering,
+  --   wrapping the squared norm for double double vectors.
+
   function Product ( x,y : Double_Double_Vectors.Vector;
                      verbose : boolean := true ) return double_double;
 

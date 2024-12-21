@@ -705,6 +705,22 @@ package body Vectored_Double_Doubles is
     return res;
   end Squared_Norm;
 
+  function Squared_Norm
+             ( x : DoblDobl_Complex_Vectors.Vector;
+               verbose : boolean := true ) return double_double is
+
+    res : double_double;
+    xre,xim : Double_Double_Vectors.Vector(x'range);
+
+  begin
+    for i in x'range loop
+      xre(i) := DoblDobl_Complex_Numbers.REAL_PART(x(i));
+      xim(i) := DoblDobl_Complex_Numbers.IMAG_PART(x(i));
+    end loop;
+    res := Squared_Norm(xre,verbose) + Squared_Norm(xim,verbose);
+    return res;
+  end Squared_Norm;
+
   function Product ( x,y : Double_Double_Vectors.Vector;
                      verbose : boolean := true ) return double_double is
 
