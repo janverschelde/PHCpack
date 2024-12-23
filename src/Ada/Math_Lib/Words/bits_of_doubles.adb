@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Mask_Bits_of_Doubles;
 
 package body Bits_of_Doubles is
@@ -323,5 +324,62 @@ package body Bits_of_Doubles is
    -- end if;
     x3 := x - (x0 + x1 + x2);
   end Split;
+
+  procedure Sign_Balance ( hi,lo : in out double_float;
+                           verbose : in boolean := true ) is
+
+    mhi,mlo : double_float;
+
+  begin
+    if hi < 0.0 then
+      mhi := -hi;
+      mlo := -lo;
+      Sign_Balance(mhi,mlo,verbose);
+      hi := -mhi;
+      lo := -mlo;
+    else
+      for k in 1..52 loop
+        mhi := hi - chop_last_bits(hi,natural32(k));
+        if verbose then
+          put("b hi : "); write_fraction_bits(hi);
+          put("  hi : "); put(hi); new_line;
+          put("  lo : "); put(lo); new_line;
+          put("last bit : "); put(mhi); new_line;
+        end if;
+        exit when (mhi > 0.0);
+      end loop;
+      hi := hi - mhi;
+      lo := lo + mhi;
+      if verbose then
+        put("  hi : "); put(hi); new_line;
+        put("  lo : "); put(lo); new_line;
+      end if;
+    end if;
+  end Sign_Balance;
+
+  procedure Sign_Balance ( x : in out double_double;
+                           verbose : in boolean := true ) is
+
+    hi : double_float := hi_part(x);
+    lo : double_float := lo_part(x);
+    prd : double_float;
+
+  begin
+    prd := hi*lo;
+    if prd < 0.0 then
+      Sign_Balance(hi,lo,verbose);
+      x := create(hi,lo);
+    end if;
+  end Sign_Balance;
+
+  function Is_Sign_Balanced ( x : double_double ) return boolean is
+
+    hi : constant double_float := hi_part(x);
+    lo : constant double_float := lo_part(x);
+    prd : constant double_float := hi*lo;
+
+  begin
+    return (prd >= 0.0);
+  end Is_Sign_Balanced;
 
 end Bits_of_Doubles;

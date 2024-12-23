@@ -2,6 +2,7 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Natural_Vectors;
+with Double_Double_Numbers;              use Double_Double_Numbers;
 
 package Bits_of_Doubles is
 
@@ -168,5 +169,27 @@ package Bits_of_Doubles is
   --   returned in x0, x1, x2, x3, with x0 > x1 > x2 > x3.
   --   On return: Bit_Equal(x,x0+x1+x2+x3) is true
   --   and x - (x0 + x1 + x2 + x3) is exactly zero.
+
+  procedure Sign_Balance ( hi,lo : in out double_float;
+                           verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Given hi*lo < 0.0, balances the sign by redistributing
+  --   the bits from hi to lo.
+  --   If verbose, prints results of intermediate computations.
+
+  procedure Sign_Balance ( x : in out double_double;
+                           verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   If the high and the low part of x have different signs,
+  --   then the bits of x are redistributed so the double double
+  --   representation of x is sign balanced.
+  --   If verbose, prints results of intermediate computations.
+
+  function Is_Sign_Balanced ( x : double_double ) return boolean;
+
+  -- DESCRIPTION :
+  --   Returns true of both the high and low part of x have the same sign.
 
 end Bits_of_Doubles;

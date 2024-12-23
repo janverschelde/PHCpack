@@ -101,6 +101,19 @@ package Test_Bits_of_Doubles is
   --   (1) A decimal representation may not have a finite binary expansion.
   --   (2) A bit equal split does not suffice to give accurate results.
 
+  procedure Test_Sign_Balance ( nbr : in double_double );
+
+  -- DESCRIPTION :
+  --   Balances the number nbr so the sign of the high double 
+  --   is the same as the sign of the low double.
+
+  procedure Test_Sign_Balance;
+
+  -- DESCRIPTION :
+  --   Generates two random double doubles and balances
+  --   so the sign of the high double is the same
+  --   as the sign of the low double.
+
   procedure Main;
 
   -- DESCRIPTION :

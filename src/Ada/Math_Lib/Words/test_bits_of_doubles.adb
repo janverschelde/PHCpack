@@ -5,6 +5,8 @@ with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Natural_Vectors;
 with Double_Double_Basics;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with DoblDobl_Complex_Numbers;
+with DoblDobl_Random_Numbers;
 with Bits_of_Doubles;                    use Bits_of_Doubles;
 with Mask_Bits_of_Doubles;
 
@@ -457,6 +459,46 @@ package body Test_Bits_of_Doubles is
     Test_Particular_Product;
   end Test_Split_Product;
 
+  procedure Test_Sign_Balance ( nbr : in double_double ) is
+
+    x : double_double := nbr;
+    xb,err : double_double;
+
+  begin
+    put("x : "); put(x);
+    if Is_Sign_Balanced(x) then
+      put_line(" sign balanced");
+    else
+      put_line(" not sign balanced");
+      put("x hi : "); put(hi_part(x)); new_line;
+      put("x lo : "); put(lo_part(x)); new_line;
+      xb := nbr;
+      Sign_Balance(x);
+      put("x hi : "); put(hi_part(x)); new_line;
+      put("x lo : "); put(lo_part(x)); new_line;
+      put("org x : "); put(xb); new_line;
+      put("new x : "); put(x); 
+      if Is_Sign_Balanced(x)
+       then put_line(" sign balanced");
+       else put_line(" NOT sign balanced, bug!");
+      end if;
+      err := abs(xb - x);
+      put("error : "); put(err,2); new_line;
+    end if;
+  end Test_Sign_Balance;
+
+  procedure Test_Sign_Balance is
+
+    rnd : constant DoblDobl_Complex_Numbers.Complex_Number
+        := DoblDobl_Random_Numbers.Random1;
+    x : constant double_double := DoblDobl_Complex_Numbers.REAL_PART(rnd);
+    y : constant double_double := DoblDobl_Complex_Numbers.IMAG_PART(rnd);
+
+  begin
+    Test_Sign_Balance(x);
+    Test_Sign_Balance(y);
+  end Test_Sign_Balance;
+
   procedure Main is
   begin
     Test_Mod_Mask_Bits;
@@ -468,6 +510,10 @@ package body Test_Bits_of_Doubles is
     put_line("*** testing the product via splits ***");
     new_line;
     Test_Split_Product;
+    new_line;
+    put_line("*** testing sign balancing ***");
+    new_line;
+    Test_Sign_Balance;
   end Main;
 
 end Test_Bits_of_Doubles;
