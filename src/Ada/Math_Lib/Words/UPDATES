@@ -1,5 +1,6 @@
 Mon 23 Dec 2024 : added sign balance procedure to bits_of_doubles,
-  tested in test_bits_of_doubles.
+  tested in test_bits_of_doubles.  Simplified the signed quarter procedure
+  in vectored_double_doubles, updated test_vectored_double_doubles.adb.
 
 Sun 22 Dec 2024 : initialized development of sign aware wrappers for the
   real product in vectored_double_doubles, with updates in the tests in

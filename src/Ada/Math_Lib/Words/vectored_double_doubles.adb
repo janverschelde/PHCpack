@@ -328,31 +328,22 @@ package body Vectored_Double_Doubles is
 
   procedure Signed_Quarter
               ( x,y : in Double_Double_Vectors.Vector;
-                xss0,xss1,xss2,xss3 : out Standard_Floating_Vectors.Vector;
-                xss4,xss5,xss6,xss7 : out Standard_Floating_Vectors.Vector;
-                yss0,yss1,yss2,yss3 : out Standard_Floating_Vectors.Vector;
-                yss4,yss5,yss6,yss7 : out Standard_Floating_Vectors.Vector;
-                xsd0,xsd1,xsd2,xsd3 : out Standard_Floating_Vectors.Vector;
-                xsd4,xsd5,xsd6,xsd7 : out Standard_Floating_Vectors.Vector;
-                ysd0,ysd1,ysd2,ysd3 : out Standard_Floating_Vectors.Vector;
-                ysd4,ysd5,ysd6,ysd7 : out Standard_Floating_Vectors.Vector;
-                xds0,xds1,xds2,xds3 : out Standard_Floating_Vectors.Vector;
-                xds4,xds5,xds6,xds7 : out Standard_Floating_Vectors.Vector;
-                yds0,yds1,yds2,yds3 : out Standard_Floating_Vectors.Vector;
-                yds4,yds5,yds6,yds7 : out Standard_Floating_Vectors.Vector;
-                xdd0,xdd1,xdd2,xdd3 : out Standard_Floating_Vectors.Vector;
-                xdd4,xdd5,xdd6,xdd7 : out Standard_Floating_Vectors.Vector;
-                ydd0,ydd1,ydd2,ydd3 : out Standard_Floating_Vectors.Vector;
-                ydd4,ydd5,ydd6,ydd7 : out Standard_Floating_Vectors.Vector;
-                nss,nsd,nds,ndd : out integer32;
-                verbose : in boolean := true ) is
+                xs0,xs1,xs2,xs3 : out Standard_Floating_Vectors.Vector;
+                xs4,xs5,xs6,xs7 : out Standard_Floating_Vectors.Vector;
+                ys0,ys1,ys2,ys3 : out Standard_Floating_Vectors.Vector;
+                ys4,ys5,ys6,ys7 : out Standard_Floating_Vectors.Vector;
+                xd0,xd1,xd2,xd3 : out Standard_Floating_Vectors.Vector;
+                xd4,xd5,xd6,xd7 : out Standard_Floating_Vectors.Vector;
+                yd0,yd1,yd2,yd3 : out Standard_Floating_Vectors.Vector;
+                yd4,yd5,yd6,yd7 : out Standard_Floating_Vectors.Vector;
+                ns,nd : out integer32; verbose : in boolean := true ) is
 
     nbr : double_double;
     flt,x0,x1,x2,x3,x4,x5,x6,x7,y0,y1,y2,y3,y4,y5,y6,y7 : double_float;
     sx,sy : String(1..8);
 
   begin
-    nss := 0; nsd := 0; nds := 0; ndd := 0;
+    ns := 0; nd := 0;
     for i in x'range loop
       nbr := x(i);
       flt := hi_part(nbr);
@@ -366,191 +357,47 @@ package body Vectored_Double_Doubles is
       Bits_of_Doubles.Split(flt,y4,y5,y6,y7);
       if x0 >= 0.0 then
         if y0 >= 0.0 then
-          if x4 >= 0.0 then
-            if y4 >= 0.0 then
-              nss := nss + 1;
-              xss0(nss) := x0; xss1(nss) := x1;
-              xss2(nss) := x2; xss3(nss) := x3;
-              xss4(nss) := x4; xss5(nss) := x5;
-              xss6(nss) := x6; xss7(nss) := x7;
-              yss0(nss) := y0; yss1(nss) := y1;
-              yss2(nss) := y2; yss3(nss) := y3;
-              yss4(nss) := y4; yss5(nss) := y5;
-              yss6(nss) := y6; yss7(nss) := y7;
-            else -- y4 < 0.0 then
-              nsd := nsd + 1;
-              xsd0(nsd) := x0; xsd1(nsd) := x1;
-              xsd2(nsd) := x2; xsd3(nsd) := x3;
-              xsd4(nsd) := x4; xsd5(nsd) := x5;
-              xsd6(nsd) := x6; xsd7(nsd) := x7;
-              ysd0(nsd) := y0; ysd1(nsd) := y1;
-              ysd2(nsd) := y2; ysd3(nsd) := y3;
-              ysd4(nsd) := y4; ysd5(nsd) := y5;
-              ysd6(nsd) := y6; ysd7(nsd) := y7;
-            end if;
-          else -- x4 < 0.0
-            if y4 >= 0.0 then
-              nsd := nsd + 1;
-              xsd0(nsd) := x0; xsd1(nsd) := x1;
-              xsd2(nsd) := x2; xsd3(nsd) := x3;
-              xsd4(nsd) := x4; xsd5(nsd) := x5;
-              xsd6(nsd) := x6; xsd7(nsd) := x7;
-              ysd0(nsd) := y0; ysd1(nsd) := y1;
-              ysd2(nsd) := y2; ysd3(nsd) := y3;
-              ysd4(nsd) := y4; ysd5(nsd) := y5;
-              ysd6(nsd) := y6; ysd7(nsd) := y7;
-            else -- y4 < 0.0
-              nss := nss + 1;
-              xss0(nss) := x0; xss1(nss) := x1;
-              xss2(nss) := x2; xss3(nss) := x3;
-              xss4(nss) := x4; xss5(nss) := x5;
-              xss6(nss) := x6; xss7(nss) := x7;
-              yss0(nss) := y0; yss1(nss) := y1;
-              yss2(nss) := y2; yss3(nss) := y3;
-              yss4(nss) := y4; yss5(nss) := y5;
-              yss6(nss) := y6; yss7(nss) := y7;
-            end if;
-          end if;
-        else -- x0 >= 0.0, y0 < 0.0
-          if x4 >= 0.0 then
-            if y4 >= 0.0 then
-              nds := nds + 1;
-              xds0(nds) := x0; xds1(nds) := x1;
-              xds2(nds) := x2; xds3(nds) := x3;
-              xds4(nds) := x4; xds5(nds) := x5;
-              xds6(nds) := x6; xds7(nds) := x7;
-              yds0(nds) := y0; yds1(nds) := y1;
-              yds2(nds) := y2; yds3(nds) := y3;
-              yds4(nds) := y4; yds5(nds) := y5;
-              yds6(nds) := y6; yds7(nds) := y7;
-            else -- x4 >= 0.0, y4 < 0.0
-              ndd := ndd + 1;
-              xdd0(ndd) := x0; xdd1(ndd) := x1;
-              xdd2(ndd) := x2; xdd3(ndd) := x3;
-              xdd4(ndd) := x4; xdd5(ndd) := x5;
-              xdd6(ndd) := x6; xdd7(ndd) := x7;
-              ydd0(ndd) := y0; ydd1(ndd) := y1;
-              ydd2(ndd) := y2; ydd3(ndd) := y3;
-              ydd4(ndd) := y4; ydd5(ndd) := y5;
-              ydd6(ndd) := y6; ydd7(ndd) := y7;
-            end if;
-          else -- x0 >= 0.0, y0 < 0.0, x4 < 0.0 
-            if y4 >= 0.0 then
-              ndd := ndd + 1;
-              xdd0(ndd) := x0; xdd1(ndd) := x1;
-              xdd2(ndd) := x2; xdd3(ndd) := x3;
-              xdd4(ndd) := x4; xdd5(ndd) := x5;
-              xdd6(ndd) := x6; xdd7(ndd) := x7;
-              ydd0(ndd) := y0; ydd1(ndd) := y1;
-              ydd2(ndd) := y2; ydd3(ndd) := y3;
-              ydd4(ndd) := y4; ydd5(ndd) := y5;
-              ydd6(ndd) := y6; ydd7(ndd) := y7;
-            else -- y4 < 0.0
-              nds := nds + 1;
-              xds0(nds) := x0; xds1(nds) := x1;
-              xds2(nds) := x2; xds3(nds) := x3;
-              xds4(nds) := x4; xds5(nds) := x5;
-              xds6(nds) := x6; xds7(nds) := x7;
-              yds0(nds) := y0; yds1(nds) := y1;
-              yds2(nds) := y2; yds3(nds) := y3;
-              yds4(nds) := y4; yds5(nds) := y5;
-              yds6(nds) := y6; yds7(nds) := y7;
-            end if;
-          end if;
+          ns := ns + 1;
+          xs0(ns) := x0; xs1(ns) := x1;
+          xs2(ns) := x2; xs3(ns) := x3;
+          xs4(ns) := x4; xs5(ns) := x5;
+          xs6(ns) := x6; xs7(ns) := x7;
+          ys0(ns) := y0; ys1(ns) := y1;
+          ys2(ns) := y2; ys3(ns) := y3;
+          ys4(ns) := y4; ys5(ns) := y5;
+          ys6(ns) := y6; ys7(ns) := y7;
+        else -- y0 < 0.0 then
+          nd := nd + 1;
+          xd0(nd) := x0; xd1(nd) := x1;
+          xd2(nd) := x2; xd3(nd) := x3;
+          xd4(nd) := x4; xd5(nd) := x5;
+          xd6(nd) := x6; xd7(nd) := x7;
+          yd0(nd) := y0; yd1(nd) := y1;
+          yd2(nd) := y2; yd3(nd) := y3;
+          yd4(nd) := y4; yd5(nd) := y5;
+          yd6(nd) := y6; yd7(nd) := y7;
         end if;
-      else -- x0 < 0.0
-        if y0 >= 0.0 then
-          if x4 >= 0.0 then
-            if y4 >= 0.0 then
-              nds := nds + 1;
-              xds0(nds) := x0; xds1(nds) := x1;
-              xds2(nds) := x2; xds3(nds) := x3;
-              xds4(nds) := x4; xds5(nds) := x5;
-              xds6(nds) := x6; xds7(nds) := x7;
-              yds0(nds) := y0; yds1(nds) := y1;
-              yds2(nds) := y2; yds3(nds) := y3;
-              yds4(nds) := y4; yds5(nds) := y5;
-              yds6(nds) := y6; yds7(nds) := y7;
-            else -- y4 < 0.0 then
-              ndd := ndd + 1;
-              xdd0(ndd) := x0; xdd1(ndd) := x1;
-              xdd2(ndd) := x2; xdd3(ndd) := x3;
-              xdd4(ndd) := x4; xdd5(ndd) := x5;
-              xdd6(ndd) := x6; xdd7(ndd) := x7;
-              ydd0(ndd) := y0; ydd1(ndd) := y1;
-              ydd2(ndd) := y2; ydd3(ndd) := y3;
-              ydd4(ndd) := y4; ydd5(ndd) := y5;
-              ydd6(ndd) := y6; ydd7(ndd) := y7;
-            end if;
-          else -- x0 < 0.0, y0 >= 0.0, x4 < 0.0
-            if y4 >= 0.0 then
-              ndd := ndd + 1;
-              xdd0(ndd) := x0; xdd1(ndd) := x1;
-              xdd2(ndd) := x2; xdd3(ndd) := x3;
-              xdd4(ndd) := x4; xdd5(ndd) := x5;
-              xdd6(ndd) := x6; xdd7(ndd) := x7;
-              ydd0(ndd) := y0; ydd1(ndd) := y1;
-              ydd2(ndd) := y2; ydd3(ndd) := y3;
-              ydd4(ndd) := y4; ydd5(ndd) := y5;
-              ydd6(ndd) := y6; ydd7(ndd) := y7;
-            else -- y4 < 0.0
-              nds := nds + 1;
-              xds0(nds) := x0; xds1(nds) := x1;
-              xds2(nds) := x2; xds3(nds) := x3;
-              xds4(nds) := x4; xds5(nds) := x5;
-              xds6(nds) := x6; xds7(nds) := x7;
-              yds0(nds) := y0; yds1(nds) := y1;
-              yds2(nds) := y2; yds3(nds) := y3;
-              yds4(nds) := y4; yds5(nds) := y5;
-              yds6(nds) := y6; yds7(nds) := y7;
-            end if;
-          end if;
-        else -- x0 < 0.0, y0 < 0.0
-          if x4 >= 0.0 then
-            if y4 >= 0.0 then
-              nss := nss + 1;
-              xss0(nss) := x0; xss1(nss) := x1;
-              xss2(nss) := x2; xss3(nss) := x3;
-              xss4(nss) := x4; xss5(nss) := x5;
-              xss6(nss) := x6; xss7(nss) := x7;
-              yss0(nss) := y0; yss1(nss) := y1;
-              yss2(nss) := y2; yss3(nss) := y3;
-              yss4(nss) := y4; yss5(nss) := y5;
-              yss6(nss) := y6; yss7(nss) := y7;
-            else -- x4 >= 0.0, y4 < 0.0
-              nsd := nsd + 1;
-              xsd0(nsd) := x0; xsd1(nsd) := x1;
-              xsd2(nsd) := x2; xsd3(nsd) := x3;
-              xsd4(nsd) := x4; xsd5(nsd) := x5;
-              xsd6(nsd) := x6; xsd7(nsd) := x7;
-              ysd0(nsd) := y0; ysd1(nsd) := y1;
-              ysd2(nsd) := y2; ysd3(nsd) := y3;
-              ysd4(nsd) := y4; ysd5(nsd) := y5;
-              ysd6(nsd) := y6; ysd7(nsd) := y7;
-            end if;
-          else -- x0 < 0.0, y0 < 0.0, x4 < 0.0 
-            if y4 >= 0.0 then
-              nsd := nsd + 1;
-              xsd0(nsd) := x0; xsd1(nsd) := x1;
-              xsd2(nsd) := x2; xsd3(nsd) := x3;
-              xsd4(nsd) := x4; xsd5(nsd) := x5;
-              xsd6(nsd) := x6; xsd7(nsd) := x7;
-              ysd0(nsd) := y0; ysd1(nsd) := y1;
-              ysd2(nsd) := y2; ysd3(nsd) := y3;
-              ysd4(nsd) := y4; ysd5(nsd) := y5;
-              ysd6(nsd) := y6; ysd7(nsd) := y7;
-            else -- y4 < 0.0
-              nss := nss + 1;
-              xss0(nss) := x0; xss1(nss) := x1;
-              xss2(nss) := x2; xss3(nss) := x3;
-              xss4(nss) := x4; xss5(nss) := x5;
-              xss6(nss) := x6; xss7(nss) := x7;
-              yss0(nss) := y0; yss1(nss) := y1;
-              yss2(nss) := y2; yss3(nss) := y3;
-              yss4(nss) := y4; yss5(nss) := y5;
-              yss6(nss) := y6; yss7(nss) := y7;
-            end if;
-          end if;
+      else -- x4 < 0.0
+        if y4 >= 0.0 then
+          nd := nd + 1;
+          xd0(nd) := x0; xd1(nd) := x1;
+          xd2(nd) := x2; xd3(nd) := x3;
+          xd4(nd) := x4; xd5(nd) := x5;
+          xd6(nd) := x6; xd7(nd) := x7;
+          yd0(nd) := y0; yd1(nd) := y1;
+          yd2(nd) := y2; yd3(nd) := y3;
+          yd4(nd) := y4; yd5(nd) := y5;
+          yd6(nd) := y6; yd7(nd) := y7;
+        else -- y4 < 0.0
+          ns := ns + 1;
+          xs0(ns) := x0; xs1(ns) := x1;
+          xs2(ns) := x2; xs3(ns) := x3;
+          xs4(ns) := x4; xs5(ns) := x5;
+          xs6(ns) := x6; xs7(ns) := x7;
+          ys0(ns) := y0; ys1(ns) := y1;
+          ys2(ns) := y2; ys3(ns) := y3;
+          ys4(ns) := y4; ys5(ns) := y5;
+          ys6(ns) := y6; ys7(ns) := y7;
         end if;
       end if;
       if verbose then
@@ -1013,93 +860,76 @@ package body Vectored_Double_Doubles is
 
     res : double_double;
     dim : constant integer32 := x'length;
-    xss0,xss1,xss2,xss3 : Standard_Floating_Vectors.Vector(1..dim);
-    xss4,xss5,xss6,xss7 : Standard_Floating_Vectors.Vector(1..dim);
-    yss0,yss1,yss2,yss3 : Standard_Floating_Vectors.Vector(1..dim);
-    yss4,yss5,yss6,yss7 : Standard_Floating_Vectors.Vector(1..dim);
-    xsd0,xsd1,xsd2,xsd3 : Standard_Floating_Vectors.Vector(1..dim);
-    xsd4,xsd5,xsd6,xsd7 : Standard_Floating_Vectors.Vector(1..dim);
-    ysd0,ysd1,ysd2,ysd3 : Standard_Floating_Vectors.Vector(1..dim);
-    ysd4,ysd5,ysd6,ysd7 : Standard_Floating_Vectors.Vector(1..dim);
-    xds0,xds1,xds2,xds3 : Standard_Floating_Vectors.Vector(1..dim);
-    xds4,xds5,xds6,xds7 : Standard_Floating_Vectors.Vector(1..dim);
-    yds0,yds1,yds2,yds3 : Standard_Floating_Vectors.Vector(1..dim);
-    yds4,yds5,yds6,yds7 : Standard_Floating_Vectors.Vector(1..dim);
-    xdd0,xdd1,xdd2,xdd3 : Standard_Floating_Vectors.Vector(1..dim);
-    xdd4,xdd5,xdd6,xdd7 : Standard_Floating_Vectors.Vector(1..dim);
-    ydd0,ydd1,ydd2,ydd3 : Standard_Floating_Vectors.Vector(1..dim);
-    ydd4,ydd5,ydd6,ydd7 : Standard_Floating_Vectors.Vector(1..dim);
-    nss,nsd,nds,ndd : integer32;
+    xb : Double_Double_Vectors.Vector(x'range);
+    yb : Double_Double_Vectors.Vector(y'range);
+    xs0,xs1,xs2,xs3 : Standard_Floating_Vectors.Vector(1..dim);
+    xs4,xs5,xs6,xs7 : Standard_Floating_Vectors.Vector(1..dim);
+    ys0,ys1,ys2,ys3 : Standard_Floating_Vectors.Vector(1..dim);
+    ys4,ys5,ys6,ys7 : Standard_Floating_Vectors.Vector(1..dim);
+    xd0,xd1,xd2,xd3 : Standard_Floating_Vectors.Vector(1..dim);
+    xd4,xd5,xd6,xd7 : Standard_Floating_Vectors.Vector(1..dim);
+    yd0,yd1,yd2,yd3 : Standard_Floating_Vectors.Vector(1..dim);
+    yd4,yd5,yd6,yd7 : Standard_Floating_Vectors.Vector(1..dim);
+    ns,nd : integer32;
     s0,s1,s2,s3,s4,s5,s6,s7 : double_float;
 
   begin
-    Signed_Quarter(x,y,
-                   xss0,xss1,xss2,xss3,xss4,xss5,xss6,xss7,
-                   yss0,yss1,yss2,yss3,yss4,yss5,yss6,yss7,
-                   xsd0,xsd1,xsd2,xsd3,xsd4,xsd5,xsd6,xsd7,
-                   ysd0,ysd1,ysd2,ysd3,ysd4,ysd5,ysd6,ysd7,
-                   xds0,xds1,xds2,xds3,xds4,xds5,xds6,xds7,
-                   yds0,yds1,yds2,yds3,yds4,yds5,yds6,yds7,
-                   xdd0,xdd1,xdd2,xdd3,xdd4,xdd5,xdd6,xdd7,
-                   ydd0,ydd1,ydd2,ydd3,ydd4,ydd5,ydd6,ydd7,
-                   nss,nsd,nds,ndd,verbose);
+    for i in x'range loop
+      xb(i) := x(i);
+      if not Bits_of_Doubles.Is_Sign_Balanced(xb(i))
+       then Bits_of_Doubles.Sign_Balance(xb(i),verbose=>false);
+      end if;
+      yb(i) := y(i);
+      if not Bits_of_Doubles.Is_Sign_Balanced(yb(i))
+       then Bits_of_Doubles.Sign_Balance(yb(i),verbose=>false);
+      end if;
+    end loop;
+    Signed_Quarter(xb,yb,xs0,xs1,xs2,xs3,xs4,xs5,xs6,xs7,
+                         ys0,ys1,ys2,ys3,ys4,ys5,ys6,ys7,
+                         xd0,xd1,xd2,xd3,xd4,xd5,xd6,xd7,
+                         yd0,yd1,yd2,yd3,yd4,yd5,yd6,yd7,ns,nd,verbose);
     if verbose then
-      put("#ss : "); put(nss,1); 
-      put(", #sd : "); put(nsd,1); 
-      put(", #ds : "); put(nds,1);
-      put(", #dd : "); put(ndd,1); new_line;
+      put("#s : "); put(ns,1); 
+      put(", #d : "); put(nd,1); new_line;
     end if;
     s0 := 0.0; s1 := 0.0; s2 := 0.0; s3 := 0.0;
     s4 := 0.0; s5 := 0.0; s6 := 0.0; s7 := 0.0;
-    for i in 1..nss loop
-      s0 := s0 + xss0(i)*yss0(i);
-      s1 := s1 + xss0(i)*yss1(i) + xss1(i)*yss0(i);
-      s2 := s2 + xss0(i)*yss2(i) + xss1(i)*yss1(i) + xss2(i)*yss0(i);
-      s3 := s3 + xss0(i)*yss3(i) + xss1(i)*yss2(i) + xss2(i)*yss1(i)
-               + xss3(i)*yss0(i);
-      s4 := s4 + xss0(i)*yss4(i) + xss1(i)*yss3(i) + xss2(i)*yss2(i)
-               + xss3(i)*yss1(i) + xss4(i)*yss0(i);
-      s5 := s5 + xss0(i)*yss5(i) + xss1(i)*yss4(i) + xss2(i)*yss3(i)
-               + xss3(i)*yss2(i) + xss4(i)*yss1(i) + xss5(i)*yss0(i);
-      s6 := s6 + xss0(i)*yss6(i) + xss1(i)*yss5(i) + xss2(i)*yss4(i)
-               + xss3(i)*yss3(i) + xss4(i)*yss2(i) + xss5(i)*yss1(i)
-               + xss6(i)*yss0(i);
-      s7 := s7 + xss0(i)*yss7(i) + xss1(i)*yss6(i) + xss2(i)*yss5(i)
-               + xss3(i)*yss4(i) + xss4(i)*yss3(i) + xss5(i)*yss2(i)
-               + xss6(i)*yss1(i) + xss7(i)*yss0(i);
+    for i in 1..ns loop
+      s0 := s0 + xs0(i)*ys0(i);
+      s1 := s1 + xs0(i)*ys1(i) + xs1(i)*ys0(i);
+      s2 := s2 + xs0(i)*ys2(i) + xs1(i)*ys1(i) + xs2(i)*ys0(i);
+      s3 := s3 + xs0(i)*ys3(i) + xs1(i)*ys2(i) + xs2(i)*ys1(i)
+               + xs3(i)*ys0(i);
+      s4 := s4 + xs0(i)*ys4(i) + xs1(i)*ys3(i) + xs2(i)*ys2(i)
+               + xs3(i)*ys1(i) + xs4(i)*ys0(i);
+      s5 := s5 + xs0(i)*ys5(i) + xs1(i)*ys4(i) + xs2(i)*ys3(i)
+               + xs3(i)*ys2(i) + xs4(i)*ys1(i) + xs5(i)*ys0(i);
+      s6 := s6 + xs0(i)*ys6(i) + xs1(i)*ys5(i) + xs2(i)*ys4(i)
+               + xs3(i)*ys3(i) + xs4(i)*ys2(i) + xs5(i)*ys1(i)
+               + xs6(i)*ys0(i);
+      s7 := s7 + xs0(i)*ys7(i) + xs1(i)*ys6(i) + xs2(i)*ys5(i)
+               + xs3(i)*ys4(i) + xs4(i)*ys3(i) + xs5(i)*ys2(i)
+               + xs6(i)*ys1(i) + xs7(i)*ys0(i);
     end loop;
     res := to_double_double(s0,s1,s2,s3,s4,s5,s6,s7,verbose);
     s0 := 0.0; s1 := 0.0; s2 := 0.0; s3 := 0.0;
     s4 := 0.0; s5 := 0.0; s6 := 0.0; s7 := 0.0;
-    for i in 1..nsd loop
-      s0 := s0 + xsd0(i)*ysd0(i);
-      s1 := s1 + xsd0(i)*ysd1(i) + xsd1(i)*ysd0(i);
-      s2 := s2 + xsd0(i)*ysd2(i) + xsd1(i)*ysd1(i) + xsd2(i)*ysd0(i);
-      s3 := s3 + xsd0(i)*ysd3(i) + xsd1(i)*ysd2(i) + xsd2(i)*ysd1(i)
-               + xsd3(i)*ysd0(i);
-      s4 := s4 + xsd1(i)*ysd3(i) + xsd2(i)*ysd2(i) + xsd3(i)*ysd1(i);
-      s5 := s5 + xsd2(i)*ysd4(i) + xsd3(i)*ysd2(i);
-      s6 := s6 + xds3(i)*ysd5(i);
-    end loop;
-    res := res + to_double_double(s0,s1,s2,s3,s4,s5,s6,s7,verbose);
-    s0 := 0.0; s1 := 0.0; s2 := 0.0; s3 := 0.0;
-    s4 := 0.0; s5 := 0.0; s6 := 0.0; s7 := 0.0;
-    for i in 1..ndd loop
-      s0 := s0 + xss0(i)*yss0(i);
-      s1 := s1 + xss0(i)*yss1(i) + xss1(i)*yss0(i);
-      s2 := s2 + xss0(i)*yss2(i) + xss1(i)*yss1(i) + xss2(i)*yss0(i);
-      s3 := s3 + xss0(i)*yss3(i) + xss1(i)*yss2(i) + xss2(i)*yss1(i)
-               + xss3(i)*yss0(i);
-      s4 := s4 + xss0(i)*yss4(i) + xss1(i)*yss3(i) + xss2(i)*yss2(i)
-               + xss3(i)*yss1(i) + xss4(i)*yss0(i);
-      s5 := s5 + xss0(i)*yss5(i) + xss1(i)*yss4(i) + xss2(i)*yss3(i)
-               + xss3(i)*yss2(i) + xss4(i)*yss1(i) + xss5(i)*yss0(i);
-      s6 := s6 + xss0(i)*yss6(i) + xss1(i)*yss5(i) + xss2(i)*yss4(i)
-               + xss3(i)*yss3(i) + xss4(i)*yss2(i) + xss5(i)*yss1(i)
-               + xss6(i)*yss0(i);
-      s7 := s7 + xss0(i)*yss7(i) + xss1(i)*yss6(i) + xss2(i)*yss5(i)
-               + xss3(i)*yss4(i) + xss4(i)*yss3(i) + xss5(i)*yss2(i)
-               + xss6(i)*yss1(i) + xss7(i)*yss0(i);
+    for i in 1..nd loop
+      s0 := s0 + xd0(i)*yd0(i);
+      s1 := s1 + xd0(i)*yd1(i) + xd1(i)*yd0(i);
+      s2 := s2 + xd0(i)*yd2(i) + xd1(i)*yd1(i) + xd2(i)*yd0(i);
+      s3 := s3 + xd0(i)*yd3(i) + xd1(i)*yd2(i) + xd2(i)*yd1(i)
+               + xd3(i)*yd0(i);
+      s4 := s4 + xd0(i)*yd4(i) + xd1(i)*yd3(i) + xd2(i)*yd2(i)
+               + xd3(i)*yd1(i) + xd4(i)*yd0(i);
+      s5 := s5 + xd0(i)*yd5(i) + xd1(i)*yd4(i) + xd2(i)*yd3(i)
+               + xd3(i)*yd2(i) + xd4(i)*yd1(i) + xd5(i)*yd0(i);
+      s6 := s6 + xd0(i)*yd6(i) + xd1(i)*yd5(i) + xd2(i)*yd4(i)
+               + xd3(i)*yd3(i) + xd4(i)*yd2(i) + xd5(i)*yd1(i)
+               + xd6(i)*yd0(i);
+      s7 := s7 + xd0(i)*yd7(i) + xd1(i)*yd6(i) + xd2(i)*yd5(i)
+               + xd3(i)*yd4(i) + xd4(i)*yd3(i) + xd5(i)*yd2(i)
+               + xd6(i)*yd1(i) + xd7(i)*yd0(i);
     end loop;
     res := res + to_double_double(s0,s1,s2,s3,s4,s5,s6,s7,verbose);
     return res;

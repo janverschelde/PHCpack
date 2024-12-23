@@ -162,27 +162,19 @@ package Vectored_Double_Doubles is
 
   procedure Signed_Quarter
               ( x,y : in Double_Double_Vectors.Vector;
-                xss0,xss1,xss2,xss3 : out Standard_Floating_Vectors.Vector;
-                xss4,xss5,xss6,xss7 : out Standard_Floating_Vectors.Vector;
-                yss0,yss1,yss2,yss3 : out Standard_Floating_Vectors.Vector;
-                yss4,yss5,yss6,yss7 : out Standard_Floating_Vectors.Vector;
-                xsd0,xsd1,xsd2,xsd3 : out Standard_Floating_Vectors.Vector;
-                xsd4,xsd5,xsd6,xsd7 : out Standard_Floating_Vectors.Vector;
-                ysd0,ysd1,ysd2,ysd3 : out Standard_Floating_Vectors.Vector;
-                ysd4,ysd5,ysd6,ysd7 : out Standard_Floating_Vectors.Vector;
-                xds0,xds1,xds2,xds3 : out Standard_Floating_Vectors.Vector;
-                xds4,xds5,xds6,xds7 : out Standard_Floating_Vectors.Vector;
-                yds0,yds1,yds2,yds3 : out Standard_Floating_Vectors.Vector;
-                yds4,yds5,yds6,yds7 : out Standard_Floating_Vectors.Vector;
-                xdd0,xdd1,xdd2,xdd3 : out Standard_Floating_Vectors.Vector;
-                xdd4,xdd5,xdd6,xdd7 : out Standard_Floating_Vectors.Vector;
-                ydd0,ydd1,ydd2,ydd3 : out Standard_Floating_Vectors.Vector;
-                ydd4,ydd5,ydd6,ydd7 : out Standard_Floating_Vectors.Vector;
-                nss,nsd,nds,ndd : out integer32;
-                verbose : in boolean := true );
+                xs0,xs1,xs2,xs3 : out Standard_Floating_Vectors.Vector;
+                xs4,xs5,xs6,xs7 : out Standard_Floating_Vectors.Vector;
+                ys0,ys1,ys2,ys3 : out Standard_Floating_Vectors.Vector;
+                ys4,ys5,ys6,ys7 : out Standard_Floating_Vectors.Vector;
+                xd0,xd1,xd2,xd3 : out Standard_Floating_Vectors.Vector;
+                xd4,xd5,xd6,xd7 : out Standard_Floating_Vectors.Vector;
+                yd0,yd1,yd2,yd3 : out Standard_Floating_Vectors.Vector;
+                yd4,yd5,yd6,yd7 : out Standard_Floating_Vectors.Vector;
+                ns,nd : out integer32; verbose : in boolean := true );
 
   -- DESCRIPTION :
-  --   Quarters the numbers in x and y, taking into account their sign.
+  --   Quarters the numbers in x and y, taking into account their sign,
+  --   assuming all numbers in x and y are signed balanced.
 
   -- REQUIRED : 
   --   All output vectors have the same range as x and y.
@@ -192,10 +184,10 @@ package Vectored_Double_Doubles is
   --   y        a vector of double double numbers.
 
   -- ON RETURN :
-  --   xss*, yss* : both high and low have the same sign;
-  --   xsd*, ysd* : high have same sign and low have different sign;
-  --   xds*, yds* : high have different sign and low have same sign;
-  --   xdd*, ydd* : both high and low have different sign.
+  --   xs*, ys* : both high and low have the same sign;
+  --   xd*, yd* : both high and low have different sign;
+  --   ns       number of pairs (x(i),y(i)) with the same sign;
+  --   nd       number of pairs (x(i),y(i)) with different signs.
 
   procedure Quarter ( v : in DoblDobl_Complex_Vectors.Vector;
                       v0re,v1re : out Standard_Floating_Vectors.Vector;

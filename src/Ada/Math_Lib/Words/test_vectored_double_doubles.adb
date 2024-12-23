@@ -151,7 +151,10 @@ package body Test_Vectored_Double_Doubles is
     put("dd vec : "); put(ddsum1); new_line;
     err := abs(ddsum0-ddsum1);
     put(" error : "); put(err,2); new_line;
-    ddsum2 := Vectored_Double_Doubles.Product(x,y);
+    if dim > 20
+     then ddsum2 := Vectored_Double_Doubles.Product(x,y,false);
+     else ddsum2 := Vectored_Double_Doubles.Product(x,y);
+    end if;
     put("dd prd : "); put(ddsum0); new_line;
     put("dd sgn : "); put(ddsum2); new_line;
     err := abs(ddsum0-ddsum2);
