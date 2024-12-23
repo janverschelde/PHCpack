@@ -153,7 +153,7 @@ package body Test_Vectored_Double_Doubles is
     put(" error : "); put(err,2); new_line;
     ddsum2 := Vectored_Double_Doubles.Product(x,y);
     put("dd prd : "); put(ddsum0); new_line;
-    put("dd vec : "); put(ddsum2); new_line;
+    put("dd sgn : "); put(ddsum2); new_line;
     err := abs(ddsum0-ddsum2);
     put(" error : "); put(err,2); new_line;
   end Test_Real_Product;
@@ -338,12 +338,12 @@ package body Test_Vectored_Double_Doubles is
      then Standard_Random_Numbers.Set_Seed(seed);
     end if;
     put("Give the dimension : "); get(dim);
-    Test_Real_Sum(dim);
-    Test_Complex_Sum(dim);
+   -- Test_Real_Sum(dim);
+   -- Test_Complex_Sum(dim);
     Test_Real_Product(dim);
-    Test_Complex_Product(dim);
-    Test_Real_Norm(dim);
-    Test_Complex_Norm(dim);
+   -- Test_Complex_Product(dim);
+   -- Test_Real_Norm(dim);
+   -- Test_Complex_Norm(dim);
     put("Seed used : "); put(Standard_Random_Numbers.Get_Seed,1); new_line;
   end Main;
 

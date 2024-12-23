@@ -113,6 +113,23 @@ package Vectored_Double_Doubles is
   --   v0,v1,v2,v3 are the words of the highest doubles in v;
   --   v4,v5,v6,v7 are the words of the lowest doubles in v.
 
+  function Signs ( f0,f1,f2,f3,f4,f5,f6,f7 : double_float ) return string;
+
+  -- DESCRIPTION :
+  --   Returns a string encoding the signs of the 8 given doubles.
+
+  procedure Signed_Convolutions ( sx : in string );
+
+  -- DESCRIPTION :
+  --   Given the arrays of strings for x, writes the sign patterns
+  --   when making the convolution products of x with itself.
+
+  procedure Signed_Convolutions ( sx,sy : in string );
+
+  -- DESCRIPTION :
+  --   Given the arrays of strings for x and y, writes the sign patterns
+  --   when making the convolution products of x with y.
+
   procedure Signed_Quarter
               ( v : in Double_Double_Vectors.Vector;
                 x0,x1,x2,x3 : out Standard_Floating_Vectors.Vector;
@@ -142,6 +159,43 @@ package Vectored_Double_Doubles is
   --   nbx      number of quarters of the same sign;
   --   npm      number of quarters of the type (+, -);
   --   nmp      number of quarters of the type (-, +).
+
+  procedure Signed_Quarter
+              ( x,y : in Double_Double_Vectors.Vector;
+                xss0,xss1,xss2,xss3 : out Standard_Floating_Vectors.Vector;
+                xss4,xss5,xss6,xss7 : out Standard_Floating_Vectors.Vector;
+                yss0,yss1,yss2,yss3 : out Standard_Floating_Vectors.Vector;
+                yss4,yss5,yss6,yss7 : out Standard_Floating_Vectors.Vector;
+                xsd0,xsd1,xsd2,xsd3 : out Standard_Floating_Vectors.Vector;
+                xsd4,xsd5,xsd6,xsd7 : out Standard_Floating_Vectors.Vector;
+                ysd0,ysd1,ysd2,ysd3 : out Standard_Floating_Vectors.Vector;
+                ysd4,ysd5,ysd6,ysd7 : out Standard_Floating_Vectors.Vector;
+                xds0,xds1,xds2,xds3 : out Standard_Floating_Vectors.Vector;
+                xds4,xds5,xds6,xds7 : out Standard_Floating_Vectors.Vector;
+                yds0,yds1,yds2,yds3 : out Standard_Floating_Vectors.Vector;
+                yds4,yds5,yds6,yds7 : out Standard_Floating_Vectors.Vector;
+                xdd0,xdd1,xdd2,xdd3 : out Standard_Floating_Vectors.Vector;
+                xdd4,xdd5,xdd6,xdd7 : out Standard_Floating_Vectors.Vector;
+                ydd0,ydd1,ydd2,ydd3 : out Standard_Floating_Vectors.Vector;
+                ydd4,ydd5,ydd6,ydd7 : out Standard_Floating_Vectors.Vector;
+                nss,nsd,nds,ndd : out integer32;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Quarters the numbers in x and y, taking into account their sign.
+
+  -- REQUIRED : 
+  --   All output vectors have the same range as x and y.
+
+  -- ON ENTRY :
+  --   x        a vector of double double numbers;
+  --   y        a vector of double double numbers.
+
+  -- ON RETURN :
+  --   xss*, yss* : both high and low have the same sign;
+  --   xsd*, ysd* : high have same sign and low have different sign;
+  --   xds*, yds* : high have different sign and low have same sign;
+  --   xdd*, ydd* : both high and low have different sign.
 
   procedure Quarter ( v : in DoblDobl_Complex_Vectors.Vector;
                       v0re,v1re : out Standard_Floating_Vectors.Vector;

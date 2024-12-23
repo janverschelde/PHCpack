@@ -1,3 +1,7 @@
+Sun 22 Dec 2024 : initialized development of sign aware wrappers for the
+  real product in vectored_double_doubles, with updates in the tests in
+  test_vectored_double_doubles.adb.
+
 Sat 21 Dec 2024 : added wrapper to vectored_double_doubles to compute the
   complex squared norm, updated test_vectored_double_doubles.adb.
 
