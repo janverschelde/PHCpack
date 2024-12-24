@@ -935,4 +935,25 @@ package body Vectored_Double_Doubles is
     return res;
   end Product;
 
+  function Product ( x,y : DoblDobl_Complex_Vectors.Vector;
+                     verbose : boolean := true ) return Complex_Number is
+
+    res : Complex_Number;
+    resre,resim : double_double;
+    xre,xim : Double_Double_Vectors.Vector(x'range);
+    yre,yim : Double_Double_Vectors.Vector(y'range);
+
+  begin
+    for i in x'range loop
+      xre(i) := DoblDobl_Complex_Numbers.REAL_PART(x(i));
+      xim(i) := DoblDobl_Complex_Numbers.IMAG_PART(x(i));
+      yre(i) := DoblDobl_Complex_Numbers.REAL_PART(y(i));
+      yim(i) := DoblDobl_Complex_Numbers.IMAG_PART(y(i));
+    end loop;
+    resre := Product(xre,yre,verbose) - Product(xim,yim,verbose);
+    resim := Product(xre,yim,verbose) + Product(xim,yre,verbose);
+    res := create(resre,resim);
+    return res;
+  end Product;
+
 end Vectored_Double_Doubles;

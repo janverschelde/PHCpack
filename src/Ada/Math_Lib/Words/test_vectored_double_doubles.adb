@@ -177,7 +177,7 @@ package body Test_Vectored_Double_Doubles is
     y4im,y5im,y6im,y7im : Standard_Floating_Vectors.Vector(1..dim);
     s0re,s1re,s2re,s3re,s4re,s5re,s6re,s7re : double_float;
     s0im,s1im,s2im,s3im,s4im,s5im,s6im,s7im : double_float;
-    ddsum0,ddsum1,err : Dobldobl_Complex_Numbers.Complex_Number;
+    ddsum0,ddsum1,ddsum2,err : Dobldobl_Complex_Numbers.Complex_Number;
 
     use DoblDobl_Complex_Numbers;
 
@@ -209,6 +209,14 @@ package body Test_Vectored_Double_Doubles is
     put("dd prd : "); put(ddsum0); new_line;
     put("dd vec : "); put(ddsum1); new_line;
     err := ddsum0 - ddsum1;
+    put(" error : "); put(err,2); new_line;
+    if dim > 20
+     then ddsum2 := Vectored_Double_Doubles.Product(x,y,false);
+     else ddsum2 := Vectored_Double_Doubles.Product(x,y);
+    end if;
+    put("dd prd : "); put(ddsum0); new_line;
+    put("dd sgn : "); put(ddsum2); new_line;
+    err := ddsum0 - ddsum2;
     put(" error : "); put(err,2); new_line;
   end Test_Complex_Product;
 
@@ -341,12 +349,12 @@ package body Test_Vectored_Double_Doubles is
      then Standard_Random_Numbers.Set_Seed(seed);
     end if;
     put("Give the dimension : "); get(dim);
-   -- Test_Real_Sum(dim);
-   -- Test_Complex_Sum(dim);
+    Test_Real_Sum(dim);
+    Test_Complex_Sum(dim);
     Test_Real_Product(dim);
-   -- Test_Complex_Product(dim);
-   -- Test_Real_Norm(dim);
-   -- Test_Complex_Norm(dim);
+    Test_Complex_Product(dim);
+    Test_Real_Norm(dim);
+    Test_Complex_Norm(dim);
     put("Seed used : "); put(Standard_Random_Numbers.Get_Seed,1); new_line;
   end Main;
 

@@ -423,4 +423,15 @@ package Vectored_Double_Doubles is
   --   Returns the inner product of the vectors of x and y,
   --   via sign aware quartering.
 
+  -- REQUIRED : x'range = y'range.
+
+  function Product ( x,y : DoblDobl_Complex_Vectors.Vector;
+                     verbose : boolean := true ) return Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns the inner product of the vectors of x and y,
+  --   via sign aware quartering.
+
+  -- REQUIRED : x'range = y'range.
+
 end Vectored_Double_Doubles;
