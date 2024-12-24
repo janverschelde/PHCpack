@@ -580,6 +580,26 @@ package body Vectored_Double_Doubles is
     end loop;
   end Product;
 
+  procedure Write_Subsums ( s0,s1,s2,s3 : in double_float ) is
+  begin
+    put("s0 : "); put(s0); new_line;
+    put("s1 : "); put(s1); new_line;
+    put("s2 : "); put(s2); new_line;
+    put("s3 : "); put(s3); new_line;
+  end Write_Subsums;
+
+  procedure Write_Subsums ( s0,s1,s2,s3,s4,s5,s6,s7 : in double_float ) is
+  begin
+    put("s0 : "); put(s0); new_line;
+    put("s1 : "); put(s1); new_line;
+    put("s2 : "); put(s2); new_line;
+    put("s3 : "); put(s3); new_line;
+    put("s4 : "); put(s4); new_line;
+    put("s5 : "); put(s5); new_line;
+    put("s6 : "); put(s6); new_line;
+    put("s7 : "); put(s7); new_line;
+  end Write_Subsums;
+
   function to_double_double
              ( s0,s1,s2,s3 : double_float;
                verbose : boolean := true ) return double_double is
@@ -588,6 +608,9 @@ package body Vectored_Double_Doubles is
     res : double_double;
 
   begin
+    if verbose
+     then Write_Subsums(s0,s1,s2,s3);
+    end if;
     Double_Double_Basics.quick_two_sum(s0,s1,shi,err);
     res := create(shi,err);
     if verbose then
@@ -613,6 +636,9 @@ package body Vectored_Double_Doubles is
     dz0,dz1,dz2,dz3 : double_double;
 
   begin
+    if verbose
+     then Write_Subsums(s0,s1,s2,s3,s4,s5,s6,s7);
+    end if;
     Double_Double_Basics.two_sum(s0,s1,z0,e1);
     if verbose then
       put(" z0 : "); put(z0); new_line;

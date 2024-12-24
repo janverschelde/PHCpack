@@ -346,6 +346,16 @@ package Vectored_Double_Doubles is
   --   s6im      second lowest word of the imaginary part of the product;
   --   s7im      lowest word of the imaginary part of the product.
 
+  procedure Write_Subsums ( s0,s1,s2,s3 : in double_float );
+
+  -- DESCRIPTION :
+  --   Writes all subsums given in the four arguments.
+
+  procedure Write_Subsums ( s0,s1,s2,s3,s4,s5,s6,s7 : in double_float );
+
+  -- DESCRIPTION :
+  --   Writes all subsums given in the eight arguments.
+
   function to_Double_Double
              ( s0,s1,s2,s3 : double_float;
                verbose : boolean := true ) return double_double;

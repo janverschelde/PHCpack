@@ -1,3 +1,6 @@
+Tue 24 Dec 2024 : improved verbose runs in vectored_double_doubles
+  with the writing of the subsums.
+
 Mon 23 Dec 2024 : added sign balance procedure to bits_of_doubles,
   tested in test_bits_of_doubles.  Simplified the signed quarter procedure
   in vectored_double_doubles, updated test_vectored_double_doubles.adb.
