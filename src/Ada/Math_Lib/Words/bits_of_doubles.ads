@@ -3,6 +3,9 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Natural_Vectors;
 with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Octo_Double_Numbers;                use Octo_Double_Numbers;
+with Hexa_Double_Numbers;                use Hexa_Double_Numbers;
 
 package Bits_of_Doubles is
 
@@ -170,6 +173,13 @@ package Bits_of_Doubles is
   --   On return: Bit_Equal(x,x0+x1+x2+x3) is true
   --   and x - (x0 + x1 + x2 + x3) is exactly zero.
 
+  function Different_Sign ( x,y : double_float ) return boolean;
+
+  -- DESCRIPTION :
+  --   Returns true if x and y have different signs, false otherwise.
+  --   This function should be used to avoid underflow of x*y
+  --   which causes the test x*y < 0.0 to fail.
+
   procedure Sign_Balance ( hi,lo : in out double_float;
                            verbose : in boolean := true );
 
@@ -187,9 +197,50 @@ package Bits_of_Doubles is
   --   representation of x is sign balanced.
   --   If verbose, prints results of intermediate computations.
 
+  procedure Sign_Balance ( hihi,lohi,hilo,lolo : in out double_float;
+                           verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Balances the doubles of a quad double so all parts have the same sign.
+
+  procedure Sign_Balance
+              ( hihihi,lohihi,hilohi,lolohi : in out double_float;
+                hihilo,lohilo,hilolo,lololo : in out double_float;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Balances the doubles of an octo double so all parts have the same sign.
+
+  procedure Sign_Balance
+              ( hihihihi,lohihihi,hilohihi,lolohihi : in out double_float;
+                hihilohi,lohilohi,hilolohi,lololohi : in out double_float;
+                hihihilo,lohihilo,hilohilo,lolohilo : in out double_float;
+                hihilolo,lohilolo,hilololo,lolololo : in out double_float;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Balances the doubles of a hexa double so all parts have the same sign.
+
+  procedure Sign_Balance ( x : in out quad_double;
+                           verbose : in boolean := true );
+  procedure Sign_Balance ( x : in out octo_double;
+                           verbose : in boolean := true );
+  procedure Sign_Balance ( x : in out hexa_double;
+                           verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Redistributes the bits so all parts of have the same sign.
+
   function Is_Sign_Balanced ( x : double_double ) return boolean;
 
   -- DESCRIPTION :
   --   Returns true of both the high and low part of x have the same sign.
+
+  function Is_Sign_Balanced ( x : quad_double ) return boolean;
+  function Is_Sign_Balanced ( x : octo_double ) return boolean;
+  function Is_Sign_Balanced ( x : hexa_double ) return boolean;
+
+  -- DESCRIPTION :
+  --   Returns true of all parts of x have the same sign.
 
 end Bits_of_Doubles;
