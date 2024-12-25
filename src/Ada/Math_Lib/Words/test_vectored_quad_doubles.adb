@@ -22,22 +22,24 @@ package body Test_Vectored_Quad_Doubles is
       := QuadDobl_Random_Vectors.Random_Vector(1,dim);
     b : constant QuadDobl_Complex_Vectors.Vector(1..dim)
       := QuadDobl_Random_Vectors.Random_Vector(1,dim);
-    x,y : Quad_Double_Vectors.Vector(1..dim);
+    xr,yr,x,y : Quad_Double_Vectors.Vector(1..dim);
     cntxpos,cntypos : natural32 := 0;
     qdprd0,qdprd0p,qdprd0m : quad_double;
     qdprd1,err : quad_double;
 
   begin
     for i in 1..dim loop
-      x(i) := QuadDobl_Complex_Numbers.REAL_PART(a(i));
-      if x(i) >= 0.0
+      xr(i) := QuadDobl_Complex_Numbers.REAL_PART(a(i));
+      if xr(i) >= 0.0
        then cntxpos := cntxpos + 1;
       end if;
-      y(i) := QuadDobl_Complex_Numbers.REAL_PART(b(i));
-      if y(i) >= 0.0
+      yr(i) := QuadDobl_Complex_Numbers.REAL_PART(b(i));
+      if yr(i) >= 0.0
        then cntypos := cntypos + 1;
       end if;
     end loop;
+    x := Vectored_Quad_Doubles.Sign_Balance(xr,verbose=>false);
+    y := Vectored_Quad_Doubles.Sign_Balance(yr,verbose=>false);
     put("Testing product of random real vectors of dimension ");
     put(dim,1);
     if dim > 20 then
@@ -113,8 +115,8 @@ package body Test_Vectored_Quad_Doubles is
     end if;
     put("Give the dimension : "); get(dim);
     Test_Real_Product(dim);
-   -- new_line;
-   -- Test_Complex_Product(dim);
+    new_line;
+    Test_Complex_Product(dim);
     put("Seed used : "); put(Standard_Random_Numbers.Get_Seed,1); new_line;
   end Main;
 
