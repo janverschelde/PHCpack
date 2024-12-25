@@ -8,13 +8,13 @@ package Test_Vectored_Quad_Doubles is
   procedure Test_Real_Product ( dim : in integer32 );
 
   -- DESCRIPTION :
-  --   Generates two vectors of random double double numbers
+  --   Generates two vectors of random quad double numbers
   --   of dimension dim and tests their inner product.
 
   procedure Test_Complex_Product ( dim : in integer32 );
 
   -- DESCRIPTION :
-  --   Generates two vectors of random complex double double numbers
+  --   Generates two vectors of random complex quad double numbers
   --   of dimension dim and tests their inner product.
 
   procedure Main;

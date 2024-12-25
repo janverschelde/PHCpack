@@ -1,6 +1,7 @@
 Wed 25 Dec 2024 : new vectored_quad_doubles, test_vectored_quad_doubles, and
   ts_vqda.adb, with updated words.gpr, for vectored quad double arithmetic.
   Applied sign balancing in test_vectored_quad_doubles.adb.
+  Corrected documentation in test_vectored_quad_doubles.ads.
 
 Tue 24 Dec 2024 : improved verbose runs in vectored_double_doubles
   with the writing of the subsums.  Added sign balance procedures
