@@ -168,15 +168,28 @@ package body Vectored_Quad_Doubles is
                 s8,s9,sA,sB,sC,sD,sE,sF : double_float;
                 verbose : boolean := true ) return quad_double is
 
-    res : quad_double := create(sC,sD,sE,sF);
+    res : quad_double;
 
   begin
     if verbose
      then write_subsums(s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,sA,sB,sC,sD,sE,sF);
     end if;
-    res := res + create(s8,s9,sA,sB);
-    res := res + create(s4,s5,s6,s7);
-    res := res + create(s0,s1,s2,s3);
+    res := create(sF,0.0,0.0,0.0);
+    res := res + create(sE,0.0,0.0,0.0);
+    res := res + create(sD,0.0,0.0,0.0);
+    res := res + create(sC,0.0,0.0,0.0);
+    res := res + create(sB,0.0,0.0,0.0);
+    res := res + create(sA,0.0,0.0,0.0);
+    res := res + create(s9,0.0,0.0,0.0);
+    res := res + create(s8,0.0,0.0,0.0);
+    res := res + create(s7,0.0,0.0,0.0);
+    res := res + create(s6,0.0,0.0,0.0);
+    res := res + create(s5,0.0,0.0,0.0);
+    res := res + create(s4,0.0,0.0,0.0);
+    res := res + create(s3,0.0,0.0,0.0);
+    res := res + create(s2,0.0,0.0,0.0);
+    res := res + create(s1,0.0,0.0,0.0);
+    res := res + create(s0,0.0,0.0,0.0);
     return res;
   end to_quad_double;
 
