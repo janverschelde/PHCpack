@@ -28,4 +28,7 @@ ts_vdda                          : main test on vectored double doubles
 vectored_quad_doubles            : vectorized quad double arithmetic
 test_vectored_quad_doubles       : tests on vectored quad double arithmetic
 ts_vdda                          : main test on vectored quad doubles
+vectored_octo_doubles            : vectorized octo double arithmetic
+test_vectored_octo_doubles       : tests on vectored octo double arithmetic
+ts_voda                          : main test on vectored octo doubles
 ------------------------------------------------------------------------------

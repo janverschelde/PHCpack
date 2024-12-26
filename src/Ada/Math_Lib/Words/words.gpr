@@ -23,7 +23,9 @@ project Words is
         "ts_intbits.adb",   -- split 64-bit integer numbers
         "ts_dblint.adb",    -- double integer arithmetic
         "ts_dblbits.adb",   -- remove bits from fraction
-        "ts_vdda.adb"       -- vectorized double double arithmetic
+        "ts_vdda.adb",      -- vectorized double double arithmetic
+        "ts_vqda.adb",      -- vectorized quad double arithmetic
+        "ts_voda.adb"       -- vectorized octo double arithmetic
     );
 
     package Compiler is

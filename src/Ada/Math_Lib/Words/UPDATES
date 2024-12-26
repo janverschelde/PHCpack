@@ -1,6 +1,8 @@
 Thu 26 Dec 2024 : in vectored_quad_doubles.adb, improved the accuracy of
   to_quad_double with 15 additions in quad double precision.
   Shortened definition of sign_quarter in vectored_quad_doubles.adb.
+  New vectored_octo_doubles, test_vectored_octo_doubles, ts_voda.adb,
+  updated words.gpr.
 
 Wed 25 Dec 2024 : new vectored_quad_doubles, test_vectored_quad_doubles, and
   ts_vqda.adb, with updated words.gpr, for vectored quad double arithmetic.
