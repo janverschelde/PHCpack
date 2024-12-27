@@ -60,12 +60,17 @@ package Vectored_Quad_Doubles is
   --   nd       number of pairs (x(i),y(i)) with different signs.
 
   procedure Write_Subsums
+              ( s0,s1,s2,s3,s4,s5,s6,s7 : in double_float );
+  procedure Write_Subsums
               ( s0,s1,s2,s3,s4,s5,s6,s7 : in double_float;
                 s8,s9,sA,sB,sC,sD,sE,sF : in double_float );
 
   -- DESCRIPTION :
   --   Writes all subsums of the convolutions of a product of two vectors.
 
+  function to_quad_double
+              ( s0,s1,s2,s3,s4,s5,s6,s7 : double_float;
+                verbose : boolean := true ) return quad_double;
   function to_quad_double
               ( s0,s1,s2,s3,s4,s5,s6,s7 : double_float;
                 s8,s9,sA,sB,sC,sD,sE,sF : double_float;
