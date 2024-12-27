@@ -197,7 +197,8 @@ package body Bits_of_Doubles is
   end insert_first_bits;
 
   procedure Mod_Split ( x : in double_float;
-                        xhi,xlo : out double_float ) is
+                        xhi,xlo : out double_float;
+                        verbose : in boolean := true ) is
 
     e : constant integer32 := integer32(double_float'exponent(x));
     f : constant double_float := double_float'fraction(x);
@@ -209,15 +210,19 @@ package body Bits_of_Doubles is
   begin
     mlast := Mask_Bits_of_Doubles.last_bits(m,26);
     mchop := m - mlast;
-    put("m     : "); put(m,1,b=>2); new_line;
-    put("mchop : "); put(mchop,1,b=>2); new_line;
+    if verbose then
+      put("m     : "); put(m,1,b=>2); new_line;
+      put("mchop : "); put(mchop,1,b=>2); new_line;
+    end if;
     xhi := double_float'compose(double_float(mchop),e);
     if mlast /= 0 then
       while mlast < 2**natural(25-cnt) loop
         cnt := cnt + 1;
       end loop;
-      put("mlast : "); put(mlast,1,b=>2); new_line;
-      put("cnt : "); put(cnt,1); new_line;
+      if verbose then
+        put("mlast : "); put(mlast,1,b=>2); new_line;
+        put("cnt : "); put(cnt,1); new_line;
+      end if;
     end if;
     xlo := double_float'compose(double_float(mlast),e-26-cnt);
   end Mod_Split;
@@ -323,5 +328,32 @@ package body Bits_of_Doubles is
    -- end if;
     x3 := x - (x0 + x1 + x2);
   end Split;
+
+  function Last_Zero_Count ( x : integer64 ) return natural32 is
+
+    res : natural32 := 0;
+    wrk : integer64 := x;
+
+  begin
+    for i in 1..64 loop
+      if wrk mod 2 /= 0 then
+        exit;
+      else
+        res := res + 1;
+        wrk := wrk/2;
+      end if;
+    end loop;
+    return res;
+  end Last_Zero_Count;
+
+  function Last_Zero_Count ( x : double_float ) return natural32 is
+
+    r : constant double_float := double_float'fraction(x);
+    s : constant double_float := double_float'compose(r, 52);
+    f : constant integer64 := integer64(double_float'truncation(s));
+
+  begin
+    return Last_Zero_Count(f);
+  end Last_Zero_Count;
 
 end Bits_of_Doubles;

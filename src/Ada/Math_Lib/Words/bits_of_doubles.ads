@@ -147,7 +147,8 @@ package Bits_of_Doubles is
   --   headbits contains the first bits to be inserted.
 
   procedure Mod_Split ( x : in double_float;
-                        xhi,xlo : out double_float );
+                        xhi,xlo : out double_float;
+                        verbose : in boolean := true );
 
   -- DESCRIPTION :
   --   Splits the fraction of the double x in two equal halves,
@@ -168,5 +169,15 @@ package Bits_of_Doubles is
   --   returned in x0, x1, x2, x3, with x0 > x1 > x2 > x3.
   --   On return: Bit_Equal(x,x0+x1+x2+x3) is true
   --   and x - (x0 + x1 + x2 + x3) is exactly zero.
+
+  function Last_Zero_Count ( x : integer64 ) return natural32;
+
+  -- DESCRIPTION :
+  --   Returns the number of last zeros in x.
+
+  function Last_Zero_Count ( x : double_float ) return natural32;
+
+  -- DESCRIPTION :
+  --   Returns the number of last zeros in the fraction of x.
 
 end Bits_of_Doubles;

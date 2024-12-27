@@ -1,7 +1,9 @@
 with text_io;                            use text_io;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Standard_Random_Numbers;
 with Standard_Natural_Vectors;
 with Double_Double_Basics;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
@@ -457,6 +459,35 @@ package body Test_Bits_of_Doubles is
     Test_Particular_Product;
   end Test_Split_Product;
 
+  procedure Test_Last_Zero_Counts is
+
+    x : constant double_float := abs(Standard_Random_Numbers.Random);
+    nbr : natural32;
+    x0,x1,x2,x3 : double_float;
+
+  begin
+    put("x :"); put(x); new_line;
+    put("b : "); write_fraction_bits(x);
+    nbr := Last_Zero_Count(x);
+    put("n : "); put(nbr,1); new_line;
+    put_line("after splitting in half : ");
+    Mod_Split(x,x0,x1,verbose=>false);
+    put("x0 : "); write_fraction_bits(x0);
+    put("n0 : "); put(Last_Zero_Count(x0),1); new_line;
+    put("x1 : "); write_fraction_bits(x1);
+    put("n1 : "); put(Last_Zero_Count(x1),1); new_line;
+    put_line("after quartering : ");
+    Split(x,x0,x1,x2,x3);
+    put("x0 : "); write_fraction_bits(x0);
+    put("n0 : "); put(Last_Zero_Count(x0),1); new_line;
+    put("x1 : "); write_fraction_bits(x1);
+    put("n1 : "); put(Last_Zero_Count(x1),1); new_line;
+    put("x2 : "); write_fraction_bits(x2);
+    put("n2 : "); put(Last_Zero_Count(x2),1); new_line;
+    put("x3 : "); write_fraction_bits(x3);
+    put("n3 : "); put(Last_Zero_Count(x3),1); new_line;
+  end Test_Last_Zero_Counts;
+
   procedure Main is
   begin
     Test_Mod_Mask_Bits;
@@ -468,6 +499,9 @@ package body Test_Bits_of_Doubles is
     put_line("*** testing the product via splits ***");
     new_line;
     Test_Split_Product;
+    new_line;
+    put_line("*** testing the last zero counts ***");
+    Test_Last_Zero_Counts;
   end Main;
 
 end Test_Bits_of_Doubles;

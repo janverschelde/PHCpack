@@ -101,6 +101,12 @@ package Test_Bits_of_Doubles is
   --   (1) A decimal representation may not have a finite binary expansion.
   --   (2) A bit equal split does not suffice to give accurate results.
 
+  procedure Test_Last_Zero_Counts;
+
+  -- DESCRIPTION :
+  --   Tests the counting of the last zeros 
+  --   in the fraction of a random double.
+
   procedure Main;
 
   -- DESCRIPTION :

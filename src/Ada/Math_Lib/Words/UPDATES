@@ -3,6 +3,8 @@ Fri 27 Dec 2024 : factored out the sign balance procedures out of the
   the sign balancers from test_bits_of_doubles into test_sign_balancers,
   making a new ts_sgnbal.adb main test procedure.  Updated words.gpr
   and the packages vectored_{double, quad, octo}_doubles.adb.
+  To bits_of_doubles, added a function to count the number of last
+  zero bits in the fraction of a double, tested in test_bits_of_doubles.
 
 Thu 26 Dec 2024 : in vectored_quad_doubles.adb, improved the accuracy of
   to_quad_double with 15 additions in quad double precision.
