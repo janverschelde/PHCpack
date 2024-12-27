@@ -1,7 +1,9 @@
 with text_io;                            use text_io;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Bits_of_Doubles;
+with Sign_Balancers;                     use Sign_Balancers;
 
 package body Vectored_Quad_Doubles is
 
@@ -16,8 +18,8 @@ package body Vectored_Quad_Doubles is
   begin
     for i in x'range loop
       res(i) := x(i);
-      if not Bits_of_Doubles.Is_Sign_Balanced(res(i))
-       then Bits_of_Doubles.Sign_Balance(res(i),verbose);
+      if not Is_Sign_Balanced(res(i))
+       then Sign_Balance(res(i),verbose);
       end if;
     end loop;
     return res;
@@ -61,7 +63,7 @@ package body Vectored_Quad_Doubles is
       flt := lohi_part(nbr); Bits_of_Doubles.Split(flt,y4,y5,y6,y7);
       flt := hilo_part(nbr); Bits_of_Doubles.Split(flt,y8,y9,yA,yB);
       flt := lolo_part(nbr); Bits_of_Doubles.Split(flt,yC,yD,yE,yF);
-      if not Bits_of_Doubles.Different_Sign(x0,y0) then
+      if not Sign_Balancers.Different_Sign(x0,y0) then
         ns := ns + 1;
         xs0(ns) := x0; xs1(ns) := x1;
         xs2(ns) := x2; xs3(ns) := x3;
@@ -104,23 +106,42 @@ package body Vectored_Quad_Doubles is
   procedure Write_Subsums
               ( s0,s1,s2,s3,s4,s5,s6,s7 : in double_float;
                 s8,s9,sA,sB,sC,sD,sE,sF : in double_float ) is
+
+    use Bits_of_Doubles;
+
   begin
-    put("s0 : "); put(s0); new_line;
-    put("s1 : "); put(s1); new_line;
-    put("s2 : "); put(s2); new_line;
-    put("s3 : "); put(s3); new_line;
-    put("s4 : "); put(s4); new_line;
-    put("s5 : "); put(s5); new_line;
-    put("s6 : "); put(s6); new_line;
-    put("s7 : "); put(s7); new_line;
-    put("s8 : "); put(s8); new_line;
-    put("s9 : "); put(s9); new_line;
-    put("sA : "); put(sA); new_line;
-    put("sB : "); put(sB); new_line;
-    put("sC : "); put(sC); new_line;
-    put("sD : "); put(sD); new_line;
-    put("sE : "); put(sE); new_line;
-    put("sF : "); put(sF); new_line;
+    put("s0 : "); put(s0);
+    put(", n0 : "); put(Last_Zero_Count(s0),1); new_line;
+    put("s1 : "); put(s1);
+    put(", n1 : "); put(Last_Zero_Count(s1),1); new_line;
+    put("s2 : "); put(s2);
+    put(", n2 : "); put(Last_Zero_Count(s2),1); new_line;
+    put("s3 : "); put(s3);
+    put(", n3 : "); put(Last_Zero_Count(s3),1); new_line;
+    put("s4 : "); put(s4);
+    put(", n4 : "); put(Last_Zero_Count(s4),1); new_line;
+    put("s5 : "); put(s5);
+    put(", n5 : "); put(Last_Zero_Count(s5),1); new_line;
+    put("s6 : "); put(s6);
+    put(", n6 : "); put(Last_Zero_Count(s6),1); new_line;
+    put("s7 : "); put(s7);
+    put(", n7 : "); put(Last_Zero_Count(s7),1); new_line;
+    put("s8 : "); put(s8);
+    put(", n8 : "); put(Last_Zero_Count(s8),1); new_line;
+    put("s9 : "); put(s9);
+    put(", n9 : "); put(Last_Zero_Count(s9),1); new_line;
+    put("sA : "); put(sA);
+    put(", nA : "); put(Last_Zero_Count(sA),1); new_line;
+    put("sB : "); put(sB);
+    put(", nB : "); put(Last_Zero_Count(sB),1); new_line;
+    put("sC : "); put(sC);
+    put(", nC : "); put(Last_Zero_Count(sC),1); new_line;
+    put("sD : "); put(sD);
+    put(", nD : "); put(Last_Zero_Count(sD),1); new_line;
+    put("sE : "); put(sE);
+    put(", nE : "); put(Last_Zero_Count(sE),1); new_line;
+    put("sF : "); put(sF);
+    put(", nF : "); put(Last_Zero_Count(sF),1); new_line;
   end Write_Subsums;
 
   function to_quad_double
@@ -134,22 +155,22 @@ package body Vectored_Quad_Doubles is
     if verbose
      then write_subsums(s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,sA,sB,sC,sD,sE,sF);
     end if;
-    res := create(sF,0.0,0.0,0.0);
-    res := res + create(sE,0.0,0.0,0.0);
-    res := res + create(sD,0.0,0.0,0.0);
-    res := res + create(sC,0.0,0.0,0.0);
-    res := res + create(sB,0.0,0.0,0.0);
-    res := res + create(sA,0.0,0.0,0.0);
-    res := res + create(s9,0.0,0.0,0.0);
-    res := res + create(s8,0.0,0.0,0.0);
-    res := res + create(s7,0.0,0.0,0.0);
-    res := res + create(s6,0.0,0.0,0.0);
-    res := res + create(s5,0.0,0.0,0.0);
-    res := res + create(s4,0.0,0.0,0.0);
-    res := res + create(s3,0.0,0.0,0.0);
-    res := res + create(s2,0.0,0.0,0.0);
-    res := res + create(s1,0.0,0.0,0.0);
-    res := res + create(s0,0.0,0.0,0.0);
+    res := create(sF);
+    res := res + create(sE);
+    res := res + create(sD);
+    res := res + create(sC);
+    res := res + create(sB);
+    res := res + create(sA);
+    res := res + create(s9);
+    res := res + create(s8);
+    res := res + create(s7);
+    res := res + create(s6);
+    res := res + create(s5);
+    res := res + create(s4);
+    res := res + create(s3);
+    res := res + create(s2);
+    res := res + create(s1);
+    res := res + create(s0);
     return res;
   end to_quad_double;
 

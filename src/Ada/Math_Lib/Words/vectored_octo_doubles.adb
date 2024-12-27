@@ -1,7 +1,9 @@
 with text_io;                            use text_io;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Bits_of_Doubles;
+with Sign_Balancers;                     use Sign_Balancers;
 
 package body Vectored_Octo_Doubles is
 
@@ -16,8 +18,8 @@ package body Vectored_Octo_Doubles is
   begin
     for i in x'range loop
       res(i) := x(i);
-      if not Bits_of_Doubles.Is_Sign_Balanced(res(i))
-       then Bits_of_Doubles.Sign_Balance(res(i),verbose);
+      if not Is_Sign_Balanced(res(i))
+       then Sign_Balance(res(i),verbose);
       end if;
     end loop;
     return res;
@@ -91,7 +93,7 @@ package body Vectored_Octo_Doubles is
       flt := lohilo_part(nbr); Bits_of_Doubles.Split(flt,y20,y21,y22,y23);
       flt := hilolo_part(nbr); Bits_of_Doubles.Split(flt,y24,y25,y26,y27);
       flt := lololo_part(nbr); Bits_of_Doubles.Split(flt,y28,y29,y30,y31);
-      if not Bits_of_Doubles.Different_Sign(x00,y00) then
+      if not Sign_Balancers.Different_Sign(x00,y00) then
         ns := ns + 1;
         xs00(ns) := x00; xs01(ns) := x01;
         xs02(ns) := x02; xs03(ns) := x03;
@@ -168,39 +170,74 @@ package body Vectored_Octo_Doubles is
                 s08,s09,s10,s11,s12,s13,s14,s15 : in double_float;
                 s16,s17,s18,s19,s20,s21,s22,s23 : in double_float;
                 s24,s25,s26,s27,s28,s29,s30,s31 : in double_float ) is
+
+    use Bits_of_Doubles;
+
   begin
-    put("s00 : "); put(s00); new_line;
-    put("s01 : "); put(s01); new_line;
-    put("s02 : "); put(s02); new_line;
-    put("s03 : "); put(s03); new_line;
-    put("s04 : "); put(s04); new_line;
-    put("s05 : "); put(s05); new_line;
-    put("s06 : "); put(s06); new_line;
-    put("s07 : "); put(s07); new_line;
-    put("s08 : "); put(s08); new_line;
-    put("s09 : "); put(s09); new_line;
-    put("s10 : "); put(s10); new_line;
-    put("s11 : "); put(s11); new_line;
-    put("s12 : "); put(s12); new_line;
-    put("s13 : "); put(s13); new_line;
-    put("s14 : "); put(s14); new_line;
-    put("s15 : "); put(s15); new_line;
-    put("s16 : "); put(s16); new_line;
-    put("s17 : "); put(s17); new_line;
-    put("s18 : "); put(s18); new_line;
-    put("s19 : "); put(s19); new_line;
-    put("s20 : "); put(s20); new_line;
-    put("s21 : "); put(s21); new_line;
-    put("s22 : "); put(s22); new_line;
-    put("s23 : "); put(s23); new_line;
-    put("s24 : "); put(s24); new_line;
-    put("s25 : "); put(s25); new_line;
-    put("s26 : "); put(s26); new_line;
-    put("s27 : "); put(s27); new_line;
-    put("s28 : "); put(s28); new_line;
-    put("s29 : "); put(s29); new_line;
-    put("s30 : "); put(s30); new_line;
-    put("s31 : "); put(s31); new_line;
+    put("s00 : "); put(s00);
+    put(", n00 : "); put(Last_Zero_Count(s00),1); new_line;
+    put("s01 : "); put(s01);
+    put(", n01 : "); put(Last_Zero_Count(s01),1); new_line;
+    put("s02 : "); put(s02);
+    put(", n02 : "); put(Last_Zero_Count(s02),1); new_line;
+    put("s03 : "); put(s03);
+    put(", n03 : "); put(Last_Zero_Count(s03),1); new_line;
+    put("s04 : "); put(s04);
+    put(", n04 : "); put(Last_Zero_Count(s04),1); new_line;
+    put("s05 : "); put(s05);
+    put(", n05 : "); put(Last_Zero_Count(s05),1); new_line;
+    put("s06 : "); put(s06);
+    put(", n06 : "); put(Last_Zero_Count(s06),1); new_line;
+    put("s07 : "); put(s07);
+    put(", n07 : "); put(Last_Zero_Count(s07),1); new_line;
+    put("s08 : "); put(s08);
+    put(", n08 : "); put(Last_Zero_Count(s08),1); new_line;
+    put("s09 : "); put(s09);
+    put(", n09 : "); put(Last_Zero_Count(s09),1); new_line;
+    put("s10 : "); put(s10);
+    put(", n10 : "); put(Last_Zero_Count(s10),1); new_line;
+    put("s11 : "); put(s11);
+    put(", n11 : "); put(Last_Zero_Count(s11),1); new_line;
+    put("s12 : "); put(s12);
+    put(", n12 : "); put(Last_Zero_Count(s12),1); new_line;
+    put("s13 : "); put(s13);
+    put(", n13 : "); put(Last_Zero_Count(s13),1); new_line;
+    put("s14 : "); put(s14);
+    put(", n14 : "); put(Last_Zero_Count(s14),1); new_line;
+    put("s15 : "); put(s15);
+    put(", n15 : "); put(Last_Zero_Count(s15),1); new_line;
+    put("s16 : "); put(s16);
+    put(", n16 : "); put(Last_Zero_Count(s16),1); new_line;
+    put("s17 : "); put(s17);
+    put(", n17 : "); put(Last_Zero_Count(s17),1); new_line;
+    put("s18 : "); put(s18);
+    put(", n18 : "); put(Last_Zero_Count(s18),1); new_line;
+    put("s19 : "); put(s19);
+    put(", n19 : "); put(Last_Zero_Count(s19),1); new_line;
+    put("s20 : "); put(s20);
+    put(", n20 : "); put(Last_Zero_Count(s20),1); new_line;
+    put("s21 : "); put(s21);
+    put(", n21 : "); put(Last_Zero_Count(s21),1); new_line;
+    put("s22 : "); put(s22);
+    put(", n22 : "); put(Last_Zero_Count(s22),1); new_line;
+    put("s23 : "); put(s23);
+    put(", n23 : "); put(Last_Zero_Count(s23),1); new_line;
+    put("s24 : "); put(s24);
+    put(", n24 : "); put(Last_Zero_Count(s24),1); new_line;
+    put("s25 : "); put(s25);
+    put(", n25 : "); put(Last_Zero_Count(s25),1); new_line;
+    put("s26 : "); put(s26);
+    put(", n26 : "); put(Last_Zero_Count(s26),1); new_line;
+    put("s27 : "); put(s27);
+    put(", n27 : "); put(Last_Zero_Count(s27),1); new_line;
+    put("s28 : "); put(s28);
+    put(", n28 : "); put(Last_Zero_Count(s28),1); new_line;
+    put("s29 : "); put(s29);
+    put(", n29 : "); put(Last_Zero_Count(s29),1); new_line;
+    put("s30 : "); put(s30);
+    put(", n30 : "); put(Last_Zero_Count(s30),1); new_line;
+    put("s31 : "); put(s31);
+    put(", n31 : "); put(Last_Zero_Count(s31),1); new_line;
   end Write_Subsums;
 
   function to_octo_double

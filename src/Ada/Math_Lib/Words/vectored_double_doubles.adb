@@ -1,8 +1,10 @@
 with text_io;                            use text_io;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Basics;
 with Bits_of_Doubles;
+with Sign_Balancers;                     use Sign_Balancers;
 
 package body Vectored_Double_Doubles is
 
@@ -581,23 +583,41 @@ package body Vectored_Double_Doubles is
   end Product;
 
   procedure Write_Subsums ( s0,s1,s2,s3 : in double_float ) is
+
+    use Bits_of_Doubles;
+
   begin
-    put("s0 : "); put(s0); new_line;
-    put("s1 : "); put(s1); new_line;
-    put("s2 : "); put(s2); new_line;
-    put("s3 : "); put(s3); new_line;
+    put("s0 : "); put(s0);
+    put(", n0 : "); put(Last_Zero_Count(s0),1); new_line;
+    put("s1 : "); put(s1);
+    put(", n1 : "); put(Last_Zero_Count(s1),1); new_line;
+    put("s2 : "); put(s2);
+    put(", n2 : "); put(Last_Zero_Count(s2),1); new_line;
+    put("s3 : "); put(s3);
+    put(", n3 : "); put(Last_Zero_Count(s3),1); new_line;
   end Write_Subsums;
 
   procedure Write_Subsums ( s0,s1,s2,s3,s4,s5,s6,s7 : in double_float ) is
+
+    use Bits_of_Doubles;
+
   begin
-    put("s0 : "); put(s0); new_line;
-    put("s1 : "); put(s1); new_line;
-    put("s2 : "); put(s2); new_line;
-    put("s3 : "); put(s3); new_line;
+    put("s0 : "); put(s0);
+    put(", n0 : "); put(Last_Zero_Count(s0),1); new_line;
+    put("s1 : "); put(s1);
+    put(", n1 : "); put(Last_Zero_Count(s1),1); new_line;
+    put("s2 : "); put(s2);
+    put(", n2 : "); put(Last_Zero_Count(s2),1); new_line;
+    put("s3 : "); put(s3);
+    put(", n3 : "); put(Last_Zero_Count(s3),1); new_line;
     put("s4 : "); put(s4); new_line;
+    put(", n4 : "); put(Last_Zero_Count(s4),1); new_line;
     put("s5 : "); put(s5); new_line;
+    put(", n5 : "); put(Last_Zero_Count(s5),1); new_line;
     put("s6 : "); put(s6); new_line;
+    put(", n6 : "); put(Last_Zero_Count(s6),1); new_line;
     put("s7 : "); put(s7); new_line;
+    put(", n7 : "); put(Last_Zero_Count(s7),1); new_line;
   end Write_Subsums;
 
   function to_double_double
@@ -902,12 +922,12 @@ package body Vectored_Double_Doubles is
   begin
     for i in x'range loop
       xb(i) := x(i);
-      if not Bits_of_Doubles.Is_Sign_Balanced(xb(i))
-       then Bits_of_Doubles.Sign_Balance(xb(i),verbose=>false);
+      if not Is_Sign_Balanced(xb(i))
+       then Sign_Balance(xb(i),verbose=>false);
       end if;
       yb(i) := y(i);
-      if not Bits_of_Doubles.Is_Sign_Balanced(yb(i))
-       then Bits_of_Doubles.Sign_Balance(yb(i),verbose=>false);
+      if not Is_Sign_Balanced(yb(i))
+       then Sign_Balance(yb(i),verbose=>false);
       end if;
     end loop;
     Signed_Quarter(xb,yb,xs0,xs1,xs2,xs3,xs4,xs5,xs6,xs7,
