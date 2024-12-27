@@ -20,8 +20,12 @@ ts_dblint                        : main test on multiword integers
 ------------------------------------------------------------------------------
 mask_bits_of_doubles             : mod last or first bits of doubles
 bits_of_doubles                  : manipulating bits of doubles
-test_bits_of_doubles             : teston bit manipulation of doubles
+test_bits_of_doubles             : test on bit manipulation of doubles
 ts_dblbits                       : testing the bits of a double
+sign_balancers                   : balances the signs of multiple doubles
+test_sign_balancers              : tests on the sign balancers
+ts_sgnbal                        : main test on sign balancing
+------------------------------------------------------------------------------
 vectored_double_doubles          : vectorized double double arithmetic
 test_vectored_double_doubles     : tests on vectored double double arithmetic
 ts_vdda                          : main test on vectored double doubles

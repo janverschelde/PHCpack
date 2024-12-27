@@ -1,3 +1,9 @@
+Fri 27 Dec 2024 : factored out the sign balance procedures out of the
+  bits_of_doubles into a new package sign_balancers, moved the tests on
+  the sign balancers from test_bits_of_doubles into test_sign_balancers,
+  making a new ts_sgnbal.adb main test procedure.  Updated words.gpr
+  and the packages vectored_{double, quad, octo}_doubles.adb.
+
 Thu 26 Dec 2024 : in vectored_quad_doubles.adb, improved the accuracy of
   to_quad_double with 15 additions in quad double precision.
   Shortened definition of sign_quarter in vectored_quad_doubles.adb.
