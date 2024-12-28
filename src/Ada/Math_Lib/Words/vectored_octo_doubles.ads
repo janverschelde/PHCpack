@@ -76,6 +76,15 @@ package Vectored_Octo_Doubles is
   --   nd       number of pairs (x(i),y(i)) with different signs.
 
   procedure Write_Subsums
+              ( s00,s01,s02,s03,s04,s05,s06,s07 : in double_float );
+  procedure Write_Subsums
+              ( s00,s01,s02,s03,s04,s05,s06,s07 : in double_float;
+                s08,s09,s10,s11,s12,s13,s14,s15 : in double_float );
+  procedure Write_Subsums
+              ( s00,s01,s02,s03,s04,s05,s06,s07 : in double_float;
+                s08,s09,s10,s11,s12,s13,s14,s15 : in double_float;
+                s16,s17,s18,s19,s20,s21,s22,s23 : in double_float );
+  procedure Write_Subsums
               ( s00,s01,s02,s03,s04,s05,s06,s07 : in double_float;
                 s08,s09,s10,s11,s12,s13,s14,s15 : in double_float;
                 s16,s17,s18,s19,s20,s21,s22,s23 : in double_float;
@@ -84,6 +93,18 @@ package Vectored_Octo_Doubles is
   -- DESCRIPTION :
   --   Writes all subsums of the convolutions of a product of two vectors.
 
+  function to_octo_double
+              ( s00,s01,s02,s03,s04,s05,s06,s07 : double_float;
+                verbose : boolean := true ) return Octo_double;
+  function to_octo_double
+              ( s00,s01,s02,s03,s04,s05,s06,s07 : double_float;
+                s08,s09,s10,s11,s12,s13,s14,s15 : double_float;
+                verbose : boolean := true ) return Octo_double;
+  function to_octo_double
+              ( s00,s01,s02,s03,s04,s05,s06,s07 : double_float;
+                s08,s09,s10,s11,s12,s13,s14,s15 : double_float;
+                s16,s17,s18,s19,s20,s21,s22,s23 : double_float;
+                verbose : boolean := true ) return Octo_double;
   function to_octo_double
               ( s00,s01,s02,s03,s04,s05,s06,s07 : double_float;
                 s08,s09,s10,s11,s12,s13,s14,s15 : double_float;
