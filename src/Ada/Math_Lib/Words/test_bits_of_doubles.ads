@@ -1,4 +1,5 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 
@@ -106,6 +107,13 @@ package Test_Bits_of_Doubles is
   -- DESCRIPTION :
   --   Tests the counting of the last zeros 
   --   in the fraction of a random double.
+
+  procedure Test_Free_Convolution_Bits ( dim : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates two vectors of dimension dim,
+  --   convolutes the quarters and counts the free bits at the end
+  --   of the convoluted product.
 
   procedure Main;
 

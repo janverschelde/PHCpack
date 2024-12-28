@@ -1,10 +1,11 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Random_Numbers;
 with Standard_Natural_Vectors;
+with Standard_Floating_Vectors;
+with Standard_Random_Vectors;
 with Double_Double_Basics;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Bits_of_Doubles;                    use Bits_of_Doubles;
@@ -488,7 +489,108 @@ package body Test_Bits_of_Doubles is
     put("n3 : "); put(Last_Zero_Count(x3),1); new_line;
   end Test_Last_Zero_Counts;
 
+  procedure Test_Free_Convolution_Bits ( dim : in integer32 ) is
+
+    x : Standard_Floating_Vectors.Vector(1..dim)
+      := Standard_Random_Vectors.Random_Vector(1,dim);
+    y : Standard_Floating_Vectors.Vector(1..dim)
+      := Standard_Random_Vectors.Random_Vector(1,dim);
+    x0,x1,x2,x3 : Standard_Floating_Vectors.Vector(1..dim);
+    y0,y1,y2,y3 : Standard_Floating_Vectors.Vector(1..dim);
+    s0,s1,s2,s3 : double_float;
+    f : integer64;
+    e : integer32;
+    xemin0,xemin1,xemin2,xemin3 : integer32;
+    xemax0,xemax1,xemax2,xemax3 : integer32;
+    yemin0,yemin1,yemin2,yemin3 : integer32;
+    yemax0,yemax1,yemax2,yemax3 : integer32;
+
+    procedure Update ( f : in integer64;
+                       emin,emax : in out integer32; e : in integer32 ) is
+
+    -- DESCRIPTION :
+    --   Updates the minimal and maximal exponent with e
+    --   if the fraction is nonzero.
+
+    begin
+      if f /= 0 then
+        if e < emin
+         then emin := e;
+        end if;
+        if e > emax
+         then emax := e;
+        end if;
+      end if;
+    end Update;
+
+  begin
+    x(1) := abs(x(1)); Split(x(1),x0(1),x1(1),x2(1),x3(1));
+    Fraction_Exponent(x0(1),f,xemin0); xemax0 := xemin0;
+    Fraction_Exponent(x1(1),f,xemin1); xemax1 := xemin1;
+    Fraction_Exponent(x2(1),f,xemin2); xemax2 := xemin2;
+    Fraction_Exponent(x3(1),f,xemin3); xemax3 := xemin3;
+    y(1) := abs(y(1)); Split(y(1),y0(1),y1(1),y2(1),y3(1));
+    Fraction_Exponent(y0(1),f,yemin0); yemax0 := yemin0;
+    Fraction_Exponent(y1(1),f,yemin1); yemax1 := yemin1;
+    Fraction_Exponent(y2(1),f,yemin2); yemax2 := yemin2;
+    Fraction_Exponent(y3(1),f,yemin3); yemax3 := yemin3;
+    for i in 2..dim loop
+      x(i) := abs(x(i)); Split(x(i),x0(i),x1(i),x2(i),x3(i));
+      Fraction_Exponent(x0(i),f,e); Update(f,xemin0,xemax0,e);
+      Fraction_Exponent(x1(i),f,e); Update(f,xemin1,xemax1,e);
+      Fraction_Exponent(x2(i),f,e); Update(f,xemin2,xemax2,e);
+      Fraction_Exponent(x3(i),f,e); Update(f,xemin3,xemax3,e);
+      y(i) := abs(y(i)); Split(y(i),y0(i),y1(i),y2(i),y3(i));
+      Fraction_Exponent(y0(i),f,e); Update(f,yemin0,yemax0,e);
+      Fraction_Exponent(y1(i),f,e); Update(f,yemin1,yemax1,e);
+      Fraction_Exponent(y2(i),f,e); Update(f,yemin2,yemax2,e);
+      Fraction_Exponent(y3(i),f,e); Update(f,yemin3,yemax3,e);
+    end loop;
+    s0 := 0.0; s1 := 0.0; s2 := 0.0; s3 := 0.0;
+    for i in 1..dim loop
+      s0 := s0 + x0(i)*y0(i);
+      s1 := s1 + x0(i)*y1(i) + x1(i)*y0(i);
+      s2 := s2 + x0(i)*y2(i) + x1(i)*y1(i) + x2(i)*y0(i);
+      s3 := s3 + x0(i)*y3(i) + x1(i)*y2(i) + x2(i)*y1(i) + x3(i)*y0(i);
+    end loop;
+    put("n0 : "); put(Last_Zero_Count(s0),1);
+    put(", n1 : "); put(Last_Zero_Count(s1),1); 
+    put(", n2 : "); put(Last_Zero_Count(s2),1);
+    put(", n3 : "); put(Last_Zero_Count(s3),1); new_line;
+    put("  xemin : ");
+    put(" "); put(xemin0,1); 
+    put(" "); put(xemin1,1); 
+    put(" "); put(xemin2,1); 
+    put(" "); put(xemin3,1);
+    put(", xemax : ");
+    put(" "); put(xemax0,1); 
+    put(" "); put(xemax1,1); 
+    put(" "); put(xemax2,1); 
+    put(" "); put(xemax3,1);
+    put(", d : "); put(xemax0-xemin0,1);
+    put(" "); put(xemax1-xemin1,1);
+    put(" "); put(xemax2-xemin2,1);
+    put(" "); put(xemax3-xemin3,1); new_line;
+    put("  yemin : ");
+    put(" "); put(yemin0,1); 
+    put(" "); put(yemin1,1); 
+    put(" "); put(yemin2,1); 
+    put(" "); put(yemin3,1);
+    put(", yemax : ");
+    put(" "); put(yemax0,1); 
+    put(" "); put(yemax1,1); 
+    put(" "); put(yemax2,1); 
+    put(" "); put(yemax3,1);
+    put(", d : "); put(yemax0-yemin0,1);
+    put(" "); put(yemax1-yemin1,1);
+    put(" "); put(yemax2-yemin2,1);
+    put(" "); put(yemax3-yemin3,1); new_line;
+  end Test_Free_Convolution_Bits;
+
   procedure Main is
+
+    dim : integer32 := 0;
+
   begin
     Test_Mod_Mask_Bits;
     new_line;
@@ -502,6 +604,11 @@ package body Test_Bits_of_Doubles is
     new_line;
     put_line("*** testing the last zero counts ***");
     Test_Last_Zero_Counts;
+    new_line;
+    put("Give the dimension : "); get(dim);
+    for i in 1..10 loop
+      Test_Free_Convolution_Bits(dim);
+    end loop;
   end Main;
 
 end Test_Bits_of_Doubles;

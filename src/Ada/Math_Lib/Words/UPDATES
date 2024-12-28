@@ -1,4 +1,5 @@
 Sat 28 Dec 2024 : introduced more accumulators in vectored_octo_doubles.
+  Added test on distribution of the numbers to test_bits_of_doubles.
 
 Fri 27 Dec 2024 : factored out the sign balance procedures out of the
   bits_of_doubles into a new package sign_balancers, moved the tests on
