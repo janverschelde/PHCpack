@@ -26,12 +26,78 @@ package Balanced_Quarter_Doubles is
   -- DESCRIPTION :
   --   Makes a random balanced quarter double.
 
+  procedure Random ( x0,x1,x2,x3,x4,x5,x6,x7 : out double_float );
+
+  -- DESCRIPTION :
+  --   Makes a random balanced quarter double double.
+
+  procedure Random ( x0,x1,x2,x3,x4,x5,x6,x7 : out double_float;
+                     x8,x9,xA,xB,xC,xD,xE,xF : out double_float );
+
+  -- DESCRIPTION :
+  --   Makes a random balanced quarter quad double.
+
+  procedure Random ( x00,x01,x02,x03,x04,x05,x06,x07 : out double_float;
+                     x08,x09,x10,x11,x12,x13,x14,x15 : out double_float;
+                     x16,x17,x18,x19,x20,x21,x22,x23 : out double_float;
+                     x24,x25,x26,x27,x28,x29,x30,x31 : out double_float );
+
+  -- DESCRIPTION :
+  --   Makes a random balanced quarter octo double.
+
+  procedure Random ( x00,x01,x02,x03,x04,x05,x06,x07 : out double_float;
+                     x08,x09,x10,x11,x12,x13,x14,x15 : out double_float;
+                     x16,x17,x18,x19,x20,x21,x22,x23 : out double_float;
+                     x24,x25,x26,x27,x28,x29,x30,x31 : out double_float;
+                     x32,x33,x34,x35,x36,x37,x38,x39 : out double_float;
+                     x40,x41,x42,x43,x44,x45,x46,x47 : out double_float;
+                     x48,x49,x50,x51,x52,x53,x54,x55 : out double_float;
+                     x56,x57,x58,x59,x60,x61,x62,x63 : out double_float ); 
+
+  -- DESCRIPTION :
+  --   Makes a random balanced quarter hexa double.
+
   procedure Random ( dim : in integer32;
                      x0,x1,x2,x3 : out Standard_Floating_Vectors.Vector );
+  procedure Random ( dim : in integer32;
+                     x0,x1,x2,x3 : out Standard_Floating_Vectors.Vector;
+                     x4,x5,x6,x7 : out Standard_Floating_Vectors.Vector );
+  procedure Random ( dim : in integer32;
+                     x0,x1,x2,x3 : out Standard_Floating_Vectors.Vector;
+                     x4,x5,x6,x7 : out Standard_Floating_Vectors.Vector;
+                     x8,x9,xA,xB : out Standard_Floating_Vectors.Vector;
+                     xC,xD,xE,xF : out Standard_Floating_Vectors.Vector );
+  procedure Random ( dim : in integer32;
+                     x00,x01,x02,x03 : out Standard_Floating_Vectors.Vector;
+                     x04,x05,x06,x07 : out Standard_Floating_Vectors.Vector;
+                     x08,x09,x10,x11 : out Standard_Floating_Vectors.Vector;
+                     x12,x13,x14,x15 : out Standard_Floating_Vectors.Vector;
+                     x16,x17,x18,x19 : out Standard_Floating_Vectors.Vector;
+                     x20,x21,x22,x23 : out Standard_Floating_Vectors.Vector;
+                     x24,x25,x26,x27 : out Standard_Floating_Vectors.Vector;
+                     x28,x29,x30,x31 : out Standard_Floating_Vectors.Vector );
+  procedure Random ( dim : in integer32;
+                     x00,x01,x02,x03 : out Standard_Floating_Vectors.Vector;
+                     x04,x05,x06,x07 : out Standard_Floating_Vectors.Vector;
+                     x08,x09,x10,x11 : out Standard_Floating_Vectors.Vector;
+                     x12,x13,x14,x15 : out Standard_Floating_Vectors.Vector;
+                     x16,x17,x18,x19 : out Standard_Floating_Vectors.Vector;
+                     x20,x21,x22,x23 : out Standard_Floating_Vectors.Vector;
+                     x24,x25,x26,x27 : out Standard_Floating_Vectors.Vector;
+                     x28,x29,x30,x31 : out Standard_Floating_Vectors.Vector;
+                     x32,x33,x34,x35 : out Standard_Floating_Vectors.Vector;
+                     x36,x37,x38,x39 : out Standard_Floating_Vectors.Vector;
+                     x40,x41,x42,x43 : out Standard_Floating_Vectors.Vector;
+                     x44,x45,x46,x47 : out Standard_Floating_Vectors.Vector;
+                     x48,x49,x50,x51 : out Standard_Floating_Vectors.Vector;
+                     x52,x53,x54,x55 : out Standard_Floating_Vectors.Vector;
+                     x56,x57,x58,x59 : out Standard_Floating_Vectors.Vector;
+                     x60,x61,x62,x63 : out Standard_Floating_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Makes vectors of random balanced quarter doubles.
 
-  -- REQUIRED : x0'range, x1'range, x2'range, x3'range includes 1..dim.
+  -- REQUIRED :
+  --   The range of all vectors includes 1..dim.
 
 end Balanced_Quarter_Doubles;
