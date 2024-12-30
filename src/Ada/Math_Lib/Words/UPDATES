@@ -1,3 +1,6 @@
+Mon 30 Dec 2024 : tested the wrappers in test_balanced_quarter_doubles
+  and recalibrated the exponents in balanced_quarter_doubles.adb.
+
 Sun 29 Dec 2024 : new balanced_quarter_doubles and ts_qtrbal.adb,
   calling the main in test_balanced_quarter_doubles.  Updated words.gpr.
   To balanced_quarter_doubles, added procedures to make balanced quarter

@@ -4,7 +4,7 @@ package body Balanced_Quarter_Doubles is
 
   function Thirteen_Random_Bits return integer64 is
 
-    res : integer64 := 1;
+    res : integer64 := 1; -- first bit is one
     rnd : integer64;
 
   begin
@@ -27,33 +27,33 @@ package body Balanced_Quarter_Doubles is
 
   procedure Random ( x0,x1,x2,x3 : out double_float ) is
   begin
-    x0 := Random_Quarter(-1);
+    x0 := Random_Quarter(0);
     x1 := Random_Quarter(-13);
-    x2 := Random_Quarter(-25);
-    x3 := Random_Quarter(-37);
+    x2 := Random_Quarter(-26);
+    x3 := Random_Quarter(-39);
   end Random;
 
   procedure Random ( x0,x1,x2,x3,x4,x5,x6,x7 : out double_float ) is
   begin
     Random(x0,x1,x2,x3);
-    x4 := Random_Quarter(-49);
-    x5 := Random_Quarter(-61);
-    x6 := Random_Quarter(-73);
-    x7 := Random_Quarter(-85);
+    x4 := Random_Quarter(-52);
+    x5 := Random_Quarter(-65);
+    x6 := Random_Quarter(-78);
+    x7 := Random_Quarter(-91);
   end Random;
 
   procedure Random ( x0,x1,x2,x3,x4,x5,x6,x7 : out double_float;
                      x8,x9,xA,xB,xC,xD,xE,xF : out double_float ) is
   begin
     Random(x0,x1,x2,x3,x4,x5,x6,x7);
-    x8 := Random_Quarter(-97);
-    x9 := Random_Quarter(-109);
-    xA := Random_Quarter(-121);
-    xB := Random_Quarter(-133);
-    xC := Random_Quarter(-145);
-    xD := Random_Quarter(-157);
-    xE := Random_Quarter(-169);
-    xF := Random_Quarter(-181);
+    x8 := Random_Quarter(-104);
+    x9 := Random_Quarter(-117);
+    xA := Random_Quarter(-130);
+    xB := Random_Quarter(-143);
+    xC := Random_Quarter(-156);
+    xD := Random_Quarter(-169);
+    xE := Random_Quarter(-182);
+    xF := Random_Quarter(-195);
   end Random;
 
   procedure Random ( x00,x01,x02,x03,x04,x05,x06,x07 : out double_float;
@@ -62,22 +62,22 @@ package body Balanced_Quarter_Doubles is
                      x24,x25,x26,x27,x28,x29,x30,x31 : out double_float ) is
   begin
     Random(x00,x01,x02,x03,x04,x05,x06,x07,x08,x09,x10,x11,x12,x13,x14,x15);
-    x16 := Random_Quarter(-193);
-    x17 := Random_Quarter(-205);
-    x18 := Random_Quarter(-217);
-    x19 := Random_Quarter(-228);
-    x20 := Random_Quarter(-241);
-    x21 := Random_Quarter(-253);
-    x22 := Random_Quarter(-265);
-    x23 := Random_Quarter(-277);
-    x24 := Random_Quarter(-289);
-    x25 := Random_Quarter(-301);
-    x26 := Random_Quarter(-313);
-    x27 := Random_Quarter(-325);
-    x28 := Random_Quarter(-337);
-    x29 := Random_Quarter(-349);
-    x30 := Random_Quarter(-361);
-    x31 := Random_Quarter(-373);
+    x16 := Random_Quarter(-208);
+    x17 := Random_Quarter(-221);
+    x18 := Random_Quarter(-234);
+    x19 := Random_Quarter(-247);
+    x20 := Random_Quarter(-260);
+    x21 := Random_Quarter(-273);
+    x22 := Random_Quarter(-286);
+    x23 := Random_Quarter(-299);
+    x24 := Random_Quarter(-312);
+    x25 := Random_Quarter(-325);
+    x26 := Random_Quarter(-338);
+    x27 := Random_Quarter(-351);
+    x28 := Random_Quarter(-364);
+    x29 := Random_Quarter(-377);
+    x30 := Random_Quarter(-390);
+    x31 := Random_Quarter(-403);
   end Random;
 
   procedure Random ( x00,x01,x02,x03,x04,x05,x06,x07 : out double_float;
@@ -91,38 +91,38 @@ package body Balanced_Quarter_Doubles is
   begin
     Random(x00,x01,x02,x03,x04,x05,x06,x07,x08,x09,x10,x11,x12,x13,x14,x15,
            x16,x17,x18,x19,x20,x21,x22,x23,x24,x25,x26,x27,x28,x29,x30,x31);
-    x32 := Random_Quarter(-385);
-    x33 := Random_Quarter(-397);
-    x34 := Random_Quarter(-409);
-    x35 := Random_Quarter(-421);
-    x36 := Random_Quarter(-433);
-    x37 := Random_Quarter(-445);
-    x38 := Random_Quarter(-457);
-    x39 := Random_Quarter(-469);
-    x40 := Random_Quarter(-481);
-    x41 := Random_Quarter(-493);
-    x42 := Random_Quarter(-505);
-    x43 := Random_Quarter(-517);
-    x44 := Random_Quarter(-529);
-    x45 := Random_Quarter(-541);
-    x46 := Random_Quarter(-553);
-    x47 := Random_Quarter(-565);
-    x48 := Random_Quarter(-577);
-    x49 := Random_Quarter(-589);
-    x50 := Random_Quarter(-601);
-    x51 := Random_Quarter(-613);
-    x52 := Random_Quarter(-625);
-    x53 := Random_Quarter(-637);
-    x54 := Random_Quarter(-649);
-    x55 := Random_Quarter(-661);
-    x56 := Random_Quarter(-673);
-    x57 := Random_Quarter(-685);
-    x58 := Random_Quarter(-697);
-    x59 := Random_Quarter(-709);
-    x60 := Random_Quarter(-721);
-    x61 := Random_Quarter(-733);
-    x62 := Random_Quarter(-745);
-    x63 := Random_Quarter(-757);
+    x32 := Random_Quarter(-416);
+    x33 := Random_Quarter(-429);
+    x34 := Random_Quarter(-442);
+    x35 := Random_Quarter(-455);
+    x36 := Random_Quarter(-468);
+    x37 := Random_Quarter(-481);
+    x38 := Random_Quarter(-449);
+    x39 := Random_Quarter(-507);
+    x40 := Random_Quarter(-520);
+    x41 := Random_Quarter(-533);
+    x42 := Random_Quarter(-546);
+    x43 := Random_Quarter(-559);
+    x44 := Random_Quarter(-572);
+    x45 := Random_Quarter(-585);
+    x46 := Random_Quarter(-598);
+    x47 := Random_Quarter(-611);
+    x48 := Random_Quarter(-624);
+    x49 := Random_Quarter(-637);
+    x50 := Random_Quarter(-650);
+    x51 := Random_Quarter(-663);
+    x52 := Random_Quarter(-676);
+    x53 := Random_Quarter(-689);
+    x54 := Random_Quarter(-702);
+    x55 := Random_Quarter(-715);
+    x56 := Random_Quarter(-728);
+    x57 := Random_Quarter(-741);
+    x58 := Random_Quarter(-754);
+    x59 := Random_Quarter(-767);
+    x60 := Random_Quarter(-780);
+    x61 := Random_Quarter(-793);
+    x62 := Random_Quarter(-806);
+    x63 := Random_Quarter(-819);
   end Random;
 
   procedure Random ( dim : in integer32;
