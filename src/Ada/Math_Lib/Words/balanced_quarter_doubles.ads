@@ -1,6 +1,14 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Vectors;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Octo_Double_Numbers;                use Octo_Double_Numbers;
+with Hexa_Double_Numbers;                use Hexa_Double_Numbers;
+with Double_Double_Vectors;
+with Quad_Double_Vectors;
+with Octo_Double_Vectors;
+with Hexa_Double_Vectors;
 
 package Balanced_Quarter_Doubles is
 
@@ -99,5 +107,27 @@ package Balanced_Quarter_Doubles is
 
   -- REQUIRED :
   --   The range of all vectors includes 1..dim.
+
+-- WRAPPERS :
+
+  function Random return double_float;
+  function Random return double_double;
+  function Random return quad_double;
+  function Random return octo_double;
+  function Random return hexa_double;
+
+  -- DESCRIPTION :
+  --   Returns a random double, double double, quad double,
+  --   octo double, and hexa double summing the doubles of
+  --   a random balanced quarter double.
+
+  function Random ( dim : integer32 ) return Standard_Floating_Vectors.Vector;
+  function Random ( dim : integer32 ) return Double_Double_Vectors.Vector;
+  function Random ( dim : integer32 ) return Quad_Double_Vectors.Vector;
+  function Random ( dim : integer32 ) return Octo_Double_Vectors.Vector;
+  function Random ( dim : integer32 ) return Hexa_Double_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns a vector of range 1..dim of random balanced quarters.
 
 end Balanced_Quarter_Doubles;

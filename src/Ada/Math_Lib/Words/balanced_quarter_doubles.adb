@@ -202,4 +202,176 @@ package body Balanced_Quarter_Doubles is
     end loop;
   end Random;
 
+-- WRAPPERS :
+
+  function Random return double_float is
+
+    res,r0,r1,r2,r3 : double_float;
+
+  begin
+    Random(r0,r1,r2,r3);
+    res := ((r3 + r2) + r1) + r0;
+    return res;
+  end Random;
+
+  function Random return double_double is
+
+    res,reshi,reslo : double_double;
+    r0,r1,r2,r3,r4,r5,r6,r7 : double_float;
+
+  begin
+    Random(r0,r1,r2,r3,r4,r5,r6,r7);
+    reshi := ((Double_Double_Numbers.create(r3) + r2) + r1) + r0;
+    reslo := ((Double_Double_Numbers.create(r7) + r6) + r5) + r4;
+    res := reshi + reslo;
+    return res;
+  end Random;
+
+  function Random return quad_double is
+
+    res,reshihi,reslohi,reshilo,reslolo : quad_double;
+    r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,rA,rB,rC,rD,rE,rF : double_float;
+
+  begin
+    Random(r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,rA,rB,rC,rD,rE,rF);
+    reshihi := ((Quad_Double_Numbers.create(r3) + r2) + r1) + r0;
+    reslohi := ((Quad_Double_Numbers.create(r7) + r6) + r5) + r4;
+    reshilo := ((Quad_Double_Numbers.create(rB) + rA) + r9) + r8;
+    reslolo := ((Quad_Double_Numbers.create(rF) + rE) + rD) + rC;
+    res := reshihi + reslohi + reshilo + reslolo;
+    return res;
+  end Random;
+
+  function Random return octo_double is
+
+    res : octo_double;
+    reshihihi,reslohihi,reshilohi,reslolohi : octo_double;
+    reshihilo,reslohilo,reshilolo,reslololo : octo_double;
+    r00,r01,r02,r03,r04,r05,r06,r07 : double_float;
+    r08,r09,r10,r11,r12,r13,r14,r15 : double_float;
+    r16,r17,r18,r19,r20,r21,r22,r23 : double_float;
+    r24,r25,r26,r27,r28,r29,r30,r31 : double_float;
+
+  begin
+    Random(r00,r01,r02,r03,r04,r05,r06,r07,
+           r08,r09,r10,r11,r12,r13,r14,r15,
+           r16,r17,r18,r19,r20,r21,r22,r23,
+           r24,r25,r26,r27,r28,r29,r30,r31);
+    reshihihi := ((Octo_Double_Numbers.create(r03) + r02) + r01) + r00;
+    reslohihi := ((Octo_Double_Numbers.create(r07) + r06) + r05) + r04;
+    reshilohi := ((Octo_Double_Numbers.create(r11) + r10) + r09) + r08;
+    reslolohi := ((Octo_Double_Numbers.create(r15) + r14) + r13) + r12;
+    reshihilo := ((Octo_Double_Numbers.create(r19) + r18) + r17) + r16;
+    reslohilo := ((Octo_Double_Numbers.create(r23) + r22) + r21) + r20;
+    reshilolo := ((Octo_Double_Numbers.create(r27) + r26) + r25) + r24;
+    reslololo := ((Octo_Double_Numbers.create(r31) + r30) + r29) + r28;
+    res := reshihihi + reslohihi + reshilohi + reslolohi
+         + reshihilo + reslohilo + reshilolo + reslololo;
+    return res;
+  end Random;
+
+  function Random return hexa_double is
+
+    res : hexa_double;
+    reshihihihi,reslohihihi,reshilohihi,reslolohihi : hexa_double;
+    reshihilohi,reslohilohi,reshilolohi,reslololohi : hexa_double;
+    reshihihilo,reslohihilo,reshilohilo,reslolohilo : hexa_double;
+    reshihilolo,reslohilolo,reshilololo,reslolololo : hexa_double;
+    r00,r01,r02,r03,r04,r05,r06,r07 : double_float;
+    r08,r09,r10,r11,r12,r13,r14,r15 : double_float;
+    r16,r17,r18,r19,r20,r21,r22,r23 : double_float;
+    r24,r25,r26,r27,r28,r29,r30,r31 : double_float;
+    r32,r33,r34,r35,r36,r37,r38,r39 : double_float;
+    r40,r41,r42,r43,r44,r45,r46,r47 : double_float;
+    r48,r49,r50,r51,r52,r53,r54,r55 : double_float;
+    r56,r57,r58,r59,r60,r61,r62,r63 : double_float;
+
+  begin
+    Random(r00,r01,r02,r03,r04,r05,r06,r07,
+           r08,r09,r10,r11,r12,r13,r14,r15,
+           r16,r17,r18,r19,r20,r21,r22,r23,
+           r24,r25,r26,r27,r28,r29,r30,r31,
+           r32,r33,r34,r35,r36,r37,r38,r39,
+           r40,r41,r42,r43,r44,r45,r46,r47,
+           r48,r49,r50,r51,r52,r53,r54,r55,
+           r56,r57,r58,r59,r60,r61,r62,r63);
+    reshihihihi := ((Hexa_Double_Numbers.create(r03) + r02) + r01) + r00;
+    reslohihihi := ((Hexa_Double_Numbers.create(r07) + r06) + r05) + r04;
+    reshilohihi := ((Hexa_Double_Numbers.create(r11) + r10) + r09) + r08;
+    reslolohihi := ((Hexa_Double_Numbers.create(r15) + r14) + r13) + r12;
+    reshihilohi := ((Hexa_Double_Numbers.create(r19) + r18) + r17) + r16;
+    reslohilohi := ((Hexa_Double_Numbers.create(r23) + r22) + r21) + r20;
+    reshilolohi := ((Hexa_Double_Numbers.create(r27) + r26) + r25) + r24;
+    reslololohi := ((Hexa_Double_Numbers.create(r31) + r30) + r29) + r28;
+    reshihihilo := ((Hexa_Double_Numbers.create(r35) + r34) + r33) + r32;
+    reslohihilo := ((Hexa_Double_Numbers.create(r39) + r38) + r37) + r36;
+    reshilohilo := ((Hexa_Double_Numbers.create(r43) + r42) + r41) + r40;
+    reslolohilo := ((Hexa_Double_Numbers.create(r47) + r46) + r45) + r44;
+    reshihilolo := ((Hexa_Double_Numbers.create(r51) + r50) + r49) + r48;
+    reslohilolo := ((Hexa_Double_Numbers.create(r55) + r54) + r53) + r52;
+    reshilololo := ((Hexa_Double_Numbers.create(r59) + r58) + r57) + r56;
+    reslolololo := ((Hexa_Double_Numbers.create(r63) + r62) + r61) + r60;
+    res := reshihihihi + reslohihihi + reshilohihi + reslolohihi
+         + reshihilohi + reslohilohi + reshilolohi + reslololohi
+         + reshihihilo + reslohihilo + reshilohilo + reslolohilo
+         + reshihilolo + reslohilolo + reshilololo + reslolololo;
+    return res;
+  end Random;
+
+  function Random 
+             ( dim : integer32 ) return Standard_Floating_Vectors.Vector is
+
+    res : Standard_Floating_Vectors.Vector(1..dim);
+
+  begin
+    for i in 1..dim loop
+      res(i) := Random;
+    end loop;
+    return res;
+  end Random;
+
+  function Random ( dim : integer32 ) return Double_Double_Vectors.Vector is
+
+    res : Double_Double_Vectors.Vector(1..dim);
+
+  begin
+    for i in 1..dim loop
+      res(i) := Random;
+    end loop;
+    return res;
+  end Random;
+
+  function Random ( dim : integer32 ) return Quad_Double_Vectors.Vector is
+
+    res : Quad_Double_Vectors.Vector(1..dim);
+
+  begin
+    for i in 1..dim loop
+      res(i) := Random;
+    end loop;
+    return res;
+  end Random;
+
+  function Random ( dim : integer32 ) return Octo_Double_Vectors.Vector is
+
+    res : Octo_Double_Vectors.Vector(1..dim);
+
+  begin
+    for i in 1..dim loop
+      res(i) := Random;
+    end loop;
+    return res;
+  end Random;
+
+  function Random ( dim : integer32 ) return Hexa_Double_Vectors.Vector is
+
+    res : Hexa_Double_Vectors.Vector(1..dim);
+
+  begin
+    for i in 1..dim loop
+      res(i) := Random;
+    end loop;
+    return res;
+  end Random;
+
 end Balanced_Quarter_Doubles;
