@@ -17,6 +17,11 @@ package Test_Vectored_Quad_Doubles is
   --   Generates two vectors of random complex quad double numbers
   --   of dimension dim and tests their inner product.
 
+  procedure Test_Balanced_Product ( dim : in integer32 );
+
+  -- DESCRIPTION :
+  --   Tests the product of balanced quarter quad double vectors.
+
   procedure Main;
 
   -- DESCRIPTION :

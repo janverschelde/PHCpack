@@ -13,6 +13,7 @@ with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Random_Vectors;
 with Vectored_Quad_Doubles;
+with Balanced_Quarter_Doubles;
 
 package body Test_Vectored_Quad_Doubles is
 
@@ -103,6 +104,29 @@ package body Test_Vectored_Quad_Doubles is
     put(" error : "); put(err,2); new_line;
   end Test_Complex_Product;
 
+  procedure Test_Balanced_Product ( dim : in integer32 ) is
+
+    x : constant Quad_Double_Vectors.Vector(1..dim)
+      := Balanced_Quarter_Doubles.Random(dim);
+    y : constant Quad_Double_Vectors.Vector(1..dim)
+      := Balanced_Quarter_Doubles.Random(dim);
+    qdprd0,qdprd1,err : quad_double;
+
+  begin
+    qdprd0 := create(integer32(0));
+    for i in x'range loop
+      qdprd0 := qdprd0 + x(i)*y(i);
+    end loop;
+    if dim > 20
+     then qdprd1 := Vectored_Quad_Doubles.Product(x,y,false);
+     else qdprd1 := Vectored_Quad_Doubles.Product(x,y);
+    end if;
+    put("qd prd : "); put(qdprd0); new_line;
+    put("qd sgn : "); put(qdprd1); new_line;
+    err := qdprd0 - qdprd1;
+    put(" error : "); put(err,2); new_line;
+  end Test_Balanced_Product;
+
   procedure Main is
 
     seed : natural32 := 0;
@@ -117,6 +141,8 @@ package body Test_Vectored_Quad_Doubles is
     Test_Real_Product(dim);
     new_line;
     Test_Complex_Product(dim);
+    new_line;
+    Test_Balanced_Product(dim);
     put("Seed used : "); put(Standard_Random_Numbers.Get_Seed,1); new_line;
   end Main;
 

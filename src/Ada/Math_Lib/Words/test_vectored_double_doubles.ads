@@ -41,6 +41,11 @@ package Test_Vectored_Double_Doubles is
   --   Generates one vector of random complex double double numbers
   --   of dimension dim and tests its squared complex norm.
 
+  procedure Test_Balanced_Product ( dim : in integer32 );
+
+  -- DESCRIPTION :
+  --   Tests the product of balanced quarter double double vectors.
+
   procedure Main;
 
   -- DESCRIPTION :

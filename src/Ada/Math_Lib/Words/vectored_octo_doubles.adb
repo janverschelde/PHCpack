@@ -811,20 +811,22 @@ package body Vectored_Octo_Doubles is
                    + xs27(i)*ys04(i) + xs28(i)*ys03(i) + xs29(i)*ys02(i)
                    + xs30(i)*ys01(i) + xs31(i)*ys00(i);
     end loop;
-    res := to_octo_double(s00,s01,s02,s03,s04,s05,s06,s07,
-                          s08a,s09a,s10a,s11a,s12a,s13a,s14a,s15a,
-                          s16a,s17a,s18a,s19a,s20a,s21a,s22a,s23a,
-                          s24a,s25a,s26a,s27a,s28a,s29a,s30a,s31a,
-                          verbose=>true)
-         + to_octo_double(s08b,s09b,s10b,s11b,s12b,s13b,s14b,s15b,
-                          s16b,s17b,s18b,s19b,s20b,s21b,s22b,s23b,
-                          s24b,s25b,s26b,s27b,s28b,s29b,s30b,s31b,
-                          verbose=>true)
-         + to_octo_double(s16c,s17c,s18c,s19c,s20c,s21c,s22c,s23c,
-                          s24c,s25c,s26c,s27c,s28c,s29c,s30c,s31c,
-                          verbose=>true)
-         + to_octo_double(s24d,s25d,s26d,s27d,s28d,s29d,s30d,s31d,
-                          verbose=>true);
+    if ns > 0 then
+      res := to_octo_double(s00,s01,s02,s03,s04,s05,s06,s07,
+                            s08a,s09a,s10a,s11a,s12a,s13a,s14a,s15a,
+                            s16a,s17a,s18a,s19a,s20a,s21a,s22a,s23a,
+                            s24a,s25a,s26a,s27a,s28a,s29a,s30a,s31a,
+                            verbose=>true)
+           + to_octo_double(s08b,s09b,s10b,s11b,s12b,s13b,s14b,s15b,
+                            s16b,s17b,s18b,s19b,s20b,s21b,s22b,s23b,
+                            s24b,s25b,s26b,s27b,s28b,s29b,s30b,s31b,
+                            verbose=>true)
+           + to_octo_double(s16c,s17c,s18c,s19c,s20c,s21c,s22c,s23c,
+                            s24c,s25c,s26c,s27c,s28c,s29c,s30c,s31c,
+                            verbose=>true)
+           + to_octo_double(s24d,s25d,s26d,s27d,s28d,s29d,s30d,s31d,
+                            verbose=>true);
+    end if;
     s00 := 0.0; s01 := 0.0; s02 := 0.0; s03 := 0.0;
     s04 := 0.0; s05 := 0.0; s06 := 0.0; s07 := 0.0;
     s08a := 0.0; s09a := 0.0; s10a := 0.0; s11a := 0.0;
@@ -1054,20 +1056,22 @@ package body Vectored_Octo_Doubles is
                    + xd27(i)*yd04(i) + xd28(i)*yd03(i) + xd29(i)*yd02(i)
                    + xd30(i)*yd01(i) + xd31(i)*yd00(i);
     end loop;
-    res := res + to_octo_double(s00,s01,s02,s03,s04,s05,s06,s07,
-                                s08a,s09a,s10a,s11a,s12a,s13a,s14a,s15a,
-                                s16a,s17a,s18a,s19a,s20a,s21a,s22a,s23a,
-                                s24a,s25a,s26a,s27a,s28a,s29a,s30a,s31a,
-                                verbose=>true)
-               + to_octo_double(s08b,s09b,s10b,s11b,s12b,s13b,s14b,s15b,
-                                s16b,s17b,s18b,s19b,s20b,s21b,s22b,s23b,
-                                s24b,s25b,s26b,s27b,s28b,s29b,s30b,s31b,
-                                verbose=>true)
-               + to_octo_double(s16c,s17c,s18c,s19c,s20c,s21c,s22c,s23c,
-                                s24c,s25c,s26c,s27c,s28c,s29c,s30c,s31c,
-                                verbose=>true)
-               + to_octo_double(s24d,s25d,s26d,s27d,s28d,s29d,s30d,s31d,
-                                verbose=>true);
+    if nd > 0 then
+      res := res + to_octo_double(s00,s01,s02,s03,s04,s05,s06,s07,
+                                  s08a,s09a,s10a,s11a,s12a,s13a,s14a,s15a,
+                                  s16a,s17a,s18a,s19a,s20a,s21a,s22a,s23a,
+                                  s24a,s25a,s26a,s27a,s28a,s29a,s30a,s31a,
+                                  verbose=>true)
+                 + to_octo_double(s08b,s09b,s10b,s11b,s12b,s13b,s14b,s15b,
+                                  s16b,s17b,s18b,s19b,s20b,s21b,s22b,s23b,
+                                  s24b,s25b,s26b,s27b,s28b,s29b,s30b,s31b,
+                                  verbose=>true)
+                 + to_octo_double(s16c,s17c,s18c,s19c,s20c,s21c,s22c,s23c,
+                                  s24c,s25c,s26c,s27c,s28c,s29c,s30c,s31c,
+                                  verbose=>true)
+                 + to_octo_double(s24d,s25d,s26d,s27d,s28d,s29d,s30d,s31d,
+                                  verbose=>true);
+    end if;
     return res;
   end Product;
 

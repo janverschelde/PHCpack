@@ -16,6 +16,7 @@ with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Random_Vectors;
 with Vectored_Double_Doubles;            use Vectored_Double_Doubles;
+with Balanced_Quarter_Doubles;
 
 package body Test_Vectored_Double_Doubles is
 
@@ -337,6 +338,29 @@ package body Test_Vectored_Double_Doubles is
     dderr := DoblDobl_Complex_Numbers.REAL_PART(ddsum0) - ddsum2;
     put(" error : "); put(dderr,2); new_line;
   end Test_Complex_Norm;
+
+  procedure Test_Balanced_Product ( dim : in integer32 ) is
+
+    x : constant Double_Double_Vectors.Vector(1..dim)
+      := Balanced_Quarter_Doubles.Random(dim);
+    y : constant Double_Double_Vectors.Vector(1..dim)
+      := Balanced_Quarter_Doubles.Random(dim);
+    ddprd0,ddprd1,err : double_double;
+
+  begin
+    ddprd0 := create(integer32(0));
+    for i in x'range loop
+      ddprd0 := ddprd0 + x(i)*y(i);
+    end loop;
+    if dim > 20
+     then ddprd1 := Vectored_Double_Doubles.Product(x,y,false);
+     else ddprd1 := Vectored_Double_Doubles.Product(x,y);
+    end if;
+    put("dd prd : "); put(ddprd0); new_line;
+    put("dd sgn : "); put(ddprd1); new_line;
+    err := ddprd0 - ddprd1;
+    put(" error : "); put(err,2); new_line;
+  end Test_Balanced_Product;
   
   procedure Main is
 
@@ -354,7 +378,10 @@ package body Test_Vectored_Double_Doubles is
     Test_Real_Product(dim);
     Test_Complex_Product(dim);
     Test_Real_Norm(dim);
+    new_line;
     Test_Complex_Norm(dim);
+    new_line;
+    Test_Balanced_Product(dim);
     put("Seed used : "); put(Standard_Random_Numbers.Get_Seed,1); new_line;
   end Main;
 

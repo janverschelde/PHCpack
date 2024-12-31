@@ -325,9 +325,11 @@ package body Vectored_Quad_Doubles is
                  + xsB(i)*ys4(i) + xsC(i)*ys3(i) + xsD(i)*ys2(i)
                  + xsE(i)*ys1(i) + xsF(i)*ys0(i);
     end loop;
-    res := to_quad_double(s0,s1,s2,s3,s4,s5,s6,s7,
-                          s8a,s9a,sAa,sBa,sCa,sDa,sEa,sFa,verbose=>true)
-         + to_quad_double(s8b,s9b,sAb,sBb,sCb,sDb,sEb,sFb,verbose=>true);
+    if ns > 0 then
+      res := to_quad_double(s0,s1,s2,s3,s4,s5,s6,s7,
+                            s8a,s9a,sAa,sBa,sCa,sDa,sEa,sFa,verbose=>true)
+           + to_quad_double(s8b,s9b,sAb,sBb,sCb,sDb,sEb,sFb,verbose=>true);
+    end if;
     s0 := 0.0; s1 := 0.0; s2 := 0.0; s3 := 0.0;
     s4 := 0.0; s5 := 0.0; s6 := 0.0; s7 := 0.0;
     s8a := 0.0; s9a := 0.0; sAa := 0.0; sBa := 0.0;
@@ -390,10 +392,12 @@ package body Vectored_Quad_Doubles is
                  + xdB(i)*yd4(i) + xdC(i)*yd3(i) + xdD(i)*yd2(i)
                  + xdE(i)*yd1(i) + xdF(i)*yd0(i);
     end loop;
-    res := res
-         + to_quad_double(s0,s1,s2,s3,s4,s5,s6,s7,
-                          s8a,s9a,sAa,sBa,sCa,sDa,sEa,sFa,verbose=>true)
-         + to_quad_double(s8b,s9b,sAb,sBb,sCb,sDb,sEb,sFb,verbose=>true);
+    if nd > 0 then
+      res := res
+           + to_quad_double(s0,s1,s2,s3,s4,s5,s6,s7,
+                            s8a,s9a,sAa,sBa,sCa,sDa,sEa,sFa,verbose=>true)
+           + to_quad_double(s8b,s9b,sAb,sBb,sCb,sDb,sEb,sFb,verbose=>true);
+    end if;
     return res;
   end Product;
 
