@@ -411,6 +411,32 @@ package body Vectored_Double_Doubles is
     end loop;
   end Signed_Quarter;
 
+  procedure Balanced_Quarter_Product
+              ( dim : in integer32;
+                x0,x1,x2,x3 : in Standard_Floating_Vectors.Vector;
+                x4,x5,x6,x7 : in Standard_Floating_Vectors.Vector;
+                y0,y1,y2,y3 : in Standard_Floating_Vectors.Vector;
+                y4,y5,y6,y7 : in Standard_Floating_Vectors.Vector;
+                s0,s1,s2,s3,s4,s5,s6,s7 : out double_float ) is
+  begin
+    s0 := 0.0; s1 := 0.0; s2 := 0.0; s3 := 0.0;
+    s4 := 0.0; s5 := 0.0; s6 := 0.0; s7 := 0.0;
+    for i in 1..dim loop
+      s0 := s0 + x0(i)*y0(i);
+      s1 := s1 + x0(i)*y1(i) + x1(i)*y0(i);
+      s2 := s2 + x0(i)*y2(i) + x1(i)*y1(i) + x2(i)*y0(i);
+      s3 := s3 + x0(i)*y3(i) + x1(i)*y2(i) + x2(i)*y1(i) + x3(i)*y0(i);
+      s4 := s4 + x0(i)*y4(i) + x1(i)*y3(i) + x2(i)*y2(i) + x3(i)*y1(i)
+               + x4(i)*y0(i);
+      s5 := s5 + x0(i)*y5(i) + x1(i)*y4(i) + x2(i)*y3(i) + x3(i)*y2(i)
+               + x4(i)*y1(i) + x5(i)*y0(i);
+      s6 := s6 + x0(i)*y6(i) + x1(i)*y5(i) + x2(i)*y4(i) + x3(i)*y3(i)
+               + x4(i)*y2(i) + x5(i)*y1(i) + x6(i)*y0(i);
+      s7 := s7 + x0(i)*y7(i) + x1(i)*y6(i) + x2(i)*y5(i) + x3(i)*y4(i)
+               + x4(i)*y3(i) + x5(i)*y2(i) + x6(i)*y1(i) + x7(i)*y0(i);
+    end loop;
+  end Balanced_Quarter_Product;
+
   procedure Sum ( v0,v1,v2,v3 : in Standard_Floating_Vectors.Vector;
                   s0,s1,s2,s3 : out double_float ) is
   begin
@@ -610,13 +636,13 @@ package body Vectored_Double_Doubles is
     put(", n2 : "); put(Last_Zero_Count(s2),1); new_line;
     put("s3 : "); put(s3);
     put(", n3 : "); put(Last_Zero_Count(s3),1); new_line;
-    put("s4 : "); put(s4); new_line;
+    put("s4 : "); put(s4);
     put(", n4 : "); put(Last_Zero_Count(s4),1); new_line;
-    put("s5 : "); put(s5); new_line;
+    put("s5 : "); put(s5);
     put(", n5 : "); put(Last_Zero_Count(s5),1); new_line;
-    put("s6 : "); put(s6); new_line;
+    put("s6 : "); put(s6);
     put(", n6 : "); put(Last_Zero_Count(s6),1); new_line;
-    put("s7 : "); put(s7); new_line;
+    put("s7 : "); put(s7);
     put(", n7 : "); put(Last_Zero_Count(s7),1); new_line;
   end Write_Subsums;
 

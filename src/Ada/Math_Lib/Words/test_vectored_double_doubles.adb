@@ -341,21 +341,28 @@ package body Test_Vectored_Double_Doubles is
 
   procedure Test_Balanced_Product ( dim : in integer32 ) is
 
-    x : constant Double_Double_Vectors.Vector(1..dim)
-      := Balanced_Quarter_Doubles.Random(dim);
-    y : constant Double_Double_Vectors.Vector(1..dim)
-      := Balanced_Quarter_Doubles.Random(dim);
+    x0,x1,x2,x3,x4,x5,x6,x7 : Standard_Floating_Vectors.Vector(1..dim);
+    y0,y1,y2,y3,y4,y5,y6,y7 : Standard_Floating_Vectors.Vector(1..dim);
+    x,y : Double_Double_Vectors.Vector(1..dim);
     ddprd0,ddprd1,err : double_double;
+    s0,s1,s2,s3,s4,s5,s6,s7 : double_float;
 
   begin
+    Balanced_Quarter_Doubles.Random(dim,x0,x1,x2,x3,x4,x5,x6,x7);
+    Balanced_Quarter_Doubles.Random(dim,y0,y1,y2,y3,y4,y5,y6,y7);
+    x := Balanced_Quarter_Doubles.Make_Double_Doubles
+           (x0,x1,x2,x3,x4,x5,x6,x7);
+    y := Balanced_Quarter_Doubles.Make_Double_Doubles
+           (y0,y1,y2,y3,y4,y5,y6,y7);
     ddprd0 := create(integer32(0));
     for i in x'range loop
       ddprd0 := ddprd0 + x(i)*y(i);
     end loop;
-    if dim > 20
-     then ddprd1 := Vectored_Double_Doubles.Product(x,y,false);
-     else ddprd1 := Vectored_Double_Doubles.Product(x,y);
-    end if;
+    Vectored_Double_Doubles.Balanced_Quarter_Product
+      (dim,x0,x1,x2,x3,x4,x5,x6,x7,y0,y1,y2,y3,y4,y5,y6,y7,
+       s0,s1,s2,s3,s4,s5,s6,s7);
+    ddprd1 := Vectored_Double_Doubles.to_double_double
+                (s0,s1,s2,s3,s4,s5,s6,s7);
     put("dd prd : "); put(ddprd0); new_line;
     put("dd sgn : "); put(ddprd1); new_line;
     err := ddprd0 - ddprd1;

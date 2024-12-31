@@ -189,6 +189,26 @@ package Vectored_Double_Doubles is
   --   ns       number of pairs (x(i),y(i)) with the same sign;
   --   nd       number of pairs (x(i),y(i)) with different signs.
 
+  procedure Balanced_Quarter_Product
+              ( dim : in integer32;
+                x0,x1,x2,x3 : in Standard_Floating_Vectors.Vector;
+                x4,x5,x6,x7 : in Standard_Floating_Vectors.Vector;
+                y0,y1,y2,y3 : in Standard_Floating_Vectors.Vector;
+                y4,y5,y6,y7 : in Standard_Floating_Vectors.Vector;
+                s0,s1,s2,s3,s4,s5,s6,s7 : out double_float );
+
+  -- DESCRIPTION :
+  --   Given balanced quarter double doubles in vectors of length dim,
+  --   returns the subsums of their inner product.
+
+  -- ON ENTRY :
+  --   dim      all vectors have range 1..dim;
+  --   x0, ..., x7 are the balanced quarter quad doubles of x;
+  --   y0, ..., y7 are the balanced quarter quad doubles of y.
+
+  -- ON RETURN :
+  --   s0, ..., s7 are the subsums of the inner product of x and y.
+
   procedure Quarter ( v : in DoblDobl_Complex_Vectors.Vector;
                       v0re,v1re : out Standard_Floating_Vectors.Vector;
                       v2re,v3re : out Standard_Floating_Vectors.Vector;
