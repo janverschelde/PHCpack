@@ -108,6 +108,101 @@ package Balanced_Quarter_Doubles is
   -- REQUIRED :
   --   The range of all vectors includes 1..dim.
 
+  function Make_Double ( r0,r1,r2,r3 : double_float ) return double_float;
+
+  -- DESCRIPTION :
+  --   Given the quarters of the doubles for a double float,
+  --   returns their evaluated sum.
+
+  function Make_Double_Double
+             ( r0,r1,r2,r3,r4,r5,r6,r7 : double_float )
+             return double_double;
+
+  -- DESCRIPTION :
+  --   Given the quarters of the doubles for a double double,
+  --   returns their evaluated sum.
+
+  function Make_Quad_Double
+             ( r0,r1,r2,r3,r4,r5,r6,r7 : double_float;
+               r8,r9,rA,rB,rC,rD,rE,rF : double_float )
+             return quad_double;
+
+  -- DESCRIPTION :
+  --   Given the quarters of the doubles for a quad double,
+  --   returns their evaluated sum.
+
+  function Make_Octo_Double
+             ( r00,r01,r02,r03,r04,r05,r06,r07 : double_float;
+               r08,r09,r10,r11,r12,r13,r14,r15 : double_float;
+               r16,r17,r18,r19,r20,r21,r22,r23 : double_float;
+               r24,r25,r26,r27,r28,r29,r30,r31 : double_float )
+             return octo_double;
+
+  -- DESCRIPTION :
+  --   Given the quarters of the doubles for an octo double,
+  --   returns their evaluated sum.
+
+  function Make_Hexa_Double
+             ( r00,r01,r02,r03,r04,r05,r06,r07 : double_float;
+               r08,r09,r10,r11,r12,r13,r14,r15 : double_float;
+               r16,r17,r18,r19,r20,r21,r22,r23 : double_float;
+               r24,r25,r26,r27,r28,r29,r30,r31 : double_float;
+               r32,r33,r34,r35,r36,r37,r38,r39 : double_float;
+               r40,r41,r42,r43,r44,r45,r46,r47 : double_float;
+               r48,r49,r50,r51,r52,r53,r54,r55 : double_float;
+               r56,r57,r58,r59,r60,r61,r62,r63 : double_float )
+             return hexa_double;
+
+  -- DESCRIPTION :
+  --   Given the quarters of the doubles for a hexa double,
+  --   returns their evaluated sum.
+
+  function Make_Doubles
+             ( x0,x1,x2,x3 : Standard_Floating_Vectors.Vector )
+             return Standard_Floating_Vectors.Vector;
+  function Make_Double_Doubles
+             ( x0,x1,x2,x3 : Standard_Floating_Vectors.Vector;
+               x4,x5,x6,x7 : Standard_Floating_Vectors.Vector )
+             return Double_Double_Vectors.Vector;
+  function Make_Quad_Doubles
+             ( x0,x1,x2,x3 : Standard_Floating_Vectors.Vector;
+               x4,x5,x6,x7 : Standard_Floating_Vectors.Vector;
+               x8,x9,xA,xB : Standard_Floating_Vectors.Vector;
+               xC,xD,xE,xF : Standard_Floating_Vectors.Vector )
+             return Quad_Double_Vectors.Vector;
+  function Make_Octo_Doubles
+             ( x00,x01,x02,x03 : Standard_Floating_Vectors.Vector;
+               x04,x05,x06,x07 : Standard_Floating_Vectors.Vector;
+               x08,x09,x10,x11 : Standard_Floating_Vectors.Vector;
+               x12,x13,x14,x15 : Standard_Floating_Vectors.Vector;
+               x16,x17,x18,x19 : Standard_Floating_Vectors.Vector;
+               x20,x21,x22,x23 : Standard_Floating_Vectors.Vector;
+               x24,x25,x26,x27 : Standard_Floating_Vectors.Vector;
+               x28,x29,x30,x31 : Standard_Floating_Vectors.Vector )
+             return Octo_Double_Vectors.Vector;
+  function Make_Hexa_Doubles
+             ( x00,x01,x02,x03 : Standard_Floating_Vectors.Vector;
+               x04,x05,x06,x07 : Standard_Floating_Vectors.Vector;
+               x08,x09,x10,x11 : Standard_Floating_Vectors.Vector;
+               x12,x13,x14,x15 : Standard_Floating_Vectors.Vector;
+               x16,x17,x18,x19 : Standard_Floating_Vectors.Vector;
+               x20,x21,x22,x23 : Standard_Floating_Vectors.Vector;
+               x24,x25,x26,x27 : Standard_Floating_Vectors.Vector;
+               x28,x29,x30,x31 : Standard_Floating_Vectors.Vector;
+               x32,x33,x34,x35 : Standard_Floating_Vectors.Vector;
+               x36,x37,x38,x39 : Standard_Floating_Vectors.Vector;
+               x40,x41,x42,x43 : Standard_Floating_Vectors.Vector;
+               x44,x45,x46,x47 : Standard_Floating_Vectors.Vector;
+               x48,x49,x50,x51 : Standard_Floating_Vectors.Vector;
+               x52,x53,x54,x55 : Standard_Floating_Vectors.Vector;
+               x56,x57,x58,x59 : Standard_Floating_Vectors.Vector;
+               x60,x61,x62,x63 : Standard_Floating_Vectors.Vector )
+             return Hexa_Double_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Given the vectors of quarters for multiple doubles,
+  --   returns their evaluated sums.
+
 -- WRAPPERS :
 
   function Random return double_float;

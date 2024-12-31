@@ -1,3 +1,7 @@
+Tue 31 Dec 2024 : improved the wrappers in balanced_quarter_doubles,
+  used in test_vectored_quad_doubles.adb, in a balanced product procedure
+  in vectored_quad_doubles.
+
 Mon 30 Dec 2024 : tested the wrappers in test_balanced_quarter_doubles
   and recalibrated the exponents in balanced_quarter_doubles.adb.
   To test_vectored_{double, quad, octo}_doubles, added tests on product 

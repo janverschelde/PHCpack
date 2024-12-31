@@ -59,6 +59,31 @@ package Vectored_Quad_Doubles is
   --   ns       number of pairs (x(i),y(i)) with the same sign;
   --   nd       number of pairs (x(i),y(i)) with different signs.
 
+  procedure Balanced_Quarter_Product
+              ( dim : in integer32;
+                x0,x1,x2,x3 : in Standard_Floating_Vectors.Vector;
+                x4,x5,x6,x7 : in Standard_Floating_Vectors.Vector;
+                x8,x9,xA,xB : in Standard_Floating_Vectors.Vector;
+                xC,xD,xE,xF : in Standard_Floating_Vectors.Vector;
+                y0,y1,y2,y3 : in Standard_Floating_Vectors.Vector;
+                y4,y5,y6,y7 : in Standard_Floating_Vectors.Vector;
+                y8,y9,yA,yB : in Standard_Floating_Vectors.Vector;
+                yC,yD,yE,yF : in Standard_Floating_Vectors.Vector;
+                s0,s1,s2,s3,s4,s5,s6,s7 : out double_float;
+                s8,s9,sA,sB,sC,sD,sE,sF : out double_float );
+
+  -- DESCRIPTION :
+  --   Given balanced quarter quad doubles in vectors of length dim,
+  --   returns the subsums of their inner product.
+
+  -- ON ENTRY :
+  --   dim      all vectors have range 1..dim;
+  --   x0, ..., xF are the balanced quarter quad doubles of x;
+  --   y0, ..., yF are the balanced quarter quad doubles of y.
+
+  -- ON RETURN :
+  --   s0, ..., sF are the subsums of the inner product of x and y.
+
   procedure Write_Subsums
               ( s0,s1,s2,s3,s4,s5,s6,s7 : in double_float );
   procedure Write_Subsums

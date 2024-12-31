@@ -103,6 +103,67 @@ package body Vectored_Quad_Doubles is
     end loop;
   end Signed_Quarter;
 
+  procedure Balanced_Quarter_Product
+              ( dim : in integer32;
+                x0,x1,x2,x3 : in Standard_Floating_Vectors.Vector;
+                x4,x5,x6,x7 : in Standard_Floating_Vectors.Vector;
+                x8,x9,xA,xB : in Standard_Floating_Vectors.Vector;
+                xC,xD,xE,xF : in Standard_Floating_Vectors.Vector;
+                y0,y1,y2,y3 : in Standard_Floating_Vectors.Vector;
+                y4,y5,y6,y7 : in Standard_Floating_Vectors.Vector;
+                y8,y9,yA,yB : in Standard_Floating_Vectors.Vector;
+                yC,yD,yE,yF : in Standard_Floating_Vectors.Vector;
+                s0,s1,s2,s3,s4,s5,s6,s7 : out double_float;
+                s8,s9,sA,sB,sC,sD,sE,sF : out double_float ) is
+  begin
+    s0 := 0.0; s1 := 0.0; s2 := 0.0; s3 := 0.0;
+    s4 := 0.0; s5 := 0.0; s6 := 0.0; s7 := 0.0;
+    s8 := 0.0; s9 := 0.0; sA := 0.0; sB := 0.0;
+    sC := 0.0; sD := 0.0; sE := 0.0; sF := 0.0;
+    for i in 1..dim loop
+      s0 := s0 + x0(i)*y0(i);
+      s1 := s1 + x0(i)*y1(i) + x1(i)*y0(i);
+      s2 := s2 + x0(i)*y2(i) + x1(i)*y1(i) + x2(i)*y0(i);
+      s3 := s3 + x0(i)*y3(i) + x1(i)*y2(i) + x2(i)*y1(i) + x3(i)*y0(i);
+      s4 := s4 + x0(i)*y4(i) + x1(i)*y3(i) + x2(i)*y2(i) + x3(i)*y1(i)
+               + x4(i)*y0(i);
+      s5 := s5 + x0(i)*y5(i) + x1(i)*y4(i) + x2(i)*y3(i) + x3(i)*y2(i)
+               + x4(i)*y1(i) + x5(i)*y0(i);
+      s6 := s6 + x0(i)*y6(i) + x1(i)*y5(i) + x2(i)*y4(i) + x3(i)*y3(i)
+               + x4(i)*y2(i) + x5(i)*y1(i) + x6(i)*y0(i);
+      s7 := s7 + x0(i)*y7(i) + x1(i)*y6(i) + x2(i)*y5(i) + x3(i)*y4(i)
+               + x4(i)*y3(i) + x5(i)*y2(i) + x6(i)*y1(i) + x7(i)*y0(i);
+      s8 := s8 + x0(i)*y8(i) + x1(i)*y7(i) + x2(i)*y6(i) + x3(i)*y5(i)
+               + x4(i)*y4(i) + x5(i)*y3(i) + x6(i)*y2(i) + x7(i)*y1(i)
+               + x8(i)*y0(i);
+      s9 := s9 + x0(i)*y9(i) + x1(i)*y8(i) + x2(i)*y7(i) + x3(i)*y6(i)
+               + x4(i)*y5(i) + x5(i)*y4(i) + x6(i)*y3(i) + x7(i)*y2(i)
+               + x8(i)*y1(i) + x9(i)*y0(i);
+      sA := sA + x0(i)*yA(i) + x1(i)*y9(i) + x2(i)*y8(i) + x3(i)*y7(i)
+               + x4(i)*y6(i) + x5(i)*y5(i) + x6(i)*y4(i) + x7(i)*y3(i)
+               + x8(i)*y2(i) + x9(i)*y1(i) + xA(i)*y0(i);
+      sB := sB + x0(i)*yB(i) + x1(i)*yA(i) + x2(i)*y9(i) + x3(i)*y8(i)
+               + x4(i)*y7(i) + x5(i)*y6(i) + x6(i)*y5(i) + x7(i)*y4(i)
+               + x8(i)*y3(i) + x9(i)*y2(i) + xA(i)*y1(i) + xB(i)*y0(i);
+      sC := sC + x0(i)*yC(i) + x1(i)*yB(i) + x2(i)*yA(i) + x3(i)*y9(i)
+               + x4(i)*y8(i) + x5(i)*y7(i) + x6(i)*y6(i) + x7(i)*y5(i)
+               + x8(i)*y4(i) + x9(i)*y3(i) + xA(i)*y2(i) + xB(i)*y1(i)
+               + xC(i)*y0(i);
+      sD := sD + x0(i)*yD(i) + x1(i)*yC(i) + x2(i)*yB(i) + x3(i)*yA(i)
+               + x4(i)*y9(i) + x5(i)*y8(i) + x6(i)*y7(i) + x7(i)*y6(i)
+               + x8(i)*y5(i) + x9(i)*y4(i) + xA(i)*y3(i) + xB(i)*y2(i)
+               + xC(i)*y1(i) + xD(i)*y0(i);
+      sE := sE + x0(i)*yE(i) + x1(i)*yD(i) + x2(i)*yC(i) + x3(i)*yB(i)
+               + x4(i)*yA(i) + x5(i)*y9(i) + x6(i)*y8(i) + x7(i)*y7(i)
+               + x8(i)*y6(i) + x9(i)*y5(i) + xA(i)*y4(i) + xB(i)*y3(i)
+               + xC(i)*y2(i) + xD(i)*y1(i) + xE(i)*y0(i);
+      sF := sF + x0(i)*yF(i) + x1(i)*yE(i) + x2(i)*yD(i) + x3(i)*yC(i)
+               + x4(i)*yB(i) + x5(i)*yA(i) + x6(i)*y9(i) + x7(i)*y8(i)
+               + x8(i)*y7(i) + x9(i)*y6(i) + xA(i)*y5(i) + xB(i)*y4(i)
+               + xC(i)*y3(i) + xD(i)*y2(i) + xE(i)*y1(i) + xF(i)*y0(i);
+    end loop;
+  end Balanced_Quarter_Product;
+
   procedure Write_Subsums
               ( s0,s1,s2,s3,s4,s5,s6,s7 : in double_float ) is
 

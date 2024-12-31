@@ -202,61 +202,52 @@ package body Balanced_Quarter_Doubles is
     end loop;
   end Random;
 
--- WRAPPERS :
-
-  function Random return double_float is
-
-    res,r0,r1,r2,r3 : double_float;
-
+  function Make_Double ( r0,r1,r2,r3 : double_float ) return double_float is
   begin
-    Random(r0,r1,r2,r3);
-    res := ((r3 + r2) + r1) + r0;
-    return res;
-  end Random;
+    return ((r3 + r2) + r1) + r0;
+  end Make_Double;
 
-  function Random return double_double is
+  function Make_Double_Double
+             ( r0,r1,r2,r3,r4,r5,r6,r7 : double_float )
+             return double_double is
 
     res,reshi,reslo : double_double;
-    r0,r1,r2,r3,r4,r5,r6,r7 : double_float;
 
   begin
-    Random(r0,r1,r2,r3,r4,r5,r6,r7);
     reshi := ((Double_Double_Numbers.create(r3) + r2) + r1) + r0;
     reslo := ((Double_Double_Numbers.create(r7) + r6) + r5) + r4;
     res := reshi + reslo;
     return res;
-  end Random;
+  end Make_Double_Double;
 
-  function Random return quad_double is
+  function Make_Quad_Double
+             ( r0,r1,r2,r3,r4,r5,r6,r7 : double_float;
+               r8,r9,rA,rB,rC,rD,rE,rF : double_float )
+             return quad_double is
 
     res,reshihi,reslohi,reshilo,reslolo : quad_double;
-    r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,rA,rB,rC,rD,rE,rF : double_float;
 
   begin
-    Random(r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,rA,rB,rC,rD,rE,rF);
     reshihi := ((Quad_Double_Numbers.create(r3) + r2) + r1) + r0;
     reslohi := ((Quad_Double_Numbers.create(r7) + r6) + r5) + r4;
     reshilo := ((Quad_Double_Numbers.create(rB) + rA) + r9) + r8;
     reslolo := ((Quad_Double_Numbers.create(rF) + rE) + rD) + rC;
     res := reshihi + reslohi + reshilo + reslolo;
     return res;
-  end Random;
+  end Make_Quad_Double;
 
-  function Random return octo_double is
+  function Make_Octo_Double
+             ( r00,r01,r02,r03,r04,r05,r06,r07 : double_float;
+               r08,r09,r10,r11,r12,r13,r14,r15 : double_float;
+               r16,r17,r18,r19,r20,r21,r22,r23 : double_float;
+               r24,r25,r26,r27,r28,r29,r30,r31 : double_float )
+             return octo_double is
 
     res : octo_double;
     reshihihi,reslohihi,reshilohi,reslolohi : octo_double;
     reshihilo,reslohilo,reshilolo,reslololo : octo_double;
-    r00,r01,r02,r03,r04,r05,r06,r07 : double_float;
-    r08,r09,r10,r11,r12,r13,r14,r15 : double_float;
-    r16,r17,r18,r19,r20,r21,r22,r23 : double_float;
-    r24,r25,r26,r27,r28,r29,r30,r31 : double_float;
 
   begin
-    Random(r00,r01,r02,r03,r04,r05,r06,r07,
-           r08,r09,r10,r11,r12,r13,r14,r15,
-           r16,r17,r18,r19,r20,r21,r22,r23,
-           r24,r25,r26,r27,r28,r29,r30,r31);
     reshihihi := ((Octo_Double_Numbers.create(r03) + r02) + r01) + r00;
     reslohihi := ((Octo_Double_Numbers.create(r07) + r06) + r05) + r04;
     reshilohi := ((Octo_Double_Numbers.create(r11) + r10) + r09) + r08;
@@ -268,33 +259,26 @@ package body Balanced_Quarter_Doubles is
     res := reshihihi + reslohihi + reshilohi + reslolohi
          + reshihilo + reslohilo + reshilolo + reslololo;
     return res;
-  end Random;
+  end Make_Octo_Double;
 
-  function Random return hexa_double is
+  function Make_Hexa_Double
+             ( r00,r01,r02,r03,r04,r05,r06,r07 : double_float;
+               r08,r09,r10,r11,r12,r13,r14,r15 : double_float;
+               r16,r17,r18,r19,r20,r21,r22,r23 : double_float;
+               r24,r25,r26,r27,r28,r29,r30,r31 : double_float;
+               r32,r33,r34,r35,r36,r37,r38,r39 : double_float;
+               r40,r41,r42,r43,r44,r45,r46,r47 : double_float;
+               r48,r49,r50,r51,r52,r53,r54,r55 : double_float;
+               r56,r57,r58,r59,r60,r61,r62,r63 : double_float )
+             return hexa_double is
 
     res : hexa_double;
     reshihihihi,reslohihihi,reshilohihi,reslolohihi : hexa_double;
     reshihilohi,reslohilohi,reshilolohi,reslololohi : hexa_double;
     reshihihilo,reslohihilo,reshilohilo,reslolohilo : hexa_double;
     reshihilolo,reslohilolo,reshilololo,reslolololo : hexa_double;
-    r00,r01,r02,r03,r04,r05,r06,r07 : double_float;
-    r08,r09,r10,r11,r12,r13,r14,r15 : double_float;
-    r16,r17,r18,r19,r20,r21,r22,r23 : double_float;
-    r24,r25,r26,r27,r28,r29,r30,r31 : double_float;
-    r32,r33,r34,r35,r36,r37,r38,r39 : double_float;
-    r40,r41,r42,r43,r44,r45,r46,r47 : double_float;
-    r48,r49,r50,r51,r52,r53,r54,r55 : double_float;
-    r56,r57,r58,r59,r60,r61,r62,r63 : double_float;
 
   begin
-    Random(r00,r01,r02,r03,r04,r05,r06,r07,
-           r08,r09,r10,r11,r12,r13,r14,r15,
-           r16,r17,r18,r19,r20,r21,r22,r23,
-           r24,r25,r26,r27,r28,r29,r30,r31,
-           r32,r33,r34,r35,r36,r37,r38,r39,
-           r40,r41,r42,r43,r44,r45,r46,r47,
-           r48,r49,r50,r51,r52,r53,r54,r55,
-           r56,r57,r58,r59,r60,r61,r62,r63);
     reshihihihi := ((Hexa_Double_Numbers.create(r03) + r02) + r01) + r00;
     reslohihihi := ((Hexa_Double_Numbers.create(r07) + r06) + r05) + r04;
     reshilohihi := ((Hexa_Double_Numbers.create(r11) + r10) + r09) + r08;
@@ -316,6 +300,179 @@ package body Balanced_Quarter_Doubles is
          + reshihihilo + reslohihilo + reshilohilo + reslolohilo
          + reshihilolo + reslohilolo + reshilololo + reslolololo;
     return res;
+  end Make_Hexa_Double;
+
+  function Make_Doubles
+             ( x0,x1,x2,x3 : Standard_Floating_Vectors.Vector )
+             return Standard_Floating_Vectors.Vector is
+
+    res : Standard_Floating_Vectors.Vector(x0'range);
+
+  begin
+    for i in x0'range loop
+      res(i) := Make_Double(x0(i),x1(i),x2(i),x3(i));
+    end loop;
+    return res;
+  end Make_Doubles;
+
+  function Make_Double_Doubles
+             ( x0,x1,x2,x3 : Standard_Floating_Vectors.Vector;
+               x4,x5,x6,x7 : Standard_Floating_Vectors.Vector )
+             return Double_Double_Vectors.Vector is
+
+    res : Double_Double_Vectors.Vector(x0'range);
+
+  begin
+    for i in x0'range loop
+      res(i) := Make_Double_Double
+                  (x0(i),x1(i),x2(i),x3(i),x4(i),x5(i),x6(i),x7(i));
+    end loop;
+    return res;
+  end Make_Double_Doubles;
+
+  function Make_Quad_Doubles
+             ( x0,x1,x2,x3 : Standard_Floating_Vectors.Vector;
+               x4,x5,x6,x7 : Standard_Floating_Vectors.Vector;
+               x8,x9,xA,xB : Standard_Floating_Vectors.Vector;
+               xC,xD,xE,xF : Standard_Floating_Vectors.Vector )
+             return Quad_Double_Vectors.Vector is
+
+    res : Quad_Double_Vectors.Vector(x0'range);
+
+  begin
+    for i in x0'range loop
+      res(i) := Make_Quad_Double
+                  (x0(i),x1(i),x2(i),x3(i),x4(i),x5(i),x6(i),x7(i),
+                   x8(i),x9(i),xA(i),xB(i),xC(i),xD(i),xE(i),xF(i));
+    end loop;
+    return res;
+  end Make_Quad_Doubles;
+
+  function Make_Octo_Doubles
+             ( x00,x01,x02,x03 : Standard_Floating_Vectors.Vector;
+               x04,x05,x06,x07 : Standard_Floating_Vectors.Vector;
+               x08,x09,x10,x11 : Standard_Floating_Vectors.Vector;
+               x12,x13,x14,x15 : Standard_Floating_Vectors.Vector;
+               x16,x17,x18,x19 : Standard_Floating_Vectors.Vector;
+               x20,x21,x22,x23 : Standard_Floating_Vectors.Vector;
+               x24,x25,x26,x27 : Standard_Floating_Vectors.Vector;
+               x28,x29,x30,x31 : Standard_Floating_Vectors.Vector )
+             return Octo_Double_Vectors.Vector is
+
+    res : Octo_Double_Vectors.Vector(x00'range);
+
+  begin
+    for i in x00'range loop
+      res(i) := Make_Octo_Double
+                  (x00(i),x01(i),x02(i),x03(i),x04(i),x05(i),x06(i),x07(i),
+                   x08(i),x09(i),x10(i),x11(i),x12(i),x13(i),x14(i),x15(i),
+                   x16(i),x17(i),x18(i),x19(i),x20(i),x21(i),x22(i),x23(i),
+                   x24(i),x25(i),x26(i),x27(i),x28(i),x29(i),x30(i),x31(i));
+    end loop;
+    return res;
+  end Make_Octo_Doubles;
+
+  function Make_Hexa_Doubles
+             ( x00,x01,x02,x03 : Standard_Floating_Vectors.Vector;
+               x04,x05,x06,x07 : Standard_Floating_Vectors.Vector;
+               x08,x09,x10,x11 : Standard_Floating_Vectors.Vector;
+               x12,x13,x14,x15 : Standard_Floating_Vectors.Vector;
+               x16,x17,x18,x19 : Standard_Floating_Vectors.Vector;
+               x20,x21,x22,x23 : Standard_Floating_Vectors.Vector;
+               x24,x25,x26,x27 : Standard_Floating_Vectors.Vector;
+               x28,x29,x30,x31 : Standard_Floating_Vectors.Vector;
+               x32,x33,x34,x35 : Standard_Floating_Vectors.Vector;
+               x36,x37,x38,x39 : Standard_Floating_Vectors.Vector;
+               x40,x41,x42,x43 : Standard_Floating_Vectors.Vector;
+               x44,x45,x46,x47 : Standard_Floating_Vectors.Vector;
+               x48,x49,x50,x51 : Standard_Floating_Vectors.Vector;
+               x52,x53,x54,x55 : Standard_Floating_Vectors.Vector;
+               x56,x57,x58,x59 : Standard_Floating_Vectors.Vector;
+               x60,x61,x62,x63 : Standard_Floating_Vectors.Vector )
+             return Hexa_Double_Vectors.Vector is
+
+    res : Hexa_Double_Vectors.Vector(x00'range);
+
+  begin
+    for i in x00'range loop
+      res(i) := Make_Hexa_Double
+                  (x00(i),x01(i),x02(i),x03(i),x04(i),x05(i),x06(i),x07(i),
+                   x08(i),x09(i),x10(i),x11(i),x12(i),x13(i),x14(i),x15(i),
+                   x16(i),x17(i),x18(i),x19(i),x20(i),x21(i),x22(i),x23(i),
+                   x24(i),x25(i),x26(i),x27(i),x28(i),x29(i),x30(i),x31(i),
+                   x32(i),x33(i),x34(i),x35(i),x36(i),x37(i),x38(i),x39(i),
+                   x40(i),x41(i),x42(i),x43(i),x44(i),x45(i),x46(i),x47(i),
+                   x48(i),x49(i),x50(i),x51(i),x52(i),x53(i),x54(i),x55(i),
+                   x56(i),x57(i),x58(i),x59(i),x60(i),x61(i),x62(i),x63(i));
+    end loop;
+    return res;
+  end Make_Hexa_Doubles;
+
+-- WRAPPERS :
+
+  function Random return double_float is
+
+    r0,r1,r2,r3 : double_float;
+
+  begin
+    Random(r0,r1,r2,r3);
+    return Make_Double(r0,r1,r2,r3);
+  end Random;
+
+  function Random return double_double is
+
+    r0,r1,r2,r3,r4,r5,r6,r7 : double_float;
+
+  begin
+    Random(r0,r1,r2,r3,r4,r5,r6,r7);
+    return Make_Double_Double(r0,r1,r2,r3,r4,r5,r6,r7);
+  end Random;
+
+  function Random return quad_double is
+
+    r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,rA,rB,rC,rD,rE,rF : double_float;
+
+  begin
+    Random(r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,rA,rB,rC,rD,rE,rF);
+    return Make_Quad_Double(r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,rA,rB,rC,rD,rE,rF);
+  end Random;
+
+  function Random return octo_double is
+
+    r00,r01,r02,r03,r04,r05,r06,r07 : double_float;
+    r08,r09,r10,r11,r12,r13,r14,r15 : double_float;
+    r16,r17,r18,r19,r20,r21,r22,r23 : double_float;
+    r24,r25,r26,r27,r28,r29,r30,r31 : double_float;
+
+  begin
+    Random(r00,r01,r02,r03,r04,r05,r06,r07,r08,r09,r10,r11,r12,r13,r14,r15,
+           r16,r17,r18,r19,r20,r21,r22,r23,r24,r25,r26,r27,r28,r29,r30,r31);
+    return Make_Octo_Double
+             (r00,r01,r02,r03,r04,r05,r06,r07,r08,r09,r10,r11,r12,r13,r14,r15,
+              r16,r17,r18,r19,r20,r21,r22,r23,r24,r25,r26,r27,r28,r29,r30,r31);
+  end Random;
+
+  function Random return hexa_double is
+
+    r00,r01,r02,r03,r04,r05,r06,r07 : double_float;
+    r08,r09,r10,r11,r12,r13,r14,r15 : double_float;
+    r16,r17,r18,r19,r20,r21,r22,r23 : double_float;
+    r24,r25,r26,r27,r28,r29,r30,r31 : double_float;
+    r32,r33,r34,r35,r36,r37,r38,r39 : double_float;
+    r40,r41,r42,r43,r44,r45,r46,r47 : double_float;
+    r48,r49,r50,r51,r52,r53,r54,r55 : double_float;
+    r56,r57,r58,r59,r60,r61,r62,r63 : double_float;
+
+  begin
+    Random(r00,r01,r02,r03,r04,r05,r06,r07,r08,r09,r10,r11,r12,r13,r14,r15,
+           r16,r17,r18,r19,r20,r21,r22,r23,r24,r25,r26,r27,r28,r29,r30,r31,
+           r32,r33,r34,r35,r36,r37,r38,r39,r40,r41,r42,r43,r44,r45,r46,r47,
+           r48,r49,r50,r51,r52,r53,r54,r55,r56,r57,r58,r59,r60,r61,r62,r63);
+    return Make_Hexa_Double
+             (r00,r01,r02,r03,r04,r05,r06,r07,r08,r09,r10,r11,r12,r13,r14,r15,
+              r16,r17,r18,r19,r20,r21,r22,r23,r24,r25,r26,r27,r28,r29,r30,r31,
+              r32,r33,r34,r35,r36,r37,r38,r39,r40,r41,r42,r43,r44,r45,r46,r47,
+              r48,r49,r50,r51,r52,r53,r54,r55,r56,r57,r58,r59,r60,r61,r62,r63);
   end Random;
 
   function Random 
