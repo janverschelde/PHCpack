@@ -75,6 +75,42 @@ package Vectored_Octo_Doubles is
   --   ns       number of pairs (x(i),y(i)) with the same sign;
   --   nd       number of pairs (x(i),y(i)) with different signs.
 
+  procedure Balanced_Quarter_Product
+              ( dim : in integer32;
+                x00,x01,x02,x03 : in Standard_Floating_Vectors.Vector;
+                x04,x05,x06,x07 : in Standard_Floating_Vectors.Vector;
+                x08,x09,x10,x11 : in Standard_Floating_Vectors.Vector;
+                x12,x13,x14,x15 : in Standard_Floating_Vectors.Vector;
+                x16,x17,x18,x19 : in Standard_Floating_Vectors.Vector;
+                x20,x21,x22,x23 : in Standard_Floating_Vectors.Vector;
+                x24,x25,x26,x27 : in Standard_Floating_Vectors.Vector;
+                x28,x29,x30,x31 : in Standard_Floating_Vectors.Vector;
+                y00,y01,y02,y03 : in Standard_Floating_Vectors.Vector;
+                y04,y05,y06,y07 : in Standard_Floating_Vectors.Vector;
+                y08,y09,y10,y11 : in Standard_Floating_Vectors.Vector;
+                y12,y13,y14,y15 : in Standard_Floating_Vectors.Vector;
+                y16,y17,y18,y19 : in Standard_Floating_Vectors.Vector;
+                y20,y21,y22,y23 : in Standard_Floating_Vectors.Vector;
+                y24,y25,y26,y27 : in Standard_Floating_Vectors.Vector;
+                y28,y29,y30,y31 : in Standard_Floating_Vectors.Vector;
+                s00,s01,s02,s03,s04,s05,s06,s07 : out double_float;
+                s08,s09,s10,s11,s12,s13,s14,s15 : out double_float;
+                s16,s17,s18,s19,s20,s21,s22,s23 : out double_float;
+                s24,s25,s26,s27,s28,s29,s30,s31 : out double_float );
+
+  -- DESCRIPTION :
+  --   Given balanced quarter octo doubles in vectors of length dim,
+  --   returns the subsums of their inner product.
+
+  -- ON ENTRY :
+  --   dim      all vectors have range 1..dim;
+  --   x00, ..., x31 are the balanced quarter octo doubles of x;
+  --   y00, ..., y31 are the balanced quarter octo doubles of y.
+
+  -- ON RETURN :
+  --   s00, ..., s31 are the subsums of the inner product of x and y.
+
+
   procedure Write_Subsums
               ( s00,s01,s02,s03,s04,s05,s06,s07 : in double_float );
   procedure Write_Subsums

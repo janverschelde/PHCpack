@@ -165,6 +165,228 @@ package body Vectored_Octo_Doubles is
     end loop;
   end Signed_Quarter;
 
+  procedure Balanced_Quarter_Product
+              ( dim : in integer32;
+                x00,x01,x02,x03 : in Standard_Floating_Vectors.Vector;
+                x04,x05,x06,x07 : in Standard_Floating_Vectors.Vector;
+                x08,x09,x10,x11 : in Standard_Floating_Vectors.Vector;
+                x12,x13,x14,x15 : in Standard_Floating_Vectors.Vector;
+                x16,x17,x18,x19 : in Standard_Floating_Vectors.Vector;
+                x20,x21,x22,x23 : in Standard_Floating_Vectors.Vector;
+                x24,x25,x26,x27 : in Standard_Floating_Vectors.Vector;
+                x28,x29,x30,x31 : in Standard_Floating_Vectors.Vector;
+                y00,y01,y02,y03 : in Standard_Floating_Vectors.Vector;
+                y04,y05,y06,y07 : in Standard_Floating_Vectors.Vector;
+                y08,y09,y10,y11 : in Standard_Floating_Vectors.Vector;
+                y12,y13,y14,y15 : in Standard_Floating_Vectors.Vector;
+                y16,y17,y18,y19 : in Standard_Floating_Vectors.Vector;
+                y20,y21,y22,y23 : in Standard_Floating_Vectors.Vector;
+                y24,y25,y26,y27 : in Standard_Floating_Vectors.Vector;
+                y28,y29,y30,y31 : in Standard_Floating_Vectors.Vector;
+                s00,s01,s02,s03,s04,s05,s06,s07 : out double_float;
+                s08,s09,s10,s11,s12,s13,s14,s15 : out double_float;
+                s16,s17,s18,s19,s20,s21,s22,s23 : out double_float;
+                s24,s25,s26,s27,s28,s29,s30,s31 : out double_float ) is
+  begin
+    s00 := 0.0; s01 := 0.0; s02 := 0.0; s03 := 0.0;
+    s04 := 0.0; s05 := 0.0; s06 := 0.0; s07 := 0.0;
+    s08 := 0.0; s09 := 0.0; s10 := 0.0; s11 := 0.0;
+    s12 := 0.0; s13 := 0.0; s14 := 0.0; s15 := 0.0;
+    s16 := 0.0; s17 := 0.0; s18 := 0.0; s19 := 0.0;
+    s20 := 0.0; s21 := 0.0; s22 := 0.0; s23 := 0.0;
+    s24 := 0.0; s25 := 0.0; s26 := 0.0; s27 := 0.0;
+    s28 := 0.0; s29 := 0.0; s30 := 0.0; s31 := 0.0;
+    for i in 1..dim loop
+      s00 := s00 + x00(i)*y00(i);
+      s01 := s01 + x00(i)*y01(i) + x01(i)*y00(i);
+      s02 := s02 + x00(i)*y02(i) + x01(i)*y01(i) + x02(i)*y00(i);
+      s03 := s03 + x00(i)*y03(i) + x01(i)*y02(i) + x02(i)*y01(i)
+                 + x03(i)*y00(i);
+      s04 := s04 + x00(i)*y04(i) + x01(i)*y03(i) + x02(i)*y02(i)
+                 + x03(i)*y01(i) + x04(i)*y00(i);
+      s05 := s05 + x00(i)*y05(i) + x01(i)*y04(i) + x02(i)*y03(i)
+                 + x03(i)*y02(i) + x04(i)*y01(i) + x05(i)*y00(i);
+      s06 := s06 + x00(i)*y06(i) + x01(i)*y05(i) + x02(i)*y04(i)
+                 + x03(i)*y03(i) + x04(i)*y02(i) + x05(i)*y01(i)
+                 + x06(i)*y00(i);
+      s07 := s07 + x00(i)*y07(i) + x01(i)*y06(i) + x02(i)*y05(i)
+                 + x03(i)*y04(i) + x04(i)*y03(i) + x05(i)*y02(i)
+                 + x06(i)*y01(i) + x07(i)*y00(i);
+      s08 := s08 + x00(i)*y08(i) + x01(i)*y07(i) + x02(i)*y06(i)
+                 + x03(i)*y05(i) + x04(i)*y04(i) + x05(i)*y03(i)
+                 + x06(i)*y02(i) + x07(i)*y01(i) + x08(i)*y00(i);
+      s09 := s09 + x00(i)*y09(i) + x01(i)*y08(i) + x02(i)*y07(i)
+                 + x03(i)*y06(i) + x04(i)*y05(i) + x05(i)*y04(i)
+                 + x06(i)*y03(i) + x07(i)*y02(i) + x08(i)*y01(i)
+                 + x09(i)*y00(i);
+      s10 := s10 + x00(i)*y10(i) + x01(i)*y09(i) + x02(i)*y08(i)
+                 + x03(i)*y07(i) + x04(i)*y06(i) + x05(i)*y05(i)
+                 + x06(i)*y04(i) + x07(i)*y03(i) + x08(i)*y02(i)
+                 + x09(i)*y01(i) + x10(i)*y00(i);
+      s11 := s11 + x00(i)*y11(i) + x01(i)*y10(i) + x02(i)*y09(i)
+                 + x03(i)*y08(i) + x04(i)*y07(i) + x05(i)*y06(i)
+                 + x06(i)*y05(i) + x07(i)*y04(i) + x08(i)*y03(i)
+                 + x09(i)*y02(i) + x10(i)*y01(i) + x11(i)*y00(i);
+      s12 := s12 + x00(i)*y12(i) + x01(i)*y11(i) + x02(i)*y10(i)
+                 + x03(i)*y09(i) + x04(i)*y08(i) + x05(i)*y07(i)
+                 + x06(i)*y06(i) + x07(i)*y05(i) + x08(i)*y04(i)
+                 + x09(i)*y03(i) + x10(i)*y02(i) + x11(i)*y01(i)
+                 + x12(i)*y00(i);
+      s13 := s13 + x00(i)*y13(i) + x01(i)*y12(i) + x02(i)*y11(i)
+                 + x03(i)*y10(i) + x04(i)*y09(i) + x05(i)*y08(i)
+                 + x06(i)*y07(i) + x07(i)*y06(i) + x08(i)*y05(i)
+                 + x09(i)*y04(i) + x10(i)*y03(i) + x11(i)*y02(i)
+                 + x12(i)*y01(i) + x13(i)*y00(i);
+      s14 := s14 + x00(i)*y14(i) + x01(i)*y13(i) + x02(i)*y12(i)
+                 + x03(i)*y11(i) + x04(i)*y10(i) + x05(i)*y09(i)
+                 + x06(i)*y08(i) + x07(i)*y07(i) + x08(i)*y06(i)
+                 + x09(i)*y05(i) + x10(i)*y04(i) + x11(i)*y03(i)
+                 + x12(i)*y02(i) + x13(i)*y01(i) + x14(i)*y00(i);
+      s15 := s15 + x00(i)*y15(i) + x01(i)*y14(i) + x02(i)*y13(i)
+                 + x03(i)*y12(i) + x04(i)*y11(i) + x05(i)*y10(i)
+                 + x06(i)*y09(i) + x07(i)*y08(i) + x08(i)*y07(i)
+                 + x09(i)*y06(i) + x10(i)*y05(i) + x11(i)*y04(i)
+                 + x12(i)*y03(i) + x13(i)*y02(i) + x14(i)*y01(i)
+                 + x15(i)*y00(i);
+      s16 := s16 + x00(i)*y16(i) + x01(i)*y15(i) + x02(i)*y14(i)
+                 + x03(i)*y13(i) + x04(i)*y12(i) + x05(i)*y11(i)
+                 + x06(i)*y10(i) + x07(i)*y09(i) + x08(i)*y08(i)
+                 + x09(i)*y07(i) + x10(i)*y06(i) + x11(i)*y05(i)
+                 + x12(i)*y04(i) + x13(i)*y03(i) + x14(i)*y02(i)
+                 + x15(i)*y01(i) + x16(i)*y00(i);
+      s17 := s17 + x00(i)*y17(i) + x01(i)*y16(i) + x02(i)*y15(i)
+                 + x03(i)*y14(i) + x04(i)*y13(i) + x05(i)*y12(i)
+                 + x06(i)*y11(i) + x07(i)*y10(i) + x08(i)*y09(i)
+                 + x09(i)*y08(i) + x10(i)*y07(i) + x11(i)*y06(i)
+                 + x12(i)*y05(i) + x13(i)*y04(i) + x14(i)*y03(i)
+                 + x15(i)*y02(i) + x16(i)*y01(i) + x17(i)*y00(i);
+      s18 := s18 + x00(i)*y18(i) + x01(i)*y17(i) + x02(i)*y16(i)
+                 + x03(i)*y15(i) + x04(i)*y14(i) + x05(i)*y13(i)
+                 + x06(i)*y12(i) + x07(i)*y11(i) + x08(i)*y10(i)
+                 + x09(i)*y09(i) + x10(i)*y08(i) + x11(i)*y07(i)
+                 + x12(i)*y06(i) + x13(i)*y05(i) + x14(i)*y04(i)
+                 + x15(i)*y03(i) + x16(i)*y02(i) + x17(i)*y01(i)
+                 + x18(i)*y00(i);
+      s19 := s19 + x00(i)*y19(i) + x01(i)*y18(i) + x02(i)*y17(i)
+                 + x03(i)*y16(i) + x04(i)*y15(i) + x05(i)*y14(i)
+                 + x06(i)*y13(i) + x07(i)*y12(i) + x08(i)*y11(i)
+                 + x09(i)*y10(i) + x10(i)*y09(i) + x11(i)*y08(i)
+                 + x12(i)*y07(i) + x13(i)*y06(i) + x14(i)*y05(i)
+                 + x15(i)*y04(i) + x16(i)*y03(i) + x17(i)*y02(i)
+                 + x18(i)*y01(i) + x19(i)*y00(i);
+      s20 := s20 + x00(i)*y20(i) + x01(i)*y19(i) + x02(i)*y18(i)
+                 + x03(i)*y17(i) + x04(i)*y16(i) + x05(i)*y15(i)
+                 + x06(i)*y14(i) + x07(i)*y13(i) + x08(i)*y12(i)
+                 + x09(i)*y11(i) + x10(i)*y10(i) + x11(i)*y09(i)
+                 + x12(i)*y08(i) + x13(i)*y07(i) + x14(i)*y06(i)
+                 + x15(i)*y05(i) + x16(i)*y04(i) + x17(i)*y03(i)
+                 + x18(i)*y02(i) + x19(i)*y01(i) + x20(i)*y00(i);
+      s21 := s21 + x00(i)*y21(i) + x01(i)*y20(i) + x02(i)*y19(i)
+                 + x03(i)*y18(i) + x04(i)*y17(i) + x05(i)*y16(i)
+                 + x06(i)*y15(i) + x07(i)*y14(i) + x08(i)*y13(i)
+                 + x09(i)*y12(i) + x10(i)*y11(i) + x11(i)*y10(i)
+                 + x12(i)*y09(i) + x13(i)*y08(i) + x14(i)*y07(i)
+                 + x15(i)*y06(i) + x16(i)*y05(i) + x17(i)*y04(i)
+                 + x18(i)*y03(i) + x19(i)*y02(i) + x20(i)*y01(i)
+                 + x21(i)*y00(i);
+      s22 := s22 + x00(i)*y22(i) + x01(i)*y21(i) + x02(i)*y20(i)
+                 + x03(i)*y19(i) + x04(i)*y18(i) + x05(i)*y17(i)
+                 + x06(i)*y16(i) + x07(i)*y15(i) + x08(i)*y14(i)
+                 + x09(i)*y13(i) + x10(i)*y12(i) + x11(i)*y11(i)
+                 + x12(i)*y10(i) + x13(i)*y09(i) + x14(i)*y08(i)
+                 + x15(i)*y07(i) + x16(i)*y06(i) + x17(i)*y05(i)
+                 + x18(i)*y04(i) + x19(i)*y03(i) + x20(i)*y02(i)
+                 + x21(i)*y01(i) + x22(i)*y00(i);
+      s23 := s23 + x00(i)*y23(i) + x01(i)*y22(i) + x02(i)*y21(i)
+                 + x03(i)*y20(i) + x04(i)*y19(i) + x05(i)*y18(i)
+                 + x06(i)*y17(i) + x07(i)*y16(i) + x08(i)*y15(i)
+                 + x09(i)*y14(i) + x10(i)*y13(i) + x11(i)*y12(i)
+                 + x12(i)*y11(i) + x13(i)*y10(i) + x14(i)*y09(i)
+                 + x15(i)*y08(i) + x16(i)*y07(i) + x17(i)*y06(i)
+                 + x18(i)*y05(i) + x19(i)*y04(i) + x20(i)*y03(i)
+                 + x21(i)*y02(i) + x22(i)*y01(i) + x23(i)*y00(i);
+      s24 := s24 + x00(i)*y24(i) + x01(i)*y23(i) + x02(i)*y22(i)
+                 + x03(i)*y21(i) + x04(i)*y20(i) + x05(i)*y19(i)
+                 + x06(i)*y18(i) + x07(i)*y17(i) + x08(i)*y16(i)
+                 + x09(i)*y15(i) + x10(i)*y14(i) + x11(i)*y13(i)
+                 + x12(i)*y12(i) + x13(i)*y11(i) + x14(i)*y10(i)
+                 + x15(i)*y09(i) + x16(i)*y08(i) + x17(i)*y07(i)
+                 + x18(i)*y06(i) + x19(i)*y05(i) + x20(i)*y04(i)
+                 + x21(i)*y03(i) + x22(i)*y02(i) + x23(i)*y01(i)
+                 + x24(i)*y00(i);
+      s25 := s25 + x00(i)*y25(i) + x01(i)*y24(i) + x02(i)*y23(i)
+                 + x03(i)*y22(i) + x04(i)*y21(i) + x05(i)*y20(i)
+                 + x06(i)*y19(i) + x07(i)*y18(i) + x08(i)*y17(i)
+                 + x09(i)*y16(i) + x10(i)*y15(i) + x11(i)*y14(i)
+                 + x12(i)*y13(i) + x13(i)*y12(i) + x14(i)*y11(i)
+                 + x15(i)*y10(i) + x16(i)*y09(i) + x17(i)*y08(i)
+                 + x18(i)*y07(i) + x19(i)*y06(i) + x20(i)*y05(i)
+                 + x21(i)*y04(i) + x22(i)*y03(i) + x23(i)*y02(i)
+                 + x24(i)*y01(i) + x25(i)*y00(i);
+      s26 := s26 + x00(i)*y26(i) + x01(i)*y25(i) + x02(i)*y24(i)
+                 + x03(i)*y23(i) + x04(i)*y22(i) + x05(i)*y21(i)
+                 + x06(i)*y20(i) + x07(i)*y19(i) + x08(i)*y18(i)
+                 + x09(i)*y17(i) + x10(i)*y16(i) + x11(i)*y15(i)
+                 + x12(i)*y14(i) + x13(i)*y13(i) + x14(i)*y12(i)
+                 + x15(i)*y11(i) + x16(i)*y10(i) + x17(i)*y09(i)
+                 + x18(i)*y08(i) + x19(i)*y07(i) + x20(i)*y06(i)
+                 + x21(i)*y05(i) + x22(i)*y04(i) + x23(i)*y03(i)
+                 + x24(i)*y02(i) + x25(i)*y01(i) + x26(i)*y00(i);
+      s27 := s27 + x00(i)*y27(i) + x01(i)*y26(i) + x02(i)*y25(i)
+                 + x03(i)*y24(i) + x04(i)*y23(i) + x05(i)*y22(i)
+                 + x06(i)*y21(i) + x07(i)*y20(i) + x08(i)*y19(i)
+                 + x09(i)*y18(i) + x10(i)*y17(i) + x11(i)*y16(i)
+                 + x12(i)*y15(i) + x13(i)*y14(i) + x14(i)*y13(i)
+                 + x15(i)*y12(i) + x16(i)*y11(i) + x17(i)*y10(i)
+                 + x18(i)*y09(i) + x19(i)*y08(i) + x20(i)*y07(i)
+                 + x21(i)*y06(i) + x22(i)*y05(i) + x23(i)*y04(i)
+                 + x24(i)*y03(i) + x25(i)*y02(i) + x26(i)*y01(i)
+                 + x27(i)*y00(i);
+      s28 := s28 + x00(i)*y28(i) + x01(i)*y27(i) + x02(i)*y26(i)
+                 + x03(i)*y25(i) + x04(i)*y24(i) + x05(i)*y23(i)
+                 + x06(i)*y22(i) + x07(i)*y21(i) + x08(i)*y20(i)
+                 + x09(i)*y19(i) + x10(i)*y18(i) + x11(i)*y17(i)
+                 + x12(i)*y16(i) + x13(i)*y15(i) + x14(i)*y14(i)
+                 + x15(i)*y13(i) + x16(i)*y12(i) + x17(i)*y11(i)
+                 + x18(i)*y10(i) + x19(i)*y09(i) + x20(i)*y08(i)
+                 + x21(i)*y07(i) + x22(i)*y06(i) + x23(i)*y05(i)
+                 + x24(i)*y04(i) + x25(i)*y03(i) + x26(i)*y02(i)
+                 + x27(i)*y01(i) + x28(i)*y00(i);
+      s29 := s29 + x00(i)*y29(i) + x01(i)*y28(i) + x02(i)*y27(i)
+                 + x03(i)*y26(i) + x04(i)*y25(i) + x05(i)*y24(i)
+                 + x06(i)*y23(i) + x07(i)*y22(i) + x08(i)*y21(i)
+                 + x09(i)*y20(i) + x10(i)*y19(i) + x11(i)*y18(i)
+                 + x12(i)*y17(i) + x13(i)*y16(i) + x14(i)*y15(i)
+                 + x15(i)*y14(i) + x16(i)*y13(i) + x17(i)*y12(i)
+                 + x18(i)*y11(i) + x19(i)*y10(i) + x20(i)*y09(i)
+                 + x21(i)*y08(i) + x22(i)*y07(i) + x23(i)*y06(i)
+                 + x24(i)*y05(i) + x25(i)*y04(i) + x26(i)*y03(i)
+                 + x27(i)*y02(i) + x28(i)*y01(i) + x29(i)*y00(i);
+      s30 := s30 + x00(i)*y30(i) + x01(i)*y29(i) + x02(i)*y28(i)
+                 + x03(i)*y27(i) + x04(i)*y26(i) + x05(i)*y25(i)
+                 + x06(i)*y24(i) + x07(i)*y23(i) + x08(i)*y22(i)
+                 + x09(i)*y21(i) + x10(i)*y20(i) + x11(i)*y19(i)
+                 + x12(i)*y18(i) + x13(i)*y17(i) + x14(i)*y16(i)
+                 + x15(i)*y15(i) + x16(i)*y14(i) + x17(i)*y13(i)
+                 + x18(i)*y12(i) + x19(i)*y11(i) + x20(i)*y10(i)
+                 + x21(i)*y09(i) + x22(i)*y08(i) + x23(i)*y07(i)
+                 + x24(i)*y06(i) + x25(i)*y05(i) + x26(i)*y04(i)
+                 + x27(i)*y03(i) + x28(i)*y02(i) + x29(i)*y01(i)
+                 + x30(i)*y00(i);
+      s31 := s31 + x00(i)*y31(i) + x01(i)*y30(i) + x02(i)*y29(i)
+                 + x03(i)*y28(i) + x04(i)*y27(i) + x05(i)*y26(i)
+                 + x06(i)*y25(i) + x07(i)*y24(i) + x08(i)*y23(i)
+                 + x09(i)*y22(i) + x10(i)*y21(i) + x11(i)*y20(i)
+                 + x12(i)*y19(i) + x13(i)*y18(i) + x14(i)*y17(i)
+                 + x15(i)*y16(i) + x16(i)*y15(i) + x17(i)*y14(i)
+                 + x18(i)*y13(i) + x19(i)*y12(i) + x20(i)*y11(i)
+                 + x21(i)*y10(i) + x22(i)*y09(i) + x23(i)*y08(i)
+                 + x24(i)*y07(i) + x25(i)*y06(i) + x26(i)*y05(i)
+                 + x27(i)*y04(i) + x28(i)*y03(i) + x29(i)*y02(i)
+                 + x30(i)*y01(i) + x31(i)*y00(i);
+    end loop;
+  end Balanced_Quarter_Product;
+
   procedure Write_Subsums
               ( s00,s01,s02,s03,s04,s05,s06,s07 : in double_float ) is
 
