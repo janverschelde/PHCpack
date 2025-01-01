@@ -110,7 +110,6 @@ package Vectored_Octo_Doubles is
   -- ON RETURN :
   --   s00, ..., s31 are the subsums of the inner product of x and y.
 
-
   procedure Write_Subsums
               ( s00,s01,s02,s03,s04,s05,s06,s07 : in double_float );
   procedure Write_Subsums

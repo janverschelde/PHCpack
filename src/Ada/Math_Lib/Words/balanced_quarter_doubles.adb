@@ -97,7 +97,7 @@ package body Balanced_Quarter_Doubles is
     x35 := Random_Quarter(-455);
     x36 := Random_Quarter(-468);
     x37 := Random_Quarter(-481);
-    x38 := Random_Quarter(-449);
+    x38 := Random_Quarter(-494);
     x39 := Random_Quarter(-507);
     x40 := Random_Quarter(-520);
     x41 := Random_Quarter(-533);
