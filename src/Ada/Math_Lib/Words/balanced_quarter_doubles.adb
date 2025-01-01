@@ -42,8 +42,8 @@ package body Balanced_Quarter_Doubles is
                          verbose : boolean := true ) return boolean is
 
     res : boolean := true;
-    n0,n1,n2,n3,f0,f1,f2,f3 : natural32;
-    e0,e1,e2,e3,d0,d1,d2,d3 : integer32;
+    n0,n1,n2,n3 : natural32;
+    e0,e1,e2,e3,f0,f1,f2,f3,d0,d1,d2,d3 : integer32;
 
   begin
    -- number of zero bits at end
@@ -69,10 +69,10 @@ package body Balanced_Quarter_Doubles is
       put(", e3 : "); put(e3,1); new_line;
     end if;
    -- freedom number, mind the rounding with x3
-    f0 := n0 + 13 - 52;
-    f1 := n1 + 13 - 52;
-    f2 := n2 + 13 - 52;
-    f3 := n3 + 14 - 52;
+    f0 := integer32(n0) + 13 - 52;
+    f1 := integer32(n1) + 13 - 52;
+    f2 := integer32(n2) + 13 - 52;
+    f3 := integer32(n3) + 14 - 52;
     if verbose then
       put("f0 : "); put(f0,1);
       put(", f1 : "); put(f1,1);
@@ -81,17 +81,16 @@ package body Balanced_Quarter_Doubles is
     end if;
    -- deviance of exponent with grid
     d0 := e - e0;
-    d1 := e -13 - e1;
-    d2 := e -26 - e2; 
-    d3 := e -39 - e3;
+    d1 := e - 13 - e1;
+    d2 := e - 26 - e2; 
+    d3 := e - 39 - e3;
     if verbose then
       put("d0 : "); put(d0,1);
       put(", d1 : "); put(d1,1);
       put(", d2 : "); put(d2,1);
       put(", d3 : "); put(d3,1); new_line;
     end if;
-    res := (d0 <= integer32(f0)) and (d1 <= integer32(f1))
-       and (d2 <= integer32(f2)) and (d3 <= integer32(f3));
+    res := (d0 <= f0) and (d1 <= f1) and (d2 <= f2) and (d3 <= f3);
     if verbose then
       if res
        then put_line("balanced");
