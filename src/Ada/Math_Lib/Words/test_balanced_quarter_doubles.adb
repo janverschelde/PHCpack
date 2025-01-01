@@ -1,8 +1,10 @@
 with text_io;                            use text_io;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Floating_Vectors;
+with Standard_Random_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
@@ -202,6 +204,24 @@ package body Test_Balanced_Quarter_Doubles is
     Write_Quarters(x60,x61,x62,x63);
   end Test_Hexa_Double_Wrapper;
 
+  procedure Test_Balanced_Split is
+
+    x : constant double_float := Standard_Random_Numbers.Random;
+    x0,x1,x2,x3 : double_float;
+    isbal : boolean;
+
+  begin
+    put("x : "); put(x); new_line;
+    put("b : "); Bits_of_Doubles.write_52bits_expo(x); new_line;
+    Bits_of_Doubles.Split(x,x0,x1,x2,x3);
+    Write_Quarters(x0,x1,x2,x3);
+    isbal := Balanced_Quarter_Doubles.Is_Balanced(0,x0,x1,x2,x3);
+    if not isbal
+     then put_line("unbalanced");
+     else put_line("balanced");
+    end if;
+  end Test_Balanced_Split;
+
   procedure Main is
   begin
     Test_Thirteen_Bits;
@@ -222,6 +242,9 @@ package body Test_Balanced_Quarter_Doubles is
     new_line;
     put_line("Testing hexa double wrapper ...");
     Test_Hexa_Double_Wrapper;
+    new_line;
+    put_line("Testing the balanced split ...");
+    Test_Balanced_Split;
   end Main;
 
 end Test_Balanced_Quarter_Doubles;

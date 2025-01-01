@@ -1,3 +1,6 @@
+Wed 1 Jan 2025 : to balanced_quarter_doubles added the definition of
+  balanced quarter doubles, tested by test_balanced_quarter_doubles.
+
 Tue 31 Dec 2024 : improved the wrappers in balanced_quarter_doubles,
   used in test_vectored_quad_doubles.adb, in a balanced product procedure
   in vectored_quad_doubles.  Fixed the test on the balanced product in

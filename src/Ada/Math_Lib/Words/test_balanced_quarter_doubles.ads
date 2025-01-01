@@ -55,6 +55,11 @@ package Test_Balanced_Quarter_Doubles is
   --   Generates a random balanced quarter hexa double and verifies
   --   whether its split in quarters is balanced.
 
+  procedure Test_Balanced_Split;
+
+  -- DESCRIPTION :
+  --   Generates a random double and tests the splitting on a grid.
+
   procedure Main;
 
   -- DESCRIPTION :

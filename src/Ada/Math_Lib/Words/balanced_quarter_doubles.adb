@@ -1,4 +1,9 @@
+with text_io;                            use text_io;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Random_Numbers;
+with Bits_of_Doubles;
 
 package body Balanced_Quarter_Doubles is
 
@@ -32,6 +37,69 @@ package body Balanced_Quarter_Doubles is
     x2 := Random_Quarter(-26);
     x3 := Random_Quarter(-39);
   end Random;
+
+  function Is_Balanced ( e : integer32; x0,x1,x2,x3 : double_float;
+                         verbose : boolean := true ) return boolean is
+
+    res : boolean := true;
+    n0,n1,n2,n3,f0,f1,f2,f3 : natural32;
+    e0,e1,e2,e3,d0,d1,d2,d3 : integer32;
+
+  begin
+   -- number of zero bits at end
+    n0 := Bits_of_Doubles.Last_Zero_Count(x0);
+    n1 := Bits_of_Doubles.Last_Zero_Count(x1);
+    n2 := Bits_of_Doubles.Last_Zero_Count(x2);
+    n3 := Bits_of_Doubles.Last_Zero_Count(x3);
+    if verbose then
+      put("n0 : "); put(n0,1);
+      put(", n1 : "); put(n1,1);
+      put(", n2 : "); put(n2,1);
+      put(", n3 : "); put(n3,1); new_line;
+    end if;
+   -- exponents of the quarters
+    e0 := integer32(double_float'exponent(x0));
+    e1 := integer32(double_float'exponent(x1));
+    e2 := integer32(double_float'exponent(x2));
+    e3 := integer32(double_float'exponent(x3));
+    if verbose then
+      put("e0 : "); put(e0,1);
+      put(", e1 : "); put(e1,1);
+      put(", e2 : "); put(e2,1);
+      put(", e3 : "); put(e3,1); new_line;
+    end if;
+   -- freedom number, mind the rounding with x3
+    f0 := n0 + 13 - 52;
+    f1 := n1 + 13 - 52;
+    f2 := n2 + 13 - 52;
+    f3 := n3 + 14 - 52;
+    if verbose then
+      put("f0 : "); put(f0,1);
+      put(", f1 : "); put(f1,1);
+      put(", f2 : "); put(f2,1);
+      put(", f3 : "); put(f3,1); new_line;
+    end if;
+   -- deviance of exponent with grid
+    d0 := e - e0;
+    d1 := e -13 - e1;
+    d2 := e -26 - e2; 
+    d3 := e -39 - e3;
+    if verbose then
+      put("d0 : "); put(d0,1);
+      put(", d1 : "); put(d1,1);
+      put(", d2 : "); put(d2,1);
+      put(", d3 : "); put(d3,1); new_line;
+    end if;
+    res := (d0 <= integer32(f0)) and (d1 <= integer32(f1))
+       and (d2 <= integer32(f2)) and (d3 <= integer32(f3));
+    if verbose then
+      if res
+       then put_line("balanced");
+       else put_line("unbalanced");
+      end if;
+    end if;
+    return res;
+  end Is_Balanced;
 
   procedure Random ( x0,x1,x2,x3,x4,x5,x6,x7 : out double_float ) is
   begin
