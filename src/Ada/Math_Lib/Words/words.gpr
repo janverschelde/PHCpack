@@ -27,7 +27,8 @@ project Words is
         "ts_qtrbal.adb",    -- make balanced quarter doubles
         "ts_vdda.adb",      -- vectorized double double arithmetic
         "ts_vqda.adb",      -- vectorized quad double arithmetic
-        "ts_voda.adb"       -- vectorized octo double arithmetic
+        "ts_voda.adb",      -- vectorized octo double arithmetic
+        "ts_vhda.adb"       -- vectorized hexa double arithmetic
     );
 
     package Compiler is
