@@ -1,9 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
-with Standard_Floating_Vectors;
 with Bits_of_Doubles;
 
 package body Vectored_Doubles is
