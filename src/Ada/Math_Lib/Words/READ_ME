@@ -29,6 +29,9 @@ balanced_quarter_doubles         : making doubles that are quarter balanced
 test_balanced_quarter_doubles    : test on balanced quartered doubles
 ts_qtrbal                        : main test on balanced quarters
 ------------------------------------------------------------------------------
+vectored_doubles                 : vectorized double arithmetic
+test_vectored_doubles            : tests on vectored double arithmetic
+ts_vda                           : main test on vectored doubles
 vectored_double_doubles          : vectorized double double arithmetic
 test_vectored_double_doubles     : tests on vectored double double arithmetic
 ts_vdda                          : main test on vectored double doubles
