@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
@@ -115,8 +116,12 @@ package body Test_Vectored_Quad_Doubles is
     x,y : Quad_Double_Vectors.Vector(1..dim);
     qdprd0,qdprd1,err : quad_double;
     s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,sA,sB,sC,sD,sE,sF : double_float;
+    timer0,timer1 : Timing_Widget;
+    freq : natural32 := 0;
 
   begin
+    put_line("Testing the balanced inner product ...");
+    put("Give the frequency : "); get(freq);
     Balanced_Quarter_Doubles.Random
       (dim,x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,xA,xB,xC,xD,xE,xF);
     Balanced_Quarter_Doubles.Random
@@ -125,20 +130,37 @@ package body Test_Vectored_Quad_Doubles is
            (x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,xA,xB,xC,xD,xE,xF);
     y := Balanced_Quarter_Doubles.Make_Quad_Doubles
            (y0,y1,y2,y3,y4,y5,y6,y7,y8,y9,yA,yB,yC,yD,yE,yF);
-    qdprd0 := create(integer32(0));
-    for i in x'range loop
-      qdprd0 := qdprd0 + x(i)*y(i);
+    tstart(timer0);
+    for i in 1..freq loop
+      qdprd0 := create(integer32(0));
+      for i in x'range loop
+        qdprd0 := qdprd0 + x(i)*y(i);
+      end loop;
     end loop;
-    Vectored_Quad_Doubles.Balanced_Quarter_Product
-      (dim,x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,xA,xB,xC,xD,xE,xF,
-           y0,y1,y2,y3,y4,y5,y6,y7,y8,y9,yA,yB,yC,yD,yE,yF,
-       s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,sA,sB,sC,sD,sE,sF);
-    qdprd1 := Vectored_Quad_Doubles.to_quad_double
-      (s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,sA,sB,sC,sD,sE,sF);
+    tstop(timer0);
+    tstart(timer1);
+    for i in 1..freq loop
+      Vectored_Quad_Doubles.Balanced_Quarter_Product
+        (dim,x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,xA,xB,xC,xD,xE,xF,
+             y0,y1,y2,y3,y4,y5,y6,y7,y8,y9,yA,yB,yC,yD,yE,yF,
+         s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,sA,sB,sC,sD,sE,sF);
+      if freq = 1 then
+        qdprd1 := Vectored_Quad_Doubles.to_quad_double
+          (s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,sA,sB,sC,sD,sE,sF);
+      else
+        qdprd1 := Vectored_Quad_Doubles.to_quad_double
+          (s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,sA,sB,sC,sD,sE,sF,verbose=>false);
+      end if;
+    end loop;
+    tstop(timer1);
     put("qd prd : "); put(qdprd0); new_line;
     put("qd sgn : "); put(qdprd1); new_line;
     err := qdprd0 - qdprd1;
     put(" error : "); put(err,2); new_line;
+    new_line;
+    print_times(standard_output,timer0,"quad double inner product");
+    new_line;
+    print_times(standard_output,timer1,"vectored quad double product");
   end Test_Balanced_Product;
 
   procedure Main is

@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Timing_Package;                     use Timing_Package;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
@@ -346,27 +347,48 @@ package body Test_Vectored_Double_Doubles is
     x,y : Double_Double_Vectors.Vector(1..dim);
     ddprd0,ddprd1,err : double_double;
     s0,s1,s2,s3,s4,s5,s6,s7 : double_float;
+    timer0,timer1 : Timing_Widget;
+    freq : natural32 := 0;
 
   begin
+    put_line("Testing balanced product ...");
+    put("Give the frequency : "); get(freq);
     Balanced_Quarter_Doubles.Random(dim,x0,x1,x2,x3,x4,x5,x6,x7);
     Balanced_Quarter_Doubles.Random(dim,y0,y1,y2,y3,y4,y5,y6,y7);
     x := Balanced_Quarter_Doubles.Make_Double_Doubles
            (x0,x1,x2,x3,x4,x5,x6,x7);
     y := Balanced_Quarter_Doubles.Make_Double_Doubles
            (y0,y1,y2,y3,y4,y5,y6,y7);
-    ddprd0 := create(integer32(0));
-    for i in x'range loop
-      ddprd0 := ddprd0 + x(i)*y(i);
+    tstart(timer0);
+    for i in 1..freq loop
+      ddprd0 := create(integer32(0));
+      for i in x'range loop
+        ddprd0 := ddprd0 + x(i)*y(i);
+      end loop;
     end loop;
-    Vectored_Double_Doubles.Balanced_Quarter_Product
-      (dim,x0,x1,x2,x3,x4,x5,x6,x7,y0,y1,y2,y3,y4,y5,y6,y7,
-       s0,s1,s2,s3,s4,s5,s6,s7);
-    ddprd1 := Vectored_Double_Doubles.to_double_double
-                (s0,s1,s2,s3,s4,s5,s6,s7);
+    tstop(timer0);
+    tstart(timer1);
+    for i in 1..freq loop
+      Vectored_Double_Doubles.Balanced_Quarter_Product
+        (dim,x0,x1,x2,x3,x4,x5,x6,x7,y0,y1,y2,y3,y4,y5,y6,y7,
+         s0,s1,s2,s3,s4,s5,s6,s7);
+      if freq = 1 then
+        ddprd1 := Vectored_Double_Doubles.to_double_double
+                    (s0,s1,s2,s3,s4,s5,s6,s7,verbose=>true);
+      else
+        ddprd1 := Vectored_Double_Doubles.to_double_double
+                    (s0,s1,s2,s3,s4,s5,s6,s7,verbose=>false);
+      end if;
+    end loop;
+    tstop(timer1);
     put("dd prd : "); put(ddprd0); new_line;
     put("dd sgn : "); put(ddprd1); new_line;
     err := ddprd0 - ddprd1;
     put(" error : "); put(err,2); new_line;
+    new_line;
+    print_times(standard_output,timer0,"double double inner product");
+    new_line;
+    print_times(standard_output,timer1,"vectored double double product");
   end Test_Balanced_Product;
   
   procedure Main is

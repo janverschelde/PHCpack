@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
@@ -129,8 +130,12 @@ package body Test_Vectored_Octo_Doubles is
     s24,s25,s26,s27,s28,s29,s30,s31 : double_float;
     x,y : Octo_Double_Vectors.Vector(1..dim);
     odprd0,odprd1,err : octo_double;
+    timer0,timer1 : Timing_Widget;
+    freq : natural32 := 0;
 
   begin
+    put_line("Testing the balanced product ...");
+    put("Give the frequency : "); get(freq);
     Balanced_Quarter_Doubles.Random
       (dim,x00,x01,x02,x03,x04,x05,x06,x07,x08,x09,x10,x11,x12,x13,x14,x15,
            x16,x17,x18,x19,x20,x21,x22,x23,x24,x25,x26,x27,x28,x29,x30,x31);
@@ -143,24 +148,43 @@ package body Test_Vectored_Octo_Doubles is
     y := Balanced_Quarter_Doubles.Make_Octo_Doubles
            (y00,y01,y02,y03,y04,y05,y06,y07,y08,y09,y10,y11,y12,y13,y14,y15,
             y16,y17,y18,y19,y20,y21,y22,y23,y24,y25,y26,y27,y28,y29,y30,y31);
-    odprd0 := create(integer32(0));
-    for i in x'range loop
-      odprd0 := odprd0 + x(i)*y(i);
+    tstart(timer0);
+    for i in 1..freq loop
+      odprd0 := create(integer32(0));
+      for i in x'range loop
+        odprd0 := odprd0 + x(i)*y(i);
+      end loop;
     end loop;
-    Vectored_Octo_Doubles.Balanced_Quarter_Product
-      (dim,x00,x01,x02,x03,x04,x05,x06,x07,x08,x09,x10,x11,x12,x13,x14,x15,
-           x16,x17,x18,x19,x20,x21,x22,x23,x24,x25,x26,x27,x28,x29,x30,x31,
-           y00,y01,y02,y03,y04,y05,y06,y07,y08,y09,y10,y11,y12,y13,y14,y15,
-           y16,y17,y18,y19,y20,y21,y22,y23,y24,y25,y26,y27,y28,y29,y30,y31,
-       s00,s01,s02,s03,s04,s05,s06,s07,s08,s09,s10,s11,s12,s13,s14,s15,
-       s16,s17,s18,s19,s20,s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,s31);
-    odprd1 := Vectored_Octo_Doubles.to_octo_double
-      (s00,s01,s02,s03,s04,s05,s06,s07,s08,s09,s10,s11,s12,s13,s14,s15,
-       s16,s17,s18,s19,s20,s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,s31);
+    tstop(timer0);
+    tstart(timer1);
+    for i in 1..freq loop
+      Vectored_Octo_Doubles.Balanced_Quarter_Product
+        (dim,x00,x01,x02,x03,x04,x05,x06,x07,x08,x09,x10,x11,x12,x13,x14,x15,
+             x16,x17,x18,x19,x20,x21,x22,x23,x24,x25,x26,x27,x28,x29,x30,x31,
+             y00,y01,y02,y03,y04,y05,y06,y07,y08,y09,y10,y11,y12,y13,y14,y15,
+             y16,y17,y18,y19,y20,y21,y22,y23,y24,y25,y26,y27,y28,y29,y30,y31,
+         s00,s01,s02,s03,s04,s05,s06,s07,s08,s09,s10,s11,s12,s13,s14,s15,
+         s16,s17,s18,s19,s20,s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,s31);
+      if freq = 1 then
+        odprd1 := Vectored_Octo_Doubles.to_octo_double
+          (s00,s01,s02,s03,s04,s05,s06,s07,s08,s09,s10,s11,s12,s13,s14,s15,
+           s16,s17,s18,s19,s20,s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,s31);
+      else
+        odprd1 := Vectored_Octo_Doubles.to_octo_double
+          (s00,s01,s02,s03,s04,s05,s06,s07,s08,s09,s10,s11,s12,s13,s14,s15,
+           s16,s17,s18,s19,s20,s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,s31,
+           verbose=>false);
+      end if;
+    end loop;
+    tstop(timer1);
     put("od prd : "); put(odprd0); new_line;
     put("od sgn : "); put(odprd1); new_line;
     err := odprd0 - odprd1;
     put(" error : "); put(err,2); new_line;
+    new_line;
+    print_times(standard_output,timer0,"octo double inner product");
+    new_line;
+    print_times(standard_output,timer1,"vectored octo double product");
   end Test_Balanced_Product;
 
   procedure Main is

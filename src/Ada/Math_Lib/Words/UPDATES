@@ -1,3 +1,6 @@
+Thu 2 Jan 2025 : to test_vectored_{double, quad, octo, hexa}_doubles.adb,
+  added frequency and timers.
+
 Wed 1 Jan 2025 : to balanced_quarter_doubles added the definition of
   balanced quarter doubles, tested by test_balanced_quarter_doubles.
   In balanced_quarter_doubles, in is_balanced, allow f's to be negative.
