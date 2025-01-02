@@ -33,7 +33,8 @@ project Words is
 
     package Compiler is
 
-        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+     -- for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+      for Default_Switches ("Ada") use ("-O3", "-gnatv", "-gnatp", "-gnatf");
 
     end Compiler;
 

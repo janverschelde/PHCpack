@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Timing_Package;                     use Timing_Package;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
@@ -57,6 +58,7 @@ package body Test_Vectored_Hexa_Doubles is
     s56,s57,s58,s59,s60,s61,s62,s63 : double_float;
     x,y : Hexa_Double_Vectors.Vector(1..dim);
     hdprd0,hdprd1,err : hexa_double;
+    timer0,timer1 : Timing_Widget;
 
   begin
     Balanced_Quarter_Doubles.Random
@@ -79,10 +81,13 @@ package body Test_Vectored_Hexa_Doubles is
             y16,y17,y18,y19,y20,y21,y22,y23,y24,y25,y26,y27,y28,y29,y30,y31,
             y32,y33,y34,y35,y36,y37,y38,y39,y40,y41,y42,y43,y44,y45,y46,y47,
             y48,y49,y50,y51,y52,y53,y54,y55,y56,y57,y58,y59,y60,y61,y62,y63);
+    tstart(timer0);
     hdprd0 := create(integer32(0));
     for i in x'range loop
       hdprd0 := hdprd0 + x(i)*y(i);
     end loop;
+    tstop(timer0);
+    tstart(timer1);
     Vectored_Hexa_Doubles.Balanced_Quarter_Product
       (dim,x00,x01,x02,x03,x04,x05,x06,x07,x08,x09,x10,x11,x12,x13,x14,x15,
            x16,x17,x18,x19,x20,x21,x22,x23,x24,x25,x26,x27,x28,x29,x30,x31,
@@ -101,10 +106,16 @@ package body Test_Vectored_Hexa_Doubles is
        s16,s17,s18,s19,s20,s21,s22,s23,s24,s25,s26,s27,s28,s29,s30,s31,
        s32,s33,s34,s35,s36,s37,s38,s39,s40,s41,s42,s43,s44,s45,s46,s47,
        s48,s49,s50,s51,s52,s53,s54,s55,s56,s57,s58,s59,s60,s61,s62,s63);
+    tstop(timer1);
+    new_line;
     put("hd prd : "); put(hdprd0); new_line;
     put("hd sgn : "); put(hdprd1); new_line;
     err := hdprd0 - hdprd1;
     put(" error : "); put(err,2); new_line;
+    new_line;
+    print_times(standard_output,timer0,"hexa double inner product");
+    new_line;
+    print_times(standard_output,timer1,"vectored hexa double product");
   end Test_Balanced_Product;
 
   procedure Main is
