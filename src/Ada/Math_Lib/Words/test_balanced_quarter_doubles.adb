@@ -1,5 +1,6 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
@@ -207,7 +208,7 @@ package body Test_Balanced_Quarter_Doubles is
   procedure Test_Balanced_Split is
 
     x : constant double_float := Standard_Random_Numbers.Random;
-    x0,x1,x2,x3 : double_float;
+    x0,x1,x2,x3,b0,b1,b2,b3,b4 : double_float;
     isbal : boolean;
 
   begin
@@ -216,14 +217,24 @@ package body Test_Balanced_Quarter_Doubles is
     Bits_of_Doubles.Split(x,x0,x1,x2,x3);
     Write_Quarters(x0,x1,x2,x3);
     isbal := Balanced_Quarter_Doubles.Is_Balanced(0,x0,x1,x2,x3);
-    if not isbal
-     then put_line("unbalanced");
-     else put_line("balanced");
+    if isbal then
+      put_line("balanced");
+    else
+      put_line("Computing a balanced split ...");
+      Balanced_Quarter_Doubles.Split(x,b0,b1,b2,b3,b4);
+      isbal := Balanced_Quarter_Doubles.Is_Balanced(0,b0,b1,b2,b3);
     end if;
   end Test_Balanced_Split;
 
   procedure Main is
+
+    seed : natural32 := 0;
+
   begin
+    put("Give the seed (0 for none) : "); get(seed);
+    if seed /= 0
+     then Standard_Random_Numbers.Set_Seed(seed);
+    end if;
     Test_Thirteen_Bits;
     Test_Random_Quarters;
     Test_Random_Vectors;
@@ -245,6 +256,7 @@ package body Test_Balanced_Quarter_Doubles is
     new_line;
     put_line("Testing the balanced split ...");
     Test_Balanced_Split;
+    put("Seed used : "); put(Standard_Random_Numbers.Get_Seed,1); new_line;
   end Main;
 
 end Test_Balanced_Quarter_Doubles;

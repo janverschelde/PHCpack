@@ -2,7 +2,9 @@ with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Random_Numbers;
+with Standard_Natural_Vectors;
 with Bits_of_Doubles;
 
 package body Balanced_Quarter_Doubles is
@@ -99,6 +101,234 @@ package body Balanced_Quarter_Doubles is
     end if;
     return res;
   end Is_Balanced;
+
+  procedure Split ( x : in double_float;
+                    x0,x1,x2,x3,x4 : out double_float;
+                    verbose : in boolean := true ) is
+
+    e : constant integer32 := integer32(double_float'exponent(x));
+    f : constant double_float := double_float'fraction(x);
+    s : constant double_float := double_float'compose(f, 52);
+    m : constant integer64 := integer64(double_float'truncation(s));
+    xbits : Standard_Natural_Vectors.Vector(0..51);
+    wrkbx : Standard_Natural_Vectors.Vector(0..51-e);
+    part : constant integer32 := 13;
+    valbits : integer64;
+    idx,cnt,startidx : integer32;
+    tail : boolean := false;
+
+  begin
+    if verbose then
+      put("The exponent of x : "); put(e,1); new_line;
+      put("b : "); put(m,1,b=>2); new_line;
+    end if;
+    x4 := 0.0;
+    if e = 0 then
+      if verbose
+       then put_line("Quartering the double ...");
+      end if;
+      Bits_of_Doubles.Split(x,x0,x1,x2,x3); return;
+    end if;
+    x0 := 0.0; x1 := 0.0; x2 := 0.0; x3 := 0.0;
+    if e > 0 then
+      if verbose
+       then put_line("positive exponent not covered (yet) ...");
+      end if;
+      return;
+    end if;
+    if verbose
+     then put("xbits'last : "); put(wrkbx'last,1); new_line;
+    end if;
+    Bits_of_Doubles.expand_52bits(xbits,m);
+    if verbose then
+      put("x bits : "); Bits_of_Doubles.write_52bits(xbits); new_line;
+    end if;
+    for i in 0..(-e)-1 loop
+      if xbits(xbits'last-i) = 1
+       then tail := true;
+      end if;
+    end loop;
+    if tail
+     then put_line("x has a tail");
+     else put_line("no tail for x");
+    end if;
+    for i in 0..(-e)-1 loop
+      wrkbx(i) := 0;
+    end loop;
+    for i in (-e)..wrkbx'last loop
+      wrkbx(i) := xbits(i+e);
+    end loop;
+    if verbose then
+      put_line("w bits : ");
+      for i in 0..(-e)-1 loop
+        put(wrkbx(i),1);
+      end loop;
+      put(" ");
+      for i in 0..51 loop
+        if i > 0 then
+          if i mod 4 = 0
+           then put(" ");
+          end if;
+        end if;
+        put(integer32(wrkbx(integer32(i)-e)));
+      end loop;
+      new_line;
+    end if;
+    for i in 0..(part-1) loop
+      xbits(i) := wrkbx(i);
+    end loop;
+    for i in part..xbits'last loop
+      xbits(i) := 0;
+    end loop;
+    valbits := Bits_of_Doubles.value_52bits(xbits);
+    if verbose then
+      put("x0 bits : "); Bits_of_Doubles.write_52bits(xbits); new_line;
+      put("b : "); put(valbits,1,b=>2); new_line;
+    end if;
+    x0 := double_float'compose(double_float(valbits),e);
+    if x < 0.0
+     then x0 := -x0;
+    end if;
+    if verbose then
+      put(" x : "); put(x); new_line;
+      put("x0 : "); put(x0); new_line;
+      put("error : "); put(abs(x-x0),2); new_line;
+    end if;
+    for i in 0..(part-1) loop
+      xbits(i) := 0;
+    end loop;
+    for i in part..(2*part-1) loop
+      xbits(i) := wrkbx(i);
+    end loop;
+    for i in 2*part..xbits'last loop
+      xbits(i) := 0;
+    end loop;
+    valbits := Bits_of_Doubles.value_52bits(xbits);
+    if verbose then
+      put("x1 bits : "); Bits_of_Doubles.write_52bits(xbits); new_line;
+      put("b : "); put(valbits,1,b=>2); new_line;
+    end if;
+    cnt := 0;
+    if valbits /= 0 then
+      idx := part;
+      while xbits(idx) = 0 loop
+        idx := idx + 1;
+        cnt := cnt + 1;
+      end loop;
+    end if;
+    if verbose
+     then put("leading zero bits : "); put(cnt,1); new_line;
+    end if;
+    startidx := 2*part;
+    if cnt > 0 then
+      idx := 2*part-1;
+      for i in 1..cnt loop
+        if xbits(idx) = 1 then
+          xbits(idx) := 0;
+          startidx := idx;
+          idx := idx - 1;
+        end if;
+      end loop;
+    end if;
+    if verbose
+     then put("start index for x2 : "); put(startidx,1); new_line;
+    end if;
+    if startidx /= 2*part then
+      valbits := Bits_of_Doubles.value_52bits(xbits);
+      if verbose then
+        put("x1 bits : "); Bits_of_Doubles.write_52bits(xbits); new_line;
+        put("b : "); put(valbits,1,b=>2); new_line;
+      end if;
+    end if;
+    x1 := double_float'compose(double_float(valbits),-part-cnt);
+    if x < 0.0
+     then x1 := -x1;
+    end if;
+    if verbose then
+      put("x1 : "); put(x1); new_line;
+      put("    x : "); put(x); new_line;
+      put("x0+x1 : "); put(x0+x1); new_line;
+      put("error : "); put(abs(x-(x0+x1)),2); new_line;
+    end if;
+    for i in 0..(startidx-1) loop
+      xbits(i) := 0;
+    end loop;
+    for i in startidx..startidx+part-1 loop
+      xbits(i) := wrkbx(i);
+    end loop;
+    for i in startidx+part..xbits'last loop
+      xbits(i) := 0;
+    end loop;
+    valbits := Bits_of_Doubles.value_52bits(xbits);
+    if verbose then
+      put("x2 bits : "); Bits_of_Doubles.write_52bits(xbits); new_line;
+      put("b : "); put(valbits,1,b=>2); new_line;
+    end if;
+    cnt := 0;
+    if valbits /= 0 then
+      idx := startidx;
+      while xbits(idx) = 0 loop
+        idx := idx + 1;
+        cnt := cnt + 1;
+      end loop;
+    end if;
+    if verbose
+     then put("leading zero bits : "); put(cnt,1); new_line;
+    end if;
+    x2 := double_float'compose(double_float(valbits),-startidx-cnt);
+    if x < 0.0
+     then x2 := -x2;
+    end if;
+    if verbose then
+      put("x2 : "); put(x2); new_line;
+      put("       x : "); put(x); new_line;
+      put("x0+x1+x2 : "); put(x0+x1+x2); new_line;
+      put("   error : "); put(abs(x-(x0+x1+x2)),2); new_line;
+    end if;
+    if not tail then
+      x3 := x - (x0 + x1 + x2);
+    else
+      for i in 0..(3*part-1) loop
+        xbits(i) := 0;
+      end loop;
+      for i in 3*part..xbits'last loop
+        xbits(i) := wrkbx(i);
+      end loop;
+      valbits := Bits_of_Doubles.value_52bits(xbits);
+      if verbose then
+        put("x3 bits : "); Bits_of_Doubles.write_52bits(xbits); new_line;
+        put("b : "); put(valbits,1,b=>2); new_line;
+      end if;
+      cnt := 0;
+      if valbits /= 0 then
+        idx := 3*part;
+        while xbits(idx) = 0 loop
+          idx := idx + 1;
+          cnt := cnt + 1;
+        end loop;
+      end if;
+      if verbose
+       then put("leading zero bits : "); put(cnt,1); new_line;
+      end if;
+      x3 := double_float'compose(double_float(valbits),-3*part-cnt);
+      if x < 0.0
+       then x3 := -x3;
+      end if;
+    end if;
+    if verbose then
+      put("x3 : "); put(x3); new_line;
+      put("          x : "); put(x); new_line;
+      put("x0+x1+x2+x3 : "); put(x0+x1+x2+x3); new_line;
+      put("      error : "); put(abs(x-(x0+x1+x2+x3)),2); new_line;
+    end if;
+    if tail then
+      x4 := x - (x0 + x1 + x2 + x3);
+      put("x4 : "); put(x3); new_line;
+      put("             x : "); put(x); new_line;
+      put("x0+x1+x2+x3+x4 : "); put(x0+x1+x2+x3+x4); new_line;
+      put("         error : "); put(abs(x-(x0+x1+x2+x3+x4)),2); new_line;
+    end if;
+  end Split;
 
   procedure Random ( x0,x1,x2,x3,x4,x5,x6,x7 : out double_float ) is
   begin

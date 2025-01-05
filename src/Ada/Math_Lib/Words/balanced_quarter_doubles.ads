@@ -42,6 +42,14 @@ package Balanced_Quarter_Doubles is
   --   If the deviances are larger than the freedom number
   --   of any quarter, then the quarters are not balanced.
 
+  procedure Split ( x : in double_float;
+                    x0,x1,x2,x3,x4 : out double_float;
+                    verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Splits x into balanced quarters x0, x1, x2, x3, with a tail x4.
+  --   If verbose, then the steps are documented.
+
   procedure Random ( x0,x1,x2,x3 : out double_float );
 
   -- DESCRIPTION :

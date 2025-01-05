@@ -1,3 +1,6 @@
+Sat 4 Jan 2025 : added to balanced_quarter_doubles an algorithm to split
+  into quarters, tested in test_balanced_quarter_doubles.adb.
+
 Thu 2 Jan 2025 : to test_vectored_{double, quad, octo, hexa}_doubles.adb,
   added frequency and timers.  New vectored_doubles, test_vectored_doubles,
   and ts_vda.adb to provide the baseline to compare with double double times.
