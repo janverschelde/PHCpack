@@ -11,6 +11,8 @@ The "gprclean words.gpr" removes all files created by gprbuild.
 ------------------------------------------------------------------------------
 file name                        : short description
 ------------------------------------------------------------------------------
+ts_leibniz                       : reformulating Leibniz rule for pi/4
+------------------------------------------------------------------------------
 bits_of_integers                 : splitters of 64-bit integers
 test_bits_of_integers            : test 64-bit splitters
 ts_intbits                       : main test on 64-bit splitters
@@ -44,4 +46,5 @@ ts_voda                          : main test on vectored octo doubles
 vectored_hexa_doubles            : vectorized hexa double arithmetic
 test_vectored_hexa_doubles       : tests on vectored hexa double arithmetic
 ts_vhda                          : main test on vectored hexa doubles
+ts_wallvhda                      : no prompting for wall clock time test
 ------------------------------------------------------------------------------

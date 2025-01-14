@@ -5,10 +5,18 @@ package Test_Vectored_Hexa_Doubles is
 -- DESCRIPTION :
 --   Test on the vectorized hexa double arithmetic.
 
-  procedure Test_Balanced_Product ( dim : in integer32 );
+  procedure Test_Balanced_Product ( dim,freq : in integer32 );
 
   -- DESCRIPTION :
-  --   Tests the product of balanced quarter hexa double vectors.
+  --   Tests the product of balanced quarter hexa double vectors,
+  --   on vectors of dimension dim, computing it as many times
+  --   as the value of freq.
+
+  procedure Wall_Time_Test;
+
+  -- DESCRIPTION :
+  --   Runs a test without prompting for input,
+  --   suitable to measure the wall clock time.
 
   procedure Main;
 
