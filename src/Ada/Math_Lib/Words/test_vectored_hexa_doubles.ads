@@ -18,6 +18,11 @@ package Test_Vectored_Hexa_Doubles is
   --   Runs a test without prompting for input,
   --   suitable to measure the wall clock time.
 
+  procedure Wall_Time_Parallel_Test ( nt : in integer32 );
+
+  -- DESCRIPTION :
+  --   Runs the Wall_Time_Test with a number of threads equal to nt.
+
   procedure Main;
 
   -- DESCRIPTION :

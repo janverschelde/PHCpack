@@ -1,5 +1,7 @@
 Tue 14 Jan 2025 : new ts_wallvhda.adb to measure wall clock time,
   updated test_vectored_hexa_doubles and words.gpr.
+  New ts_mtvhda.adb for a high level parallel version of ts_wallvhda,
+  calls new procedure in test_vectored_hexa_doubles, updated words.gpr.
 
 Sun 12 Jan 2025 : added ts_leibniz.adb to experiment with the reformulation
   of Leibniz rule to approximate pi/4.

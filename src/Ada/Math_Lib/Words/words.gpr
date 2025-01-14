@@ -7,11 +7,11 @@ project Words is
         when "linux" | "macosx" =>
             for Source_Dirs use
                 (".", "../../System", "../../System/Unix_Timer",
-                 "../Numbers", "../Vectors", "../QD");
+                 "../Numbers", "../Vectors", "../QD", "../../Tasking");
         when "windows" =>
             for Source_Dirs use
                 (".", "../../System", "../../System/Basic_Timer",
-                 "../Numbers", "../Vectors", "../QD");
+                 "../Numbers", "../Vectors", "../QD", "../../Tasking");
             for Languages use ("Ada", "C");
     end case;
 
@@ -31,7 +31,8 @@ project Words is
         "ts_voda.adb",      -- vectorized octo double arithmetic
         "ts_vhda.adb",      -- vectorized hexa double arithmetic
         "ts_leibniz.adb",   -- applies the Leibniz series
-        "ts_wallvhda.adb"   -- wall clock time test
+        "ts_wallvhda.adb",  -- wall clock time test
+        "ts_mtvhda.adb"     -- wall clock time parallel test
     );
 
     package Compiler is
