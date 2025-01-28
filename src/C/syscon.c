@@ -341,7 +341,7 @@ int syscon_degree_of_multprec_polynomial ( int k, int *d )
    return fail;
 }
 
-int syscon_store_standard_polynomial ( int nc, int n, int k, char *p )
+int syscon_store_standard_polynomial ( int nc, int n, int k, const char *p )
 {
    int a[3],b[nc],i,fail;
    double *c;
@@ -358,7 +358,7 @@ int syscon_store_standard_polynomial ( int nc, int n, int k, char *p )
    return fail;
 }
 
-int syscon_store_dobldobl_polynomial ( int nc, int n, int k, char *p )
+int syscon_store_dobldobl_polynomial ( int nc, int n, int k, const char *p )
 {
    int a[3],b[nc],i,fail;
    double *c;
@@ -373,7 +373,7 @@ int syscon_store_dobldobl_polynomial ( int nc, int n, int k, char *p )
    return fail;
 }
 
-int syscon_store_quaddobl_polynomial ( int nc, int n, int k, char *p )
+int syscon_store_quaddobl_polynomial ( int nc, int n, int k, const char *p )
 {
    int a[3],b[nc],i,fail;
    double *c;
@@ -389,7 +389,7 @@ int syscon_store_quaddobl_polynomial ( int nc, int n, int k, char *p )
 }
 
 int syscon_store_multprec_polynomial
- ( int nc, int n, int k, int deci, char *p )
+ ( int nc, int n, int k, int deci, const char *p )
 {
    int a[4],b[nc],i,fail;
    double *c;
@@ -561,7 +561,7 @@ int syscon_load_multprec_polynomial ( int k, int *nc, char *p )
    return fail;
 }
 
-int syscon_store_standard_Laurential ( int nc, int n, int k, char *p )
+int syscon_store_standard_Laurential ( int nc, int n, int k, const char *p )
 {
    int a[3],b[nc],i,fail;
    double *c;
@@ -576,7 +576,7 @@ int syscon_store_standard_Laurential ( int nc, int n, int k, char *p )
    return fail;
 }
 
-int syscon_store_dobldobl_Laurential ( int nc, int n, int k, char *p )
+int syscon_store_dobldobl_Laurential ( int nc, int n, int k, const char *p )
 {
    int a[3],b[nc],i,fail;
    double *c;
@@ -591,7 +591,7 @@ int syscon_store_dobldobl_Laurential ( int nc, int n, int k, char *p )
    return fail;
 }
 
-int syscon_store_quaddobl_Laurential ( int nc, int n, int k, char *p )
+int syscon_store_quaddobl_Laurential ( int nc, int n, int k, const char *p )
 {
    int a[3],b[nc],i,fail;
    double *c;
@@ -607,7 +607,7 @@ int syscon_store_quaddobl_Laurential ( int nc, int n, int k, char *p )
 }
 
 int syscon_store_multprec_Laurential
- ( int nc, int n, int k, int deci, char *p )
+ ( int nc, int n, int k, int deci, const char *p )
 {
    int a[4],b[nc],i,fail;
    double *c;

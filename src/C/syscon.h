@@ -288,7 +288,7 @@ int syscon_degree_of_multprec_polynomial ( int k, int *d );
  *   Returns in d the degree of the k-th polynomial stored in
  *   the multiprecision polynomial systems container. */
 
-int syscon_store_standard_polynomial ( int nc, int n, int k, char *p );
+int syscon_store_standard_polynomial ( int nc, int n, int k, const char *p );
 /*
  * DESCRIPTION :
  *   Defines the k-th polynomial in the systems container with
@@ -305,7 +305,7 @@ int syscon_store_standard_polynomial ( int nc, int n, int k, char *p );
  *   The systems container must be initialized with the number of
  *   polynomials and this number must be larger than or equal to k. */
 
-int syscon_store_dobldobl_polynomial ( int nc, int n, int k, char *p );
+int syscon_store_dobldobl_polynomial ( int nc, int n, int k, const char *p );
 /*
  * DESCRIPTION :
  *   Defines the k-th polynomial with complex double double coefficients
@@ -323,7 +323,7 @@ int syscon_store_dobldobl_polynomial ( int nc, int n, int k, char *p );
  *   The systems container must be initialized with the number of
  *   polynomials and this number must be larger than or equal to k. */
 
-int syscon_store_quaddobl_polynomial ( int nc, int n, int k, char *p );
+int syscon_store_quaddobl_polynomial ( int nc, int n, int k, const char *p );
 /*
  * DESCRIPTION :
  *   Defines the k-th polynomial with complex quad double coefficients
@@ -342,7 +342,7 @@ int syscon_store_quaddobl_polynomial ( int nc, int n, int k, char *p );
  *   polynomials and this number must be larger than or equal to k. */
 
 int syscon_store_multprec_polynomial
- ( int nc, int n, int k, int deci, char *p );
+ ( int nc, int n, int k, int deci, const char *p );
 /*
  * DESCRIPTION :
  *   Defines the k-th polynomial with multiprecision complex coefficients
@@ -454,7 +454,7 @@ int syscon_load_multprec_polynomial ( int k, int *nc, char *p );
  *   with multiprecision complex coefficients in the string p,
  *   where nc equals the number of characters in the string p. */
 
-int syscon_store_standard_Laurential ( int nc, int n, int k, char *p );
+int syscon_store_standard_Laurential ( int nc, int n, int k, const char *p );
 /*
  * DESCRIPTION :
  *   Defines the k-th Laurent polynomial in the systems container 
@@ -473,7 +473,7 @@ int syscon_store_standard_Laurential ( int nc, int n, int k, char *p );
  *   must be initialized with the number of polynomials and 
  *   this number must be larger than or equal to k. */
 
-int syscon_store_dobldobl_Laurential ( int nc, int n, int k, char *p );
+int syscon_store_dobldobl_Laurential ( int nc, int n, int k, const char *p );
 /*
  * DESCRIPTION :
  *   Defines the k-th Laurent polynomial in the systems container 
@@ -492,7 +492,7 @@ int syscon_store_dobldobl_Laurential ( int nc, int n, int k, char *p );
  *   must be initialized with the number of polynomials and 
  *   this number must be larger than or equal to k. */
 
-int syscon_store_quaddobl_Laurential ( int nc, int n, int k, char *p );
+int syscon_store_quaddobl_Laurential ( int nc, int n, int k, const char *p );
 /*
  * DESCRIPTION :
  *   Defines the k-th Laurent polynomial in the systems container 
@@ -512,7 +512,7 @@ int syscon_store_quaddobl_Laurential ( int nc, int n, int k, char *p );
  *   this number must be larger than or equal to k. */
 
 int syscon_store_multprec_Laurential
- ( int nc, int n, int k, int deci, char *p );
+ ( int nc, int n, int k, int deci, const char *p );
 /*
  * DESCRIPTION :
  *   Defines the k-th Laurent polynomial in the systems container 
