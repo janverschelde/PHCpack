@@ -383,7 +383,7 @@ char *read_equations_from_file
  * ON RETURN :
  *  len       length of the string on return. */
 
-int scan_number_of_variables ( int nc, char *eqs, int *dim );
+int scan_number_of_variables ( int nc, const char *eqs, int *dim );
 /*
  * DESCRIPTION :
  *   Given in eqs are as many characters as the value of nc.
@@ -461,7 +461,7 @@ char *read_solution_banner_and_string ( FILE *fp, int k, int *len, int *dim );
  *   and the number of variables in dim. */
 
 int varbprec_Newton_Laurent_step
- ( int dim, int wanted, int maxitr, int maxprc, int ns, char *s );
+ ( int dim, int wanted, int maxitr, int maxprc, int ns, const char *s );
 /*
  * DESCRIPTION :
  *   Replaces the solutions in the multprecision solutions container with
@@ -484,7 +484,7 @@ int read_standard_target_system ( void );
  *   Prompts the user for a file name and reads the target system from file.
  *   If available on file, also its solutions will be read and stored. */
 
-int read_standard_target_system_from_file ( int n, char *filename );
+int read_standard_target_system_from_file ( int n, const char *filename );
 /*
  * DESCRIPTION :
  *   Opens the file with name given in the n characters stored in filename,
@@ -498,7 +498,7 @@ int read_dobldobl_target_system ( void );
  *   If available on file, also its solutions will be read and stored.
  *   All data is parsed to double double precision. */
 
-int read_dobldobl_target_system_from_file ( int n, char* filename );
+int read_dobldobl_target_system_from_file ( int n, const char* filename );
 /*
  * DESCRIPTION :
  *   Opens the file with name given in the n characters stored in filename,
@@ -512,7 +512,7 @@ int read_quaddobl_target_system ( void );
  *   If available on file, also its solutions will be read and stored.
  *   All data is parsed to quad double precision. */
 
-int read_quaddobl_target_system_from_file ( int n, char* filename );
+int read_quaddobl_target_system_from_file ( int n, const char* filename );
 /*
  * DESCRIPTION :
  *   Opens the file with name given in the n characters stored in filename,
@@ -528,7 +528,7 @@ int read_multprec_target_system ( int decimals );
  *   places as the value of decimals. */
 
 int read_multprec_target_system_from_file
-  ( int decimals, int n, char* filename );
+  ( int decimals, int n, const char* filename );
 /*
  * DESCRIPTION :
  *   Opens the file with name given in the n characters stored in filename,
@@ -563,7 +563,7 @@ int read_standard_start_system ( void );
  *   Prompts the user for a file name and reads the start system from file. 
  *   If available, then also start solutions will be read and stored. */
 
-int read_standard_start_system_from_file ( int n, char* filename );
+int read_standard_start_system_from_file ( int n, const char* filename );
 /*
  * DESCRIPTION :
  *   Opens the file with name given in the n characters stored in filename,
@@ -578,7 +578,7 @@ int read_dobldobl_start_system ( void );
  *   If available, then also start solutions will be read and stored.
  *   All data is parsed to double double precision. */
 
-int read_dobldobl_start_system_from_file ( int n, char* filename );
+int read_dobldobl_start_system_from_file ( int n, const char* filename );
 /*
  * DESCRIPTION :
  *   Opens the file with name given in the n characters stored in filename,
@@ -593,7 +593,7 @@ int read_quaddobl_start_system ( void );
  *   If available, then also start solutions will be read and stored.
  *   All data is parsed to quad double precision. */
 
-int read_quaddobl_start_system_from_file ( int n, char* filename );
+int read_quaddobl_start_system_from_file ( int n, const char* filename );
 /*
  * DESCRIPTION :
  *   Opens the file with name given in the n characters stored in filename,
@@ -610,7 +610,7 @@ int read_multprec_start_system ( int decimals );
  *   places as the value of decimals. */
 
 int read_multprec_start_system_from_file
- ( int decimals, int n, char* filename );
+ ( int decimals, int n, const char* filename );
 /*
  * DESCRIPTION :
  *   Opens the file with name given in the n characters stored in filename,
