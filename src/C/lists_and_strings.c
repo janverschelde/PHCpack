@@ -2,7 +2,7 @@
 
 #include<stdio.h>
 
-int intlist2str ( int n, int *d, char *s )
+int intlist2str ( int n, const int *d, char *s )
 {
    int bufsize = 16;
    int cnt = 0;
@@ -27,7 +27,7 @@ int intlist2str ( int n, int *d, char *s )
    return cnt;
 }
 
-int dbllist2str ( int n, double *d, char *s )
+int dbllist2str ( int n, const double *d, char *s )
 {
    int bufsize = 26;
    int cnt = 0;
@@ -52,7 +52,7 @@ int dbllist2str ( int n, double *d, char *s )
    return cnt;
 }
 
-int itemcount ( char *s )
+int itemcount ( const char *s )
 {
    int cnt = 1;
    int pos = 0;
@@ -63,7 +63,7 @@ int itemcount ( char *s )
    return cnt;
 }
 
-void str2intlist ( int n, char *s, int *d )
+void str2intlist ( int n, const char *s, int *d )
 {
    int bufsize = 16;
    char buf[bufsize];
@@ -92,7 +92,7 @@ void str2intlist ( int n, char *s, int *d )
    sscanf(buf,"%d",&d[n-1]);
 }
 
-void str2dbllist ( int n, char *s, double *d )
+void str2dbllist ( int n, const char *s, double *d )
 {
    int bufsize = 26;
    char buf[bufsize];

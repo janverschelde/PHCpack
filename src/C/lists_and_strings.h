@@ -1,7 +1,7 @@
 /* prototypes of functions to write arrays of numbers into strings and
    to convert string representations of lists into arrays of numbers */
 
-int intlist2str ( int n, int *d, char *s );
+int intlist2str ( int n, const int *d, char *s );
 /*
  * DESCRIPTION :
  *   Given in d is an array of n integers,
@@ -19,7 +19,7 @@ int intlist2str ( int n, int *d, char *s );
  *   s         string with n integers separated by commas
  *             and enclosed by square brackets [ and ].  */
 
-int dbllist2str ( int n, double *d, char *s );
+int dbllist2str ( int n, const double *d, char *s );
 /*
  * DESCRIPTION :
  *   Given in d is an array of n doubles,
@@ -37,14 +37,14 @@ int dbllist2str ( int n, double *d, char *s );
  *   s         string with n doubles separated by commas
  *             and enclosed by square brackets [ and ].  */
 
-int itemcount ( char *s );
+int itemcount ( const char *s );
 /*
  * DESCRIPTION :
  *   Given in s a string representation of a list,
  *   counts the number of commas and returns the
  *   number of items in the list the string represents. */
 
-void str2intlist ( int n, char *s, int *d );
+void str2intlist ( int n, const char *s, int *d );
 /*
  * DESCRIPTION :
  *   Scans the string s of n numbers and puts them in d.

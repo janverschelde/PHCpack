@@ -572,7 +572,7 @@ char *read_solution_banner_and_string ( FILE *fp, int k, int *len, int *dim )
 }
 
 int varbprec_Newton_Laurent_step
- ( int dim, int wanted, int maxitr, int maxprc, int ns, char *s )
+ ( int dim, int wanted, int maxitr, int maxprc, int ns, const char *s )
 {
    int i,fail;
    int a[5];
@@ -601,7 +601,7 @@ int read_standard_target_system ( void )
    return fail;
 }
 
-int read_standard_target_system_from_file ( int n, char* filename )
+int read_standard_target_system_from_file ( int n, const char* filename )
 {
    int b[n],i,fail;
    double *c;
@@ -621,7 +621,7 @@ int read_dobldobl_target_system ( void )
    return fail;
 }
 
-int read_dobldobl_target_system_from_file ( int n, char* filename )
+int read_dobldobl_target_system_from_file ( int n, const char* filename )
 {
    int b[n],i,fail;
    double *c;
@@ -641,7 +641,7 @@ int read_quaddobl_target_system ( void )
    return fail;
 }
 
-int read_quaddobl_target_system_from_file ( int n, char* filename )
+int read_quaddobl_target_system_from_file ( int n, const char* filename )
 {
    int b[n],i,fail;
    double *c;
@@ -662,7 +662,7 @@ int read_multprec_target_system ( int decimals )
 }
 
 int read_multprec_target_system_from_file
-  ( int decimals, int n, char* filename )
+  ( int decimals, int n, const char* filename )
 {
    int b[n],i,fail;
    int a[2];
@@ -717,7 +717,7 @@ int read_standard_start_system ( void )
    return fail;
 }
 
-int read_standard_start_system_from_file ( int n, char* filename )
+int read_standard_start_system_from_file ( int n, const char* filename )
 {
    int b[n],i,fail;
    double *c;
@@ -737,7 +737,7 @@ int read_dobldobl_start_system ( void )
    return fail;
 }
 
-int read_dobldobl_start_system_from_file ( int n, char* filename )
+int read_dobldobl_start_system_from_file ( int n, const char* filename )
 {
    int b[n],i,fail;
    double *c;
@@ -757,7 +757,7 @@ int read_quaddobl_start_system ( void )
    return fail;
 }
 
-int read_quaddobl_start_system_from_file ( int n, char* filename )
+int read_quaddobl_start_system_from_file ( int n, const char* filename )
 {
    int b[n],i,fail;
    double *c;
@@ -778,7 +778,7 @@ int read_multprec_start_system ( int decimals )
 }
 
 int read_multprec_start_system_from_file
- ( int decimals, int n, char* filename )
+ ( int decimals, int n, const char* filename )
 {
    int b[n],i,fail;
    int a[2];
