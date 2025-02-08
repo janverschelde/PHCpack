@@ -48,4 +48,5 @@ test_vectored_hexa_doubles       : tests on vectored hexa double arithmetic
 ts_vhda                          : main test on vectored hexa doubles
 ts_wallvhda                      : no prompting for wall clock time test
 ts_mtvhda                        : multithreaded wall clock time test
+ts_modbal                        : test balancing by modifier constant
 ------------------------------------------------------------------------------

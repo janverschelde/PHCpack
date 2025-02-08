@@ -1,3 +1,6 @@
+Sat 8 Feb 2025 : added ts_modbal.adb to test the balancing of a sequence
+  of doubles by the addition of a modifier constant; updated words.gpr.
+
 Tue 14 Jan 2025 : new ts_wallvhda.adb to measure wall clock time,
   updated test_vectored_hexa_doubles and words.gpr.
   New ts_mtvhda.adb for a high level parallel version of ts_wallvhda,

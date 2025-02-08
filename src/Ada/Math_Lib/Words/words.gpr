@@ -40,13 +40,14 @@ project Words is
         "ts_vhda.adb",      -- vectorized hexa double arithmetic
         "ts_leibniz.adb",   -- applies the Leibniz series
         "ts_wallvhda.adb",  -- wall clock time test
-        "ts_mtvhda.adb"     -- wall clock time parallel test
+        "ts_mtvhda.adb",    -- wall clock time parallel test
+        "ts_modbal.adb"     -- balanced 48-bit double
     );
 
     package Compiler is
 
-     -- for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
-      for Default_Switches ("Ada") use ("-O3", "-gnatv", "-gnatp", "-gnatf");
+      for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+     -- for Default_Switches ("Ada") use ("-O3", "-gnatv", "-gnatp", "-gnatf");
 
     end Compiler;
 
