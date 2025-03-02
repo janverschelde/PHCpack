@@ -8,23 +8,23 @@
 #define __SERIES_H__
 
 #ifdef compilewgpp
-extern "C" void adainit( void );
-extern "C" int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern "C" void adafinal( void );
+extern "C" void adainit(void);
+extern "C" int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern "C" void adafinal(void);
 #else
-extern void adainit( void );
-extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern void adafinal( void );
+extern void adainit(void);
+extern int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern void adafinal(void);
 #endif
 
-int standard_Newton_series ( int idx, int maxdeg, int nbr, int verbose );
+int standard_Newton_series(int idx, int maxdeg, int nbr, int verbose);
 /*
  * DESCRIPTION :
  *   Given in the systems container a polynomial system with coefficients
  *   in standard double precision, and in the solutions container the
  *   leading coefficients of the power series, this function runs Newton's
  *   method to compute power series solutions of the system in the container,
- *   in standard double precision.  The solution series are stored in 
+ *   in standard double precision.  The solution series are stored in
  *   the standard systems pool.
  *
  * ON ENTRY :
@@ -37,7 +37,7 @@ int standard_Newton_series ( int idx, int maxdeg, int nbr, int verbose );
  * ON RETURN :
  *   The failure code, which equals zero if all went well. */
 
-int dobldobl_Newton_series ( int idx, int maxdeg, int nbr, int verbose );
+int dobldobl_Newton_series(int idx, int maxdeg, int nbr, int verbose);
 /*
  * DESCRIPTION :
  *   Given in the systems container a polynomial system with coefficients
@@ -57,7 +57,7 @@ int dobldobl_Newton_series ( int idx, int maxdeg, int nbr, int verbose );
  * ON RETURN :
  *   The failure code, which equals zero if all went well. */
 
-int quaddobl_Newton_series ( int idx, int maxdeg, int nbr, int verbose );
+int quaddobl_Newton_series(int idx, int maxdeg, int nbr, int verbose);
 /*
  * DESCRIPTION :
  *   Given in the systems container a polynomial system with coefficients
@@ -77,7 +77,7 @@ int quaddobl_Newton_series ( int idx, int maxdeg, int nbr, int verbose );
  * ON RETURN :
  *   The failure code, which equals zero if all went well. */
 
-int standard_Newton_power_series ( int idx, int maxdeg, int nbr, int verbose );
+int standard_Newton_power_series(int idx, int maxdeg, int nbr, int verbose);
 /*
  * DESCRIPTION :
  *   Given in the systems container a polynomial system with coefficients
@@ -97,7 +97,7 @@ int standard_Newton_power_series ( int idx, int maxdeg, int nbr, int verbose );
  * ON RETURN :
  *   The failure code, which equals zero if all went well. */
 
-int dobldobl_Newton_power_series ( int idx, int maxdeg, int nbr, int verbose );
+int dobldobl_Newton_power_series(int idx, int maxdeg, int nbr, int verbose);
 /*
  * DESCRIPTION :
  *   Given in the systems container a polynomial system with coefficients
@@ -117,14 +117,14 @@ int dobldobl_Newton_power_series ( int idx, int maxdeg, int nbr, int verbose );
  * ON RETURN :
  *   The failure code, which equals zero if all went well. */
 
-int quaddobl_Newton_power_series ( int idx, int maxdeg, int nbr, int verbose );
+int quaddobl_Newton_power_series(int idx, int maxdeg, int nbr, int verbose);
 /*
  * DESCRIPTION :
  *   Given in the systems container a polynomial system with coefficients
  *   in quad double precision, and in the quad double systems pool
  *   the leading terms of the power series, this function runs Newton's
  *   method to compute power series solutions of the system in the container,
- *   in quad double precision.  The solution series are stored in the 
+ *   in quad double precision.  The solution series are stored in the
  *   quad double systems pool.
  *
  * ON ENTRY :
@@ -137,15 +137,15 @@ int quaddobl_Newton_power_series ( int idx, int maxdeg, int nbr, int verbose );
  * ON RETURN :
  *   The failure code, which equals zero if all went well. */
 
-int standard_Pade_approximant
- ( int idx, int numdeg, int dendeg, int nbr, int verbose );
+int standard_Pade_approximant(int idx, int numdeg, int dendeg, int nbr,
+                              int verbose);
 /*
  * DESCRIPTION :
  *   Given in the systems container a polynomial system with coefficients
  *   in standard double precision, and in the solutions container the
  *   leading coefficients of the power series, this function runs Newton's
  *   method to compute power series solutions of the system in the container,
- *   in standard double precision.  The solution series are stored in 
+ *   in standard double precision.  The solution series are stored in
  *   the standard systems pool.  The series lead to Pade approximants.
  *
  * ON ENTRY :
@@ -159,15 +159,15 @@ int standard_Pade_approximant
  * ON RETURN :
  *   The failure code, which equals zero if all went well. */
 
-int dobldobl_Pade_approximant
- ( int idx, int numdeg, int dendeg, int nbr, int verbose );
+int dobldobl_Pade_approximant(int idx, int numdeg, int dendeg, int nbr,
+                              int verbose);
 /*
  * DESCRIPTION :
  *   Given in the systems container a polynomial system with coefficients
  *   in double double precision, and in the solutions container the
  *   leading coefficients of the power series, this function runs Newton's
  *   method to compute power series solutions of the system in the container,
- *   in double double precision.  The solution series are stored in 
+ *   in double double precision.  The solution series are stored in
  *   the dobldobl systems pool.  The series lead to Pade approximants.
  *
  * ON ENTRY :
@@ -181,15 +181,15 @@ int dobldobl_Pade_approximant
  * ON RETURN :
  *   The failure code, which equals zero if all went well. */
 
-int quaddobl_Pade_approximant
- ( int idx, int numdeg, int dendeg, int nbr, int verbose );
+int quaddobl_Pade_approximant(int idx, int numdeg, int dendeg, int nbr,
+                              int verbose);
 /*
  * DESCRIPTION :
  *   Given in the systems container a polynomial system with coefficients
  *   in quad double precision, and in the solutions container the
  *   leading coefficients of the power series, this function runs Newton's
  *   method to compute power series solutions of the system in the container,
- *   in quad double precision.  The solution series are stored in 
+ *   in quad double precision.  The solution series are stored in
  *   the quaddobl systems pool.  The series lead to Pade approximants.
  *
  * ON ENTRY :

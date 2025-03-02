@@ -8,17 +8,17 @@
 #define __NUMBTROP_H__
 
 #ifdef compilewgpp
-extern "C" void adainit( void );
-extern "C" int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern "C" void adafinal( void );
+extern "C" void adainit(void);
+extern "C" int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern "C" void adafinal(void);
 #else
-extern void adainit( void );
-extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern void adafinal( void );
+extern void adainit(void);
+extern int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern void adafinal(void);
 #endif
 
-int numbtrop_standard_initialize
- ( int nbt, int dim, int *wnd, double *dir, double *err );
+int numbtrop_standard_initialize(int nbt, int dim, int *wnd, double *dir,
+                                 double *err);
 /*
  * DESCRIPTION :
  *   Initializes the numerical tropisms container,
@@ -34,8 +34,8 @@ int numbtrop_standard_initialize
  * ON RETURN :
  *   The failure code, which equals zero if all went well. */
 
-int numbtrop_dobldobl_initialize
- ( int nbt, int dim, int *wnd, double *dir, double *err );
+int numbtrop_dobldobl_initialize(int nbt, int dim, int *wnd, double *dir,
+                                 double *err);
 /*
  * DESCRIPTION :
  *   Initializes the numerical tropisms container,
@@ -51,8 +51,8 @@ int numbtrop_dobldobl_initialize
  * ON RETURN :
  *   The failure code, which equals zero if all went well. */
 
-int numbtrop_quaddobl_initialize
- ( int nbt, int dim, int *wnd, double *dir, double *err );
+int numbtrop_quaddobl_initialize(int nbt, int dim, int *wnd, double *dir,
+                                 double *err);
 /*
  * DESCRIPTION :
  *   Initializes the numerical tropisms container,
@@ -68,8 +68,8 @@ int numbtrop_quaddobl_initialize
  * ON RETURN :
  *   The failure code, which equals zero if all went well. */
 
-int numbtrop_standard_retrieve
- ( int nbt, int dim, int *wnd, double *dir, double *err );
+int numbtrop_standard_retrieve(int nbt, int dim, int *wnd, double *dir,
+                               double *err);
 /*
  * DESCRIPTION :
  *   Retrieves all tropisms stored in standard double precision.
@@ -84,8 +84,8 @@ int numbtrop_standard_retrieve
  *   err    errors on the tropisms, as many doubles as the value of nbt.
  *   The failure code, which equals zero if all went well. */
 
-int numbtrop_dobldobl_retrieve
- ( int nbt, int dim, int *wnd, double *dir, double *err );
+int numbtrop_dobldobl_retrieve(int nbt, int dim, int *wnd, double *dir,
+                               double *err);
 /*
  * DESCRIPTION :
  *   Retrieves all tropisms stored in double double precision.
@@ -100,8 +100,8 @@ int numbtrop_dobldobl_retrieve
  *   err    errors on the tropisms, as many doubles as the value of 2*nbt.
  *   The failure code, which equals zero if all went well. */
 
-int numbtrop_quaddobl_retrieve
- ( int nbt, int dim, int *wnd, double *dir, double *err );
+int numbtrop_quaddobl_retrieve(int nbt, int dim, int *wnd, double *dir,
+                               double *err);
 /*
  * DESCRIPTION :
  *   Retrieves all tropisms stored in quad double precision.
@@ -116,44 +116,44 @@ int numbtrop_quaddobl_retrieve
  *   err    errors on the tropisms, as many doubles as the value of 4*nbt.
  *   The failure code, which equals zero if all went well. */
 
-int numbtrop_standard_size ( int *nbt );
+int numbtrop_standard_size(int *nbt);
 /*
  * DESCRIPTION :
  *   Returns in nbt the number of tropisms, stored in standard double
  *   precision, in the numerical tropisms container. */
 
-int numbtrop_dobldobl_size ( int *nbt );
+int numbtrop_dobldobl_size(int *nbt);
 /*
  * DESCRIPTION :
  *   Returns in nbt the number of tropisms, stored in double double
  *   precision, in the numerical tropisms container. */
 
-int numbtrop_quaddobl_size ( int *nbt );
+int numbtrop_quaddobl_size(int *nbt);
 /*
  * DESCRIPTION :
  *   Returns in nbt the number of tropisms, stored in quad double
  *   precision, in the numerical tropisms container. */
 
-int numbtrop_standard_dimension ( int *dim );
+int numbtrop_standard_dimension(int *dim);
 /*
  * DESCRIPTION :
  *   Returns in dim the dimension of the tropisms, stored in standard double
  *   precision, in the numerical tropisms container. */
 
-int numbtrop_dobldobl_dimension ( int *dim );
+int numbtrop_dobldobl_dimension(int *dim);
 /*
  * DESCRIPTION :
  *   Returns in dim the dimension of the tropisms, stored in double double
  *   precision, in the numerical tropisms container. */
 
-int numbtrop_quaddobl_dimension ( int *dim );
+int numbtrop_quaddobl_dimension(int *dim);
 /*
  * DESCRIPTION :
  *   Returns in dim the dimension of the tropisms, stored in quad double
  *   precision, in the numerical tropisms container. */
 
-int numbtrop_store_standard_tropism
- ( int dim, int idx, int wnd, double *dir, double err );
+int numbtrop_store_standard_tropism(int dim, int idx, int wnd, double *dir,
+                                    double err);
 /*
  * DESCRIPTION :
  *   Stores a tropism given in standard double precision.
@@ -166,8 +166,8 @@ int numbtrop_store_standard_tropism
  *   dir     coordinates of the tropisms, as many as dim;
  *   err     the error on the tropism. */
 
-int numbtrop_store_dobldobl_tropism
- ( int dim, int idx, int wnd, double *dir, double *err );
+int numbtrop_store_dobldobl_tropism(int dim, int idx, int wnd, double *dir,
+                                    double *err);
 /*
  * DESCRIPTION :
  *   Stores a tropism given in double double precision.
@@ -180,8 +180,8 @@ int numbtrop_store_dobldobl_tropism
  *   dir     coordinates of the tropisms, as many as 2*dim;
  *   err     the error on the tropism, two doubles. */
 
-int numbtrop_store_quaddobl_tropism
- ( int dim, int idx, int wnd, double *dir, double *err );
+int numbtrop_store_quaddobl_tropism(int dim, int idx, int wnd, double *dir,
+                                    double *err);
 /*
  * DESCRIPTION :
  *   Stores a tropism given in quad double precision.
@@ -194,8 +194,8 @@ int numbtrop_store_quaddobl_tropism
  *   dir     coordinates of the tropisms, as many as 4*dim;
  *   err     the error on the tropism, four doubles. */
 
-int numbtrop_standard_retrieve_tropism
- ( int dim, int idx, int *wnd, double *dir, double *err );
+int numbtrop_standard_retrieve_tropism(int dim, int idx, int *wnd, double *dir,
+                                       double *err);
 /*
  * DESCRIPTION :
  *   Returns one tropism, stored in standard double precision.
@@ -210,8 +210,8 @@ int numbtrop_standard_retrieve_tropism
  *   dir     coordinates of the tropisms, as many as dim;
  *   err     the error on the tropism. */
 
-int numbtrop_dobldobl_retrieve_tropism
- ( int dim, int idx, int *wnd, double *dir, double *err );
+int numbtrop_dobldobl_retrieve_tropism(int dim, int idx, int *wnd, double *dir,
+                                       double *err);
 /*
  * DESCRIPTION :
  *   Returns one tropism, stored in double double precision.
@@ -226,8 +226,8 @@ int numbtrop_dobldobl_retrieve_tropism
  *   dir     coordinates of the tropisms, as many as 2*dim;
  *   err     the error on the tropism, two doubles. */
 
-int numbtrop_quaddobl_retrieve_tropism
- ( int dim, int idx, int *wnd, double *dir, double *err );
+int numbtrop_quaddobl_retrieve_tropism(int dim, int idx, int *wnd, double *dir,
+                                       double *err);
 /*
  * DESCRIPTION :
  *   Returns one tropism, stored in quad double precision.
@@ -242,19 +242,19 @@ int numbtrop_quaddobl_retrieve_tropism
  *   dir     coordinates of the tropisms, as many as 4*dim;
  *   err     the error on the tropism, four doubles. */
 
-int numbtrop_standard_clear ( void );
+int numbtrop_standard_clear(void);
 /*
  * DESCRIPTION :
  *   Deallocates the stored numerically computed tropisms,
  *   computed in standard double precision. */
 
-int numbtrop_dobldobl_clear ( void );
+int numbtrop_dobldobl_clear(void);
 /*
  * DESCRIPTION :
  *   Deallocates the stored numerically computed tropisms,
  *   computed in double double precision. */
 
-int numbtrop_quaddobl_clear ( void );
+int numbtrop_quaddobl_clear(void);
 /*
  * DESCRIPTION :
  *   Deallocates the stored numerically computed tropisms,

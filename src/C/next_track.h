@@ -8,22 +8,22 @@
 #define __NEXT_TRACK_H__
 
 #ifdef compilewgpp
-extern "C" void adainit( void );
-extern "C" int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern "C" void adafinal( void );
+extern "C" void adainit(void);
+extern "C" int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern "C" void adafinal(void);
 #else
-extern void adainit( void );
-extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern void adafinal( void );
+extern void adainit(void);
+extern int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern void adafinal(void);
 #endif
 
-int initialize_standard_homotopy
- ( int fixed_gamma, double regamma, double imgamma );
+int initialize_standard_homotopy(int fixed_gamma, double regamma,
+                                 double imgamma);
 /*
  * DESCRIPTION :
  *   Takes start and target system as stored in standard double precision
  *   in the PHCpack containers and initializes the homotopy for tracking
- *   in standard double complex arithmetic. 
+ *   in standard double complex arithmetic.
  *   If fixed_gamma equals 1 (true), then gamma will be a fixed default,
  *   otherwise, a new random complex constant for gamma is generated,
  *   but only if regamma and imgamma are both zero.
@@ -31,8 +31,8 @@ int initialize_standard_homotopy
  *   then the value of the complex number defined by regamma and imgamma
  *   will define the gamma constant in the homotopy. */
 
-int initialize_dobldobl_homotopy
- ( int fixed_gamma, double regamma, double imgamma );
+int initialize_dobldobl_homotopy(int fixed_gamma, double regamma,
+                                 double imgamma);
 /*
  * DESCRIPTION :
  *   Takes start and target system as stored in double double precision
@@ -45,8 +45,8 @@ int initialize_dobldobl_homotopy
  *   then the value of the complex number defined by regamma and imgamma
  *   will define the gamma constant in the homotopy. */
 
-int initialize_quaddobl_homotopy
- ( int fixed_gamma, double regamma, double imgamma );
+int initialize_quaddobl_homotopy(int fixed_gamma, double regamma,
+                                 double imgamma);
 /*
  * DESCRIPTION :
  *   Takes start and target system as stored in quad double precision
@@ -59,7 +59,7 @@ int initialize_quaddobl_homotopy
  *   then the value of the complex number defined by regamma and imgamma
  *   will define the gamma constant in the homotopy. */
 
-int initialize_multprec_homotopy ( int fixed_gamma, int decimals );
+int initialize_multprec_homotopy(int fixed_gamma, int decimals);
 /*
  * DESCRIPTION :
  *   Takes start and target system as stored in multiprecision
@@ -69,8 +69,8 @@ int initialize_multprec_homotopy ( int fixed_gamma, int decimals );
  *   If fixed_gamma equals 1 (true), then gamma will be a fixed default,
  *   otherwise, a new random complex constant for gamma is generated. */
 
-int initialize_varbprec_homotopy 
- ( int fixed_gamma, int nc_target, char *target, int nc_start, char *start );
+int initialize_varbprec_homotopy(int fixed_gamma, int nc_target, char *target,
+                                 int nc_start, char *start);
 /*
  * DESCRIPTION :
  *   Initializes the variable precision homotopy with the target and
@@ -84,31 +84,31 @@ int initialize_varbprec_homotopy
  *   nc_start      number of characters in the string start;
  *   start         string representation of the start system. */
 
-int initialize_standard_solution ( int k );
+int initialize_standard_solution(int k);
 /*
  * DESCRIPTION :
  *   Takes the k-th solution in the standard solution container
  *   and initializes the standard double path tracker with generator. */
 
-int initialize_dobldobl_solution ( int k );
+int initialize_dobldobl_solution(int k);
 /*
  * DESCRIPTION :
  *   Takes the k-th solution in the double double solution container
  *   and initializes the double double path tracker with generator. */
 
-int initialize_quaddobl_solution ( int k );
+int initialize_quaddobl_solution(int k);
 /*
  * DESCRIPTION :
  *   Takes the k-th solution in the quad double solution container
  *   and initializes the double double path tracker with generator. */
 
-int initialize_multprec_solution ( int k );
+int initialize_multprec_solution(int k);
 /*
  * DESCRIPTION :
  *   Takes the k-th solution in the multiprecision solution container
  *   and initializes the multiprecision path tracker with generator. */
 
-int initialize_varbprec_solution ( int nv, int nc, char *sol );
+int initialize_varbprec_solution(int nv, int nc, char *sol);
 /*
  * DESCRIPTION :
  *   Uses the string representation of a solution to initialize the
@@ -119,52 +119,52 @@ int initialize_varbprec_solution ( int nv, int nc, char *sol );
  *   nc      the number of characters in the string sol;
  *   sol     string representation of a solution. */
 
-int next_standard_solution ( int k );
+int next_standard_solution(int k);
 /*
  * DESCRIPTION :
  *   Applies one predictor-corrector step to the initialized path tracker
- *   in standard double precision and replaces the k-th solution in the 
+ *   in standard double precision and replaces the k-th solution in the
  *   standard solution container with a new solution on the path.
  *
  * REQUIRED :
  *   The standard homotopy has been initialized and the standard path
  *   tracker was initialized with the k-th start solution.  */
 
-int next_dobldobl_solution ( int k );
+int next_dobldobl_solution(int k);
 /*
  * DESCRIPTION :
  *   Applies one predictor-corrector step to the initialized path tracker
- *   in double double precision and replaces the k-th solution in the 
+ *   in double double precision and replaces the k-th solution in the
  *   double double solution container with a new solution on the path.
  *
  * REQUIRED :
  *   The double double homotopy has been initialized and the double double
  *   path tracker was initialized with the k-th start solution.  */
 
-int next_quaddobl_solution ( int k );
+int next_quaddobl_solution(int k);
 /*
  * DESCRIPTION :
  *   Applies one predictor-corrector step to the initialized path tracker
- *   in quad double precision and replaces the k-th solution in the 
+ *   in quad double precision and replaces the k-th solution in the
  *   quad double solution container with a new solution on the path.
  *
  * REQUIRED :
  *   The quad double homotopy has been initialized and the quad double
  *   path tracker was initialized with the k-th start solution.  */
 
-int next_multprec_solution ( int k );
+int next_multprec_solution(int k);
 /*
  * DESCRIPTION :
  *   Applies one predictor-corrector step to the initialized path tracker
- *   in multiple precision and replaces the k-th solution in the 
+ *   in multiple precision and replaces the k-th solution in the
  *   multiprecision solution container with a new solution on the path.
  *
  * REQUIRED :
  *   The multiprecision homotopy has been initialized and the multiprecision
  *   path tracker was initialized with the k-th start solution.  */
 
-char *next_varbprec_solution
- ( int want, int maxprc, int maxitr, int verbose, int *nc, int *fail ); 
+char *next_varbprec_solution(int want, int maxprc, int maxitr, int verbose,
+                             int *nc, int *fail);
 /*
  * DESCRIPTION :
  *   Returns the next point along the path computed with variable precision.
@@ -185,31 +185,31 @@ char *next_varbprec_solution
  *            which represents the next solution along a path;
  *   fail     if 0, then no failure occurred. */
 
-int clear_standard_tracker ( void );
+int clear_standard_tracker(void);
 /*
  * DESCRIPTION :
  *   Deallocates and resets data for tracking paths with a generator
  *   in standard double precision complex arithmetic. */
 
-int clear_dobldobl_tracker ( void );
+int clear_dobldobl_tracker(void);
 /*
  * DESCRIPTION :
  *   Deallocates and resets data for tracking paths with a generator
  *   in double double precision complex arithmetic. */
 
-int clear_quaddobl_tracker ( void );
+int clear_quaddobl_tracker(void);
 /*
  * DESCRIPTION :
  *   Deallocates and resets data for tracking paths with a generator
  *   in quad double precision complex arithmetic. */
 
-int clear_multprec_tracker ( void );
+int clear_multprec_tracker(void);
 /*
  * DESCRIPTION :
  *   Deallocates and resets data for tracking paths with a generator
  *   in multiprecision complex arithmetic. */
 
-int clear_varbprec_tracker ( void );
+int clear_varbprec_tracker(void);
 /*
  * DESCRIPTION :
  *   Deallocates and resets data for tracking paths with a generator

@@ -75,7 +75,7 @@ int compute_root_count ( int *r )
       fail = set_structure_string(&nc,ss);
       printf("\nthe set structure string : \n%s\n",ss);
       printf("clearing the set structure ...\n");
-      clear_set_structure();     
+      clear_set_structure();
       printf("parsing the set structure string ...\n");
       parse_set_structure(nc,ss);
       printf("after parsing the set structure string :\n");

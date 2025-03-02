@@ -7,16 +7,16 @@
 #define __SCALERS_H__
 
 #ifdef compilewgpp
-extern "C" void adainit( void );
-extern "C" int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern "C" void adafinal( void );
+extern "C" void adainit(void);
+extern "C" int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern "C" void adafinal(void);
 #else
-extern void adainit( void );
-extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern void adafinal( void );
+extern void adainit(void);
+extern int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern void adafinal(void);
 #endif
 
-int standard_scale_system ( int mode, double *cff );
+int standard_scale_system(int mode, double *cff);
 /*
  * DESCRIPTION :
  *   Applies scaling to the system in the standard systems container,
@@ -39,7 +39,7 @@ int standard_scale_system ( int mode, double *cff );
  *           The last double in cff is the estimated inverse condition
  *           number (as a complex number) in the solved linear system. */
 
-int dobldobl_scale_system ( int mode, double *cff );
+int dobldobl_scale_system(int mode, double *cff);
 /*
  * DESCRIPTION :
  *   Applies scaling to the system in the dobldobl systems container,
@@ -62,7 +62,7 @@ int dobldobl_scale_system ( int mode, double *cff );
  *           The last 4 doubles in cff is the estimated inverse condition
  *           number (as a complex number) in the solved linear system. */
 
-int quaddobl_scale_system ( int mode, double *cff );
+int quaddobl_scale_system(int mode, double *cff);
 /*
  * DESCRIPTION :
  *   Applies scaling to the system in the quaddobl systems container,
@@ -85,7 +85,7 @@ int quaddobl_scale_system ( int mode, double *cff );
  *           The last 8 doubles in cff store the estimated inverse condition
  *           number (as a complex number) in the solved linear system. */
 
-int standard_scale_solutions ( int dim, int basis, double *cff );
+int standard_scale_solutions(int dim, int basis, double *cff);
 /*
  * DESCRIPTION :
  *   Replaces the solutions in the standard solutions container with
@@ -99,7 +99,7 @@ int standard_scale_solutions ( int dim, int basis, double *cff );
  *   cff     as many scaling coefficients (real and imaginary parts)
  *           as the value of dim. */
 
-int dobldobl_scale_solutions ( int dim, int basis, double *cff );
+int dobldobl_scale_solutions(int dim, int basis, double *cff);
 /*
  * DESCRIPTION :
  *   Replaces the solutions in the dobldobl solutions container with
@@ -113,7 +113,7 @@ int dobldobl_scale_solutions ( int dim, int basis, double *cff );
  *   cff     as many scaling coefficients (real and imaginary parts)
  *           as the value of dim. */
 
-int quaddobl_scale_solutions ( int dim, int basis, double *cff );
+int quaddobl_scale_solutions(int dim, int basis, double *cff);
 /*
  * DESCRIPTION :
  *   Replaces the solutions in the quaddobl solutions container with

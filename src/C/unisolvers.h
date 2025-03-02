@@ -8,16 +8,16 @@
 #define __UNISOLVERS_H__
 
 #ifdef compilewgpp
-extern "C" void adainit( void );
-extern "C" int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern "C" void adafinal( void );
+extern "C" void adainit(void);
+extern "C" int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern "C" void adafinal(void);
 #else
-extern void adainit( void );
-extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern void adafinal( void );
+extern void adainit(void);
+extern int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern void adafinal(void);
 #endif
 
-int solve_with_standard_doubles ( int max, double eps, int *nit );
+int solve_with_standard_doubles(int max, double eps, int *nit);
 /*
  * DESCRIPTION :
  *   Calls the method of Durand-Kerner as implemented in PHCpack
@@ -26,7 +26,7 @@ int solve_with_standard_doubles ( int max, double eps, int *nit );
  * REQUIRED :
  *   The standard polynomial systems container must have as system
  *   one polynomial in one variable, before calling this function.
- *   On return, approximations for the roots are in the standard 
+ *   On return, approximations for the roots are in the standard
  *   solutions container.
  *
  * ON ENTRY :
@@ -36,7 +36,7 @@ int solve_with_standard_doubles ( int max, double eps, int *nit );
  * ON RETURN :
  *   nit      number of iterations performed by Durand-Kerner. */
 
-int solve_with_double_doubles ( int max, double eps, int *nit );
+int solve_with_double_doubles(int max, double eps, int *nit);
 /*
  * DESCRIPTION :
  *   Calls the method of Durand-Kerner as implemented in PHCpack
@@ -55,7 +55,7 @@ int solve_with_double_doubles ( int max, double eps, int *nit );
  * ON RETURN :
  *   nit      number of iterations performed by Durand-Kerner. */
 
-int solve_with_quad_doubles ( int max, double eps, int *nit );
+int solve_with_quad_doubles(int max, double eps, int *nit);
 /*
  * DESCRIPTION :
  *   Calls the method of Durand-Kerner as implemented in PHCpack
@@ -74,7 +74,7 @@ int solve_with_quad_doubles ( int max, double eps, int *nit );
  * ON RETURN :
  *   nit      number of iterations performed by Durand-Kerner. */
 
-int solve_with_multiprecision ( int dcp, int max, double eps, int *nit );
+int solve_with_multiprecision(int dcp, int max, double eps, int *nit);
 /*
  * DESCRIPTION :
  *   Calls the method of Durand-Kerner as implemented in PHCpack

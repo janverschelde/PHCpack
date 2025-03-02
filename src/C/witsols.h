@@ -8,19 +8,19 @@
 #define __WITSOLS_H__
 
 #ifdef compilewgpp
-extern "C" void adainit( void );
-extern "C" int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern "C" void adafinal( void );
+extern "C" void adainit(void);
+extern "C" int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern "C" void adafinal(void);
 #else
-extern void adainit( void );
-extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern void adafinal( void );
+extern void adainit(void);
+extern int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern void adafinal(void);
 #endif
 
 /* the solvers */
 
-int standard_polysys_solve
- ( int nbtasks, int topdim, int filter, int factor, int verbose );
+int standard_polysys_solve(int nbtasks, int topdim, int filter, int factor,
+                           int verbose);
 /*
  * DESCRIPTION :
  *   Runs the cascades of homotopies on the polynomial system in
@@ -29,12 +29,12 @@ int standard_polysys_solve
  * ON ENTRY :
  *   nbtasks   equals the number of tasks for multitasking,
  *   topdim    the top dimension to start the homotopy cascades,
- *   filter    0 or 1 flag to filter the witness supersets, 
+ *   filter    0 or 1 flag to filter the witness supersets,
  *   factor    0 or 1 flag to factor the witness sets,
  *   verbose   for intermediate output. */
 
-int standard_laursys_solve
- ( int nbtasks, int topdim, int filter, int factor, int verbose );
+int standard_laursys_solve(int nbtasks, int topdim, int filter, int factor,
+                           int verbose);
 /*
  * DESCRIPTION :
  *   Runs the cascades of homotopies on the Laurent polynomial system in
@@ -43,12 +43,12 @@ int standard_laursys_solve
  * ON ENTRY :
  *   nbtasks   equals the number of tasks for multitasking,
  *   topdim    the top dimension to start the homotopy cascades,
- *   filter    0 or 1 flag to filter the witness supersets, 
+ *   filter    0 or 1 flag to filter the witness supersets,
  *   factor    0 or 1 flag to factor the witness sets,
  *   verbose   for intermediate output. */
 
-int dobldobl_polysys_solve
- ( int nbtasks, int topdim, int filter, int factor, int verbose );
+int dobldobl_polysys_solve(int nbtasks, int topdim, int filter, int factor,
+                           int verbose);
 /*
  * DESCRIPTION :
  *   Runs the cascades of homotopies on the polynomial system in
@@ -57,12 +57,12 @@ int dobldobl_polysys_solve
  * ON ENTRY :
  *   nbtasks   equals the number of tasks for multitasking,
  *   topdim    the top dimension to start the homotopy cascades,
- *   filter    0 or 1 flag to filter the witness supersets, 
+ *   filter    0 or 1 flag to filter the witness supersets,
  *   factor    0 or 1 flag to factor the witness sets,
  *   verbose   for intermediate output. */
 
-int dobldobl_laursys_solve
- ( int nbtasks, int topdim, int filter, int factor, int verbose );
+int dobldobl_laursys_solve(int nbtasks, int topdim, int filter, int factor,
+                           int verbose);
 /*
  * DESCRIPTION :
  *   Runs the cascades of homotopies on the Laurent polynomial system in
@@ -71,12 +71,12 @@ int dobldobl_laursys_solve
  * ON ENTRY :
  *   nbtasks   equals the number of tasks for multitasking,
  *   topdim    the top dimension to start the homotopy cascades,
- *   filter    0 or 1 flag to filter the witness supersets, 
+ *   filter    0 or 1 flag to filter the witness supersets,
  *   factor    0 or 1 flag to factor the witness sets,
  *   verbose   for intermediate output. */
 
-int quaddobl_polysys_solve
- ( int nbtasks, int topdim, int filter, int factor, int verbose );
+int quaddobl_polysys_solve(int nbtasks, int topdim, int filter, int factor,
+                           int verbose);
 /*
  * DESCRIPTION :
  *   Runs the cascades of homotopies on the polynomial system in
@@ -85,12 +85,12 @@ int quaddobl_polysys_solve
  * ON ENTRY :
  *   nbtasks   equals the number of tasks for multitasking,
  *   topdim    the top dimension to start the homotopy cascades,
- *   filter    0 or 1 flag to filter the witness supersets, 
+ *   filter    0 or 1 flag to filter the witness supersets,
  *   factor    0 or 1 flag to factor the witness sets,
  *   verbose   for intermediate output. */
 
-int quaddobl_laursys_solve
- ( int nbtasks, int topdim, int filter, int factor, int verbose );
+int quaddobl_laursys_solve(int nbtasks, int topdim, int filter, int factor,
+                           int verbose);
 /*
  * DESCRIPTION :
  *   Runs the cascades of homotopies on the Laurent polynomial system in
@@ -99,13 +99,13 @@ int quaddobl_laursys_solve
  * ON ENTRY :
  *   nbtasks   equals the number of tasks for multitasking,
  *   topdim    the top dimension to start the homotopy cascades,
- *   filter    0 or 1 flag to filter the witness supersets, 
+ *   filter    0 or 1 flag to filter the witness supersets,
  *   factor    0 or 1 flag to factor the witness sets,
  *   verbose   for intermediate output. */
 
 /* extracting solution data */
 
-int copy_standard_polysys_witset ( int dim );
+int copy_standard_polysys_witset(int dim);
 /*
  * DESCRIPTION :
  *   Copies the witness set representation for a solution set
@@ -114,9 +114,9 @@ int copy_standard_polysys_witset ( int dim );
  *
  * REQUIRED :
  *   1) standard_polysys_solve was executed successfully, and
- *   2) dim is in the range 0..topdim. */ 
+ *   2) dim is in the range 0..topdim. */
 
-int copy_standard_laursys_witset ( int dim );
+int copy_standard_laursys_witset(int dim);
 /*
  * DESCRIPTION :
  *   Copies the witness set representation for a solution set
@@ -125,9 +125,9 @@ int copy_standard_laursys_witset ( int dim );
  *
  * REQUIRED :
  *   1) standard_laursys_solve was executed successfully, and
- *   2) dim is in the range 0..topdim. */ 
+ *   2) dim is in the range 0..topdim. */
 
-int copy_dobldobl_polysys_witset ( int dim );
+int copy_dobldobl_polysys_witset(int dim);
 /*
  * DESCRIPTION :
  *   Copies the witness set representation for a solution set
@@ -136,9 +136,9 @@ int copy_dobldobl_polysys_witset ( int dim );
  *
  * REQUIRED :
  *   1) dobldobl_polysys_solve was executed successfully, and
- *   2) dim is in the range 0..topdim. */ 
+ *   2) dim is in the range 0..topdim. */
 
-int copy_dobldobl_laursys_witset ( int dim );
+int copy_dobldobl_laursys_witset(int dim);
 /*
  * DESCRIPTION :
  *   Copies the witness set representation for a solution set
@@ -147,9 +147,9 @@ int copy_dobldobl_laursys_witset ( int dim );
  *
  * REQUIRED :
  *   1) dobldobl_laursys_solve was executed successfully, and
- *   2) dim is in the range 0..topdim. */ 
+ *   2) dim is in the range 0..topdim. */
 
-int copy_quaddobl_polysys_witset ( int dim );
+int copy_quaddobl_polysys_witset(int dim);
 /*
  * DESCRIPTION :
  *   Copies the witness set representation for a solution set
@@ -158,9 +158,9 @@ int copy_quaddobl_polysys_witset ( int dim );
  *
  * REQUIRED :
  *   1) quaddobl_polysys_solve was executed successfully, and
- *   2) dim is in the range 0..topdim. */ 
+ *   2) dim is in the range 0..topdim. */
 
-int copy_quaddobl_laursys_witset ( int dim );
+int copy_quaddobl_laursys_witset(int dim);
 /*
  * DESCRIPTION :
  *   Copies the witness set representation for a solution set
@@ -169,19 +169,19 @@ int copy_quaddobl_laursys_witset ( int dim );
  *
  * REQUIRED :
  *   1) quaddobl_laursys_solve was executed successfully, and
- *   2) dim is in the range 0..topdim. */ 
+ *   2) dim is in the range 0..topdim. */
 
-int clear_standard_witsols ( void );
+int clear_standard_witsols(void);
 /*
  * DESCRIPTION :
  *   Clears the witness solutions in standard double precision. */
 
-int clear_dobldobl_witsols ( void );
+int clear_dobldobl_witsols(void);
 /*
  * DESCRIPTION :
  *   Clears the witness solutions in double double precision. */
 
-int clear_quaddobl_witsols ( void );
+int clear_quaddobl_witsols(void);
 /*
  * DESCRIPTION :
  *   Clears the witness solutions in quad double precision. */

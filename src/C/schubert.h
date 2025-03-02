@@ -8,22 +8,22 @@
 #define __SCHUBERT_H__
 
 #ifdef compilewgpp
-extern "C" void adainit( void );
-extern "C" int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern "C" void adafinal( void );
+extern "C" void adainit(void);
+extern "C" int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern "C" void adafinal(void);
 #else
-extern void adainit( void );
-extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern void adafinal( void );
+extern void adainit(void);
+extern int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern void adafinal(void);
 #endif
 
-int Pieri_root_count ( int m, int p, int q, int *r );
+int Pieri_root_count(int m, int p, int q, int *r);
 /*
  * Returns in r the number of p-plane producing curves
  * of degree q the meet m-planes at prescribed points. */
 
-int resolve_Schubert_conditions
- ( int n, int k, int c, int *brackets, int verbose, int *r );
+int resolve_Schubert_conditions(int n, int k, int c, int *brackets, int verbose,
+                                int *r);
 /*
  * In n-space for k-planes subject to c general Schubert intersection
  * conditions as defined by the brackets, the root count r is computed.
@@ -41,10 +41,9 @@ int resolve_Schubert_conditions
  *   r        the formal root count as the number of k-planes
  *            for conditions imposed by the brackets for general flags. */
 
-int standard_Littlewood_Richardson_homotopies
- ( int n, int k, int c, int *brackets,
-   int verbose, int verify, int minrep, int tosquare, 
-   int nbchar, char *filename, int *r, double *flags );
+int standard_Littlewood_Richardson_homotopies(
+    int n, int k, int c, int *brackets, int verbose, int verify, int minrep,
+    int tosquare, int nbchar, char *filename, int *r, double *flags);
 /*
  * In n-space for k-planes subject to c general Schubert intersection
  * conditions as defined by the brackets, the root count r is computed
@@ -75,10 +74,9 @@ int standard_Littlewood_Richardson_homotopies
  *            for conditions imposed by the brackets for general flags;
  *   flags    coefficients of the general flags. */
 
-int dobldobl_Littlewood_Richardson_homotopies
- ( int n, int k, int c, int *brackets,
-   int verbose, int verify, int minrep, int tosquare,
-   int nbchar, char *filename, int *r, double *flags );
+int dobldobl_Littlewood_Richardson_homotopies(
+    int n, int k, int c, int *brackets, int verbose, int verify, int minrep,
+    int tosquare, int nbchar, char *filename, int *r, double *flags);
 /*
  * In n-space for k-planes subject to c general Schubert intersection
  * conditions as defined by the brackets, the root count r is computed
@@ -109,10 +107,9 @@ int dobldobl_Littlewood_Richardson_homotopies
  *            for conditions imposed by the brackets for general flags;
  *   flags    coefficients of the general flags. */
 
-int quaddobl_Littlewood_Richardson_homotopies
- ( int n, int k, int c, int *brackets,
-   int verbose, int verify, int minrep, int tosquare,
-   int nbchar, char *filename, int *r, double *flags );
+int quaddobl_Littlewood_Richardson_homotopies(
+    int n, int k, int c, int *brackets, int verbose, int verify, int minrep,
+    int tosquare, int nbchar, char *filename, int *r, double *flags);
 /*
  * In n-space for k-planes subject to c general Schubert intersection
  * conditions as defined by the brackets, the root count r is computed
@@ -143,13 +140,12 @@ int quaddobl_Littlewood_Richardson_homotopies
  *            for conditions imposed by the brackets for general flags;
  *   flags    coefficients of the general flags. */
 
-int localization_poset ( int m, int p, int q, int *nc, char *ps );
+int localization_poset(int m, int p, int q, int *nc, char *ps);
 /*
  * Returns in ps, a string of nc characters, the string representation
  * of the localization poset for the Pieri root count for (m,p,q). */
 
-int Pieri_polynomial_system
- ( int m, int p, int q, int nc, char *A, int is_real );
+int Pieri_polynomial_system(int m, int p, int q, int nc, char *A, int is_real);
 /*
  * Makes the polynomial system defined by the planes in A.
  *
@@ -162,12 +158,12 @@ int Pieri_polynomial_system
  *            the real and imaginary parts are separated by a space;
  *   is_real  if == 1, then the coefficients of A are real,
  *            if == 0, then the coefficients of A are complex.
- * 
- * The system container contains the polynomial system 
+ *
+ * The system container contains the polynomial system
  * defined by the input planes in A. */
 
-int run_Pieri_homotopies
- ( int m, int p, int q, int nc, int *r, char *A, char *pts );
+int run_Pieri_homotopies(int m, int p, int q, int nc, int *r, char *A,
+                         char *pts);
 /*
  * Runs the Pieri homotopies for (m,p,q) dimensions on random input data.
  *
@@ -183,12 +179,11 @@ int run_Pieri_homotopies
  *
  * ON RETURN :
  *   r        the combinatorial Pieri root count.
- * 
+ *
  * The system container contains the polynomial system solved
  * and the solutions are in the solution container. */
 
-int real_osculating_planes
- ( int m, int p, int q, int *nc, char *s, char *planes );
+int real_osculating_planes(int m, int p, int q, int *nc, char *s, char *planes);
 /*
  * Returns in planes (a string of nc characters), the string representation
  * of n real m-planes in d-space osculating a rational normal curve

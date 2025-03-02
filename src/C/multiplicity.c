@@ -3,41 +3,38 @@
 
 #include "multiplicity.h"
 
-int standard_multiplicity_structure
- ( int order, int verbose, double tol, int *multiplicity, int *hilbert )
-{
-   int fail = 0;
+int standard_multiplicity_structure(int order, int verbose, double tol,
+                                    int *multiplicity, int *hilbert) {
+  int fail = 0;
 
-   *multiplicity = order;
-   hilbert[0] = verbose;
+  *multiplicity = order;
+  hilbert[0] = verbose;
 
-   fail = _ada_use_c2phc4c(732,multiplicity,hilbert,&tol,0);
+  fail = _ada_use_c2phc(732, multiplicity, hilbert, &tol, 0);
 
-   return fail;
+  return fail;
 }
 
-int dobldobl_multiplicity_structure
- ( int order, int verbose, double tol, int *multiplicity, int *hilbert )
-{
-   int fail = 0;
+int dobldobl_multiplicity_structure(int order, int verbose, double tol,
+                                    int *multiplicity, int *hilbert) {
+  int fail = 0;
 
-   *multiplicity = order;
-   hilbert[0] = verbose;
+  *multiplicity = order;
+  hilbert[0] = verbose;
 
-   fail = _ada_use_c2phc4c(733,multiplicity,hilbert,&tol,0);
+  fail = _ada_use_c2phc(733, multiplicity, hilbert, &tol, 0);
 
-   return fail;
+  return fail;
 }
 
-int quaddobl_multiplicity_structure
- ( int order, int verbose, double tol, int *multiplicity, int *hilbert )
-{
-   int fail = 0;
+int quaddobl_multiplicity_structure(int order, int verbose, double tol,
+                                    int *multiplicity, int *hilbert) {
+  int fail = 0;
 
-   *multiplicity = order;
-   hilbert[0] = verbose;
+  *multiplicity = order;
+  hilbert[0] = verbose;
 
-   fail = _ada_use_c2phc4c(734,multiplicity,hilbert,&tol,0);
+  fail = _ada_use_c2phc(734, multiplicity, hilbert, &tol, 0);
 
-   return fail;
+  return fail;
 }

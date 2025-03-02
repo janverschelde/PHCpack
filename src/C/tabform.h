@@ -8,17 +8,16 @@
 #define __TABFORM_H__
 
 #ifdef compilewgpp
-extern "C" void adainit( void );
-extern "C" int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern "C" void adafinal( void );
+extern "C" void adainit(void);
+extern "C" int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern "C" void adafinal(void);
 #else
-extern void adainit( void );
-extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern void adafinal( void );
+extern void adainit(void);
+extern int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern void adafinal(void);
 #endif
 
-int number_of_standard_terms
- ( int neq, int *nbterms, int *nbtsum, int verbose );
+int number_of_standard_terms(int neq, int *nbterms, int *nbtsum, int verbose);
 /*
  * DESCRIPTION :
  *   Computes the number of terms of each polynomial in the container
@@ -35,9 +34,8 @@ int number_of_standard_terms
  *   nbtsum   sum of the number of elements in nbterms,
  *            equals the total number of terms in the system. */
 
-int standard_tableau_form
- ( int neq, int nvr, int *nbterms, double *coefficients, int *exponents,
-   int verbose );
+int standard_tableau_form(int neq, int nvr, int *nbterms, double *coefficients,
+                          int *exponents, int verbose);
 /*
  * DESCRIPTION :
  *   Given allocated data structures, defines the coefficients and exponents
@@ -59,8 +57,8 @@ int standard_tableau_form
  *   coefficients   coefficients of the system;
  *   exponents      exponents of the system. */
 
-void write_standard_tableau_form
- ( int neq, int nvr, int *nbterms, double *coefficients, int *exponents );
+void write_standard_tableau_form(int neq, int nvr, int *nbterms,
+                                 double *coefficients, int *exponents);
 /*
  * DESCRIPTION :
  *   Writes the tableau form of the system to screen.
@@ -73,9 +71,9 @@ void write_standard_tableau_form
  *   coefficients   coefficients of the system;
  *   exponents      exponents of the system. */
 
-int store_standard_tableau_form
- ( int neq, int nvr, int *nbterms, double *coefficients, int *exponents,
-   int verbose );
+int store_standard_tableau_form(int neq, int nvr, int *nbterms,
+                                double *coefficients, int *exponents,
+                                int verbose);
 /*
  * DESCRIPTION :
  *   Stores the tableau form into the standard systems container.
@@ -91,7 +89,7 @@ int store_standard_tableau_form
  *   verbose        if > 0, then extra information is written,
  *                  otherwise, the function remains silent. */
 
-int load_standard_tableau_dimensions ( int *neq, int *nvr, int *nbt );
+int load_standard_tableau_dimensions(int *neq, int *nvr, int *nbt);
 /*
  * DESCRIPTION :
  *   Returns the dimensions of the tableau form for the system stored

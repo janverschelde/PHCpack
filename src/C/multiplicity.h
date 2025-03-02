@@ -8,17 +8,17 @@
 #define __MULTIPLICITY_H__
 
 #ifdef compilewgpp
-extern "C" void adainit( void );
-extern "C" int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern "C" void adafinal( void );
+extern "C" void adainit(void);
+extern "C" int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern "C" void adafinal(void);
 #else
-extern void adainit( void );
-extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern void adafinal( void );
+extern void adainit(void);
+extern int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern void adafinal(void);
 #endif
 
-int standard_multiplicity_structure
- ( int order, int verbose, double tol, int *multiplicity, int *hilbert );
+int standard_multiplicity_structure(int order, int verbose, double tol,
+                                    int *multiplicity, int *hilbert);
 /*
  * DESCRIPTION :
  *   Computes the multiplicity structure of the solution stored in
@@ -37,8 +37,8 @@ int standard_multiplicity_structure
  *   multiplicity is the computed multiplicity;
  *   hilbert contains the values of the Hilbert function. */
 
-int dobldobl_multiplicity_structure
- ( int order, int verbose, double tol, int *multiplicity, int *hilbert );
+int dobldobl_multiplicity_structure(int order, int verbose, double tol,
+                                    int *multiplicity, int *hilbert);
 /*
  * DESCRIPTION :
  *   Computes the multiplicity structure of the solution stored in
@@ -57,8 +57,8 @@ int dobldobl_multiplicity_structure
  *   multiplicity is the computed multiplicity;
  *   hilbert contains the values of the Hilbert function. */
 
-int quaddobl_multiplicity_structure
- ( int order, int verbose, double tol, int *multiplicity, int *hilbert );
+int quaddobl_multiplicity_structure(int order, int verbose, double tol,
+                                    int *multiplicity, int *hilbert);
 /*
  * DESCRIPTION :
  *   Computes the multiplicity structure of the solution stored in

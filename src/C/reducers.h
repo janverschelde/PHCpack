@@ -7,16 +7,16 @@
 #define __REDUCERS_H__
 
 #ifdef compilewgpp
-extern "C" void adainit( void );
-extern "C" int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern "C" void adafinal( void );
+extern "C" void adainit(void);
+extern "C" int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern "C" void adafinal(void);
 #else
-extern void adainit( void );
-extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern void adafinal( void );
+extern void adainit(void);
+extern int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern void adafinal(void);
 #endif
 
-int standard_row_reduce_system ( int diag );
+int standard_row_reduce_system(int diag);
 /*
  * DESCRIPTION :
  *   Applies row reduction to the coefficient matrix of the polynomial
@@ -32,7 +32,7 @@ int standard_row_reduce_system ( int diag );
  *   diag     1 if the coefficient matrix needs to be diagonalized,
  *            0 if bringing in triangular form suffices. */
 
-int dobldobl_row_reduce_system ( int diag );
+int dobldobl_row_reduce_system(int diag);
 /*
  * DESCRIPTION :
  *   Applies row reduction to the coefficient matrix of the polynomial
@@ -48,7 +48,7 @@ int dobldobl_row_reduce_system ( int diag );
  *   diag     1 if the coefficient matrix needs to be diagonalized,
  *            0 if bringing in triangular form suffices. */
 
-int quaddobl_row_reduce_system ( int diag );
+int quaddobl_row_reduce_system(int diag);
 /*
  * DESCRIPTION :
  *   Applies row reduction to the coefficient matrix of the polynomial
@@ -64,8 +64,8 @@ int quaddobl_row_reduce_system ( int diag );
  *   diag     1 if the coefficient matrix needs to be diagonalized,
  *            0 if bringing in triangular form suffices. */
 
-int standard_nonlinear_reduce_system
- ( int eqmax, int spmax, int rpmax, int *eqcnt, int *spcnt, int *rpcnt );
+int standard_nonlinear_reduce_system(int eqmax, int spmax, int rpmax,
+                                     int *eqcnt, int *spcnt, int *rpcnt);
 /*
  * DESCRIPTION :
  *   Applies nonlinear reduction to the system in the standard container.

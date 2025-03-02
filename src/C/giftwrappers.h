@@ -8,16 +8,16 @@
 #define __GIFTWRAPPERS_H__
 
 #ifdef compilewgpp
-extern "C" void adainit( void );
-extern "C" int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern "C" void adafinal( void );
+extern "C" void adainit(void);
+extern "C" int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern "C" void adafinal(void);
 #else
-extern void adainit( void );
-extern int _ada_use_c2phc4c ( int task, int *a, int *b, double *c, int v );
-extern void adafinal( void );
+extern void adainit(void);
+extern int _ada_use_c2phc(int task, int *a, int *b, double *c, int v);
+extern void adafinal(void);
 #endif
 
-int convex_hull_2d ( int nc_pts, char *pts, int *nc_hull, char *hull );
+int convex_hull_2d(int nc_pts, char *pts, int *nc_hull, char *hull);
 /*
  * DESCRIPTION :
  *   Computes the convex hull of a planar point configuration.
@@ -36,9 +36,9 @@ int convex_hull_2d ( int nc_pts, char *pts, int *nc_hull, char *hull );
  *            the convex hull, as a tuple of two lists of tuples;
  *   hull     string representation of two tuples, the first is a
  *            list of vertex points, the second element of the tuple
- *            is a list of inner normals. */  
+ *            is a list of inner normals. */
 
-int convex_hull ( int nc_pts, char *pts );
+int convex_hull(int nc_pts, char *pts);
 /*
  * DESCRIPTION :
  *   Computes the convex hull of a point configuration in 3-space or 4-space.
@@ -52,7 +52,7 @@ int convex_hull ( int nc_pts, char *pts );
  *            a point configuration, as a list of tuples;
  *   pts      string representation of a Python-style list of tuples. */
 
-int number_of_facets ( int dim, int *nbr );
+int number_of_facets(int dim, int *nbr);
 /*
  * DESCRIPTION :
  *   Returns the number of facets of a convex hull in the space
@@ -67,7 +67,7 @@ int number_of_facets ( int dim, int *nbr );
  * ON RETURN :
  *   nbr      number of facets of the convex hull. */
 
-int retrieve_facet ( int dim, int fcn, int *nc_rep, char *fctrep );
+int retrieve_facet(int dim, int fcn, int *nc_rep, char *fctrep);
 /*
  * DESCRIPTION :
  *   Returns the string representation of a facet given the dimension
@@ -95,17 +95,17 @@ int retrieve_facet ( int dim, int fcn, int *nc_rep, char *fctrep );
  *            3. number of adjacent facets, with the facet count starting
  *               at zero. */
 
-int clear_3d_facets ( void );
+int clear_3d_facets(void);
 /*
  * DESCRIPTION :
  *   Clears the list of facets in 3-space. */
 
-int clear_4d_facets ( void );
+int clear_4d_facets(void);
 /*
  * DESCRIPTION :
  *   Clears the list of facets in 4-space. */
 
-int support_size ( int idx );
+int support_size(int idx);
 /*
  * DESCRIPTION :
  *   Returns the number of characters in the string representation of
@@ -117,7 +117,7 @@ int support_size ( int idx );
  * ON ENTRY :
  *   idx     number between 1 and the number of polynomials stored. */
 
-int support_string ( int size, char *supp );
+int support_string(int size, char *supp);
 /*
  * DESCRIPTION :
  *   Returns the string representation of the support a Laurent polynomial.
@@ -134,13 +134,13 @@ int support_string ( int size, char *supp );
  *   support  the string representation of the support of a Laurent
  *            polynomial. */
 
-int clear_support_string ( void );
+int clear_support_string(void);
 /*
  * DESCRIPTION :
  *   Deallocates the string representation of the support set
  *   as stored internally. */
 
-int initial_form ( int dim, int nbc, char *normal );
+int initial_form(int dim, int nbc, char *normal);
 /*
  * DESCRIPTION :
  *   Replaces the system in the Laurent system container by its initial form,
