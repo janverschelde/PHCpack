@@ -26,7 +26,7 @@ int main ( int argc, char* argv[] )
 
    fail = _ada_use_c2phc(999, &len, name, c, 1);
 
-   char *version = calloc(30, sizeof(char));
+   char *version = (char *)calloc(30, sizeof(char));
 
    for(int i=0; i<30; i++) version[i] = (char) name[i];
 
