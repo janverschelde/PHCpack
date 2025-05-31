@@ -247,3 +247,10 @@ hexadobl_complex_numbers_cv     : convert complex <-> hexa double complex
 test_multprec_hexadobl_casts    : tests casting multprec into hd and back
 ts_mpcasts                      : main test on multiprecision casts
 ------------------------------------------------------------------------------
+geometric_sums                  : geometric sums in various precisions
+test_geometric_sums             : test the geometric sums
+ts_geosum                       : main test on geometric sums
+geometric_inner_products        : geometric inner products
+test_geometric_inner_products   : tests geometric inner products
+ts_geoprod                      : main test on geometric inner products
+------------------------------------------------------------------------------

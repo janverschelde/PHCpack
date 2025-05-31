@@ -45,7 +45,9 @@ project QD is
         "ts_odfun.adb",    -- tests octo double functions
         "ts_dafun.adb",    -- tests deca double functions
         "ts_hdfun.adb",    -- tests hexa double functions
-        "ts_mpcasts.adb"   -- tests multiprecision multiple double casts
+        "ts_mpcasts.adb",  -- tests multiprecision multiple double casts
+        "ts_geosum.adb",   -- computes geometric sums
+        "ts_geoprod.adb"   -- computes geometric inner products
     );
 
     package Compiler is

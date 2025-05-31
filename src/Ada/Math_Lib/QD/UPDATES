@@ -1,3 +1,6 @@
+Sat 31 May 2025 : added geometric sums and geometric inner producs,
+  for doubles, double doubles, quad doubles, octo doubles and hexa doubles.
+
 Thu 12 Dec 2024 : bug fixed in the procedure Mul of double_double_numbers.adb.
 
 Sun 3 Nov 2024 : fixed line in double_double_numbers.adb, to make Mul
