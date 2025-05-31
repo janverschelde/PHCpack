@@ -1,4 +1,4 @@
-Multitasked linear algebra, evaluation and path tracking in PHCv2.4.90
+Multitasked linear algebra, evaluation and path tracking in PHCv2.4.91
 
 This directory is entirely new in release 2.3.45 of PHCpack.
 Tasks in Ada are mapped to kernel threads.
@@ -126,4 +126,9 @@ ts_mtshiftcnv                     : calls the main test on mt shift circuits
 -------------------------------------------------------------------------------
 multitasked_path_convolutions     : multitasked trackers with convolutions
 ts_mtpcscnv                       : test mt predictor-corrector-shift loops
+-------------------------------------------------------------------------------
+identification                    : gives tasks unique identification numbers
+generic_task_array                : defines an array of worker tasks
+multitasked_geometric_products    : multitasked geometric inner products
+ts_mtgeoprod                      : tests multitasked geometric products
 -------------------------------------------------------------------------------

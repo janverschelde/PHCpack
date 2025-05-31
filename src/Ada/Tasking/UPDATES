@@ -1,3 +1,6 @@
+Sat 31 May 2025 : added identifcation, generic_task_array,
+  multitasked_geometric_products, and ts_mtgeoprod.
+
 Thu 7 Mar 2024 : fixed tasking.gpr so it works on windows.
 
 Wed 7 Feb 2024 : fixed tuning of parameters to the default values,

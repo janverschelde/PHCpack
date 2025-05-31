@@ -100,12 +100,14 @@ project tasking is
         "ts_mthesscrc.adb",  -- tests multitasked Hessian circuits
         "ts_mtratapp.adb",   -- tests multitasked Pade approximation
         "ts_mtshiftcnv.adb", -- tests multitasked shift circuits
-        "ts_mtpcscnv.adb"    -- tests predictor-corrector-shift loops
+        "ts_mtpcscnv.adb",   -- tests predictor-corrector-shift loops
+        "ts_mtgeoprod.adb"   -- tests multitasked geometric inner products
     );
 
     package Compiler is
 
-        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+       -- for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+        for Default_Switches ("Ada") use ("-O3", "-gnatv", "-gnatp", "-gnatf");
 
         for Switches ("use_c2phc.adb") use ("-c");
 
