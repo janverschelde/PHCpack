@@ -1,5 +1,8 @@
 Dynamic Enumeration of all Mixed Cells in PHCv2.4.91
 
+To remove the dependency on C++, translation of the source code in Ada
+is started in version 2.4.91.
+
 This directory was added in version 2.4.53 to prepare the interface
 to DEMiCs, software for the dynamic enumeration of all mixed cells.
 This software was developed by Tomohiko Mizutani, Akiko Takeda,
@@ -57,6 +60,10 @@ file name                   : short description
 demics_command_line         : defines the command line interface
 demics_output_convertors    : converts output of demics
 ts_calldemics               : file based interface to DEMiCs
+------------------------------------------------------------------------------
+demics_input_data           : defines input for DEMiCs
+test_demics_input           : tests input for DEMiCs
+ts_demics_input             : main test on input for DEMiCs
 ------------------------------------------------------------------------------
 global.h                    : definition of global parameters
 inputData                   : processing of input data
