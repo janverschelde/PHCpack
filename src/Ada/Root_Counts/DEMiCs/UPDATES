@@ -1,4 +1,6 @@
-Wed 20 Aug 2025 : fixed demics.gpr so it works again, at least on Linux.
+Wed 20 Aug 2025 : fixed demics.gpr so it works again, on Linux and Windows.
+  Fixed bug in demics_algorithm.adb, for counting the artificial origin
+  when asking for stable mixed volumes.
 
 Fri 31 Dec 2021 : because of std::data, replace all "data" by "theData"
   in fTest.h, fTest.cpp, smplex.h, simplex.cpp, mvc.h, mvc.cpp.

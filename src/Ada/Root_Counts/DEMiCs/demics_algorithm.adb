@@ -1,21 +1,15 @@
 with text_io;                            use text_io;
 with Interfaces.C;
 with String_Splitters;
-with Communications_with_User;           use Communications_with_User;
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Random_Numbers;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
-with Standard_Floating_VecVecs;
 with Standard_Floating_VecVecs_io;       use Standard_Floating_VecVecs_io;
-with Lists_of_Integer_Vectors;
 with Arrays_of_Integer_Vector_Lists_io;  use Arrays_of_Integer_Vector_Lists_io;
 with Supports_of_Polynomial_Systems;
 with Floating_Lifting_Functions;
 with Mixed_Volume_Computation;
-with Floating_Mixed_Subdivisions_io;
 with Lists_of_Strings;
 with DEMiCs_Command_Line;
 with DEMiCs_Output_Convertors;
@@ -393,7 +387,7 @@ package body DEMiCs_Algorithm is
                 verbose : in boolean := true ) is
 
     nbrpts : constant integer32 := Number_of_Points(mix.all,sup);
-    lif : C_Double_Array := Random_Lifting(nbrpts);
+    lif : constant C_Double_Array := Random_Lifting(nbrpts);
 
   begin
     Call_DEMiCs(mix,sup,nbrpts,lif,verbose);
@@ -406,16 +400,17 @@ package body DEMiCs_Algorithm is
                 verbose : in boolean := true ) is
 
     dim : constant integer32 := sup'last;
-    nbrpts : constant integer32 := Number_of_Points(mix.all,sup);
-    nbadded : integer32;
+    nbrpts,nbadded : integer32;
     added : Standard_Integer_Vectors.Vector(sup'range);
     lifting : Standard_Floating_VecVecs.Link_to_VecVec;
 
   begin
     if not stable then
+      nbrpts := Number_of_Points(mix.all,sup);
       Call_DEMiCs(mix,sup,verbose);
     else
       Add_Artificial_Origins(dim,sup,nbadded,added);
+      nbrpts := Number_of_Points(mix.all,sup);
       lifting := Random_Lifting(mix,sup,stlb,added);
       declare
         lifvals : constant Standard_Floating_Vectors.Vector
