@@ -1,4 +1,10 @@
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
+
 package body demics_input_data is
+
+-- All indexing in the original code started at zero,
+-- while all vectors start at one.
 
   package body class_dataSet is
 
@@ -8,45 +14,229 @@ package body demics_input_data is
 
     begin
       res.dim := 0;
+      res.supN := 0;
+      res.termSumNum := 0;
+      res.termMax := 0;
+      res.typeMax := 0;
+      res.termSet := null;
+      res.termStart := null;
+      res.supType := null;
+      res.support := null;
+      res.coef := null;
+      res.outFile := null;
       return res;
     end new_dataSet;
 
-    procedure delete_dataSet ( this : access dataSet ) is
+    procedure delete_dataSet ( this : in out dataSet ) is
     begin
-      null;
+      this.dim := 0;
+      this.supN := 0;
+      this.termSumNum := 0;
+      this.termMax := 0;
+      this.typeMax := 0;
+      Standard_Integer_Vectors.Clear(this.termSet);
+      Standard_Integer_Vectors.Clear(this.termStart);
+      Standard_Integer_Vectors.Clear(this.supType);
+      Standard_Floating_Vectors.Clear(this.support);
+      Standard_Floating_Vectors.Clear(this.coef);
+      String_Splitters.Clear(this.outFile);
     end delete_dataSet;
 
-    procedure support_in ( this : access dataSet;
-                           rowIdx : integer32; colIdx : integer32;
-                           elem : double_float ) is
+    procedure support_in ( this : in dataSet;
+                           rowIdx : in integer32; colIdx : in integer32;
+                           elem : in double_float ) is
+
+      idx : constant integer32 := this.dim*(rowIdx-1) + colIdx;
+
     begin
-      null;
+      this.support(idx) := elem; 
     end support_in;
 
-    function support_out ( this : access dataSet;
-                           rowIdx : integer32; colIdx : integer32 )
+    function support_out ( this : in dataSet;
+                           rowIdx : in integer32; colIdx : in integer32 )
                          return double_float is
 
-      res : double_float := 0.0;
+      idx : constant integer32 := this.dim*(rowIdx-1) + colIdx;
 
     begin
-      return res;
+      return this.support(idx);
     end support_out;
 
-    procedure getInputFile ( this : access dataSet;
-                             inputFile : Link_to_String ) is
+    function makeOutputFile ( inputFile : Link_to_String )
+                            return Link_to_String is
+
+      res : Link_to_String;
+      idx : integer := inputFile'last;
+
     begin
-      null;
+      for i in inputFile'range loop
+        if inputFile(i) = '.'
+         then idx := i; exit;
+        end if;  
+      end loop;
+      if inputFile(idx) = '.' then
+        declare
+          outstring : constant string := inputFile(1..idx) & "out";
+        begin
+          res := new string'(outstring); 
+        end;
+      else
+        declare
+          outstring : constant string := inputFile(1..idx) & ".out";
+        begin
+          res := new string'(outstring); 
+        end;
+      end if;
+      return res;
+    end makeOutputFile;
+
+    procedure parse_preamble ( file : in file_type;
+                               this : in out dataSet;
+                               fail : out boolean ) is
+
+      ch : character;
+
+    begin
+      fail := false;
+      while not end_of_file(file) loop -- look for 'Dim ='
+        get(file,ch);
+        exit when ch = '=';
+      end loop;
+      if ch /= '=' then
+        fail := true;
+      else
+        get(file,this.dim);
+        while not end_of_file(file) loop -- look for 'Support ='
+          get(file,ch);
+          exit when ch = '=';
+        end loop;
+        if ch /= '=' then
+          fail := true;
+        else
+          get(file,this.supN);
+          while not end_of_file(file) loop -- look for 'Elem ='
+            get(file,ch);
+            exit when ch = '=';
+          end loop;
+          if ch /= '=' then
+            fail := true;
+          else
+            this.termSet := new Standard_Integer_Vectors.Vector(1..this.supN);
+            for i in 1..this.supN loop
+              get(file,this.termSet(i));
+            end loop;
+            while not end_of_file(file) loop -- look for 'Type ='
+              get(file,ch);
+              exit when ch = '=';
+            end loop;
+            if ch /= '=' then
+              fail := true;
+            else
+              this.supType := new Standard_Integer_Vectors.Vector(1..this.supN);
+              for i in 1..this.supN loop
+                get(file,this.supType(i));
+              end loop;
+            end if;
+          end if;
+        end if;
+      end if;
+      this.termMax := this.termSet(1);
+      this.typeMax := this.supType(1);
+      for i in 2..this.supN loop
+        if this.termSet(i) > this.termMax
+         then this.termMax := this.termSet(i);
+        end if;
+        if this.supType(i) > this.typeMax
+         then this.typeMax := this.supType(i);
+        end if;
+      end loop;
+    end parse_preamble;
+
+    procedure parse_supports ( file : in file_type;
+                               this : in out dataSet; fail : out boolean ) is
+      idx : integer32 := 0;
+      size : integer32;
+
+    begin
+      fail := false;
+      this.termSumNum := 0;
+      this.termStart := new Standard_Integer_Vectors.Vector(1..this.supN+1);
+      this.termStart(1) := 1;
+      for k in 1..this.supN loop
+        this.termSumNum := this.termSumNum + this.termSet(k);
+        this.termStart(k+1) := 1 + this.termSumNum;
+      end loop;
+      this.termStart(this.supN+1) := this.termSumNum;
+      size := this.termSumNum*this.dim;
+      this.support := new Standard_Floating_Vectors.Vector(1..size);
+      for i in 1..this.supN loop
+        for j in 1..this.termSet(i) loop
+          for k in 1..this.dim loop
+            idx := idx + 1;
+            get(file,this.support(idx));
+          end loop;
+        end loop;
+      end loop;
+    exception
+      when others => fail := true; return;
+    end parse_supports;
+
+    procedure getInputFile ( this : in out dataSet;
+                             inputFile : in Link_to_String;
+                             fail : out boolean ) is
+
+      file : file_type;
+
+    begin
+      fail := false;
+      declare
+      begin
+        Open(file,in_file,inputFile.all);
+      exception
+        when others => fail := true; return;
+      end;
+      parse_preamble(file,this,fail);
+      if not fail then
+        parse_supports(file,this,fail);
+        if not fail
+         then this.outFile := makeOutputFile(inputFile);
+        end if;
+      end if;
     end getInputFile;
 
-    procedure info_preamble ( this : access dataSet ) is
+    procedure info_preamble ( this : in dataSet ) is
     begin
-      null;
+      put("Dim = "); put(this.dim,1); new_line;
+      put("Support = "); put(this.supN,1); new_line; new_line;
+      put("Elem = ");
+      for i in 1..this.supN loop
+        put(this.termSet(i),1); put(" ");
+      end loop;
+      new_line;
+      put("Type = ");
+      for i in 1..this.supN loop
+        put(this.supType(i),1); put(" ");
+      end loop;
+      new_line;
     end info_preamble;
 
-    procedure info_supports ( this : access dataSet ) is
+    procedure info_supports ( this : in dataSet ) is
+
+      counter : integer32 := 0;
+      top : integer32 := 1;
+
     begin
-      null;
+      for k in 1..this.supN loop
+        for j in top..this.termSet(k) + top - 1 loop
+          for i in 1..this.dim loop
+            put(integer32(support_out(this,j,i)),1); put(" ");
+          end loop;
+          new_line;
+          counter := counter + 1;
+        end loop;
+        new_line;
+        top := counter + 1;
+      end loop;
     end info_supports;
 
   end class_dataSet;
