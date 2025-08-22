@@ -65,6 +65,9 @@ demics_input_data           : defines input for DEMiCs
 test_demics_input           : tests input for DEMiCs
 ts_demics_input             : main test on input for DEMiCs
 ------------------------------------------------------------------------------
+demics_global_constants     : global constants, translates global.h
+demics_itest                : translates iTest
+------------------------------------------------------------------------------
 global.h                    : definition of global parameters
 inputData                   : processing of input data
 ts_inputData                : unit test on reading the input data
