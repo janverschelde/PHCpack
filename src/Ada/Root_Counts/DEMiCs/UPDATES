@@ -1,4 +1,5 @@
 Fri 22 Aug 2025 : added demics_global_constants.ads and stub for demics_itest.
+  Added stub for demics_ftest.
 
 Thu 21 Aug 2025 : completed demics_input_data and test_demics_input.adb.
 
