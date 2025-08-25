@@ -1,3 +1,5 @@
+Mon 25 Aug 2025 : added demics_simplex stub for simplex algorithm.
+
 Fri 22 Aug 2025 : added demics_global_constants.ads and stub for demics_itest.
   Added stub for demics_ftest.
 

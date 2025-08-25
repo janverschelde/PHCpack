@@ -47,6 +47,10 @@ package demics_ftest is
       nodeLabel : Standard_Integer_Vectors.Link_to_Vector;
     end record;
 
+    type Link_to_theData is access theData;
+    type Array_of_theData is array ( integer range <> ) of Link_to_theData;
+    type Link_to_Array_of_theData is access Array_of_theData;
+
     function new_theData return theData;
 
     procedure Delete_theData ( this : access theData );

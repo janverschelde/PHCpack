@@ -68,6 +68,7 @@ ts_demics_input             : main test on input for DEMiCs
 demics_global_constants     : global constants, translates global.h
 demics_itest                : translates iTest
 demics_ftest                : translates fTest
+demics_simplex              : translates simplex
 ------------------------------------------------------------------------------
 global.h                    : definition of global parameters
 inputData                   : processing of input data
