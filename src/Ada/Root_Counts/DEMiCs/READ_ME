@@ -69,6 +69,7 @@ demics_global_constants     : global constants, translates global.h
 demics_itest                : translates iTest
 demics_ftest                : translates fTest
 demics_simplex              : translates simplex
+demics_reltab               : translates reltab
 ------------------------------------------------------------------------------
 global.h                    : definition of global parameters
 inputData                   : processing of input data

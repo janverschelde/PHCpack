@@ -1,4 +1,7 @@
-Mon 25 Aug 2025 : added demics_simplex stub for simplex algorithm.
+Tue 26 Aug 2025 : added demics_reltab stub for the relation table.
+
+Mon 25 Aug 2025 : added demics_simplex stub for simplex algorithm,
+  added pointer and array types to demics_ftest.ads.
 
 Fri 22 Aug 2025 : added demics_global_constants.ads and stub for demics_itest.
   Added stub for demics_ftest.
