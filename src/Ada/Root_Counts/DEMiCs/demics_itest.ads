@@ -13,12 +13,15 @@ package demics_itest is
   package class_uData is
 
     type uData;
+    type Link_to_uData is access uData;
+    type Array_of_uData is array ( integer32 range <> ) of Link_to_uData;
+    type Link_to_Array_of_uData is access Array_of_uData;
 
     type uData is record
       nfN : integer32;
-      next : access uData;
-      prev : access uData;
-      fNext : access uData;
+      next : Link_to_uData;
+      prev : Link_to_uData;
+      fNext : Link_to_uData;
       supLab : integer32;
       red : double_float;
       dir : Standard_Floating_Vectors.Link_to_Vector;
@@ -58,6 +61,10 @@ package demics_itest is
       fHead : access uData;
       last : access uData;
     end record;
+
+    type Link_to_inifData is access inifData;
+    type Array_of_inifData is array ( integer32 range <> ) of Link_to_inifData;
+    type Link_to_Array_of_inifData is access Array_of_inifData;
 
     function new_inifData return inifData;
 

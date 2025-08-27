@@ -1,3 +1,6 @@
+Wed 27 Aug 2025 : added types to demics_itest.ads and demics_ftest.ads,
+  new demics_mvc as a stub for mvc.
+
 Tue 26 Aug 2025 : added demics_reltab stub for the relation table.
 
 Mon 25 Aug 2025 : added demics_simplex stub for simplex algorithm,

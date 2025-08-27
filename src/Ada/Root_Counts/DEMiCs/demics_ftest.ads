@@ -6,6 +6,10 @@ with Standard_Floating_Vectors;
 
 package demics_ftest is
 
+-- DESCRIPTION :
+--   Defines classes to store floating-point data of linear programs.
+--   Translation initiated by g++ -c -fdump-ada-spec fTest.h.
+
   package class_theData is
 
     type theData;
@@ -148,6 +152,10 @@ package demics_ftest is
       head : access theData;
       last : access theData;
     end record;
+
+    type Link_to_ftData is access ftData;
+    type Array_of_ftData is array ( integer32 range <> ) of Link_to_ftData;
+    type Link_to_Array_of_ftdata is access Array_of_ftData;
 
     function new_ftData return ftData;
 
