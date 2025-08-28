@@ -6,6 +6,7 @@ with QuadDobl_Complex_Vectors;
 with PentDobl_Complex_Vectors;
 with OctoDobl_Complex_Vectors;
 with DecaDobl_Complex_Vectors;
+with HexaDobl_Complex_Vectors;
 with Standard_Random_Vectors;
 with DoblDobl_Random_Vectors;
 with TripDobl_Random_Vectors;
@@ -13,6 +14,7 @@ with QuadDobl_Random_Vectors;
 with PentDobl_Random_Vectors;
 with OctoDobl_Random_Vectors;
 with DecaDobl_Random_Vectors;
+with HexaDobl_Random_Vectors;
 with Standard_Complex_Series;
 with Standard_Complex_Series_Vectors;
 with Standard_Complex_Random_Series;
@@ -41,6 +43,10 @@ with DecaDobl_Complex_Series;
 with DecaDobl_Complex_Series_Vectors;
 with DecaDobl_Complex_Random_Series;
 with DecaDobl_Random_Series_Vectors;
+with HexaDobl_Complex_Series;
+with HexaDobl_Complex_Series_Vectors;
+with HexaDobl_Complex_Random_Series;
+with HexaDobl_Random_Series_Vectors;
 with Exponent_Indices;
 with Series_Coefficient_Vectors;
 with Homotopy_Convolution_Circuits;
@@ -51,6 +57,7 @@ with QuadDobl_Newton_Convolutions;
 with PentDobl_Newton_Convolutions;
 with OctoDobl_Newton_Convolutions;
 with DecaDobl_Newton_Convolutions;
+with HexaDobl_Newton_Convolutions;
 
 package body Random_Convolution_Circuits is
 
@@ -275,6 +282,34 @@ package body Random_Convolution_Circuits is
     return res;
   end DecaDobl_Random_Convolution_Circuit;
 
+  function HexaDobl_Random_Convolution_Circuit
+             ( dim,deg,nbr,pwr : in integer32 )
+             return HexaDobl_Speelpenning_Convolutions.Circuit is
+
+    use HexaDobl_Speelpenning_Convolutions;
+
+    res : Circuit(nbr,dim,dim-1,dim-2);
+    polcff : constant HexaDobl_Complex_Series_Vectors.Vector(1..nbr)
+           := HexaDobl_Random_Series_Vectors.Random_Series_Vector(1,nbr,deg);
+    rancst : constant HexaDobl_Complex_Series.Series
+           := HexaDobl_Complex_Random_Series.Random_Series(deg);
+    cstcff : constant HexaDobl_Complex_Vectors.Vector(0..rancst.deg)
+           := rancst.cff(0..rancst.deg);
+
+  begin
+    res.xps := Random_Exponents(dim,nbr,pwr);
+    res.idx := Exponent_Indices.Exponent_Index(res.xps);
+    res.fac := Exponent_Indices.Factor_Index(res.xps);
+    res.cff := Series_Coefficient_Vectors.HexaDobl_Series_Coefficients(polcff);
+    res.cst := new HexaDobl_Complex_Vectors.Vector'(cstcff);
+    res.forward := Allocate_Coefficients(dim-1,deg);
+    res.backward := Allocate_Coefficients(dim-2,deg);
+    res.cross := Allocate_Coefficients(dim-2,deg);
+    res.wrk := Allocate_Coefficients(deg);
+    res.acc := Allocate_Coefficients(deg);
+    return res;
+  end HexaDobl_Random_Convolution_Circuit;
+
   function Standard_Random_Convolution_Circuits
              ( dim,deg,nbr,pwr : in integer32 )
              return Standard_Speelpenning_Convolutions.Circuits is
@@ -415,6 +450,26 @@ package body Random_Convolution_Circuits is
     return res;
   end DecaDobl_Random_Convolution_Circuits;
 
+  function HexaDobl_Random_Convolution_Circuits
+             ( dim,deg,nbr,pwr : in integer32 )
+             return HexaDobl_Speelpenning_Convolutions.Circuits is
+
+    use HexaDobl_Speelpenning_Convolutions;
+
+    res : Circuits(1..dim);
+
+  begin
+    for k in 1..dim loop
+      declare
+        c : constant Circuit(nbr,dim,dim-1,dim-2)
+          := HexaDobl_Random_Convolution_Circuit(dim,deg,nbr,pwr);
+      begin
+        res(k) := new Circuit'(c);
+      end;
+    end loop;
+    return res;
+  end HexaDobl_Random_Convolution_Circuits;
+
   function Standard_Random_System
              ( dim,deg,nbr,pwr : integer32 )
              return Standard_Speelpenning_Convolutions.Link_to_System is
@@ -491,6 +546,17 @@ package body Random_Convolution_Circuits is
   begin
     return DecaDobl_Speelpenning_Convolutions.Create(c,dim,deg);
   end DecaDobl_Random_System;
+
+  function HexaDobl_Random_System
+             ( dim,deg,nbr,pwr : integer32 )
+             return HexaDobl_Speelpenning_Convolutions.Link_to_System is
+
+    c : constant HexaDobl_Speelpenning_Convolutions.Circuits
+      := HexaDobl_Random_Convolution_Circuits(dim,deg,nbr,pwr);
+
+  begin
+    return HexaDobl_Speelpenning_Convolutions.Create(c,dim,deg);
+  end HexaDobl_Random_System;
 
   procedure Standard_Random_Newton_Homotopy
              ( dim,deg,nbr,pwr : in integer32;
@@ -603,5 +669,21 @@ package body Random_Convolution_Circuits is
     s := DecaDobl_Random_System(dim,deg,nbr,pwr);
     Homotopy_Convolution_Circuits.Newton_Homotopy(s.crc,z);
   end DecaDobl_Random_Newton_Homotopy;
+
+  procedure HexaDobl_Random_Newton_Homotopy
+             ( dim,deg,nbr,pwr : in integer32;
+               s : out HexaDobl_Speelpenning_Convolutions.Link_to_System;
+               x : out HexaDobl_Complex_VecVecs.Link_to_VecVec ) is
+
+    z : constant HexaDobl_Complex_Vectors.Vector(1..dim)
+      := HexaDobl_Random_Vectors.Random_Vector(1,dim);
+    sz : constant HexaDobl_Complex_VecVecs.VecVec(1..dim)
+       := HexaDobl_Newton_Convolutions.Series_Coefficients(z,deg);
+
+  begin
+    x := new HexaDobl_Complex_VecVecs.VecVec'(sz);
+    s := HexaDobl_Random_System(dim,deg,nbr,pwr);
+    Homotopy_Convolution_Circuits.Newton_Homotopy(s.crc,z);
+  end HexaDobl_Random_Newton_Homotopy;
 
 end Random_Convolution_Circuits;
