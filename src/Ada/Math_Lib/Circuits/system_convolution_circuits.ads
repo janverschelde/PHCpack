@@ -454,4 +454,134 @@ package System_Convolution_Circuits is
   --   The system on return has the same coefficients as s,
   --   but of a lower precision.
 
+  function to_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Circuit )
+	     return Standard_Speelpenning_Convolutions.Circuit;
+  function to_double_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Circuit )
+	     return DoblDobl_Speelpenning_Convolutions.Circuit;
+  function to_triple_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Circuit )
+	     return TripDobl_Speelpenning_Convolutions.Circuit;
+  function to_quad_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Circuit )
+	     return QuadDobl_Speelpenning_Convolutions.Circuit;
+  function to_penta_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Circuit )
+	     return PentDobl_Speelpenning_Convolutions.Circuit;
+  function to_octo_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Circuit )
+	     return OctoDobl_Speelpenning_Convolutions.Circuit;
+  function to_deca_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Circuit )
+	     return DecaDobl_Speelpenning_Convolutions.Circuit;
+
+  -- DESCRIPTION :
+  --   The circuit on return has the same coefficients as c,
+  --   but of a lower precision.
+
+  function to_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return Standard_Speelpenning_Convolutions.Link_to_Circuit;
+  function to_double_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return DoblDobl_Speelpenning_Convolutions.Link_to_Circuit;
+  function to_triple_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return TripDobl_Speelpenning_Convolutions.Link_to_Circuit;
+  function to_quad_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return QuadDobl_Speelpenning_Convolutions.Link_to_Circuit;
+  function to_penta_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return PentDobl_Speelpenning_Convolutions.Link_to_Circuit;
+  function to_octo_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return OctoDobl_Speelpenning_Convolutions.Link_to_Circuit;
+  function to_deca_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Link_to_Circuit )
+             return DecaDobl_Speelpenning_Convolutions.Link_to_Circuit;
+
+  -- DESCRIPTION :
+  --   The circuit on return has the same coefficients as c,
+  --   but of a lower precision.
+
+  function to_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Circuits )
+             return Standard_Speelpenning_Convolutions.Circuits;
+  function to_double_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Circuits )
+             return DoblDobl_Speelpenning_Convolutions.Circuits;
+  function to_triple_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Circuits )
+             return TripDobl_Speelpenning_Convolutions.Circuits;
+  function to_quad_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Circuits )
+             return QuadDobl_Speelpenning_Convolutions.Circuits;
+  function to_penta_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Circuits )
+             return PentDobl_Speelpenning_Convolutions.Circuits;
+  function to_octo_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Circuits )
+             return OctoDobl_Speelpenning_Convolutions.Circuits;
+  function to_deca_double
+	     ( c : HexaDobl_Speelpenning_Convolutions.Circuits )
+             return DecaDobl_Speelpenning_Convolutions.Circuits;
+
+  -- DESCRIPTION :
+  --   The circuits on return have the same coefficients as c,
+  --   but of a lower precision.
+
+  function to_double
+             ( s : HexaDobl_Speelpenning_Convolutions.System )
+             return Standard_Speelpenning_Convolutions.System;
+  function to_double_double
+             ( s : HexaDobl_Speelpenning_Convolutions.System )
+             return DoblDobl_Speelpenning_Convolutions.System;
+  function to_triple_double
+             ( s : HexaDobl_Speelpenning_Convolutions.System )
+             return TripDobl_Speelpenning_Convolutions.System;
+  function to_quad_double
+             ( s : HexaDobl_Speelpenning_Convolutions.System )
+             return QuadDobl_Speelpenning_Convolutions.System;
+  function to_penta_double
+             ( s : HexaDobl_Speelpenning_Convolutions.System )
+             return PentDobl_Speelpenning_Convolutions.System ;
+  function to_octo_double
+             ( s : HexaDobl_Speelpenning_Convolutions.System )
+             return OctoDobl_Speelpenning_Convolutions.System;
+  function to_deca_double
+             ( s : HexaDobl_Speelpenning_Convolutions.System )
+             return DecaDobl_Speelpenning_Convolutions.System;
+
+  -- DESCRIPTION :
+  --   The system on return has the same coefficients as s,
+  --   but of a lower precision.
+
+  function to_double
+             ( s : HexaDobl_Speelpenning_Convolutions.Link_to_System )
+             return Standard_Speelpenning_Convolutions.Link_to_System;
+  function to_double_double
+             ( s : HexaDobl_Speelpenning_Convolutions.Link_to_System )
+             return DoblDobl_Speelpenning_Convolutions.Link_to_System;
+  function to_triple_double
+             ( s : HexaDobl_Speelpenning_Convolutions.Link_to_System )
+             return TripDobl_Speelpenning_Convolutions.Link_to_System;
+  function to_quad_double
+             ( s : HexaDobl_Speelpenning_Convolutions.Link_to_System )
+             return QuadDobl_Speelpenning_Convolutions.Link_to_System;
+  function to_penta_double
+             ( s : HexaDobl_Speelpenning_Convolutions.Link_to_System )
+             return PentDobl_Speelpenning_Convolutions.Link_to_System ;
+  function to_octo_double
+             ( s : HexaDobl_Speelpenning_Convolutions.Link_to_System )
+             return OctoDobl_Speelpenning_Convolutions.Link_to_System;
+  function to_deca_double
+             ( s : HexaDobl_Speelpenning_Convolutions.Link_to_System )
+             return DecaDobl_Speelpenning_Convolutions.Link_to_System;
+
+  -- DESCRIPTION :
+  --   The system on return has the same coefficients as s,
+  --   but of a lower precision.
+
 end System_Convolution_Circuits;
