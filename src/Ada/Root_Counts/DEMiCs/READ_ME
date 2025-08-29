@@ -1,6 +1,6 @@
 Dynamic Enumeration of all Mixed Cells in PHCv2.4.91
 
-To remove the dependency on C++, translation of the source code in Ada
+To remove the dependency on C++, translation of the C++ source code into Ada
 is started in version 2.4.91.
 
 This directory was added in version 2.4.53 to prepare the interface
@@ -62,6 +62,7 @@ demics_output_convertors    : converts output of demics
 ts_calldemics               : file based interface to DEMiCs
 ------------------------------------------------------------------------------
 demics_input_data           : defines input for DEMiCs
+demics_input_main           : main input procedures
 test_demics_input           : tests input for DEMiCs
 ts_demics_input             : main test on input for DEMiCs
 ------------------------------------------------------------------------------
