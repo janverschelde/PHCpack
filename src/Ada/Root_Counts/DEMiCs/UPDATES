@@ -1,6 +1,7 @@
 Fri 29 Aug 2025 : from test_demics_input, factored out procedure to read
   the input, into the new package demics_input_main.  Added definitions
   of pointer types to demics_itest, demics_ftest, and demics_mvc.
+  New demics_main.adb, updated demics_mvc.adb.
 
 Wed 27 Aug 2025 : added types to demics_itest.ads and demics_ftest.ads,
   new demics_mvc as a stub for mvc.

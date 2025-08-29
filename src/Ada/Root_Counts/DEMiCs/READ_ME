@@ -72,6 +72,7 @@ demics_ftest                : translates fTest
 demics_simplex              : translates simplex
 demics_reltab               : translates reltab
 demics_mvc                  : translates mvc
+demics_main                 : main Ada procedure
 ------------------------------------------------------------------------------
 global.h                    : definition of global parameters
 inputData                   : processing of input data

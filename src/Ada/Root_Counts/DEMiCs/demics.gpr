@@ -94,7 +94,9 @@ project demics is
        "ts_outdata.adb",      -- tests demics_output_data
       -- "ts_outputData.cpp",   -- tests output data from C++
        "ts_demics_input.adb",  -- tests input data for demics
-       "ts_demicsrun.adb"      -- tests the second interface to demics
+      -- "ts_new.adb",           -- force compilation of stubs
+       "ts_demicsrun.adb" ,    -- tests the second interface to demics
+       "demics_main.adb"       -- translated demics main procedure
     );
 
     package Compiler is

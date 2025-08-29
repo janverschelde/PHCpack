@@ -299,7 +299,30 @@ package body demics_mvc is
                   data : in demics_input_data.class_dataSet.dataSet;
                   seedNum : in integer32; output : in integer32 ) is
     begin
-      null;
+      this.dim := data.dim;
+      this.supN := data.supN;
+      this.row := data.dim;
+      this.termSumNum := data.termSumNum;
+      this.termMax := data.termMax;
+      this.maxLength := data.typeMax + 1;
+      this.col := this.termSumNum - this.supN + this.dim;
+      this.termSet := data.termSet;
+      this.termStart := data.termStart;
+      this.supType := data.supType;
+      this.mfNum := new Standard_Integer_Vectors.Vector(0..this.supN-1);
+      this.lvl_1PT := new Standard_Floating_Vectors.Vector(0..this.supN-1);
+      this.lvl_2PT := new Standard_Floating_Vectors.Vector(0..this.supN-1);
+      this.actnode := new Standard_Floating_Vectors.Vector(0..this.supN-1);
+      this.firIdx := new Standard_Integer_Vectors.Vector(0..this.supN-1);
+      this.re_termStart := new Standard_Integer_Vectors.Vector(0..this.supN);
+      this.repN := new Standard_Integer_Vectors.Vector(0..this.supN-1);
+      this.sp := new Standard_Integer_Vectors.Vector(0..this.supN-1);
+      this.candIdx := new Standard_Integer_Vectors.Vector(0..this.termMax);
+      this.trMat
+        := new Standard_Floating_Vectors.Vector(0..this.dim*this.dim-1);
+      this.lv := new demics_ftest.class_lvData.Array_of_lvData(0..this.supN-1);
+      this.iLv
+        := new demics_itest.class_iLvData.Array_of_iLvData(0..this.supN-1);
     end allocateAndIni;
 
     procedure initFeasTest ( this : in Link_to_mvc; depth : in integer32 ) is
