@@ -53,73 +53,75 @@ package demics_mvc is
       table : Standard_Integer_Vectors.Link_to_Vector;
       the_Reltab : demics_reltab.class_reltab.reltab;
       the_Simplex : demics_simplex.class_simplex.simplex;
-      lv : access demics_ftest.class_lvData.lvData;
-      iLv : access demics_itest.class_iLvData.iLvData;
+      lv : demics_ftest.class_lvData.Link_to_Array_of_lvData;
+      iLv : demics_itest.class_iLvData.Link_to_Array_of_iLvData;
     end record;
 
+    type Link_to_mvc is access mvc;
+
     procedure getMemory
-                ( this : access mvc;
+                ( this : in Link_to_mvc;
                   depth : in integer32; lvl : in integer32;
                   length : in integer32 );
 
     procedure initMemoryCheck
-                ( this : access mvc;
-                  data : access demics_ftest.class_ftData.ftData;
+                ( this : in Link_to_mvc;
+                  data : in demics_ftest.class_ftData.Link_to_ftData;
                   depth : in integer32 );
 
     procedure memoryCheck
-                ( this : access mvc;
-                  data : access demics_ftest.class_ftData.ftData;
+                ( this : in Link_to_mvc;
+                  data : in demics_ftest.class_ftData.Link_to_ftData;
                   depth : in integer32 );
 
     procedure get_candIdx
-                ( this : access mvc;
-                  curInif : access demics_itest.class_inifData.inifData );
+                ( this : in Link_to_mvc;
+                  curInif : in demics_itest.class_inifData.Link_to_inifData );
 
     function chooseSup
-                ( this : access mvc;
+                ( this : Link_to_mvc;
                   depth : integer32;
-                  curNode : access demics_ftest.class_theData.theData;
-                  curInif : access demics_itest.class_inifData.inifData;
-                  nextInif : access demics_itest.class_inifData.inifData )
+                  curNode : demics_ftest.class_theData.Link_to_theData;
+                  curInif : demics_itest.class_inifData.Link_to_inifData;
+                  nextInif : demics_itest.class_inifData.Link_to_inifData )
                 return integer32;
 
     procedure fUpdateDirRed
-                ( this : access mvc;
-                  curInif : demics_itest.class_inifData.Array_of_inifData;
-                  nextInif : demics_itest.class_inifData.Array_of_inifData;
-                  curNode : access demics_ftest.Class_theData.theData;
+                ( this : in Link_to_mvc;
+                  curInif : in demics_itest.class_inifData.Array_of_inifData;
+                  nextInif : in demics_itest.class_inifData.Array_of_inifData;
+                  curNode : in demics_ftest.Class_theData.Link_to_theData;
                   curRsp : in Standard_Integer_Vectors.Link_to_Vector;
                   depth : in integer32 );
 
     procedure updateDirRed
-                ( this : access mvc;
-                  curInif : demics_itest.class_inifData.Array_of_inifData;
-                  nextInif : demics_itest.class_inifData.Array_of_inifData;
-                  curNode : access demics_ftest.class_theData.theData;
+                ( this : in Link_to_mvc;
+                  curInif : in demics_itest.class_inifData.Array_of_inifData;
+                  nextInif : in demics_itest.class_inifData.Array_of_inifData;
+                  curNode : in demics_ftest.class_theData.Link_to_theData;
                   curRsp : in Standard_Integer_Vectors.Link_to_Vector;
                   depth : in integer32 );
 
     function findUnbDir
-                ( this : access mvc;
+                ( this : Link_to_mvc;
                   nextInif : demics_itest.class_inifData.Array_of_inifData;
-                  curNode : access demics_ftest.class_theData.theData;
+                  curNode : demics_ftest.class_theData.Link_to_theData;
                   nextRsp : Standard_Integer_Vectors.Link_to_Vector;
                   curRsp : Standard_Integer_Vectors.Link_to_Vector;
                   depth : integer32 ) return integer32;
 
     function findUnbDir_art
-                ( this : access mvc;
+                ( this : Link_to_mvc;
                   nextInif : demics_itest.class_inifData.Array_of_inifData;
-                  curNode : access demics_ftest.class_theData.theData;
+                  curNode : demics_ftest.class_theData.Link_to_theData;
                   nextRsp : Standard_Integer_Vectors.Link_to_Vector;
                   curRsp : Standard_Integer_Vectors.Link_to_Vector;
-                  depth : in integer32 ) return integer32;
+                  depth : integer32 ) return integer32;
 
     function checkDir
-                ( this : access mvc;
+                ( this : Link_to_mvc;
                   corPtr : demics_itest.class_uData.Link_to_Array_of_uData;
-                  tarPtr : access demics_itest.class_uData.uData;
+                  tarPtr : demics_itest.class_uData.Link_to_uData;
                   tar_dir : Standard_Floating_Vectors.Link_to_Vector;
                   tar_red : double_float;
                   nf_pos : Standard_Integer_Vectors.Link_to_Vector;
@@ -127,9 +129,9 @@ package demics_mvc is
                   nfN : integer32 ) return integer32;
 
     function checkDir_art
-                ( this : access mvc;
+                ( this : Link_to_mvc;
                   corPtr : demics_itest.class_uData.Link_to_Array_of_uData;
-                  tarPtr : access demics_itest.class_uData.uData;
+                  tarPtr : demics_itest.class_uData.Link_to_uData;
                   tar_dir : Standard_Floating_Vectors.Link_to_Vector;
                   tar_red : double_float;
                   nf_pos : Standard_Integer_Vectors.Link_to_Vector;
@@ -137,155 +139,154 @@ package demics_mvc is
                   nfN : integer32 ) return integer32;
 
     procedure skipPtr
-                ( this : access mvc;
-                  curr : demics_itest.class_uData.Link_to_Array_of_uData;
-                  fHead : demics_itest.class_uData.Link_to_Array_of_uData );
+                ( this : in Link_to_mvc;
+                  curr : in demics_itest.class_uData.Link_to_Array_of_uData;
+                  fHead : in demics_itest.class_uData.Link_to_Array_of_uData );
 
     procedure get_tuple_index
-                ( this : access mvc;
-                  node : access demics_ftest.class_ftData.ftData;
-                  data : access demics_ftest.class_ftData.ftData;
+                ( this : in Link_to_mvc;
+                  node : in demics_ftest.class_ftData.Link_to_ftData;
+                  data : in demics_ftest.class_ftData.Link_to_ftData;
                   length : in integer32 );
 
     procedure dbg_init_transMat
-                ( this : access mvc;
-                  curNode : access demics_ftest.class_theData.theData );
+                ( this : in Link_to_mvc;
+                  curNode : in demics_ftest.class_theData.Link_to_theData );
 
     procedure dbg_transMat
-                ( this : access mvc;
-                  preNode : access demics_ftest.class_theData.theData;
-                  curNode : access demics_ftest.class_theData.theData );
+                ( this : in Link_to_mvc;
+                  preNode : in demics_ftest.class_theData.Link_to_theData;
+                  curNode : in demics_ftest.class_theData.Link_to_theData );
 
     procedure check_transMat
-                ( this : access mvc;
-                  preNode : access demics_ftest.class_theData.theData;
-                  curNode : access demics_ftest.class_theData.theData );
+                ( this : in Link_to_mvc;
+                  preNode : in demics_ftest.class_theData.Link_to_theData;
+                  curNode : in demics_ftest.class_theData.Link_to_theData );
 
     procedure check_init_transRed
-                ( this : access mvc;
-                  curNode : access demics_ftest.class_theData.theData );
+                ( this : in Link_to_mvc;
+                  curNode : in demics_ftest.class_theData.Link_to_theData );
 
     function checkSign_red
-                ( this : access mvc;
+                ( this : Link_to_mvc;
                   curRed : double_float;
                   tarRed : double_float ) return integer32;
 
     function checkNonNeg_dir
-                ( this : access mvc;
+                ( this : Link_to_mvc;
                   curDirElem : double_float;
                   tarDirElem : double_float ) return integer32;
 
     function checkNonPos_dir
-                ( this : access mvc;
+                ( this : Link_to_mvc;
                   curDirElem : double_float;
                   tarDirElem : double_float ) return integer32;
 
     function checkZero_dir
-                ( this : access mvc;
+                ( this : Link_to_mvc;
                   curDirElem : double_float;
                   tarDirElem : double_float) return integer32;
 
     function table_out
-                ( this : access mvc;
+                ( this : Link_to_mvc;
                   row : integer32; col : integer32 ) return integer32;
 
     procedure info_neg
-                ( this : access mvc;
-                  termSet : in integer32;
+                ( this : in Link_to_mvc; termSet : in integer32;
                   negIdx : in Standard_Integer_VecVecs.Link_to_VecVec );
 
-    procedure info_sp ( this : access mvc; depth : in integer32 );
+    procedure info_sp ( this : in Link_to_mvc; depth : in integer32 );
 
-    procedure info_parent_node ( this : access mvc; depth : in integer32 );
+    procedure info_parent_node ( this : in Link_to_mvc; depth : in integer32 );
 
     procedure info_tuple
-                ( this : access mvc;
+                ( this : in Link_to_mvc;
                   lvl : in integer32; depth : in integer32 );
 
     procedure info_all_dirRed
-                ( this : access mvc;
+                ( this : in Link_to_mvc;
                   depth : in integer32;
-                  node : access demics_ftest.class_ftData.ftData;
+                  node : in demics_ftest.class_ftData.Link_to_ftData;
                   nextInif : demics_itest.class_inifData.Array_of_inifData );
 
-    procedure info_mFea ( this : access mvc; length : in integer32 );
+    procedure info_mFea ( this : in Link_to_mvc; length : in integer32 );
 
-    procedure info_firIdx ( this : access mvc; length : in integer32 );
+    procedure info_firIdx ( this : in Link_to_mvc; length : in integer32 );
 
     procedure info_fIdx
-                ( this : access mvc;
-                  data : access demics_ftest.class_ftData.ftData );
+                ( this : in Link_to_mvc;
+                  data : in demics_ftest.class_ftData.Link_to_ftData );
 
-    procedure info_candIdx ( this : access mvc );
+    procedure info_candIdx ( this : in Link_to_mvc );
 
     procedure info_elemNum
-                ( this : access mvc;
+                ( this : in Link_to_mvc;
                   length : in integer32;
-                  data : access demics_ftest.class_ftData.ftData;
-                  node : demics_ftest.class_ftData.ftData );
+                  data : in demics_ftest.class_ftData.Link_to_ftData;
+                  node : in demics_ftest.class_ftData.ftData );
 
     procedure info_prop_elemNum
-                ( this : access mvc;
+                ( this : in Link_to_mvc;
                   length : in integer32;
-                  data : access demics_ftest.class_ftData.ftData;
-                  node : demics_ftest.class_ftData.ftData );
+                  data : in demics_ftest.class_ftData.Link_to_ftData;
+                  node : in demics_ftest.class_ftData.ftData );
 
-    procedure info_table ( this : access mvc );
+    procedure info_table ( this : in Link_to_mvc );
 
     function new_mvc return mvc;
 
-    procedure delete_mvc ( this : access mvc );
+    procedure delete_mvc ( this : in Link_to_mvc );
 
     procedure allocateAndIni
-                ( this : access mvc;
-                  data : access demics_input_data.class_dataSet.dataSet;
+                ( this : in Link_to_mvc;
+                  data : in demics_input_data.class_dataSet.dataSet;
                   seedNum : in integer32; output : in integer32 );
 
-    procedure initFeasTest ( this : access mvc; depth : in integer32 );
+    procedure initFeasTest ( this : in Link_to_mvc; depth : in integer32 );
 
     procedure initCheck
-                ( this : access mvc;
-                  depth : in integer32;
-                  data : access demics_ftest.class_ftData.ftData );
+                ( this : in Link_to_mvc; depth : in integer32;
+                  data : in demics_ftest.class_ftData.Link_to_ftData );
 
     procedure initLP
-                ( this : access mvc;
-                  data : access demics_ftest.class_ftData.ftData;
+                ( this : in Link_to_mvc;
+                  data : in demics_ftest.class_ftData.Link_to_ftData;
                   negIdx : in Standard_Integer_VecVecs.Link_to_VecVec;
                   depth : in integer32; idx : in integer32;
                   feaNum : in out integer32 );
 
     function feasTest
-                ( this : access mvc;
+                ( this : Link_to_mvc;
                   depth : integer32;
-                  parent : access demics_ftest.class_theData.theData )
+                  parent : demics_ftest.class_theData.Link_to_theData )
                 return integer32;
 
     procedure upFeasTest
-                ( this : access mvc; depth : in out integer32;
+                ( this : in Link_to_mvc; depth : in out integer32;
                   flag : out integer32 );
 
     -- upFeasTest was declared as a function, assigning to depth
     -- as a side effect, returning a flag
 
     procedure findMixedCell
-                ( this : access mvc;
+                ( this : in Link_to_mvc;
                   depth : in integer32;
-                  parent : access demics_ftest.class_theData.theData );
+                  parent : in demics_ftest.class_theData.Link_to_theData );
 
-    procedure findAllMixedCells ( this : access mvc; depth : in integer32 );
+    procedure findAllMixedCells ( this : in Link_to_mvc;
+                                  depth : in integer32 );
 
     function iCheck
-                ( this : access mvc;
+                ( this : Link_to_mvc;
                   depth : integer32;
-                  parent : access demics_ftest.class_theData.theData;
-                  data : access demics_ftest.class_ftData.ftData;
-                  inifData : access demics_itest.class_inifData.inifData )
+                  parent : demics_ftest.class_theData.Link_to_theData;
+                  data : demics_ftest.class_ftData.Link_to_ftData;
+                  inifData : demics_itest.class_inifData.Link_to_inifData )
                 return integer32;
 
-    procedure iLP ( this : access mvc;
-                    parent : access demics_ftest.class_theData.theData;
-                    data : access demics_ftest.class_ftData.ftData;
+    procedure iLP ( this : in Link_to_mvc;
+                    parent : in demics_ftest.class_theData.Link_to_theData;
+                    data : in demics_ftest.class_ftData.Link_to_ftData;
                     depth : in integer32;
                     idx_one : in integer32;
                     fst_pivInIdx : in integer32;
@@ -294,9 +295,9 @@ package demics_mvc is
                     feaNum : in out integer32 );
 
     procedure iLP_Art
-                ( this : access mvc;
-                  parent : access demics_ftest.class_theData.theData;
-                  data : access demics_ftest.class_ftData.ftData;
+                ( this : in Link_to_mvc;
+                  parent : in demics_ftest.class_theData.Link_to_theData;
+                  data : in demics_ftest.class_ftData.Link_to_ftData;
                   depth : in integer32;
                   idx_one : in integer32;
                   fst_pivInIdx : in integer32;
@@ -305,40 +306,40 @@ package demics_mvc is
                   feaNum : in out integer32 );
 
     procedure findNode
-                ( this : access mvc;
+                ( this : in Link_to_mvc;
                   depth : in integer32;
                   lvl : in out integer32;
                   feaNum : in out integer32;
-                  data : access demics_ftest.class_ftData.ftData;
+                  data : in demics_ftest.class_ftData.Link_to_ftData;
                   flag : out integer32 );
 
     -- findNode was declared as a function, but with assignments to
     -- its arguments as side effects, returning a flag
 
     procedure findNextNode
-                ( this : access mvc;
+                ( this : in Link_to_mvc;
                   depth : in integer32;
                   lvl : in out integer32;
                   feaNum : in out integer32;
-                  Data : access demics_ftest.class_ftData.ftData;
+                  data : in demics_ftest.class_ftData.Link_to_ftData;
                   flag : out integer32 );
 
     -- findNode was declared as a function, but with assignments to
     -- its arguments as side effects, returning a flag
 
     procedure findUpNode
-                ( this : access mvc;
-                  data : access demics_ftest.class_ftData.ftData;
-                  pre : demics_ftest.class_ftData.Link_to_Array_of_ftData;
-                  cur : demics_ftest.class_ftData.Link_to_Array_of_ftData;
+                ( this : in Link_to_mvc;
+                  data : in demics_ftest.class_ftData.Link_to_ftData;
+                  pre : in demics_ftest.class_ftData.Link_to_Array_of_ftData;
+                  cur : in demics_ftest.class_ftData.Link_to_Array_of_ftData;
                   lvl : in out integer32;
                   polyDim : in integer32;
                   depth : in integer32 );
 
-    procedure mLP ( this : access mvc;
-                    Pre : access demics_ftest.class_ftData.ftData;
-                    Cur : access demics_ftest.class_ftData.ftData;
-                    data : access demics_ftest.class_ftData.ftData;
+    procedure mLP ( this : in Link_to_mvc;
+                    pre : in demics_ftest.class_ftData.Link_to_ftData;
+                    cur : in demics_ftest.class_ftData.Link_to_ftData;
+                    data : in demics_ftest.class_ftData.Link_to_ftData;
                     repIdx : in Standard_Integer_Vectors.Link_to_Vector;
                     feaIdx : in Standard_Integer_Vectors.Link_to_Vector;
                     tarIdx : in integer32;
@@ -353,30 +354,30 @@ package demics_mvc is
     -- its arguments as side effects, returning a flag
 
     function checkBasis
-                ( this : access mvc;
-                  target : access demics_ftest.class_theData.theData;
+                ( this : Link_to_mvc;
+                  target : demics_ftest.class_theData.Link_to_theData;
                   sub_sIdx : integer32 ) return integer32;
 
     function checkAnotherBasis
-                ( this : access mvc;
+                ( this : Link_to_mvc;
                   repIdx : integer32; dist : integer32;
                   target : demics_ftest.class_theData.Link_to_Array_of_theData
                 ) return integer32;
 
     procedure get_firIdx
-                ( this : access mvc;
-                  data_a : demics_ftest.class_ftData.ftData;
-                  data_b : demics_ftest.class_ftData.ftData;
+                ( this : in Link_to_mvc;
+                  data_a : in demics_ftest.class_ftData.ftData;
+                  data_b : in demics_ftest.class_ftData.ftData;
                   sn : in integer32; lvl : in integer32 );
 
     procedure info_cpuTime
-                ( this : access mvc;
-                  cpuTime_start : double_float;
-                  cpuTime_end : double_float );
+                ( this : in Link_to_mvc;
+                  cpuTime_start : in double_float;
+                  cpuTime_end : in double_float );
 
-    procedure info_final ( this : access mvc );
+    procedure info_final ( this : in Link_to_mvc );
 
-    procedure enum ( this : access mvc );
+    procedure enum ( this : in Link_to_mvc );
 
   end class_mvc;
 
