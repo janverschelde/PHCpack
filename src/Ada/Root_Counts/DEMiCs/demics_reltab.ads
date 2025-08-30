@@ -38,93 +38,92 @@ package demics_reltab is
       val : Standard_Floating_Vectors.Link_to_Vector;
       feasIdx_a : Standard_Integer_Vectors.Link_to_Vector;
       feasIdx_b : Standard_Integer_Vectors.Link_to_Vector;
-      the_Simplex : access demics_simplex.class_simplex.simplex;
+      the_Simplex : demics_simplex.class_simplex.Link_to_simplex;
       table : Standard_Integer_Vectors.Link_to_Vector;
     end record;
 
+    type Link_to_reltab is access reltab;
+
     procedure get_init_triData
-                ( this : access reltab;
+                ( this : in Link_to_reltab;
                   lab : in integer32; idx : in integer32 );
 
     procedure get_init_squData
-                ( this : access reltab;
+                ( this : in Link_to_reltab;
                   lab_a : in integer32; lab_b : in integer32;
                   idx_a : in integer32; idx_b : in integer32;
                   colPos : in integer32; rowPos : in integer32 );
 
-    procedure init_data ( this : access reltab );
+    procedure init_data ( this : in Link_to_reltab );
 
-    procedure init_tri
-                ( this : access reltab;
-                  lab : in integer32; idx : in integer32 );
+    procedure init_tri ( this : in Link_to_reltab;
+                         lab : in integer32; idx : in integer32 );
 
-    procedure init_squ
-                ( this : access reltab;
-                  lab_a : in integer32; lab_b : in integer32;
-                  idx_a : in integer32; idx_b : in integer32 );
+    procedure init_squ ( this : in Link_to_reltab;
+                         lab_a : in integer32; lab_b : in integer32;
+                         idx_a : in integer32; idx_b : in integer32 );
 
-    procedure put_data ( this : access reltab );
+    procedure put_data ( this : in Link_to_reltab );
 
-    procedure put_frIdx ( this : access reltab; frIdx : in integer32 );
+    procedure put_frIdx ( this : in Link_to_reltab; frIdx : in integer32 );
 
-    procedure makeTri ( this : access reltab );
+    procedure makeTri ( this : in Link_to_reltab );
 
-    procedure makeSqu ( this : access reltab );
+    procedure makeSqu ( this : in Link_to_reltab );
 
     procedure findAllFeasLPs_tri
-                ( this : access reltab;
+                ( this : in Link_to_reltab;
                   lab : in integer32; idx : in integer32;
                   frIdx : in integer32 );
 
     procedure findAllFeasLPs_squ
-                ( this : access reltab;
+                ( this : in Link_to_reltab;
                   lab_a : in integer32; lab_b : in integer32;
                   idx_a : in integer32; idx_b : in integer32;
                   colPos : in integer32; rowPos : in integer32 );
 
-    procedure table_in
-                ( this : access reltab;
-                  row : in integer32; col : in integer32;
-                  elem : in integer32 );
+    procedure table_in ( this : in Link_to_reltab;
+                         row : in integer32; col : in integer32;
+                         elem : in integer32 );
 
-    function table_out
-                ( this : access reltab;
-                  row : integer32; col : integer32 ) return integer32;
+    function table_out ( this : in Link_to_reltab;
+                         row : integer32; col : integer32 ) return integer32;
 
-    procedure info_invB ( this : access reltab );
+    procedure info_invB ( this : in Link_to_reltab );
 
-    procedure info_p_sol ( this : access reltab );
+    procedure info_p_sol ( this : in Link_to_reltab );
 
-    procedure info_d_sol ( this : access reltab );
+    procedure info_d_sol ( this : in Link_to_reltab );
 
-    procedure info_basisIdx ( this : access reltab );
+    procedure info_basisIdx ( this : in Link_to_reltab );
 
-    procedure info_nbIdx ( this : access reltab );
+    procedure info_nbIdx ( this : in Link_to_reltab );
 
-    procedure info_nf_pos ( this : access reltab );
+    procedure info_nf_pos ( this : in Link_to_reltab );
 
-    procedure info_feasIdx_tri ( this : access reltab; num : in integer32 );
+    procedure info_feasIdx_tri ( this : in Link_to_reltab;
+                                 num : in integer32 );
 
     procedure info_feasIdx_squ
-                ( this : access reltab;
+                ( this : in Link_to_reltab;
                   num_a : in integer32; num_b : in integer32 );
 
-    procedure info_allTable ( this : access reltab );
+    procedure info_allTable ( this : in Link_to_reltab );
 
-    procedure info_table ( this : access reltab );
+    procedure info_table ( this : in Link_to_reltab );
 
-    function invB_out
-               ( this : access reltab;
-                 rowIdx : integer32; colIdx : integer32 )
-               return double_float; 
+    function invB_out ( this : Link_to_reltab;
+                        rowIdx : integer32; colIdx : integer32 )
+                      return double_float; 
 
     function new_reltab return reltab;
 
-    procedure delete_reltab ( this : access reltab );
+    procedure delete_reltab ( this : in Link_to_reltab );
 
     procedure allocateAndIni
-                ( this : access reltab;
-                  ori_Simplex : access demics_simplex.class_simplex.simplex;
+                ( this : in Link_to_reltab;
+                  ori_Simplex
+                    : in demics_simplex.class_simplex.Link_to_simplex;
                   ori_firIdx : in Standard_Integer_VecVecs.Link_to_VecVec;
                   ori_dim : in integer32;
                   ori_supN : in integer32;
@@ -134,7 +133,7 @@ package demics_reltab is
                   ori_re_termStart
                     : in Standard_Integer_Vectors.Link_to_Vector );
 
-    procedure makeTable ( this : access reltab;
+    procedure makeTable ( this : in Link_to_reltab;
                           total_unbLP_tab : out double_float );
 
   end class_reltab;

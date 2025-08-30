@@ -1,6 +1,7 @@
 Sat 30 Aug 2025 : modified demics_input_data.adb and demics_input_main.adb
   to have indices start from zero instead of starting from one.
   Updated demics_simplex with definitions of pointer types.
+  Added definitions of pointer types to demics_reltab.
 
 Fri 29 Aug 2025 : from test_demics_input, factored out procedure to read
   the input, into the new package demics_input_main.  Added definitions
