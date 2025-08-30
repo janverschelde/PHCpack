@@ -51,7 +51,7 @@ package body DEMiCs_Input_Main is
         put("termMax : "); put(data.termMax,1); new_line;
         put("typeMax : "); put(data.typeMax,1); new_line;
         put("termStart :");
-        for i in 1..data.supN+1 loop
+        for i in 0..data.supN loop
           put(" "); put(data.termStart(i));
         end loop;
         new_line;

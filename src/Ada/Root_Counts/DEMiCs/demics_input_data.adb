@@ -46,7 +46,7 @@ package body demics_input_data is
                            rowIdx : in integer32; colIdx : in integer32;
                            elem : in double_float ) is
 
-      idx : constant integer32 := this.dim*(rowIdx-1) + colIdx;
+      idx : constant integer32 := this.dim*rowIdx + colIdx;
 
     begin
       this.support(idx) := elem; 
@@ -56,7 +56,7 @@ package body demics_input_data is
                            rowIdx : in integer32; colIdx : in integer32 )
                          return double_float is
 
-      idx : constant integer32 := this.dim*(rowIdx-1) + colIdx;
+      idx : constant integer32 := this.dim*rowIdx + colIdx;
 
     begin
       return this.support(idx);
@@ -121,8 +121,9 @@ package body demics_input_data is
           if ch /= '=' then
             fail := true;
           else
-            this.termSet := new Standard_Integer_Vectors.Vector(1..this.supN);
-            for i in 1..this.supN loop
+            this.termSet
+              := new Standard_Integer_Vectors.Vector(0..this.supN-1);
+            for i in 0..this.supN-1 loop
               get(file,this.termSet(i));
             end loop;
             while not end_of_file(file) loop -- look for 'Type ='
@@ -132,17 +133,18 @@ package body demics_input_data is
             if ch /= '=' then
               fail := true;
             else
-              this.supType := new Standard_Integer_Vectors.Vector(1..this.supN);
-              for i in 1..this.supN loop
+              this.supType
+                := new Standard_Integer_Vectors.Vector(0..this.supN-1);
+              for i in 0..this.supN-1 loop
                 get(file,this.supType(i));
               end loop;
             end if;
           end if;
         end if;
       end if;
-      this.termMax := this.termSet(1);
-      this.typeMax := this.supType(1);
-      for i in 2..this.supN loop
+      this.termMax := this.termSet(0);
+      this.typeMax := this.supType(0);
+      for i in 1..this.supN-1 loop
         if this.termSet(i) > this.termMax
          then this.termMax := this.termSet(i);
         end if;
@@ -160,20 +162,20 @@ package body demics_input_data is
     begin
       fail := false;
       this.termSumNum := 0;
-      this.termStart := new Standard_Integer_Vectors.Vector(1..this.supN+1);
-      this.termStart(1) := 1;
-      for k in 1..this.supN loop
+      this.termStart := new Standard_Integer_Vectors.Vector(0..this.supN);
+      this.termStart(0) := 1;
+      for k in 0..this.supN-1 loop
         this.termSumNum := this.termSumNum + this.termSet(k);
-        this.termStart(k+1) := 1 + this.termSumNum;
+        this.termStart(k+1) := this.termSumNum;
       end loop;
-      this.termStart(this.supN+1) := this.termSumNum;
+      this.termStart(this.supN) := this.termSumNum;
       size := this.termSumNum*this.dim;
-      this.support := new Standard_Floating_Vectors.Vector(1..size);
-      for i in 1..this.supN loop
+      this.support := new Standard_Floating_Vectors.Vector(0..size-1);
+      for i in 0..this.supN-1 loop
         for j in 1..this.termSet(i) loop
           for k in 1..this.dim loop
-            idx := idx + 1;
             get(file,this.support(idx));
+            idx := idx + 1;
           end loop;
         end loop;
       end loop;
@@ -209,12 +211,12 @@ package body demics_input_data is
       put("Dim = "); put(this.dim,1); new_line;
       put("Support = "); put(this.supN,1); new_line; new_line;
       put("Elem = ");
-      for i in 1..this.supN loop
+      for i in 0..this.supN-1 loop
         put(this.termSet(i),1); put(" ");
       end loop;
       new_line;
       put("Type = ");
-      for i in 1..this.supN loop
+      for i in 0..this.supN-1 loop
         put(this.supType(i),1); put(" ");
       end loop;
       new_line;
@@ -223,19 +225,19 @@ package body demics_input_data is
     procedure info_supports ( this : in dataSet ) is
 
       counter : integer32 := 0;
-      top : integer32 := 1;
+      top : integer32 := 0;
 
     begin
-      for k in 1..this.supN loop
+      for k in 0..this.supN-1 loop
         for j in top..this.termSet(k) + top - 1 loop
-          for i in 1..this.dim loop
+          for i in 0..this.dim-1 loop
             put(integer32(support_out(this,j,i)),1); put(" ");
           end loop;
           new_line;
           counter := counter + 1;
         end loop;
         new_line;
-        top := counter + 1;
+        top := counter;
       end loop;
     end info_supports;
 
