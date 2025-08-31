@@ -1,3 +1,5 @@
+with Ada.text_io;                       use Ada.text_io;
+
 package body demics_reltab is
 
   package body class_reltab is
@@ -152,6 +154,30 @@ package body demics_reltab is
       res : reltab;
 
     begin
+      res.dim := 0;
+      res.supN := 0;
+      res.maxConst := 0;
+      res.termSumNum := 0;
+      res.row := 0;
+      res.col := 0;
+      res.unbLP := 0.0;
+      res.totalLP := 0.0;
+      res.nbN := 0;
+      res.nfN := 0;
+      res.termSet := null;
+      res.termStart := null;
+      res.firIdx := null;
+      res.invB := null;
+      res.p_sol := null;
+      res.d_sol := null;
+      res.basisIdx := null;
+      res.nbIdx := null;
+      res.nf_pos := null;
+      res.negIdx := null;
+      res.val := null;
+      res.feasIdx_a := null;
+      res.feasIdx_b := null;
+      res.table := null;
       return res;
     end new_reltab;
 
@@ -164,16 +190,19 @@ package body demics_reltab is
                 ( this : in Link_to_reltab;
                   ori_Simplex
                     : in demics_simplex.class_simplex.Link_to_simplex;
-                  ori_firIdx : in Standard_Integer_VecVecs.Link_to_VecVec;
+                  ori_firIdx : in Standard_Integer_Vectors.Link_to_Vector;
                   ori_dim : in integer32;
                   ori_supN : in integer32;
                   ori_termSumNum : in integer32;
                   ori_termSet : in Standard_Integer_Vectors.Link_to_Vector;
                   ori_termStart : in Standard_Integer_Vectors.Link_to_Vector;
                   ori_re_termStart
-                    : in Standard_Integer_Vectors.Link_to_Vector ) is
+                    : in Standard_Integer_Vectors.Link_to_Vector;
+                  vrblvl : in integer32 := 0 ) is
     begin
-      null;
+      if vrblvl > 0
+       then put_line("-> in demics_reltab.class_reltab.allocateAndIni ...");
+      end if;
     end allocateAndIni;
 
     procedure makeTable ( this : in Link_to_reltab;

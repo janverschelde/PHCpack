@@ -1,3 +1,7 @@
+with Ada.text_io;                       use Ada.text_io;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Random_Numbers;
+
 package body demics_simplex is
 
   package body class_supportSet is
@@ -7,12 +11,17 @@ package body demics_simplex is
       res : supportSet;
 
     begin
+      res.row := 0;
+      res.col := 0;
+      res.supMat := null;
+      res.costVec := null;
       return res;
     end new_supportSet;
 
     procedure delete_supportSet ( this : in Link_to_supportSet ) is
     begin
-      null;
+      Standard_Floating_Vectors.clear(this.supMat);
+      Standard_Floating_Vectors.clear(this.costVec);
     end delete_supportSet;
 
     procedure allocSupp
@@ -534,6 +543,58 @@ package body demics_simplex is
       res : simplex;
 
     begin
+      res.dim := 0;
+      res.supN := 0;
+      res.termSumNum := 0;
+      res.repIdx := 0;
+      res.output := 0;
+      res.mixedVol := 0.0;
+      res.mixedCell := 0;
+      res.ip := null;
+      res.weight := null;
+      res.vol := null;
+      res.eye := null;
+      res.nbN := 0;
+      res.nfN := 0;
+      res.artV := 0;
+      res.pivOutNum := 0;
+      res.frIdx := 0;
+      res.Supp := null;
+      res.lifting := null;
+      res.oriSupp := null;
+      res.firIdx := null;
+      res.termSet := null;
+      res.termStart := null;
+      res.re_termStart := null;
+      res.invB := null;
+      res.transMat := null;
+      res.transRed := null;
+      res.p_sol := null;
+      res.d_sol := null;
+      res.p1_d_sol := null;
+      res.fst_d_sol := null;
+      res.aux_cvec := null;
+      res.dir := null;
+      res.fst_redVec := null;
+      res.redVec := null;
+      res.basisIdx := null;
+      res.nf_pos := null;
+      res.nbIdx := null;
+      res.rIdx := null;
+      res.pivOutList := null;
+      res.pivOutCheck := null;
+      res.tmp_newInvB := null;
+      res.tmp_transMat := null;
+      res.nIdx := null;
+      res.pre_p_sol := null;
+      res.pre_d_sol := null;
+      res.pre_redVec := null;
+      res.pre_basisIdx := null;
+      res.pre_nbIdx := null;
+      res.pre_nf_pos := null;
+      res.pre_invB := null;
+      res.pre_transMat := null;
+      res.pre_transRed := null;
       return res;
     end new_simplex;
 
@@ -673,10 +734,72 @@ package body demics_simplex is
                 ( this : in Link_to_simplex;
                   data : demics_input_data.class_dataSet.dataSet;
                   ori_firIdx : in Standard_Integer_Vectors.Link_to_Vector;
-                  seedNum : in integer32;
-                  ori_output : in integer32 ) is
+                  seedNum : in integer32; ori_output : in integer32;
+                  vrblvl : in integer32 := 0 ) is
+
+      cnt,tmp_nDim,tmp_mDim : integer32;
+     -- rand_max : double_float;
+
     begin
-      null;
+      if vrblvl > 0
+       then put_line("-> in demics_simplex.class_simplex.allocateAndIni ...");
+      end if;
+      tmp_nDim := data.dim;
+      tmp_mDim := data.dim;
+      this.dim := data.dim;
+      this.supN := data.supN;
+      this.termSumNum := data.termSumNum;
+      tmp_nDim := tmp_nDim + this.termSumNum - this.supN;
+      this.firIdx := ori_firIdx;
+      this.output := ori_output;
+      this.termSet := data.termSet;    
+      this.termStart := data.termStart;
+      this.re_termStart := new Standard_Integer_Vectors.Vector(0..this.supN);
+      this.re_termStart(0) := 0;
+      this.p1_d_sol
+        := new Standard_Floating_Vectors.Vector'(0..this.dim-1 => 0.0);
+      this.ip  := new Standard_Integer_Vectors.Vector'(0..this.dim-1 => 0);
+      this.weight := new Standard_Floating_Vectors.Vector(0..this.Dim-1);
+      this.vol
+        := new Standard_Floating_Vectors.Vector'(0..this.dim*this.dim-1 => 0.0);
+      this.eye
+        := new Standard_Floating_Vectors.Vector'(0..this.dim*this.dim-1 => 0.0);
+      this.lifting
+        := new Standard_Floating_Vectors.Vector(0..this.termSumNum-1);
+      this.oriSupp := new Standard_Floating_VecVecs.VecVec(0..this.supN-1);
+
+      for i in 0..this.supN-1 loop
+        this.oriSupp(i)
+          := new Standard_Floating_Vectors.Vector'
+                   (0..this.dim*this.termSet(i) => 0.0);
+        for j in 0..this.dim-1 loop
+          for k in this.termStart(i)..this.termStart(i)+this.termSet(i)-1 loop
+            supp_in(this,i,j,k - this.termStart(i),
+                    demics_input_data.class_dataSet.support_out(data,k, j));
+          end loop;
+        end loop;
+      end loop;
+      this.fst_d_sol
+        := new Standard_Floating_Vectors.Vector'(0..tmp_mDim-1 => 0.0);
+      this.aux_cvec
+        := new Standard_Floating_Vectors.Vector'(0..tmp_nDim-1 => 0.0);
+      this.dir := new Standard_Floating_Vectors.Vector'(0..tmp_mDim-1 => 0.0);
+      this.fst_redVec
+        := new Standard_Floating_Vectors.Vector'(0..data.termMax-1 => 0.0);
+      this.tmp_newInvB := new Standard_Floating_Vectors.Vector(0..this.dim-1);
+      this.tmp_transMat := new Standard_Floating_Vectors.Vector(0..this.dim-1);
+      this.nIdx := new Standard_Integer_Vectors.Vector(0..2*tmp_nDim-1);
+      Standard_Random_Numbers.Set_Seed(natural32(seedNum));
+     -- rand_max was needed because of rand()/rand_max*10 was used ...
+     -- rand_max := 2.0;  
+     -- for i in 1..29 loop
+     --   rand_max := 2.0*rand_max;
+     -- end loop;
+     -- rand_max := (rand_max - 1.0)*2.0 + 1.0;
+      for i in 0..this.termSumNum-1 loop
+        this.lifting(i) := 10.0*abs(Standard_Random_Numbers.Random);
+      end loop;
+     -- incomplete ...
     end allocateAndIni;
 
 -- for relation table

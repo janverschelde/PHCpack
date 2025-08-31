@@ -120,10 +120,13 @@ package body demics_itest is
                   termSet : in Standard_Integer_Vectors.Link_to_Vector;
                   termStart : in Standard_Integer_Vectors.Link_to_Vector;
                   depth : in integer32; dim : in integer32;
-                  supN : in integer32 ) is
+                  supN : in integer32; vrblvl : in integer32 := 0 ) is
 
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_itest.class_inifData.get_info, depth : ");
+        put(depth,1); put_line(" ...");
+      end if;
     end get_info;
 
     procedure info_all_dirRed ( this : in Link_to_inifData ) is
@@ -197,9 +200,19 @@ package body demics_itest is
                   lifting : in Standard_Floating_Vectors.Link_to_Vector;
                   termSet : in Standard_Integer_Vectors.Link_to_Vector;
                   termStart : in Standard_Integer_Vectors.Link_to_Vector;
-                  dim : in integer32; supN : in integer32 ) is
+                  dim : in integer32; supN : in integer32;
+                  vrblvl : in integer32 := 0 ) is
     begin
-      null;
+      if vrblvl > 0
+       then put_line("-> in demics_itest.class_iLvData.getInit ...");
+      end if;
+      for i in 0..supN-1 loop
+        class_inifData.get_info
+          (this.inif(i),data,lifting,termSet,termStart,i,dim,supN,vrblvl-1);
+        if i < supN-1
+         then this.rsp(i) := i+1;
+        end if;
+      end loop;
     end getInit;
 
     procedure init ( this : in Link_to_iLvData;

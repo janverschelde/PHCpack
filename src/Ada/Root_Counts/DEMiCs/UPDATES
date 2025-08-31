@@ -1,5 +1,7 @@
 Sun 31 Aug 2025 : demics_main.adb calls allocateAndIni of demics_mvc,
   calling the creators of demics_itest and demics_ftest.
+  Finished allocateAndIni in demics_mvc.adb, updated demics_itest,
+  demics_reltab, and demics_simplex.
 
 Sat 30 Aug 2025 : modified demics_input_data.adb and demics_input_main.adb
   to have indices start from zero instead of starting from one.

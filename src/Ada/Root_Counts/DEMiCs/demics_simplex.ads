@@ -30,7 +30,13 @@ package demics_simplex is
 
     function new_supportSet return supportSet;
 
+    -- DESCRIPTION :
+    --   Returns a supportSet record with zero and null values.
+
     procedure delete_supportSet ( this : in Link_to_supportSet );
+
+    -- DESCRIPTION :
+    --   Deallocates the supMath and costVec fields of the record.
 
     procedure allocSupp
                 ( this : in Link_to_supportSet;
@@ -455,6 +461,9 @@ package demics_simplex is
 
     function new_simplex return simplex;
 
+    -- DESCRIPTION :
+    --   Returns a simplex record with zero and null values.
+
     procedure delete_simplex ( this : in Link_to_simplex );
 
     procedure get_iNbN_nfN
@@ -535,8 +544,12 @@ package demics_simplex is
                 ( this : in Link_to_simplex;
                   data : in demics_input_data.class_dataSet.dataSet;
                   ori_firIdx : in Standard_Integer_Vectors.Link_to_Vector;
-                  seedNum : in integer32;
-                  ori_output : in integer32 );
+                  seedNum : in integer32; ori_output : in integer32;
+                  vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Allocates and initializes the simplex record.
+    --   Generates random lifting values, setting the seed to seedNum.
 
 -- for relation table
 

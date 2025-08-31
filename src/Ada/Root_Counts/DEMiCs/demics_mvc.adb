@@ -385,6 +385,19 @@ package body demics_mvc is
           getMemory(this,i,j,length,vrblvl-1);
         end loop;
       end loop;
+      this.the_Simplex := new demics_simplex.class_simplex.simplex'
+                             (demics_simplex.class_simplex.new_simplex);
+      demics_simplex.class_simplex.allocateAndIni
+        (this.the_Simplex,data,this.firIdx,seedNum,output,vrblvl-1);
+      this.the_Reltab := new demics_reltab.class_reltab.reltab'
+                            (demics_reltab.class_reltab.new_reltab);
+      demics_reltab.class_reltab.allocateAndIni
+        (this.the_Reltab,this.the_Simplex,this.firIdx,this.dim,this.supN,
+         this.termSumNum,this.termSet,this.termStart,this.re_termStart,
+         vrblvl-1);
+      demics_itest.class_iLvData.getInit
+        (this.iLv(0),data,this.the_Simplex.lifting,this.termSet,
+         this.termStart,this.dim,this.supN,vrblvl-1);
     end allocateAndIni;
 
     procedure initFeasTest ( this : in Link_to_mvc; depth : in integer32 ) is

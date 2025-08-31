@@ -118,20 +118,31 @@ package demics_reltab is
 
     function new_reltab return reltab;
 
+    -- DESCRIPTION :
+    --   Returns a record with zero and null values.
+
     procedure delete_reltab ( this : in Link_to_reltab );
 
     procedure allocateAndIni
                 ( this : in Link_to_reltab;
                   ori_Simplex
                     : in demics_simplex.class_simplex.Link_to_simplex;
-                  ori_firIdx : in Standard_Integer_VecVecs.Link_to_VecVec;
+                  ori_firIdx : in Standard_Integer_Vectors.Link_to_Vector;
                   ori_dim : in integer32;
                   ori_supN : in integer32;
                   ori_termSumNum : in integer32;
                   ori_termSet : in Standard_Integer_Vectors.Link_to_Vector;
                   ori_termStart : in Standard_Integer_Vectors.Link_to_Vector;
                   ori_re_termStart
-                    : in Standard_Integer_Vectors.Link_to_Vector );
+                    : in Standard_Integer_Vectors.Link_to_Vector;
+                  vrblvl : in integer32 := 0 );
+
+    -- NOTE :
+    --   The ori_firIdx was declare as int** which could indicate a
+    --   vector of vectors data structure, but then in the allocateAndIni
+    --   of mvc.cpp the argument was called as &firIdx.
+    --   Thus, as the int** was immediately dereferenced by the &,
+    --   the argument refers to a one dimensional data type.
 
     procedure makeTable ( this : in Link_to_reltab;
                           total_unbLP_tab : out double_float );

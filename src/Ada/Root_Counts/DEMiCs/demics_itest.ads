@@ -106,7 +106,7 @@ package demics_itest is
                   termSet : in Standard_Integer_Vectors.Link_to_Vector;
                   termStart : in Standard_Integer_Vectors.Link_to_Vector;
                   depth : in integer32; dim : in integer32;
-                  supN : in integer32 );
+                  supN : in integer32; vrblvl : in integer32 := 0 );
 
     procedure info_all_dirRed ( this : in Link_to_inifData );
 
@@ -157,7 +157,8 @@ package demics_itest is
                   lifting : in Standard_Floating_Vectors.Link_to_Vector;
                   termSet : in Standard_Integer_Vectors.Link_to_Vector;
                   termStart : in Standard_Integer_Vectors.Link_to_Vector;
-                  dim : in integer32; supN : in integer32 );
+                  dim : in integer32; supN : in integer32;
+                  vrblvl : in integer32 := 0 );
 
     procedure init ( this : in Link_to_iLvData;
                      supN : in integer32; depth : in integer32;
