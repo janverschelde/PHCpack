@@ -1,3 +1,6 @@
+with Ada.text_io;                       use Ada.text_io;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+
 package body demics_ftest is
 
   package body class_theData is
@@ -7,6 +10,40 @@ package body demics_ftest is
       res : theData;
 
     begin
+      res.row := 0;
+      res.col := 0;
+      res.termS := 0;
+      res.flag := 0;
+      res.polyDim := 0;
+      res.nbN := 0;
+      res.nfN := 0;
+      res.artV := 0;
+      res.pivOutNum := 0;
+      res.fIdx := 0;
+      res.sw := 0;
+      res.invB := null;
+      res.transMat := null;
+      res.transRed := null;
+      res.p_sol := null;
+      res.d_sol := null;
+      res.redVec := null;
+      res.basisIdx := null;
+      res.nbIdx := null;
+      res.nf_pos := null;
+      res.rIdx := null;
+      res.next := null;
+      res.pivOutList := null;
+      res.pivOutCheck := null;
+      res.invB_ptr := null;  
+      res.transMat_ptr := null;
+      res.transRed_ptr := null;
+      res.p_sol_ptr := null; 
+      res.d_sol_ptr := null; 
+      res.redVec_ptr := null;
+      res.basisIdx_ptr := null; 
+      res.nbIdx_ptr := null; 
+      res.nf_pos_ptr := null;
+      res.nodeLabel := null;
       return res;
     end new_theData;
 
@@ -18,9 +55,41 @@ package body demics_ftest is
     procedure create ( this : in Link_to_theData;
                        ori_row : in integer32; ori_col : in integer32;
                        ori_termS : in integer32;
-                       ori_polyDim : in integer32 ) is
+                       ori_polyDim : in integer32;
+                       vrblvl : in integer32 := 0 ) is
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_ftest.class_theData.create, ori_row : ");
+        put(ori_row,1); put_line(" ...");
+      end if;
+      this.row := ori_row;
+      this.col := ori_col;
+      this.termS := ori_termS;
+      this.polyDim := ori_polyDim;
+      this.invB
+        := new Standard_Floating_Vectors.Vector'(0..this.row*this.row-1 => 0.0);
+      this.transMat
+        := new Standard_Floating_Vectors.Vector'(0..this.row*this.row-1 => 0.0);
+      this.transRed
+        := new Standard_Floating_Vectors.Vector'(0..this.row-1 => 0.0);
+      this.p_sol
+        := new Standard_Floating_Vectors.Vector'(0..this.col-1 => 0.0);
+      this.d_sol
+        := new Standard_Floating_Vectors.Vector'(0..this.row-1 => 0.0);
+      this.basisIdx
+        := new Standard_Integer_Vectors.Vector'(0..this.row-1 => 0);
+      this.nf_pos := new Standard_Integer_Vectors.Vector'(0..this.row-1 => 0);
+      this.nbIdx := new Standard_Integer_Vectors.Vector'(0..this.col-1 => 0);
+      this.redVec
+        := new Standard_Floating_Vectors.Vector'(0..this.col-1 => 0.0);
+      this.rIdx
+        := new Standard_Integer_Vectors.Vector'(0..this.termS-1 => 0);
+      this.pivOutList
+        := new Standard_Integer_Vectors.Vector'(0..this.row-1 => 0);
+      this.pivOutCheck
+        := new Standard_Integer_Vectors.Vector'(0..this.row-1 => 0);
+      this.nodeLabel
+        := new Standard_Integer_Vectors.Vector(0..this.polyDim);
     end create;
 
     procedure joint ( this : in Link_to_theData ) is
@@ -195,13 +264,20 @@ package body demics_ftest is
 
   end class_theData;
 
-  package body Class_ftData is
+  package body class_ftData is
 
     function new_ftData return ftData is
 
       res : ftData;
 
     begin
+      res.elemNum := 0;
+      res.cur := null;
+      res.parent := null;
+      res.limit := null;
+      res.head := null;
+      res.last := null;
+      res.dim := 0;
       return res;
     end new_ftData;
 
@@ -213,20 +289,43 @@ package body demics_ftest is
     procedure create_elem
                 ( this : in Link_to_ftData;
                   row : in integer32; col : in integer32;
-                  termS : in integer32; polyDim : in integer32 ) is
-
+                  termS : in integer32; polyDim : in integer32;
+                  vrblvl : in integer32 := 0 ) is
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_ftest.class_ftData.create_elem, row : ");
+        put(row,1); put(", col : "); put(col,1); put_line(" ...");
+      end if;
+      declare
+        newData : Link_to_theData := new theData'(new_theData);
+      begin
+        class_theData.create(newData,row,col,termS,polyDim,vrblvl-1);
+        this.cur := newData;
+      end;
+      this.dim := row;
     end create_elem;
 
-    procedure add_elem ( this : in Link_to_ftData ) is
+    procedure add_elem ( this : in Link_to_ftData;
+                         vrblvl : in integer32 := 0 ) is
     begin
-      null;
+      if vrblvl > 0
+       then put_line("-> in demics_ftest.class_ftData.add_elem ...");
+      end if;
+      if this.last /= null then
+        this.last.next := this.cur;
+      else
+        this.head := this.cur;
+        this.parent := this.cur;
+      end if;
+      this.last := this.cur;
+      this.elemNum := this.elemNum + 1;
     end add_elem;
 
-    procedure mark ( this : in Link_to_ftData ) is
+    procedure mark ( this : in Link_to_ftData; vrblvl : in integer32 := 0 ) is
     begin
-      null;
+      if vrblvl > 0
+       then put_line("-> in demics_ftest.class_ftData.mark ...");
+      end if;
     end mark;
 
     procedure clear ( this : in Link_to_ftData ) is
@@ -648,6 +747,14 @@ package body demics_ftest is
       res : lvData;
 
     begin
+      res.fTest := null;
+      res.node := null;
+      res.mRepN := null;
+      res.mFeaIdx := null;
+      res.mFea := null;
+      res.dim := 0;
+      res.length := 0;
+      res.termMax := 0;
       return res;
     end new_lvData;
 
@@ -658,10 +765,25 @@ package body demics_ftest is
 
     procedure create ( this : in Link_to_lvData; depth : in integer32;
                        supN : in integer32; dim : in integer32;
-                       ori_length : in integer32;
-                       ori_termMax : in integer32 ) is
+                       ori_length : in integer32; ori_termMax : in integer32;
+                       vrblvl : in integer32 := 0 ) is
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_ftest.class_lvData.create, depth : ");
+        put(depth,1); put_line(" ...");
+      end if;
+      this.length := ori_length;
+      this.termMax := ori_termMax;
+      this.ftest := new Array_of_ftData(0..this.length-1);
+      this.node := this.ftest(this.length-1);
+      this.mRepN
+        := new Standard_Integer_Vectors.Vector'(0..this.length-1 => 0);
+      this.mFeaIdx := new Standard_Integer_VecVecs.VecVec(0..this.length-1);
+      for i in 0..this.length-1 loop
+        this.mFeaIdx(i)
+          := new Standard_Integer_Vectors.Vector(0..this.termMax-1);
+      end loop;
+      this.mFea := new Standard_Integer_Vectors.Vector'(0..this.length-1 => 0);
     end create;
 
     procedure get_info

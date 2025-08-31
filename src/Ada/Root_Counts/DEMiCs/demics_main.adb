@@ -14,7 +14,7 @@ procedure demics_main is
     ptr2MVC : constant class_mvc.Link_to_mvc := new class_mvc.mvc;
 
   begin
-    class_mvc.allocateAndIni(ptr2MVC,data,1,1);
+    class_mvc.allocateAndIni(ptr2MVC,data,1,1,99);
   end Compute_Mixed_Volume;
  
   procedure Main is

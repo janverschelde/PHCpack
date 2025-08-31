@@ -14,7 +14,7 @@ package demics_ftest is
 
     type theData;
     type Link_to_theData is access theData;
-    type Array_of_theData is array ( integer range <> ) of Link_to_theData;
+    type Array_of_theData is array ( integer32 range <> ) of Link_to_theData;
     type Link_to_Array_of_theData is access Array_of_theData;
 
     type theData is record
@@ -54,14 +54,17 @@ package demics_ftest is
       nodeLabel : Standard_Integer_Vectors.Link_to_Vector;
     end record;
 
-
     function new_theData return theData;
+
+    -- DESCRIPTION :
+    --   Returns a record with zero and null values.
 
     procedure Delete_theData ( this : in out Link_to_theData );
 
     procedure create ( this : in Link_to_theData;
                        ori_row : in integer32; ori_col : in integer32;
-                       ori_termS : in integer32; ori_polyDim : in integer32 );
+                       ori_termS : in integer32; ori_polyDim : in integer32;
+                       vrblvl : in integer32 := 0 );
 
     procedure joint ( this : in Link_to_theData );
 
@@ -141,7 +144,7 @@ package demics_ftest is
 
   use class_theData;
 
-  package Class_ftData is
+  package class_ftData is
 
     type ftData is record
       dim : integer32;
@@ -164,11 +167,14 @@ package demics_ftest is
     procedure create_elem
                 ( this : in Link_to_ftData;
                   row : in integer32; col : in integer32;
-                  termS : in integer32; polyDim : in integer32 );
+                  termS : in integer32; polyDim : in integer32;
+                  vrblvl : in integer32 := 0 );
 
-    procedure add_elem ( this : in Link_to_ftData );
+    procedure add_elem ( this : in Link_to_ftData;
+                         vrblvl : in integer32 := 0 );
 
-    procedure mark ( this : in Link_to_ftData );
+    procedure mark ( this : in Link_to_ftData;
+                     vrblvl : in integer32 := 0 );
 
     procedure clear ( this : in Link_to_ftData );
 
@@ -364,7 +370,7 @@ package demics_ftest is
       mRepN : Standard_Integer_Vectors.Link_to_Vector;
       mFeaIdx : Standard_Integer_VecVecs.Link_to_VecVec;
       mFea : Standard_Integer_Vectors.Link_to_Vector;
-      fTest : Link_to_ftData;
+      fTest : Link_to_Array_of_ftData;
       Node : Link_to_ftData;
     end record;
 
@@ -374,11 +380,15 @@ package demics_ftest is
 
     function new_lvData return lvData;
 
+    -- DESCRIPTION :
+    --   Returns a record with zero and null values.
+
     procedure delete_lvData ( this : in Link_to_lvData );
 
     procedure create ( this : in Link_to_lvData; depth : in integer32;
                        supN : in integer32; dim : in integer32;
-                       ori_length : in integer32; ori_termMax : in integer32 );
+                       ori_length : in integer32; ori_termMax : in integer32;
+                       vrblvl : in integer32 := 0 );
 
     procedure get_info
                 ( this : in Link_to_lvData;

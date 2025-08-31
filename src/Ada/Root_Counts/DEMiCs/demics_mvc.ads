@@ -51,8 +51,8 @@ package demics_mvc is
       candIdx : Standard_Integer_Vectors.Link_to_Vector;
       trMat : Standard_Floating_Vectors.Link_to_Vector;
       table : Standard_Integer_Vectors.Link_to_Vector;
-      the_Reltab : demics_reltab.class_reltab.reltab;
-      the_Simplex : demics_simplex.class_simplex.simplex;
+      the_Reltab : demics_reltab.class_reltab.Link_to_reltab;
+      the_Simplex : demics_simplex.class_simplex.Link_to_simplex;
       lv : demics_ftest.class_lvData.Link_to_Array_of_lvData;
       iLv : demics_itest.class_iLvData.Link_to_Array_of_iLvData;
     end record;
@@ -62,7 +62,7 @@ package demics_mvc is
     procedure getMemory
                 ( this : in Link_to_mvc;
                   depth : in integer32; lvl : in integer32;
-                  length : in integer32 );
+                  length : in integer32; vrblvl : in integer32 := 0 );
 
     procedure initMemoryCheck
                 ( this : in Link_to_mvc;
@@ -240,7 +240,8 @@ package demics_mvc is
     procedure allocateAndIni
                 ( this : in Link_to_mvc;
                   data : in demics_input_data.class_dataSet.dataSet;
-                  seedNum : in integer32; output : in integer32 );
+                  seedNum : in integer32; output : in integer32;
+                  vrblvl : in integer32 := 0 );
 
     procedure initFeasTest ( this : in Link_to_mvc; depth : in integer32 );
 

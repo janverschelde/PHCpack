@@ -30,7 +30,8 @@ package demics_itest is
     function new_uData return uData;
 
     -- DESCRIPTION :
-    --   Returns an empty data structure.
+    --   Returns an empty data structure,
+    --   with values set to zero or to null.
 
     procedure delete_uData ( this : in Link_to_uData );
 
@@ -38,15 +39,31 @@ package demics_itest is
     --   Deallocates the this.dir vector.
 
     procedure create ( this : in Link_to_uData;
-                       depth : in integer32; dim : in integer32 );
+                       depth : in integer32; dim : in integer32;
+                       vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Sets the value of this.nfN to dim 
+    --   and allocates memory for this.dir.
 
     procedure init ( this : in Link_to_uData );
+
+    -- DESCRIPTION :
+    --   Sets all elements of this.dir to zero,
+    --   and sets this.supLab and this.red to zero as well.
 
     procedure getDir ( this : in Link_to_uData; val : in double_float;
                        idx : in integer32 );
 
-    procedure getRed ( this : in Link_to_uData; val : out double_float;
-                       idx : in integer32 );
+    -- DESCRIPTION :
+    --   Sets the value of this.dir at index idx to val.
+
+    procedure getRed ( this : in Link_to_uData; val : in double_float );
+
+    -- DESCRIPTION :
+    --   Sets this.red to the value val.
+    --   The original getRed contained a superfluous parameter idx,
+    --   which was unused and therefore has been removed.
 
     procedure info_dirRed ( this : in Link_to_uData );
 
@@ -68,11 +85,19 @@ package demics_itest is
 
     function new_inifData return inifData;
 
+    -- DESCRIPTION :
+    --   Returns an inifData object will all pointers set to null,
+    --   which must be invoked each time a new Link_to_uData is made.
+
     procedure delete_inifData ( this : in Link_to_inifData );
 
     procedure create ( this : in Link_to_inifData;
                        length : in integer32; depth : in integer32;
-                       dim : in integer32 );
+                       dim : in integer32; vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Makes space for a linked list of the given length
+    --   with uData nodes for the given depth and dim.
 
     procedure get_info
                 ( this : in Link_to_inifData;
@@ -102,7 +127,7 @@ package demics_itest is
     type iLvData is record
       rspLen : integer32;
       inifLen : integer32;
-      inif : Link_to_inifData;
+      inif : Link_to_Array_of_inifData;
       rsp : Standard_Integer_Vectors.Link_to_Vector;
     end record;
 
@@ -112,11 +137,19 @@ package demics_itest is
 
     function new_iLvData return iLvData;
 
+    -- DESCRIPTION :
+    --   Returns a record with zero and null values.
+
     procedure delete_iLvData ( this : in Link_to_iLvData );
 
     procedure create ( this : in Link_to_iLvData;
                        depth : in integer32; supN : in integer32;
-                       dim : in integer32; termMax : in integer32 );
+                       dim : in integer32; termMax : in integer32;
+                       vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Sets the values of this.rspLen and this.inifLen, allocates memory
+    --   for this.rsp and makes the values of the this.inif array.
 
     procedure getInit
                 ( this : in Link_to_iLvData;

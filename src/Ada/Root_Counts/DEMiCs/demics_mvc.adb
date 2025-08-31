@@ -1,3 +1,6 @@
+with Ada.text_io;                       use Ada.text_io;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+
 package body demics_mvc is
 
   package body class_mvc is
@@ -5,9 +8,38 @@ package body demics_mvc is
     procedure getMemory
                 ( this : in Link_to_mvc;
                   depth : in integer32; lvl : in integer32;
-                  length : in integer32 ) is
+                  length : in integer32; vrblvl : in integer32 := 0 ) is
+
+      elemLen,div : integer32;
+
     begin
-      null;
+      if vrblvl > 0
+       then put("-> in demics_mvc.getMemory, ");
+      end if;
+      if depth /= 0
+       then div := 2;
+       else div := 1;
+      end if;
+      if lvl /= length-1 
+       then elemLen := this.termSet(depth)/((lvl + 1)*div);
+       else elemLen := 1;
+      end if;
+      if vrblvl > 0 then
+        put("depth : "); put(depth,1);
+        put(", lvl : "); put(lvl,1);
+        put(", elemLen : "); put(elemLen,1); new_line;
+      end if;
+      for i in 0..this.termSet(depth)-1 loop
+        this.lv(depth).ftest(lvl)
+          := new demics_ftest.class_ftData.ftData'
+                (demics_ftest.class_ftData.new_ftData);
+        demics_ftest.class_ftData.create_elem
+          (this.lv(depth).ftest(lvl),this.row,this.col,
+           this.termSet(depth),this.supType(depth),vrblvl-1);
+        demics_ftest.class_ftData.add_elem(this.lv(depth).ftest(lvl),vrblvl-1);
+      end loop;
+      demics_ftest.class_ftData.mark(this.lv(depth).ftest(lvl),vrblvl-1);
+      this.lv(depth).ftest(lvl).cur := this.lv(depth).ftest(lvl).head;
     end getMemory;
 
     procedure initMemoryCheck
@@ -297,8 +329,15 @@ package body demics_mvc is
     procedure allocateAndIni
                 ( this : in Link_to_mvc;
                   data : in demics_input_data.class_dataSet.dataSet;
-                  seedNum : in integer32; output : in integer32 ) is
+                  seedNum : in integer32; output : in integer32;
+                  vrblvl : in integer32 := 0 ) is
+
+      length : integer32;
+
     begin
+      if vrblvl > 0
+       then put_line("-> in demics_mvc.allocateAndIni ...");
+      end if;
       this.dim := data.dim;
       this.supN := data.supN;
       this.row := data.dim;
@@ -310,12 +349,18 @@ package body demics_mvc is
       this.termStart := data.termStart;
       this.supType := data.supType;
       this.mfNum := new Standard_Integer_Vectors.Vector(0..this.supN-1);
-      this.lvl_1PT := new Standard_Floating_Vectors.Vector(0..this.supN-1);
-      this.lvl_2PT := new Standard_Floating_Vectors.Vector(0..this.supN-1);
-      this.actnode := new Standard_Floating_Vectors.Vector(0..this.supN-1);
-      this.firIdx := new Standard_Integer_Vectors.Vector(0..this.supN-1);
+      this.lvl_1PT
+        := new Standard_Floating_Vectors.Vector'(0..this.supN-1 => 0.0);
+      this.lvl_2PT
+        := new Standard_Floating_Vectors.Vector'(0..this.supN-1 => 0.0);
+      this.actnode
+        := new Standard_Floating_Vectors.Vector'(0..this.supN-1 => 0.0);
+      this.firIdx
+        := new Standard_Integer_Vectors.Vector'(0..this.supN-1 => 0);
       this.re_termStart := new Standard_Integer_Vectors.Vector(0..this.supN);
-      this.repN := new Standard_Integer_Vectors.Vector(0..this.supN-1);
+      this.re_termStart(0) := 0;
+      this.repN
+        := new Standard_Integer_Vectors.Vector'(0..this.supN-1 => 0);
       this.sp := new Standard_Integer_Vectors.Vector(0..this.supN-1);
       this.candIdx := new Standard_Integer_Vectors.Vector(0..this.termMax);
       this.trMat
@@ -323,6 +368,23 @@ package body demics_mvc is
       this.lv := new demics_ftest.class_lvData.Array_of_lvData(0..this.supN-1);
       this.iLv
         := new demics_itest.class_iLvData.Array_of_iLvData(0..this.supN-1);
+      for i in 0..this.supN-1 loop
+        this.re_termStart(i+1) := this.termStart(i+1) - i - 1;
+        this.sp(i) := i;
+        this.lv(i) := new demics_ftest.class_lvData.lvData'
+                         (demics_ftest.class_lvData.new_lvData);
+        demics_ftest.class_lvData.create
+          (this.lv(i),i,this.supN,this.dim,this.supType(i)+1,
+           this.termMax,vrblvl-1);
+        this.iLv(i) := new demics_itest.class_iLvData.ilvData'
+                          (demics_itest.class_iLvData.new_iLvData);
+        demics_itest.class_iLvData.create
+          (this.iLv(i),i,this.supN,this.dim,this.termMax,vrblvl-1);
+        length := this.supType(i) + 1;
+        for j in 0..length-1 loop
+          getMemory(this,i,j,length,vrblvl-1);
+        end loop;
+      end loop;
     end allocateAndIni;
 
     procedure initFeasTest ( this : in Link_to_mvc; depth : in integer32 ) is
