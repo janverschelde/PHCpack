@@ -1,3 +1,5 @@
+Mon 1 Sep 2025 : demics_itest contains first complete translation of iTest.
+
 Sun 31 Aug 2025 : demics_main.adb calls allocateAndIni of demics_mvc,
   calling the creators of demics_itest and demics_ftest.
   Finished allocateAndIni in demics_mvc.adb, updated demics_itest,

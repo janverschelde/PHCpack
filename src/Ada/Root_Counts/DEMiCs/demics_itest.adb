@@ -1,5 +1,7 @@
 with Ada.text_io;                       use Ada.text_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
+with DEMiCs_Global_Constants;
 
 package body demics_itest is
 
@@ -63,8 +65,20 @@ package body demics_itest is
     end getRed;
 
     procedure info_dirRed ( this : in Link_to_uData ) is
+
+      val : double_float;
+
     begin
-      null;
+      for i in 0..this.nfN-1 loop
+        val := this.dir(i);
+        if val < DEMiCs_Global_Constants.PLUSZERO and
+           val > DEMiCs_Global_Constants.MINUSZERO then
+          put("0 ");
+        else
+          put(val); put(" ");
+        end if;
+      end loop;
+      put(" : "); put(this.red); new_line;
     end info_dirRed;
 
   end class_uData;
@@ -83,8 +97,18 @@ package body demics_itest is
     end new_inifdata;
 
     procedure delete_inifData ( this : in Link_to_inifData ) is
+
+      curr,tmp : Link_to_uData;
+
     begin
-      null;
+      curr := this.head;
+      while curr /= null loop
+        tmp := curr.next;
+        delete_uData(curr);
+        curr := tmp;
+      end loop;
+      this.head := null;
+      this.last := null;
     end delete_inifData;
 
     procedure create ( this : in Link_to_inifData;
@@ -120,38 +144,96 @@ package body demics_itest is
                   termSet : in Standard_Integer_Vectors.Link_to_Vector;
                   termStart : in Standard_Integer_Vectors.Link_to_Vector;
                   depth : in integer32; dim : in integer32;
-                  supN : in integer32; vrblvl : in integer32 := 0 ) is
+                 -- supN : in integer32;
+                  vrblvl : in integer32 := 0 ) is
+
+      termSta,termS : integer32;
+      val,red : double_float;
+      curr : Link_to_uData;
 
     begin
       if vrblvl > 0 then
         put("-> in demics_itest.class_inifData.get_info, depth : ");
         put(depth,1); put_line(" ...");
       end if;
+      termSta := termStart(depth);
+      termS := termSet(depth);
+      curr := this.fHead;
+      for j in termSta..termSta+termS-1 loop
+        for i in 0..dim-1 loop
+          val := demics_input_data.class_dataSet.support_out(data,j,i);
+          class_uData.getDir(curr,val,i);
+        end loop;
+        red := lifting(j);
+        class_uData.getRed(curr,red);
+        curr.supLab := j - termSta;
+        curr := curr.fNext;
+      end loop;
+      if curr /= null
+       then curr.prev.fNext := null;
+      end if;
     end get_info;
 
     procedure info_all_dirRed ( this : in Link_to_inifData ) is
+
+      curr : Link_to_uData := this.fHead;
+
     begin
-      null;
+      while curr /= null loop
+        put(curr.supLab+1,1); put(" : ");
+        class_uData.info_dirRed(curr);
+        curr := curr.fNext;
+      end loop;
     end info_all_dirRed;
 
     procedure info_feasIdx ( this : in Link_to_inifData ) is
+
+      curr : Link_to_uData := this.fHead;
+
     begin
-      null;
+      while curr /= null loop
+        put(curr.supLab+1,1); put(" ");
+        curr := curr.fNext;
+      end loop;
     end info_feasIdx;
 
     procedure info_fNext ( this : in Link_to_inifData ) is
+
+      curr : Link_to_uData := this.fHead;
+
     begin
-      null;
+      put_line("<< info_fNext >>");
+      while curr /= null loop
+        -- put(curr.a[0]); put(" ");
+        curr := curr.fNext;
+      end loop;
+      new_line;
     end info_fNext;
 
     procedure info_next ( this : in Link_to_inifData ) is
+
+      curr : Link_to_uData := this.head;
+
     begin
-      null;
+      put_line("<< info_next >>");
+      while curr /= null loop
+        -- put(curr.a[0]); put(" ");
+        curr := curr.next;
+      end loop;
+      new_line;
     end info_next;
 
     procedure info_prev ( this : in Link_to_inifData ) is
+
+     curr : Link_to_uData := this.last;
+
     begin
-      null;
+      put_line("<< info_prev >>");
+      while curr /= null loop
+        -- put(curr.a[0]); put(" ");
+        curr := curr.prev;
+      end loop;
+      new_line;
     end info_prev;
 
   end class_inifData;
@@ -172,7 +254,14 @@ package body demics_itest is
 
     procedure delete_iLvData ( this : in Link_to_iLvData ) is
     begin
-      null;
+      if this.inif /= null then
+        for i in this.inif'range loop
+          delete_inifData(this.inif(i));
+        end loop;
+      end if;
+      Standard_Integer_Vectors.clear(this.rsp);
+      this.rspLen := 0;
+      this.inifLen := 0;
     end delete_iLvData;
 
     procedure create ( this : in Link_to_iLvData;
@@ -208,7 +297,8 @@ package body demics_itest is
       end if;
       for i in 0..supN-1 loop
         class_inifData.get_info
-          (this.inif(i),data,lifting,termSet,termStart,i,dim,supN,vrblvl-1);
+          (this.inif(i),data,lifting,termSet,termStart,i,dim, --supN,
+           vrblvl-1);
         if i < supN-1
          then this.rsp(i) := i+1;
         end if;
@@ -217,30 +307,67 @@ package body demics_itest is
 
     procedure init ( this : in Link_to_iLvData;
                      supN : in integer32; depth : in integer32;
-                     preRsp : in Standard_Integer_Vectors.Link_to_Vector ) is
+                     preRsp : in Standard_Integer_Vectors.Link_to_Vector;
+                     vrblvl : in integer32 := 0 ) is
+
+      length : constant integer32 := supN - depth - 1;
+      lvl : integer32;
+      curr : Link_to_uData;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_itest.class_iLvData.init, depth : ");
+        put(depth,1); put_line(" ...");
+      end if;
+      for i in 0..length-1 loop
+        lvl := preRsp(i);
+        this.inif(lvl).fHead := this.inif(lvl).head;
+        curr := this.inif(lvl).fHead;
+        while curr /= null loop
+          curr.fNext := curr.next;
+          if curr.next /= null
+           then curr.next.prev := curr;
+          end if;
+          curr := curr.next;
+        end loop;
+      end loop;
     end init;
 
     procedure info_rsp ( this : in Link_to_iLvData ) is
     begin
-      null;
+      put("rsp :");
+      for i in 0..this.rspLen-1 loop
+        put(" "); put(this.rsp(i),1);
+      end loop;
+      new_line;
     end info_rsp;
 
     procedure info_all_dirRed ( this : in Link_to_iLvData ) is
     begin
-      null;
+      put_line("<< info_all_dir_red >>");
+      for i in 0..this.inifLen-1 loop
+        put("--- Support "); put(i+1,1); put_line(" ---");
+        class_inifData.info_all_dirRed(this.inif(i));
+        new_line;
+      end loop;
     end info_all_dirRed;
 
     procedure info_feasIdx ( this : in Link_to_iLvData;
                              depth : in integer32 ) is
     begin
-      null;
+      put_line("<< info_feasIdx >>");
+      class_inifData.info_feasIdx(this.inif(depth));
+      new_line;
     end info_feasIdx;
 
     procedure info_all_feasIdx ( this : in Link_to_iLvData ) is
     begin
-      null;
+      put_line("<< info_all_feasIdx >>");
+      for i in 0..this.inifLen-1 loop
+        put("--- Support "); put(i+1,1); put_line(" ---");
+        class_inifData.info_feasIdx(this.inif(i));
+        new_line;
+      end loop;
     end info_all_feasIdx;
 
   end class_iLvData;

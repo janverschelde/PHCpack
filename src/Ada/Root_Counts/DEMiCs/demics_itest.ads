@@ -67,6 +67,9 @@ package demics_itest is
 
     procedure info_dirRed ( this : in Link_to_uData );
 
+    -- DESCRIPTION :
+    --    Writes the values in this.dir and also the this.red value.
+
   end class_uData;
 
   use class_uData;
@@ -91,6 +94,9 @@ package demics_itest is
 
     procedure delete_inifData ( this : in Link_to_inifData );
 
+   -- DESCRIPTION :
+   --   Deallocates the linked list defined by the inifData.
+
     procedure create ( this : in Link_to_inifData;
                        length : in integer32; depth : in integer32;
                        dim : in integer32; vrblvl : in integer32 := 0 );
@@ -106,17 +112,36 @@ package demics_itest is
                   termSet : in Standard_Integer_Vectors.Link_to_Vector;
                   termStart : in Standard_Integer_Vectors.Link_to_Vector;
                   depth : in integer32; dim : in integer32;
-                  supN : in integer32; vrblvl : in integer32 := 0 );
+                 -- supN : in integer32;
+                  vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   The parameter supN is not used in the body.
 
     procedure info_all_dirRed ( this : in Link_to_inifData );
 
+    -- DESCRIPTION :
+    --   Calls info_dirRed on all nodes of the list this.fHead.
+
     procedure info_feasIdx ( this : in Link_to_inifData );
+
+    -- DESCRIPTION :
+    --   Writes the supLab values stored in the list this.fHead.
 
     procedure info_fNext ( this : in Link_to_inifData );
 
+    -- DESCRIPTION :
+    --   Runs through the fNext pointers of this.
+
     procedure info_next ( this : in Link_to_inifData );
 
+    -- DESCRIPTION :
+    --   Runs through the next pointers of this.
+
     procedure info_prev ( this : in Link_to_inifData );
+
+    -- DESCRIPTION :
+    --   Runs through the prev pointers of this.
 
   end class_inifData;
 
@@ -142,6 +167,9 @@ package demics_itest is
 
     procedure delete_iLvData ( this : in Link_to_iLvData );
 
+    -- DESCRIPTION :
+    --   Deallocates the array this.inif and this.rsp.
+
     procedure create ( this : in Link_to_iLvData;
                        depth : in integer32; supN : in integer32;
                        dim : in integer32; termMax : in integer32;
@@ -162,15 +190,31 @@ package demics_itest is
 
     procedure init ( this : in Link_to_iLvData;
                      supN : in integer32; depth : in integer32;
-                     preRsp : in Standard_Integer_Vectors.Link_to_Vector );
+                     preRsp : in Standard_Integer_Vectors.Link_to_Vector;
+                     vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Initializes the pointers in the list of this.inif.
 
     procedure info_rsp ( this : in Link_to_iLvData );
 
+    -- DESCRIPTION :
+    --   Writes the values stored in this.rsp.
+
     procedure info_all_dirRed ( this : in Link_to_iLvData );
+
+    -- DESCRIPTION :
+    --   Calls the info_all_dirRed on all this.inif elements.
 
     procedure info_feasIdx ( this : in Link_to_iLvData; depth : in integer32 );
 
+    -- DESCRIPTION :
+    --   Calls info_feasIdx on this.inif(depth).
+
     procedure info_all_feasIdx ( this : in Link_to_iLvData );
+
+    -- DESCRIPTION :
+    --   Calls info_feasIdx on all elements in this.inif.
 
   end class_iLvData;
 
