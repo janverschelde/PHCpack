@@ -1,7 +1,6 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
-with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
 with demics_simplex;
 
@@ -67,9 +66,11 @@ package demics_reltab is
 
     procedure put_frIdx ( this : in Link_to_reltab; frIdx : in integer32 );
 
-    procedure makeTri ( this : in Link_to_reltab );
+    procedure makeTri ( this : in Link_to_reltab;
+                        vrblvl : in integer32 := 0 );
 
-    procedure makeSqu ( this : in Link_to_reltab );
+    procedure makeSqu ( this : in Link_to_reltab;
+                        vrblvl : in integer32 := 0 );
 
     procedure findAllFeasLPs_tri
                 ( this : in Link_to_reltab;
@@ -86,35 +87,76 @@ package demics_reltab is
                          row : in integer32; col : in integer32;
                          elem : in integer32 );
 
+    -- DESCRIPTION :
+    --   Sets the value of the number in the table defined by row and col
+    --   to the elem.
+
     function table_out ( this : in Link_to_reltab;
                          row : integer32; col : integer32 ) return integer32;
 
+    -- DESCRIPTION :
+    --   Returns the value of the number in the table defined by row and col.
+
     procedure info_invB ( this : in Link_to_reltab );
+
+    -- DESCRIPTION :
+    --   Writes the values stored in this.invB.
 
     procedure info_p_sol ( this : in Link_to_reltab );
 
+    -- DESCRIPTION :
+    --   Writes the numbers stored in this.p_sol.
+
     procedure info_d_sol ( this : in Link_to_reltab );
+
+    -- DESCRIPTION :
+    --   Writes the numbers stored in this.d_sol.
 
     procedure info_basisIdx ( this : in Link_to_reltab );
 
+    -- DESCRIPTION :
+    --   Writes the numbers stored in this.basisIdx.
+
     procedure info_nbIdx ( this : in Link_to_reltab );
+
+    -- DESCRIPTION :
+    --   Writes the numbers stored in this.nbIdx.
 
     procedure info_nf_pos ( this : in Link_to_reltab );
 
+    -- DESCRIPTION :
+    --   Writes the numbers stored in this.nf_pos.
+
     procedure info_feasIdx_tri ( this : in Link_to_reltab;
                                  num : in integer32 );
+
+    -- DESCRIPTION :
+    --   Writes the numbers in this.feasIdx_a.
 
     procedure info_feasIdx_squ
                 ( this : in Link_to_reltab;
                   num_a : in integer32; num_b : in integer32 );
 
+    -- DESCRIPTION :
+    --   Writes the numbers in this.feasIdx_a and this.feasIdx_b.
+
     procedure info_allTable ( this : in Link_to_reltab );
 
+    -- DESCRIPTION :
+    --   Writes all elements in the relation table.
+
     procedure info_table ( this : in Link_to_reltab );
+
+    -- DESCRIPTION :
+    --   Writes the information about the relation table.
 
     function invB_out ( this : Link_to_reltab;
                         rowIdx : integer32; colIdx : integer32 )
                       return double_float; 
+
+    -- DESCRIPTION :
+    --   Returns the value in this.invB defined by row and column
+    --   indices rowIdx and colIdx.
 
     function new_reltab return reltab;
 
@@ -122,6 +164,10 @@ package demics_reltab is
     --   Returns a record with zero and null values.
 
     procedure delete_reltab ( this : in Link_to_reltab );
+
+    -- DESCRIPTION :
+    --   Deallocates those vector types of this that are
+    --   specific to the relation table.
 
     procedure allocateAndIni
                 ( this : in Link_to_reltab;
@@ -137,6 +183,9 @@ package demics_reltab is
                     : in Standard_Integer_Vectors.Link_to_Vector;
                   vrblvl : in integer32 := 0 );
 
+    -- DESCRIPTION :
+    --   Allocates and initializes the data in the relation table.
+
     -- NOTE :
     --   The ori_firIdx was declare as int** which could indicate a
     --   vector of vectors data structure, but then in the allocateAndIni
@@ -145,7 +194,11 @@ package demics_reltab is
     --   the argument refers to a one dimensional data type.
 
     procedure makeTable ( this : in Link_to_reltab;
-                          total_unbLP_tab : out double_float );
+                          total_unbLP_tab : out double_float;
+                          vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Main constructor for the relation table.
 
   end class_reltab;
 
