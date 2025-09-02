@@ -1,5 +1,8 @@
+with unchecked_deallocation;
 with Ada.text_io;                       use Ada.text_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
+with DEMiCs_Global_Constants;
 
 package body demics_ftest is
 
@@ -49,7 +52,19 @@ package body demics_ftest is
 
     procedure delete_theData ( this : in out Link_to_theData ) is
     begin
-      null;
+      Standard_Floating_Vectors.clear(this.invB);
+      Standard_Floating_Vectors.clear(this.transMat);
+      Standard_Floating_Vectors.clear(this.transRed);
+      Standard_Floating_Vectors.clear(this.p_sol);
+      Standard_Floating_Vectors.clear(this.d_sol);
+      Standard_Floating_Vectors.clear(this.redVec);
+      Standard_Integer_Vectors.clear(this.basisIdx);
+      Standard_Integer_Vectors.clear(this.nbIdx);
+      Standard_Integer_Vectors.clear(this.nf_pos);
+      Standard_Integer_Vectors.clear(this.rIdx);
+      Standard_Integer_Vectors.clear(this.pivOutList);
+      Standard_Integer_Vectors.clear(this.pivOutCheck);
+      Standard_Integer_Vectors.clear(this.nodeLabel);
     end delete_theData;
 
     procedure create ( this : in Link_to_theData;
@@ -94,17 +109,27 @@ package body demics_ftest is
 
     procedure joint ( this : in Link_to_theData ) is
     begin
-      null;
+      this.invB_ptr := this.invB;
+      this.transMat_ptr := this.transMat;
+      this.p_sol_ptr := this.p_sol;
+      this.d_sol_ptr := this.d_sol;
+      this.redVec_ptr := this.redVec;
+      this.basisIdx_ptr := this.basisIdx;
+      this.nbIdx_ptr := this.nbIdx;
+      this.nf_pos_ptr := this.nf_pos;
     end joint;
 
     procedure iJoint ( this : in Link_to_theData ) is
     begin
-      null;
+      this.transMat_ptr := this.transMat;
+      this.transRed_ptr := this.transRed;
+      this.redVec_ptr := this.redVec;
+      this.nbIdx_ptr := this.nbIdx;
     end iJoint;
 
     procedure mJoint ( this : in Link_to_theData ) is
     begin
-      null;
+      this.nf_pos_ptr := this.nf_pos;
     end mJoint;
 
     procedure clear ( this : in Link_to_theData ) is
@@ -114,152 +139,301 @@ package body demics_ftest is
 
     procedure clear_transMat ( this : in Link_to_theData ) is
     begin
-      null;
+      for i in 0..this.row*this.row-1 loop
+        this.transMat(i) := 0.0;
+      end loop;
     end clear_transMat;
 
     procedure put_info ( this : in Link_to_theData;
                          repIdx : in integer32; idx2 : out integer32;
                          lNbN : out integer32; lNfN : out integer32 ) is
     begin
-      null;
+      idx2 := this.rIdx(repIdx);
+      lNbN := this.nbN;
+      lNfN := this.nfN;
     end put_info;
 
     function invB_out ( this : Link_to_theData;
                         rowIdx : integer32; colIdx : integer32 )
                       return double_float is
     begin
-      return 0.0;
+      return this.invB(colIdx + this.row*rowIdx);
     end invB_out;
 
     function transMat_out ( this : Link_to_theData;
                             rowIdx : integer32; colIdx : integer32 )
                           return double_float is
     begin
-      return 0.0;
+      return this.transMat(colIdx + this.row*rowIdx);
     end transMat_out;
 
     function invB_ptr_out ( this : Link_to_theData;
                             rowIdx : integer32; colIdx : integer32 )
                           return double_float is
     begin
-      return 0.0;
+      return this.invB_ptr(colIdx + this.row*rowIdx);
     end invB_ptr_out;
 
     function transMat_ptr_out ( this : Link_to_theData;
                                 rowIdx : integer32; colIdx : integer32 )
                               return double_float is
     begin
-      return 0.0;
+      return this.transMat_ptr(colIdx + this.row*rowIdx);
     end transMat_ptr_out;
 
     procedure info_p_sol ( this : in Link_to_theData ) is
     begin
-      null;
+      put_line("<< p_sol >>");
+      for i in 0..this.col-1 loop
+        put(this.p_sol(i)); put(" ");
+      end loop;
+      new_line;
     end info_p_sol;
 
     procedure info_d_sol ( this : in Link_to_theData ) is
     begin
-      null;
+      put_line("<< d_sol >>");
+      for i in 0..this.row-1 loop
+        put(this.d_sol(i)); put(" ");
+      end loop;
+      new_line;
     end info_d_sol;
 
     procedure info_invB ( this : in Link_to_theData ) is
+
+      val : double_float;
+
     begin
-      null;
+      put_line("<< invB >>");
+      for i in 0..this.row-1 loop
+        for j in 0..this.row-1 loop
+          val := invB_out(this,i,j);
+          if val < DEMiCs_Global_Constants.PLUSZERO and
+             val > DEMiCs_Global_Constants.MINUSZERO
+           then put("0 ");
+           else put(val); put(" ");
+          end if;
+        end loop;
+        new_line;
+      end loop;
     end info_invB;
 
     procedure info_transMat ( this : in Link_to_theData ) is
+
+      val : double_float;
+
     begin
-      null;
+      put_line("<< transMat >>");
+      for i in 0..this.row-1 loop
+        for j in 0..this.row-1 loop
+          val := transMat_out(this,i,j);
+          if val < DEMiCs_Global_Constants.PLUSZERO and
+             val > DEMiCs_Global_Constants.MINUSZERO
+           then put("0 ");
+           else put(val); put(" ");
+          end if;
+        end loop;
+        new_line;
+      end loop;
     end info_transMat;
 
     procedure info_transRed ( this : in Link_to_theData ) is
+
+      val : double_float;
+
     begin
-      null;
+      put_line("<< transRed >>");
+      for i in 0..this.row-1 loop
+        val := this.transRed(i);
+          if val < DEMiCs_Global_Constants.PLUSZERO and
+             val > DEMiCs_Global_Constants.MINUSZERO
+           then put("0 ");
+           else put(val); put(" ");
+          end if;
+      end loop;
+      new_line;
     end info_transRed;
 
     procedure info_basisIdx ( this : in Link_to_theData ) is
     begin
-      null;
+      put_line("<< basisIdx >>");
+      for i in 0..this.row-1 loop
+        put(this.basisIdx(i),1); put(" ");
+      end loop;
+      new_line;
     end info_basisIdx;
 
     procedure info_nf_pos ( this : in Link_to_theData ) is
     begin
-      null;
+      put_line("<< nf_pos >>");
+      for i in 0..this.nfN-1 loop
+        put(this.nf_pos(i),1); put(" ");
+      end loop;
+      new_line;
     end info_nf_pos;
 
     procedure info_nbIdx ( this : in Link_to_theData ) is
     begin
-      null;
+      put_line("<< nbIdx >>");
+      for i in 0..this.col-1 loop
+        put(this.nbIdx(i),1); put(" ");
+      end loop;
+      new_line;
     end info_nbIdx;
 
     procedure info_redVec ( this : in Link_to_theData ) is
     begin
-      null;
+      put_line("<< redVec >>");
+      for i in 0..this.col-1 loop
+        put(this.redVec(i)); put(" ");
+      end loop;
+      new_line;
     end info_redVec;
 
     procedure info_rIdx ( this : in Link_to_theData ) is
     begin
-      null;
+      put_line("<< rIdx >>");
+      for i in 0..this.termS-1 loop
+        put(this.rIdx(i),1); put(" ");
+      end loop;
+      new_line;
     end info_rIdx;
 
     procedure info_pivOutIdx ( this : in Link_to_theData ) is
     begin
-      null;
+      put("pivOutCheck :");
+      for i in 0..this.row-1 loop
+        put(" "); put(this.pivOutCheck(i),1);
+      end loop;
+      new_line;
+      put("pivOutList :");
+      for i in 0..this.pivOutNum-1 loop
+        put(" "); put(this.pivOutList(i),1);
+      end loop;
+      new_line;
     end info_pivOutIdx;
 
     procedure info_p_sol_ptr ( this : in Link_to_theData ) is
     begin
-      null;
+      put_line("<< p_sol_ptr >>");
+      for i in 0..this.col-1 loop
+        put(this.p_sol_ptr(i)); put(" ");
+      end loop;
+      new_line;
     end info_p_sol_ptr;
 
     procedure info_d_sol_ptr ( this : in Link_to_theData ) is
     begin
-      null;
+      put_line("<< d_sol_ptr >>");
+      for i in 0..this.row-1 loop
+        put(this.d_sol_ptr(i)); put(" ");
+      end loop;
+      new_line;
     end info_d_sol_ptr;
 
     procedure info_invB_ptr ( this : in Link_to_theData ) is
+
+      val : double_float;
+
     begin
-      null;
+      put_line("<< invB_ptr >>");
+      for i in 0..this.row-1 loop
+        for j in 0..this.row-1 loop
+          val := invB_ptr_out(this,i,j);
+          if val < DEMiCs_Global_Constants.PLUSZERO and
+             val > DEMiCs_Global_Constants.MINUSZERO
+           then put("0 ");
+           else put(val); put(" ");
+          end if;
+        end loop;
+        new_line;
+      end loop;
     end info_invB_ptr;
 
     procedure info_transMat_ptr ( this : in Link_to_theData ) is
+
+      val : double_float;
+
     begin
-      null;
+      put_line("<< transMat_ptr >>");
+      for i in 0..this.row-1 loop
+        for j in 0..this.row-1 loop
+          val := transMat_ptr_out(this,i,j);
+          if val < DEMiCs_Global_Constants.PLUSZERO and
+             val > DEMiCs_Global_Constants.MINUSZERO
+           then put("0 ");
+           else put(val); put(" ");
+          end if;
+        end loop;
+        new_line;
+      end loop;
     end info_transMat_ptr;
 
     procedure info_transRed_ptr ( this : in Link_to_theData ) is
+
+      val : double_float;
+
     begin
-      null;
+      put_line("<< transRed_ptr >>");
+      for i in 0..this.row-1 loop
+        val := this.transRed_ptr(i);
+          if val < DEMiCs_Global_Constants.PLUSZERO and
+             val > DEMiCs_Global_Constants.MINUSZERO
+           then put("0 ");
+           else put(val); put(" ");
+          end if;
+      end loop;
+      new_line;
     end info_transRed_ptr;
 
     procedure info_basisIdx_ptr ( this : in Link_to_theData ) is
     begin
-      null;
+      put_line("<< basisIdx_ptr >>");
+      for i in 0..this.row-1 loop
+        put(this.basisIdx_ptr(i),1); put(" ");
+      end loop;
+      new_line;
     end info_basisIdx_ptr;
 
     procedure info_nf_pos_ptr ( this : in Link_to_theData ) is
     begin
-      null;
+      put_line("<< nf_pos_ptr >>");
+      for i in 0..this.nfN-1 loop
+        put(this.nf_pos_ptr(i),1); put(" ");
+      end loop;
+      new_line;
     end info_nf_pos_ptr;
 
     procedure info_nbIdx_ptr ( this : in Link_to_theData ) is
     begin
-      null;
+      put_line("<< nbIdx_ptr >>");
+      for i in 0..this.col-1 loop
+        put(this.nbIdx_ptr(i),1); put(" ");
+      end loop;
+      new_line;
     end info_nbIdx_ptr;
 
     procedure info_redVec_ptr ( this : in Link_to_theData ) is
     begin
-      null;
+      put_line("<< redVec_ptr >>");
+      for i in 0..this.col-1 loop
+        put(this.redVec_ptr(i)); put(" ");
+      end loop;
+      new_line;
     end info_redVec_ptr;
 
     procedure info_fIdx ( this : in Link_to_theData ) is
     begin
-      null;
+      put(this.fIdx+1,1); new_line;
     end info_fIdx;
 
     procedure info_node ( this : in Link_to_theData ) is
     begin
-      null;
+      put("( ");
+      for i in 0..this.polyDim loop
+        put(this.nodeLabel(i)+1,1); put(" ");
+      end loop;
+      put(") ");
     end info_node;
 
   end class_theData;
@@ -286,6 +460,16 @@ package body demics_ftest is
       null;
     end delete_ftData;
 
+    procedure clear ( lftd : in out Link_to_Array_of_ftData ) is
+
+      procedure free is
+        new unchecked_deallocation(Array_of_ftData,
+                                   Link_to_Array_of_ftData);
+
+    begin
+      free(lftd);
+    end clear;
+
     procedure create_elem
                 ( this : in Link_to_ftData;
                   row : in integer32; col : in integer32;
@@ -297,7 +481,7 @@ package body demics_ftest is
         put(row,1); put(", col : "); put(col,1); put_line(" ...");
       end if;
       declare
-        newData : Link_to_theData := new theData'(new_theData);
+        newData : constant Link_to_theData := new theData'(new_theData);
       begin
         class_theData.create(newData,row,col,termS,polyDim,vrblvl-1);
         this.cur := newData;
@@ -355,7 +539,8 @@ package body demics_ftest is
 
     procedure init_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      this.parent := this.head;
+      this.cur := this.head;
     end init_ptr;
 
     procedure make_init_data
@@ -734,8 +919,16 @@ package body demics_ftest is
     end info_all_nodeNum;
 
     procedure info_numElem ( this : in Link_to_ftData ) is
+
+      num : integer32 := 0;
+      curr : Link_to_theData := this.head;
+
     begin
-      null;
+      while curr /= null loop
+        curr := curr.next;
+        num := num + 1;
+      end loop;
+      put(num,1); put(" ");
     end info_numElem;
 
   end class_ftData;
@@ -759,9 +952,31 @@ package body demics_ftest is
     end new_lvData;
 
     procedure delete_lvData ( this : in Link_to_lvData ) is
+
+      use Standard_Integer_VecVecs;
+
     begin
-      null;
+      for i in 0..this.length-1 loop
+        class_ftData.delete_all(this.fTest(i));
+      end loop;
+      class_ftData.clear(this.fTest);
+      Standard_Integer_Vectors.clear(this.mRepN);
+      Standard_Integer_Vectors.clear(this.mFea);
+      if this.mFeaIdx /= null then
+        Standard_Integer_VecVecs.Deep_Clear(this.mFeaIdx);
+        this.mFeaIdx := null;
+      end if;
     end delete_lvData;
+
+    procedure clear ( lvd : in out Link_to_Array_of_lvData ) is
+
+      procedure free is
+        new unchecked_deallocation(Array_of_lvData,
+                                   Link_to_Array_of_lvData);
+
+    begin
+      free(lvd);
+    end clear;
 
     procedure create ( this : in Link_to_lvData; depth : in integer32;
                        supN : in integer32; dim : in integer32;
@@ -788,21 +1003,34 @@ package body demics_ftest is
 
     procedure get_info
                 ( this : in Link_to_lvData;
-                  g_mRepN : out Standard_Integer_VecVecs.Link_to_VecVec;
+                  g_mRepN : out Standard_Integer_Vectors.Link_to_Vector;
                   g_mFeaIdx : out Standard_Integer_VecVecs.Link_to_VecVec;
-                  g_mFea : out Standard_Integer_VecVecs.Link_to_VecVec ) is
+                  g_mFea : out Standard_Integer_Vectors.Link_to_Vector ) is
     begin
-      null;
+      g_mRepN := this.mRepN;
+      g_mFeaIdx := this.mFeaIdx;
+      g_mFea := this.mFea;
     end get_info;
 
     procedure init_ptr ( this : in Link_to_lvData ) is
     begin
-      null;
+      for i in 0..this.length-1 loop
+        class_ftData.init_ptr(this.fTest(i));
+      end loop;
     end init_ptr;
 
     procedure info_mFea ( this : in Link_to_lvData ) is
     begin
-      null;
+      put_line("mFea :");
+      for i in 0..this.length-1 loop
+        put(" "); put(this.mFea(i),1);
+      end loop;
+      new_line;
+      put_line("mRepN :");
+      for i in 0..this.length-1 loop
+        put(" "); put(this.mRepN(i),1);
+      end loop;
+      new_line;
     end info_mFea;
 
   end class_lvData;

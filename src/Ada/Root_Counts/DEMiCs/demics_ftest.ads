@@ -59,86 +59,190 @@ package demics_ftest is
     -- DESCRIPTION :
     --   Returns a record with zero and null values.
 
-    procedure Delete_theData ( this : in out Link_to_theData );
+    procedure delete_theData ( this : in out Link_to_theData );
+
+    -- DESCRIPTION :
+    --   Deallocates those fields in this that are not ending in _ptr.
 
     procedure create ( this : in Link_to_theData;
                        ori_row : in integer32; ori_col : in integer32;
                        ori_termS : in integer32; ori_polyDim : in integer32;
                        vrblvl : in integer32 := 0 );
 
+    -- DESCRIPTION :
+    --   Allocates space for the fields in the this record.
+
     procedure joint ( this : in Link_to_theData );
+
+    -- DESCRIPTION :
+    --   Assign all this.*_ptr values to the corresponding this.* values.
 
     procedure iJoint ( this : in Link_to_theData );
 
+    -- DESCRIPTION :
+    --   Assigns _ptr values for transMat, transRed, redVec, and nbIdx.
+
     procedure mJoint ( this : in Link_to_theData );
+
+    -- DESCRIPTION :
+    --   Assigns this.nf_pos to this.nf_pos_ptr.
 
     procedure clear ( this : in Link_to_theData );
 
     procedure clear_transMat ( this : in Link_to_theData );
 
+    -- DESCRIPTION :
+    --   Sets all values of the this.transMat to zero.
+
     procedure put_info ( this : in Link_to_theData;
                          repIdx : in integer32; idx2 : out integer32;
                          lNbN : out integer32; lNfN : out integer32 );
+
+    -- DESCRIPTION :
+    --   Sets idx2 to this.rIdx(repIdx), sets lNbN to this.nbN, and
+    --   sets lNfN to this.nfN.
 
     function invB_out ( this : Link_to_theData;
                         rowIdx : integer32; colIdx : integer32 )
                       return double_float;
 
+    -- DESCRIPTION :
+    --   Returns the value of this.invB as defined by the rowIdx
+    --   and the colIdx.
+
     function transMat_out ( this : Link_to_theData;
                             rowIdx : integer32; colIdx : integer32 )
                           return double_float;
+
+    -- DESCRIPTION :
+    --   Returns the value of this.transMat as defined by the rowIdx
+    --   and the colIdx.
 
     function invB_ptr_out ( this : Link_to_theData;
                             rowIdx : integer32; colIdx : integer32 )
                           return double_float;
 
+    -- DESCRIPTION :
+    --   Returns the value of this.invB_ptr as defined by the rowIdx
+    --   and the colIdx.
+
     function transMat_ptr_out ( this : Link_to_theData;
                                 rowIdx : integer32; colIdx : integer32 )
                               return double_float;
 
+    -- DESCRIPTION :
+    --   Returns the value of this.transMat_ptr as defined by the rowIdx
+    --   and the colIdx.
+
     procedure info_p_sol ( this : in Link_to_theData );
+
+    -- DESCRIPTION :
+    --   Writes the numbers stored in this.p_sol.
 
     procedure info_d_sol ( this : in Link_to_theData );
 
+    -- DESCRIPTION :
+    --   Writes the numbers stored in this.d_sol.
+
     procedure info_invB ( this : in Link_to_theData );
+
+    -- DESCRIPTION :
+    --   Writes the numbers in this.invB.
 
     procedure info_transMat ( this : in Link_to_theData );
 
+    -- DESCRIPTION :
+    --   Writes the numbers in this.transMat.
+
     procedure info_transRed ( this : in Link_to_theData );
+
+    -- DESCRIPTION :
+    --   Writes the numbers in this.transRed.
 
     procedure info_basisIdx ( this : in Link_to_theData );
 
+    -- DESCRIPTION :
+    --   Writes the numbers stored in this.basisIdx.
+
     procedure info_nf_pos ( this : in Link_to_theData );
+
+    -- DESCRIPTION :
+    --   Writes the numbers stored in this.nf_pos.
 
     procedure info_nbIdx ( this : in Link_to_theData );
 
+    -- DESCRIPTION :
+    --   Writes the numbers stored in this.nbIdx.
+
     procedure info_redVec ( this : in Link_to_theData );
+
+    -- DESCRIPTION :
+    --   Writes the numbers stored in this.redVec.
 
     procedure info_rIdx ( this : in Link_to_theData );
 
+    -- DESCRIPTION :
+    --   Write the numbers stored in this.rIdx.
+
     procedure info_pivOutIdx ( this : in Link_to_theData );
+
+    -- DESCRPIPTION :
+    --   Writes the numbers in this.pivOutCheck and this.pivOutList.
 
     procedure info_p_sol_ptr ( this : in Link_to_theData );
 
+    -- DESCRIPTION :
+    --   Writes the numbers stored in this.p_sol_ptr.
+
     procedure info_d_sol_ptr ( this : in Link_to_theData );
+
+    -- DESCRIPTION :
+    --   Writes the numbers stored in this.d_sol_ptr.
 
     procedure info_invB_ptr ( this : in Link_to_theData );
 
+    -- DESCRIPTION :
+    --   Writes the numbers in this.invB_ptr.
+
     procedure info_transMat_ptr ( this : in Link_to_theData );
+
+    -- DESCRIPTION :
+    --   Writes the numbers in this.transMat_ptr.
 
     procedure info_transRed_ptr ( this : in Link_to_theData );
 
+    -- DESCRIPTION :
+    --   Writes the numbers in this.transRed_ptr.
+
     procedure info_basisIdx_ptr ( this : in Link_to_theData );
+
+    -- DESCRIPTION :
+    --   Writes the numbers stored in this.info_basisIdx_ptr.
 
     procedure info_nf_pos_ptr ( this : in Link_to_theData );
 
+    -- DESCRIPTION :
+    --   Writes the numbers stored in this.info_nf_pos_ptr.
+
     procedure info_nbIdx_ptr ( this : in Link_to_theData );
+
+    -- DESCRIPTION :
+    --   Writes the numbers stored in nbIdx_ptr.
 
     procedure info_redVec_ptr ( this : in Link_to_theData );
 
+    -- DESCRIPTION :
+    --   Writes the numbers stored in this.redVec_ptr.
+
     procedure info_fIdx ( this : in Link_to_theData );
 
+    -- DESCRIPTION :
+    --   Writes the value of this.fIdx + 1, followed by a new line.
+
     procedure info_node ( this : in Link_to_theData );
+
+    -- DESCRIPTION :
+    --   Writes the values in this.nodeLabel, each augmented by one.
 
   end class_theData;
 
@@ -158,11 +262,16 @@ package demics_ftest is
 
     type Link_to_ftData is access ftData;
     type Array_of_ftData is array ( integer32 range <> ) of Link_to_ftData;
-    type Link_to_Array_of_ftdata is access Array_of_ftData;
+    type Link_to_Array_of_ftData is access Array_of_ftData;
 
     function new_ftData return ftData;
 
     procedure delete_ftData ( this : in Link_to_ftData );
+
+    procedure clear ( lftd : in out Link_to_Array_of_ftData );
+
+    -- DESCRIPTION :
+    --   Deallocates the pointer to the array.
 
     procedure create_elem
                 ( this : in Link_to_ftData;
@@ -187,6 +296,9 @@ package demics_ftest is
     procedure delete_addedElem ( this : in Link_to_ftData );
 
     procedure init_ptr ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Sets the pointers this.parent and this.cur to this.head.
 
     procedure make_init_data
                 ( this : in Link_to_ftData;
@@ -357,6 +469,9 @@ package demics_ftest is
 
     procedure info_numElem ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Counts and writes the number of elements in the list this.head.
+
   end class_ftData;
 
   use class_ftData;
@@ -385,20 +500,41 @@ package demics_ftest is
 
     procedure delete_lvData ( this : in Link_to_lvData );
 
+    -- DESCRIPTION :
+    --   Dealocates the space occupied by lvData.
+
+    procedure clear ( lvd : in out Link_to_Array_of_lvData );
+
+    -- DESCRIPTION :
+    --   Deallocates the pointer to the array.
+
     procedure create ( this : in Link_to_lvData; depth : in integer32;
                        supN : in integer32; dim : in integer32;
                        ori_length : in integer32; ori_termMax : in integer32;
                        vrblvl : in integer32 := 0 );
 
+    -- DESCRIPTION :
+    --   Allocates data for the lvData object.
+
     procedure get_info
                 ( this : in Link_to_lvData;
-                  g_mRepN : out Standard_Integer_VecVecs.Link_to_VecVec;
+                  g_mRepN : out Standard_Integer_Vectors.Link_to_Vector;
                   g_mFeaIdx : out Standard_Integer_VecVecs.Link_to_VecVec;
-                  g_mFea : out Standard_Integer_VecVecs.Link_to_VecVec );
+                  g_mFea : out Standard_Integer_Vectors.Link_to_Vector );
+
+    -- DESCRIPTION :
+    --   Assigns to the three output parameters this.mRepN, this.mFeaIdx,
+    --   and this.mFea respectively.
 
     procedure init_ptr ( this : in Link_to_lvData );
 
+    -- DESCRIPTION :
+    --   Calls init_ptr on each element on this.fTest.
+
     procedure info_mFea ( this : in Link_to_lvData );
+
+    -- DESCRIPTION :
+    --   Writes the values stored in this.mFea and this.mRepN.
 
   end class_lvData;
 
