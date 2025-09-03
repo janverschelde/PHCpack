@@ -50,7 +50,7 @@ package body demics_ftest is
       return res;
     end new_theData;
 
-    procedure delete_theData ( this : in out Link_to_theData ) is
+    procedure delete_theData ( this : in Link_to_theData ) is
     begin
       Standard_Floating_Vectors.clear(this.invB);
       Standard_Floating_Vectors.clear(this.transMat);
@@ -134,7 +134,26 @@ package body demics_ftest is
 
     procedure clear ( this : in Link_to_theData ) is
     begin
-      null;
+      this.nbN := 0;
+      this.nfN := 0;
+      this.artV := 0;
+      for i in 0..this.row*this.row-1 loop
+        this.invB(i) := 0.0;
+        this.transMat(i) := 0.0;
+      end loop;
+      for i in 0..this.col-1 loop
+        this.p_sol(i) := 0.0;
+        this.nbIdx(i) := 0;
+        this.redVec(i) := 0.0;
+      end loop;
+      for i in 0..this.row-1 loop
+        this.d_sol(i) := 0.0;
+        this.basisIdx(i) := 0;
+        this.nf_pos(i) := 0;
+      end loop;
+      for i in 0..this.termS-1 loop
+        this.rIdx(i) := 0;
+      end loop;
     end clear;
 
     procedure clear_transMat ( this : in Link_to_theData ) is
@@ -457,7 +476,7 @@ package body demics_ftest is
 
     procedure delete_ftData ( this : in Link_to_ftData ) is
     begin
-      null;
+      null; -- indeed, empty destructor
     end delete_ftData;
 
     procedure clear ( lftd : in out Link_to_Array_of_ftData ) is
@@ -510,31 +529,68 @@ package body demics_ftest is
       if vrblvl > 0
        then put_line("-> in demics_ftest.class_ftData.mark ...");
       end if;
+      this.limit := this.last;
     end mark;
 
     procedure clear ( this : in Link_to_ftData ) is
+
+      curr : Link_to_theData := this.head;
+
     begin
-      null;
+      while curr /= null loop
+        class_theData.clear(curr);
+        curr := curr.next;
+      end loop;
     end clear;
 
     procedure clear_transMat ( this : in Link_to_ftData ) is
+
+      curr : Link_to_theData := this.head;
+
     begin
-      null;
+      while curr /= null loop
+        class_theData.clear_transMat(curr);
+        curr := curr.next;
+      end loop;
     end clear_transMat;
 
     procedure delete_cur ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.delete_theData(this.cur);
     end delete_cur;
 
     procedure delete_all ( this : in Link_to_ftData ) is
+
+      curr : Link_to_theData := this.head;
+      tmp : Link_to_theData;
+
     begin
-      null;
+      while curr /= null loop
+        tmp := curr.next;
+        class_theData.delete_theData(curr);
+        curr := tmp;
+      end loop;
+      this.cur := null;
+      this.parent := null;
+      this.head := null;
+      this.last := null;
+      this.elemNum := 0;
     end delete_all;
 
     procedure delete_addedElem ( this : in Link_to_ftData ) is
+
+      curr : Link_to_theData := this.limit.next;
+      tmp : Link_to_theData;
+
     begin
-      null;
+      while curr /= null loop
+        tmp := curr.next;
+        class_theData.delete_theData(curr);
+        curr := tmp;
+      end loop;
+      this.limit.next := null;
+      this.last := this.limit;
+      this.cur := this.last; 
     end delete_addedElem;
 
     procedure init_ptr ( this : in Link_to_ftData ) is
@@ -549,37 +605,84 @@ package body demics_ftest is
                   termS : in integer32; reTermS : in integer32 ) is
 
     begin
-      null;
+      for i in 0..this.dim loop
+        this.cur.nf_pos(i) := i;
+        this.cur.invB(i*(this.dim+1)) := 1.0;
+        this.cur.transMat(i*(this.dim+1)) := 1.0;
+        this.cur.basisIdx(i) := termSumNum - supN + i;
+        this.cur.d_sol(i) := 1.0;
+      end loop;
+      for i in 0..termS-2 loop
+        this.cur.nbIdx(i) := reTermS + i;
+        this.cur.rIdx(i) := -1*(i+1);
+      end loop;
     end make_init_data;
 
     procedure next_data ( this : in Link_to_ftData ) is
     begin
-      null;
+      if this.parent /= null
+       then this.parent := this.parent.next;
+      end if;
     end next_data;
 
     procedure copy ( this : in Link_to_ftData;
                      col : in integer32; pre_data : in Link_to_theData ) is
     begin
-      null;
+      for i in 0..col-1 loop
+        this.cur.p_sol(i) := pre_data.p_sol_ptr(i);
+      end loop;
+      for i in 0..this.dim-1 loop
+        this.cur.d_sol(i) := pre_data.d_sol_ptr(i);
+        this.cur.basisIdx(i) := pre_data.basisIdx_ptr(i);
+      end loop;
+      for i in 0..col-this.dim-1 loop
+        this.cur.nbIdx(i) := pre_data.nbIdx_ptr(i);
+      end loop;
     end copy;
 
     procedure get_ptr ( this : in Link_to_ftData;
                         pre_data : in Link_to_theData ) is
     begin
-      null;
+      Standard_Floating_Vectors.clear(this.cur.p_sol);
+      Standard_Floating_Vectors.clear(this.cur.d_sol);
+      Standard_Integer_Vectors.clear(this.cur.basisIdx);
+      Standard_Integer_Vectors.clear(this.cur.nbIdx);
+      this.cur.p_sol := pre_data.p_sol;
+      this.cur.d_sol := pre_data.d_sol;
+      this.cur.basisIdx := pre_data.basisIdx;
+      this.cur.nbIdx := pre_data.nbIdx;
     end get_ptr;
 
     procedure create_rIdx
                 ( this : in Link_to_ftData;
-                  nbN : in integer32; repIdx : in integer32;
+                  preNbN : in integer32; repIdx : in integer32;
                   candIdx : in Standard_Integer_Vectors.Link_to_Vector ) is
+
+      cnt : integer32 := 0;
+      candNum : constant integer32 := candIdx(0);
+      tmp_val : constant integer32 := preNbN - this.dim + 1;
+      idx : integer32;
+
     begin
-      null;
+      for i in 0..candNum-1 loop
+        idx := candIdx(i+1);
+        if repIdx > idx then
+          this.cur.rIdx(idx) := -1*(tmp_val + cnt);
+          cnt := cnt + 1;
+        elsif repIdx < idx then
+          this.cur.rIdx(idx-1) := -1*(tmp_val + cnt);
+          cnt := cnt + 1;
+        end if;
+      end loop;
     end create_rIdx;
 
     procedure init_info ( this : in Link_to_ftData ) is
     begin
-      null;
+      this.cur.pivOutNum := 0;
+      for i in 0..this.dim-1 loop
+        this.cur.pivOutCheck(i) := 0;
+        this.cur.transRed(i) := 0.0;
+      end loop;
     end init_info;
 
     procedure get_nbIdx_rIdx
@@ -587,56 +690,139 @@ package body demics_ftest is
                   preNbN : in integer32; repIdx : in integer32;
                   candIdx : in Standard_Integer_Vectors.Link_to_Vector;
                   reTermS : in integer32; pre_data : in Link_to_theData ) is
+
+      pre_length : constant integer32 := preNbN - this.dim;
+      candNum : constant integer32 := candIdx(0);
+      cnt : integer32 := 0;
+      idx,sub_idx : integer32;
+
     begin
-      null;
+      for i in 0..pre_length-1 loop
+        this.cur.nbIdx(i) := pre_data.nbIdx_ptr(i);
+      end loop;
+      for i in 0..candNum-1 loop
+        idx := candIdx(i+1);
+        if repIdx > idx then
+          sub_idx := pre_length + cnt;
+          this.cur.nbIdx(sub_idx) := idx + reTermS;
+          this.cur.rIdx(idx) := -1*(sub_idx + 1);
+          cnt := cnt + 1;
+        elsif repIdx < idx then
+          sub_idx := pre_length + cnt;
+          this.cur.nbIdx(sub_idx) := idx + reTermS - 1;
+          this.cur.rIdx(idx-1) := -1*(sub_idx + 1);
+          cnt := cnt + 1;
+        end if;
+      end loop;
     end get_nbIdx_rIdx;
 
     procedure iCopy ( this : in Link_to_ftData;
-                      nbN : in integer32; nfN : in integer32;
-                      repIdx : in integer32; termS : in integer32;
+                      preNbN : in integer32; nfN : in integer32;
+                      repIdx : in integer32; -- termS : in integer32;
                       reTermS : in integer32;
                       candIdx : in Standard_Integer_Vectors.Link_to_Vector;
                       pre_data : in Link_to_theData ) is
+
+      pre_length : constant integer32 := preNbN - this.dim;
+      candNum : constant integer32 := candIdx(0);
+      cnt : integer32 := 0;
+      idx,sub_idx,ii,nfPos : integer32;
+
     begin
-      null;
+      for i in 0..nfN-1 loop
+        this.cur.nf_pos(i) := pre_data.nf_pos_ptr(i);
+      end loop;
+      for i in 0..candNum-1 loop
+        idx := candIdx(i+1);
+        if repIdx > idx then
+          sub_idx := pre_length + cnt;
+          this.cur.nbIdx(sub_idx) := idx + reTermS;
+          this.cur.rIdx(idx) := -1*(sub_idx + 1);
+          cnt := cnt + 1;
+        elsif repIdx < idx then
+          sub_idx := pre_length + cnt;
+          this.cur.nbIdx(sub_idx) := idx + reTermS - 1;
+          this.cur.rIdx(idx-1) := -1*(sub_idx + 1);
+          cnt := cnt + 1;
+        end if;
+      end loop;
+      for j in 0..nfN-1 loop
+        nfPos := pre_data.nf_pos_ptr(j);
+        ii := nfPos*this.dim;
+        for i in 0..this.dim-1 loop
+          this.cur.invB(ii+i) := pre_data.invB_ptr(ii+i);
+        end loop;
+      end loop;
     end iCopy;
 
     procedure iGetPtr ( this : in Link_to_ftData;
                         pre_data : in Link_to_theData ) is
     begin
-      null;
+      this.cur.invB_ptr := pre_data.invB_ptr;
+      this.cur.p_sol_ptr := pre_data.p_sol_ptr;
+      this.cur.d_sol_ptr := pre_data.d_sol_ptr;
+      this.cur.basisIdx_ptr := pre_data.basisIdx_ptr;
+      this.cur.nf_pos_ptr := pre_data.nf_pos_ptr;
     end iGetPtr;
 
     procedure output ( this : in Link_to_ftData;
                        repIdx : in integer32; idx2 : out integer32;
                        nbN : out integer32; nfN : out integer32 ) is
     begin
-      null;
+      idx2 := this.parent.rIdx(repIdx-1);
+      nbN := this.parent.nbN;
+      nfN := this.parent.nfN;
     end output;
 
     procedure decrease_nfN ( this : in Link_to_ftData ) is
     begin
-      null;
+      this.cur.nfN := this.cur.nfN - 1;
     end decrease_nfN;
 
     procedure copy_rIdx
                 ( this : in Link_to_ftData; pre_data : in Link_to_theData;
                   termS : in integer32 ) is
     begin
-      null;
+      this.cur.artV := pre_data.artV;
+      for i in 0..termS-1 loop
+        this.cur.rIdx(i) := pre_data.rIdx(i);
+      end loop;
     end copy_rIdx;
 
     procedure copy_pivOutIdx ( this : in Link_to_ftData;
                                pre_data : in Link_to_theData ) is
+
+      pivOutNum,idx : integer32;
+
     begin
-      null;
+      for i in 0..this.dim-1 loop
+        this.cur.pivOutCheck(i) := 0;
+      end loop;
+      pivOutNum := pre_data.pivOutNum;
+      this.cur.pivOutNum := pivOutNum;
+      for i in 0..pivOutNum-1 loop
+        idx := pre_data.pivOutList(i);
+        this.cur.pivOutCheck(idx) := 1;
+        this.cur.pivOutList(i) := idx;
+      end loop;
     end copy_pivOutIdx;
 
     procedure get_nf_pos
                 ( this : in Link_to_ftData; pre_data : in Link_to_theData;
                   nfN : in integer32; idx2 : in integer32 ) is
+
+      cnt : integer32 := 0;
+     -- nfPos : integer32; -- assigned but never read ...
+
     begin
-      null;
+      for i in 0..nfN-1 loop
+       -- nfPos := pre_data.nf_pos_ptr(i);
+        if pre_data.nf_pos_ptr(i) /= idx2 then
+          this.cur.nf_pos(cnt) := pre_data.nf_pos_ptr(i);
+          cnt := cnt + 1;
+        end if;
+      end loop;
+      this.cur.nfN := this.cur.nfN - 1;
     end get_nf_pos;
 
     procedure mCopy ( this : in Link_to_ftData;
@@ -650,272 +836,344 @@ package body demics_ftest is
     procedure mGetPtr ( this : in Link_to_ftData;
                         pre_data : in Link_to_theData ) is
     begin
-      null;
+      Standard_Floating_Vectors.clear(this.cur.p_sol);
+      Standard_Floating_Vectors.clear(this.cur.d_sol);
+      Standard_Integer_Vectors.clear(this.cur.basisIdx);
+      Standard_Integer_Vectors.clear(this.cur.nbIdx);
+      this.cur.p_sol := pre_data.p_sol;
+      this.cur.d_sol := pre_data.d_sol;
+      this.cur.basisIdx := pre_data.basisIdx;
+      this.cur.nbIdx := pre_data.nbIdx;
     end mGetPtr;
 
     procedure put_sup ( this : in Link_to_ftData; sup : out integer32 ) is
     begin
-      null;
+      if this.parent /= null
+       then sup := this.parent.nodeLabel(0);
+      end if;
     end put_sup;
 
     procedure info_parent_nbN_nfN ( this : in Link_to_ftData ) is
     begin
-      null;
+      put("nbN : "); put(this.parent.nbN,1); new_line;
+      put("nfN : "); put(this.parent.nfN,1); new_line;
     end info_parent_nbN_nfN;
 
     procedure info_parent_p_sol ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_p_sol(this.parent);
     end info_parent_p_sol;
 
     procedure info_parent_d_sol ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_d_sol(this.parent);
     end info_parent_d_sol;
 
     procedure info_parent_invB ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_invB(this.parent);
     end info_parent_invB;
 
     procedure info_parent_transMat ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_transMat(this.parent);
     end info_parent_transMat;
 
     procedure info_parent_transRed ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_transRed(this.parent);
     end info_parent_transRed;
 
     procedure info_parent_basisIdx ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_basisIdx(this.parent);
     end info_parent_basisIdx;
 
     procedure info_parent_nf_pos ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_nf_pos(this.parent);
     end info_parent_nf_pos;
 
     procedure info_parent_nbIdx ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_nbIdx(this.parent);
     end info_parent_nbIdx;
 
     procedure info_parent_redVec ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_redVec(this.parent);
     end info_parent_redVec;
 
     procedure info_parent_rIdx ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_rIdx(this.parent);
     end info_parent_rIdx;
 
     procedure info_parent_pivOutIdx ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_pivOutIdx(this.parent);
     end info_parent_pivOutIdx;
 
     procedure info_parent_p_sol_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_p_sol_ptr(this.parent);
     end info_parent_p_sol_ptr;
 
     procedure info_parent_d_sol_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_d_sol_ptr(this.parent);
     end info_parent_d_sol_ptr;
 
     procedure info_parent_invB_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_invB_ptr(this.parent);
     end info_parent_invB_ptr;
 
     procedure info_parent_transMat_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_transMat_ptr(this.parent);
     end info_parent_transMat_ptr;
 
     procedure info_parent_transRed_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_transRed_ptr(this.parent);
     end info_parent_transRed_ptr;
 
     procedure info_parent_basisIdx_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_basisIdx_ptr(this.parent);
     end info_parent_basisIdx_ptr;
 
     procedure info_parent_nf_pos_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_nf_pos_ptr(this.parent);
     end info_parent_nf_pos_ptr;
 
     procedure info_parent_nbIdx_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_nbIdx_ptr(this.parent);
     end info_parent_nbIdx_ptr;
 
     procedure info_parent_redVec_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_redVec_ptr(this.parent);
     end info_parent_redVec_ptr;
-
-    procedure info_parent_pivOutIdx_ptr ( this : in Link_to_ftData ) is
-    begin
-      null;
-    end info_parent_pivOutIdx_ptr;
 
     procedure info_parent ( this : in Link_to_ftData ) is
     begin
-      null;
+      info_parent_p_sol(this);
+      info_parent_d_sol(this);
+      info_parent_invB(this);
+      info_parent_basisIdx(this);
+      info_parent_nf_pos(this);
+      info_parent_nbIdx(this);
+      info_parent_redVec(this);
+      info_parent_rIdx(this);
     end info_parent;
 
     procedure info_parent_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      info_parent_p_sol_ptr(this);
+      info_parent_d_sol_ptr(this);
+      info_parent_invB_ptr(this);
+      info_parent_basisIdx_ptr(this);
+      info_parent_nf_pos_ptr(this);
+      info_parent_nbIdx_ptr(this);
+      info_parent_redVec_ptr(this);
     end info_parent_ptr;
 
     procedure info_parent_node ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_node(this.parent);
     end info_parent_node;
 
     procedure info_cur_nbN_nfN ( this : in Link_to_ftData ) is
     begin
-      null;
+      put("nbN : "); put(this.cur.nbN,1); new_line;
+      put("nfN : "); put(this.cur.nfN,1); new_line;
     end info_cur_nbN_nfN;
 
     procedure info_cur_p_sol ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_p_sol(this.cur);
     end info_cur_p_sol;
 
     procedure info_cur_d_sol ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_d_sol(this.cur);
     end info_cur_d_sol;
 
     procedure info_cur_invB ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_invB(this.cur);
     end info_cur_invB;
 
     procedure info_cur_transMat ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_transMat(this.cur);
     end info_cur_transMat;
 
     procedure info_cur_transRed ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_transRed(this.cur);
     end info_cur_transRed;
 
     procedure info_cur_basisIdx ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_basisIdx(this.cur);
     end info_cur_basisIdx;
 
     procedure info_cur_nf_pos ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_nf_pos(this.cur);
     end info_cur_nf_pos;
 
     procedure info_cur_nbIdx ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_nbIdx(this.cur);
     end info_cur_nbIdx;
 
     procedure info_cur_redVec ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_redVec(this.cur);
     end info_cur_redVec;
 
     procedure info_cur_rIdx ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_rIdx(this.cur);
     end info_cur_rIdx;
 
     procedure info_cur_pivOutIdx ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_pivOutIdx(this.cur);
     end info_cur_pivOutIdx;
 
     procedure info_cur_p_sol_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_p_sol_ptr(this.cur);
     end info_cur_p_sol_ptr;
 
     procedure info_cur_d_sol_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_d_sol_ptr(this.cur);
     end info_cur_d_sol_ptr;
 
     procedure info_cur_invB_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_invB_ptr(this.cur);
     end info_cur_invB_ptr;
 
     procedure info_cur_transMat_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_transMat_ptr(this.cur);
     end info_cur_transMat_ptr;
 
     procedure info_cur_transRed_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_transRed_ptr(this.cur);
     end info_cur_transRed_ptr;
 
     procedure info_cur_basisIdx_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_basisIdx_ptr(this.cur);
     end info_cur_basisIdx_ptr;
 
     procedure info_cur_nf_pos_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_nf_pos_ptr(this.cur);
     end info_cur_nf_pos_ptr;
 
     procedure info_cur_nbIdx_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_nbIdx_ptr(this.cur);
     end info_cur_nbIdx_ptr;
 
     procedure info_cur_redVec_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_redVec_ptr(this.cur);
     end info_cur_redVec_ptr;
 
     procedure info_cur ( this : in Link_to_ftData ) is
     begin
-      null;
+      info_cur_p_sol(this);
+      info_cur_d_sol(this);
+      info_cur_invB(this);
+      info_cur_transMat(this);
+      info_cur_basisIdx(this);
+      info_cur_nf_pos(this);
+      info_cur_nbIdx(this);
+      info_cur_redVec(this);
+      info_cur_rIdx(this);
     end info_cur;
 
     procedure info_cur_ptr ( this : in Link_to_ftData ) is
     begin
-      null;
+      info_cur_p_sol_ptr(this);
+      info_cur_d_sol_ptr(this);
+      info_cur_invB_ptr(this);
+      info_cur_transMat_ptr(this);
+      info_cur_basisIdx_ptr(this);
+      info_cur_nf_pos_ptr(this);
+      info_cur_nbIdx_ptr(this);
+      info_cur_redVec_ptr(this);
     end info_cur_ptr;
 
     procedure info_cur_node ( this : in Link_to_ftData ) is
     begin
-      null;
+      class_theData.info_node(this.cur);
     end info_cur_node;
 
     procedure info_all_node ( this : in Link_to_ftData ) is
+
+      curr : Link_to_theData := this.head;
+      i : integer32 := 0;
+
     begin
-      null;
+      put_line("<< info_all_node >>");
+      while curr /= null loop
+        put("# "); put(i+1,1); new_line;
+        info_node(curr);
+        curr := curr.next;
+        i := i+1;
+      end loop;
+      new_line;
     end info_all_node;
 
     procedure info_all_cur ( this : in Link_to_ftData ) is
+
+      curr : Link_to_theData := this.head;
+      num : integer32 := 0;
+
     begin
-      null;
+      put_line("<< info_all_cur >>");
+      while curr /= null loop
+        put("# "); put(num+1,1); new_line;
+        info_p_sol(curr);
+        info_d_sol(curr);
+        info_invB(curr);
+        info_basisIdx(curr);
+        info_nf_pos(curr);
+        info_nbIdx(curr);
+        info_redVec(curr);
+        info_rIdx(curr);
+        curr := curr.next;
+        num := num+1;
+      end loop;
     end info_all_cur;
 
     procedure info_all_nodeNum ( this : in Link_to_ftData ) is
+
+      curr : Link_to_theData := this.head;
+      i : integer32 := 0;
+
     begin
-      null;
+      put_line("<< info_all_nodeNum >>");
+      while curr /= null loop
+        put("# "); put(i+1,1); new_line;
+        curr := curr.next;
+        i := i+1;
+      end loop;
+      new_line;
     end info_all_nodeNum;
 
     procedure info_numElem ( this : in Link_to_ftData ) is
@@ -979,7 +1237,7 @@ package body demics_ftest is
     end clear;
 
     procedure create ( this : in Link_to_lvData; depth : in integer32;
-                       supN : in integer32; dim : in integer32;
+                      -- supN : in integer32; dim : in integer32;
                        ori_length : in integer32; ori_termMax : in integer32;
                        vrblvl : in integer32 := 0 ) is
     begin

@@ -374,8 +374,8 @@ package body demics_mvc is
         this.lv(i) := new demics_ftest.class_lvData.lvData'
                          (demics_ftest.class_lvData.new_lvData);
         demics_ftest.class_lvData.create
-          (this.lv(i),i,this.supN,this.dim,this.supType(i)+1,
-           this.termMax,vrblvl-1);
+          (this.lv(i),i,--this.supN,this.dim,
+           this.supType(i)+1,this.termMax,vrblvl-1);
         this.iLv(i) := new demics_itest.class_iLvData.ilvData'
                           (demics_itest.class_iLvData.new_iLvData);
         demics_itest.class_iLvData.create

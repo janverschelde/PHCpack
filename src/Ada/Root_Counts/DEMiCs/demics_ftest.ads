@@ -59,7 +59,7 @@ package demics_ftest is
     -- DESCRIPTION :
     --   Returns a record with zero and null values.
 
-    procedure delete_theData ( this : in out Link_to_theData );
+    procedure delete_theData ( this : in Link_to_theData );
 
     -- DESCRIPTION :
     --   Deallocates those fields in this that are not ending in _ptr.
@@ -88,6 +88,9 @@ package demics_ftest is
     --   Assigns this.nf_pos to this.nf_pos_ptr.
 
     procedure clear ( this : in Link_to_theData );
+
+    -- DESCRIPTION :
+    --   Sets values in this to zero.
 
     procedure clear_transMat ( this : in Link_to_theData );
 
@@ -266,7 +269,13 @@ package demics_ftest is
 
     function new_ftData return ftData;
 
+    -- DESCRIPTION :
+    --   Returns a record with zero and null values.
+
     procedure delete_ftData ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Empty destructor.
 
     procedure clear ( lftd : in out Link_to_Array_of_ftData );
 
@@ -279,21 +288,46 @@ package demics_ftest is
                   termS : in integer32; polyDim : in integer32;
                   vrblvl : in integer32 := 0 );
 
+    -- DESCRIPTION :
+    --   Makes a new data element in this.cur.
+
     procedure add_elem ( this : in Link_to_ftData;
                          vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Appends this.cur to the list this.head.
 
     procedure mark ( this : in Link_to_ftData;
                      vrblvl : in integer32 := 0 );
 
+    -- DESCRIPTION :
+    --   Sets this.limit to this.last.
+
     procedure clear ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls the clear procedure to all elements of this.head.
 
     procedure clear_transMat ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls the clear_transMat procedure to all elements of this.head.
+
     procedure delete_cur ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls delete_theData on this.cur.
 
     procedure delete_all ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Deletes all elements of this.head and sets then all
+    --   fields to zero or to null.
+
     procedure delete_addedElem ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Deletes all elements of this.limit.
 
     procedure init_ptr ( this : in Link_to_ftData );
 
@@ -305,20 +339,41 @@ package demics_ftest is
                   termSumNum : in integer32; supN : in integer32;
                   termS : in integer32; reTermS : in integer32 );
 
+    -- DESCRIPTION :
+    --   Initializes the indices in this.cur.
+
     procedure next_data ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Sets the this.parent to this.parent.next if not null.
 
     procedure copy ( this : in Link_to_ftData;
                      col : in integer32; pre_data : in Link_to_theData );
 
+    -- DESCRIPTION :
+    --   Copies values of p_sol, d_sol, basisIdx, and nbIdx
+    --   from corresponding *_ptr fields from pre_data into this.cur.
+
     procedure get_ptr ( this : in Link_to_ftData;
                         pre_data : in Link_to_theData );
 
+    -- DESCRIPTION :
+    --   Sets the values for p_sol, d_sol, basisIdx, nbIdx in this.cur
+    --   from corresponding fields in pre_data, after deallocating
+    --   the fields in this.cur.
+
     procedure create_rIdx
                  ( this : in Link_to_ftData;
-                   nbN : in integer32; repIdx : in integer32;
+                   preNbN : in integer32; repIdx : in integer32;
                    candIdx : in Standard_Integer_Vectors.Link_to_Vector );
 
+    -- DESCRIPTION :
+    --   Sets the values of this.cur.rIdx.
+
     procedure init_info ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Sets this.pivOutcheck and this.transRef to zero.
 
     procedure get_nbIdx_rIdx
                 ( this : in Link_to_ftData;
@@ -326,32 +381,60 @@ package demics_ftest is
                   candIdx : in Standard_Integer_Vectors.Link_to_Vector;
                   reTermS : in integer32; pre_data : in Link_to_theData );
 
+    -- DESCRIPTION :
+    --   Gets the values of this.cur.nbIdx and this.cur.rIdx
+    --   from the input parameters.
+
     procedure iCopy ( this : in Link_to_ftData;
-                      nbN : in integer32; nfN : in integer32;
-                      repIdx : in integer32; termS : in integer32;
+                      preNbN : in integer32; nfN : in integer32;
+                      repIdx : in integer32; -- termS : in integer32;
                       reTermS : in integer32;
                       candIdx : in Standard_Integer_Vectors.Link_to_Vector;
                       pre_data : in Link_to_theData );
 
+    -- DESCRIPTION :
+    --   Copies values into nbIdx, rIdx, invB of this.cur
+    --   from the input arguments.
+    --   The original input parameter termS is not referenced.
+
     procedure iGetPtr ( this : in Link_to_ftData;
                         pre_data : in Link_to_theData );
+
+    -- DESCRIPTION :
+    --   Copies values of _ptr fields from pre_data into this.cur.
 
     procedure output ( this : in Link_to_ftData;
                        repIdx : in integer32; idx2 : out integer32;
                        nbN : out integer32; nfN : out integer32 );
 
+    -- DESCRIPTION :
+    --   Assigns to the output variables values from this.parent.
+
     procedure decrease_nfN ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Decrements the value of nfN of this.cur by one.
 
     procedure copy_rIdx
                 ( this : in Link_to_ftData;
                   pre_data : in Link_to_theData; termS : in integer32 );
 
+    -- DESCRIPTION :
+    --   Copies termS values for pre_data.rIdx into this.cur.
+
     procedure copy_pivOutIdx ( this : in Link_to_ftData;
                                pre_data : in Link_to_theData );
+
+    -- DESCRIPTION :
+    --   Copies indices from pre_data into this.cur.pivOutCheck
+    --   and this.cur.pivoutList.
 
     procedure get_nf_pos
                 ( this : in Link_to_ftData; pre_data : in Link_to_theData;
                   nfN : in integer32; idx2 : in integer32 );
+
+    -- DESCRIPTION :
+    --   Gets values from pre_data.nf_pos_ptr into this.cur.nf_pos.
 
     procedure mCopy ( this : in Link_to_ftData;
                       nbN : in integer32; nfN : in integer32;
@@ -361,111 +444,269 @@ package demics_ftest is
     procedure mGetPtr ( this : in Link_to_ftData;
                         pre_data : in Link_to_theData );
 
+    -- DESCRIPTION :
+    --   Copies into this.cur the values p_sol, d_sol, basisIdx, nbIdx
+    --   of pre_data after clearing the fields in this.cur.
+
     procedure put_sup ( this : in Link_to_ftData; sup : out integer32 );
+
+    -- DESCRIPTION :
+    --   Returns in sup the first nodeLabel of this.parent.
 
     procedure info_parent_nbN_nfN ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Writes the values of nbN ad nfN of this.parent.
+
     procedure info_parent_p_sol ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_p_sol on this.parent.
 
     procedure info_parent_d_sol ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_d_sol on this.parent.
+
     procedure info_parent_invB ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_invB on this.parent.
 
     procedure info_parent_transMat ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_transMat on this.parent.
+
     procedure info_parent_transRed ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_transRed on this.parent.
 
     procedure info_parent_basisIdx ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_basisIdx on this.parent.
+
     procedure info_parent_nf_pos ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_nf_pos on this.parent.
 
     procedure info_parent_nbIdx ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_nbIdx on this.parent.
+
     procedure info_parent_redVec ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_redVec on this.parent.
 
     procedure info_parent_rIdx ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_rIdx on this.parent.
+
     procedure info_parent_pivOutIdx ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_pivOutIdx on this.parent.
 
     procedure info_parent_p_sol_ptr ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_p_sol_ptr on this.parent.
+
     procedure info_parent_d_sol_ptr ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_d_sol_ptr on this.parent.
 
     procedure info_parent_invB_ptr ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_invB_ptr on this.parent.
+
     procedure info_parent_transMat_ptr ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_transMat_ptr on this.parent.
 
     procedure info_parent_transRed_ptr ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_transRed_ptr on this.parent.
+
     procedure info_parent_basisIdx_ptr ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_basisIdx_ptr on this.parent.
 
     procedure info_parent_nf_pos_ptr ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_nf_pos_ptr on this.parent.
+
     procedure info_parent_nbIdx_ptr ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_nbIdx_ptr on this.parent.
 
     procedure info_parent_redVec_ptr ( this : in Link_to_ftData );
 
-    procedure info_parent_pivOutIdx_ptr ( this : in Link_to_ftData );
+    -- DESCRIPTION :
+    --   Calls info_redVec_ptr on this.parent.
 
     procedure info_parent ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls all info_* procedures on the this.parent fields.
+
     procedure info_parent_ptr ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls all info_*_ptr procedures on the this.parent fields.
 
     procedure info_parent_node ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_node on this.parent.
+
     procedure info_cur_nbN_nfN ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Writes the values of nbN ad nfN of this.cur.
 
     procedure info_cur_p_sol ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_p_sol on this.cur.
+
     procedure info_cur_d_sol ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_d_sol on this.cur.
 
     procedure info_cur_invB ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_invB on this.cur.
+
     procedure info_cur_transMat ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_transMat on this.cur.
 
     procedure info_cur_transRed ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_transRed on this.cur.
+
     procedure info_cur_basisIdx ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_basisIdx on this.cur.
 
     procedure info_cur_nf_pos ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_nf_pos on this.cur.
+
     procedure info_cur_nbIdx ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_nbIdx on this.cur.
 
     procedure info_cur_redVec ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_redVec on this.cur.
+
     procedure info_cur_rIdx ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_rIdx on this.cur.
 
     procedure info_cur_pivOutIdx ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_pivOutIdx on this.cur.
+
     procedure info_cur_p_sol_ptr ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_p_sol_ptr on this.cur.
 
     procedure info_cur_d_sol_ptr ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_d_sol_ptr on this.cur.
+
     procedure info_cur_invB_ptr ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_invB_ptr on this.cur.
 
     procedure info_cur_transMat_ptr ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_transMat_ptr on this.cur.
+
     procedure info_cur_transRed_ptr ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_transRed_ptr on this.cur.
 
     procedure info_cur_basisIdx_ptr ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_basisIdx_ptr on this.cur.
+
     procedure info_cur_nf_pos_ptr ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_nf_pos_ptr on this.cur.
 
     procedure info_cur_nbIdx_ptr ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_nbIdx_ptr on this.cur.
+
     procedure info_cur_redVec_ptr ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_redVec_ptr on this.cur.
 
     procedure info_cur ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls all info_* procedures on the this.cur fields.
+
     procedure info_cur_ptr ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls all info_*_ptr procedures on the this.cur fields.
 
     procedure info_cur_node ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls info_node on this.cur.
+
     procedure info_all_node ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Calls info_node on all elements in the list this.head.
 
     procedure info_all_cur ( this : in Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Calls all info_ procedures on the all elements in this.head.
+
     procedure info_all_nodeNum ( this : in Link_to_ftData );
+
+    -- DESCRIPTION :
+    --   Writes the index counter of all elemens in the list this.head.
 
     procedure info_numElem ( this : in Link_to_ftData );
 
@@ -509,12 +750,13 @@ package demics_ftest is
     --   Deallocates the pointer to the array.
 
     procedure create ( this : in Link_to_lvData; depth : in integer32;
-                       supN : in integer32; dim : in integer32;
+                      -- supN : in integer32; dim : in integer32;
                        ori_length : in integer32; ori_termMax : in integer32;
                        vrblvl : in integer32 := 0 );
 
     -- DESCRIPTION :
     --   Allocates data for the lvData object.
+    --   The original input arguments supN and dim are not references.
 
     procedure get_info
                 ( this : in Link_to_lvData;

@@ -1,3 +1,6 @@
+Wed 3 Sep 2025 : completed demics_ftest, modified demics_mvc.adb for
+  superfluous parameters that were not referenced.
+
 Tue 2 Sep 2025 : documented and defined many procedures in demics_ftest.
 
 Mon 1 Sep 2025 : demics_itest contains first complete translation of iTest.
