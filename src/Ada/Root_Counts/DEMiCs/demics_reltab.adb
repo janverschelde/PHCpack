@@ -25,30 +25,64 @@ package body demics_reltab is
 
     procedure init_data ( this : in Link_to_reltab ) is
     begin
-      null;
+      for i in 0..this.row*this.row-1 loop
+        this.invB(i) := 0.0;
+      end loop;
+      for i in 0..this.col-1 loop
+        this.p_sol(i) := 0.0;
+      end loop;
     end init_data;
 
     procedure init_tri ( this : in Link_to_reltab;
                          lab : in integer32; idx : in integer32 ) is
+
+      constNum : constant integer32 := this.termSet(lab) - 1;
+
     begin
-      null;
+      for j in 0..this.negIdx(0)-1 loop
+        for i in 0..constNum-1 loop
+          demics_simplex.class_simplex.mult_elem_supp
+            (this.the_Simplex,lab,idx,this.negIdx(j+1),i);
+        end loop;
+      end loop;
     end init_tri;
 
     procedure init_squ ( this : in Link_to_reltab;
                          lab_a : in integer32; lab_b : in integer32;
                          idx_a : in integer32; idx_b : in integer32 ) is
+
+      constNum_a : constant integer32 := this.termSet(lab_a) - 1;
+      constNum_b : constant integer32 := this.termSet(lab_b) - 1;
+
     begin
-      null;
+      for j in 0..this.negIdx(0)-1 loop
+        for i in 0..constNum_a-1 loop
+          demics_simplex.class_simplex.mult_elem_supp
+            (this.the_Simplex,lab_a,idx_a,this.negIdx(j+1),i);
+        end loop;
+        for i in 0..constNum_b-1 loop
+          demics_simplex.class_simplex.mult_elem_supp
+            (this.the_Simplex,lab_b,idx_b,this.negIdx(j+1),i);
+        end loop;
+      end loop;
     end init_squ;
 
     procedure put_data ( this : in Link_to_reltab ) is
     begin
-      null;
+      demics_simplex.class_simplex.get_nbN_nfN
+        (this.the_Simplex,this.nbN,this.nfN);
+      demics_simplex.class_simplex.get_p_sol(this.the_Simplex,this.p_sol);
+      demics_simplex.class_simplex.get_d_sol(this.the_Simplex,this.d_sol);
+      demics_simplex.class_simplex.get_basisIdx
+        (this.the_Simplex,this.basisIdx);
+      demics_simplex.class_simplex.get_nf_pos(this.the_Simplex,this.nf_pos);
+      demics_simplex.class_simplex.get_nbIdx(this.the_Simplex,this.nbIdx);
+      demics_simplex.class_simplex.get_invB(this.the_Simplex,this.invB);
     end put_data;
 
     procedure put_frIdx ( this : in Link_to_reltab; frIdx : in integer32 ) is
     begin
-      null;
+      demics_simplex.class_simplex.get_frIdx(this.the_Simplex,frIdx);
     end put_frIdx;
 
     procedure makeTri ( this : in Link_to_reltab;
@@ -69,10 +103,39 @@ package body demics_reltab is
 
     procedure findAllFeasLPs_tri
                 ( this : in Link_to_reltab;
-                  lab : in integer32; idx : in integer32;
-                  frIdx : in integer32 ) is
+                  lab : in integer32; idx : in integer32 ) is
+                 -- frIdx : in integer32 ) is
+
+      reTermS : constant integer32 := this.re_termStart(lab);
+      termSta : constant integer32 := this.termStart(lab);
+      bIdx,tmp_idx : integer32;
+      fIdx,fIdx_a,fIdx_b : integer32;
+      num : integer32 := 0;
+      opt : constant := DEMiCs_Global_Constants.OPT;
+
     begin
-      null;
+      for i in 0..this.dim-1 loop
+        bIdx := this.basisIdx(i);
+        if bIdx < this.termSumNum - this.supN then
+          tmp_idx := bIdx - reTermS;
+          if tmp_idx >= idx
+           then fIdx := tmp_idx + 1;
+           else fIdx := tmp_idx;
+          end if;
+          table_in(this,termSta +  idx,termSta + fIdx,opt);
+          table_in(this,termSta + fidx,termSta +  idx,opt);
+          this.feasIdx_a(num) := fIdx;
+          num := num + 1;
+        end if;
+      end loop;
+      for j in 0..num-1 loop
+        fIdx_b := this.feasIdx_a(j);
+        for i in j+1..num-1 loop
+          fIdx_a := this.feasIdx_a(i);
+          table_in(this,termSta + fIdx_b,termSta + fIdx_a,opt);
+          table_in(this,termSta + fIdx_a,termSta + fIdx_b,opt);
+        end loop;
+      end loop;
     end findAllFeasLPs_tri;
 
     procedure findAllFeasLPs_squ
@@ -80,8 +143,54 @@ package body demics_reltab is
                   lab_a : in integer32; lab_b : in integer32;
                   idx_a : in integer32; idx_b : in integer32;
                   colPos : in integer32; rowPos : in integer32 ) is
+
+      constNum_a : constant integer32 := this.termSet(lab_a) - 1;
+     -- constNum_b : constant integer32 := this.termSet(lab_b) - 1;
+      reTermS_a : constant integer32 := this.re_termStart(lab_a);
+      reTermS_b : constant integer32 := this.re_termStart(lab_b);
+      bIdx,tmp_idx : integer32;
+      fIdx,fIdx_a,fIdx_b : integer32;
+      num_a : integer32 := 0;
+      num_b : integer32 := 0;
+      opt : constant := DEMiCs_Global_Constants.OPT;
+
     begin
-      null;
+      table_in(this,colPos + idx_a,rowPos + idx_b,opt);
+      table_in(this,rowPos + idx_b,colPos + idx_a,opt);
+      for i in 0..this.dim-1 loop
+        bIdx := this.basisIdx(i);
+        if bIdx < this.termSumNum - this.supN then
+          if (reTermS_a <= bIdx) and (bIdx < reTermS_a + constNum_a) then
+            tmp_idx := bIdx - reTermS_a;
+            if tmp_idx >= idx_a
+             then fIdx := tmp_idx + 1;
+             else fIdx := tmp_idx;
+            end if;
+            table_in(this,colPos + fIdx,  rowPos + idx_b,opt);
+            table_in(this,rowPos + idx_b, colPos + fIdx, opt);
+            this.feasIdx_a(num_a) := fIdx;
+            num_a := num_a + 1;
+          else
+            tmp_idx := bIdx - reTermS_b;
+            if tmp_idx >= idx_b
+             then fIdx := tmp_idx + 1;
+             else fIdx := tmp_idx;
+            end if;
+            table_in(this,colPos + idx_a, rowPos + fIdx, opt);
+            table_in(this,rowPos + fIdx,  colPos + idx_a,opt);
+            this.feasIdx_b(num_b) := fIdx;
+            num_b := num_b + 1;
+          end if;
+        end if;
+      end loop;
+      for j in 0..num_b-1 loop
+        fIdx_b := this.feasIdx_b(j);
+        for i in 0..num_a-1 loop
+          fIdx_a := this.feasIdx_a(i);
+          table_in(this,colPos + fIdx_a, rowPos + fIdx_b, opt);
+          table_in(this,rowPos + fIdx_b, colPos + fIdx_a, opt);
+        end loop;
+      end loop;
     end findAllFeasLPs_squ;
 
     procedure table_in ( this : in Link_to_reltab;

@@ -55,16 +55,31 @@ package demics_reltab is
 
     procedure init_data ( this : in Link_to_reltab );
 
+    -- DESCRIPTION :
+    --   Initializes this.invB and this.p_sol to zero.
+
     procedure init_tri ( this : in Link_to_reltab;
                          lab : in integer32; idx : in integer32 );
+
+    -- DESCRIPTION :
+    --   Initializes data of this.the_simplex, calling mult_elem_supp.
 
     procedure init_squ ( this : in Link_to_reltab;
                          lab_a : in integer32; lab_b : in integer32;
                          idx_a : in integer32; idx_b : in integer32 );
 
+    -- DESCRIPTION :
+    --   Initializes data of this.the_simplex, calling mult_elem_supp.
+
     procedure put_data ( this : in Link_to_reltab );
 
+    -- DESCRIPTION :
+    --   Calls get_* operations on this.the_Simplex with data in this.
+
     procedure put_frIdx ( this : in Link_to_reltab; frIdx : in integer32 );
+
+    -- DESCRIPTION :
+    --   Calls the get_frIdx on the_Simplex with frIdx.
 
     procedure makeTri ( this : in Link_to_reltab;
                         vrblvl : in integer32 := 0 );
@@ -74,14 +89,22 @@ package demics_reltab is
 
     procedure findAllFeasLPs_tri
                 ( this : in Link_to_reltab;
-                  lab : in integer32; idx : in integer32;
-                  frIdx : in integer32 );
+                  lab : in integer32; idx : in integer32 );
+                 -- frIdx : in integer32 );
+
+    -- DESCRIPTION :
+    --   Fills in the table with data from the this.feasIdx_a.
+    --   The frIdx in the original code is not referenced.
 
     procedure findAllFeasLPs_squ
                 ( this : in Link_to_reltab;
                   lab_a : in integer32; lab_b : in integer32;
                   idx_a : in integer32; idx_b : in integer32;
                   colPos : in integer32; rowPos : in integer32 );
+
+    -- DESCRIPTION :
+    --   Fills in the table with data from the this.feasIdx_a
+    --   and this.feasIdx_b.
 
     procedure table_in ( this : in Link_to_reltab;
                          row : in integer32; col : in integer32;
