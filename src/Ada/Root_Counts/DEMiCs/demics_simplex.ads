@@ -28,6 +28,10 @@ package demics_simplex is
       array ( integer32 range <> ) of Link_to_supportSet;
     type Link_to_Array_of_supportSets is access Array_of_supportSets;
 
+    type VecVec_of_supportSets is
+      array ( integer32 range <> ) of Link_to_Array_of_supportSets;
+    type Link_to_VecVec_of_supportSets is access VecVec_of_supportSets;
+
     function new_supportSet return supportSet;
 
     -- DESCRIPTION :
@@ -43,33 +47,60 @@ package demics_simplex is
                   data : in demics_input_data.class_dataSet.dataSet;
                   level : in integer32;
                   num : in integer32;
-                  lifting : in Standard_Floating_Vectors.Link_to_Vector );
+                  lifting : in Standard_Floating_Vectors.Link_to_Vector;
+                  vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Allocates and initializes the support set.
 
     procedure allocAux
                 ( this : in Link_to_supportSet;
-                  data : in demics_input_data.class_dataSet.dataSet );
+                  data : in demics_input_data.class_dataSet.dataSet;
+                  vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Allocation and initialization of the last support set.
 
     procedure supMat_in ( this : in Link_to_supportSet;
                           rowIdx : in integer32;
                           colIdx : in integer32;
                           elem : in double_float );
 
+    -- DESCRIPTION :
+    --   Sets the value in this.supMat defined by rowIdx and colIdx to elem.
+
     procedure supMat_neg ( this : in Link_to_supportSet;
                            rowIdx : in integer32;
                            colIdx : in integer32 );
 
+    -- DESCRIPTION :
+    --   Flips the sign of the value in this.supMat,
+    --   as defined by rowIdx and colIdx.
+
     function supMat_out ( this : Link_to_supportSet;
                           rowIdx : integer32;
                           colIdx : integer32 ) return double_float;
+
+    -- DESCRIPTION :
+    --   Returns the value in this.supMat as defined by rowIdx and colIdx.
 
     function redVal ( this : Link_to_supportSet;
                       d_sol : Standard_Floating_Vectors.Link_to_Vector;
                       idx : integer32;
                       ii : integer32 ) return double_float;
 
+    -- DESCRIPTION :
+    --   Returns the value of the solution.
+
     procedure info_sup ( this : in Link_to_supportSet );
 
+    -- DESCRIPTION :
+    --   Writes the numbers stored in this.supMat.
+
     procedure info_costVec ( this : in Link_to_supportSet );
+
+    -- DESCRIPTION :
+    --   Writes the numbers stored in this.costVec.
 
   end class_supportSet;
 
@@ -99,7 +130,7 @@ package demics_simplex is
       artV : integer32;
       pivOutNum : integer32;
       frIdx :  integer32;
-      Supp : Link_to_Array_of_supportSets;
+      Supp : Link_to_VecVec_of_supportSets;
       oriSupp : Standard_Floating_VecVecs.Link_to_VecVec;
       invB : Standard_Floating_Vectors.Link_to_Vector;  -- row oriented
       transMat : Standard_Floating_Vectors.Link_to_Vector; -- row oriented

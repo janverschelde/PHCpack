@@ -1,5 +1,7 @@
 with Ada.text_io;                       use Ada.text_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Random_Numbers;
 
 package body demics_simplex is
@@ -29,16 +31,53 @@ package body demics_simplex is
                   data : demics_input_data.class_dataSet.dataSet;
                   level : in integer32;
                   num : in integer32;
-                  lifting : in Standard_Floating_Vectors.Link_to_Vector ) is
+                  lifting : in Standard_Floating_Vectors.Link_to_Vector;
+                  vrblvl : in integer32 := 0 ) is
+
+      cnt : integer32 := 0;
+
+      use demics_input_data.class_dataSet; -- for support_out
+
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_simplex.class_supportSet.allocSupp, level : ");
+        put(level,1); put_line(" ...");      
+      end if;
+      this.row := data.dim;
+      this.col := data.termSet(level);
+      this.supMat := new Standard_Floating_Vectors.Vector'
+                           (0..this.row*this.col-1 => 0.0);
+      this.costVec
+        := new Standard_Floating_Vectors.Vector'(0..this.col-2 => 0.0);
+      for j in 0..this.col-1 loop
+        if j /= num then
+          for i in 0..this.row-1 loop
+            supMat_in(this,i,cnt,
+                      support_out(data,data.termStart(level) + j,i)
+                    - support_out(data,data.termStart(level) + num,i));
+          end loop;
+          this.costVec(cnt) := lifting(data.termStart(level) + j)
+                             - lifting(data.termStart(level) + num);
+          cnt := cnt + 1;
+        end if;
+      end loop;
+      this.col := this.col - 1;
     end allocSupp;
 
     procedure allocAux
                 ( this : in Link_to_supportSet;
-                  data : in demics_input_data.class_dataSet.dataSet ) is
+                  data : in demics_input_data.class_dataSet.dataSet;
+                  vrblvl : in integer32 := 0 ) is
     begin
-      null;
+      this.row := data.dim;
+      this.col := data.dim;
+      this.supMat := new Standard_Floating_Vectors.Vector'
+                           (0..this.row*this.col-1 => 0.0);
+      this.costVec := new Standard_Floating_Vectors.Vector(0..this.col-1);
+      for i in 0..this.col-1 loop
+        supMat_in(this,i,i,1.0);
+        this.costVec(i) := 1.0;
+      end loop;
     end allocAux;
 
     procedure supMat_in ( this : in Link_to_supportSet;
@@ -46,39 +85,54 @@ package body demics_simplex is
                           colIdx : in integer32;
                           elem : in double_float ) is
     begin
-      null;
+      this.supMat(rowIdx + colIdx*this.row) := elem;
     end supMat_in;
 
     procedure supMat_neg ( this : in Link_to_supportSet;
                            rowIdx : in integer32;
                            colIdx : in integer32 ) is
     begin
-      null;
+      this.supMat(rowIdx + colIdx*this.row) 
+        := -this.supMat(rowIdx + colIdx*this.row);
     end supMat_neg;
 
     function supMat_out ( this : Link_to_supportSet;
                           rowIdx : integer32;
                           colIdx : integer32 ) return double_float is
     begin
-      return 0.0;
+      return this.supMat(rowIdx + colIdx*this.row);
     end supMat_out;
 
     function redVal ( this : Link_to_supportSet;
                       d_sol : Standard_Floating_Vectors.Link_to_Vector;
                       idx : integer32;
                       ii : integer32 ) return double_float is
+
+      val : double_float := 0.0;
+
     begin
-      return 0.0;
+      for i in 0..this.row-1 loop
+        val := val + d_sol(i)*this.supMat(i+ii);
+      end loop;
+      return (this.costVec(idx) - val);
     end redVal;
 
     procedure info_sup ( this : in Link_to_supportSet ) is
     begin
-      null;
+      for j in 0..this.row-1 loop
+        for i in 0..this.col-1 loop
+          put(supMat_out(this,j,i)); put(" ");
+        end loop;
+        new_line;
+      end loop;
     end info_sup;
 
     procedure info_costVec ( this : in Link_to_supportSet ) is
     begin
-      null;
+      for i in 0..this.col-1 loop
+        put(this.costVec(i)); put(" ");
+      end loop;
+      new_line;
     end info_costVec;
 
   end class_supportSet;
@@ -767,7 +821,6 @@ package body demics_simplex is
       this.lifting
         := new Standard_Floating_Vectors.Vector(0..this.termSumNum-1);
       this.oriSupp := new Standard_Floating_VecVecs.VecVec(0..this.supN-1);
-
       for i in 0..this.supN-1 loop
         this.oriSupp(i)
           := new Standard_Floating_Vectors.Vector'
@@ -799,7 +852,52 @@ package body demics_simplex is
       for i in 0..this.termSumNum-1 loop
         this.lifting(i) := 10.0*abs(Standard_Random_Numbers.Random);
       end loop;
-     -- incomplete ...
+      this.supp := new VecVec_of_supportSets(0..this.supN);
+      for i in 0..this.supN-1 loop
+        this.re_termStart(i+1) := data.termStart(i+1) - i - 1;
+        this.supp(i) := new Array_of_supportSets(0..this.termSet(i)-1);
+      end loop;
+      for i in 0..this.supN-1 loop
+        for j in 0..this.termSet(i)-1 loop
+          this.supp(i)(j) := new supportSet'(new_supportSet);
+          class_supportSet.allocSupp
+            (this.supp(i)(j),data,i,j,this.lifting,vrblvl-1);
+        end loop;
+      end loop;
+      this.supp(this.supN) := new Array_of_supportSets(0..0);
+      this.supp(this.supN)(0) := new supportSet'(new_supportSet);
+      class_supportSet.allocAux(this.supp(this.supN)(0),data,vrblvl-1);
+      cnt := 0;
+      for i in 0..this.supN-1 loop
+        for j in 0..this.termSet(i)-2 loop
+          this.nIdx(2*cnt) := i;
+          this.nIdx(2*cnt+1) := j;
+          cnt := cnt + 1;
+        end loop;
+      end loop;
+      for i in 0..this.dim-1 loop
+        this.aux_cvec(this.termSumNum - this.supN + i) := 1.0;
+        this.nIdx(2*cnt) := this.supN;
+        this.nIdx(2*cnt+1) := 0;
+        this.eye(i*(this.dim+1)) := 1.0;
+        cnt := cnt + 1;
+      end loop;
+      if this.output > 0 then
+        put_line("----------------------------------");
+        put("* Seed number = "); put(seedNum,1); new_line;
+        put_line("* Lifting values for elements in each support set");
+        cnt := 0;
+        for i in 0..this.supN-1 loop
+          put("S"); put(i+1,1); put(" : ");
+          for j in 
+              this.termStart(i)..this.termStart(i) + this.termSet(i)-1 loop
+            put(this.lifting(cnt)); put(" ");
+            cnt := cnt + 1;
+          end loop;
+          new_line;
+        end loop;
+        put_line("----------------------------------");
+      end if;
     end allocateAndIni;
 
 -- for relation table
