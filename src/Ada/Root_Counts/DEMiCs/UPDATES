@@ -1,4 +1,4 @@
-Thu 4 Sep 2025 : updated demics.gpr to build demics_main.
+Thu 4 Sep 2025 : completed demics_reltab.
 
 Wed 3 Sep 2025 : completed demics_ftest, modified demics_mvc.adb for
   superfluous parameters that were not referenced.

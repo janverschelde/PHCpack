@@ -45,13 +45,24 @@ package demics_reltab is
 
     procedure get_init_triData
                 ( this : in Link_to_reltab;
-                  lab : in integer32; idx : in integer32 );
+                  lab : in integer32; idx : in integer32;
+                  vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Initializes basis, primal and dual solution for simplex method,
+    --   for use in makeTri.
 
     procedure get_init_squData
                 ( this : in Link_to_reltab;
                   lab_a : in integer32; lab_b : in integer32;
                   idx_a : in integer32; idx_b : in integer32;
-                  colPos : in integer32; rowPos : in integer32 );
+                 -- colPos : in integer32; rowPos : in integer32;
+                  vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Initializes basis, primal and dual solution for simplex method,
+    --   for use in makeSqu.
+    --   In the original code, colPos and rowPos are not referenced.
 
     procedure init_data ( this : in Link_to_reltab );
 
@@ -84,13 +95,20 @@ package demics_reltab is
     procedure makeTri ( this : in Link_to_reltab;
                         vrblvl : in integer32 := 0 );
 
+    -- DESCRIPTION :
+    --   Called by the makeTable procedure.
+
     procedure makeSqu ( this : in Link_to_reltab;
                         vrblvl : in integer32 := 0 );
 
+    -- DESCRIPTION :
+    --   Called by the makeTable procedure.
+
     procedure findAllFeasLPs_tri
                 ( this : in Link_to_reltab;
-                  lab : in integer32; idx : in integer32 );
-                 -- frIdx : in integer32 );
+                  lab : in integer32; idx : in integer32;
+                 -- frIdx : in integer32
+                  vrblvl : in integer32 := 0 );
 
     -- DESCRIPTION :
     --   Fills in the table with data from the this.feasIdx_a.
@@ -100,7 +118,8 @@ package demics_reltab is
                 ( this : in Link_to_reltab;
                   lab_a : in integer32; lab_b : in integer32;
                   idx_a : in integer32; idx_b : in integer32;
-                  colPos : in integer32; rowPos : in integer32 );
+                  colPos : in integer32; rowPos : in integer32;
+                  vrblvl : in integer32 := 0 );
 
     -- DESCRIPTION :
     --   Fills in the table with data from the this.feasIdx_a

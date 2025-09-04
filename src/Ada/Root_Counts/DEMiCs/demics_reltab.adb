@@ -1,6 +1,7 @@
 with Ada.text_io;                       use Ada.text_io;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Random_Numbers;
 with DEMiCs_Global_Constants;
 
 package body demics_reltab is
@@ -9,18 +10,140 @@ package body demics_reltab is
 
     procedure get_init_triData
                 ( this : in Link_to_reltab;
-                  lab : in integer32; idx : in integer32 ) is
+                  lab : in integer32; idx : in integer32;
+                  vrblvl : in integer32 := 0 ) is
+
+      constNum : constant integer32 := this.termStart(lab);
+      reTermS : constant integer32 := this.re_termStart(lab);
+      negNum : integer32 := 0;
+      elem : double_float;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put_line("-> in demics_reltab.class_reltab.get_init_triData ...");
+      end if;
+      this.firIdx(lab) := idx;
+      this.nbN := constNum + this.dim;
+      this.nfN := this.dim;
+      Standard_Random_Numbers.Set_Seed(4);
+      for i in 0..constNum-1 loop
+        this.val(i) := abs(Standard_Random_Numbers.Random);
+        this.nbIdx(i) := reTermS + i;
+      end loop;
+      for i in 0..this.dim-1 loop
+        elem := 0.0;
+        for j in 0..constNum-1 loop
+          elem := elem
+                + this.val(j)*demics_simplex.class_simplex.put_elem_supp
+                                (this.the_Simplex,lab,idx,i,j);
+        end loop;
+        if elem < DEMiCs_Global_Constants.MINUSZERO then
+          this.p_sol(this.maxConst+i) := -elem;
+          this.negIdx(negNum+1) := i;
+          negNum := negNum + 1;
+          for j in 0..constNum-1 loop
+            demics_simplex.class_simplex.mult_elem_supp
+              (this.the_Simplex,lab,idx,i,j);
+          end loop;
+        elsif elem > DEMiCs_Global_Constants.PLUSZERO then
+          this.p_sol(this.maxConst + i) := elem;
+        else
+          this.p_sol(this.maxConst + i) := 0.0;
+        end if;
+      end loop;
+      this.negIdx(0) := negNum;
+      for i in 0..this.dim-1 loop
+        this.nf_pos(i) := i;
+        this.invB(i*(this.dim+1)) := 1.0;
+        this.basisIdx(i) := this.maxConst + i;
+        this.d_sol(i) := 1.0;
+      end loop;
     end get_init_triData;
 
     procedure get_init_squData
                 ( this : in Link_to_reltab;
                   lab_a : in integer32; lab_b : in integer32;
                   idx_a : in integer32; idx_b : in integer32;
-                  colPos : in integer32; rowPos : in integer32 ) is
+                 -- colPos : in integer32; rowPos : in integer32;
+                  vrblvl : in integer32 := 0 ) is
+
+      constNum_a : constant integer32 := this.termSet(lab_a) - 1;
+      constNum_b : constant integer32 := this.termSet(lab_b) - 1;
+      constNum : constant integer32 := constNum_a + constNum_b;
+      reTermS_a : constant integer32 := this.re_termStart(lab_a);
+      reTermS_b : constant integer32 := this.re_termStart(lab_b);
+      negNum : integer32 := 0;
+      elem : double_float;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put_line("-> in demics_reltab.class_reltab.get_init_squData ...");
+      end if;
+      if vrblvl > 0 then
+        put("<<========== (  << sup : "); put(lab_a + 1,1);
+        put(" idx : "); put(idx_a + 1,1); put(" )-( ");
+        put("sup : "); put(lab_b + 1,1);
+        put(" idx : "); put(idx_b + 1,1);
+        put_line(" ) ==========");
+      end if;
+      this.firIdx(lab_a) := idx_a;
+      this.firIdx(lab_b) := idx_b;
+      this.nbN := constNum + this.dim;
+      this.nfN := this.dim;
+      Standard_Random_Numbers.Set_Seed(4);
+      for i in 0..constNum_a-1 loop
+        this.nbIdx(i) := reTermS_a + i; 
+        this.val(i) := abs(Standard_Random_Numbers.Random);
+      end loop;
+      for i in 0..constNum_b-1 loop
+        this.nbIdx(constNum_a + i) := reTermS_b + i; 
+        this.val(constNum_a + i) := abs(Standard_Random_Numbers.Random);
+      end loop;
+      for i in 0..this.dim-1 loop
+        elem := 0.0;
+        for j in 0..constNum_a-1 loop
+          elem := elem
+                + this.val(j)*demics_simplex.class_simplex.put_elem_supp
+                                (this.the_Simplex,lab_a,idx_a,i,j);
+        end loop;
+        for j in 0..constNum_b-1 loop
+          elem := elem + this.val(j+constNum_a)
+                       * demics_simplex.class_simplex.put_elem_supp
+                           (this.the_Simplex,lab_b,idx_b,i,j);
+        end loop;
+        if elem < DEMiCs_Global_Constants.MINUSZERO then
+          this.p_sol(this.maxConst + i) := -elem;
+          this.negIdx(negNum + 1) := i;
+          negNum := negNum + 1;
+          for j in 0..constNum_a-1 loop
+            demics_simplex.class_simplex.mult_elem_supp
+              (this.the_Simplex,lab_a,idx_a,i,j);
+          end loop;
+          for j in 0..constNum_b-1 loop
+            demics_simplex.class_simplex.mult_elem_supp
+              (this.the_Simplex,lab_b,idx_b,i,j);
+          end loop;
+        elsif elem > DEMiCs_Global_Constants.PLUSZERO then
+          this.p_sol(this.maxConst + i) := elem;
+        else
+          this.p_sol(this.maxConst + i) := 0.0;
+        end if;
+      end loop;
+      this.negIdx(0) := negNum;
+      for i in 0..this.dim-1 loop
+        this.nf_pos(i) := i;
+        this.invB(i * (this.Dim + 1)) := 1.0;
+        this.basisIdx(i) := this.maxConst + i;
+        this.d_sol(i) := 1.0; 
+      end loop;
+      if vrblvl > 0 then
+        info_invB(this);
+        info_p_sol(this);
+        info_d_sol(this);
+        info_basisIdx(this);
+        info_nbIdx(this); 
+        info_nf_pos(this);
+      end if;
     end get_init_squData;
 
     procedure init_data ( this : in Link_to_reltab ) is
@@ -87,24 +210,102 @@ package body demics_reltab is
 
     procedure makeTri ( this : in Link_to_reltab;
                         vrblvl : in integer32 := 0 ) is
+
+      len,termSta,reTermS,flag,iter : integer32;
+      opt : constant := DEMiCs_Global_Constants.OPT;
+      triangle : constant := DEMiCs_Global_Constants.TRIANGLE;
+      unbounded : constant := DEMiCs_Global_Constants.UNBOUNDED;
+
     begin
       if vrblvl > 0
        then put_line("-> in demics_reltab.class_reltab.makeTri ...");
       end if;
+      for k in 0..this.supN-1 loop
+        len := this.termSet(k);
+        reTermS := this.re_termStart(k);
+        termSta := this.termStart(k);
+        for j in 0..len-2 loop
+          for i in j+1..len-1 loop
+            if vrblvl > 0 then
+              put("========== ( "); put(j + 1,1); put(" )-( ");
+              put(i + 1,1); put_line(" ) ==========");
+            end if;
+            if table_out(this,termSta+j,termSta+i) /= opt then
+              get_init_triData(this,k,j,vrblvl-1);
+              put_data(this);
+              put_frIdx(this,reTermS+i-1);
+              iter := 0;
+              demics_simplex.class_simplex.tSolLP
+                (this.the_Simplex,iter,triangle,flag);
+              if flag = opt then
+               -- findAllFeasLPs_tri(this,k,j,reTermS+i-1,vrblvl-1);
+                findAllFeasLPs_tri(this,k,j,vrblvl-1);
+              else
+                table_in(this,termSta+j,termSta+i,unbounded);
+                table_in(this,termSta+i,termSta+j,unbounded);
+                this.unbLP := this.unbLP + 1.0;
+	      end if;
+              init_data(this);
+              init_tri(this,k,j);
+            end if;
+          end loop;
+        end loop;
+      end loop;
     end makeTri;
 
     procedure makeSqu ( this : in Link_to_reltab;
                         vrblvl : in integer32 := 0 ) is
+
+      len_a,len_b,flag,iter : integer32;
+     -- reTermS : integer32;
+      rowPos,colPos : integer32;
+      opt : constant := DEMiCs_Global_Constants.OPT;
+      square : constant := DEMiCs_Global_Constants.SQUARE;
+      unbounded : constant := DEMiCs_Global_Constants.UNBOUNDED;
+
     begin
       if vrblvl > 0
        then put_line("-> in demics_reltab.class_reltab.makeSqu ...");
       end if;
+      for supLab_a in 0..this.supN-1 loop
+        len_a := this.termSet(supLab_a);
+       -- reTermS := this.re_termStart(supLab_a);
+        rowPos := this.termStart(supLab_a + 1);
+        colPos := this.termStart(supLab_a);
+        for supLab_b in supLab_a+1..this.supN-1 loop
+          len_b := this.termSet(supLab_b);
+          for j in 0..len_a-1 loop
+            for i in 0..len_b-1 loop
+	      if table_out(this,colPos+j,rowPos+i) /= opt then
+               -- get_init_squData(this,supLab_a,supLab_b,j,i,colPos,rowPos);
+                get_init_squData(this,supLab_a,supLab_b,j,i,vrblvl-1);
+                put_data(this);
+                iter := 0;
+                demics_simplex.class_simplex.tSolLP
+                  (this.the_Simplex,iter,square,flag);
+                if flag = opt then
+                  findAllFeasLPs_squ
+                    (this,supLab_a,supLab_b,j,i,colPos,rowPos,vrblvl-1);
+                else
+                  table_in(this,colPos+j,rowPos+i,unbounded);
+                  table_in(this,rowPos+i,colPos+j,unbounded);
+                  this.unbLP := this.unbLP + 1.0;
+                end if;
+                init_squ(this,supLab_a,supLab_b,j,i);
+                init_data(this);
+              end if;
+            end loop;
+          end loop;
+          rowPos := rowPos + len_b;
+        end loop;
+      end loop;
     end makeSqu;
 
     procedure findAllFeasLPs_tri
                 ( this : in Link_to_reltab;
-                  lab : in integer32; idx : in integer32 ) is
-                 -- frIdx : in integer32 ) is
+                  lab : in integer32; idx : in integer32;
+                 -- frIdx : in integer32
+                  vrblvl : in integer32 := 0 ) is
 
       reTermS : constant integer32 := this.re_termStart(lab);
       termSta : constant integer32 := this.termStart(lab);
@@ -114,6 +315,9 @@ package body demics_reltab is
       opt : constant := DEMiCs_Global_Constants.OPT;
 
     begin
+      if vrblvl > 0 then
+        put_line("-> in demics_reltab.class_reltab.findAllFeasLPs_tri ...");
+      end if;
       for i in 0..this.dim-1 loop
         bIdx := this.basisIdx(i);
         if bIdx < this.termSumNum - this.supN then
@@ -142,7 +346,8 @@ package body demics_reltab is
                 ( this : in Link_to_reltab;
                   lab_a : in integer32; lab_b : in integer32;
                   idx_a : in integer32; idx_b : in integer32;
-                  colPos : in integer32; rowPos : in integer32 ) is
+                  colPos : in integer32; rowPos : in integer32;
+                  vrblvl : in integer32 := 0 ) is
 
       constNum_a : constant integer32 := this.termSet(lab_a) - 1;
      -- constNum_b : constant integer32 := this.termSet(lab_b) - 1;
@@ -155,6 +360,9 @@ package body demics_reltab is
       opt : constant := DEMiCs_Global_Constants.OPT;
 
     begin
+      if vrblvl > 0 then
+        put_line("-> in demics_reltab.class_reltab.findAllFeasLPs_squ ...");
+      end if;
       table_in(this,colPos + idx_a,rowPos + idx_b,opt);
       table_in(this,rowPos + idx_b,colPos + idx_a,opt);
       for i in 0..this.dim-1 loop
