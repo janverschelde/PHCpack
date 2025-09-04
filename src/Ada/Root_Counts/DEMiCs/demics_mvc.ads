@@ -195,13 +195,26 @@ package demics_mvc is
                 ( this : in Link_to_mvc; termSet : in integer32;
                   negIdx : in Standard_Integer_VecVecs.Link_to_VecVec );
 
+    -- DESCRIPTION :
+    --   Writes the numbers in this.trNeg and in negIdx.
+
     procedure info_sp ( this : in Link_to_mvc; depth : in integer32 );
+
+    -- DESCRIPTION :
+    --   Writes the numbers in this.sp.
 
     procedure info_parent_node ( this : in Link_to_mvc; depth : in integer32 );
 
+    -- DESCRIPTION :
+    --   Calls info_parent_node on the elements in this.lv.
+
     procedure info_tuple
                 ( this : in Link_to_mvc;
-                  lvl : in integer32; depth : in integer32 );
+                  lvl : in integer32 ); -- depth : in integer32 );
+
+    -- DESCRIPTION :
+    --   Writes the numbers in this.mFeaIdx.
+    --   In the original procedure depth was not referenced.
 
     procedure info_all_dirRed
                 ( this : in Link_to_mvc;
@@ -211,13 +224,25 @@ package demics_mvc is
 
     procedure info_mFea ( this : in Link_to_mvc; length : in integer32 );
 
+    -- DESCRIPTION :
+    --   Writes the numbers in this.mFea and this.mRepN.
+
     procedure info_firIdx ( this : in Link_to_mvc; length : in integer32 );
+
+    -- DESCRIPTION :
+    --   Writes the numbers in this.firIdx.
 
     procedure info_fIdx
                 ( this : in Link_to_mvc;
                   data : in demics_ftest.class_ftData.Link_to_ftData );
 
+   -- DESCRIPTION :
+   --   Writes the first index in data.parent.
+
     procedure info_candIdx ( this : in Link_to_mvc );
+
+    -- DESCRIPTION :
+    --   Writes the numbers in this.candIdx.
 
     procedure info_elemNum
                 ( this : in Link_to_mvc;

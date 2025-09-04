@@ -237,25 +237,51 @@ package body demics_mvc is
                 ( this : in Link_to_mvc; termSet : in integer32;
                   negIdx : in Standard_Integer_VecVecs.Link_to_VecVec ) is
     begin
-      null;
+      put_line("<< trNeg >>");
+      for j in 0..termSet-1 loop
+        for i in 0..this.row-1 loop
+          put(this.trNeg(j)(i),1); put(" ");
+        end loop;
+        new_line;
+      end loop;
+      put_line("<< negIdx >>");
+      for j in 0..termSet-1 loop
+        for i in 0..negIdx(j)(0) loop
+          put(negIdx(j)(i+1),1); put(" ");
+        end loop;
+        new_line;
+      end loop;
     end info_neg;
 
     procedure info_sp ( this : in Link_to_mvc; depth : in integer32 ) is
     begin
-      null;
+      put("sp :");
+      for i in 0..depth-1 loop
+        put(" "); put(this.sp(i),1);
+      end loop;
+      new_line;
     end info_sp;
 
     procedure info_parent_node ( this : in Link_to_mvc;
                                  depth : in integer32 ) is
     begin
-      null;
+      put("Node : ");
+      for i in 0..depth-1 loop
+        put(this.sp(i),1); put(" : ");
+        demics_ftest.class_ftData.info_parent_node(this.lv(this.sp(i)).node);
+      end loop;
+      new_line;
     end info_parent_node;
 
     procedure info_tuple
                 ( this : in Link_to_mvc;
-                  lvl : in integer32; depth : in integer32 ) is
+                  lvl : in integer32 ) is -- ; depth : in integer32 ) is
     begin
-      null;
+      put("( ");
+      for i in 0..lvl-1 loop
+        put(this.mFeaIdx(i)(this.mRepN(i))+1,1); put(" ");
+      end loop;
+      put_line(")");
     end info_tuple;
 
     procedure info_all_dirRed
@@ -270,24 +296,41 @@ package body demics_mvc is
 
     procedure info_mFea ( this : in Link_to_mvc; length : in integer32 ) is
     begin
-      null;
+      put("mFea :");
+      for i in 0..length-1 loop
+        put(" "); put(this.mFea(i),1);
+      end loop;
+      new_line;
+      put("mRepN :");
+      for i in 0..length-1 loop
+        put(" "); put(this.mRepN(i),1);
+      end loop;
+      new_line;
     end info_mFea;
 
     procedure info_firIdx ( this : in Link_to_mvc; length : in integer32 ) is
     begin
-      null;
+      put_line("<< firIdx >>");
+      for i in 0..length loop
+        put(this.firIdx(i),1); put(" ");
+      end loop;
+      new_line;
     end info_firIdx;
 
     procedure info_fIdx
                 ( this : in Link_to_mvc;
                   data : in demics_ftest.class_ftData.Link_to_ftData ) is
     begin
-      null;
+      put("First Index : "); put(data.parent.fIdx+1,1); new_line;
     end info_fIdx;
 
     procedure info_candIdx ( this : in Link_to_mvc ) is
     begin
-      null;
+      put("candIdx :");
+      for i in 0..this.candIdx(0)-1 loop
+        put(this.candIdx(i+1),1); put(" ");
+      end loop;
+      new_line;
     end info_candIdx;
 
     procedure info_elemNum

@@ -2,6 +2,7 @@ Wed 3 Sep 2025 : completed demics_ftest, modified demics_mvc.adb for
   superfluous parameters that were not referenced.
   Extended allocateAndIni in demics_simplex, completed translation of
   the class_supportSet in demics_simplex.  Added code to demics_reltab.
+  Extended demics_mvc with documentation and definitions of procedures.
 
 Tue 2 Sep 2025 : documented and defined many procedures in demics_ftest.
 
