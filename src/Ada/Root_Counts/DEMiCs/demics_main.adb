@@ -11,7 +11,8 @@ procedure demics_main is
 
     use demics_mvc;
 
-    ptr2MVC : constant class_mvc.Link_to_mvc := new class_mvc.mvc;
+    ptr2MVC : constant class_mvc.Link_to_mvc
+            := new class_mvc.mvc'(class_mvc.new_mvc);
 
   begin
     class_mvc.allocateAndIni(ptr2MVC,data,1,1,99);

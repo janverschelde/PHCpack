@@ -1,5 +1,7 @@
 with Ada.text_io;                       use Ada.text_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
+with DEMiCs_Global_Constants;
 
 package body demics_mvc is
 
@@ -31,23 +33,32 @@ package body demics_mvc is
       end if;
       for i in 0..this.termSet(depth)-1 loop
         this.lv(depth).ftest(lvl)
-          := new demics_ftest.class_ftData.ftData'
-                (demics_ftest.class_ftData.new_ftData);
-        demics_ftest.class_ftData.create_elem
+          := new demics_fTest.class_ftData.ftData'
+                (demics_fTest.class_ftData.new_ftData);
+        demics_fTest.class_ftData.create_elem
           (this.lv(depth).ftest(lvl),this.row,this.col,
            this.termSet(depth),this.supType(depth),vrblvl-1);
-        demics_ftest.class_ftData.add_elem(this.lv(depth).ftest(lvl),vrblvl-1);
+        demics_fTest.class_ftData.add_elem(this.lv(depth).ftest(lvl),vrblvl-1);
       end loop;
-      demics_ftest.class_ftData.mark(this.lv(depth).ftest(lvl),vrblvl-1);
+      demics_fTest.class_ftData.mark(this.lv(depth).ftest(lvl),vrblvl-1);
       this.lv(depth).ftest(lvl).cur := this.lv(depth).ftest(lvl).head;
     end getMemory;
 
     procedure initMemoryCheck
                 ( this : in Link_to_mvc;
-                  data : in demics_ftest.class_ftData.Link_to_ftData;
+                  data : in demics_fTest.class_ftData.Link_to_ftData;
                   depth : in integer32 ) is
+
+      sn : constant integer32 := this.sp(depth);
+
+      use demics_fTest.class_theData;
+
     begin
-      null;
+      if data.cur = null then
+        demics_ftest.class_ftData.create_elem
+          (data,this.row,this.col,this.termSet(sn),this.supType(sn));
+        demics_ftest.class_ftData.add_elem(data);
+      end if;
     end initMemoryCheck;
 
     procedure memoryCheck
@@ -55,15 +66,26 @@ package body demics_mvc is
                   data : in demics_ftest.class_ftData.Link_to_ftData;
                   depth : in integer32 ) is
     begin
-      null;
+      initMemoryCheck(this,data,depth); -- same code as initMemoryCheck
     end memoryCheck;
 
     procedure get_candIdx
                 ( this : in Link_to_mvc;
                   curInif : in demics_itest.class_inifData.Link_to_inifData
                 ) is
+
+      num : integer32 := 0;
+      n_curr : demics_iTest.class_uData.Link_to_uData := curInif.fHead;
+
+      use demics_iTest.class_uData;
+
     begin
-      null;
+      while n_curr /= null loop
+        this.candIdx(num+1) := n_curr.supLab;
+        n_curr := n_curr.fNext;
+        num := num + 1;
+      end loop;
+      this.candIdx(0) := num;
     end get_candIdx;
 
     function chooseSup
@@ -158,10 +180,22 @@ package body demics_mvc is
     procedure get_tuple_index
                 ( this : in Link_to_mvc;
                   node : in demics_ftest.class_ftData.Link_to_ftData;
-                  data : in demics_ftest.class_ftData.Link_to_ftData;
+                  data : in demics_ftest.class_ftData.Array_of_ftData;
                   length : in integer32 ) is
+
+      on : constant := DEMiCs_Global_Constants.ON;
+      tmpIdx : integer32;
+
     begin
-      null;
+      for i in 0..length-1 loop
+        node.parent.nodeLabel(i) := data(length-1).cur.fIdx;
+      end loop;
+      node.parent.nodeLabel(length-1) := data(length-1).cur.fIdx;
+      if data(1).parent.sw = on then
+        tmpIdx := node.parent.nodeLabel(1);
+        node.parent.nodeLabel(1) := node.parent.nodeLabel(0);
+        node.parent.nodeLabel(0) := tmpIdx;
+      end if;
     end get_tuple_index;
 
     procedure dbg_init_transMat
@@ -198,8 +232,20 @@ package body demics_mvc is
                 ( this : Link_to_mvc;
                   curRed : double_float;
                   tarRed : double_float ) return integer32 is
+
+      flag : integer32 := 0;
+      pluszero : constant := DEMiCs_Global_Constants.PLUSZERO;
+      minuszero : constant := DEMiCs_Global_Constants.MINUSZERO;
+      positive : constant := DEMiCs_Global_Constants.POSITIVE;
+      negative : constant := DEMiCs_Global_Constants.NEGATIVE;
+
     begin
-      return 0;
+      if curRed > tarRed + pluszero then
+        flag := positive;
+      elsif curRed < tarRed + minuszero then
+        flag := negative;
+      end if;
+      return flag;
     end checkSign_red;
 
     function checkNonNeg_dir
@@ -230,7 +276,7 @@ package body demics_mvc is
                 ( this : in Link_to_mvc;
                   row : integer32; col : integer32 ) return integer32 is
     begin
-      return 0;
+      return this.table(row + col*this.termSumNum);
     end table_out;
 
     procedure info_neg
@@ -352,8 +398,34 @@ package body demics_mvc is
     end info_prop_elemNum;
 
     procedure info_table ( this : in Link_to_mvc ) is
+
+    -- NOTE :
+    --   This is essentially the same code as the procedure
+    --   demics_reltab.class_reltab.info_table.
+
+      u_cnt : integer32 := 0;
+      t_cnt : integer32 := 0;
+
     begin
-      null;
+      put_line("<< Relation table >>");
+      for i in 0..this.termSumNum-1 loop
+        for k in 0..i-1 loop
+          put("  ");
+        end loop;
+        for j in i+1..this.termSumNum-1 loop
+          if table_out(this,j,i) = DEMiCs_Global_Constants.UNBOUNDED
+           then u_cnt := u_cnt + 1;
+          end if;
+          put(table_out(this,j,i),1); put(" ");
+          t_cnt := t_cnt + 1;
+        end loop;
+        new_line;
+      end loop;
+      new_line;
+      put("# Unb. LPs : "); put(u_cnt,1); new_line;
+      put("# Elem. : "); put(t_cnt,1); new_line;
+      put("Ratio : "); put(double_float(u_cnt)/double_float(t_cnt));
+      new_line;
     end info_table;
 
     function new_mvc return mvc is
@@ -361,12 +433,67 @@ package body demics_mvc is
       res : mvc;
 
     begin
+      res.dim := 0;
+      res.supN := 0;
+      res.row := 0;
+      res.col := 0;
+      res.termSumNum := 0;
+      res.termMax := 0;
+      res.maxLength := 0;
+      res.total_iter := 0.0;
+      res.total_feasLP := 0.0;
+      res.total_LPs := 0.0;
+      res.total_1PT := 0.0;
+      res.total_2PT := 0.0;
+      res.total_triLPs_mLP := 0.0;
+      res.total_unbLP_tab := 0.0;
+      res.lvl_1PT := null;
+      res.lvl_2PT := null;
+      res.actNode := null;
+      res.mfNum := null;
+      res.termSet := null;
+      res.termStart := null;
+      res.re_termStart := null;
+      res.supType := null;
+      res.mRepN := null;
+      res.mFeaIdx := null;
+      res.mFea := null;
+      res.trNeg := null;
+      res.firIdx := null;
+      res.repN := null;
+      res.sp := null;
+      res.candIdx := null;
+      res.trMat := null;
+      res.table := null;
+      res.lv := null;
+      res.iLv := null;
       return res;
     end new_mvc;
 
     procedure delete_mvc ( this : in Link_to_mvc ) is
+
+      use Standard_Integer_VecVecs;
+
     begin
-      null;
+      if this.trNeg /= null then
+        for i in 0..this.termSet(this.sp(0))-1 loop
+          Standard_Integer_Vectors.clear(this.trNeg(i));
+        end loop;
+        Standard_Integer_VecVecs.shallow_clear(this.trNeg);
+        this.trNeg := null;
+      end if;
+      Standard_Integer_Vectors.clear(this.re_termStart);
+      Standard_Integer_Vectors.clear(this.mfNum);
+      Standard_Floating_Vectors.clear(this.lvl_1PT);
+      Standard_Floating_Vectors.clear(this.lvl_2PT);
+      Standard_Floating_Vectors.clear(this.actNode);
+      Standard_Integer_Vectors.clear(this.firIdx);
+      Standard_Integer_Vectors.clear(this.repN);
+      Standard_Integer_Vectors.clear(this.sp);
+      Standard_Integer_Vectors.clear(this.candIdx);
+      Standard_Floating_Vectors.clear(this.trMat);
+     -- delete [] this.lv;
+     -- delete [] this.iLv;
     end delete_mvc;
 
     procedure allocateAndIni
@@ -603,8 +730,18 @@ package body demics_mvc is
                   data_a : in demics_ftest.class_ftData.ftData;
                   data_b : in demics_ftest.class_ftData.ftData;
                   sn : in integer32; lvl : in integer32 ) is
+
+      off : constant := DEMiCs_Global_Constants.OFF;
+
     begin
-      null;
+      if lvl = 1 then
+        this.firIdx(sn) := data_a.parent.fIdx;
+      else
+        if data_b.parent.sw = off
+         then this.firIdx(sn) := data_a.parent.fIdx;
+         else this.firIdx(sn) := data_b.parent.fIdx;
+        end if;
+      end if;
     end get_firIdx;
 
     procedure info_cpuTime
@@ -620,9 +757,11 @@ package body demics_mvc is
       null;
     end info_final;
 
-    procedure enum ( this : in Link_to_mvc ) is
+    procedure enum ( this : in Link_to_mvc; vrblvl : in integer32 := 0 ) is
     begin
-      null;
+      if vrblvl > 0 
+       then put_line("-> in demics_mvc.class_mvc.enum ...");
+      end if;
     end enum;
 
   end class_mvc;

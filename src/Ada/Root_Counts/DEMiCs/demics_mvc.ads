@@ -64,33 +64,45 @@ package demics_mvc is
                   depth : in integer32; lvl : in integer32;
                   length : in integer32; vrblvl : in integer32 := 0 );
 
+    -- DESCRIPTION :
+    --   Allocates memory for the levels.
+
     procedure initMemoryCheck
                 ( this : in Link_to_mvc;
-                  data : in demics_ftest.class_ftData.Link_to_ftData;
+                  data : in demics_fTest.class_ftData.Link_to_ftData;
                   depth : in integer32 );
+
+    -- DESCRIPTION :
+    --   Adds an element to data if data.cur is null.
 
     procedure memoryCheck
                 ( this : in Link_to_mvc;
-                  data : in demics_ftest.class_ftData.Link_to_ftData;
+                  data : in demics_fTest.class_ftData.Link_to_ftData;
                   depth : in integer32 );
+
+    -- DESCRIPTION :
+    --   Same as initMemoryCheck.
 
     procedure get_candIdx
                 ( this : in Link_to_mvc;
-                  curInif : in demics_itest.class_inifData.Link_to_inifData );
+                  curInif : in demics_iTest.class_inifData.Link_to_inifData );
+
+    -- DESCRIPTION :
+    --   Defines the elements in this.candIdx.
 
     function chooseSup
                 ( this : Link_to_mvc;
                   depth : integer32;
-                  curNode : demics_ftest.class_theData.Link_to_theData;
-                  curInif : demics_itest.class_inifData.Link_to_inifData;
-                  nextInif : demics_itest.class_inifData.Link_to_inifData )
+                  curNode : demics_fTest.class_theData.Link_to_theData;
+                  curInif : demics_iTest.class_inifData.Link_to_inifData;
+                  nextInif : demics_iTest.class_inifData.Link_to_inifData )
                 return integer32;
 
     procedure fUpdateDirRed
                 ( this : in Link_to_mvc;
-                  curInif : in demics_itest.class_inifData.Array_of_inifData;
-                  nextInif : in demics_itest.class_inifData.Array_of_inifData;
-                  curNode : in demics_ftest.Class_theData.Link_to_theData;
+                  curInif : in demics_iTest.class_inifData.Array_of_inifData;
+                  nextInif : in demics_iTest.class_inifData.Array_of_inifData;
+                  curNode : in demics_fTest.Class_theData.Link_to_theData;
                   curRsp : in Standard_Integer_Vectors.Link_to_Vector;
                   depth : in integer32 );
 
@@ -146,8 +158,11 @@ package demics_mvc is
     procedure get_tuple_index
                 ( this : in Link_to_mvc;
                   node : in demics_ftest.class_ftData.Link_to_ftData;
-                  data : in demics_ftest.class_ftData.Link_to_ftData;
+                  data : in demics_ftest.class_ftData.Array_of_ftData;
                   length : in integer32 );
+
+    -- DESCRIPTION :
+    --   Sets the value of nodeLabel of node.parent using data.
 
     procedure dbg_init_transMat
                 ( this : in Link_to_mvc;
@@ -172,6 +187,9 @@ package demics_mvc is
                   curRed : double_float;
                   tarRed : double_float ) return integer32;
 
+    -- DESCRIPTION :
+    --   Checks the sign of curRed versus tarRed.
+
     function checkNonNeg_dir
                 ( this : Link_to_mvc;
                   curDirElem : double_float;
@@ -190,6 +208,9 @@ package demics_mvc is
     function table_out
                 ( this : Link_to_mvc;
                   row : integer32; col : integer32 ) return integer32;
+
+    -- DESCRIPTION :
+    --   Returns the element in the table at position defined by row and col.
 
     procedure info_neg
                 ( this : in Link_to_mvc; termSet : in integer32;
@@ -258,15 +279,27 @@ package demics_mvc is
 
     procedure info_table ( this : in Link_to_mvc );
 
+    -- DESCRIPTION :
+    --   Writes information about the relation table.
+
     function new_mvc return mvc;
 
+    -- DESCRIPTION :
+    --   Returns a record with zero and null values.
+
     procedure delete_mvc ( this : in Link_to_mvc );
+
+    -- DESCRIPTION :
+    --   Deallocates memory for the vector types.
 
     procedure allocateAndIni
                 ( this : in Link_to_mvc;
                   data : in demics_input_data.class_dataSet.dataSet;
                   seedNum : in integer32; output : in integer32;
                   vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Allocates and initializes the data.
 
     procedure initFeasTest ( this : in Link_to_mvc; depth : in integer32 );
 
@@ -396,6 +429,9 @@ package demics_mvc is
                   data_b : in demics_ftest.class_ftData.ftData;
                   sn : in integer32; lvl : in integer32 );
 
+    -- DESCRIPTION :
+    --   Sets the value of this.firIdx(sn).
+
     procedure info_cpuTime
                 ( this : in Link_to_mvc;
                   cpuTime_start : in double_float;
@@ -403,7 +439,10 @@ package demics_mvc is
 
     procedure info_final ( this : in Link_to_mvc );
 
-    procedure enum ( this : in Link_to_mvc );
+    procedure enum ( this : in Link_to_mvc; vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Enumerates all mixed cells.
 
   end class_mvc;
 
