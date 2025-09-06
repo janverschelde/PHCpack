@@ -236,7 +236,7 @@ package body demics_reltab is
               put_frIdx(this,reTermS+i-1);
               iter := 0;
               demics_simplex.class_simplex.tSolLP
-                (this.the_Simplex,iter,triangle,flag);
+                (this.the_Simplex,iter,triangle,flag,vrblvl-1);
               if flag = opt then
                -- findAllFeasLPs_tri(this,k,j,reTermS+i-1,vrblvl-1);
                 findAllFeasLPs_tri(this,k,j,vrblvl-1);
@@ -282,7 +282,7 @@ package body demics_reltab is
                 put_data(this);
                 iter := 0;
                 demics_simplex.class_simplex.tSolLP
-                  (this.the_Simplex,iter,square,flag);
+                  (this.the_Simplex,iter,square,flag,vrblvl-1);
                 if flag = opt then
                   findAllFeasLPs_squ
                     (this,supLab_a,supLab_b,j,i,colPos,rowPos,vrblvl-1);

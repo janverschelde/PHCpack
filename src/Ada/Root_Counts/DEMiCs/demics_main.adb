@@ -1,4 +1,4 @@
-with text_io;                           use text_io;
+with Ada.text_io;                       use Ada.text_io;
 with Communications_with_User;
 with demics_input_data;
 with demics_input_main;
@@ -16,6 +16,7 @@ procedure demics_main is
 
   begin
     class_mvc.allocateAndIni(ptr2MVC,data,1,1,99);
+    class_mvc.Enum(ptr2MVC,99);
   end Compute_Mixed_Volume;
  
   procedure Main is

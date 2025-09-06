@@ -168,17 +168,29 @@ package demics_simplex is
 
 -- relation table
 
-    function checkFrIdx ( this : Link_to_simplex ) return integer32;
+    function checkFrIdx ( this : Link_to_simplex;
+                          vrblvl : integer32 := 0 ) return integer32;
+
+    -- DESCRIPTION :
+    --   Called in phase 2 of tSolLP when making the relation table.
 
     procedure elimFrIdx ( this : in Link_to_simplex;
                           sub_pivOutIdx : in integer32 );
 
 -- phase 1
 
-    procedure reMakeNonBasisIdx ( this : in Link_to_simplex;
-                                  reTermS : in integer32 );
+    procedure reMakeNonBasisIdx
+                ( this : in Link_to_simplex; reTermS : in integer32;
+                  vrblvl : in integer32 := 0 );
 
-    procedure reMakeNonBasisIdx_tab ( this : in Link_to_simplex );
+    -- DESCRIPTION :
+    --   Updates this.nbIdx.
+
+    procedure reMakeNonBasisIdx_tab
+                ( this : in Link_to_simplex; vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Updates this.nbIdx, called when making the relation table.
 
     procedure elimArt ( this : in Link_to_simplex;
                         depth : in integer32; preNbN : in integer32;
@@ -198,32 +210,44 @@ package demics_simplex is
     -- isZeroDirEle was a function returning (TRUE) or (FALSE)
     -- with a side effect: assigning to sub_pivInIdx
 
-    procedure IP_vec_mat ( this : in Link_to_simplex );
+    procedure IP_vec_mat ( this : in Link_to_simplex;
+                           vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Updates this.d_sol based on this.basisIdx.
 
 -- reduced cost
 
     procedure reducedCost_tab_p1
                 ( this : in Link_to_simplex;
-                  enterIdx : out integer32;
-                  sub_enterIdx : out integer32;
-                  redCost : out double_float; flag : out integer32 );
+                  pivInIdx : out integer32; sub_pivInIdx : out integer32;
+                  redCost : out double_float; flag : out integer32;
+                  vrblvl : in integer32 := 0 );
 
-    -- reducedCost_tab_p1 was defined as a function, assigning to its
-    -- arguments as side effects and returning a flag value
+    -- DESCRIPTION :
+    --   Called in phase 1 of tSolLP when making the relation table.
+
+    -- NOTE:
+    --   reducedCost_tab_p1 was defined as a function, assigning to its
+    --   arguments as side effects and returning a flag value.
 
     procedure reducedCost_tab
                 ( this : in Link_to_simplex;
-                  enterIdx : out integer32;
-                  sub_enterIdx : out integer32;
-                  redCost : out double_float; flag : out integer32 );
+                  pivInIdx : out integer32; sub_pivInIdx : out integer32;
+                  redCost : out double_float; flag : out integer32;
+                  vrblvl : in integer32 := 0 );
 
-    -- reducedCost_tab was defined as a function, assigning to its
-    -- arguments as side effects and returning a flag value
+    -- DESCRIPTION :
+    --   Called in phase 2 of tSolLP when making the relation table.
+
+    -- NOTE :
+    --   reducedCost_tab was defined as a function, assigning to its
+    --   arguments as side effects and returning a flag value.
 
     procedure reducedCost_p1
                 ( this : in Link_to_simplex;
-                  enterIdx : out integer32;
-                  sub_enterIdx : out integer32;
+                  pivInIdx : out integer32;
+                  sub_pivInIdx : out integer32;
                   redCost : out double_float; flag : out integer32 );
 
     -- reducedCost_tab_p1 was defined as a function, assigning to its
@@ -231,8 +255,8 @@ package demics_simplex is
 
     procedure reducedCost
                 ( this : in Link_to_simplex;
-                  enterIdx : out integer32;
-                  sub_enterIdx : out integer32;
+                  pivInIdx : out integer32;
+                  sub_pivInIdx : out integer32;
                   redCost : out double_float; flag : out integer32 );
 
     -- reducedCost was defined as a function, assigning to its arguments
@@ -240,8 +264,8 @@ package demics_simplex is
 
     procedure reducedCost_Bland
                 ( this : in Link_to_simplex;
-                  enterIdx : out integer32;
-                  sub_enterIdx : out integer32;
+                  pivInIdx : out integer32;
+                  sub_pivInIdx : out integer32;
                   redCost : out double_float; flag : out integer32 );
 
     -- reducedCost_Bland was defined as a function, assigning to its
@@ -249,8 +273,8 @@ package demics_simplex is
 
     procedure reducedCost_mFst
                 ( this : in Link_to_simplex;
-                  enterIdx : out integer32;
-                  sub_enterIdx : out integer32;
+                  pivInIdx : out integer32;
+                  sub_PivInIdx : out integer32;
                   pivOutIdx : in integer32;
                   sub_pivOutIdx : in integer32;
                   redCost : out double_float; flag : out integer32 );
@@ -260,8 +284,8 @@ package demics_simplex is
 
     procedure reducedCost_iFst
                 ( this : in Link_to_simplex;
-                  enterIdx : out integer32;
-                  sub_enterIdx : out integer32;
+                  pivInIdx : out integer32;
+                  sub_pivInIdx : out integer32;
                   pivOutIdx : in integer32;
                   sub_pivOutIdx : in integer32;
                   redCost : out double_float;
@@ -293,50 +317,52 @@ package demics_simplex is
     -- extend_nbIdx_comp was declared as a function, returning a flag,
     -- assigning to non_basisIdx and cnt as side effects
 
-    procedure getIdx ( this : in Link_to_simplex;
-                       level : out integer32;
-                       idx : out integer32;
-                       idx2 : out integer32;
-                       ii : out integer32;
-                       d_nbIdx : in out integer32 );
+    procedure getIdx ( this : in Link_to_simplex; level : out integer32;
+                       idx : out integer32; idx2 : out integer32;
+                       ii : out integer32; d_nbIdx : in integer32;
+                       vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Assigns the level and updates this.nIdx.
 
 -- ratio test
 
     procedure ratioTest
-                ( this : in Link_to_simplex;
-                  redFlag : in integer32;
-                  pivInIdx : in integer32;
-                  sub_pivInIdx : in integer32;
-                  pivOutIdx : out integer32;
-                  sub_pivOutIdx : out integer32;
-                  theta : out double_float; flag : out integer32 );
+                ( this : in Link_to_simplex; redFlag : in integer32;
+                  pivInIdx : in integer32; sub_pivInIdx : in integer32;
+                  pivOutIdx : out integer32; sub_pivOutIdx : out integer32;
+                  theta : out double_float; flag : out integer32;
+                  vrblvl : in integer32 := 0 );
 
-    -- ratioTest was declared as a function, returning a flag,
-    -- assigning to pivOutIdx, sub_pivOutIdx, and theta as side effects
+    -- DESCRIPTION :
+    --   Called in phase 1 of tSolLP when making the relation table.
+
+    -- NOTE :
+    --   ratioTest was declared as a function, returning a flag,
+    --   assigning to pivOutIdx, sub_pivOutIdx, and theta as side effects.
 
     procedure ratioTest_artFst
-                ( this : in Link_to_simplex;
-                  redFlag : in integer32;
-                  pivInIdx : in integer32;
-                  sub_pivInIdx : in integer32;
-                  pivOutIdx : out integer32;
-                  sub_pivOutIdx : out integer32;
+                ( this : in Link_to_simplex; redFlag : in integer32;
+                  pivInIdx : in integer32; sub_pivInIdx : in integer32;
+                  pivOutIdx : out integer32; sub_pivOutIdx : out integer32;
                   theta : out double_float; flag : out integer32 );
 
     -- ratioTest_artFst was declared as a function, returning a flag,
     -- assigning to pivOutIdx, sub_pivOutIdx, and theta as side effects
 
     procedure ratioTest_art
-                ( this : in Link_to_simplex;
-                  redFlag : in integer32;
-                  pivInIdx : in integer32;
-                  sub_pivInIdx : in integer32;
-                  pivOutIdx : out integer32;
-                  sub_pivOutIdx : out integer32;
-                  theta : out double_float; flag : out integer32 );
+                ( this : in Link_to_simplex; redFlag : in integer32;
+                  pivInIdx : in integer32; sub_pivInIdx : in integer32;
+                  pivOutIdx : out integer32; sub_pivOutIdx : out integer32;
+                  theta : out double_float; flag : out integer32;
+                  vrblvl : in integer32 := 0 );
 
-    -- ratioTest_art was declared as a function, returning a flag,
-    -- assigning to pivOutIdx, sub_pivOutIdx, and theta as side effects
+    -- DESCRIPTION :
+    --   Called in phase 2 of tSolLP when making the relation table.
+
+    -- NOTE :
+    --   ratioTest_art was declared as a function, returning a flag,
+    --   assigning to pivOutIdx, sub_pivOutIdx, and theta as side effects.
 
     procedure ratioTest_art_Bland
                 ( this : in Link_to_simplex;
@@ -372,12 +398,10 @@ package demics_simplex is
 
     procedure createNewBandN_tab
                 ( this : in Link_to_simplex;
-                  pivInIdx : in integer32;
-                  sub_pivInIdx : in integer32;
-                  pivOutIdx : in integer32;
-                  sub_pivOutIdx : in integer32;
-                  theta : in double_float;
-                  redCost : in double_float );
+                  pivInIdx : in integer32; sub_pivInIdx : in integer32;
+                  pivOutIdx : in integer32; sub_pivOutIdx : in integer32;
+                  theta : in double_float; redCost : in double_float;
+                  vrblvl : in integer32 := 0 );
 
     procedure createNewBandN_p1
                 ( this : in Link_to_simplex;
@@ -460,35 +484,83 @@ package demics_simplex is
 
     procedure info_p_sol ( this : in Link_to_simplex );
 
+    -- DESCRIPTION :
+    --   Write the numbers is this.p_sol.
+
     procedure info_d_sol ( this : in Link_to_simplex );
+
+    -- DESCRIPTION :
+    --   Write the numbers is this.d_sol.
 
     procedure info_p1_d_sol ( this : in Link_to_simplex );
 
+    -- DESCRIPTION :
+    --   Write the numbers is this.p1_d_sol.
+
     procedure info_invB ( this : in Link_to_simplex );
+
+    -- DESCRIPTION :
+    --   Write the numbers is this.invB.
 
     procedure info_transMat ( this : in Link_to_simplex );
 
+    -- DESCRIPTION :
+    --   Write the numbers is this.transMat.
+
     procedure info_transRed ( this : in Link_to_simplex );
+
+    -- DESCRIPTION :
+    --   Write the numbers is this.transRed.
 
     procedure info_basisIdx ( this : in Link_to_simplex );
 
+    -- DESCRIPTION :
+    --   Write the numbers is this.basisIdx.
+
     procedure info_nf_pos ( this : in Link_to_simplex );
+
+    -- DESCRIPTION :
+    --   Write the numbers is this.nf_pos.
 
     procedure info_nbIdx ( this : in Link_to_simplex );
 
+    -- DESCRIPTION :
+    --   Write the numbers is this.nbIdx.
+
     procedure info_rIdx ( this : in Link_to_simplex );
+
+    -- DESCRIPTION :
+    --   Write the numbers is this.rIdx.
 
     procedure info_redVec ( this : in Link_to_simplex );
 
+    -- DESCRIPTION :
+    --   Write the numbers is this.redVec.
+
     procedure info_dir ( this : in Link_to_simplex );
+
+    -- DESCRIPTION :
+    --   Write the numbers is this.dir.
 
     procedure info_frIdx ( this : in Link_to_simplex );
 
+    -- DESCRIPTION :
+    --   Write the numbers is this.frIdx.
+
     procedure info_candIdx ( this : in Link_to_simplex );
+
+    -- DESCRIPTION :
+    --   Write the numbers is this.candIdx.
 
     procedure info_repIdx ( this : in Link_to_simplex );
 
+    -- DESCRIPTION :
+    --   Write the numbers is this.repIdx.
+
     procedure info_oriSup ( this : in Link_to_simplex );
+
+    -- DESCRIPTION :
+    --   Write the numbers is this.supp.
 
     function new_simplex return simplex;
 
@@ -499,9 +571,12 @@ package demics_simplex is
 
     procedure get_iNbN_nfN
                 ( this : in Link_to_simplex;
-                  cur : in demics_ftest.class_theData.Link_to_Array_of_theData;
-                  lNbN : in integer32;
-                  lNfN : in integer32 );
+                  cur : in demics_ftest.class_theData.Link_to_theData;
+                  lNbN : in integer32; lNfN : in integer32 );
+
+    -- DESCRIPTION :
+    --   Sets the values of nbN and nfN both in this and cur,
+    --   using lNbN and lNfN respectively.
 
     procedure get_mNbN_nfN
                 ( this : in Link_to_simplex;
@@ -539,28 +614,49 @@ package demics_simplex is
                 ( this : in Link_to_simplex;
                   ori_p_sol : in Standard_Floating_Vectors.Link_to_Vector );
 
+    -- DESCRIPTION :
+    --   Sets this.p_sol to ori_p_sol.
+
     procedure get_d_sol
                 ( this : in Link_to_simplex;
                   ori_d_sol : in Standard_Floating_Vectors.Link_to_Vector );
+
+    -- DESCRIPTION :
+    --   Sets this.d_sol to ori_d_sol.
 
     procedure get_basisIdx
                 ( this : in Link_to_simplex;
                   ori_basisIdx : in Standard_Integer_Vectors.Link_to_Vector );
 
+    -- DESCRIPTION :
+    --   Sets this.basisIdx to ori_basisIdx.
+
     procedure get_nf_pos
                 ( this : in Link_to_simplex;
                   ori_nf_pos : in Standard_Integer_Vectors.Link_to_Vector );
+
+    -- DESCRIPTION :
+    --   Sets this.nf_pos to ori_nf_pos;
 
     procedure get_nbIdx
                 ( this : in Link_to_simplex;
                   ori_nbIdx : in Standard_Integer_Vectors.Link_to_Vector );
 
+    -- DESCRIPTION :
+    --   Sets this.nbIdx to ori_nbIdx.
+
     procedure get_invB
                 ( this : in Link_to_simplex;
-                  invB : in Standard_Floating_Vectors.Link_to_Vector );
+                  ori_invB : in Standard_Floating_Vectors.Link_to_Vector );
+
+    -- DESCRIPTION :
+    --   Sets this.invB to ori_invB.
 
     procedure get_frIdx ( this : in Link_to_simplex;
                           ori_frIdx : in integer32 );
+
+    -- DESCRIPTION :
+    --   Sets this.frIdx to ori_frIdx.
 
     procedure copy_p1_d_sol
                 ( this : in Link_to_simplex;
@@ -586,7 +682,8 @@ package demics_simplex is
 
     procedure tSolLP ( this : in Link_to_simplex;
                        iter : in out integer32;
-                       mode : in integer32; flag : out integer32 );
+                       mode : in integer32; flag : out integer32;
+                       vrblvl : in integer32 := 0 );
 
     -- tSolLP was declared as a function, assigning to iter
     -- as a side effect, and returning a flag
@@ -742,13 +839,28 @@ package demics_simplex is
 
     procedure info_mv ( this : in Link_to_simplex );
 
+    -- DESCRIPTION :
+    --   Writes the number of mixed cells and the mixed volume.
+
     procedure info_allSup ( this : in Link_to_simplex );
+
+    -- DESCRIPTION :
+    --   Writes the supports.
 
     procedure info_allCostVec ( this : in Link_to_simplex );
 
+    -- DESCRIPTION :
+    --   Writes all cost vectors.
+
     procedure info_lifting ( this : in Link_to_simplex );
 
+    -- DESCRIPTION :
+    --   Writes the lifting values.
+
     procedure info_simplexData ( this : Link_to_simplex );
+
+    -- DESCRIPTION :
+    --   Writes all data stored in this simplex.
 
   end class_simplex;
 

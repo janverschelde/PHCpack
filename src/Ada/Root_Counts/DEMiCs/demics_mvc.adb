@@ -762,6 +762,8 @@ package body demics_mvc is
       if vrblvl > 0 
        then put_line("-> in demics_mvc.class_mvc.enum ...");
       end if;
+      demics_reltab.class_reltab.makeTable
+        (this.the_Reltab,this.total_unbLP_tab,vrblvl-1);
     end enum;
 
   end class_mvc;
