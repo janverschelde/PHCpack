@@ -1,5 +1,5 @@
 Sat 6 Sep 2025 : extended demics_simplex, updated demics_reltab.adb,
-  demics_mvc.adb and demics_main.adb.
+  demics_mvc.adb and demics_main.adb.  Extended demics_simplex.adb more.
 
 Fri 5 Sep 2025 : extended demics_mvc, updated demics_main.
 

@@ -62,32 +62,30 @@ package demics_simplex is
     --   Allocation and initialization of the last support set.
 
     procedure supMat_in ( this : in Link_to_supportSet;
-                          rowIdx : in integer32;
-                          colIdx : in integer32;
+                          rowIdx : in integer32; colIdx : in integer32;
                           elem : in double_float );
 
     -- DESCRIPTION :
     --   Sets the value in this.supMat defined by rowIdx and colIdx to elem.
 
     procedure supMat_neg ( this : in Link_to_supportSet;
-                           rowIdx : in integer32;
-                           colIdx : in integer32 );
+                           rowIdx : in integer32; colIdx : in integer32 );
 
     -- DESCRIPTION :
     --   Flips the sign of the value in this.supMat,
     --   as defined by rowIdx and colIdx.
 
     function supMat_out ( this : Link_to_supportSet;
-                          rowIdx : integer32;
-                          colIdx : integer32 ) return double_float;
+                          rowIdx : integer32; colIdx : integer32 )
+                        return double_float;
 
     -- DESCRIPTION :
     --   Returns the value in this.supMat as defined by rowIdx and colIdx.
 
     function redVal ( this : Link_to_supportSet;
                       d_sol : Standard_Floating_Vectors.Link_to_Vector;
-                      idx : integer32;
-                      ii : integer32 ) return double_float;
+                      idx : integer32; ii : integer32 )
+                    return double_float;
 
     -- DESCRIPTION :
     --   Returns the value of the solution.
@@ -380,10 +378,18 @@ package demics_simplex is
                                pivInIdx : integer32 ) return integer32;
 
     procedure IP_mat_vec ( this : in Link_to_simplex;
-                           pivInIdx : in integer32 );
+                           pivInIdx : in integer32;
+                           vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Computes a matrix-vector product, using this.invB.
 
     procedure IP_mat_vec_fst ( this : in Link_to_simplex;
-                               pivInIdx : in integer32 );
+                               pivInIdx : in integer32;
+                               vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Computes a matrix-vector product, using this.pre_invB.
 
     procedure update_p1_d_sol ( this : in Link_to_simplex;
                                 pivInIdx : in integer32;
@@ -402,6 +408,9 @@ package demics_simplex is
                   pivOutIdx : in integer32; sub_pivOutIdx : in integer32;
                   theta : in double_float; redCost : in double_float;
                   vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Makes a new basis and nonbasis when making the table.
 
     procedure createNewBandN_p1
                 ( this : in Link_to_simplex;
@@ -461,26 +470,46 @@ package demics_simplex is
                         rowIdx : in integer32; colIdx : in integer32;
                         elem : in double_float );
 
+    -- DESCRIPTION :
+    --   Assign to this.invB the value of elem,
+    --   at the position defined by rowIdx and colIdx.
+
     function invB_out ( this : Link_to_simplex;
-                        rowIdx : integer32;
-                        colIdx : integer32 ) return double_float;
-
-    function transMat_out ( this : Link_to_simplex;
-                            rowIdx : integer32;
-                            colIdx : integer32 ) return double_float;
-
-    procedure supp_in ( this : in Link_to_simplex;
-                        lvl : in integer32;
-                        rowIdx : in integer32; colIdx : in integer32;
-                        elem : in double_float ); 
-
-    function supp_out ( this : Link_to_simplex;
-                        lvl : integer32;
                         rowIdx : integer32; colIdx : integer32 )
                       return double_float;
 
-    function isZero ( this : Link_to_simplex;
-                      val : double_float ) return integer32;
+    -- DESCRIPTION :
+    --   Returns the element in this.invB at the position 
+    --   defined by rowIdx and colIdx.
+
+    function transMat_out ( this : Link_to_simplex;
+                            rowIdx : integer32; colIdx : integer32 )
+                          return double_float;
+
+    -- DESCRIPTION :
+    --   Returns the element in this.transMat at the position
+    --   defined by rowIdx and colIdx.
+
+    procedure supp_in ( this : in Link_to_simplex; lvl : in integer32;
+                        rowIdx : in integer32; colIdx : in integer32;
+                        elem : in double_float ); 
+
+    -- DESCRIPTION :
+    --   Assign to this.oriSupp the value of elem, at index lvl,
+    --   and defined by the position at rowIdx and colIdx.
+
+    function supp_out ( this : Link_to_simplex; lvl : integer32;
+                        rowIdx : integer32; colIdx : integer32 )
+                      return double_float;
+
+    -- DESCRIPTION :
+    --   Returns the element in this.oriSupp, at index lvl,
+    --   and at the position defined by rowIdx and colIdx.
+
+    function isZero ( val : double_float ) return integer32;
+
+    -- DESCRIPTION :
+    --   Returns whether the value is zero or not.
 
     procedure info_p_sol ( this : in Link_to_simplex );
 

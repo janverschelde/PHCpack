@@ -70,6 +70,9 @@ package body demics_simplex is
                   data : in demics_input_data.class_dataSet.dataSet;
                   vrblvl : in integer32 := 0 ) is
     begin
+      if vrblvl > 0
+       then put_line("-> in demics_simplex.class_supportSet.allocAux ...");
+      end if;
       this.row := data.dim;
       this.col := data.dim;
       this.supMat := new Standard_Floating_Vectors.Vector'
@@ -82,32 +85,30 @@ package body demics_simplex is
     end allocAux;
 
     procedure supMat_in ( this : in Link_to_supportSet;
-                          rowIdx : in integer32;
-                          colIdx : in integer32;
+                          rowIdx : in integer32; colIdx : in integer32;
                           elem : in double_float ) is
     begin
       this.supMat(rowIdx + colIdx*this.row) := elem;
     end supMat_in;
 
     procedure supMat_neg ( this : in Link_to_supportSet;
-                           rowIdx : in integer32;
-                           colIdx : in integer32 ) is
+                           rowIdx : in integer32; colIdx : in integer32 ) is
     begin
       this.supMat(rowIdx + colIdx*this.row) 
         := -this.supMat(rowIdx + colIdx*this.row);
     end supMat_neg;
 
     function supMat_out ( this : Link_to_supportSet;
-                          rowIdx : integer32;
-                          colIdx : integer32 ) return double_float is
+                          rowIdx : integer32; colIdx : integer32 )
+                        return double_float is
     begin
       return this.supMat(rowIdx + colIdx*this.row);
     end supMat_out;
 
     function redVal ( this : Link_to_supportSet;
                       d_sol : Standard_Floating_Vectors.Link_to_Vector;
-                      idx : integer32;
-                      ii : integer32 ) return double_float is
+                      idx : integer32; ii : integer32 )
+                    return double_float is
 
       val : double_float := 0.0;
 
@@ -305,10 +306,31 @@ package body demics_simplex is
                   pivInIdx : out integer32; sub_pivInIdx : out integer32;
                   redCost : out double_float; flag : out integer32;
                   vrblvl : in integer32 := 0 ) is
+
+      opt : constant := DEMiCs_Global_Constants.OPT;
+      ii,tmp_non_basisIdx,level,idx,idx2 : integer32;
+      val,tmp_redCost : double_float;
+
     begin
       if vrblvl > 0 then
         put_line("-> in demics_simplex.class_simplex.reducedCost_tab ...");
       end if;
+      flag := opt;
+      redCost := 1.0E-8;
+      for j in 0..this.nbN - this.dim - 1 loop
+        val := 0.0;
+        tmp_non_basisIdx := this.nbIdx(j);
+        getIdx(this,level,idx,idx2,ii,2*tmp_non_basisIdx);
+        tmp_redCost := class_supportSet.redVal
+          (this.supp(level)(idx2),this.d_sol,idx,ii);
+        if (tmp_redcost < DEMiCs_Global_Constants.MINUSZERO) and
+           (abs(tmp_redCost) > abs(redCost)) then
+          redCost := tmp_redCost;
+          pivInIdx := tmp_non_basisIdx;
+          sub_pivInIdx := j;
+          flag := DEMiCs_Global_Constants.POSTHETA;
+        end if;
+      end loop;
     end reducedCost_tab;
 
     procedure reducedCost_p1
@@ -392,9 +414,8 @@ package body demics_simplex is
                        ii : out integer32; d_nbIdx : in integer32;
                        vrblvl : in integer32 := 0 ) is
     begin
-      if vrblvl > 0 then
-        put("-> in demics_simplex.class_simplex.getIdx, level : ");
-        put(level,1); put_line(" ...");
+      if vrblvl > 0
+       then put_line("-> in demics_simplex.class_simplex.getIdx ... ");
       end if;
       level := this.nIdx(d_nbIdx);
       idx := this.nIdx(d_nbIdx+1);
@@ -410,11 +431,67 @@ package body demics_simplex is
                   pivOutIdx : out integer32; sub_pivOutIdx : out integer32;
                   theta : out double_float; flag : out integer32;
                   vrblvl : in integer32 := 0 ) is
+
+      nfPos,checker,nonNegVarNum : integer32;
+      tmp_theta : double_float;
+
     begin
       if vrblvl > 0 then
         put("-> in demics_simplex.class_simplex.ratioTest, redFlag : ");
         put(redFlag,1); put_line(" ...");
       end if;
+      flag := 0;
+      IP_mat_vec(this,pivInIdx,vrblvl-1);
+      nonNegVarNum := 0;
+      checker := 0;
+      case redFlag is
+        when DEMiCs_Global_Constants.POSTHETA =>
+          tmp_theta := DEMiCs_Global_Constants.SMALLDOUBLE;
+          theta := tmp_theta;
+          for i in 0..this.nfN-1 loop
+            nfPos := this.nf_pos(i);
+            nonNegVarNum := nonNegVarNum + 1;
+            if this.dir(nfPos) < DEMiCs_Global_Constants.MINUSZERO then
+              tmp_theta := this.p_sol(this.basisIdx(nfPos))/this.dir(nfPos);
+            else
+              checker := checker + 1;
+              tmp_theta := DEMiCs_Global_Constants.SMALLDOUBLE;
+            end if;
+            if theta < tmp_theta then
+              theta := tmp_theta;
+              pivOutIdx := this.basisIdx(nfPos);
+              sub_pivOutIdx := nfPos;
+              flag := DEMiCs_Global_Constants.CONTINUE;
+            end if;
+          end loop;
+          if checker = nonNegVarNum
+           then flag := DEMiCs_Global_Constants.UNBOUNDED;
+          end if;
+        when DEMiCs_Global_Constants.NEGTHETA =>
+          tmp_theta := DEMiCs_Global_Constants.BIGDOUBLE;
+          theta := tmp_theta;
+          for i in 0..this.nfN-1 loop
+            nfPos := this.nf_pos(i);
+            nonNegVarNum := nonNegVarNum + 1;
+            if this.dir(nfPos) > DEMiCs_Global_Constants.PLUSZERO then
+              tmp_theta := this.p_sol(this.basisIdx(nfPos))/this.dir(nfPos);
+            else
+              checker := checker + 1;
+              tmp_theta := DEMiCs_Global_Constants.BIGDOUBLE;
+            end if;
+            if theta > tmp_theta then
+              theta := tmp_theta;
+              pivOutIdx := this.basisIdx(nfPos);
+              sub_pivOutIdx := nfPos;
+              flag := DEMiCs_Global_Constants.CONTINUE;
+            end if;
+          end loop;
+          if checker = nonNegVarNum
+           then flag := DEMiCs_Global_Constants.UNBOUNDED;
+          end if;
+        when others => null;
+      end case;
+      theta := -theta;
     end ratioTest;
 
     procedure ratioTest_artFst
@@ -432,11 +509,73 @@ package body demics_simplex is
                   pivOutIdx : out integer32; sub_pivOutIdx : out integer32;
                   theta : out double_float; flag : out integer32;
                   vrblvl : in integer32 := 0 ) is
+
+      nfPos,checker,nonNegVarNum : integer32;
+      tmp_theta : double_float;
+
     begin
       if vrblvl > 0 then
         put("-> in demics_simplex.class_simplex.ratioTest_art, redFlag : ");
         put(redFlag,1); put_line(" ...");
       end if;
+      flag := 0;
+      IP_mat_vec(this,pivInIdx,vrblvl-1);
+      nonNegVarNum := 0;
+      checker := 0;
+      case redFlag is
+        when DEMiCs_Global_Constants.POSTHETA =>
+          tmp_theta := DEMiCs_Global_Constants.SMALLDOUBLE;
+          theta := tmp_theta;
+          for i in 0..this.nfN-1 loop   
+            nfPos := this.nf_pos(i);
+            if this.basisIdx(nfPos) < this.termSumNum - this.supN then
+              nonNegVarNum := nonNegVarNum + 1;
+              if this.dir(nfPos) < DEMiCs_Global_Constants.MINUSZERO then
+                tmp_theta := this.p_sol(this.basisIdx(nfPos))/this.dir(nfPos);
+              else
+                checker := checker + 1;
+                tmp_theta := DEMiCs_Global_Constants.SMALLDOUBLE;
+              end if;
+              if theta < tmp_theta then
+                theta := tmp_theta;
+                pivOutIdx := this.basisIdx(nfPos);
+                sub_pivOutIdx := nfPos;
+                flag := DEMiCs_Global_Constants.CONTINUE;
+	      end if;
+            end if;
+          end loop;
+          if checker = nonNegVarNum
+           then flag := DEMiCs_Global_Constants.UNBOUNDED;
+           else flag := DEMiCs_Global_Constants.CONTINUE;
+          end if;
+        when DEMiCs_Global_Constants.NEGTHETA =>
+          tmp_theta := DEMiCs_Global_Constants.BIGDOUBLE;
+          theta := tmp_theta;
+          for i in 0..this.nfN-1 loop
+            nfPos := this.nf_pos(i);
+            if this.basisIdx(nfPos) < this.termSumNum - this.supN then
+              nonNegVarNum := nonNegVarNum + 1;
+              if this.dir(nfPos) > DEMiCs_Global_Constants.PLUSZERO then
+                tmp_theta := this.p_sol(this.basisIdx(nfPos))/this.dir(nfPos);
+              else
+                checker := checker + 1;
+                tmp_theta := DEMiCs_Global_Constants.BIGDOUBLE;
+	      end if;
+              if theta > tmp_theta then
+                theta := tmp_theta;
+                pivOutIdx := this.basisIdx(nfPos);
+                sub_pivOutIdx := nfPos;
+                flag := DEMiCs_Global_Constants.CONTINUE;
+              end if;
+            end if;
+          end loop;
+          if checker = nonNegVarNum
+           then flag := DEMiCs_Global_Constants.UNBOUNDED;
+           else flag := DEMiCs_Global_Constants.CONTINUE;
+          end if;
+        when others => null;
+      end case;
+      theta := -theta;
     end ratioTest_art;
 
     procedure ratioTest_art_Bland
@@ -458,15 +597,59 @@ package body demics_simplex is
     end ratioTest_frIdx;
 
     procedure IP_mat_vec ( this : in Link_to_simplex;
-                           pivInIdx : in integer32 ) is
+                           pivInIdx : in integer32;
+                           vrblvl : in integer32 := 0 ) is
+
+      ii,iii,level,idx2,nfPos : integer32;
+      val : double_float;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_simplex.class_simplex.IP_mat_vec, pivInIdx : ");
+        put(pivInIdx,1); put_line(" ...");
+      end if;
+      ii := 2 * pivInIdx;
+      level := this.nIdx(ii);
+      idx2 := this.firIdx(level);
+      iii := this.dim * this.nIdx(ii + 1);
+      for j in 0..this.nfN-1 loop 
+        nfPos := this.nf_pos(j);
+        val := 0.0;
+        ii := this.dim*nfPos;
+        for i in 0..this.dim-1 loop
+          val := val
+               + this.invB(ii + i)*this.supp(level)(idx2).supMat(i + iii);
+        end loop;
+        this.dir(nfPos) := -val;
+      end loop;
     end IP_mat_vec;
 
     procedure IP_mat_vec_fst ( this : in Link_to_simplex;
-                               pivInIdx : in integer32 ) is
+                               pivInIdx : in integer32;
+                               vrblvl : in integer32 := 0 ) is
+
+      ii,iii,level,idx2,nfPos : integer32;
+      val : double_float;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_simplex.class_simplex.IP_mat_vec_fst, pivInIdx : ");
+        put(pivInIdx,1); put_line(" ...");
+      end if;
+      ii := 2 * pivInIdx;
+      level := this.nIdx(ii);
+      idx2 := this.firIdx(level);
+      iii := this.dim*this.nIdx(ii + 1);
+      for j in 0..this.nfN-1 loop
+        nfPos := this.pre_nf_pos(j);
+        val := 0.0;
+        ii := this.dim * nfPos;
+        for i in 0..this.dim-1 loop
+          val := val + this.pre_invB(ii + i)
+                     * this.supp(level)(idx2).supMat(i + iii);
+        end loop;
+        this.dir(nfPos) := -val;
+      end loop;
     end IP_mat_vec_fst;
 
     procedure update_p1_d_sol ( this : in Link_to_simplex;
@@ -495,10 +678,48 @@ package body demics_simplex is
                   pivOutIdx : in integer32; sub_pivOutIdx : in integer32;
                   theta : in double_float; redCost : in double_float;
                   vrblvl : in integer32 := 0 ) is
+
+      ii,nfPos : integer32;
+      elem,val,vval : double_float;
+
     begin
       if vrblvl > 0 then
         put_line("-> in demics_simplex.class_simplex.createNewBandN_tab ...");
       end if;
+      ii := sub_pivOutIdx * this.dim;
+      elem := this.dir(sub_pivOutIdx);
+      val := (-1.0 - elem) / elem;
+      vval := redCost / elem;
+      for i in 0..this.dim-1 loop -- make new d_sol
+        this.d_sol(i) := this.d_sol(i) - vval * this.invB(ii + i);
+      end loop;
+      for i in 0..this.nfN-1 loop -- make new p-sol
+        nfPos := this.nf_pos(i);
+        if nfPos /= sub_pivOutIdx then
+          this.p_sol(this.basisIdx(nfPos))
+            := this.p_sol(this.basisIdx(nfPos)) + theta * this.dir(nfPos);
+        else
+          this.p_sol(this.basisIdx(nfPos)) := 0.0;
+        end if;
+      end loop;
+      this.p_sol(pivInIdx) := theta;
+     -- make new basisIdx and non_basisIdx
+      this.basisIdx(sub_pivOutIdx) := pivInIdx;
+      this.nbIdx(sub_pivInIdx) := pivOutIdx;
+      for i in 0..this.dim-1 loop -- make the new basis matrix
+        this.invB(ii + i) := this.invB(ii + i)/(-elem);
+        this.tmp_newInvB(i) := this.invB(ii + i);
+      end loop;
+      for j in 0..this.nfN-1 loop
+        nfPos := this.nf_pos(j);
+        if nfPos /= sub_pivOutIdx then
+          ii := this.dim * nfPos;
+          for i in 0..this.dim-1 loop
+            this.invB(ii + i)
+              := this.invB(ii + i) + this.dir(nfPos) * this.tmp_newInvB(i);
+          end loop;
+        end if;
+      end loop;
     end createNewBandN_tab;
 
     procedure createNewBandN_p1
@@ -574,43 +795,44 @@ package body demics_simplex is
                         rowIdx : in integer32; colIdx : in integer32;
                         elem : in double_float ) is
     begin
-      null;
+      this.invB(colIdx + this.dim*rowIdx) := elem;
     end invB_in;
 
     function invB_out ( this : Link_to_simplex;
-                        rowIdx : integer32;
-                        colIdx : integer32 ) return double_float is
-    begin
-      return 0.0;
-    end invB_out;
-
-    function transMat_out ( this : Link_to_simplex;
-                            rowIdx : integer32;
-                            colIdx : integer32 ) return double_float is
-    begin
-      return 0.0;
-    end transMat_out;
-
-    procedure supp_in ( this : in Link_to_simplex;
-                        lvl : in integer32;
-                        rowIdx : in integer32; colIdx : in integer32;
-                        elem : in double_float ) is
-    begin
-      null;
-    end supp_in;
-
-    function supp_out ( this : Link_to_simplex;
-                        lvl : integer32;
                         rowIdx : integer32; colIdx : integer32 )
                       return double_float is
     begin
-      return 0.0;
+      return this.invB(colIdx + this.dim*rowIdx);
+    end invB_out;
+
+    function transMat_out ( this : Link_to_simplex;
+                            rowIdx : integer32; colIdx : integer32 )
+                          return double_float is
+    begin
+      return this.transMat(colIdx + this.dim*rowIdx);
+    end transMat_out;
+
+    procedure supp_in ( this : in Link_to_simplex; lvl : in integer32;
+                        rowIdx : in integer32; colIdx : in integer32;
+                        elem : in double_float ) is
+    begin
+      this.oriSupp(lvl)(rowIdx + colIdx*this.dim) := elem;
+    end supp_in;
+
+    function supp_out ( this : Link_to_simplex; lvl : integer32;
+                        rowIdx : integer32; colIdx : integer32 )
+                      return double_float is
+    begin
+      return this.oriSupp(lvl)(rowIdx + colIdx*this.dim);
     end supp_out;
 
-    function isZero ( this : Link_to_simplex;
-                      val : double_float ) return integer32 is
+    function isZero ( val : double_float ) return integer32 is
     begin
-      return 0;
+      if val > DEMiCs_Global_Constants.MINUSZERO and
+         val < DEMiCs_Global_Constants.PLUSZERO
+       then return DEMiCs_Global_Constants.TRUE;
+       else return DEMiCs_Global_Constants.FALSE;
+      end if;
     end isZero;
 
     procedure info_p_sol ( this : in Link_to_simplex ) is
