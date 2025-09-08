@@ -145,17 +145,71 @@ package body demics_simplex is
 
     function checkFrIdx ( this : Link_to_simplex;
                           vrblvl : integer32 := 0 ) return integer32 is
+
+      flag : integer32 := DEMiCs_Global_Constants.CONTINUE;
+      redFlag,pivInIdx,sub_pivInIdx,pivOutIdx,sub_pivOutIdx : integer32;
+      redCost,theta : double_float;
+
     begin
       if vrblvl > 0
        then put_line("-> in demics_simplex.class_simplex.checkFrIdx ...");
       end if;
-      return 0;
+      for i in 0..this.nbN - this.dim - 1 loop
+        if this.nbIdx(i) = this.frIdx then
+          pivInIdx := this.frIdx;
+          sub_pivInIdx := i;
+          flag := DEMiCs_Global_Constants.PIVOT_IN;
+          exit;
+        end if;
+      end loop;
+      if flag = DEMiCs_Global_Constants.PIVOT_IN then
+        calRedCost(this,pivInIdx,redCost,vrblvl-1);
+        if redCost > DEMiCs_Global_Constants.PLUSZERO
+         then redFlag := DEMiCs_Global_Constants.NEGTHETA;
+         else redFlag := DEMiCs_Global_Constants.POSTHETA;
+        end if;
+        ratioTest_art(this,redFlag,pivInIdx,sub_pivInIdx,
+                      pivOutIdx,sub_pivOutIdx,theta,flag,vrblvl-1);
+
+        if flag = DEMiCs_Global_Constants.CONTINUE then
+          elimFrIdx(this,sub_pivOutIdx,vrblvl-1);
+          createNewBandN_tab
+            (this,pivInIdx,sub_pivInIdx,pivOutIdx,sub_pivOutIdx, 
+             theta, redCost,vrblvl-1);
+        else
+          if vrblvl > 0 
+           then put_line("----- UNB.checkFrIdx -----");
+          end if;
+        end if;
+      else
+        for i in 0..this.dim-1 loop
+          if this.basisIdx(i) = this.frIdx then
+            elimFrIdx(this,i,vrblvl-1);
+            exit;
+          end if;
+        end loop;
+      end if;
+      return flag;
     end checkFrIdx;
 
     procedure elimFrIdx ( this : in Link_to_simplex;
-                          sub_pivOutIdx : in integer32 ) is
+                          sub_pivOutIdx : in integer32;
+                          vrblvl : in integer32 := 0 ) is
+
+      cnt : integer32 := 0;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_simplex.class_simplex.elimFrIdx, sub_pivOutIdx : ");
+        put(sub_pivOutIdx,1); put_line(" ...");
+      end if;
+      for i in 0..this.nfN-1 loop
+        if i /= sub_pivOutIdx then
+          this.nf_pos(cnt) := this.nf_pos(i);
+          cnt := cnt + 1;
+        end if;
+      end loop;
+      this.nfN := this.nfN - 1;
     end elimFrIdx;
 
 -- phase 1
@@ -226,9 +280,26 @@ package body demics_simplex is
 
     procedure calRedCost ( this : in Link_to_simplex;
                            pivInIdx : in integer32;
-                           redCost : out double_float ) is
+                           redCost : out double_float;
+                           vrblvl : in integer32 := 0 ) is
+
+      ii,level,idx,idx2 : integer32;
+      val : double_float := 0.0;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_simplex.class_simplex.calRedCost, pivInIdx : ");
+        put(pivInIdx,1); put_line(" ...");
+      end if;
+      ii := 2 * pivInIdx;
+      level := this.nIdx(ii);
+      idx := this.nIdx(ii + 1);
+      idx2 := this.firIdx(level);
+      ii := this.dim * idx;
+      for i in 0..this.dim-1 loop  
+        val := val + this.d_sol(i) * this.supp(level)(idx2).supMat(i + ii);
+      end loop;
+      redCost := this.supp(level)(idx2).costVec(idx) - val;
     end calRedCost;
 
     procedure isZeroDirEle ( this : in Link_to_simplex;

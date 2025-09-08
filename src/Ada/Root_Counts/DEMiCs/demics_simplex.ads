@@ -173,7 +173,11 @@ package demics_simplex is
     --   Called in phase 2 of tSolLP when making the relation table.
 
     procedure elimFrIdx ( this : in Link_to_simplex;
-                          sub_pivOutIdx : in integer32 );
+                          sub_pivOutIdx : in integer32;
+                          vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Subroutine in checkFrIdx.
 
 -- phase 1
 
@@ -197,7 +201,11 @@ package demics_simplex is
 
     procedure calRedCost ( this : in Link_to_simplex;
                            pivInIdx : in integer32;
-                           redCost : out double_float );
+                           redCost : out double_float;
+                           vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Calculates the reduced cost.
 
     procedure isZeroDirEle ( this : in Link_to_simplex;
                              termS : in integer32; idx : in integer32;
