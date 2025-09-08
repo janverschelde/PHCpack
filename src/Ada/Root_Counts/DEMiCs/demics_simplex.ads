@@ -45,8 +45,7 @@ package demics_simplex is
     procedure allocSupp
                 ( this : in Link_to_supportSet;
                   data : in demics_input_data.class_dataSet.dataSet;
-                  level : in integer32;
-                  num : in integer32;
+                  level : in integer32; num : in integer32;
                   lifting : in Standard_Floating_Vectors.Link_to_Vector;
                   vrblvl : in integer32 := 0 );
 
@@ -644,8 +643,10 @@ package demics_simplex is
                 );
 
     procedure get_nbN_nfN ( this : in Link_to_simplex;
-                            ori_nbN : in integer32;
-                            ori_nfN : in integer32 );
+                            ori_nbN : in integer32; ori_nfN : in integer32 );
+
+    -- DESCRIPTION :
+    --   Sets this.nbN and this.nfN to ori_nbN and ori_nfN respectively.
 
     procedure get_p_sol
                 ( this : in Link_to_simplex;
@@ -852,16 +853,22 @@ package demics_simplex is
                     return double_float;
 
     function put_elem_supp ( this : Link_to_simplex;
-                             lvl : integer32;
-                             idx : integer32;
-                             row : integer32;
-                             col : integer32 ) return double_float;
+                             lvl : integer32; idx : integer32;
+                             row : integer32; col : integer32;
+                             vrblvl : integer32 := 0 )
+                           return double_float;
+
+    -- DESCRIPTION :
+    --   Returns an element from the support matrix at row and col,
+    --   from the support defined by lvl and idx.
 
     procedure mult_elem_supp ( this : in Link_to_simplex;
-                               lvl : in integer32;
-                               idx : in integer32;
-                               row : in integer32;
-                               col : in integer32 );
+                               lvl : in integer32; idx : in integer32;
+                               row : in integer32; col : in integer32 );
+
+    -- DESCRIPTION :
+    --   Flips the sign of the element in the support matrix at row and col,
+    --   from the support devided by lvl and idx.
 
     procedure check_dirRed
                 ( this : in Link_to_simplex;

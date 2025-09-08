@@ -13,14 +13,16 @@ package body demics_reltab is
                   lab : in integer32; idx : in integer32;
                   vrblvl : in integer32 := 0 ) is
 
-      constNum : constant integer32 := this.termStart(lab);
+      constNum : constant integer32 := this.termStart(lab) - 1;
       reTermS : constant integer32 := this.re_termStart(lab);
       negNum : integer32 := 0;
       elem : double_float;
 
     begin
       if vrblvl > 0 then
-        put_line("-> in demics_reltab.class_reltab.get_init_triData ...");
+        put("-> in demics_reltab.class_reltab.get_init_triData, lab : ");
+        put(lab,1); put(", idx : "); put(idx,1); new_line;
+        put("constNum : "); put(constNum,1); put_line(" ...");
       end if;
       this.firIdx(lab) := idx;
       this.nbN := constNum + this.dim;
@@ -35,7 +37,7 @@ package body demics_reltab is
         for j in 0..constNum-1 loop
           elem := elem
                 + this.val(j)*demics_simplex.class_simplex.put_elem_supp
-                                (this.the_Simplex,lab,idx,i,j);
+                                (this.the_Simplex,lab,idx,i,j,vrblvl-1);
         end loop;
         if elem < DEMiCs_Global_Constants.MINUSZERO then
           this.p_sol(this.maxConst+i) := -elem;

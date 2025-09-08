@@ -163,7 +163,7 @@ package body demics_input_data is
       fail := false;
       this.termSumNum := 0;
       this.termStart := new Standard_Integer_Vectors.Vector(0..this.supN);
-      this.termStart(0) := 1;
+      this.termStart(0) := 0;
       for k in 0..this.supN-1 loop
         this.termSumNum := this.termSumNum + this.termSet(k);
         this.termStart(k+1) := this.termSumNum;

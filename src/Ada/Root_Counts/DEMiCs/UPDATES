@@ -1,3 +1,6 @@
+Mon 8 Sep 2025 : extended demics_simplex.  Bugs fixed in demics_reltab.adb,
+  demics_input_data.adb, and demics_mvc.adb.
+
 Sun 7 Sep 2025 : extended demics_simplex with the definitions of procedures
   called in the computation of the relation table.
 

@@ -30,8 +30,7 @@ package body demics_simplex is
     procedure allocSupp
                 ( this : in Link_to_supportSet;
                   data : demics_input_data.class_dataSet.dataSet;
-                  level : in integer32;
-                  num : in integer32;
+                  level : in integer32; num : in integer32;
                   lifting : in Standard_Floating_Vectors.Link_to_Vector;
                   vrblvl : in integer32 := 0 ) is
 
@@ -42,7 +41,7 @@ package body demics_simplex is
     begin
       if vrblvl > 0 then
         put("-> in demics_simplex.class_supportSet.allocSupp, level : ");
-        put(level,1); put_line(" ...");      
+        put(level,1); put(", num : "); put(num,1); put_line(" ...");      
       end if;
       this.row := data.dim;
       this.col := data.termSet(level);
@@ -101,7 +100,12 @@ package body demics_simplex is
     function supMat_out ( this : Link_to_supportSet;
                           rowIdx : integer32; colIdx : integer32 )
                         return double_float is
+
+      idx : constant integer32 := rowIdx + colIdx*this.row;
+
     begin
+      put("idx : "); put(idx,1);
+      put(", this.supMat'last : "); put(this.supMat'last,1); new_line;
       return this.supMat(rowIdx + colIdx*this.row);
     end supMat_out;
 
@@ -339,8 +343,7 @@ package body demics_simplex is
 
     procedure reducedCost_tab_p1
                 ( this : in Link_to_simplex;
-                  pivInIdx : out integer32;
-                  sub_pivInIdx : out integer32;
+                  pivInIdx : out integer32; sub_pivInIdx : out integer32;
                   redCost : out double_float; flag : out integer32;
                   vrblvl : in integer32 := 0 ) is
 
@@ -1197,10 +1200,10 @@ package body demics_simplex is
     end get_pivOutNum;
 
     procedure get_nbN_nfN ( this : in Link_to_simplex;
-                            ori_nbN : in integer32;
-                            ori_nfN : in integer32 ) is
+                            ori_nbN : in integer32; ori_nfN : in integer32 ) is
     begin
-      null;
+      this.nbN := ori_nbN;
+      this.nfN := ori_nfN;
     end get_nbN_nfN;
 
     procedure get_p_sol
@@ -1307,7 +1310,7 @@ package body demics_simplex is
       for i in 0..this.supN-1 loop
         this.oriSupp(i)
           := new Standard_Floating_Vectors.Vector'
-                   (0..this.dim*this.termSet(i) => 0.0);
+                   (0..this.dim*this.termSet(i)-1 => 0.0);
         for j in 0..this.dim-1 loop
           for k in this.termStart(i)..this.termStart(i)+this.termSet(i)-1 loop
             supp_in(this,i,j,k - this.termStart(i),
@@ -1662,21 +1665,25 @@ package body demics_simplex is
     end matinv;
 
     function put_elem_supp ( this : Link_to_simplex;
-                             lvl : integer32;
-                             idx : integer32;
-                             row : integer32;
-                             col : integer32 ) return double_float is
+                             lvl : integer32; idx : integer32;
+                             row : integer32; col : integer32;
+                             vrblvl : integer32 := 0 )
+                           return double_float is
     begin
-      return 0.0;
+      if vrblvl > 0 then
+        put("-> in demics_simplex.class_simplex.put_elem_supp, lvl : ");
+        put(lvl,1); put(" idx : "); put(idx,1); new_line;
+        put("row : "); put(row,1);
+        put(", col : "); put(col,1); put_line(" ...");
+      end if;
+      return class_supportSet.supMat_Out(this.supp(lvl)(idx),row,col);
     end put_elem_supp;
 
     procedure mult_elem_supp ( this : in Link_to_simplex;
-                               lvl : in integer32;
-                               idx : in integer32;
-                               row : in integer32;
-                               col : in integer32 ) is
+                               lvl : in integer32; idx : in integer32;
+                               row : in integer32; col : in integer32 ) is
     begin
-      null;
+      class_supportSet.supMat_neg(this.supp(lvl)(idx),row,col);
     end mult_elem_supp;
 
     procedure check_dirRed

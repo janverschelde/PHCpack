@@ -526,7 +526,7 @@ package body demics_mvc is
       this.actnode
         := new Standard_Floating_Vectors.Vector'(0..this.supN-1 => 0.0);
       this.firIdx
-        := new Standard_Integer_Vectors.Vector'(0..this.supN-1 => 0);
+        := new Standard_Integer_Vectors.Vector'(0..this.supN => 0);
       this.re_termStart := new Standard_Integer_Vectors.Vector(0..this.supN);
       this.re_termStart(0) := 0;
       this.repN
