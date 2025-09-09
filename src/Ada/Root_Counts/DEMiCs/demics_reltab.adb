@@ -13,7 +13,7 @@ package body demics_reltab is
                   lab : in integer32; idx : in integer32;
                   vrblvl : in integer32 := 0 ) is
 
-      constNum : constant integer32 := this.termStart(lab) - 1;
+      constNum : constant integer32 := this.termSet(lab) - 1;
       reTermS : constant integer32 := this.re_termStart(lab);
       negNum : integer32 := 0;
       elem : double_float;
@@ -659,6 +659,9 @@ package body demics_reltab is
       makeTri(this,vrblvl-1);
       makeSqu(this,vrblvl-1);
       total_unbLP_tab := this.unbLP;
+      if vrblvl > 0
+       then info_table(this);
+      end if;
     end makeTable;
 
   end class_reltab;
