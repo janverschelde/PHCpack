@@ -101,11 +101,11 @@ package body demics_simplex is
                           rowIdx : integer32; colIdx : integer32 )
                         return double_float is
 
-      idx : constant integer32 := rowIdx + colIdx*this.row;
+     -- idx : constant integer32 := rowIdx + colIdx*this.row;
 
     begin
-      put("idx : "); put(idx,1);
-      put(", this.supMat'last : "); put(this.supMat'last,1); new_line;
+     -- put("idx : "); put(idx,1);
+     -- put(", this.supMat'last : "); put(this.supMat'last,1); new_line;
       return this.supMat(rowIdx + colIdx*this.row);
     end supMat_out;
 
@@ -292,7 +292,7 @@ package body demics_simplex is
       end if;
       for i in 0..this.dim-1 loop
         if this.basisIdx(i) >= this.termSumNum - this.supN then
-          isZeroDirEle(this,termS,i,preNbN,sub_pivInIdx,flag);
+          isZeroDirEle(this,termS,i,preNbN,sub_pivInIdx,flag,vrblvl-1);
           cnt := cnt + 1;
          -- True  -- val > 0
          -- False -- val =0
@@ -337,13 +337,38 @@ package body demics_simplex is
       redCost := this.supp(level)(idx2).costVec(idx) - val;
     end calRedCost;
 
-    procedure isZeroDirEle ( this : in Link_to_simplex;
-                             termS : in integer32; idx : in integer32;
-                             preNbN : in integer32;
-                             sub_pivInIdx : out integer32;
-                             result : out integer32 ) is
+    procedure isZeroDirEle
+                ( this : in Link_to_simplex;
+                  termS : in integer32; idx : in integer32;
+                  preNbN : in integer32; sub_pivInIdx : out integer32;
+                  result : out integer32; vrblvl : in integer32 := 0 ) is
+
+      ii,iii,idx2,level : integer32;
+      val : double_float;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_simplex.class_simplex.isZeroDirEle, termS : ");
+        put(termS,1); put(", idx : "); put(idx,1); put_line(" ...");
+      end if;
+      for j in 0..termS-2 loop
+        ii := 2*this.nbIdx(preNbN - this.dim + j);
+        level := this.nIdx(ii);
+        idx2 := this.firIdx(level);
+        iii := this.dim*this.nIdx(ii + 1);
+        val := 0.0;
+        ii := this.dim*idx;
+        for i in 0..this.dim-1 loop
+          val := val
+               + this.invB(ii + i)*this.supp(level)(idx2).supMat(i+iii);
+        end loop;
+        if (val < DEMiCs_Global_Constants.MINUSZERO) or
+           (val > DEMiCs_Global_Constants.PLUSZERO) then
+          sub_pivInIdx := preNbN - this.dim + j;
+          result := DEMiCs_Global_Constants.TRUE; return;
+        end if;
+      end loop;
+      result := DEMiCs_Global_Constants.FALSE;
     end isZeroDirEle;
 
     procedure IP_vec_mat ( this : in Link_to_simplex;
@@ -514,59 +539,201 @@ package body demics_simplex is
                   pivInIdx : out integer32; sub_pivInIdx : out integer32;
                   redCost : out double_float; flag : out integer32;
                   vrblvl : in integer32 := 0 ) is
+
+      opt : constant := DEMiCs_Global_Constants.OPT;
+      ii,tmp_non_basisIdx,level,idx,idx2 : integer32;
+      tmp_redCost : double_float;
+     -- val : double_float;
+
     begin
       if vrblvl > 0 then
         put_line("-> in demics_simplex.class_simplex.reducedCost_Bland ...");
       end if;
+      flag := opt;
+      pivInIdx := DEMiCs_Global_Constants.BIGINT;
+      for j in 0..this.nbN - this.dim - 1 loop
+       -- val := 0.0;
+        tmp_non_basisIdx := this.nbIdx(j);
+        getIdx(this,level,idx,idx2,ii,2*tmp_non_basisIdx,vrblvl-1);
+        tmp_redCost := class_supportSet.redVal
+                         (this.supp(level)(idx2),this.d_sol,idx,ii);
+        this.redVec(tmp_non_basisIdx) := tmp_redCost;
+        if (tmp_redCost < DEMiCs_Global_Constants.MINUSZERO) and
+           (tmp_non_basisIdx < pivInIdx) then
+          redCost := tmp_redCost;
+          pivInIdx := tmp_non_basisIdx;
+          sub_pivInIdx := j;
+          flag := DEMiCs_Global_Constants.POSTHETA;
+        end if;
+      end loop;
     end reducedCost_Bland;
 
     procedure reducedCost_mFst
                 ( this : in Link_to_simplex;
-                  pivInIdx : out integer32; sub_pivInIdx : out integer32;
-                  pivOutIdx : in integer32; sub_pivOutIdx : in integer32;
+                  pivInIdx : out integer32; sub_pivInIdx : in out integer32;
+                  pivOutIdx : in integer32;
+                 -- sub_pivOutIdx : in integer32;
                   redCost : out double_float; flag : out integer32;
                   vrblvl : in integer32 := 0 ) is
+
+      opt : constant := DEMiCs_Global_Constants.OPT;
+      ii,tmp_non_basisIdx,level,idx,idx2 : integer32;
+      pre_pivOutIdx,pre_sub_pivInIdx : integer32;
+      tmp_redCost : double_float;
+     -- val : double_float;
+
     begin
       if vrblvl > 0 then
         put_line("-> in demics_simplex.class_simplex.reducedCost_mFst ...");
       end if;
+      flag := opt;
+      pre_pivOutIdx := pivOutIdx;
+      pre_sub_pivInIdx := sub_pivInIdx;
+      redCost := 1.0E-8;
+      for j in 0..this.nbN - this.Dim - 1 loop
+        if j = pre_sub_pivInIdx then
+          this.nbIdx(j) := pre_pivOutIdx;
+          tmp_non_basisIdx := pre_pivOutIdx;
+        else
+          this.nbIdx(j) := this.pre_nbIdx(j);
+          tmp_non_basisIdx := this.pre_nbIdx(j);
+        end if;
+       -- val := 0.0;
+        getIdx(this,level,idx,idx2,ii,2*tmp_non_basisIdx,vrblvl-1);
+        tmp_redCost := class_supportSet.redVal
+          (this.supp(level)(idx2),this.d_sol,idx,ii);
+        this.redVec(tmp_non_basisIdx) := tmp_redCost;
+        if (tmp_redCost < DEMiCs_Global_Constants.MINUSZERO) and
+           (abs(tmp_redCost) > abs(redCost)) then
+          redCost := tmp_redCost;
+          pivInIdx := tmp_non_basisIdx;
+          sub_pivInIdx := j;
+          flag := DEMiCs_Global_Constants.POSTHETA;
+        end if;
+      end loop;
     end reducedCost_mFst;
 
     procedure reducedCost_iFst
                 ( this : in Link_to_simplex;
-                  pivInIdx : out integer32; sub_pivInIdx : out integer32;
-                  pivOutIdx : in integer32; sub_pivOutIdx : in integer32;
-                  redCost : out double_float; termS : in integer32;
+                  pivInIdx : in out integer32;
+                  sub_pivInIdx : in out integer32;
+                  pivOutIdx : in integer32; -- sub_pivOutIdx : in integer32;
+                  redCost : out double_float; -- termS : in integer32;
                   reTermS : in integer32; preNbN : in integer32;
                   flag : out integer32; vrblvl : in integer32 := 0 ) is
+
+      opt : constant := DEMiCs_Global_Constants.OPT;
+      ii,non_basisIdx,level,idx,idx2 : integer32;
+      pre_pivOutIdx,pre_pivInIdx : integer32;
+     -- pre_sub_pivInIdx : integer32;
+      length,pre_length,candNum,cnt : integer32;
+      tmp_redCost : double_float;
+
     begin
       if vrblvl > 0 then
         put_line("-> in demics_simplex.class_simplex.reducedCost_iFst ...");
       end if;
+      flag := opt;
+      length := this.nbN - this.dim;
+      pre_length := preNbN - this.dim;
+      pre_pivInIdx := pivInIdx;
+     -- pre_sub_pivInIdx := sub_pivInIdx;
+      pre_pivOutIdx := pivOutIdx;
+      for i in 0..pre_length loop
+        this.nbIdx(i) := this.pre_nbIdx(i);
+      end loop;
+      candNum := this.nbN - preNbN + 1;
+      cnt := 0;
+      for i in 0..candNum-1 loop
+        extend_nbIdx
+          (this,this.candIdx(i+1),pre_pivInIdx,pre_pivOutIdx,
+           pre_length,reTermS,cnt,vrblvl-1);
+      end loop;
+      redCost := 1.0E-8;
+      for j in 0..length-1 loop
+        non_basisIdx := this.nbIdx(j);
+        getIdx(this,level,idx,idx2,ii,2*non_basisIdx,vrblvl-1);
+        tmp_redCost := class_supportSet.redVal
+          (this.supp(level)(idx2),this.d_sol,idx,ii);
+        this.redVec(non_basisIdx) := tmp_redCost;
+        if (tmp_redCost < DEMiCs_Global_Constants.MINUSZERO) and
+           (abs(tmp_redCost) > abs(redCost)) then
+          redCost := tmp_redCost;
+          pivInIdx := non_basisIdx;
+          sub_pivInIdx := j;
+          flag := DEMiCs_Global_Constants.POSTHETA;
+        end if;
+      end loop;
     end reducedCost_iFst;
 
-    procedure extend_nbIdx ( this : in Link_to_simplex;
-                             cIdx : in integer32;
-                             pre_pivInIdx : in integer32;
-                             pre_pivOutIdx : in integer32;
-                             pre_length : in integer32;
-                             reTermS : in integer32;
-                             cnt : in out integer32 ) is
+    procedure extend_nbIdx
+                ( this : in Link_to_simplex; cIdx : in integer32;
+                  pre_pivInIdx : in integer32; pre_pivOutIdx : in integer32;
+                  pre_length : in integer32; reTermS : in integer32;
+                  cnt : in out integer32; vrblvl : in integer32 := 0 ) is
+
+      idx : integer32;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_simplex.class_simplex.extend_nbIdx, cIdx : ");
+        put(cIdx,1); put_line(" ...");
+      end if;
+      if this.repIdx > cIdx then
+        idx := cIdx + reTermS;
+        if idx = pre_pivInIdx
+         then this.nbIdx(pre_length + cnt) := pre_pivOutIdx;
+         else this.nbIdx(pre_length + cnt) := cIdx + reTermS;
+        end if;
+        cnt := cnt + 1;
+      elsif this.repIdx < cIdx then
+        idx := cIdx + reTermS - 1;
+        if idx = pre_pivInIdx
+         then this.nbIdx(pre_length + cnt) := pre_pivOutIdx;
+         else this.nbIdx(pre_length + cnt) := cIdx + reTermS - 1;
+        end if;
+        cnt := cnt + 1;
+      end if;
     end extend_nbIdx;
 
     procedure extend_nbIdx_comp
                 ( this : in Link_to_simplex;
-                  non_basisIdx : out integer32;
-                  cIdx : in integer32;
-                  pre_pivInIdx : in integer32;
-                  pre_pivOutIdx : in integer32;
-                  pre_length : in integer32;
-                  reTermS : in integer32;
-                  cnt : in out integer; flag : out integer32 ) is
+                  non_basisIdx : out integer32; cIdx : in integer32;
+                  pre_pivInIdx : in integer32; pre_pivOutIdx : in integer32;
+                  pre_length : in integer32; reTermS : in integer32;
+                  cnt : in out integer32; flag : out integer32;
+                  vrblvl : in integer32 := 0 ) is
+
+      idx : integer32;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put_line("-> in demics_simplex.class_simplex.extend_nbIdx_comp ... ");
+      end if;
+      flag := DEMiCs_Global_Constants.TRUE;
+      if this.repIdx > cIdx then
+         idx := cIdx + reTermS;
+         if idx = pre_pivInIdx then
+           this.nbIdx(pre_length + cnt) := pre_pivOutIdx;
+           non_basisIdx := pre_pivOutIdx;
+         else
+           this.nbIdx(pre_length + cnt) := cIdx + reTermS;
+           non_basisIdx := this.nbIdx(pre_length + cnt);
+         end if;
+         cnt := cnt + 1;
+      elsif this.repIdx < cIdx then
+         idx := cIdx + reTermS - 1;
+         if idx = pre_pivInIdx then
+           this.nbIdx(pre_length + cnt) := pre_pivOutIdx;
+           non_basisIdx := pre_pivOutIdx;
+         else
+           this.nbIdx(pre_length + cnt) := cIdx + reTermS - 1;
+           non_basisIdx := this.nbIdx(pre_length + cnt);
+         end if;
+         cnt := cnt + 1;
+      else
+        flag := DEMiCs_Global_Constants.FALSE;
+      end if;
     end extend_nbIdx_comp;
 
     procedure getIdx ( this : in Link_to_simplex; level : out integer32;
@@ -658,9 +825,77 @@ package body demics_simplex is
                 ( this : in Link_to_simplex; redFlag : in integer32;
                   pivInIdx : in integer32; sub_pivInIdx : in integer32;
                   pivOutIdx : out integer32; sub_pivOutIdx : out integer32;
-                  theta : out double_float; flag : out integer32 ) is
+                  theta : out double_float; flag : out integer32;
+                  vrblvl : in integer32 := 0 ) is
+
+      nfPos,checker,nonNegVarNum : integer32;
+      tmp_theta : double_float;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_simplex.class_simplex.ratioTest_artFst, ");
+        put("redFlag : "); put(redFlag,1); put_line(" ...");
+      end if;
+      flag := 0;
+      IP_mat_vec_fst(this,pivInIdx,vrblvl-1);
+      nonNegVarNum := 0;
+      checker := 0;
+      case redFlag is
+        when DEMiCs_Global_Constants.POSTHETA =>
+          tmp_theta := DEMiCs_Global_Constants.SMALLDOUBLE;
+          theta := tmp_theta;
+          for i in 0..this.nfN-1 loop
+            nfPos := this.pre_nf_pos(i);
+            if this.pre_basisIdx(nfPos) < this.termSumNum - this.supN then
+              nonNegVarNum := nonNegVarNum + 1;
+              if this.dir(nfPos) < DEMiCs_Global_Constants.MINUSZERO then
+                tmp_theta
+                  := this.pre_p_sol(this.pre_basisIdx(nfPos))/this.dir(nfPos);
+              else
+                checker := checker + 1;
+                tmp_theta := DEMiCs_Global_Constants.SMALLDOUBLE;
+              end if;
+              if theta < tmp_theta then
+                theta := tmp_theta;
+                pivOutIdx := this.pre_basisIdx(nfPos);
+                sub_pivOutIdx := nfPos;
+                flag := DEMiCs_Global_Constants.CONTINUE;
+              end if;
+            end if;
+          end loop;
+          if checker = nonNegVarNum
+           then flag := DEMiCs_Global_Constants.UNBOUNDED;
+           else flag := DEMiCs_Global_Constants.CONTINUE;
+          end if;
+        when DEMiCs_Global_Constants.NEGTHETA =>
+          tmp_theta := DEMiCs_Global_Constants.BIGDOUBLE;
+          theta := tmp_theta;
+          for i in 0..this.nfN-1 loop
+            nfPos := this.pre_nf_pos(i);
+            if this.pre_basisIdx(nfPos) < this.termSumNum - this.supN then
+              nonNegVarNum := nonNegVarNum + 1;
+              if this.dir(nfPos) > DEMiCs_Global_Constants.PLUSZERO then
+                tmp_theta
+                  := this.pre_p_sol(this.pre_basisIdx(nfPos))/this.dir(nfPos);
+              else
+                checker := checker + 1;
+                tmp_theta := DEMiCs_Global_Constants.BIGDOUBLE;
+              end if;
+              if theta > tmp_theta then
+                theta := tmp_theta;
+                pivOutIdx := this.pre_basisIdx(nfPos);
+                sub_pivOutIdx := nfPos;
+                flag := DEMiCs_Global_Constants.CONTINUE;
+              end if;
+            end if;
+          end loop;
+          if checker = nonNegVarNum
+           then flag := DEMiCs_Global_Constants.UNBOUNDED;
+           else flag := DEMiCs_Global_Constants.CONTINUE;
+          end if;
+        when others => null;
+      end case;
+      theta := -theta;
     end ratioTest_artFst;
 
     procedure ratioTest_art
@@ -739,21 +974,118 @@ package body demics_simplex is
     end ratioTest_art;
 
     procedure ratioTest_art_Bland
-                ( this : in Link_to_simplex;
-                  redFlag : in integer32;
-                  pivInIdx : in integer32;
-                  sub_pivInIdx : in integer32;
-                  pivOutIdx : out integer32;
-                  sub_pivOutIdx : out integer32;
-                  theta : out double_float; flag : out integer32 ) is
+                ( this : in Link_to_simplex; redFlag : in integer32;
+                  pivInIdx : in integer32; sub_pivInIdx : in integer32;
+                  pivOutIdx : out integer32; sub_pivOutIdx : out integer32;
+                  theta : out double_float; flag : out integer32;
+                  vrblvl : in integer32 := 0 ) is
+
+     nfPos,checker,nonNegVarNum,tmp_basisIdx : integer32;
+     tmp_theta : double_float;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_simplex.class_simplex.ratioTest_art_Bland, ");
+        put("redFlag : "); put(redFlag,1); put_line(" ...");
+      end if;
+      flag := 0;
+      IP_mat_vec(this,pivInIdx,vrblvl-1);
+      nonNegVarNum := 0;
+      checker := 0;
+      case redFlag is
+        when DEMiCs_Global_Constants.POSTHETA =>
+          theta := 0.0;
+          pivOutIdx := DEMiCs_Global_Constants.BIGINT;
+          for i in 0..this.nfN-1 loop
+            nfPos := this.nf_pos(i);
+            tmp_basisIdx := this.basisIdx(nfPos);
+            if tmp_basisIdx < this.termSumNum - this.supN then
+              nonNegVarNum := nonNegVarNum + 1;
+              if this.dir(nfPos) < DEMiCs_Global_Constants.MINUSZERO then
+                tmp_theta := this.p_sol(tmp_basisIdx)/this.dir(nfPos);
+                if tmp_basisIdx < pivOutIdx then
+                  theta := tmp_theta;
+                  pivOutIdx := tmp_basisIdx;
+                  sub_pivOutIdx := nfPos;
+                  flag := DEMiCs_Global_Constants.CONTINUE;
+                end if;
+              else
+                checker := checker + 1;
+              end if;
+            end if;
+          end loop;
+          if checker = nonNegVarNum
+           then flag := DEMiCs_Global_Constants.UNBOUNDED;
+           else flag := DEMiCs_Global_Constants.CONTINUE;
+          end if;
+        when DEMiCs_Global_Constants.NEGTHETA =>
+          theta := 0.0;
+          pivOutIdx := DEMiCs_Global_Constants.BIGINT;
+          for i in 0..this.nfN-1 loop
+            nfPos := this.nf_pos(i);
+            tmp_basisIdx := this.basisIdx(nfPos);
+            if tmp_basisIdx < this.termSumNum - this.supN then
+              nonNegVarNum := nonNegVarNum + 1;
+              if this.dir(nfPos) > DEMiCs_Global_Constants.PLUSZERO then
+                tmp_theta := this.p_sol(tmp_basisIdx)/this.dir(nfPos);
+                if tmp_basisIdx < pivOutIdx then
+                  theta := tmp_theta;
+                  pivOutIdx := tmp_basisIdx;
+                  sub_pivOutIdx := nfPos;
+                  flag := DEMiCs_Global_Constants.CONTINUE;
+                end if;
+              else
+                checker := checker + 1;
+              end if;
+            end if;
+          end loop;
+          if checker = nonNegVarNum
+           then flag := DEMiCs_Global_Constants.UNBOUNDED;
+           else flag := DEMiCs_Global_Constants.CONTINUE;
+          end if;
+        when others => null;
+      end case;
+      theta := -theta;
     end ratioTest_art_Bland;
 
-    function ratioTest_frIdx ( this : Link_to_simplex;
-                               pivInIdx : integer32 ) return integer32 is
+    function ratioTest_frIdx
+               ( this : Link_to_simplex; pivInIdx : integer32;
+                 vrblvl : integer32 := 0 ) return integer32 is
+
+      flag,nfPos,checker,nonNegVarNum : integer32;
+      theta,tmp_theta : double_float;
+
     begin
-      return 0;
+      if vrblvl > 0 then
+        put("-> in demics_simplex.class_simplex.ratioTest_frIdx, pivInIdx : ");
+        put(pivInIdx,1); put_line(" ...");
+      end if;
+      flag := 0;
+      IP_mat_vec(this,pivInIdx,vrblvl-1);
+      nonNegVarNum := 0;
+      checker := 0;
+      tmp_theta := DEMiCs_Global_Constants.BIGDOUBLE;
+      theta := tmp_theta;
+      for i in 0..this.nfN-1 loop
+        nfPos := this.nf_pos(i);
+        if this.basisIdx(nfPos) < this.termSumNum - this.supN then
+          nonNegVarNum := nonNegVarNum + 1;
+          if this.dir(nfPos) > DEMiCs_Global_Constants.PLUSZERO then
+            tmp_theta := this.p_sol(this.basisIdx(nfPos))/this.dir(nfPos);
+          else
+            checker := checker + 1;
+            tmp_theta := DEMiCs_Global_Constants.BIGDOUBLE;
+          end if; 
+          if theta > tmp_theta
+           then theta := tmp_theta;
+          end if;
+        end if; 
+      end loop;   
+      if checker = nonNegVarNum
+       then flag := DEMiCs_Global_Constants.UNBOUNDED;
+       else flag := DEMiCs_Global_Constants.OPT;
+      end if;
+      return flag;
     end ratioTest_frIdx;
 
     procedure IP_mat_vec ( this : in Link_to_simplex;
@@ -842,16 +1174,118 @@ package body demics_simplex is
     procedure modify_p_sol ( this : in Link_to_simplex;
                              pivInIdx : in integer32;
                              vrblvl : in integer32 := 0 ) is
+
+      level : constant integer32 := this.nIdx(2*pivInIdx);
+      idx : constant integer32 := this.nIdx(2*pivInIdx+1);
+      idx2 : constant integer32 := this.firIdx(level);
+
     begin
       if vrblvl > 0 then
         put("-> in demics_simplex.class_simplex.modify_p_sol, pivInIdx : ");
         put(pivInIdx,1); put_line(" ...");
       end if;
+      if vrblvl > 0 then -- #if DBG_MODIFY
+        put_line("------- << modify_p_sol >> -------");
+        info_p_sol(this);
+        info_basisIdx(this);
+        put("pivInIdx : "); put(pivInIdx,1); new_line;
+        put("supVec : ");
+        for i in 0..this.dim-1 loop
+          put(class_supportSet.supMat_out(this.supp(level)(idx2),i,idx));
+          put(" ");
+        end loop;
+        new_line;
+      end if;
+      for i in 0..this.dim-1 loop
+        if (isZero(this.p_sol(this.basisIdx(i)))
+             = DEMiCs_Global_Constants.TRUE) and
+           (isZero(class_supportSet.supMat_out(this.supp(level)(idx2),i,idx))
+             = DEMiCs_Global_Constants.FALSE)
+         then calElem(this,i,vrblvl-1);
+        end if;
+      end loop;
     end modify_p_sol;
 
-    procedure calElem ( this : in Link_to_simplex; idx : in integer32 ) is
+    procedure calElem ( this : in Link_to_simplex; idx : in integer32;
+                        vrblvl : in integer32 := 0 ) is
+
+      val,ddelta,randNum : double_float;
+      -- The original delta variable is reserved in Ada,
+      -- replaced original delta variable by ddelta.
+      bigdouble : constant := DEMiCs_Global_Constants.BIGDOUBLE;
+      smalldouble : constant := DEMiCs_Global_Constants.SMALLDOUBLE;
+      upper : double_float := bigdouble;
+      lower : double_float := smalldouble;
+      tmp_upper,tmp_lower : double_float;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_simplex.class_simplex.calElem, idx : ");
+        put(idx,1); put_line(" ...");
+      end if;
+      if vrblvl > 0 then -- #if DBG_MODIFY
+       -- put_line("<< calElem >>");
+       -- put("idx : "); put(idx,1); new_line;
+        info_invB(this);
+        put("p_sol : ");
+        for i in 0..this.dim-1 loop
+          put(this.p_sol(this.basisIdx(i))); put(" ");
+        end loop;
+        new_line;
+        put("colum-invB : ");
+        for i in 0..this.dim-1 loop
+          put(invB_out(this,i,idx)); put(" ");
+        end loop;
+        new_line;
+      end if;
+      for i in 0..this.dim-1 loop
+        val := invB_out(this,i,idx);
+        if val > DEMiCs_Global_Constants.PLUSZERO then
+          tmp_lower := -this.p_sol(this.basisIdx(i))/val;
+          if tmp_lower > lower
+           then lower := tmp_lower;
+          end if;
+        end if;
+        if val < DEMiCs_Global_Constants.MINUSZERO then
+          tmp_upper := -this.p_sol(this.basisIdx(i))/val;
+          if tmp_upper < upper
+           then upper := tmp_upper;
+          end if;
+        end if;
+      end loop;
+      if vrblvl > 0 then -- #if DBG_MODIFY
+        put("lower : "); put(lower); new_line;
+        put("upper : "); put(upper); new_line;
+      end if;
+      if (lower = 0.0) and (upper = 0.0) then
+        ddelta := 0.0;
+      else
+        if (lower = smalldouble) and (upper = bigdouble) then
+          Standard_Random_Numbers.Set_Seed(2);
+          ddelta := abs(Standard_Random_Numbers.Random);
+        elsif (lower = smalldouble) and (upper < bigdouble) then
+          Standard_Random_Numbers.Set_Seed(3);        
+          randNum := abs(Standard_Random_Numbers.Random);
+          ddelta := upper - randNum/2.0;
+        elsif (lower > smalldouble) and (upper = bigdouble) then
+          Standard_Random_Numbers.Set_Seed(4);
+          randNum := abs(Standard_Random_Numbers.Random);
+          ddelta := lower + randNum/2.0;
+        else
+          ddelta := (lower + upper)/2.0;
+        end if;
+      end if;
+      if vrblvl > 0 then -- #if DBG_MODIFY
+        put("delta : "); put(ddelta); new_line;
+      end if;
+      for i in 0..this.dim-1 loop
+        this.p_sol(this.basisIdx(i))
+          := this.p_sol(this.basisIdx(i)) + ddelta*invB_out(this,i,idx);
+      end loop;
+      if vrblvl > 0 then -- #if DBG_MODIFY
+        put("-- modified --");
+        info_p_sol(this);
+      end if;
     end calElem;
 
 -- create new basis and nonbasis
@@ -1050,30 +1484,153 @@ package body demics_simplex is
 
     procedure createNewBandN_iFst
                 ( this : in Link_to_simplex;
-                  pivInIdx : in integer32;
-                  sub_pivInIdx : in integer32;
-                  pivOutIdx : in integer32;
-                  sub_pivOutIdx : in integer32;
-                  theta : in double_float;
-                  redCost : in double_float;
-                  termS : in integer32;
-                  reTermS : in integer32 ) is
+                  pivInIdx : in integer32; sub_pivInIdx : in integer32;
+                  pivOutIdx : in integer32; sub_pivOutIdx : in integer32;
+                  theta : in double_float; redCost : in double_float;
+                  termS : in integer32; reTermS : in integer32;
+                  vrblvl : in integer32 := 0 ) is
+
+      ii,nfPos : integer32;
+     -- cnt : integer32 := 0;
+      elem,val,vval : double_float;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put_line("-> in demics_simplex.class_simplex.createNewBandN_iFst ...");
+      end if;
+      ii := sub_pivOutIdx*this.dim;
+      elem := this.dir(sub_pivOutIdx);
+      val := (-1.0 - elem)/elem;
+      vval := redCost/elem;
+    -- make new basisIdx and non_basisIdx
+      for i in 0..this.dim-1 loop
+        this.d_sol(i) := this.pre_d_sol(i) - vval*this.pre_invB(ii+i);
+        this.transRed(i) := this.transRed(i) - vval*this.eye(ii+i);
+        this.nf_pos(i) := this.pre_nf_pos(i);
+        if i /= sub_pivOutIdx
+         then this.basisIdx(i) := this.pre_basisIdx(i);
+         else this.basisIdx(i) := pivInIdx;
+        end if;
+      end loop;
+      if this.pivOutCheck(sub_pivOutIdx) = 0 then
+        this.pivOutCheck(sub_pivOutIdx) := 1;
+        this.pivOutList(this.pivOutNum) := sub_pivOutIdx;
+        this.pivOutNum := this.pivOutNum + 1;
+      end if;
+      if(reTermS <= pivInIdx) and (pivInIdx < reTermS + termS - 1) then
+        this.rIdx(pivInIdx - reTermS) := sub_pivOutIdx;
+      end if;
+      if(reTermS <= pivOutIdx) and (pivOutIdx < reTermS + termS - 1) then
+        this.rIdx(pivOutIdx - reTermS) := -(1 + sub_pivInIdx);
+      end if;
+     -- make new p_sol
+      for i in 0..this.nfN-1 loop
+        nfPos := this.nf_pos(i);
+        if nfPos /= sub_pivOutIdx then
+          this.p_sol(this.basisIdx(nfPos))
+            := this.pre_p_sol(this.basisIdx(nfPos)) + theta*this.dir(nfPos);
+        else
+          this.p_sol(this.basisIdx(nfPos)) := 0.0;
+        end if;
+      end loop;
+      this.p_sol(pivInIdx) := theta;
+     -- make the new basis matrix   
+      for i in 0..this.dim-1 loop
+        this.invB(ii+i) := this.pre_invB(ii+i)/(-elem);
+        this.tmp_newInvB(i) := this.invB(ii+i);
+        this.tmp_transMat(i) := this.eye(ii+i);
+        this.transMat(ii+i) := this.eye(ii+i) + val*this.tmp_transMat(i);
+      end loop;
+      for j in 0..this.nfN-1 loop
+        nfPos := this.nf_pos(j);
+        if nfPos /= sub_pivOutIdx then
+          ii := this.dim*nfPos;
+          for i in 0..this.dim-1 loop
+            this.invB(ii+i)
+              := this.pre_invB(ii+i) + this.dir(nfPos)*this.tmp_newInvB(i);
+            this.transMat(ii+i)
+              := this.eye(ii+i) - this.tmp_transMat(i)*(this.dir(nfPos)/elem);
+          end loop;
+        end if;
+      end loop;
     end createNewBandN_iFst;
 
     procedure createNewBandN_mFst
                 ( this : in Link_to_simplex;
-                  pivInIdx : in integer32;
-                  sub_pivInIdx : in integer32;
-                  pivOutIdx : in integer32;
-                  sub_pivOutIdx : in integer32;
-                  theta : in double_float;
-                  redCost : in double_float;
-                  termS : in integer32;
-                  reTermS : in integer32 ) is
+                  pivInIdx : in integer32; sub_pivInIdx : in integer32;
+                  pivOutIdx : in integer32; sub_pivOutIdx : in integer32;
+                  theta : in double_float; redCost : in double_float;
+                  termS : in integer32; reTermS : in integer32;
+                  vrblvl : in integer32 := 0 ) is
+
+      ii,cnt,nfPos : integer32;
+      elem,vval : double_float;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put_line("-> in demics_simplex.class_simplex.createNewBandN_mFst ...");
+      end if;
+      ii := sub_pivOutIdx*this.dim;
+      elem := this.dir(sub_pivOutIdx);
+      vval := redCost/elem;
+     -- make new basisIdx and non_basisIdx
+      cnt := 0;
+      for i in 0..this.dim-1 loop
+        this.d_sol(i) := this.pre_d_sol(i) - vval*this.pre_invB(ii+i);
+        this.transRed(i)
+          := this.pre_transRed(i) - vval*this.pre_transMat(ii+i);
+        if this.pre_nf_pos(i) /= sub_pivOutIdx then
+          this.nf_pos(cnt) := this.pre_nf_pos(i);
+          cnt := cnt + 1;
+        end if;
+        if i /= sub_pivOutIdx
+         then this.basisIdx(i) := this.pre_basisIdx(i);
+         else this.basisIdx(i) := pivInIdx;
+        end if;
+      end loop;
+      this.nfN := this.nfN - 1;
+      if this.pivOutCheck(sub_pivOutIdx) = 0 then
+        this.pivOutCheck(sub_pivOutIdx) := 1;
+        this.pivOutList(this.pivOutNum) := sub_pivOutIdx;
+        this.pivOutNum := this.pivOutNum + 1;
+      end if;
+      if (reTermS <= pivInIdx) and (pivInIdx < reTermS + termS - 1) then
+        this.rIdx(pivInIdx - reTermS) := sub_pivOutIdx;
+      end if;
+      if (reTermS <= pivOutIdx) and (pivOutIdx < reTermS + termS - 1) then
+        this.rIdx(pivOutIdx - reTermS) := -(1 + sub_pivInIdx);
+      end if;
+     -- make new p_sol
+      for i in 0..this.nfN-1 loop
+        nfPos := this.nf_pos(i);
+        if nfPos /= sub_pivOutIdx then
+          this.p_sol(this.basisIdx(nfPos))
+            := this.pre_p_sol(this.basisIdx(nfPos)) + theta*this.dir(nfPos);
+        else
+          this.p_sol(this.basisIdx(nfPos)) := 0.0;
+        end if;
+      end loop;
+      this.p_sol(pivInIdx) := theta;
+     -- make the new basis matrix   
+      for i in 0..this.dim-1 loop
+        this.invB(ii+i) := this.pre_invB(ii+i)/(-elem);
+        this.tmp_newInvB(i) := this.invB(ii+i);
+        this.tmp_transMat(i) := this.pre_transMat(ii+i);
+        this.transMat(ii+i)
+          := this.pre_transMat(ii+i) + (-1.0-elem)/elem*this.tmp_transMat(i);
+      end loop;
+      for j in 0..this.nfN-1 loop
+        nfPos := this.nf_pos(j);
+        if nfPos /= sub_pivOutIdx then
+          ii := this.dim*nfPos;
+          for i in 0..this.dim-1 loop
+            this.invB(ii+i) :=
+              this.pre_invB(ii+i) + this.dir(nfPos)*this.tmp_newInvB(i);
+            this.transMat(ii+i) := this.pre_transMat(ii+i)
+              - this.tmp_transMat(i)*(this.dir(nfPos)/elem);
+          end loop;
+        end if;
+      end loop;
     end createNewBandN_mFst;
 
     procedure createNewBandN_art
@@ -1415,8 +1972,39 @@ package body demics_simplex is
     end new_simplex;
 
     procedure delete_simplex ( this : in Link_to_simplex ) is
+
+      use Standard_Floating_VecVecs;
+
     begin
-      null;
+      Standard_Integer_Vectors.Clear(this.re_termStart);
+      Standard_Floating_Vectors.Clear(this.p1_d_sol);
+      Standard_Integer_Vectors.Clear(this.ip);
+      Standard_Floating_Vectors.Clear(this.weight);
+      Standard_Floating_Vectors.Clear(this.vol);
+      Standard_Floating_Vectors.Clear(this.eye);
+      Standard_Floating_Vectors.Clear(this.lifting);
+      Standard_Floating_Vectors.Clear(this.fst_d_sol);
+      Standard_Floating_Vectors.Clear(this.aux_cvec);
+      Standard_Floating_Vectors.Clear(this.dir);
+      Standard_Floating_Vectors.Clear(this.fst_redVec);
+      Standard_Floating_Vectors.Clear(this.tmp_newInvB);
+      Standard_Floating_Vectors.Clear(this.tmp_transMat);
+      Standard_Integer_Vectors.Clear(this.nIdx);
+      if this.Supp /= null then
+        for i in 0..this.supN loop
+          for j in this.Supp(i)'range loop
+            class_supportSet.delete_supportSet(this.Supp(i)(j));
+          end loop;
+        end loop;
+        this.supp := null;
+      end if;
+      if this.oriSupp /= null then
+        for i in 0..this.supN-1 loop
+          Standard_Floating_Vectors.Clear(this.oriSupp(i));
+        end loop;
+        Standard_Floating_VecVecs.Shallow_Clear(this.oriSupp);
+        this.oriSupp := null;
+      end if;
     end delete_simplex;
 
     procedure get_iNbN_nfN
@@ -1431,10 +2019,10 @@ package body demics_simplex is
     procedure get_mNbN_nfN
                 ( this : in Link_to_simplex;
                   parent : in demics_ftest.class_theData.Link_to_theData;
-                  cur : in demics_ftest.class_theData.Link_to_Array_of_theData
-                ) is
+                  cur : in demics_ftest.class_theData.Link_to_theData ) is
     begin
-      null;
+      this.nbN := parent.nbN; cur.nbN := parent.nbN;
+      this.nfN := parent.nfN; cur.nfN := parent.nfN;
     end get_mNbN_nfN;
 
     procedure get_repIdx_candIdx
@@ -1463,25 +2051,37 @@ package body demics_simplex is
 
     procedure get_cur
                 ( this : in Link_to_simplex;
-                  cur : in demics_ftest.class_theData.Link_to_Array_of_theData
-                ) is
+                  cur : in demics_ftest.class_theData.Link_to_theData ) is
     begin
-      null;
+      this.p_sol := cur.p_sol;
+      this.d_sol := cur.d_sol;
+      this.redVec := cur.redVec;
+      this.basisIdx := cur.basisIdx;
+      this.nf_pos := cur.nf_pos;
+      this.nbIdx := cur.nbIdx;
+      this.rIdx := cur.rIdx;
+      this.invB := cur.invB;
+      this.transMat := cur.transMat;
+      this.transRed := cur.transRed;
+      this.pivOutList := cur.pivOutList;
+      this.pivOutCheck := cur.pivOutCheck;
+      this.pivOutNum := cur.pivOutNum;
     end get_cur;
 
     procedure get_res ( this : in Link_to_simplex; 
                         iData : in demics_ftest.class_ftData.Link_to_ftData
                       ) is
     begin
-      null;
+      iData.cur.artV := this.artV;
+      this.artV := 0;
+      iData.cur.nbN := this.nbN;
     end get_res;
 
     procedure get_pivOutNum
                 ( this : in Link_to_simplex;
-                  cur : in demics_ftest.class_theData.Link_to_Array_of_theData
-                ) is
+                  cur : in demics_ftest.class_theData.Link_to_theData) is
     begin
-      null;
+      cur.pivOutNum := this.pivOutNum;
     end get_pivOutNum;
 
     procedure get_nbN_nfN ( this : in Link_to_simplex;
@@ -1544,15 +2144,18 @@ package body demics_simplex is
                 ( this : in Link_to_simplex;
                   cur : in demics_ftest.class_theData.Link_to_theData ) is
     begin
-      null;
+      for i in 0..this.dim-1 loop
+        this.p1_d_sol(i) := cur.d_sol(i);
+      end loop;
     end copy_p1_d_sol;
 
     procedure copy_eye
                 ( this : in Link_to_simplex;
-                  cur : in demics_ftest.class_theData.Link_to_Array_of_theData
-                ) is
+                  cur : in demics_ftest.class_theData.Link_to_theData ) is
     begin
-      null;
+      for i in 0..this.dim*this.dim-1 loop
+        cur.transMat(i) := this.eye(i);
+      end loop;
     end copy_eye;
 
     procedure allocateAndIni
@@ -1931,31 +2534,68 @@ package body demics_simplex is
 -- iCheck
 
     procedure fstRed_candIdx
-                 ( this : in Link_to_simplex;
-                   curInif : in demics_iTest.class_inifData.Link_to_inifData;
-                   mCandIdx : in Standard_Integer_VecVecs.Link_to_VecVec;
-                   pivInIdx : out integer32;
-                   sub_pivInIdx : out integer32 ) is
+                ( this : in Link_to_simplex;
+                  curInif : in demics_iTest.class_inifData.Link_to_inifData;
+                  mCandIdx : in Standard_Integer_Vectors.Link_to_Vector;
+                  pivInIdx : out integer32; sub_pivInIdx : out integer32;
+                  vrblvl : in integer32 := 0 ) is
+
+      use demics_itest.class_uData;
+
+      num : integer32 := 0;
+      idx : integer32;
+      tmp_redCost : double_float;
+      redCost : double_float := 1.0E+8;
+      n_curr : Link_to_uData := curInif.fHead;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put_line("-> in demics_simplex.class_simplex.fstRed_candIdx ...");
+      end if;
+      while n_curr /= null loop
+        tmp_redCost := n_curr.red;
+        idx := n_curr.supLab;
+        this.fst_redVec(idx) := tmp_redCost;
+        mCandIdx(num+1) := idx;
+        if tmp_redCost < redCost then
+          redCost := tmp_redCost;
+          pivInIdx := idx;
+          sub_pivInIdx := num;
+        end if;
+        n_curr := n_curr.fNext;
+        num := num + 1;
+      end loop;
+      mCandIdx(0) := num;
     end fstRed_candIdx;
 
     procedure cal_redVec
                 ( this : in Link_to_simplex;
-                  termS : in integer32;
-                  reTermS : in integer32;
+                  termS : in integer32; reTermS : in integer32;
                   fst_pivInIdx : in integer32;
-                  cur : in demics_ftest.class_theData.Link_to_Array_of_theData
-                ) is
+                  cur : in demics_ftest.class_theData.Link_to_theData;
+                  vrblvl : in integer32 := 0 ) is
+
+      cnt : integer32 := 0;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_simplex.class_simplex.cal_redVec, termS : ");
+        put(termS,1); put_line(" ...");
+      end if;
+      for i in 0..termS-1 loop
+        if i /= fst_pivInIdx then
+          cur.redVec(cnt+reTermS)
+            := this.fst_redVec(i) - this.fst_redVec(fst_pivInIdx);
+          cnt := cnt + 1;
+        end if;
+      end loop;
     end cal_redVec;
 
     function put_redCost
-               ( this : Link_to_simplex;
-                 fst_pivInIdx : integer32 ) return double_float is
+               ( this : Link_to_simplex; fst_pivInIdx : integer32 )
+               return double_float is
     begin
-      return 0.0;
+      return (this.fst_redVec(fst_pivInIdx) - this.fst_redVec(this.repIdx));
     end put_redCost;
 
 -- iCheck_art

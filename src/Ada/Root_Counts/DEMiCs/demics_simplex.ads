@@ -1,7 +1,6 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
-with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
 with demics_input_data;
@@ -196,8 +195,10 @@ package demics_simplex is
     procedure elimArt ( this : in Link_to_simplex;
                         depth : in integer32; preNbN : in integer32;
                         termS : in integer32; reTermS : in integer32;
-                        iter : in out integer32;
-                        vrblvl : in integer32 := 0 );
+                        iter : in out integer32; vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Called in the procedure solLP_art.
 
     procedure calRedCost ( this : in Link_to_simplex;
                            pivInIdx : in integer32;
@@ -207,14 +208,18 @@ package demics_simplex is
     -- DESCRIPTION :
     --   Calculates the reduced cost.
 
-    procedure isZeroDirEle ( this : in Link_to_simplex;
-                             termS : in integer32; idx : in integer32;
-                             preNbN : in integer32;
-                             sub_pivInIdx : out integer32;
-                             result : out integer32 );
+    procedure isZeroDirEle
+                ( this : in Link_to_simplex;
+                  termS : in integer32; idx : in integer32;
+                  preNbN : in integer32; sub_pivInIdx : out integer32;
+                  result : out integer32; vrblvl : in integer32 := 0 );
 
-    -- isZeroDirEle was a function returning (TRUE) or (FALSE)
-    -- with a side effect: assigning to sub_pivInIdx
+    -- DESCRIPTION :
+    --   Helper procedure in elimArt.
+
+    -- NOTE:
+    --   isZeroDirEle was a function returning (TRUE) or (FALSE)
+    --   with a side effect: assigning to sub_pivInIdx
 
     procedure IP_vec_mat ( this : in Link_to_simplex;
                            vrblvl : in integer32 := 0 );
@@ -279,8 +284,9 @@ package demics_simplex is
 
     procedure reducedCost_mFst
                 ( this : in Link_to_simplex;
-                  pivInIdx : out integer32; sub_PivInIdx : out integer32;
-                  pivOutIdx : in integer32; sub_pivOutIdx : in integer32;
+                  pivInIdx : out integer32; sub_PivInIdx : in out integer32;
+                  pivOutIdx : in integer32;
+                 -- sub_pivOutIdx : in integer32;
                   redCost : out double_float; flag : out integer32;
                   vrblvl : in integer32 := 0 );
 
@@ -289,32 +295,29 @@ package demics_simplex is
 
     procedure reducedCost_iFst
                 ( this : in Link_to_simplex;
-                  pivInIdx : out integer32; sub_pivInIdx : out integer32;
-                  pivOutIdx : in integer32; sub_pivOutIdx : in integer32;
-                  redCost : out double_float; termS : in integer32;
+                  pivInIdx : in out integer32;
+                  sub_pivInIdx : in out integer32;
+                  pivOutIdx : in integer32; -- sub_pivOutIdx : in integer32;
+                  redCost : out double_float; -- termS : in integer32;
                   reTermS : in integer32; preNbN : in integer32;
                   flag : out integer32; vrblvl : in integer32 := 0 );
 
     -- reducedCost_iFst was defined as a function, assigning to its
     -- arguments as side effects and returning a flag value
 
-    procedure extend_nbIdx ( this : in Link_to_simplex;
-                             cIdx : in integer32;
-                             pre_pivInIdx : in integer32;
-                             pre_pivOutIdx : in integer32;
-                             pre_length : in integer32;
-                             reTermS : in integer32;
-                             cnt : in out integer32 );
+    procedure extend_nbIdx
+                ( this : in Link_to_simplex; cIdx : in integer32;
+                  pre_pivInIdx : in integer32; pre_pivOutIdx : in integer32;
+                  pre_length : in integer32; reTermS : in integer32;
+                  cnt : in out integer32; vrblvl : in integer32 := 0 );
 
     procedure extend_nbIdx_comp
                 ( this : in Link_to_simplex;
-                  non_basisIdx : out integer32;
-                  cIdx : in integer32;
-                  pre_pivInIdx : in integer32;
-                  pre_pivOutIdx : in integer32;
-                  pre_length : in integer32;
-                  reTermS : in integer32;
-                  cnt : in out integer; flag : out integer32 );
+                  non_basisIdx : out integer32; cIdx : in integer32;
+                  pre_pivInIdx : in integer32; pre_pivOutIdx : in integer32;
+                  pre_length : in integer32; reTermS : in integer32;
+                  cnt : in out integer32; flag : out integer32;
+                  vrblvl : in integer32 := 0 );
 
     -- extend_nbIdx_comp was declared as a function, returning a flag,
     -- assigning to non_basisIdx and cnt as side effects
@@ -347,7 +350,8 @@ package demics_simplex is
                 ( this : in Link_to_simplex; redFlag : in integer32;
                   pivInIdx : in integer32; sub_pivInIdx : in integer32;
                   pivOutIdx : out integer32; sub_pivOutIdx : out integer32;
-                  theta : out double_float; flag : out integer32 );
+                  theta : out double_float; flag : out integer32;
+                  vrblvl : in integer32 := 0 );
 
     -- ratioTest_artFst was declared as a function, returning a flag,
     -- assigning to pivOutIdx, sub_pivOutIdx, and theta as side effects
@@ -367,19 +371,18 @@ package demics_simplex is
     --   assigning to pivOutIdx, sub_pivOutIdx, and theta as side effects.
 
     procedure ratioTest_art_Bland
-                ( this : in Link_to_simplex;
-                  redFlag : in integer32;
-                  pivInIdx : in integer32;
-                  sub_pivInIdx : in integer32;
-                  pivOutIdx : out integer32;
-                  sub_pivOutIdx : out integer32;
-                  theta : out double_float; flag : out integer32 );
+                ( this : in Link_to_simplex; redFlag : in integer32;
+                  pivInIdx : in integer32; sub_pivInIdx : in integer32;
+                  pivOutIdx : out integer32; sub_pivOutIdx : out integer32;
+                  theta : out double_float; flag : out integer32;
+                  vrblvl : in integer32 := 0 );
 
     -- ratioTest_art_Bland was declared as a function, returning a flag,
     -- assigning to pivOutIdx, sub_pivOutIdx, and theta as side effects
 
-    function ratioTest_frIdx ( this : Link_to_simplex;
-                               pivInIdx : integer32 ) return integer32;
+    function ratioTest_frIdx
+               ( this : Link_to_simplex; pivInIdx : integer32;
+                 vrblvl : integer32 := 0 ) return integer32;
 
     procedure IP_mat_vec ( this : in Link_to_simplex;
                            pivInIdx : in integer32;
@@ -400,11 +403,21 @@ package demics_simplex is
                   pivInIdx : in integer32; sub_pivOutIdx : in integer32;
                   vrblvl : in integer32 := 0 );
 
+    -- DESCRIPTION :
+    --   Updates this.p1_d_sol, as called in fSolLP.
+
     procedure modify_p_sol
                 ( this : in Link_to_simplex;
                   pivInIdx : in integer32; vrblvl : in integer32 := 0 );
 
-    procedure calElem ( this : in Link_to_simplex; idx : in integer32 );
+    -- DESCRIPTION :
+    --   Modifies this.p_sol, as called in createNewBandN_art.
+
+    procedure calElem ( this : in Link_to_simplex; idx : in integer32;
+                        vrblvl : in integer32 := 0 );
+
+    -- DESCRIPTION :
+    --   Helper procedure of modify_p_sol.
 
 -- create new basis and nonbasis
 
@@ -436,25 +449,19 @@ package demics_simplex is
 
     procedure createNewBandN_iFst
                 ( this : in Link_to_simplex;
-                  pivInIdx : in integer32;
-                  sub_pivInIdx : in integer32;
-                  pivOutIdx : in integer32;
-                  sub_pivOutIdx : in integer32;
-                  theta : in double_float;
-                  redCost : in double_float;
-                  termS : in integer32;
-                  reTermS : in integer32 );
+                  pivInIdx : in integer32; sub_pivInIdx : in integer32;
+                  pivOutIdx : in integer32; sub_pivOutIdx : in integer32;
+                  theta : in double_float; redCost : in double_float;
+                  termS : in integer32; reTermS : in integer32;
+                  vrblvl : in integer32 := 0 );
 
     procedure createNewBandN_mFst
                 ( this : in Link_to_simplex;
-                  pivInIdx : in integer32;
-                  sub_pivInIdx : in integer32;
-                  pivOutIdx : in integer32;
-                  sub_pivOutIdx : in integer32;
-                  theta : in double_float;
-                  redCost : in double_float;
-                  termS : in integer32;
-                  reTermS : in integer32 );
+                  pivInIdx : in integer32; sub_pivInIdx : in integer32;
+                  pivOutIdx : in integer32; sub_pivOutIdx : in integer32;
+                  theta : in double_float; redCost : in double_float;
+                  termS : in integer32; reTermS : in integer32;
+                  vrblvl : in integer32 := 0 );
 
     procedure createNewBandN_art
                 ( this : in Link_to_simplex;
@@ -607,8 +614,11 @@ package demics_simplex is
     procedure get_mNbN_nfN
                 ( this : in Link_to_simplex;
                   parent : in demics_ftest.class_theData.Link_to_theData;
-                  cur : in demics_ftest.class_theData.Link_to_Array_of_theData
-                );
+                  cur : in demics_ftest.class_theData.Link_to_theData );
+
+    -- DESCRIPTION :
+    --   Copies parent.nbN and parent.nfN into the corresponding fields
+    --   for this and cur.
 
     procedure get_repIdx_candIdx
                 ( this : in Link_to_simplex;
@@ -628,16 +638,24 @@ package demics_simplex is
 
     procedure get_cur
                 ( this : in Link_to_simplex;
-                  cur : in demics_ftest.class_theData.Link_to_Array_of_theData
-                );
+                  cur : in demics_ftest.class_theData.Link_to_theData );
+
+    -- DECRIPTION :
+    --   Copies fields from cur into this.
 
     procedure get_res ( this : in Link_to_simplex; 
                         iData : in demics_ftest.class_ftData.Link_to_ftData );
 
+    -- DESCRIPTION :
+    --   Sets the value of artV and nbN of iData, copying from this.
+    --   Sets this.artV to zero.
+
     procedure get_pivOutNum
                 ( this : in Link_to_simplex;
-                  cur : in demics_ftest.class_theData.Link_to_Array_of_theData
-                );
+                  cur : in demics_ftest.class_theData.Link_to_theData );
+
+    -- DESCRIPTION :
+    --   Sets cur.pivOutNum to the value of this.pivOutNum.
 
     procedure get_nbN_nfN ( this : in Link_to_simplex;
                             ori_nbN : in integer32; ori_nfN : in integer32 );
@@ -697,10 +715,15 @@ package demics_simplex is
                 ( this : in Link_to_simplex;
                   cur : in demics_ftest.class_theData.Link_to_theData );
 
+    -- DESCRIPTION :
+    --   Copies cur.d_sol into this.d_sol.
+
     procedure copy_eye
                 ( this : in Link_to_simplex;
-                  cur : in demics_ftest.class_theData.Link_to_Array_of_theData
-                );
+                  cur : in demics_ftest.class_theData.Link_to_theData );
+
+    -- DECRIPTION :
+    --   Copies this.eye into cur.transMat.
 
     procedure allocateAndIni
                 ( this : in Link_to_simplex;
@@ -736,23 +759,22 @@ package demics_simplex is
 -- iCheck
 
     procedure fstRed_candIdx
-                 ( this : in Link_to_simplex;
-                   curInif : in demics_iTest.class_inifData.Link_to_inifData;
-                   mCandIdx : in Standard_Integer_VecVecs.Link_to_VecVec;
-                   pivInIdx : out integer32;
-                   sub_pivInIdx : out integer32 );
+                ( this : in Link_to_simplex;
+                  curInif : in demics_iTest.class_inifData.Link_to_inifData;
+                  mCandIdx : in Standard_Integer_Vectors.Link_to_Vector;
+                  pivInIdx : out integer32; sub_pivInIdx : out integer32;
+                  vrblvl : in integer32 := 0 );
 
     procedure cal_redVec
                 ( this : in Link_to_simplex;
-                  termS : in integer32;
-                  reTermS : in integer32;
+                  termS : in integer32; reTermS : in integer32;
                   fst_pivInIdx : in integer32;
-                  cur : in demics_ftest.class_theData.Link_to_Array_of_theData
-                );
+                  cur : in demics_ftest.class_theData.Link_to_theData;
+                  vrblvl : in integer32 := 0 );
 
     function put_redCost
-               ( this : Link_to_simplex;
-                 fst_pivInIdx : integer32 ) return double_float;
+               ( this : Link_to_simplex; fst_pivInIdx : integer32 )
+               return double_float;
 
 -- iCheck_art
 
