@@ -196,7 +196,8 @@ package demics_simplex is
     procedure elimArt ( this : in Link_to_simplex;
                         depth : in integer32; preNbN : in integer32;
                         termS : in integer32; reTermS : in integer32;
-                        iter : in out integer32 );
+                        iter : in out integer32;
+                        vrblvl : in integer32 := 0 );
 
     procedure calRedCost ( this : in Link_to_simplex;
                            pivInIdx : in integer32;
@@ -251,52 +252,48 @@ package demics_simplex is
 
     procedure reducedCost_p1
                 ( this : in Link_to_simplex;
-                  pivInIdx : out integer32;
-                  sub_pivInIdx : out integer32;
-                  redCost : out double_float; flag : out integer32 );
+                  pivInIdx : out integer32; sub_pivInIdx : out integer32;
+                  redCost : out double_float; flag : out integer32;
+                  vrblvl : in integer32 := 0 );
 
     -- reducedCost_tab_p1 was defined as a function, assigning to its
     -- arguments as side effects and returning a flag value
 
     procedure reducedCost
                 ( this : in Link_to_simplex;
-                  pivInIdx : out integer32;
-                  sub_pivInIdx : out integer32;
-                  redCost : out double_float; flag : out integer32 );
+                  pivInIdx : out integer32; sub_pivInIdx : out integer32;
+                  redCost : out double_float; flag : out integer32;
+                  vrblvl : in integer32 := 0 );
 
     -- reducedCost was defined as a function, assigning to its arguments
     -- as side effects and returning a flag value
 
     procedure reducedCost_Bland
                 ( this : in Link_to_simplex;
-                  pivInIdx : out integer32;
-                  sub_pivInIdx : out integer32;
-                  redCost : out double_float; flag : out integer32 );
+                  pivInIdx : out integer32; sub_pivInIdx : out integer32;
+                  redCost : out double_float; flag : out integer32;
+                  vrblvl : in integer32 := 0 );
 
     -- reducedCost_Bland was defined as a function, assigning to its
     -- arguments as side effects and returning a flag value
 
     procedure reducedCost_mFst
                 ( this : in Link_to_simplex;
-                  pivInIdx : out integer32;
-                  sub_PivInIdx : out integer32;
-                  pivOutIdx : in integer32;
-                  sub_pivOutIdx : in integer32;
-                  redCost : out double_float; flag : out integer32 );
+                  pivInIdx : out integer32; sub_PivInIdx : out integer32;
+                  pivOutIdx : in integer32; sub_pivOutIdx : in integer32;
+                  redCost : out double_float; flag : out integer32;
+                  vrblvl : in integer32 := 0 );
 
     -- reducedCost_mFst was defined as a function, assigning to its
     -- arguments as side effects and returning a flag value
 
     procedure reducedCost_iFst
                 ( this : in Link_to_simplex;
-                  pivInIdx : out integer32;
-                  sub_pivInIdx : out integer32;
-                  pivOutIdx : in integer32;
-                  sub_pivOutIdx : in integer32;
-                  redCost : out double_float;
-                  termS : in integer32;
-                  reTermS : in integer32;
-                  preNbN : in integer32; flag : out integer32 );
+                  pivInIdx : out integer32; sub_pivInIdx : out integer32;
+                  pivOutIdx : in integer32; sub_pivOutIdx : in integer32;
+                  redCost : out double_float; termS : in integer32;
+                  reTermS : in integer32; preNbN : in integer32;
+                  flag : out integer32; vrblvl : in integer32 := 0 );
 
     -- reducedCost_iFst was defined as a function, assigning to its
     -- arguments as side effects and returning a flag value
@@ -398,12 +395,14 @@ package demics_simplex is
     -- DESCRIPTION :
     --   Computes a matrix-vector product, using this.pre_invB.
 
-    procedure update_p1_d_sol ( this : in Link_to_simplex;
-                                pivInIdx : in integer32;
-                                sub_pivOutIdx : in integer32 );
+    procedure update_p1_d_sol
+                ( this : in Link_to_simplex;
+                  pivInIdx : in integer32; sub_pivOutIdx : in integer32;
+                  vrblvl : in integer32 := 0 );
 
-    procedure modify_p_sol ( this : in Link_to_simplex;
-                             pivInIdx : in integer32 );
+    procedure modify_p_sol
+                ( this : in Link_to_simplex;
+                  pivInIdx : in integer32; vrblvl : in integer32 := 0 );
 
     procedure calElem ( this : in Link_to_simplex; idx : in integer32 );
 
@@ -421,25 +420,19 @@ package demics_simplex is
 
     procedure createNewBandN_p1
                 ( this : in Link_to_simplex;
-                  pivInIdx : in integer32;
-                  sub_pivInIdx : in integer32;
-                  pivOutIdx : in integer32;
-                  sub_pivOutIdx : in integer32;
-                  theta : in double_float;
-                  redCost : in double_float;
-                  termS : in integer32;
-                  reTermS : in integer32 );
+                  pivInIdx : in integer32; sub_pivInIdx : in integer32;
+                  pivOutIdx : in integer32; sub_pivOutIdx : in integer32;
+                  theta : in double_float; redCost : in double_float;
+                  termS : in integer32; reTermS : in integer32;
+                  vrblvl : in integer32 := 0 );
 
     procedure createNewBandN
                 ( this : in Link_to_simplex;
-                  pivInIdx : in integer32;
-                  sub_pivInIdx : in integer32;
-                  pivOutIdx : in integer32;
-                  sub_pivOutIdx : in integer32;
-                  theta : in double_float;
-                  redCost : in double_float;
-                  termS : in integer32;
-                  reTermS : in integer32 );
+                  pivInIdx : in integer32; sub_pivInIdx : in integer32;
+                  pivOutIdx : in integer32; sub_pivOutIdx : in integer32;
+                  theta : in double_float; redCost : in double_float;
+                  termS : in integer32; reTermS : in integer32;
+                  vrblvl : in integer32 := 0 );
 
     procedure createNewBandN_iFst
                 ( this : in Link_to_simplex;
@@ -465,13 +458,10 @@ package demics_simplex is
 
     procedure createNewBandN_art
                 ( this : in Link_to_simplex;
-                  pivInIdx : in integer32;
-                  sub_pivInIdx : in integer32;
-                  pivOutIdx : in integer32;
-                  sub_pivOutIdx : in integer32;
-                  redCost : in double_float;
-                  termS : in integer32;
-                  reTermS : in integer32 );
+                  pivInIdx : in integer32; sub_pivInIdx : in integer32;
+                  pivOutIdx : in integer32; sub_pivOutIdx : in integer32;
+                  redCost : in double_float; termS : in integer32;
+                  reTermS : in integer32; vrblvl : in integer32 := 0 );
 
     procedure invB_in ( this : in Link_to_simplex;
                         rowIdx : in integer32; colIdx : in integer32;
@@ -625,9 +615,16 @@ package demics_simplex is
                   ori_candIdx : in Standard_Integer_Vectors.Link_to_Vector;
                   ori_repIdx : in integer32 );
 
+    -- DESCRIPTION :
+    --   Assigns ori_candIdx to this.candIdx and
+    --   assigns ori_repIdx to this.repIdx.
+
     procedure get_parent
                 ( this : in Link_to_simplex;
                   parent : in demics_ftest.class_theData.Link_to_theData );
+
+    -- DESCRIPTION :
+    --   Assigns pointers from parent to corresponding fields in this.
 
     procedure get_cur
                 ( this : in Link_to_simplex;
@@ -729,9 +726,9 @@ package demics_simplex is
 -- for phase 1 and 2
 
     procedure fSolLP ( this : in Link_to_simplex;
-                       termS : in integer32;
-                       reTermS : in integer32;
-                       iter : in out integer32; flag : out integer32 );
+                       termS : in integer32; reTermS : in integer32;
+                       iter : in out integer32; flag : out integer32;
+                       vrblvl : in integer32 := 0 );
 
     -- fSolLP was declared as a function, assigning to iter
     -- as a side effect, and returning a flag
@@ -759,30 +756,24 @@ package demics_simplex is
 
 -- iCheck_art
 
-    procedure solLP_art ( this : in Link_to_simplex;
-                          depth : in integer32;
-                          idx_one : in integer32;
-                          fst_pivIn : in integer32;
-                          preNbN : in integer32;
-                          termS : in integer32;
-                          reTermS : in integer32;
-                          iter : in out integer32; flag : out integer32 );
+    procedure solLP_art
+                ( this : in Link_to_simplex; depth : in integer32;
+                  idx_one : in integer32; fst_pivIn : in integer32;
+                  preNbN : in integer32; termS : in integer32;
+                  reTermS : in integer32; iter : in out integer32;
+                  flag : out integer32; vrblvl : in integer32 := 0 );
 
     -- solLP_art was declared as a function, updating iter as a side effect,
     -- and returning a flag
 
-    procedure solLP_art_Bland ( this : in Link_to_simplex;
-                                pivInIdx : in integer32;
-                                sub_pivInIdx : in integer32;
-                                pivOutIdx : in integer32;
-                                sub_pivOutIdx : in integer32;
-                                redFlag : in integer32;
-                                theta : in double_float;
-                                redCost : in double_float;
-                                termS : in integer32;
-                                reTermS : in integer32;
-                                iter : in out integer32;
-                                flag : out integer32 );
+    procedure solLP_art_Bland
+                ( this : in Link_to_simplex;
+                  pivInIdx : in integer32; sub_pivInIdx : in integer32;
+                  pivOutIdx : in integer32; sub_pivOutIdx : in integer32;
+                  redFlag : in integer32; theta : in double_float;
+                  redCost : in double_float; termS : in integer32;
+                  reTermS : in integer32; iter : in out integer32;
+                  flag : out integer32; vrblvl : in integer32 := 0 );
 
     -- solLP_art_bland was declared as a function, updating iter
     -- as a side effect, and returning a flag
@@ -842,15 +833,29 @@ package demics_simplex is
                             sp : in Standard_Integer_Vectors.Link_to_Vector;
                             supN : in integer32 );
 
-    function lu ( this : Link_to_simplex;
-                  n : integer32;
-                  a : Standard_Floating_Vectors.Vector ) return double_float;
+    procedure lu ( this : in Link_to_simplex; n : in integer32;
+                   a : in Standard_Floating_Vectors.Link_to_Vector;
+                   det : out double_float );
 
-    function matinv ( this : Link_to_simplex;
-                      n : integer32;
-                      a : Standard_Floating_Vectors.Link_to_Vector;
-                      a_inv : Standard_Floating_Vectors.Link_to_Vector )
-                    return double_float;
+    -- DESCRIPTION :
+    --   Does an lu factorization of the n-by-n matrix stored in a.
+    --   Returns the determinant of a.
+
+    -- NOTE :
+    --   Originally defined as a function, but a is altered.
+
+    procedure matinv ( this : in Link_to_simplex; n : in integer32;
+                       a : in Standard_Floating_Vectors.Link_to_Vector;
+                       a_inv : in Standard_Floating_Vectors.Link_to_Vector;
+                       det : out double_float );
+
+    -- DESCRIPTION :
+    --   Applies and lu factorization to the n-by-n matrix stored in a,
+    --   to return its inverse in a_inv and its determinant in det.
+
+    -- NOTE :
+    --   Originally defined as a function but with assignments to a
+    --   and a_inv as side effects.
 
     function put_elem_supp ( this : Link_to_simplex;
                              lvl : integer32; idx : integer32;

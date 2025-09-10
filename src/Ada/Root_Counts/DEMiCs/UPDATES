@@ -1,4 +1,4 @@
-Tue 9 Sep 2025 : fixed bug in demics_reltab.adb.
+Tue 9 Sep 2025 : fixed bug in demics_reltab.adb.  Added to demics_simplex.
 
 Mon 8 Sep 2025 : extended demics_simplex.  Bugs fixed in demics_reltab.adb,
   demics_input_data.adb, and demics_mvc.adb.
