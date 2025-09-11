@@ -172,9 +172,8 @@ package body demics_simplex is
          then redFlag := DEMiCs_Global_Constants.NEGTHETA;
          else redFlag := DEMiCs_Global_Constants.POSTHETA;
         end if;
-        ratioTest_art(this,redFlag,pivInIdx,sub_pivInIdx,
+        ratioTest_art(this,redFlag,pivInIdx,--sub_pivInIdx,
                       pivOutIdx,sub_pivOutIdx,theta,flag,vrblvl-1);
-
         if flag = DEMiCs_Global_Constants.CONTINUE then
           elimFrIdx(this,sub_pivOutIdx,vrblvl-1);
           createNewBandN_tab
@@ -300,8 +299,8 @@ package body demics_simplex is
 	    calRedCost(this,this.nbIdx(sub_pivInIdx),redCost,vrblvl-1);
             IP_mat_vec(this,this.nbIdx(sub_pivInIdx),vrblvl-1);
             createNewBandN_art
-              (this,this.nbIdx(sub_pivInIdx),sub_pivInIdx, 
-               this.basisIdx(i),i,redCost,termS,reTermS,vrblvl-1);
+              (this,this.nbIdx(sub_pivInIdx),sub_pivInIdx,--this.basisIdx(i),
+               i,redCost,termS,reTermS,vrblvl-1);
             iter := iter + 1;
             cnt_t := cnt_t + 1;
           end if;
@@ -754,7 +753,7 @@ package body demics_simplex is
 
     procedure ratioTest
                 ( this : in Link_to_simplex; redFlag : in integer32;
-                  pivInIdx : in integer32; sub_pivInIdx : in integer32;
+                  pivInIdx : in integer32; -- sub_pivInIdx : in integer32;
                   pivOutIdx : out integer32; sub_pivOutIdx : out integer32;
                   theta : out double_float; flag : out integer32;
                   vrblvl : in integer32 := 0 ) is
@@ -823,7 +822,7 @@ package body demics_simplex is
 
     procedure ratioTest_artFst
                 ( this : in Link_to_simplex; redFlag : in integer32;
-                  pivInIdx : in integer32; sub_pivInIdx : in integer32;
+                  pivInIdx : in integer32; -- sub_pivInIdx : in integer32;
                   pivOutIdx : out integer32; sub_pivOutIdx : out integer32;
                   theta : out double_float; flag : out integer32;
                   vrblvl : in integer32 := 0 ) is
@@ -900,7 +899,7 @@ package body demics_simplex is
 
     procedure ratioTest_art
                 ( this : in Link_to_simplex; redFlag : in integer32;
-                  pivInIdx : in integer32; sub_pivInIdx : in integer32;
+                  pivInIdx : in integer32; -- sub_pivInIdx : in integer32;
                   pivOutIdx : out integer32; sub_pivOutIdx : out integer32;
                   theta : out double_float; flag : out integer32;
                   vrblvl : in integer32 := 0 ) is
@@ -975,7 +974,7 @@ package body demics_simplex is
 
     procedure ratioTest_art_Bland
                 ( this : in Link_to_simplex; redFlag : in integer32;
-                  pivInIdx : in integer32; sub_pivInIdx : in integer32;
+                  pivInIdx : in integer32; -- sub_pivInIdx : in integer32;
                   pivOutIdx : out integer32; sub_pivOutIdx : out integer32;
                   theta : out double_float; flag : out integer32;
                   vrblvl : in integer32 := 0 ) is
@@ -1636,7 +1635,8 @@ package body demics_simplex is
     procedure createNewBandN_art
                 ( this : in Link_to_simplex;
                   pivInIdx : in integer32; sub_pivInIdx : in integer32;
-                  pivOutIdx : in integer32; sub_pivOutIdx : in integer32;
+                 -- pivOutIdx : in integer32;
+                  sub_pivOutIdx : in integer32;
                   redCost : in double_float; termS : in integer32;
                   reTermS : in integer32; vrblvl : in integer32 := 0 ) is
 
@@ -2322,8 +2322,8 @@ package body demics_simplex is
           end if;
           exit;
         end if;
-        ratioTest(this,redFlag,pivInIdx,sub_pivInIdx,pivOutIdx,sub_pivOutIdx,
-                  theta,flag,vrblvl-1);
+        ratioTest(this,redFlag,pivInIdx,--sub_pivInIdx,
+                  pivOutIdx,sub_pivOutIdx,theta,flag,vrblvl-1);
         createNewBandN_tab
           (this,pivInIdx,sub_pivInIdx,pivOutIdx,sub_pivOutIdx,
            theta,redCost,vrblvl-1);
@@ -2378,7 +2378,7 @@ package body demics_simplex is
             end if;
             exit;
           end if;
-          ratioTest_art(this,redFlag,pivInIdx,sub_pivInIdx,
+          ratioTest_art(this,redFlag,pivInIdx,--sub_pivInIdx,
                         pivOutIdx,sub_pivOutIdx,theta,flag,vrblvl-1);
           if flag = DEMiCs_Global_Constants.UNBOUNDED then
             if vrblvl > 0 then
@@ -2458,8 +2458,8 @@ package body demics_simplex is
           end if;
           exit;
         end if;
-        ratioTest(this,redFlag,pivInIdx,sub_pivInIdx,pivOutIdx,sub_pivOutIdx,
-                  theta,flag,vrblvl-1);
+        ratioTest(this,redFlag,pivInIdx,--sub_pivInIdx,
+                  pivOutIdx,sub_pivOutIdx,theta,flag,vrblvl-1);
         update_p1_d_sol(this,pivInIdx,sub_pivOutIdx,vrblvl-1);
         createNewBandN_p1(this,pivInIdx,sub_pivInIdx,pivOutIdx,sub_pivOutIdx, 
                           theta,redCost,termS,reTermS,vrblvl-1);
@@ -2502,7 +2502,7 @@ package body demics_simplex is
             end if;
             exit;
           end if;
-          ratioTest_art(this,redFlag,pivInIdx,sub_pivInIdx,
+          ratioTest_art(this,redFlag,pivInIdx,--sub_pivInIdx,
                         pivOutIdx,sub_pivOutIdx,theta,flag,vrblvl-1);
           if flag = DEMiCs_Global_Constants.UNBOUNDED
            then exit;
@@ -2602,7 +2602,7 @@ package body demics_simplex is
 
     procedure solLP_art
                 ( this : in Link_to_simplex; depth : in integer32;
-                  idx_one : in integer32; fst_pivIn : in integer32;
+                 -- idx_one : in integer32; fst_pivIn : in integer32;
                   preNbN : in integer32; termS : in integer32;
                   reTermS : in integer32; iter : in out integer32;
                   flag : out integer32; vrblvl : in integer32 := 0 ) is
@@ -2654,8 +2654,8 @@ package body demics_simplex is
           flag := opt;
           exit;
         end if;
-        ratioTest_art(this,redFlag,pivInIdx,sub_pivInIdx,pivOutIdx,
-                      sub_pivOutIdx,theta,flag,vrblvl-1);
+        ratioTest_art(this,redFlag,pivInIdx,--sub_pivInIdx,
+                      pivOutIdx,sub_pivOutIdx,theta,flag,vrblvl-1);
         if flag = DEMiCs_Global_Constants.UNBOUNDED
          then exit;
         end if;
@@ -2673,74 +2673,351 @@ package body demics_simplex is
 
     procedure solLP_art_Bland
                 ( this : in Link_to_simplex;
-                  pivInIdx : in integer32; sub_pivInIdx : in integer32;
-                  pivOutIdx : in integer32; sub_pivOutIdx : in integer32;
-                  redFlag : in integer32; theta : in double_float;
-                  redCost : in double_float; termS : in integer32;
+                  pivInIdx : in out integer32; sub_pivInIdx : in out integer32;
+                  pivOutIdx : in out integer32;
+                  sub_pivOutIdx : in out integer32;
+                  redFlag : out integer32; theta : in out double_float;
+                  redCost : in out double_float; termS : in integer32;
                   reTermS : in integer32; iter : in out integer32;
                   flag : out integer32; vrblvl : in integer32 := 0 ) is
+
+      opt : constant := DEMiCs_Global_Constants.OPT;
+
     begin
       if vrblvl > 0 then
         put_line("-> in demics_simplex.class_simplex.solLP_art_Bland ...");
       end if;
+      loop
+        if vrblvl > 0 then -- #if DBG_MSOLLP
+          put("----- Iter : "); put(iter,1); put_line(" -----");
+          info_basisIdx(this);
+          info_nbIdx(this);
+          info_invB(this);
+          info_p_sol(this);
+          info_d_sol(this);
+          info_rIdx(this);
+          info_dir(this);
+        end if;
+        reducedCost_Bland
+          (this,pivInIdx,sub_pivInIdx,redCost,redFlag,vrblvl-1);
+        if redFlag = opt then
+          if vrblvl > 0 then -- #if DBG_MSOLLP
+            put_line("----- OPT -----");
+            info_basisIdx(this);
+            info_nbIdx(this);
+            info_invB(this);
+            info_p_sol(this);
+            info_d_sol(this);
+            info_rIdx(this);
+            info_dir(this);
+          end if;
+          flag := opt;
+          exit;
+        end if;
+        ratioTest_art_Bland(this,redFlag,pivInIdx,--sub_pivInIdx,
+                            pivOutIdx,sub_pivOutIdx,theta,flag,vrblvl-1);
+        exit when (flag = DEMiCs_Global_Constants.UNBOUNDED);
+        createNewBandN
+          (this,pivInIdx,sub_pivInIdx,pivOutIdx,sub_pivOutIdx,theta,
+           redCost,termS,reTermS,vrblvl-1);
+        iter := iter + 1;
+        if iter > DEMiCs_Global_Constants.ITER then
+          flag := DEMiCs_Global_Constants.ERROR_ITER;
+          info_redVec(this);
+          info_dir(this);
+          info_basisIdx(this);
+          info_nbIdx(this);
+          info_nf_pos(this);
+          info_invB(this);
+          info_p_sol(this);
+          info_d_sol(this);
+          exit;
+        end if;
+      end loop;
     end solLP_art_Bland;
 
 -- for mLP
 
-    procedure solLP ( this : in Link_to_simplex;
-                      depth : in integer32;
-                      fst_pivInIdx : in integer32;
-                      fst_sub_pivInIdx : in integer32;
+    procedure solLP ( this : in Link_to_simplex; depth : in integer32;
+                      fst_pivInIdx : in out integer32;
+                      fst_sub_pivInIdx : in out integer32;
                       fst_redCost : in double_float;
-                      mode : in integer32;
-                      termS : in integer32;
-                      reTermS : in integer32;
-                      preNbN : in integer32;
-                      iter : in out integer; flag : out integer32 ) is
+                      mode : in integer32; termS : in integer32;
+                      reTermS : in integer32; preNbN : in integer32;
+                      iter : in out integer32; flag : out integer32;
+                      vrblvl : in integer32 := 0 ) is
+
+      opt : constant := DEMiCs_Global_Constants.OPT;
+      pivInIdx,sub_pivInIdx,pivOutIdx,sub_pivOutIdx,redFlag : integer32;
+      theta,redCost : double_float;
+  
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_simplex.class_simplex.solLP, depth : ");
+        put(depth,1); put_line(" ...");      
+      end if;
+     -- phase 2
+      initIter(this,mode,fst_pivInIdx,fst_sub_pivInIdx,fst_redCost,
+               redFlag,pivInIdx,sub_pivInIdx,pivOutIdx,sub_pivOutIdx,
+               theta,redCost,termS,reTermS,preNbN,flag,vrblvl-1);
+      iter := iter + 1;
+     -- if(flag != CONTINUE)
+     --    return (flag);
+     -- else
+      if flag = DEMiCs_Global_Constants.CONTINUE then
+        loop
+          if vrblvl > 0 then -- #if DBG_MSOLLP
+            put("----- Iter : "); put(iter,1); put_line(" -----");
+            info_basisIdx(this);
+            info_nbIdx(this);
+            info_invB(this);
+            info_p_sol(this);
+            info_d_sol(this);
+            info_rIdx(this);
+            info_dir(this);
+          end if;
+          ratioTest_art(this,redFlag,pivInIdx,--sub_pivInIdx,
+                        pivOutIdx,sub_pivOutIdx,theta,flag,vrblvl-1);
+          exit when (flag = DEMiCs_Global_Constants.UNBOUNDED);
+          createNewBandN
+            (this,pivInIdx,sub_pivInIdx,pivOutIdx,sub_pivOutIdx,
+             theta,redCost,termS,reTermS,vrblvl-1);
+          reducedCost(this,pivInIdx, sub_pivInIdx, redCost,redFlag,vrblvl-1);
+          if redFlag = opt then
+            if vrblvl > 0 then -- #if DBG_MSOLLP
+              put_line("----- OPT -----");
+              info_basisIdx(this);
+              info_nbIdx(this);
+              info_invB(this);
+              info_p_sol(this);
+              info_d_sol(this);
+              info_rIdx(this);
+              info_dir(this);
+            end if;
+            flag := opt;
+            exit;
+          end if;
+          iter := iter + 1;
+          if iter > DEMiCs_Global_Constants.ITER_BLAND then
+            solLP_Bland
+              (this,pivInIdx,sub_pivInIdx,pivOutIdx,sub_pivOutIdx,
+               redFlag,theta,redCost,termS,reTermS,iter,flag,vrblvl-1);
+            exit;
+          end if;
+        end loop;
+      end if;
     end solLP;
 
-    procedure solLP_Bland ( this : in Link_to_simplex;
-                            pivInIdx : in integer32;
-                            sub_pivInIdx : in integer32;
-                            pivOutIdx : in integer32;
-                            sub_pivOutIdx : in integer32;
-                            redFlag : in integer32;
-                            theta : in double_float;
-                            redCost : in double_float;
-                            termS : in integer32;
-                            reTermS : in integer32;
-                            iter : in out integer32; flag : out integer32 ) is
+    procedure solLP_Bland
+                ( this : in Link_to_simplex;
+                  pivInIdx : in out integer32;
+                  sub_pivInIdx : in out integer32;
+                  pivOutIdx : in out integer32;
+                  sub_pivOutIdx : in out integer32;
+                  redFlag : in out integer32; theta : in out double_float;
+                  redCost : in out double_float; termS : in integer32;
+                  reTermS : in integer32; iter : in out integer32;
+                  flag : out integer32; vrblvl : in integer32 := 0 ) is
+
+      opt : constant := DEMiCs_Global_Constants.OPT;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_simplex.class_simplex.solLP_Bland, iter : ");
+        put(iter,1); put_line(" ...");      
+      end if;
+      loop
+        if vrblvl > 0 then -- #if DBG_MSOLLP
+          put("----- Iter : "); put(iter,1); put_line(" -----");
+          info_basisIdx(this);
+          info_nbIdx(this);
+          info_invB(this);
+          info_p_sol(this);
+          info_d_sol(this);
+          info_rIdx(this);
+          info_dir(this);
+        end if;
+        ratioTest_art_Bland(this,redFlag,pivInIdx,--sub_pivInIdx,
+                            pivOutIdx,sub_pivOutIdx,theta,flag,vrblvl-1);
+        exit when (flag = DEMiCs_Global_Constants.UNBOUNDED);
+        createNewBandN
+          (this,pivInIdx,sub_pivInIdx,pivOutIdx,sub_pivOutIdx,theta,
+           redCost,termS,reTermS,vrblvl-1);
+        reducedCost_Bland(this,pivInIdx,sub_pivInIdx,redCost,redFlag,vrblvl-1);
+        if redFlag = opt then
+          if vrblvl > 0 then -- #if DBG_MSOLLP
+            put_line("----- OPT -----");
+            info_basisIdx(this);
+            info_nbIdx(this);
+            info_invB(this);
+            info_p_sol(this);
+            info_d_sol(this);
+            info_rIdx(this);
+            info_dir(this);
+          end if;
+          flag := opt;
+          exit;
+        end if;
+        iter := iter + 1;
+        if iter > DEMiCs_Global_Constants.ITER then
+          flag := DEMiCs_Global_Constants.ERROR_ITER;
+          info_redVec(this);
+          info_dir(this);
+          info_basisIdx(this);
+          info_nbIdx(this);
+          info_nf_pos(this);
+          info_invB(this);
+          info_p_sol(this);
+          info_d_sol(this);
+          exit;
+        end if;
+      end loop;
     end solLP_Bland;
 
-    procedure initIter ( this : in Link_to_simplex;
-                         mode : in integer32;
-                         fst_pivInIdx : in integer32;
-                         fst_sub_pivInIdx : in integer32;
-                         fst_redCost : in double_float;
-                         redFlag : out integer32;
-                         pivInIdx : out integer32;
-                         sub_pivInIdx : out integer32;
-                         pivOutIdx : out integer32;
-                         sub_pivOutIdx : out integer32;
-                         theta : out double_float;
-                         redCost : out double_float;
-                         termS : in integer32;
-                         reTermS : in integer32;
-                         preNbN : in integer32; flag : out integer32 ) is
+    procedure initIter
+                ( this : in Link_to_simplex; mode : in integer32;
+                  fst_pivInIdx : in out integer32;
+                  fst_sub_pivInIdx : in out integer32;
+                  fst_redCost : in double_float; redFlag : out integer32;
+                  pivInIdx : out integer32; sub_pivInIdx : out integer32;
+                  pivOutIdx : out integer32; sub_pivOutIdx : out integer32;
+                  theta : out double_float; redCost : out double_float;
+                  termS : in integer32; reTermS : in integer32;
+                  preNbN : in integer32; flag : out integer32;
+                  vrblvl : in integer32 := 0 ) is
+
+      opt : constant := DEMiCs_Global_Constants.OPT;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_simplex.class_simplex.initIter, mode : ");
+        put(mode,1); put_line(" ...");      
+      end if;
+      flag := -1;
+      case mode is
+        when DEMiCs_Global_Constants.ICHECK =>
+          ratioTest_artFst
+            (this,DEMiCs_Global_Constants.POSTHETA,fst_pivInIdx,
+             --fst_sub_pivInIdx,
+             pivOutIdx,sub_pivOutIdx,theta,flag,vrblvl-1);
+          if flag = DEMiCs_Global_Constants.UNBOUNDED then
+            return;
+          else
+            redCost := fst_redCost;
+            createNewBandN_iFst
+              (this,fst_pivInIdx,fst_sub_pivInIdx,pivOutIdx,sub_pivOutIdx,
+               theta,redCost,termS,reTermS,vrblvl-1);
+            reducedCost_iFst
+              (this,fst_pivInIdx,fst_sub_pivInIdx,pivOutIdx,--sub_pivOutIdx,
+               redCost,--termS,
+               reTermS,preNbN,redFlag,vrblvl-1);
+            if redFlag = opt then
+              if vrblvl < 0 then -- #if DBG_MSOLLP
+                put_line("----- OPT -----");
+                info_basisIdx(this);
+                info_nbIdx(this);
+                info_invB(this);
+                info_p_sol(this);
+                info_d_sol(this);
+                info_dir(this);
+              end if;
+              flag := redFlag;
+              return;
+            else
+              pivInIdx := fst_pivInIdx;
+              sub_pivInIdx := fst_sub_pivInIdx;
+              flag := DEMiCs_Global_Constants.CONTINUE;
+              return;
+            end if;
+          end if;
+        when DEMiCs_Global_Constants.MCHECK =>
+          ratioTest_artFst
+            (this,DEMiCs_Global_Constants.NEGTHETA,fst_pivInIdx,
+             -- fst_sub_pivInIdx,
+             pivOutIdx, sub_pivOutIdx, theta,flag,vrblvl-1);
+          if flag = DEMiCs_Global_Constants.UNBOUNDED then
+            return;
+          else
+            redCost := fst_redCost;
+            createNewBandN_mFst
+              (this,fst_pivInIdx,fst_sub_pivInIdx,pivOutIdx,sub_pivOutIdx,
+               theta,redCost,termS,reTermS,vrblvl-1);
+            reducedCost_mFst
+              (this,fst_pivInIdx,fst_sub_pivInIdx,pivOutIdx,--sub_pivOutIdx,
+               redCost,redFlag,vrblvl-1);
+            if redFlag = opt then
+              if vrblvl > 0 then -- #if DBG_MSOLLP
+                put_line("----- OPT -----");
+                info_basisIdx(this);
+                info_nbIdx(this);
+                info_invB(this);
+                info_p_sol(this);
+                info_d_sol(this);
+                info_dir(this);
+              end if;
+              flag := redFlag;
+              return;
+            else
+              pivInIdx := fst_pivInIdx;
+              sub_pivInIdx := fst_sub_pivInIdx;
+              flag := DEMiCs_Global_Constants.CONTINUE;
+              return;
+            end if;
+          end if;
+        when others => null;
+      end case;
     end initIter;
 
-    procedure calMixedVol ( this : in Link_to_simplex;
-                            lv : in demics_fTest.class_lvData.Link_to_lvData;
-                            sp : in Standard_Integer_Vectors.Link_to_Vector;
-                            supN : in integer32 ) is
+    procedure calMixedVol
+                ( this : in Link_to_simplex;
+                  lv : in demics_fTest.class_lvData.Array_of_lvData;
+                  sp : in Standard_Integer_Vectors.Link_to_Vector;
+                  supN : in integer32; vrblvl : in integer32 := 0 ) is
+
+      ii,jj,idx,cnt,polyDim,fIdx : integer32;
+      det : double_float;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put_line("-> in demics_simplex.class_simplex.calMixedVol ...");
+      end if;
+      this.mixedCell := this.mixedCell + 1;
+      if this.output /= 0
+       then put("# "); put(this.mixedCell,1); put(" : ");
+      end if;
+      cnt := 0;
+      for i in 0..supN-1 loop
+        polyDim := lv(sp(i)).Node.parent.polyDim; 
+        fIdx := lv(sp(i)).Node.parent.nodeLabel(0);
+        jj := fIdx*this.dim;
+        if this.output /= 0 then
+          put(sp(i)+1,1); put(" : ( ");
+          put(fIdx+1,1); put(" ");
+        end if;
+        for j in 0..polyDim-1 loop
+          idx := lv(sp(i)).Node.parent.nodeLabel(j+1);
+          ii := idx*this.dim;
+          if this.output /= 0 then
+            put(idx+1,1); put(" ");
+          end if;
+          for k in 0..this.dim-1 loop
+            this.vol(this.dim*cnt+k)
+              := this.oriSupp(sp(i))(k+ii) - this.oriSupp(sp(i))(k+jj);
+          end loop;
+          cnt := cnt + 1;
+        end loop; 
+        if this.output /= 0
+         then put(") ");
+        end if;
+      end loop;
+      lu(this,this.dim,this.vol,det);
+      det := abs(det);
+      this.mixedVol := this.mixedVol + det;
+      if this.output /= 0 then
+        new_line;
+        put("Volume : "); put(det);
+        new_line;
+      end if;
     end calMixedVol;
 
     procedure lu ( this : in Link_to_simplex; n : in integer32;
@@ -2861,17 +3138,96 @@ package body demics_simplex is
                 ( this : in Link_to_simplex;
                   parent : in demics_ftest.class_theData.Link_to_theData;
                   depth : in integer32 ) is
-    begin
-      null;
+
+      nfPos,nfN,cnt : integer32;
+      nf_pos : Standard_Integer_Vectors.Link_to_Vector;
+      val,red : double_float;
+      invB,d_sol : Standard_Floating_Vectors.Link_to_Vector;
+
+    begin  
+      put_line("----- << check_dirRed >> -----");
+      invB := parent.invB;
+      d_sol := parent.d_sol;
+      nf_pos := parent.nf_pos;
+      nfN := parent.nfN;
+      put_line("[ Direction and Reduced Cost ]");
+      for ii in depth+1..this.supN-1 loop
+        cnt := 0;
+        put("--- Support : "); put(ii+1,1); put_line(" ---");
+        for k in 0..this.termSet(ii)-1 loop
+          put(cnt+1,3); put(" : ");
+          for j in 0..nfN-1 loop
+            nfPos := nf_pos(j);
+            val := 0.0;
+            for i in 0..this.dim-1 loop
+              val := val + invB(i+nfPos*this.dim)*supp_out(this,ii,i,k);
+            end loop;
+            if (val < DEMiCs_Global_Constants.PLUSZERO) and
+               (val > DEMiCs_Global_Constants.MINUSZERO) then
+              put("0 ");
+            else
+              put(val,4); put(" ");
+            end if;
+          end loop;
+          val := 0.0;
+          for i in 0..this.dim-1 loop
+            val := val + d_sol(i)*supp_out(this,ii,i,k);
+          end loop;
+          red := this.lifting(this.termStart(ii)+k) - val;
+          put(" : "); put(red,4); new_line;
+          cnt := cnt + 1;
+        end loop;
+        new_line;
+      end loop;
     end check_dirRed;
 
     procedure dbg_dirRed
                 ( this : in Link_to_simplex;
                   parent : in demics_ftest.class_theData.Link_to_theData;
-                  nextInif : in demics_itest.class_inifData.Link_to_inifData;
+                  nextInif : in demics_itest.class_inifData.Array_of_inifData;
                   depth : in integer32 ) is
+
+      nfPos,nfN,cnt : integer32;
+      nf_pos : Standard_Integer_Vectors.Link_to_Vector;
+      val,red,diff : double_float;
+      invB,d_sol : Standard_Floating_Vectors.Link_to_Vector;
+      n_curr : demics_iTest.class_uData.Link_to_uData;
+
     begin
-      null;
+      invB := parent.invB;
+      d_sol := parent.d_sol;
+      nf_pos := parent.nf_pos;
+      nfN := parent.nfN;
+      for ii in depth+1..this.supN-1 loop
+        cnt := 0;
+        n_curr := nextInif(ii).fHead;
+        for k in 0..this.termSet(ii)-1 loop
+          for j in 0..nfN-1 loop
+            nfPos := nf_pos(j);
+            val := 0.0;
+            for i in 0..this.dim-1 loop
+              val := val + invB(i+nfPos*this.dim)*supp_out(this,ii,i,k);
+            end loop;
+            diff := val - n_curr.dir(nfPos);
+            if (diff > DEMiCs_Global_Constants.PLUSZERO) or
+               (diff < DEMiCs_Global_Constants.MINUSZERO) then
+              put_line("dbg_dirRed:  ERROR -- Direction!!");
+            end if;
+          end loop;
+          val := 0.0;
+          for i in 0..this.dim-1 loop
+            val := val + d_sol(i)*supp_out(this,ii,i,k);
+          end loop;
+          red := this.lifting(this.termStart(ii)+k) - val;
+          diff := red - n_curr.red;
+          if (diff > DEMiCs_Global_Constants.PLUSZERO) or
+             (diff < DEMiCs_Global_Constants.MINUSZERO) then
+            put_line("dbg_dirRed:  ERROR -- Reduced Cost!!");
+          end if;
+          n_curr := n_curr.fNext;
+          cnt := cnt + 1;
+        end loop; 
+      end loop;
     end dbg_dirRed;
 
     procedure info_mv ( this : in Link_to_simplex ) is
