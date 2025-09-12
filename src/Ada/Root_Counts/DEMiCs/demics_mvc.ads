@@ -95,7 +95,8 @@ package demics_mvc is
                   depth : integer32;
                   curNode : demics_fTest.class_theData.Link_to_theData;
                   curInif : demics_iTest.class_inifData.Link_to_inifData;
-                  nextInif : demics_iTest.class_inifData.Link_to_inifData )
+                  nextInif : demics_iTest.class_inifData.Link_to_inifData;
+                  vrblvl : integer32 := 0 )
                 return integer32;
 
     procedure fUpdateDirRed
@@ -301,7 +302,9 @@ package demics_mvc is
     -- DESCRIPTION :
     --   Allocates and initializes the data.
 
-    procedure initFeasTest ( this : in Link_to_mvc; depth : in integer32 );
+    procedure initFeasTest
+                ( this : in Link_to_mvc; depth : in integer32;
+                  vrblvl : in integer32 := 0 );
 
     procedure initCheck
                 ( this : in Link_to_mvc; depth : in integer32;
@@ -315,25 +318,26 @@ package demics_mvc is
                   feaNum : in out integer32 );
 
     function feasTest
-                ( this : Link_to_mvc;
-                  depth : integer32;
-                  parent : demics_ftest.class_theData.Link_to_theData )
+                ( this : Link_to_mvc; depth : integer32;
+                  parent : demics_ftest.class_theData.Link_to_theData;
+                  vrblvl : integer32 := 0 )
                 return integer32;
 
     procedure upFeasTest
                 ( this : in Link_to_mvc; depth : in out integer32;
-                  flag : out integer32 );
+                  flag : out integer32; vrblvl : in integer32 := 0 );
 
     -- upFeasTest was declared as a function, assigning to depth
     -- as a side effect, returning a flag
 
     procedure findMixedCell
-                ( this : in Link_to_mvc;
-                  depth : in integer32;
-                  parent : in demics_ftest.class_theData.Link_to_theData );
+                ( this : in Link_to_mvc; depth : in integer32;
+                  parent : in demics_ftest.class_theData.Link_to_theData;
+                  vrblvl : in integer32 := 0 );
 
-    procedure findAllMixedCells ( this : in Link_to_mvc;
-                                  depth : in integer32 );
+    procedure findAllMixedCells
+               ( this : in Link_to_mvc; depth : in integer32;
+                 vrblvl : in integer32 := 0 );
 
     function iCheck
                 ( this : Link_to_mvc;

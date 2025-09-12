@@ -92,9 +92,13 @@ package body demics_mvc is
                 ( this : Link_to_mvc; depth : integer32;
                   curNode : demics_ftest.class_theData.Link_to_theData;
                   curInif : demics_itest.class_inifData.Link_to_inifData;
-                  nextInif : demics_itest.class_inifData.Link_to_inifData )
+                  nextInif : demics_itest.class_inifData.Link_to_inifData;
+                  vrblvl : integer32 := 0 )
                 return integer32 is
     begin
+      if vrblvl > 0
+       then put_line("-> in demics_mvc.class_mvc.chooseSup ...");
+      end if;
       return 0;
     end chooseSup;
 
@@ -570,9 +574,14 @@ package body demics_mvc is
          this.termStart,this.dim,this.supN,vrblvl-1);
     end allocateAndIni;
 
-    procedure initFeasTest ( this : in Link_to_mvc; depth : in integer32 ) is
+    procedure initFeasTest
+                ( this : in Link_to_mvc; depth : in integer32;
+                  vrblvl : in integer32 := 0 ) is
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_mvc.class_mvc.initFeasTest, depth : ");
+        put(depth,1); put_line(" ...");
+      end if;
     end initFeasTest;
 
     procedure initCheck
@@ -594,30 +603,46 @@ package body demics_mvc is
 
     function feasTest
                 ( this : Link_to_mvc; depth : integer32;
-                  parent : demics_ftest.class_theData.Link_to_theData )
+                  parent : demics_ftest.class_theData.Link_to_theData;
+                  vrblvl : in integer32 := 0 )
                 return integer32 is
     begin
+      if vrblvl > 0 then
+        put("-> in demics_mvc.class_mvc.feasTest, depth : ");
+        put(depth,1); put_line(" ...");
+      end if;
       return 0;
     end feasTest;
 
     procedure upFeasTest
                 ( this : in Link_to_mvc; depth : in out integer32;
-                  flag : out integer32 ) is
+                  flag : out integer32; vrblvl : in integer32 := 0 ) is
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_mvc.class_mvc.upFeasTest, depth : ");
+        put(depth,1); put_line(" ...");
+      end if;
     end upFeasTest;
 
     procedure findMixedCell
                 ( this : in Link_to_mvc; depth : in integer32;
-                  parent : in demics_ftest.class_theData.Link_to_theData ) is
+                  parent : in demics_ftest.class_theData.Link_to_theData;
+                  vrblvl : in integer32 := 0 ) is
     begin
-      null;
+      if vrblvl > 0 then
+       put("-> in demics_mvc.class_mvc.findMixedCell, depth : ");
+       put(depth,1); put_line(" ...");
+      end if;
     end findMixedCell;
 
-    procedure findAllMixedCells ( this : in Link_to_mvc;
-                                  depth : in integer32 ) is
+    procedure findAllMixedCells
+                ( this : in Link_to_mvc; depth : in integer32;
+                  vrblvl : in integer32 := 0 ) is
     begin
-      null;
+      if vrblvl > 0 then
+       put("-> in demics_mvc.class_mvc.findAllMixedCells, depth : ");
+       put(depth,1); put_line(" ...");
+      end if;
     end findAllMixedCells;
 
     function iCheck
@@ -758,12 +783,52 @@ package body demics_mvc is
     end info_final;
 
     procedure enum ( this : in Link_to_mvc; vrblvl : in integer32 := 0 ) is
+
+      depth : integer32 := 0;
+      flag : integer32;
+
     begin
       if vrblvl > 0 
        then put_line("-> in demics_mvc.class_mvc.enum ...");
       end if;
       demics_reltab.class_reltab.makeTable
         (this.the_Reltab,this.total_unbLP_tab,vrblvl-1);
+      this.table := this.the_Reltab.table;
+      if this.supN = 1 then
+        findAllMixedCells(this,depth,vrblvl-1);
+      else
+        initFeasTest(this,depth,vrblvl-1);
+        depth := depth + 1;
+        loop
+          if depth = this.supN - 1 then
+           -- flag := chooseSup
+           --           (this,depth-1,this.lv(this.sp(depth-1)).Node.parent,
+           --            this.iLv(depth-1).inif,this.iLv(depth).inif);
+            if flag = DEMiCs_Global_Constants.CONTINUE then
+              findMixedCell
+                (this,depth,this.lv(this.sp(depth-1)).Node.parent,vrblvl-1);
+              flag := DEMiCs_Global_Constants.STOP;
+            end if;
+          else
+           -- flag := chooseSup
+           --           (this,depth-1,this.lv(this.sp(depth-1)).Node.parent,
+           --            this.iLv(depth-1).inif,this.iLv(depth).inif);
+            if flag = DEMiCs_Global_Constants.CONTINUE then
+              flag := feasTest(this,depth,
+                               this.lv(this.sp(depth-1)).Node.parent,
+                               vrblvl-1);
+            end if;
+          end if;
+          if flag = DEMiCs_Global_Constants.STOP then -- SLIDE or UP
+            upFeasTest(this,depth,flag,vrblvl-1);
+            if flag = DEMiCs_Global_Constants.STOP
+             then exit;
+            end if;
+          end if;
+          depth := depth + 1; -- DOWN
+        end loop;
+      end if;
+      demics_simplex.class_simplex.info_mv(this.the_Simplex);
     end enum;
 
   end class_mvc;
