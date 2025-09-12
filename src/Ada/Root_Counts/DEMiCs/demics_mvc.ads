@@ -94,10 +94,18 @@ package demics_mvc is
                 ( this : Link_to_mvc;
                   depth : integer32;
                   curNode : demics_fTest.class_theData.Link_to_theData;
-                  curInif : demics_iTest.class_inifData.Link_to_inifData;
-                  nextInif : demics_iTest.class_inifData.Link_to_inifData;
+             curInif : demics_iTest.class_inifData.Link_to_Array_of_inifData;
+             nextInif : demics_iTest.class_inifData.Link_to_Array_of_inifData;
                   vrblvl : integer32 := 0 )
                 return integer32;
+
+    -- DESCRIPTION :
+    --   Invoked in the enum procedure.
+
+    -- NOTE :
+    --   Both curInif and nextInif stand out in the specification,
+    --   as their definition as inifData* was not obvious from the
+    --   original prototype declaration of chooseSup.
 
     procedure fUpdateDirRed
                 ( this : in Link_to_mvc;
@@ -373,22 +381,26 @@ package demics_mvc is
                   depth : in integer32;
                   lvl : in out integer32;
                   feaNum : in out integer32;
-                  data : in demics_ftest.class_ftData.Link_to_ftData;
+                  data : in demics_ftest.class_ftData.Link_to_Array_of_ftData;
                   flag : out integer32 );
 
     -- findNode was declared as a function, but with assignments to
-    -- its arguments as side effects, returning a flag
+    -- its arguments as side effects, returning a flag; and
+    -- data was declared as ftData* Data, not obvious that the type had
+    -- to be a pointer to an array ...
 
     procedure findNextNode
                 ( this : in Link_to_mvc;
                   depth : in integer32;
                   lvl : in out integer32;
                   feaNum : in out integer32;
-                  data : in demics_ftest.class_ftData.Link_to_ftData;
+                  data : in demics_ftest.class_ftData.Link_to_Array_of_ftData;
                   flag : out integer32 );
 
     -- findNode was declared as a function, but with assignments to
-    -- its arguments as side effects, returning a flag
+    -- its arguments as side effects, returning a flag; and
+    -- data was declared as ftData* Data, not obvious that the type had
+    -- to be a pointer to an array ...
 
     procedure findUpNode
                 ( this : in Link_to_mvc;

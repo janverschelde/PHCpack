@@ -91,8 +91,8 @@ package body demics_mvc is
     function chooseSup
                 ( this : Link_to_mvc; depth : integer32;
                   curNode : demics_ftest.class_theData.Link_to_theData;
-                  curInif : demics_itest.class_inifData.Link_to_inifData;
-                  nextInif : demics_itest.class_inifData.Link_to_inifData;
+             curInif : demics_itest.class_inifData.Link_to_Array_of_inifData;
+             nextInif : demics_itest.class_inifData.Link_to_Array_of_inifData;
                   vrblvl : integer32 := 0 )
                 return integer32 is
     begin
@@ -577,11 +577,29 @@ package body demics_mvc is
     procedure initFeasTest
                 ( this : in Link_to_mvc; depth : in integer32;
                   vrblvl : in integer32 := 0 ) is
+
+      lvl,sn,feaNum,flag : integer32;
+     -- length : integer32;
+
     begin
       if vrblvl > 0 then
         put("-> in demics_mvc.class_mvc.initFeasTest, depth : ");
         put(depth,1); put_line(" ...");
       end if;
+      sn := this.sp(depth);
+     -- length := this.supType(sn) + 1;
+      demics_ftest.class_lvdata.get_info
+        (this.lv(sn),this.mRepN,this.mFeaIdx,this.mFea);
+      lvl := 0;
+      initCheck(this,depth,this.lv(sn).fTest(lvl));
+      lvl := lvl + 1;
+      feaNum := 0;
+     -- flag := DEMiCs_Global_Constants.CONTINUE;
+     -- if flag = DEMiCs_Global_Constants.CONTINUE then
+        findNode(this,depth,lvl,feaNum,this.lv(sn).fTest,flag);
+     -- else
+     --   findNextNode(this,depth,lvl,feaNum,this.lv(sn).fTest,flag);
+     -- end if;
     end initFeasTest;
 
     procedure initCheck
@@ -687,7 +705,7 @@ package body demics_mvc is
                   depth : in integer32;
                   lvl : in out integer32;
                   feaNum : in out integer32;
-                  data : in demics_ftest.class_ftData.Link_to_ftData;
+                  data : in demics_ftest.class_ftData.Link_to_Array_of_ftData;
                   flag : out integer32 ) is
     begin
       null;
@@ -698,7 +716,7 @@ package body demics_mvc is
                   depth : in integer32;
                   lvl : in out integer32;
                   feaNum : in out integer32;
-                  Data : in demics_ftest.class_ftData.Link_to_ftData;
+                  Data : in demics_ftest.class_ftData.Link_to_Array_of_ftData;
                   flag : out integer32 ) is
     begin
       null;
@@ -801,18 +819,18 @@ package body demics_mvc is
         depth := depth + 1;
         loop
           if depth = this.supN - 1 then
-           -- flag := chooseSup
-           --           (this,depth-1,this.lv(this.sp(depth-1)).Node.parent,
-           --            this.iLv(depth-1).inif,this.iLv(depth).inif);
+            flag := chooseSup
+                      (this,depth-1,this.lv(this.sp(depth-1)).Node.parent,
+                       this.iLv(depth-1).inif,this.iLv(depth).inif);
             if flag = DEMiCs_Global_Constants.CONTINUE then
               findMixedCell
                 (this,depth,this.lv(this.sp(depth-1)).Node.parent,vrblvl-1);
               flag := DEMiCs_Global_Constants.STOP;
             end if;
           else
-           -- flag := chooseSup
-           --           (this,depth-1,this.lv(this.sp(depth-1)).Node.parent,
-           --            this.iLv(depth-1).inif,this.iLv(depth).inif);
+            flag := chooseSup
+                      (this,depth-1,this.lv(this.sp(depth-1)).Node.parent,
+                       this.iLv(depth-1).inif,this.iLv(depth).inif);
             if flag = DEMiCs_Global_Constants.CONTINUE then
               flag := feasTest(this,depth,
                                this.lv(this.sp(depth-1)).Node.parent,
