@@ -1,3 +1,6 @@
+Sat 13 Sep 2025 : fixed a bug in demics_ftest.adb, and patched info_rIdx()
+  in demics_simplex.adb.  Extended demics_mvc.
+
 Fri 12 Sep 2025 : fixed specifications of chooseSup, findNode, findNextNode
   in demics_mvc, to work with pointers to arrays instead of plain pointers.
 

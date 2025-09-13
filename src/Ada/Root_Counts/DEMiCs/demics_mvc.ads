@@ -316,14 +316,15 @@ package demics_mvc is
 
     procedure initCheck
                 ( this : in Link_to_mvc; depth : in integer32;
-                  data : in demics_ftest.class_ftData.Link_to_ftData );
+                  data : in demics_ftest.class_ftData.Link_to_ftData;
+                  vrblvl : in integer32 := 0 );
 
     procedure initLP
                 ( this : in Link_to_mvc;
                   data : in demics_ftest.class_ftData.Link_to_ftData;
                   negIdx : in Standard_Integer_VecVecs.Link_to_VecVec;
                   depth : in integer32; idx : in integer32;
-                  feaNum : in out integer32 );
+                  feaNum : in out integer32; vrblvl : in integer32 := 0 );
 
     function feasTest
                 ( this : Link_to_mvc; depth : integer32;
@@ -377,12 +378,10 @@ package demics_mvc is
                   feaNum : in out integer32 );
 
     procedure findNode
-                ( this : in Link_to_mvc;
-                  depth : in integer32;
-                  lvl : in out integer32;
-                  feaNum : in out integer32;
+                ( this : in Link_to_mvc; depth : in integer32;
+                  lvl : in out integer32; feaNum : in out integer32;
                   data : in demics_ftest.class_ftData.Link_to_Array_of_ftData;
-                  flag : out integer32 );
+                  flag : out integer32; vrblvl : in integer32 := 0 );
 
     -- findNode was declared as a function, but with assignments to
     -- its arguments as side effects, returning a flag; and
@@ -390,12 +389,10 @@ package demics_mvc is
     -- to be a pointer to an array ...
 
     procedure findNextNode
-                ( this : in Link_to_mvc;
-                  depth : in integer32;
-                  lvl : in out integer32;
-                  feaNum : in out integer32;
+                ( this : in Link_to_mvc; depth : in integer32;
+                  lvl : in out integer32; feaNum : in out integer32;
                   data : in demics_ftest.class_ftData.Link_to_Array_of_ftData;
-                  flag : out integer32 );
+                  flag : out integer32; vrblvl : in integer32 := 0 );
 
     -- findNode was declared as a function, but with assignments to
     -- its arguments as side effects, returning a flag; and
@@ -404,29 +401,29 @@ package demics_mvc is
 
     procedure findUpNode
                 ( this : in Link_to_mvc;
-                  data : in demics_ftest.class_ftData.Link_to_ftData;
-                  pre : in demics_ftest.class_ftData.Link_to_Array_of_ftData;
-                  cur : in demics_ftest.class_ftData.Link_to_Array_of_ftData;
-                  lvl : in out integer32;
-                  polyDim : in integer32;
-                  depth : in integer32 );
+                  data : in demics_ftest.class_ftData.Link_to_Array_of_ftData;
+                  pre : in demics_ftest.class_ftData.Link_to_ftData;
+                  cur : in demics_ftest.class_ftData.Link_to_ftData;
+                  lvl : in out integer32; polyDim : in integer32;
+                  depth : in integer32; vrblvl : in integer32 := 0 );
 
     procedure mLP ( this : in Link_to_mvc;
                     pre : in demics_ftest.class_ftData.Link_to_ftData;
                     cur : in demics_ftest.class_ftData.Link_to_ftData;
-                    data : in demics_ftest.class_ftData.Link_to_ftData;
+                  data : in demics_ftest.class_ftData.Link_to_Array_of_ftData;
                     repIdx : in Standard_Integer_Vectors.Link_to_Vector;
                     feaIdx : in Standard_Integer_Vectors.Link_to_Vector;
                     tarIdx : in integer32;
                     mRepN : in Standard_Integer_Vectors.Link_to_Vector;
-                    totalN : in integer32;
-                    depth : in integer32;
-                    feaNum : in out integer32;
-                    lvl : in integer32;
-                    length : in integer32; flag : out integer32 );
+                    totalN : in integer32; depth : in integer32;
+                    feaNum : in out integer32; lvl : in integer32;
+                    length : in integer32; flag : out integer32;
+                    vrblvl : in integer32 := 0 );
 
     -- mLP was declared as a function, but with assignments to
-    -- its arguments as side effects, returning a flag
+    -- its arguments as side effects, returning a flag; and
+    -- data stands out as an array type, because in the original,
+    -- data was declared as ftData*, a plain pointer of ftData.
 
     function checkBasis
                 ( this : Link_to_mvc;

@@ -605,7 +605,7 @@ package body demics_ftest is
                   termS : in integer32; reTermS : in integer32 ) is
 
     begin
-      for i in 0..this.dim loop
+      for i in 0..this.dim-1 loop
         this.cur.nf_pos(i) := i;
         this.cur.invB(i*(this.dim+1)) := 1.0;
         this.cur.transMat(i*(this.dim+1)) := 1.0;

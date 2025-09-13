@@ -1853,7 +1853,14 @@ package body demics_simplex is
     procedure info_rIdx ( this : in Link_to_simplex ) is
     begin
       put_line("<< rIdx >>");
-      for i in 0..this.nbN-1 loop
+      put("this.rIdx'last : "); put(this.rIdx'last,1); new_line;
+      put("this.nbN-1 : "); put(this.nbN-1,1);
+      if this.rIdx'last = this.nbN
+       then put_line(" OK.");
+       else put_line(" Bug??!");
+      end if;
+     -- for i in 0..this.nbN-1 loop
+      for i in 0..this.rIdx'last loop
         put(this.rIdx(i),1); put(" ");
       end loop;
       new_line;
