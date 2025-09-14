@@ -109,60 +109,63 @@ package demics_mvc is
 
     procedure fUpdateDirRed
                 ( this : in Link_to_mvc;
-                  curInif : in demics_iTest.class_inifData.Array_of_inifData;
-                  nextInif : in demics_iTest.class_inifData.Array_of_inifData;
+            curInif : in demics_iTest.class_inifData.Link_to_Array_of_inifData;
+           nextInif : in demics_iTest.class_inifData.Link_to_Array_of_inifData;
                   curNode : in demics_fTest.Class_theData.Link_to_theData;
                   curRsp : in Standard_Integer_Vectors.Link_to_Vector;
-                  depth : in integer32 );
+                  depth : in integer32; vrblvl : in integer32 := 0 );
 
     procedure updateDirRed
                 ( this : in Link_to_mvc;
-                  curInif : in demics_itest.class_inifData.Array_of_inifData;
-                  nextInif : in demics_itest.class_inifData.Array_of_inifData;
+            curInif : in demics_itest.class_inifData.Link_to_Array_of_inifData;
+           nextInif : in demics_itest.class_inifData.Link_to_Array_of_inifData;
                   curNode : in demics_ftest.class_theData.Link_to_theData;
                   curRsp : in Standard_Integer_Vectors.Link_to_Vector;
-                  depth : in integer32 );
+                  depth : in integer32; vrblvl : in integer32 := 0 );
 
     function findUnbDir
-                ( this : Link_to_mvc;
-                  nextInif : demics_itest.class_inifData.Array_of_inifData;
-                  curNode : demics_ftest.class_theData.Link_to_theData;
-                  nextRsp : Standard_Integer_Vectors.Link_to_Vector;
-                  curRsp : Standard_Integer_Vectors.Link_to_Vector;
-                  depth : integer32 ) return integer32;
+               ( this : Link_to_mvc;
+             nextInif : demics_itest.class_inifData.Link_to_Array_of_inifData;
+                 curNode : demics_ftest.class_theData.Link_to_theData;
+                 nextRsp : Standard_Integer_Vectors.Link_to_Vector;
+                 curRsp : Standard_Integer_Vectors.Link_to_Vector;
+                 depth : integer32; vrblvl : integer32 := 0 )
+               return integer32;
 
     function findUnbDir_art
-                ( this : Link_to_mvc;
-                  nextInif : demics_itest.class_inifData.Array_of_inifData;
-                  curNode : demics_ftest.class_theData.Link_to_theData;
-                  nextRsp : Standard_Integer_Vectors.Link_to_Vector;
-                  curRsp : Standard_Integer_Vectors.Link_to_Vector;
-                  depth : integer32 ) return integer32;
+               ( this : Link_to_mvc;
+             nextInif : demics_itest.class_inifData.Link_to_Array_of_inifData;
+                 curNode : demics_ftest.class_theData.Link_to_theData;
+                 nextRsp : Standard_Integer_Vectors.Link_to_Vector;
+                 curRsp : Standard_Integer_Vectors.Link_to_Vector;
+                 depth : integer32; vrblvl : integer32 := 0 )
+               return integer32;
 
     function checkDir
-                ( this : Link_to_mvc;
-                  corPtr : demics_itest.class_uData.Link_to_Array_of_uData;
-                  tarPtr : demics_itest.class_uData.Link_to_uData;
-                  tar_dir : Standard_Floating_Vectors.Link_to_Vector;
-                  tar_red : double_float;
-                  nf_pos : Standard_Integer_Vectors.Link_to_Vector;
-                  basisIdx : Standard_Integer_Vectors.Link_to_Vector;
-                  nfN : integer32 ) return integer32;
+               ( this : Link_to_mvc;
+                 corPtr : demics_itest.class_uData.Link_to_uData;
+                 tarPtr : demics_itest.class_uData.Link_to_uData;
+                 tar_dir : Standard_Floating_Vectors.Link_to_Vector;
+                 tar_red : double_float;
+                 nf_pos : Standard_Integer_Vectors.Link_to_Vector;
+                 basisIdx : Standard_Integer_Vectors.Link_to_Vector;
+                 nfN : integer32; vrblvl : integer32 := 0 ) return integer32;
 
     function checkDir_art
-                ( this : Link_to_mvc;
-                  corPtr : demics_itest.class_uData.Link_to_Array_of_uData;
-                  tarPtr : demics_itest.class_uData.Link_to_uData;
-                  tar_dir : Standard_Floating_Vectors.Link_to_Vector;
-                  tar_red : double_float;
-                  nf_pos : Standard_Integer_Vectors.Link_to_Vector;
-                  basisIdx : Standard_Integer_Vectors.Link_to_Vector;
-                  nfN : integer32 ) return integer32;
+               ( this : Link_to_mvc;
+                 corPtr : demics_itest.class_uData.Link_to_uData;
+                 tarPtr : demics_itest.class_uData.Link_to_uData;
+                 tar_dir : Standard_Floating_Vectors.Link_to_Vector;
+                 tar_red : double_float;
+                 nf_pos : Standard_Integer_Vectors.Link_to_Vector;
+                 basisIdx : Standard_Integer_Vectors.Link_to_Vector;
+                 nfN : integer32; vrblvl : integer32 := 0 ) return integer32;
 
     procedure skipPtr
                 ( this : in Link_to_mvc;
-                  curr : in demics_itest.class_uData.Link_to_Array_of_uData;
-                  fHead : in demics_itest.class_uData.Link_to_Array_of_uData );
+                  curr : in demics_itest.class_uData.Link_to_uData;
+                  fHead : in out demics_itest.class_uData.Link_to_uData;
+                  vrblvl : in integer32 := 0 );
 
     procedure get_tuple_index
                 ( this : in Link_to_mvc;

@@ -96,90 +96,423 @@ package body demics_mvc is
              nextInif : demics_itest.class_inifData.Link_to_Array_of_inifData;
                   vrblvl : integer32 := 0 )
                 return integer32 is
+
+      flag : integer32;
+
     begin
-      if vrblvl > 0
-       then put_line("-> in demics_mvc.class_mvc.chooseSup ...");
+      if vrblvl > 0 then
+        put("-> in demics_mvc.class_mvc.chooseSup, depth : ");
+        put(depth,1); put_line(" ...");
       end if;
-      return 0;
+      case depth is
+        when 0 => fUpdateDirRed(this,curInif,nextInif,curNode,
+                                this.iLv(depth).rsp,depth,vrblvl-1);
+        when others => updateDirRed(this,curInif,nextInif,curNode,
+                                    this.iLv(depth).rsp,depth,vrblvl-1);
+      end case;
+      case curNode.artV is
+        when 0 =>
+          flag := findUnbDir(this,nextInif,curNode,this.iLv(depth+1).rsp,
+                             this.iLv(depth).rsp,depth,vrblvl-1);    
+        when 1 =>
+          flag := findUnbDir_art(this,nextInif,curNode,this.iLv(depth+1).rsp,
+                                 this.iLv(depth).rsp,depth,vrblvl-1);
+        when others => null;
+      end case;
+      return flag;
     end chooseSup;
 
     procedure fUpdateDirRed
                 ( this : in Link_to_mvc;
-                  curInif : in demics_itest.class_inifData.Array_of_inifData;
-                  nextInif : in demics_itest.class_inifData.Array_of_inifData;
+            curInif : in demics_itest.class_inifData.Link_to_Array_of_inifData;
+           nextInif : in demics_itest.class_inifData.Link_to_Array_of_inifData;
                   curNode : in demics_ftest.Class_theData.Link_to_theData;
                   curRsp : in Standard_Integer_Vectors.Link_to_Vector;
-                  depth : in integer32 ) is
+                  depth : in integer32; vrblvl : in integer32 := 0 ) is
+
+      num,nfPos,idx,fIdx,nfN,flag : integer32;
+      length,lvl,pivOutNum,colPos,rowPos : integer32;
+      nf_pos,pivOutList : Standard_Integer_Vectors.Link_to_Vector;
+      val,preRed : double_float;
+      transRed : Standard_Floating_Vectors.Link_to_Vector;
+      c_curr,n_curr : demics_iTest.class_uData.Link_to_uData;
+
+      use demics_iTest.class_uData;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_mvc.class_mvc.fUpdateDirRed, depth : ");
+        put(depth,1); put_line(" ...");
+      end if;
+      transRed := curNode.transRed_ptr;
+      nf_pos := curNode.nf_pos_ptr;
+      nfN := curNode.nfN;
+      pivOutNum := curNode.pivOutNum;
+      pivOutList := curNode.pivOutList;
+      length := this.supN - depth - 1;
+      fIdx := this.firIdx(depth);
+      colPos := this.termStart(this.sp(depth));
+      for i in 0..this.dim*this.dim-1 loop
+        this.trMat(i) := curNode.transMat_ptr(i);
+      end loop;
+      for j in 0..this.dim-1 loop
+        this.trMat(j + j*this.dim) := this.trMat(j + j*this.dim) - 1.0;
+        for i in 0..this.dim-1 loop
+          this.trMat(i + j*this.dim)
+            := this.trMat(i + j*this.dim)*double_float(this.trNeg(fIdx)(i));
+        end loop;
+      end loop;
+      for j in 0..length-1 loop
+        lvl := curRsp(j);
+        rowPos := this.termStart(lvl);
+        c_curr := curInif(lvl).fHead;
+        n_curr := nextInif(lvl).fHead;
+        num := 0;
+        while c_curr /= null loop
+          flag := DEMiCs_Global_Constants.CONTINUE;
+          for i in 0..curNode.polyDim loop
+            if table_out(this,colPos + curNode.nodeLabel(i),
+                              rowPos + c_curr.supLab)
+                    = DEMiCs_Global_Constants.UNBOUNDED then
+              flag := DEMiCs_Global_Constants.UNBOUNDED; exit;
+            end if; 
+          end loop;
+          if flag = DEMiCs_Global_Constants.CONTINUE then
+            n_curr.supLab := c_curr.supLab;
+           -- for direction
+            for k in 0..nfN-1 loop
+              val := 0.0;
+              nfPos := nf_pos(k);
+              for i in 0..pivOutNum-1 loop
+                idx := pivOutList(i);
+                val := val + this.trMat(idx + nfPos*this.dim)*c_curr.dir(idx);
+              end loop;
+              n_curr.dir(nfPos) := val
+                + double_float(this.trNeg(fIdx)(nfPos))*c_curr.dir(nfPos);
+            end loop; 
+           --  for reduced cost
+            val := 0.0;
+            preRed := 0.0;
+            for i in 0..this.dim - 1 loop
+              val := val
+                - double_float(this.trNeg(fIdx)(i))*transRed(i)*c_curr.dir(i);
+              preRed := preRed
+                + double_float(this.trNeg(fIdx)(i))*c_curr.dir(i);
+            end loop;
+            n_curr.red := val - preRed + c_curr.red;
+          else
+            skipPtr(this,n_curr,nextInif(lvl).fHead,vrblvl-1);
+          end if;
+          c_curr := c_curr.fNext;
+          n_curr := n_curr.fNext;
+          num := num + 1;
+        end loop;
+        if n_curr /= null
+         then n_curr.prev.fNext := null;
+        end if;
+      end loop;
     end fUpdateDirRed;
 
     procedure updateDirRed
                 ( this : in Link_to_mvc;
-                  curInif : in demics_itest.class_inifData.Array_of_inifData;
-                  nextInif : in demics_itest.class_inifData.Array_of_inifData;
+            curInif : in demics_itest.class_inifData.Link_to_Array_of_inifData;
+           nextInif : in demics_itest.class_inifData.Link_to_Array_of_inifData;
                   curNode : in demics_ftest.class_theData.Link_to_theData;
                   curRsp : in Standard_Integer_Vectors.Link_to_Vector;
-                  depth : in integer32 ) is
+                  depth : in integer32; vrblvl : in integer32 := 0 ) is
+
+      num,nfPos,idx,nfN,flag : integer32;
+      length,pivOutNum,lvl,colPos,rowPos : integer32;
+      nf_pos,pivOutList : Standard_Integer_Vectors.Link_to_Vector;
+      val : double_float;
+      transRed : Standard_Floating_Vectors.Link_to_Vector;
+      c_curr,n_curr : demics_iTest.class_uData.Link_to_uData;
+
+      use demics_iTest.class_uData;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_mvc.class_mvc.updateDirRed, depth : ");
+        put(depth,1); put_line(" ...");
+      end if;
+      transRed := curNode.transRed_ptr;
+      nf_pos := curNode.nf_pos_ptr;
+      nfN := curNode.nfN;
+      pivOutNum := curNode.pivOutNum;
+      pivOutList := curNode.pivOutList;
+      length := this.supN - depth - 1;
+      colPos := this.termStart(this.sp(depth));
+      for i in 0..this.dim*this.dim-1 loop
+        this.trMat(i) := curNode.transMat_ptr(i);
+      end loop;
+      for i in 0..this.dim-1 loop
+        this.trMat(i + i * this.dim) := this.trMat(i + i * this.dim) - 1.0;
+      end loop;
+      for j in 0..length-1 loop
+        lvl := curRsp(j);
+        rowPos := this.termStart(lvl);
+        c_curr := curInif(lvl).fHead;
+        n_curr := nextInif(lvl).fHead;
+        num := 0;
+        while c_curr /= null loop
+          flag := DEMiCs_Global_Constants.CONTINUE;
+
+          for i in 0..curNode.polyDim loop
+            if table_out(this,colPos + curNode.nodeLabel(i), 
+                              rowPos + c_curr.supLab)
+                    = DEMiCs_Global_Constants.UNBOUNDED then
+              flag := DEMiCs_Global_Constants.UNBOUNDED; exit;
+            end if; 
+          end loop;
+          if flag = DEMiCs_Global_Constants.CONTINUE then
+            n_curr.supLab := c_curr.supLab;
+           -- for direction
+            for k in 0..nfN-1 loop
+              val := 0.0;
+              nfPos := nf_pos(k);
+              for i in 0..pivOutNum-1 loop
+                idx := pivOutList(i);
+                val := val + this.trMat(idx + nfPos*this.dim)*c_curr.dir(idx);
+              end loop;
+              n_curr.dir(nfPos) := val + c_curr.dir(nfPos);
+            end loop;
+           -- for reduced cost
+            val := 0.0;
+            for i in 0..pivOutNum-1 loop
+              idx := pivOutList(i);
+              val := val - transRed(idx)*c_curr.dir(idx);
+            end loop;
+            n_curr.red := val + c_curr.red;
+          else
+            skipPtr(this,n_curr,nextInif(lvl).fHead,vrblvl-1);
+          end if;
+          c_curr := c_curr.fNext;
+          n_curr := n_curr.fNext;
+          num := num + 1;
+        end loop;
+        if n_curr /= null
+         then n_curr.prev.fNext := null;
+        end if;
+      end loop;
     end updateDirRed;
 
     function findUnbDir
-                ( this : Link_to_mvc;
-                  nextInif : demics_itest.class_inifData.Array_of_inifData;
-                  curNode : demics_ftest.class_theData.Link_to_theData;
-                  nextRsp : Standard_Integer_Vectors.Link_to_Vector;
-                  curRsp : Standard_Integer_Vectors.Link_to_Vector;
-                  depth : integer32 ) return integer32 is
+               ( this : Link_to_mvc;
+             nextInif : demics_itest.class_inifData.Link_to_Array_of_inifData;
+                 curNode : demics_ftest.class_theData.Link_to_theData;
+                 nextRsp : Standard_Integer_Vectors.Link_to_Vector;
+                 curRsp : Standard_Integer_Vectors.Link_to_Vector;
+                 depth : integer32; vrblvl : integer32 := 0 )
+               return integer32 is
+
+     nfN,flag,lvl,length,cnt,feasNum : integer32;
+     min_feasNum : integer32 := DEMiCs_Global_Constants.BIGINT;
+     min_lvl : integer32 := 0;
+     basisIdx,nf_pos : Standard_Integer_Vectors.Link_to_Vector;
+     n_curr,fHead,cor_ptr : demics_iTest.class_uData.Link_to_uData;
+
+     use demics_iTest.class_uData;
+
     begin
-      return 0;
+      if vrblvl > 0 then
+        put("-> in demics_mvc.class_mvc.findUnbDir, depth : ");
+        put(depth,1); put_line(" ...");
+      end if;
+      basisIdx := curNode.basisIdx_ptr;
+      nf_pos := curNode.nf_pos_ptr;
+      nfN := curNode.nfN;
+      length := this.supN - depth - 1;
+      for i in 0..length-1 loop
+        lvl := curRsp(i);
+        if vrblvl > 0 then -- #if DBG_FINDUNB
+          put("-------- Support : "); put(lvl+1,1); put_line(" --------");
+        end if;
+        fHead := nextInif(lvl).fHead;
+        n_curr := fHead;
+        feasNum := 0;
+        while n_curr /= null loop
+          if vrblvl > 0 then -- #if DBG_FINDUNB
+            put("-- tarIdx "); put(n_curr.supLab + 1,1); put_line(" --");
+          end if;
+          cor_ptr := nextInif(lvl).fHead;
+          flag := checkDir(this,cor_ptr,n_curr,n_curr.dir,n_curr.red, 
+                           nf_pos,basisIdx,nfN,vrblvl-1);
+          if flag = DEMiCs_Global_Constants.UNB_TAR then
+	    skipPtr(this,n_curr,nextInif(lvl).fHead,vrblvl-1);
+            if vrblvl > 0 then -- #if DBG_FINDUNB
+              put_line("UNB_TAR");
+            end if;
+          elsif flag = DEMiCs_Global_Constants.UNB_COR then
+            skipPtr(this,cor_ptr,nextInif(lvl).fHead,vrblvl-1);
+            feasNum := feasNum + 1;
+            if vrblvl > 0 then -- #if DBG_FINDUNB
+              put_line("UNB_COR");
+            end if;
+          else
+            feasNum := feasNum + 1;
+            if vrblvl > 0 then -- #if DBG_FINDUNB
+              put_line("CONTINUE");
+            end if;
+          end if;
+          n_curr := n_curr.fNext;
+        end loop;
+        if feasNum < min_feasNum then
+          min_feasNum := feasNum;
+          min_lvl := lvl;
+        end if;
+      end loop;
+      if vrblvl > 0 then -- #if DBG_FINDUNB
+        put("min_lvl : "); put(min_lvl+1,1); new_line;
+        put("min_feasNum : "); put(min_feasNum,1); new_line;
+      end if;
+      this.sp(depth + 1) := min_lvl;
+      cnt := 0;
+      for i in 0..length-1 loop
+        if curRsp(i) /= min_lvl then
+          nextRsp(cnt) := curRsp(i);
+          cnt := cnt + 1;
+        end if;
+      end loop;
+      if min_feasNum <= 1
+       then return DEMiCs_Global_Constants.STOP;
+       else return DEMiCs_Global_Constants.CONTINUE;
+      end if;
     end findUnbDir;
 
     function findUnbDir_art
-                ( this : Link_to_mvc;
-                  nextInif : demics_itest.class_inifData.Array_of_inifData;
-                  curNode : demics_ftest.class_theData.Link_to_theData;
-                  nextRsp : Standard_Integer_Vectors.Link_to_Vector;
-                  curRsp : Standard_Integer_Vectors.Link_to_Vector;
-                  depth : integer32 ) return integer32 is
+               ( this : Link_to_mvc;
+             nextInif : demics_itest.class_inifData.Link_to_Array_of_inifData;
+                 curNode : demics_ftest.class_theData.Link_to_theData;
+                 nextRsp : Standard_Integer_Vectors.Link_to_Vector;
+                 curRsp : Standard_Integer_Vectors.Link_to_Vector;
+                 depth : integer32; vrblvl : integer32 := 0 )
+               return integer32 is
+
+      nfN,flag,lvl,length,cnt,feasNum : integer32;
+      min_feasNum : integer32 := DEMiCs_Global_Constants.BIGINT;
+      min_lvl : integer32 := 0;
+      basisIdx,nf_pos : Standard_Integer_Vectors.Link_to_Vector;
+      n_curr,fHead,cor_ptr : demics_iTest.class_uData.Link_to_uData;
+
+      use demics_iTest.class_uData;
+
     begin
-      return 0;
+      if vrblvl > 0 then
+        put("-> in demics_mvc.class_mvc.findUnbDir_art, depth : ");
+        put(depth,1); put_line(" ...");
+      end if;
+      basisIdx := curNode.basisIdx_ptr;
+      nf_pos := curNode.nf_pos_ptr;
+      nfN := curNode.nfN;
+      length := this.supN - depth - 1;
+      for i in 0..length-1 loop
+        lvl := curRsp(i);
+        if vrblvl > 0 then -- #if DBG_FINDUNB
+          put("-------- Support : "); put(lvl+1,1); put_line(" --------");
+        end if;
+        fHead := nextInif(lvl).fHead;
+        n_curr := fHead;
+        feasNum := 0;
+        while n_curr /= null loop
+          if vrblvl > 0 then -- #if DBG_FINDUNB
+            put("-- tarIdx "); put(n_curr.supLab+1,1); put_line(" --");
+          end if;
+          cor_ptr := nextInif(lvl).fHead;
+          flag := checkDir_art(this,cor_ptr,n_curr,n_curr.dir,n_curr.red, 
+                               nf_pos,basisIdx,nfN,vrblvl-1);
+          if flag = DEMiCs_Global_Constants.UNB_TAR then
+            skipPtr(this,n_curr,nextInif(lvl).fHead,vrblvl-1);
+            if vrblvl > 0 then -- #if DBG_FINDUNB
+              put_line("UNB");
+            end if;
+          elsif flag = DEMiCs_Global_Constants.UNB_COR then
+            skipPtr(this,cor_ptr,nextInif(lvl).fHead,vrblvl-1);
+            feasNum := feasNum + 1;
+          else
+            feasNum := feasNum + 1;
+            if vrblvl > 0 then -- #if DBG_FINDUNB
+              put_line("CONTINUE");
+            end if;
+          end if;
+          n_curr := n_curr.fNext;
+        end loop; 
+        if feasNum < min_feasNum then
+          min_feasNum := feasNum;
+          min_lvl := lvl;
+        end if;
+      end loop;
+      if vrblvl > 0 then -- #if DBG_FINDUNB
+        put("min_lvl : "); put(min_lvl+1,1); new_line;
+        put("min_feasNum : "); put(min_feasNum,1); new_line;
+      end if;
+      this.sp(depth+1) := min_lvl;
+      cnt := 0;
+      for i in 0..length-1 loop
+        if curRsp(i) /= min_lvl then
+          nextRsp(cnt) := curRsp(i);
+          cnt := cnt + 1;
+        end if;
+      end loop;
+      if min_feasNum <= 1
+       then return DEMiCs_Global_Constants.STOP;
+       else return DEMiCs_Global_Constants.CONTINUE;
+      end if;
     end findUnbDir_art;
 
     function checkDir
-                ( this : Link_to_mvc;
-                  corPtr : demics_itest.class_uData.Link_to_Array_of_uData;
-                  tarPtr : demics_itest.class_uData.Link_to_uData;
-                  tar_dir : Standard_Floating_Vectors.Link_to_Vector;
-                  tar_red : double_float;
-                  nf_pos : Standard_Integer_Vectors.Link_to_Vector;
-                  basisIdx : Standard_Integer_Vectors.Link_to_Vector;
-                  nfN : integer32 ) return integer32 is
+               ( this : Link_to_mvc;
+                 corPtr : demics_itest.class_uData.Link_to_uData;
+                 tarPtr : demics_itest.class_uData.Link_to_uData;
+                 tar_dir : Standard_Floating_Vectors.Link_to_Vector;
+                 tar_red : double_float;
+                 nf_pos : Standard_Integer_Vectors.Link_to_Vector;
+                 basisIdx : Standard_Integer_Vectors.Link_to_Vector;
+                 nfN : integer32; vrblvl : integer32 := 0 )
+               return integer32 is
     begin
+      if vrblvl > 0 then
+        put_line("-> in demics_mvc.class_mvc.checkbDir ...");
+      end if;
       return 0;
     end checkDir;
 
     function checkDir_art
-                ( this : Link_to_mvc;
-                  corPtr : demics_itest.class_uData.Link_to_Array_of_uData;
-                  tarPtr : demics_itest.class_uData.Link_to_uData;
-                  tar_dir : Standard_Floating_Vectors.Link_to_Vector;
-                  tar_red : double_float;
-                  nf_pos : Standard_Integer_Vectors.Link_to_Vector;
-                  basisIdx : Standard_Integer_Vectors.Link_to_Vector;
-                  nfN : integer32 ) return integer32 is
+               ( this : Link_to_mvc;
+                 corPtr : demics_itest.class_uData.Link_to_uData;
+                 tarPtr : demics_itest.class_uData.Link_to_uData;
+                 tar_dir : Standard_Floating_Vectors.Link_to_Vector;
+                 tar_red : double_float;
+                 nf_pos : Standard_Integer_Vectors.Link_to_Vector;
+                 basisIdx : Standard_Integer_Vectors.Link_to_Vector;
+                 nfN : integer32; vrblvl : integer32 := 0 )
+               return integer32 is
     begin
+      if vrblvl > 0 then
+        put_line("-> in demics_mvc.class_mvc.checkbDir_art ...");
+      end if;
       return 0;
     end checkDir_art;
 
     procedure skipPtr
                 ( this : in Link_to_mvc;
-                  curr : in demics_itest.class_uData.Link_to_Array_of_uData;
-                  fHead : in demics_itest.class_uData.Link_to_Array_of_uData
-                ) is
+                  curr : in demics_itest.class_uData.Link_to_uData;
+                  fHead : in out demics_itest.class_uData.Link_to_uData;
+                  vrblvl : in integer32 := 0 ) is
+
+      use demics_iTest.class_uData;
+
     begin
-      null;
+      if vrblvl > 0
+       then put_line("-> in demics_mvc.class_mvc.skipPtr ...");
+      end if;
+      if curr = fHead then
+        fHead := curr.fNext;
+      elsif curr.fNext /= null then
+        curr.prev.fNext := curr.fNext;
+        curr.fNext.prev := curr.prev;
+      else
+        curr.prev.fNext := curr.fNext;
+      end if;
     end skipPtr;
 
     procedure get_tuple_index
