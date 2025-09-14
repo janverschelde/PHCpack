@@ -1,3 +1,5 @@
+Sun 14 Sep 2025 : extended demics_mvc.
+
 Sat 13 Sep 2025 : fixed a bug in demics_ftest.adb, and patched info_rIdx()
   in demics_simplex.adb.  Extended demics_mvc, and then some more.
 
