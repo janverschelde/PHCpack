@@ -186,23 +186,25 @@ package demics_mvc is
     -- DESCRIPTION :
     --   Sets the value of nodeLabel of node.parent using data.
 
-    procedure dbg_init_transMat
-                ( this : in Link_to_mvc;
-                  curNode : in demics_fTest.class_theData.Link_to_theData );
+-- The next procedures were commented out, and thus never used :
 
-    procedure dbg_transMat
-                ( this : in Link_to_mvc;
-                  preNode : in demics_fTest.class_theData.Link_to_theData;
-                  curNode : in demics_fTest.class_theData.Link_to_theData );
+--  procedure dbg_init_transMat
+--              ( this : in Link_to_mvc;
+--                curNode : in demics_fTest.class_theData.Link_to_theData );
 
-    procedure check_transMat
-                ( this : in Link_to_mvc;
-                  preNode : in demics_fTest.class_theData.Link_to_theData;
-                  curNode : in demics_fTest.class_theData.Link_to_theData );
+--  procedure dbg_transMat
+--              ( this : in Link_to_mvc;
+--                preNode : in demics_fTest.class_theData.Link_to_theData;
+--                curNode : in demics_fTest.class_theData.Link_to_theData );
 
-    procedure check_init_transRed
-                ( this : in Link_to_mvc;
-                  curNode : in demics_fTest.class_theData.Link_to_theData );
+--  procedure check_transMat
+--              ( this : in Link_to_mvc;
+--                preNode : in demics_fTest.class_theData.Link_to_theData;
+--                curNode : in demics_fTest.class_theData.Link_to_theData );
+
+--  procedure check_init_transRed
+--              ( this : in Link_to_mvc;
+--                curNode : in demics_fTest.class_theData.Link_to_theData );
 
     function checkSign_red
                 ( this : Link_to_mvc;
@@ -290,14 +292,14 @@ package demics_mvc is
     procedure info_elemNum
                 ( this : in Link_to_mvc;
                   length : in integer32;
-                  data : in demics_fTest.class_ftData.Link_to_ftData;
-                  node : in demics_fTest.class_ftData.ftData );
+                  data : in demics_fTest.class_ftData.Link_to_Array_of_ftData;
+                  node : in demics_fTest.class_ftData.Link_to_ftData );
 
     procedure info_prop_elemNum
                 ( this : in Link_to_mvc;
                   length : in integer32;
-                  data : in demics_fTest.class_ftData.Link_to_ftData;
-                  node : in demics_fTest.class_ftData.ftData );
+                  data : in demics_fTest.class_ftData.Link_to_Array_of_ftData;
+                  node : in demics_fTest.class_ftData.Link_to_ftData );
 
     procedure info_table ( this : in Link_to_mvc );
 
@@ -362,33 +364,29 @@ package demics_mvc is
                  vrblvl : in integer32 := 0 );
 
     function iCheck
-                ( this : Link_to_mvc;
-                  depth : integer32;
-                  parent : demics_fTest.class_theData.Link_to_theData;
-                  data : demics_fTest.class_ftData.Link_to_ftData;
-                  inifData : demics_iTest.class_inifData.Link_to_inifData )
-                return integer32;
+               ( this : Link_to_mvc;
+                 depth : integer32;
+                 parent : demics_fTest.class_theData.Link_to_theData;
+                 data : demics_fTest.class_ftData.Link_to_ftData;
+                 curInif : demics_iTest.class_inifData.Link_to_inifData;
+                 vrblvl : integer32 := 0 ) return integer32;
 
     procedure iLP ( this : in Link_to_mvc;
                     parent : in demics_fTest.class_theData.Link_to_theData;
                     data : in demics_fTest.class_ftData.Link_to_ftData;
-                    depth : in integer32;
-                    idx_one : in integer32;
+                    depth : in integer32; idx_one : in integer32;
                     fst_pivInIdx : in integer32;
-                    sub_fst_pivInIdx : in integer32;
-                    preNbN : in integer32;
-                    feaNum : in out integer32 );
+                    sub_fst_pivInIdx : in integer32; preNbN : in integer32;
+                    feaNum : in out integer32; vrblvl : in integer32 := 0 );
 
-    procedure iLP_Art
+    procedure iLP_art
                 ( this : in Link_to_mvc;
                   parent : in demics_fTest.class_theData.Link_to_theData;
                   data : in demics_fTest.class_ftData.Link_to_ftData;
-                  depth : in integer32;
-                  idx_one : in integer32;
+                  depth : in integer32; idx_one : in integer32;
                   fst_pivInIdx : in integer32;
-                  sub_fst_pivInIdx : in integer32;
-                  preNbN : in integer32;
-                  feaNum : in out integer32 );
+                  sub_fst_pivInIdx : in integer32; preNbN : in integer32;
+                  feaNum : in out integer32; vrblvl : in integer32 := 0 );
 
     procedure findNode
                 ( this : in Link_to_mvc; depth : in integer32;
@@ -439,15 +437,19 @@ package demics_mvc is
     -- data was declared as ftData*, a plain pointer of ftData.
 
     function checkBasis
-                ( this : Link_to_mvc;
-                  target : demics_fTest.class_theData.Link_to_theData;
-                  sub_sIdx : integer32 ) return integer32;
+               ( this : Link_to_mvc;
+                 target : demics_fTest.class_theData.Link_to_theData;
+                 sub_sIdx : integer32 ) return integer32;
 
-    function checkAnotherBasis
-                ( this : Link_to_mvc;
-                  repIdx : integer32; dist : integer32;
-                  target : demics_fTest.class_theData.Link_to_theData )
-                return integer32;
+    procedure checkAnotherBasis
+                ( this : in Link_to_mvc;
+                  repIdx : in integer32; dist : in integer32;
+                  target : in out demics_fTest.class_theData.Link_to_theData;
+                  result : out integer32 );
+
+    -- NOTE :
+    --   Originally defined as a function, but assigns to target
+    --   as a side effect.
 
     procedure get_firIdx
                 ( this : in Link_to_mvc;

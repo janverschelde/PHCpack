@@ -551,7 +551,8 @@ package body demics_mvc is
                   nfN : in integer32; flag : out integer32;
                   vrblvl : in integer32 := 0 ) is
 
-      nfPos,ans,sign,cnt,nonNegVarNum : integer32;
+      nfPos,ans,sign,nonNegVarNum : integer32;
+     -- cnt : integer32;
 
       use demics_iTest.class_uData;
 
@@ -578,7 +579,7 @@ package body demics_mvc is
           exit when (flag = DEMiCs_Global_Constants.STOP);
           sign := checkSign_red(this,corPtr.red,tar_red);
           if(sign = DEMiCs_Global_Constants.NEGATIVE) then
-            cnt := 0;
+           -- cnt := 0;
             nonNegVarNum := 0;
             flag := DEMiCs_Global_Constants.STOP;
             for i in 0..nfN-1 loop
@@ -608,7 +609,7 @@ package body demics_mvc is
               return;
             end if;
           else
-            cnt := 0;
+           -- cnt := 0;
             nonNegVarNum := 0;
             flag := DEMiCs_Global_Constants.STOP;
             for i in 0..nfN-1 loop
@@ -679,8 +680,8 @@ package body demics_mvc is
       tmpIdx : integer32;
 
     begin
-      for i in 0..length-1 loop
-        node.parent.nodeLabel(i) := data(length-1).cur.fIdx;
+      for i in 0..length-2 loop
+        node.parent.nodeLabel(i) := data(i).parent.fIdx;
       end loop;
       node.parent.nodeLabel(length-1) := data(length-1).cur.fIdx;
       if data(1).parent.sw = on then
@@ -690,35 +691,35 @@ package body demics_mvc is
       end if;
     end get_tuple_index;
 
-    procedure dbg_init_transMat
-                ( this : in Link_to_mvc;
-                  curNode : in demics_fTest.class_theData.Link_to_theData ) is
-    begin
-      null;
-    end dbg_init_transMat;
+--  procedure dbg_init_transMat
+--              ( this : in Link_to_mvc;
+--                curNode : in demics_fTest.class_theData.Link_to_theData ) is
+--  begin
+--    null;
+--  end dbg_init_transMat;
 
-    procedure dbg_transMat
-                ( this : in Link_to_mvc;
-                  preNode : in demics_fTest.class_theData.Link_to_theData;
-                  curNode : in demics_fTest.class_theData.Link_to_theData ) is
-    begin
-      null;
-    end dbg_transMat;
+--  procedure dbg_transMat
+--              ( this : in Link_to_mvc;
+--                preNode : in demics_fTest.class_theData.Link_to_theData;
+--                curNode : in demics_fTest.class_theData.Link_to_theData ) is
+--  begin
+--    null;
+--  end dbg_transMat;
 
-    procedure check_transMat
-                ( this : in Link_to_mvc;
-                  preNode : in demics_fTest.class_theData.Link_to_theData;
-                  curNode : in demics_fTest.class_theData.Link_to_theData ) is
-    begin
-      null;
-    end check_transMat;
+--  procedure check_transMat
+--              ( this : in Link_to_mvc;
+--                preNode : in demics_fTest.class_theData.Link_to_theData;
+--                curNode : in demics_fTest.class_theData.Link_to_theData ) is
+--  begin
+--    null;
+--  end check_transMat;
 
-    procedure check_init_transRed
-                ( this : in Link_to_mvc;
-                  curNode : in demics_fTest.class_theData.Link_to_theData ) is
-    begin
-      null;
-    end check_init_transRed;
+--  procedure check_init_transRed
+--              ( this : in Link_to_mvc;
+--                curNode : in demics_fTest.class_theData.Link_to_theData ) is
+--  begin
+--    null;
+--  end check_init_transRed;
 
     function checkSign_red
                 ( this : Link_to_mvc;
@@ -841,8 +842,39 @@ package body demics_mvc is
                   node : in demics_fTest.class_ftData.Link_to_ftData;
                   nextInif : in demics_itest.class_inifData.Array_of_inifData
                 ) is
+
+      nfPos,nfN : integer32;
+      nf_pos : Standard_Integer_Vectors.Link_to_Vector;
+      val : double_float;
+      n_curr : demics_iTest.class_uData.Link_to_uData;
+
+      use demics_iTest.class_uData;
+
     begin
-      null;
+      put_line("<< info_all_dirRed >>");
+      nf_pos := node.parent.nf_pos_ptr;
+      nfN := node.parent.nfN;
+      for j in depth+1..this.supN-1 loop
+         n_curr := nextInif(j).fHead;
+         put("--- Support : "); put(j+1,1); put_line(" ---");
+         while n_curr /= null loop
+            put(n_curr.supLab+1,1); put(" : ");
+            for k in 0..nfN-1 loop
+              nfPos := nf_pos(k);
+              val := n_curr.dir(nfPos);
+              if (val < DEMiCs_Global_Constants.PLUSZERO) and
+                 (val > DEMiCs_Global_Constants.MINUSZERO) then
+                put("0 ");
+              else
+                put(val); put(" ");
+              end if;
+            end loop;
+            put(" : "); put(n_curr.red);
+            n_curr := n_curr.fNext;
+            new_line;
+         end loop;
+         new_line;
+      end loop;
     end info_all_dirRed;
 
     procedure info_mFea ( this : in Link_to_mvc; length : in integer32 ) is
@@ -887,19 +919,28 @@ package body demics_mvc is
     procedure info_elemNum
                 ( this : in Link_to_mvc;
                   length : in integer32;
-                  data : in demics_fTest.class_ftData.Link_to_ftData;
-                  node : in demics_fTest.class_ftData.ftData ) is
+                  data : in demics_fTest.class_ftData.Link_to_Array_of_ftData;
+                  node : in demics_fTest.class_ftData.Link_to_ftData ) is
     begin
-      null;
+      put("numElem : ");
+      for i in 0..length-2 loop
+        put(data(i).elemNum); put(" ");
+      end loop;
+      put(node.elemNum); new_line;
     end info_elemNum;
 
     procedure info_prop_elemNum
                 ( this : in Link_to_mvc;
                   length : in integer32;
-                  data : in demics_fTest.class_ftData.Link_to_ftData;
-                  node : in demics_fTest.class_ftData.ftData ) is
+                  data : in demics_fTest.class_ftData.Link_to_Array_of_ftData;
+                  node : in demics_fTest.class_ftData.Link_to_ftData ) is
     begin
-      null;
+      put("prop_numElem : ");
+      for i in 0..length - 2 loop
+        demics_fTest.class_ftData.info_numElem(data(i));
+      end loop;
+      demics_fTest.class_ftData.info_numElem(node);
+      new_line;
     end info_prop_elemNum;
 
     procedure info_table ( this : in Link_to_mvc ) is
@@ -1249,81 +1290,423 @@ package body demics_mvc is
                 ( this : Link_to_mvc; depth : integer32;
                   parent : demics_fTest.class_theData.Link_to_theData;
                   vrblvl : in integer32 := 0 ) return integer32 is
+
+      lvl,length,feaNum,sn,flag : integer32;
+
     begin
       if vrblvl > 0 then
         put("-> in demics_mvc.class_mvc.feasTest, depth : ");
         put(depth,1); put_line(" ...");
       end if;
-      return 0;
+      sn := this.sp(depth);
+      length := this.supType(sn) + 1;
+      demics_fTest.class_lvData.get_info
+        (this.lv(sn),this.mRepN,this.mFeaIdx,this.mFea);
+      lvl := 0;
+      flag := iCheck(this,depth,parent,this.lv(sn).fTest(lvl),
+                     this.iLv(depth).inif(sn),vrblvl-1);
+      lvl := lvl + 1;
+      feaNum := 0;
+      flag := DEMiCs_Global_Constants.CONTINUE;
+      if flag = DEMiCs_Global_Constants.CONTINUE then
+        findNode(this,depth,lvl,feaNum,this.lv(sn).fTest,flag,vrblvl-1);
+      else
+        findNextNode(this,depth,lvl,feaNum,this.lv(sn).fTest,flag,vrblvl-1);
+      end if;
+      return flag;
     end feasTest;
 
     procedure upFeasTest
                 ( this : in Link_to_mvc; depth : in out integer32;
                   flag : out integer32; vrblvl : in integer32 := 0 ) is
+
+      lvl,length,feaNum : integer32;
+
     begin
       if vrblvl > 0 then
         put("-> in demics_mvc.class_mvc.upFeasTest, depth : ");
         put(depth,1); put_line(" ...");
       end if;
+      loop
+        demics_iTest.class_iLvData.init
+          (this.iLv(depth),this.supN,depth-1,this.iLv(depth - 1).rsp,
+           vrblvl-1);
+        demics_fTest.class_ftData.delete_addedElem 
+          (this.lv(this.sp(depth-1)).node);
+        demics_fTest.class_ftData.init_ptr(this.lv(this.sp(depth-1)).node);
+        demics_fTest.class_lvData.init_ptr(this.lv(this.sp(depth)));
+        demics_fTest.class_lvData.get_info
+          (this.lv(this.sp(depth-1)),this.mRepN,this.mFeaIdx,this.mFea);
+        length := this.supType(this.sp(depth-1)) + 1;
+        feaNum := 0;
+        lvl := this.supType(this.sp(depth-1));
+        findNextNode(this,depth-1,lvl,feaNum,this.lv(this.sp(depth-1)).fTest,
+                     flag,vrblvl-1);
+        if flag = DEMiCs_Global_Constants.CONTINUE then
+          findNode(this,depth-1,lvl,feaNum,this.lv(this.sp(depth-1)).fTest,
+                   flag,vrblvl-1);
+        end if;
+        -- STOP or FNN
+        depth := depth - 1;
+        exit when ((flag = DEMiCs_Global_Constants.FNN) or (depth = 0));
+      end loop; 
     end upFeasTest;
 
     procedure findMixedCell
                 ( this : in Link_to_mvc; depth : in integer32;
                   parent : in demics_fTest.class_theData.Link_to_theData;
                   vrblvl : in integer32 := 0 ) is
+
+      lvl,feaNum,sn,flag : integer32;
+     -- length : integer32;
+
     begin
       if vrblvl > 0 then
         put("-> in demics_mvc.class_mvc.findMixedCell, depth : ");
         put(depth,1); put_line(" ...");
       end if;
+      sn := this.sp(depth);
+     -- length := this.supType(sn) + 1;
+      demics_fTest.class_lvData.get_info
+        (this.lv(sn),this.mRepN,this.mFeaIdx,this.mFea);
+      lvl := 0;
+      flag := iCheck(this,depth,parent,this.lv(sn).fTest(lvl),
+                     this.iLv(depth).inif(sn));
+      lvl := lvl + 1;
+      feaNum := 0;
+      flag := DEMiCs_Global_Constants.CONTINUE;
+      loop
+        if flag = DEMiCs_Global_Constants.CONTINUE then
+          findNode(this,depth,lvl,feaNum,this.lv(sn).fTest,
+                   flag,vrblvl-1);
+          if flag = DEMiCs_Global_Constants.STOP
+           then exit;
+          end if;
+        else
+          findNextNode(this,depth,lvl,feaNum,this.lv(sn).fTest,
+                       flag,vrblvl-1);
+          if flag = DEMiCs_Global_Constants.STOP
+           then exit;
+          end if;
+        end if;
+      end loop;
     end findMixedCell;
 
     procedure findAllMixedCells
                 ( this : in Link_to_mvc; depth : in integer32;
                   vrblvl : in integer32 := 0 ) is
+
+      lvl,feaNum,flag : integer32;
+     -- length : integer32;
+
     begin
       if vrblvl > 0 then
         put("-> in demics_mvc.class_mvc.findAllMixedCells, depth : ");
         put(depth,1); put_line(" ...");
       end if;
+     -- length := this.supType(depth) + 1;
+      demics_fTest.class_lvData.get_info
+        (this.lv(depth),this.mRepN,this.mFeaIdx,this.mFea);
+      lvl := 0;
+      initCheck(this,depth,this.lv(depth).fTest(lvl),vrblvl-1);
+      lvl := lvl + 1;
+      feaNum := 0;
+      flag := DEMiCs_Global_Constants.CONTINUE;
+      loop
+        if flag = DEMiCs_Global_Constants.CONTINUE then
+          findNode(this,depth,lvl,feaNum,this.lv(depth).fTest,flag,vrblvl-1);
+          demics_fTest.class_ftData.delete_addedElem(this.lv(depth).node);
+          demics_fTest.class_ftData.init_ptr(this.lv(depth).node);
+          if flag = DEMiCs_Global_Constants.STOP
+           then exit;
+          end if;
+        else
+          findNextNode(this,depth,lvl,feaNum,this.lv(depth).fTest,
+                       flag,vrblvl-1);
+          demics_fTest.class_ftData.delete_addedElem(this.lv(depth).node);
+          demics_fTest.class_ftData.init_ptr(this.lv(depth).node);
+          if flag = DEMiCs_Global_Constants.STOP
+           then exit;
+          end if;
+        end if;
+      end loop;
     end findAllMixedCells;
 
     function iCheck
                 ( this : Link_to_mvc; depth : integer32;
                   parent : demics_fTest.class_theData.Link_to_theData;
                   data : demics_fTest.class_ftData.Link_to_ftData;
-                  inifData : demics_itest.class_inifData.Link_to_inifData )
-                return integer32 is
+                  curInif : demics_itest.class_inifData.Link_to_inifData;
+                  vrblvl : integer32 := 0 ) return integer32 is
+
+      feaNum : integer32 := 0;
+      preNbN,flag : integer32;
+     -- sn : integer32;
+      fst_pivInIdx, sub_fst_pivInIdx : integer32;
+      curr : demics_iTest.class_uData.Link_to_uData;
+
+      use demics_iTest.class_uData;
+
     begin
-      return 0;
+      if vrblvl > 0 then
+        put("-> in demics_mvc.class_mvc.iCheck, depth : ");
+        put(depth,1); put_line(" ...");
+      end if;
+      if vrblvl > 0 then -- #if DBG_NODE
+        put_line("+++++++++++++++++<< iCheck >>+++++++++++++++++");
+        info_parent_node(this,depth);
+      end if;
+      if vrblvl > 0 then -- #if DBG_PRE_INFO
+        put_line("<< PRE >>");
+        demics_fTest.class_theData.info_p_sol_ptr(parent);
+        demics_fTest.class_theData.info_d_sol_ptr(parent);
+        demics_fTest.class_theData.info_invB_ptr(parent);
+        demics_fTest.class_theData.info_basisIdx_ptr(parent);
+        demics_fTest.class_theData.info_nf_pos_ptr(parent);
+        demics_fTest.class_theData.info_nbIdx_ptr(parent);
+        demics_fTest.class_theData.info_redVec_ptr(parent);
+      end if;
+      flag := parent.artV;
+     -- sn := this.sp(depth);
+      case flag is
+        when DEMiCs_Global_Constants.TRUE =>
+          if vrblvl > 0 then -- #if DBG_NODE
+            put_line("<< Art >>");
+          end if;
+          get_candIdx(this,curInif);
+          preNbN := parent.nbN;
+          curr := curInif.fHead;
+          while curr /= NULL loop
+            if vrblvl > 0 then -- #if DBG_NODE
+              put("------------------- Idx : ");
+              put(curr.supLab+1,1);
+              put_line(" -------------------");
+            end if;
+            iLP_art(this,parent,data,depth,curr.supLab,fst_pivInIdx,
+                    sub_fst_pivInIdx,preNbN,feaNum,vrblvl-1);
+            curr := curr.fNext;
+          end loop;
+          if vrblvl > 0 then -- #if DBG_NODE
+            new_line;
+          end if;
+          if feaNum <= 1 then
+            this.mFea(0) := 0;
+            demics_fTest.class_ftData.delete_addedElem(data);
+            demics_fTest.class_ftData.init_ptr(data);
+            return DEMiCs_Global_Constants.SLIDE;
+          else
+            return DEMiCs_Global_Constants.CONTINUE;
+          end if;
+        when DEMiCs_Global_Constants.FALSE =>
+          if vrblvl > 0 then -- #if DBG_NODE
+            put_line("<< NoArt >>");
+          end if;
+          demics_simplex.class_simplex.fstRed_candIdx
+            (this.the_Simplex,curInif,this.candIdx,fst_pivInIdx,
+             sub_fst_pivInIdx,vrblvl-1);
+          preNbN := parent.nbN;
+          curr := curInif.fHead;
+          while curr /= null loop
+            if vrblvl > 0 then -- #if DBG_NODE
+              put("------------------- Idx : ");
+              put(curr.supLab+1,1);
+              put_line(" -------------------");
+            end if;
+            iLP(this,parent,data,depth,curr.supLab,fst_pivInIdx,
+                sub_fst_pivInIdx,preNbN,feaNum,vrblvl-1);
+            curr := curr.fNext;
+          end loop;
+          if vrblvl > 0 then -- #if DBG_NODE
+            new_line;
+          end if;
+        when others => null;
+      end case;
+      if feaNum <= 1 then
+        this.mFea(0) := 0;
+        demics_fTest.class_ftData.delete_addedElem(data);
+        demics_fTest.class_ftData.init_ptr(data);
+        return DEMiCs_Global_Constants.SLIDE;
+      else
+        return DEMiCs_Global_Constants.CONTINUE;
+      end if;
     end iCheck;
 
     procedure iLP ( this : in Link_to_mvc;
                     parent : in demics_fTest.class_theData.Link_to_theData;
                     data : in demics_fTest.class_ftData.Link_to_ftData;
-                    depth : in integer32;
-                    idx_one : in integer32;
-                    fst_pivInIdx : in integer32;
-                    sub_fst_pivInIdx : in integer32;
-                    preNbN : in integer32;
-                    feaNum : in out integer32 ) is
+                    depth : in integer32; idx_one : in integer32;
+                    fst_pivInIdx : in integer32; 
+                    sub_fst_pivInIdx : in integer32; preNbN : in integer32;
+                    feaNum : in out integer32; vrblvl : in integer32 := 0 ) is
+
+      flag,fst_pivInIdx2,sub_fst_pivInIdx2,sn,iter : integer32;
+     -- termS : integer32;
+      reTermS,repIdx,lNfN : integer32;
+      fst_redCost : double_float;
+
     begin
-      null;
+      if vrblvl > 0 then
+        put("-> in demics_mvc.class_mvc.iLP, depth : ");
+        put(depth,1); put_line(" ...");
+      end if;
+      sn := this.sp(depth);
+      initMemoryCheck(this,data,depth);
+      repIdx := idx_one;
+      this.firIdx(sn) := repIdx;
+     -- termS := this.termStart(sn);
+      reTermS := this.re_termStart(sn);
+      lNfN := parent.nfN;
+      demics_simplex.class_simplex.get_iNbN_nfN
+        (this.the_Simplex,Data.cur,preNbN+this.candIdx(0)-1,lNfN);
+      if repIdx < fst_pivInIdx then
+        fst_pivInIdx2 := reTermS + fst_pivInIdx - 1;
+        sub_fst_pivInIdx2 := preNbN - this.dim + sub_fst_pivInIdx - 1;
+      elsif repIdx > fst_pivInIdx then
+        fst_pivInIdx2 := reTermS + fst_pivInIdx;
+        sub_fst_pivInIdx2 := preNbN - this.dim + sub_fst_pivInIdx;
+      end if;
+      if repIdx /= fst_pivInIdx then
+        demics_fTest.class_ftData.init_info(data);
+        demics_ftest.class_ftData.create_rIdx
+          (data,preNbN,repIdx,this.candIdx);
+        demics_simplex.class_simplex.get_repIdx_candIdx
+          (this.the_Simplex,this.candIdx,repIdx);
+        demics_simplex.class_simplex.get_parent(this.the_Simplex,parent);
+        demics_simplex.class_simplex.get_cur(this.the_Simplex,data.cur);
+        fst_redCost := demics_simplex.class_simplex.put_redCost
+                         (this.the_Simplex,fst_pivInIdx);
+        iter := 0;
+        demics_simplex.class_simplex.solLP
+          (this.the_Simplex,depth,fst_pivInIdx2,sub_fst_pivInIdx2,
+           fst_redCost,DEMiCs_Global_Constants.ICHECK,
+           this.termSet(sn),reTermS,preNbN,iter,flag,vrblvl-1);
+        this.total_LPs := this.total_LPs + 1.0;
+        this.total_1PT := this.total_1PT + 1.0;
+        this.lvl_1PT(depth) := this.lvl_1PT(depth) + 1.0;
+        if flag = DEMiCs_Global_Constants.OPT then
+          if vrblvl > 0 then -- #if DBG_FEA
+            put_line("OPT-1");
+          end if;
+          this.total_iter := this.total_iter + double_float(iter);
+          this.total_feasLP := this.total_feasLP + 1.0;
+          demics_simplex.class_simplex.get_pivOutNum
+            (this.the_Simplex,data.cur);
+          demics_fTest.class_theData.joint(data.cur);
+          data.cur.fIdx := idx_one;
+          if vrblvl > 0 then -- #if DBG_CUR_INFO
+            put_line("<< Cur >>");
+            demics_fTest.class_ftData.info_cur(data);
+          end if;
+          this.mFeaIdx(0)(feaNum) := repIdx;
+          this.mFea(0) := this.mFea(0) + 1;
+          feaNum := feaNum + 1;
+          data.cur := data.cur.next;
+        elsif flag = DEMiCs_Global_Constants.UNBOUNDED then
+          if vrblvl > 0 then -- #if DBG_FEA
+            put_line("UNB-1");
+          end if;
+        else
+          put_line("Error: too many iterations at iLP");
+          info_parent_node(this,depth);
+          put("( "); put(idx_one+1,1); put_line(" )");
+          return; -- exit(EXIT_FAILURE);
+        end if;
+      else
+        if vrblvl > 0 then -- #if DBG_FEA
+          put_line("OPT-2");
+        end if;
+        this.mFeaIdx(0)(feaNum) := repIdx;
+        this.mFea(0) := this.mFea(0) + 1;
+        feaNum := feaNum + 1;
+        data.cur.fIdx := idx_one;
+        demics_simplex.class_simplex.copy_eye(this.the_Simplex,data.cur); 
+        demics_simplex.class_simplex.cal_redVec
+          (this.the_Simplex,this.termSet(sn),reTermS,fst_pivInIdx,data.cur,
+           vrblvl-1); 
+        demics_fTest.class_ftData.iGetPtr(data,parent);
+        demics_fTest.class_ftData.get_nbIdx_rIdx
+          (data,preNbN,repIdx,this.candIdx,reTermS,parent);
+        demics_fTest.class_ftData.init_info(data);
+        demics_fTest.class_theData.iJoint(data.cur);
+        if vrblvl > 0 then -- #if DBG_CUR_INFO
+          put_line("<< Cur_ptr >>");
+          demics_ftest.class_ftData.info_cur_ptr(data);
+          put_line("<< Cur >>");
+          demics_ftest.class_ftData.info_cur_rIdx(data);
+        end if;
+        data.cur := data.cur.next;
+      end if;
     end iLP;
 
-    procedure iLP_Art
+    procedure iLP_art
                 ( this : in Link_to_mvc;
                   parent : in demics_fTest.class_theData.Link_to_theData;
                   data : in demics_fTest.class_ftData.Link_to_ftData;
-                  depth : in integer32;
-                  idx_one : in integer32;
+                  depth : in integer32; idx_one : in integer32;
                   fst_pivInIdx : in integer32;
-                  sub_fst_pivInIdx : in integer32;
-                  preNbN : in integer32;
-                  feaNum : in out integer32 ) is
+                  sub_fst_pivInIdx : in integer32; preNbN : in integer32;
+                  feaNum : in out integer32; vrblvl : in integer32 := 0 ) is
+
+     -- termS : integer32;
+      flag,reTermS,repIdx,sn,iter,lNfN : integer32;
+
     begin
-      null;
-    end iLP_Art;
+      if vrblvl > 0 then
+        put("-> in demics_mvc.class_mvc.iLP_art, depth : ");
+        put(depth,1); put_line(" ...");
+      end if;
+      sn := this.sp(depth);
+      initMemoryCheck(this,data,depth);
+      repIdx := idx_one;
+      this.firIdx(sn) := repIdx;
+     -- termS := this.termStart(sn);
+      reTermS := this.re_termStart(sn);
+      lNfN := parent.nfN;
+      demics_simplex.class_simplex.get_iNbN_nfN
+        (this.the_Simplex,data.cur,preNbN+this.candIdx(0)-1, lNfN);
+      demics_simplex.class_simplex.copy_eye(this.the_Simplex,data.cur);
+      demics_fTest.class_ftData.copy(data,this.col,parent);
+      demics_fTest.class_ftData.iCopy
+        (data,preNbN,lNfN,repIdx, --this.termSet(sn),
+         reTermS,this.candIdx,parent);
+      demics_fTest.class_ftData.init_info(data);
+      demics_simplex.class_simplex.get_cur(this.the_Simplex,data.cur);
+      iter := 0;
+      demics_simplex.class_simplex.solLP_art
+        (this.the_Simplex,depth, -- repIdx,fst_pivInIdx,
+         preNbN,this.termSet(sn),reTermS,iter,flag,vrblvl-1);
+      this.total_LPs := this.total_LPs + 1.0;
+      this.total_1PT := this.total_1PT + 1.0;
+      this.lvl_1PT(depth) := this.lvl_1PT(depth) + 1.0;
+      if flag = DEMiCs_Global_Constants.OPT then
+        if vrblvl > 0 then -- #if DBG_FEA
+          put_line("OPT-1");
+        end if;
+        this.total_iter := this.total_iter + double_float(iter);
+        this.total_feasLP := this.total_feasLP + 1.0;
+        demics_fTest.class_theData.joint(data.cur);
+        data.cur.fIdx := idx_one;
+        demics_simplex.class_simplex.get_res(this.the_Simplex,data);
+        demics_simplex.class_simplex.get_pivOutNum(this.the_Simplex,data.cur);
+        this.mFeaIdx(0)(feaNum) := repIdx;
+        this.mFea(0) := this.mFea(0) + 1;
+        feaNum := feaNum + 1;
+        if vrblvl > 0 then -- #if DBG_CUR_INFO
+          put_line("Cur");
+          demics_fTest.class_ftData.info_cur_ptr(data);
+        end if;
+        data.cur := data.cur.next;
+      elsif flag = DEMiCs_Global_Constants.UNBOUNDED then
+        if vrblvl > 0 then -- #if DBG_FEA
+          put_line("UNB-1");
+        end if;
+      else
+        put_line("Error: too much iterations at iLP_art");
+        info_parent_node(this,depth);
+        put("( "); put(idx_one+1,1); put_line(" )");
+        return; --  exit(EXIT_FAILURE);
+      end if;
+    end iLP_art;
 
     procedure findNode
                 ( this : in Link_to_mvc; depth : in integer32;
@@ -1503,7 +1886,7 @@ package body demics_mvc is
         if vrblvl > 0 then -- #if DBG_S_PRE_INFO
           put_line("<< Pre_ptr >>");
           demics_fTest.class_ftData.info_parent_ptr(pre);
-          put_line("<< Pre >>n");
+          put_line("<< Pre >>");
           demics_fTest.class_ftData.info_parent_rIdx(pre);
         end if;
         memoryCheck(this,cur,depth);
@@ -1520,8 +1903,8 @@ package body demics_mvc is
             (target,repIdx(i)-1,idx2,lNbN,lNfN);
           cur.cur.sw := DEMiCs_Global_Constants.OFF;
           if(flag = DEMiCs_Global_Constants.CONTINUE) and (lvl = 1) then
-            flag := checkAnotherBasis
-                      (this,repIdx(sub_firIdx),i-sub_firIdx,target);
+            checkAnotherBasis
+              (this,repIdx(sub_firIdx),i-sub_firIdx,target,flag);
             if flag = DEMiCs_Global_Constants.OPT then
               demics_simplex.class_simplex.get_mNbN_nfN
                 (this.the_Simplex,target,cur.cur);
@@ -1645,16 +2028,25 @@ package body demics_mvc is
                   target : demics_fTest.class_theData.Link_to_theData;
                   sub_sIdx : integer32 ) return integer32 is
     begin
-      return 0;
+      if target.rIdx(sub_sIdx - 1) >= 0
+       then return DEMiCs_Global_Constants.OPT;
+       else return DEMiCs_Global_Constants.CONTINUE;
+      end if;
     end checkBasis;
 
-    function checkAnotherBasis
-                ( this : Link_to_mvc;
-                  repIdx : integer32; dist : integer32;
-                  target : demics_fTest.class_theData.Link_to_theData )
-                return integer32 is
+    procedure checkAnotherBasis
+                ( this : in Link_to_mvc;
+                  repIdx : in integer32; dist : in integer32;
+                  target : in out demics_fTest.class_theData.Link_to_theData;
+                  result : out integer32 ) is
     begin
-      return 0;
+      for i in 0..dist-1 loop
+        target := target.next;
+      end loop;
+      if target.rIdx(repIdx) >= 0
+       then result := DEMiCs_Global_Constants.OPT;
+       else result := DEMiCs_Global_Constants.CONTINUE;
+      end if;
     end checkAnotherBasis;
 
     procedure get_firIdx
