@@ -1,3 +1,6 @@
+Tue 16 Sep 2025 : added debug print statements to demics_ftest.adb
+  and demics_mvc.adb.
+
 Mon 15 Sep 2025 : almost completed demics_mvc.
 
 Sun 14 Sep 2025 : extended demics_mvc.

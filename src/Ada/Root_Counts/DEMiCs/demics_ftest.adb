@@ -333,8 +333,16 @@ package body demics_ftest is
     end info_pivOutIdx;
 
     procedure info_p_sol_ptr ( this : in Link_to_theData ) is
+
+      use Standard_Floating_Vectors;
+
     begin
       put_line("<< p_sol_ptr >>");
+      put("this.col-1 : "); put(this.col-1,1);
+      if this.p_sol_ptr = null
+       then put_line("  bug!");
+      end if;
+      put("  p_sol_ptr'last : "); put(this.p_sol_ptr'last,1); new_line;
       for i in 0..this.col-1 loop
         put(this.p_sol_ptr(i)); put(" ");
       end loop;

@@ -679,8 +679,39 @@ package body demics_mvc is
       on : constant := DEMiCs_Global_Constants.ON;
       tmpIdx : integer32;
 
+      use Standard_Integer_Vectors;
+      use demics_fTest.class_theData;
+      use demics_fTest.class_ftData;
+
     begin
+      put("length : "); put(length,1); new_line;
       for i in 0..length-2 loop
+        if data = null
+         then put("data = null "); put_line("BUG!");
+         else put_line("data /= null");
+        end if;
+        put("data("); put(i); put(")");
+        if data(i) = null
+         then put_line(" = null BUG!");
+         else put_line(" /= null.");
+        end if;
+        put("data("); put(i); put(").parent");
+        if data(i).parent = null
+         then put_line(" = null BUG!");
+         else put_line(" /= null");
+        end if;
+        if node = null
+         then put_line("node = null BUG!");
+         else put_line("node /= null");
+        end if;
+        if node.parent = null
+         then put_line("node.parent = null BUG!");
+         else put_line("node.parent /= null");
+        end if;
+        if node.parent.nodeLabel = null
+         then put("node.parent.nodeLabel = null BUG!");
+         else put("node.parent.nodeLabel /= null");
+        end if;
         node.parent.nodeLabel(i) := data(i).parent.fIdx;
       end loop;
       node.parent.nodeLabel(length-1) := data(length-1).cur.fIdx;
@@ -1716,8 +1747,8 @@ package body demics_mvc is
 
       sn : constant integer32 := this.sp(depth);
       polyDim : constant integer32 := this.supType(sn);
-      pre : demics_fTest.class_ftdata.Link_to_ftData := Data(lvl-1);
-      cur : demics_fTest.class_ftData.Link_to_ftData := Data(lvl);
+      pre : demics_fTest.class_ftdata.Link_to_ftData := data(lvl-1);
+      cur : demics_fTest.class_ftData.Link_to_ftData := data(lvl);
 
     begin
       if vrblvl > 0 then
@@ -1929,13 +1960,13 @@ package body demics_mvc is
             demics_fTest.class_ftData.copy_rIdx(cur,target,this.termSet(sn));
             demics_fTest.class_ftData.copy_pivOutIdx(cur,target);      
             if vrblvl > 0 then -- #if DBG_S_CUR_INFO
-              put_line("<< Cur_ptr >>");
-              demics_fTest.class_ftData.info_cur_ptr(cur);
+             -- put_line("<< Cur_ptr >>");
+             -- demics_fTest.class_ftData.info_cur_ptr(cur); => crash!
               put_line("<< Cur >>");
               demics_fTest.class_ftData.info_cur_rIdx(cur);
             end if;
             if lvl = length - 1 then
-              get_tuple_index(this,this.lv(sn).Node,data,length);
+              get_tuple_index(this,this.lv(sn).node,data,length);
               if depth = this.supN - 1 then
                 demics_simplex.class_simplex.calMixedVol
                   (this.the_Simplex,this.lv.all,this.sp,this.supN,vrblvl-1);
