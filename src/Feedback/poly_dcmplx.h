@@ -63,7 +63,7 @@ dcmplx* div_poly2 ( int n, dcmplx a[], int m, dcmplx b[], int *dq );
 
 int degree ( dcmplx *a, int d );
 
-int iszero ( int n,  dcmplx a[] );
+int is_zero ( int n,  dcmplx a[] );
 
 void Test_Div ( int n, int m );
 
