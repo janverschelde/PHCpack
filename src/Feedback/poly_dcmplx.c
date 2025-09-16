@@ -153,7 +153,7 @@ dcmplx* mul_poly ( int n, dcmplx a[], int m, dcmplx b[], int *k )
 {
   int i, j;
   dcmplx *c; 
-  if (iszero( n,a ) || iszero ( m, b ) )
+  if (is_zero( n,a ) || is_zero ( m, b ) )
   {
     *k=0;
     c = (dcmplx*) calloc(1, sizeof(dcmplx));
@@ -196,7 +196,7 @@ dcmplx** div_poly ( int n, dcmplx a[], int m, dcmplx b[],
   int i, j, k, dtemp, d;
   dcmplx *temp_a, *temp_b;
   dcmplx ** result=(dcmplx**) calloc(2, sizeof(dcmplx *));
-  if ( iszero (m, b) ) 
+  if ( is_zero (m, b) ) 
   {
 	  printf("The divisor can not be 0!\n"); 
 	  return result;
@@ -220,7 +220,7 @@ dcmplx** div_poly ( int n, dcmplx a[], int m, dcmplx b[],
 		  temp_a[i]=a[i];
 	  *dq=n-m;
 	  result[0] = (dcmplx*) calloc(*dq+1, sizeof(dcmplx));
-	  while ( dtemp>=m && (!iszero( dtemp,temp_a )))
+	  while ( dtemp>=m && (!is_zero( dtemp,temp_a )))
 	  {  
               d=dtemp-m;
 	      result[0][d]=div_dcmplx(temp_a[dtemp], b[m]);
@@ -252,7 +252,7 @@ dcmplx* div_poly1 ( int n, dcmplx a[], int m, dcmplx b[], int *dq )
   int i, j, k, dtemp, d;
   dcmplx *temp_a, *temp_b;
   dcmplx * result;
-  if ( iszero (m, b) ) 
+  if ( is_zero (m, b) ) 
   {
 	  printf("The divisor can not be 0!\n"); 
 	  return result;
@@ -265,7 +265,7 @@ dcmplx* div_poly1 ( int n, dcmplx a[], int m, dcmplx b[], int *dq )
         temp_a[i]=a[i];
    *dq=n-m;
    result = (dcmplx*) calloc(*dq+1, sizeof(dcmplx));
-   while ( dtemp>=m && (!iszero( dtemp,temp_a )))
+   while ( dtemp>=m && (!is_zero( dtemp,temp_a )))
 	  {  
               d=dtemp-m;
 	      result[d]=div_dcmplx(temp_a[dtemp], b[m]);
@@ -294,7 +294,7 @@ dcmplx* div_poly2 ( int n, dcmplx a[], int m, dcmplx b[],
   int i, j, k, dtemp, d;
   dcmplx *temp_a, *temp_b;
   dcmplx ** result=(dcmplx**) calloc(2, sizeof(dcmplx *));
-  if ( iszero (m, b) ) 
+  if ( is_zero (m, b) ) 
   {
 	  printf("The divisor can not be 0!\n"); 
 	  return result[0];
@@ -318,7 +318,7 @@ dcmplx* div_poly2 ( int n, dcmplx a[], int m, dcmplx b[],
 		  temp_a[i]=a[i];
 	  *dq=n-m;
 	  result[0] = (dcmplx*) calloc(*dq+1, sizeof(dcmplx));
-	  while ( dtemp>=m && (!iszero( dtemp,temp_a )))
+	  while ( dtemp>=m && (!is_zero( dtemp,temp_a )))
 	  {  
               d=dtemp-m;
 	      result[0][d]=div_dcmplx(temp_a[dtemp], b[m]);
@@ -354,7 +354,7 @@ int degree ( dcmplx *a, int d )
   return i;
 }
 
-int iszero ( int n,  dcmplx a[] )
+int is_zero ( int n,  dcmplx a[] )
 {
   int i;
   for ( i=0; i<=n; i++ )
@@ -445,7 +445,7 @@ POLY assign_poly(POLY a)
 
 void negative(int n, dcmplx a[])
 {      int i;
-       if(!iszero(n, a))
+       if(!is_zero(n, a))
           for(i=0; i<=n; i++)
               a[i]=min_dcmplx(a[i]);
 }        
@@ -455,7 +455,7 @@ int equal_poly(int n, dcmplx a[], int m, dcmplx b[])
 	dcmplx *c;
         int k;
 	c= min_poly ( n, a, m, b, &k );
-        if ( iszero( k, c ) )
+        if ( is_zero( k, c ) )
         {  
            free(c); 
            return 1;
