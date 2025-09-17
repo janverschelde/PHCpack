@@ -1,3 +1,5 @@
+Wed 17 Sep 2025 : fixed warnings in demics_mvc.
+
 Tue 16 Sep 2025 : added debug print statements to demics_ftest.adb
   and demics_mvc.adb.
 
