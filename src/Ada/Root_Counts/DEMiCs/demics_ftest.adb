@@ -610,9 +610,12 @@ package body demics_ftest is
     procedure make_init_data
                 ( this : in Link_to_ftData;
                   termSumNum : in integer32; supN : in integer32;
-                  termS : in integer32; reTermS : in integer32 ) is
-
+                  termS : in integer32; reTermS : in integer32;
+                  vrblvl : in integer32 := 0 ) is
     begin
+      if vrblvl > 0 then
+        put_line("-> in demics_fTest.class_ftData.make_init_data ...");
+      end if;
       for i in 0..this.dim-1 loop
         this.cur.nf_pos(i) := i;
         this.cur.invB(i*(this.dim+1)) := 1.0;
@@ -1257,6 +1260,7 @@ package body demics_ftest is
       this.termMax := ori_termMax;
       this.ftest := new Array_of_ftData(0..this.length-1);
       this.node := this.ftest(this.length-1);
+     -- this.node := this.ftest(this.length-1)'access;
       this.mRepN
         := new Standard_Integer_Vectors.Vector'(0..this.length-1 => 0);
       this.mFeaIdx := new Standard_Integer_VecVecs.VecVec(0..this.length-1);

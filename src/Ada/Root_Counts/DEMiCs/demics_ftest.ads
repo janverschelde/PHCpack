@@ -337,7 +337,8 @@ package demics_ftest is
     procedure make_init_data
                 ( this : in Link_to_ftData;
                   termSumNum : in integer32; supN : in integer32;
-                  termS : in integer32; reTermS : in integer32 );
+                  termS : in integer32; reTermS : in integer32;
+                  vrblvl : in integer32 := 0 );
 
     -- DESCRIPTION :
     --   Initializes the indices in this.cur.

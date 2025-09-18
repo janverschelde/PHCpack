@@ -99,10 +99,26 @@ package body demics_mvc is
 
       flag : integer32;
 
+      use Standard_Floating_Vectors;
+      use demics_fTest.class_theData;
+
     begin
       if vrblvl > 0 then
         put("-> in demics_mvc.class_mvc.chooseSup, depth : ");
         put(depth,1); put_line(" ...");
+        if curNode = null then
+          put_line("curNode = null, BUG!");
+        else
+          put_line("curNode /= null, okay");
+          if curNode.transMat = null
+           then put_line("curNode.transMat = null");
+           else put_line("curNode.transMat /= null");
+          end if;
+          if curNode.transMat_ptr = null
+           then put_line("curNode.transMat_ptr = null");
+           else put_line("curNode.transMat_ptr /= null");
+          end if;
+        end if;
       end if;
       case depth is
         when 0 => fUpdateDirRed(this,curInif,nextInif,curNode,
@@ -137,6 +153,7 @@ package body demics_mvc is
       transRed : Standard_Floating_Vectors.Link_to_Vector;
       c_curr,n_curr : demics_iTest.class_uData.Link_to_uData;
 
+      use Standard_Floating_Vectors;
       use demics_iTest.class_uData;
 
     begin
@@ -144,7 +161,11 @@ package body demics_mvc is
         put("-> in demics_mvc.class_mvc.fUpdateDirRed, depth : ");
         put(depth,1); put_line(" ...");
       end if;
-      transRed := curNode.transRed_ptr;
+      if curNode.transRed_ptr /= null
+       then transRed := curNode.transRed_ptr;
+       else put_line("applying patch ...");
+            transRed := curNode.transRed;
+      end if;
       nf_pos := curNode.nf_pos_ptr;
       nfN := curNode.nfN;
       pivOutNum := curNode.pivOutNum;
@@ -152,9 +173,18 @@ package body demics_mvc is
       length := this.supN - depth - 1;
       fIdx := this.firIdx(depth);
       colPos := this.termStart(this.sp(depth));
-      for i in 0..this.dim*this.dim-1 loop
-        this.trMat(i) := curNode.transMat_ptr(i);
-      end loop;
+      if curNode.transMat_ptr /= null then
+        for i in 0..this.dim*this.dim-1 loop
+         -- put("accessing at i = "); put(i,1); new_line;
+          this.trMat(i) := curNode.transMat_ptr(i);
+        end loop;
+      else
+        put_line("applying patch ...");
+        for i in 0..this.dim*this.dim-1 loop
+         -- put("accessing at i = "); put(i,1); new_line;
+          this.trMat(i) := curNode.transMat(i);
+        end loop;
+      end if;
       for j in 0..this.dim-1 loop
         this.trMat(j + j*this.dim) := this.trMat(j + j*this.dim) - 1.0;
         for i in 0..this.dim-1 loop
@@ -194,6 +224,7 @@ package body demics_mvc is
             val := 0.0;
             preRed := 0.0;
             for i in 0..this.dim - 1 loop
+              put("for reduced cost, i = "); put(i,1); new_line;
               val := val
                 - double_float(this.trNeg(fIdx)(i))*transRed(i)*c_curr.dir(i);
               preRed := preRed
@@ -690,7 +721,7 @@ package body demics_mvc is
                -- ( this : in Link_to_mvc;
                 ( node : in demics_fTest.class_ftData.Link_to_ftData;
                   data : in demics_fTest.class_ftData.Link_to_Array_of_ftData;
-                  length : in integer32 ) is
+                  length : in integer32; vrblvl : in integer32 := 0 ) is
 
       on : constant := DEMiCs_Global_Constants.ON;
       tmpIdx : integer32;
@@ -700,34 +731,39 @@ package body demics_mvc is
       use demics_fTest.class_ftData;
 
     begin
-      put("length : "); put(length,1); new_line;
+      if vrblvl > 0 then
+        put("-> in demics_mvc.class_mvc.get_tuple_index, length : ");
+        put(length,1); new_line;
+        for i in 0..length-2 loop
+          if data = null
+           then put("data = null "); put_line("BUG!");
+           else put_line("data /= null");
+          end if;
+          put("data("); put(i); put(")");
+          if data(i) = null
+           then put_line(" = null BUG!");
+           else put_line(" /= null");
+          end if;
+          put("data("); put(i); put(").parent");
+          if data(i).parent = null
+           then put_line(" = null BUG!");
+           else put_line(" /= null");
+          end if;
+          if node = null
+           then put_line("node = null BUG!");
+           else put_line("node /= null");
+          end if;
+          if node.parent = null
+           then put_line("node.parent = null BUG!");
+           else put_line("node.parent /= null");
+          end if;
+          if node.parent.nodeLabel = null
+           then put_line("node.parent.nodeLabel = null BUG!");
+           else put_line("node.parent.nodeLabel /= null");
+          end if;
+        end loop;
+      end if;
       for i in 0..length-2 loop
-        if data = null
-         then put("data = null "); put_line("BUG!");
-         else put_line("data /= null");
-        end if;
-        put("data("); put(i); put(")");
-        if data(i) = null
-         then put_line(" = null BUG!");
-         else put_line(" /= null.");
-        end if;
-        put("data("); put(i); put(").parent");
-        if data(i).parent = null
-         then put_line(" = null BUG!");
-         else put_line(" /= null");
-        end if;
-        if node = null
-         then put_line("node = null BUG!");
-         else put_line("node /= null");
-        end if;
-        if node.parent = null
-         then put_line("node.parent = null BUG!");
-         else put_line("node.parent /= null");
-        end if;
-        if node.parent.nodeLabel = null
-         then put("node.parent.nodeLabel = null BUG!");
-         else put("node.parent.nodeLabel /= null");
-        end if;
         node.parent.nodeLabel(i) := data(i).parent.fIdx;
       end loop;
       node.parent.nodeLabel(length-1) := data(length-1).cur.fIdx;
@@ -735,6 +771,9 @@ package body demics_mvc is
         tmpIdx := node.parent.nodeLabel(1);
         node.parent.nodeLabel(1) := node.parent.nodeLabel(0);
         node.parent.nodeLabel(0) := tmpIdx;
+      end if;
+      if vrblvl > 0
+       then put_line("exiting get_tuple_index");
       end if;
     end get_tuple_index;
 
@@ -1177,7 +1216,7 @@ package body demics_mvc is
       end if;
       sn := this.sp(depth);
      -- length := this.supType(sn) + 1;
-      demics_fTest.class_lvdata.get_info
+      demics_fTest.class_lvData.get_info
         (this.lv(sn),this.mRepN,this.mFeaIdx,this.mFea);
       lvl := 0;
       initCheck(this,depth,this.lv(sn).ftest(lvl),vrblvl-1);
@@ -1258,7 +1297,7 @@ package body demics_mvc is
         negIdx(idx_one)(0) := negNum;
         demics_fTest.class_ftData.make_init_data
           (data,this.termSumNum,this.supN,this.termSet(sn),
-           this.re_termStart(sn));
+           this.re_termStart(sn),vrblvl-1);
         initLP(this,data,negIdx,depth,idx_one,feaNum,vrblvl-1);
       end loop;
       Standard_Floating_Vectors.Clear(val);
@@ -1914,18 +1953,25 @@ package body demics_mvc is
                     length : in integer32; flag : out integer32;
                     vrblvl : in integer32 := 0 ) is
 
-     idx2,sn,iter : integer32;
-     lNbN,lNfN,fst_pivInIdx,fst_sub_pivInIdx : integer32;
-     sub_firIdx,sub_tarIdx,colPos,rowStartPos : integer32;
-     fst_redCost : double_float;
-     target : demics_fTest.class_theData.Link_to_theData;
+      idx2,iter : integer32;
+      sn : constant integer32 := this.sp(depth);
+      lNbN,lNfN,fst_pivInIdx,fst_sub_pivInIdx : integer32;
+      sub_firIdx,sub_tarIdx,colPos,rowStartPos : integer32;
+      fst_redCost : double_float;
+      target : demics_fTest.class_theData.Link_to_theData;
+
+      use demics_fTest.class_theData;
+      use demics_fTest.class_ftData;
 
     begin
       if vrblvl > 0 then
         put("-> in demics_mvc.class_mvc.mLP, depth : ");
-        put(depth,1); put_line(" ...");
+        put(depth,1); put(", lvl : "); put(lvl,1); put_line(" ...");
+        if this.lv(sn).node = null
+         then put("this.lv("); put(sn,1); put_line(").node = null");
+         else put("this.lv("); put(sn,1); put_line(").node /= null");
+        end if;
       end if;
-      sn := this.sp(depth);
       sub_firIdx := mRepN(0);
       sub_tarIdx := mRepN(lvl-1);
       rowStartPos := this.termStart(sn);
@@ -1989,7 +2035,7 @@ package body demics_mvc is
             end if;
             if lvl = length - 1 then
              -- get_tuple_index(this,this.lv(sn).node,data,length);
-              get_tuple_index(this.lv(sn).node,data,length);
+              get_tuple_index(this.lv(sn).node,data,length,vrblvl-1);
               if depth = this.supN - 1 then
                 demics_simplex.class_simplex.calMixedVol
                   (this.the_Simplex,this.lv.all,this.sp,this.supN,vrblvl-1);
@@ -2042,7 +2088,8 @@ package body demics_mvc is
               if lvl = length - 1 then
                -- get_tuple_index
                --   (this,this.lv(sn).Node,this.lv(sn).fTest,length);
-                get_tuple_index(this.lv(sn).Node,this.lv(sn).fTest,length);
+                get_tuple_index
+                  (this.lv(sn).Node,this.lv(sn).fTest,length,vrblvl-1);
                 if depth = this.supN - 1 then
                   demics_simplex.class_simplex.calMixedVol
                     (this.the_Simplex,this.lv.all,this.sp,this.supN,vrblvl-1);
@@ -2140,14 +2187,42 @@ package body demics_mvc is
 
       depth : integer32 := 0;
       flag : integer32;
+      ftlast : integer32;
+
+      use demics_fTest.class_theData;
+      use demics_fTest.class_ftData;
 
     begin
-      if vrblvl > 0 
-       then put_line("-> in demics_mvc.class_mvc.enum ...");
+      if vrblvl > 0 then
+        put_line("-> in demics_mvc.class_mvc.enum ...");
       end if;
       demics_reltab.class_reltab.makeTable
         (this.the_Reltab,this.total_unbLP_tab,vrblvl-1);
       this.table := this.the_Reltab.table;
+      for i in this.lv'range loop
+        put("checking this.lv("); put(i,1); put(").node");
+        if this.lv(i).node /= null then
+          put_line(" /= null");
+        else
+          put_line(" = null, assigning to last component ...");
+          ftlast := this.lv(i).fTest'last;
+          this.lv(i).node := this.lv(i).fTest(ftlast);
+        end if;
+        put_line("checking fTest ...");
+        if this.lv(i).fTest = null then
+          put("this.lv("); put(i,1); put_line(").fTest = null");
+        else
+          put("this.lv("); put(i,1); put_line(").fTest /= null");
+          for j in this.lv(i).fTest'range loop
+            put("this.lv("); put(i,1); 
+            put(").fTest("); put(j,1); put(")");
+            if this.lv(i).fTest(j) = null
+             then put_line(" = null");
+             else put_line(" /= null");
+            end if;
+          end loop;
+        end if;
+      end loop;
       if this.supN = 1 then
         findAllMixedCells(this,depth,vrblvl-1);
       else
@@ -2157,7 +2232,7 @@ package body demics_mvc is
           if depth = this.supN - 1 then
             flag := chooseSup
                       (this,depth-1,this.lv(this.sp(depth-1)).Node.parent,
-                       this.iLv(depth-1).inif,this.iLv(depth).inif);
+                       this.iLv(depth-1).inif,this.iLv(depth).inif,vrblvl-1);
             if flag = DEMiCs_Global_Constants.CONTINUE then
               findMixedCell
                 (this,depth,this.lv(this.sp(depth-1)).Node.parent,vrblvl-1);
@@ -2166,7 +2241,7 @@ package body demics_mvc is
           else
             flag := chooseSup
                       (this,depth-1,this.lv(this.sp(depth-1)).Node.parent,
-                       this.iLv(depth-1).inif,this.iLv(depth).inif);
+                       this.iLv(depth-1).inif,this.iLv(depth).inif,vrblvl-1);
             if flag = DEMiCs_Global_Constants.CONTINUE then
               flag := feasTest(this,depth,
                                this.lv(this.sp(depth-1)).Node.parent,
