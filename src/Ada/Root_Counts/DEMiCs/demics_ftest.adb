@@ -505,7 +505,9 @@ package body demics_ftest is
     begin
       if vrblvl > 0 then
         put("-> in demics_ftest.class_ftData.create_elem, row : ");
-        put(row,1); put(", col : "); put(col,1); put_line(" ...");
+        put(row,1); put(", col : "); put(col,1); new_line;
+        put("  termS : "); put(termS,1); 
+        put(", polyDim : "); put(polyDim,1);put_line(" ...");
       end if;
       declare
         newData : constant Link_to_theData := new theData'(new_theData);

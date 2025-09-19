@@ -2438,7 +2438,9 @@ package body demics_simplex is
       if vrblvl > 0 then
         info_basisIdx(this);
         info_nbIdx(this);
+        put_line("calling info_rIdx ...");
         info_rIdx(this);
+        put_line("... returning from calling info_rIdx");
         info_invB(this);
         info_p_sol(this);
         info_d_sol(this);

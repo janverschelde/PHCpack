@@ -1,3 +1,6 @@
+Fri 19 Sep 2025 : modified demics_ftest.adb, demics_mvc.adb, demics_main.adb,
+  and demics_simplex.adb for debugging purposes.
+
 Thu 18 Sep 2025 : bug fix in getMemory of demics_mvc.adb.
 
 Wed 17 Sep 2025 : fixed warnings in demics_mvc.  Improved demics_ftest

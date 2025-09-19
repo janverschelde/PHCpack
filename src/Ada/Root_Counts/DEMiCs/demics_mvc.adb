@@ -224,7 +224,6 @@ package body demics_mvc is
             val := 0.0;
             preRed := 0.0;
             for i in 0..this.dim - 1 loop
-              put("for reduced cost, i = "); put(i,1); new_line;
               val := val
                 - double_float(this.trNeg(fIdx)(i))*transRed(i)*c_curr.dir(i);
               preRed := preRed
@@ -1219,7 +1218,7 @@ package body demics_mvc is
       demics_fTest.class_lvData.get_info
         (this.lv(sn),this.mRepN,this.mFeaIdx,this.mFea);
       lvl := 0;
-      initCheck(this,depth,this.lv(sn).ftest(lvl),vrblvl-1);
+      initCheck(this,depth,this.lv(sn).fTest(lvl),vrblvl-1);
       lvl := lvl + 1;
       feaNum := 0;
      -- flag := DEMiCs_Global_Constants.CONTINUE;
@@ -1257,7 +1256,7 @@ package body demics_mvc is
       end loop;
       Standard_Random_Numbers.Set_Seed(12);
       for i in 0..this.termSet(sn)-2 loop
-         val(i) := abs(Standard_Random_Numbers.Random);
+        val(i) := abs(Standard_Random_Numbers.Random);
       end loop;
       this.firIdx(this.supN) := 0;
       for idx_one in 0..this.termSet(sn)-1 loop

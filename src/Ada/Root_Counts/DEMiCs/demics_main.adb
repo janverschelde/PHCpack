@@ -1,4 +1,7 @@
 with Ada.text_io;                       use Ada.text_io;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Random_Numbers;
 with Communications_with_User;
 with demics_input_data;
 with demics_input_main;
@@ -13,9 +16,11 @@ procedure demics_main is
 
     ptr2MVC : constant class_mvc.Link_to_mvc
             := new class_mvc.mvc'(class_mvc.new_mvc);
+    seed : constant integer32 := Standard_Random_Numbers.Get_Seed;
 
   begin
-    class_mvc.allocateAndIni(ptr2MVC,data,1,1,99);
+    put("the seed : "); put(seed,1); new_line;
+    class_mvc.allocateAndIni(ptr2MVC,data,seed,1,99);
     class_mvc.Enum(ptr2MVC,99);
   end Compute_Mixed_Volume;
  
