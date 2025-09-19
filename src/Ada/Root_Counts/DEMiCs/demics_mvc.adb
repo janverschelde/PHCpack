@@ -32,10 +32,10 @@ package body demics_mvc is
         put(", lvl : "); put(lvl,1);
         put(", elemLen : "); put(elemLen,1); new_line;
       end if;
+      this.lv(depth).fTest(lvl)
+        := new demics_fTest.class_ftData.ftData'
+              (demics_fTest.class_ftData.new_ftData);
       for i in 0..this.termSet(depth)-1 loop
-        this.lv(depth).fTest(lvl)
-          := new demics_fTest.class_ftData.ftData'
-                (demics_fTest.class_ftData.new_ftData);
         demics_fTest.class_ftData.create_elem
           (this.lv(depth).fTest(lvl),this.row,this.col,
            this.termSet(depth),this.supType(depth),vrblvl-1);
