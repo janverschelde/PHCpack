@@ -72,17 +72,17 @@ package demics_ftest is
     -- DESCRIPTION :
     --   Allocates space for the fields in the this record.
 
-    procedure joint ( this : in Link_to_theData );
+    procedure joint ( this : in Link_to_theData; vrblvl : in integer32 := 0 );
 
     -- DESCRIPTION :
     --   Assign all this.*_ptr values to the corresponding this.* values.
 
-    procedure iJoint ( this : in Link_to_theData );
+    procedure iJoint ( this : in Link_to_theData; vrblvl : in integer32 := 0 );
 
     -- DESCRIPTION :
     --   Assigns _ptr values for transMat, transRed, redVec, and nbIdx.
 
-    procedure mJoint ( this : in Link_to_theData );
+    procedure mJoint ( this : in Link_to_theData; vrblvl : in integer32 := 0 );
 
     -- DESCRIPTION :
     --   Assigns this.nf_pos to this.nf_pos_ptr.

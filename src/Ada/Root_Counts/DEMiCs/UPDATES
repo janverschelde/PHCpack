@@ -1,3 +1,6 @@
+Sat 20 Sep 2025 : added checks on the joint functions in demics_ftest,
+  updated demics_mvc.adb.
+
 Fri 19 Sep 2025 : modified demics_ftest.adb, demics_mvc.adb, demics_main.adb,
   and demics_simplex.adb for debugging purposes.
 

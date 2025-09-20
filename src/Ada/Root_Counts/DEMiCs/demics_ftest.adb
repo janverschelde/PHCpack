@@ -107,8 +107,52 @@ package body demics_ftest is
         := new Standard_Integer_Vectors.Vector(0..this.polyDim);
     end create;
 
-    procedure joint ( this : in Link_to_theData ) is
+    procedure joint ( this : in Link_to_theData;
+                      vrblvl : in integer32 := 0 ) is
+
+      use Standard_Integer_Vectors;
+      use Standard_Floating_Vectors;
+
     begin
+      if vrblvl > 0 then
+        put_line("-> in demics_ftest.class_theData.joint ...");
+        if this.invB /= null
+         then put_line("this.invB /= null");
+         else put_line("this.invB = null, error?");
+        end if;
+        if this.transMat /= null
+         then put_line("this.transMat /= null");
+         else put_line("this.transMat = null, error?");
+        end if;
+        if this.p_sol /= null
+         then put_line("this.p_sol /= null");
+         else put_line("this.p_sol = null, error?");
+        end if;
+        if this.d_sol /= null
+         then put_line("this.d_sol /= null");
+         else put_line("this.d_sol = null, error?");
+        end if;
+        if this.redVec /= null
+         then put_line("this.redVec /= null");
+         else put_line("this.redVec = null, error?");
+        end if;
+        if this.basisIdx /= null
+         then put_line("this.basisIdx /= null");
+         else put_line("this.basisIdx = null, error?");
+        end if;
+        if this.redVec /= null
+         then put_line("this.redVec /= null");
+         else put_line("this.redVec = null, error?");
+        end if;
+        if this.nbIdx /= null
+         then put_line("this.nbIdx /= null");
+         else put_line("this.nbIdx = null, error?");
+        end if;
+        if this.nf_pos /= null
+         then put_line("this.nf_pos /= null");
+         else put_line("this.nf_pos = null, error?");
+        end if;
+      end if;
       this.invB_ptr := this.invB;
       this.transMat_ptr := this.transMat;
       this.p_sol_ptr := this.p_sol;
@@ -119,16 +163,51 @@ package body demics_ftest is
       this.nf_pos_ptr := this.nf_pos;
     end joint;
 
-    procedure iJoint ( this : in Link_to_theData ) is
+    procedure iJoint ( this : in Link_to_theData;
+                       vrblvl : in integer32 := 0 ) is
+
+      use Standard_Integer_Vectors;
+      use Standard_Floating_Vectors;
+
     begin
+      if vrblvl > 0 then
+        put_line("-> in demics_ftest.class_theData.iJoint ...");
+        if this.transMat /= null
+         then put_line("this.transMat /= null");
+         else put_line("this.transMat = null, error?");
+        end if;
+        if this.transRed /= null
+         then put_line("this.transRed /= null");
+         else put_line("this.transRed = null, error?");
+        end if;
+        if this.redVec /= null
+         then put_line("this.redVec /= null");
+         else put_line("this.redVec = null, error?");
+        end if;
+        if this.nbIdx /= null
+         then put_line("this.nbIdx /= null");
+         else put_line("this.nbIdx = null, error?");
+        end if;
+      end if;
       this.transMat_ptr := this.transMat;
       this.transRed_ptr := this.transRed;
       this.redVec_ptr := this.redVec;
       this.nbIdx_ptr := this.nbIdx;
     end iJoint;
 
-    procedure mJoint ( this : in Link_to_theData ) is
+    procedure mJoint ( this : in Link_to_theData;
+                       vrblvl : in integer32 := 0 ) is
+
+      use Standard_Integer_Vectors;
+
     begin
+      if vrblvl > 0 then
+        put_line("-> in demics_ftest.class_theData.mJoint ...");
+        if this.nf_pos /= null
+         then put_line("this.nf_pos /= null");
+         else put_line("this.nb_pos = null, error?");
+        end if;
+      end if;
       this.nf_pos_ptr := this.nf_pos;
     end mJoint;
 

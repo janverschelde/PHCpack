@@ -1336,7 +1336,7 @@ package body demics_mvc is
         end if;
         this.total_iter := this.total_iter + double_float(iter);
         this.total_feasLP := this.total_feasLP + 1.0;
-        demics_fTest.class_theData.joint(data.cur);
+        demics_fTest.class_theData.joint(data.cur,vrblvl-1);
         data.cur.fIdx := idx;
         demics_simplex.class_simplex.get_res(this.the_Simplex,data);
         demics_simplex.class_simplex.get_pivOutNum
@@ -1679,7 +1679,7 @@ package body demics_mvc is
           this.total_feasLP := this.total_feasLP + 1.0;
           demics_simplex.class_simplex.get_pivOutNum
             (this.the_Simplex,data.cur);
-          demics_fTest.class_theData.joint(data.cur);
+          demics_fTest.class_theData.joint(data.cur,vrblvl-1);
           data.cur.fIdx := idx_one;
           if vrblvl > 0 then -- #if DBG_CUR_INFO
             put_line("<< Cur >>");
@@ -1715,7 +1715,7 @@ package body demics_mvc is
         demics_fTest.class_ftData.get_nbIdx_rIdx
           (data,preNbN,repIdx,this.candIdx,reTermS,parent);
         demics_fTest.class_ftData.init_info(data);
-        demics_fTest.class_theData.iJoint(data.cur);
+        demics_fTest.class_theData.iJoint(data.cur,vrblvl-1);
         if vrblvl > 0 then -- #if DBG_CUR_INFO
           put_line("<< Cur_ptr >>");
           demics_ftest.class_ftData.info_cur_ptr(data);
@@ -1773,7 +1773,7 @@ package body demics_mvc is
         end if;
         this.total_iter := this.total_iter + double_float(iter);
         this.total_feasLP := this.total_feasLP + 1.0;
-        demics_fTest.class_theData.joint(data.cur);
+        demics_fTest.class_theData.joint(data.cur,vrblvl-1);
         data.cur.fIdx := idx_one;
         demics_simplex.class_simplex.get_res(this.the_Simplex,data);
         demics_simplex.class_simplex.get_pivOutNum(this.the_Simplex,data.cur);
@@ -2023,7 +2023,7 @@ package body demics_mvc is
             cur.cur.fIdx := repIdx(i);
             demics_fTest.class_ftdata.mGetPtr(cur,target);
             demics_fTest.class_ftData.get_nf_pos(cur,target,lNfN,idx2);
-            demics_fTest.class_theData.mJoint(cur.cur);
+            demics_fTest.class_theData.mJoint(cur.cur,vrblvl-1);
             demics_fTest.class_ftData.copy_rIdx(cur,target,this.termSet(sn));
             demics_fTest.class_ftData.copy_pivOutIdx(cur,target);      
             if vrblvl > 0 then -- #if DBG_S_CUR_INFO
@@ -2075,7 +2075,7 @@ package body demics_mvc is
               this.actNode(depth) := this.actNode(depth) + 1.0;
               demics_simplex.class_simplex.get_pivOutNum
                 (this.the_Simplex,cur.cur);
-              demics_fTest.class_theData.joint(cur.cur);	
+              demics_fTest.class_theData.joint(cur.cur,vrblvl-1);	
               demics_fTest.class_ftData.decrease_nfN(cur);
               cur.cur.fIdx := repIdx(i);
               feaIdx(feaNum) := repIdx(i);
