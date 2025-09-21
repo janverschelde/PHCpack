@@ -430,14 +430,28 @@ package body demics_mvc is
       basisIdx,nf_pos : Standard_Integer_Vectors.Link_to_Vector;
       n_curr,fHead,cor_ptr : demics_iTest.class_uData.Link_to_uData;
 
+      use Standard_Integer_Vectors;
       use demics_iTest.class_uData;
 
     begin
       if vrblvl > 0 then
         put("-> in demics_mvc.class_mvc.findUnbDir_art, depth : ");
         put(depth,1); put_line(" ...");
+        if curNode.basisIdx_ptr /= null 
+         then put_line("curNode.basisIdx_ptr /= null");
+         else put_line("curNode.basisIdx_ptr = null, error?");
+        end if;
+        if curNode.nf_pos_ptr /= null 
+         then put_line("curNode.nf_pos_ptr /= null");
+         else put_line("curNode.nf_pos_ptr = null, error?");
+        end if;
       end if;
-      basisIdx := curNode.basisIdx_ptr;
+      if curNode.basisIdx_ptr /= null then
+        basisIdx := curNode.basisIdx_ptr;
+      else
+        basisIdx := curNode.basisIdx;
+        put_line("assigned basisIdx instead of basisIdx_ptr ...");
+      end if;
       nf_pos := curNode.nf_pos_ptr;
       nfN := curNode.nfN;
       length := this.supN - depth - 1;
@@ -600,7 +614,7 @@ package body demics_mvc is
 
     begin
       if vrblvl > 0 then
-        put_line("-> in demics_mvc.class_mvc.checkbDir_art ...");
+        put_line("-> in demics_mvc.class_mvc.checkDir_art ...");
       end if;
       while corPtr /= null loop
         if corPtr /= tarPtr then
@@ -1218,12 +1232,20 @@ package body demics_mvc is
       demics_fTest.class_lvData.get_info
         (this.lv(sn),this.mRepN,this.mFeaIdx,this.mFea);
       lvl := 0;
+      if vrblvl > 0 then
+        put("calling initCheck on this.lv("); put(sn,1);
+        put(").fTest("); put(lvl,1); put_line(") ...");
+      end if;
       initCheck(this,depth,this.lv(sn).fTest(lvl),vrblvl-1);
       lvl := lvl + 1;
       feaNum := 0;
      -- flag := DEMiCs_Global_Constants.CONTINUE;
      -- if flag = DEMiCs_Global_Constants.CONTINUE then
-        findNode(this,depth,lvl,feaNum,this.lv(sn).ftest,flag,vrblvl-1);
+      if vrblvl > 0 then
+        put("calling findNode on this.lv("); put(sn,1);
+        put_line(").fTest ...");
+      end if;
+        findNode(this,depth,lvl,feaNum,this.lv(sn).fTest,flag,vrblvl-1);
      -- else
      --   findNextNode(this,depth,lvl,feaNum,this.lv(sn).fTest,flag);
      -- end if;
@@ -1389,14 +1411,28 @@ package body demics_mvc is
       demics_fTest.class_lvData.get_info
         (this.lv(sn),this.mRepN,this.mFeaIdx,this.mFea);
       lvl := 0;
+      if vrblvl > 0 then
+        put("calling iCheck on this.lv("); put(sn,1); put(").fTest(");
+        put(lvl,1); put_line(")");
+        put("and on this.iLv("); put(depth,1); put(").inif("); put(sn,1);
+        put_line(") ...");
+      end if;
       flag := iCheck(this,depth,parent,this.lv(sn).fTest(lvl),
                      this.iLv(depth).inif(sn),vrblvl-1);
       lvl := lvl + 1;
       feaNum := 0;
       flag := DEMiCs_Global_Constants.CONTINUE;
       if flag = DEMiCs_Global_Constants.CONTINUE then
+        if vrblvl > 0 then
+          put("calling findNode on this.lv("); put(sn,1);
+          put(").fTest ...");
+        end if;
         findNode(this,depth,lvl,feaNum,this.lv(sn).fTest,flag,vrblvl-1);
       else
+        if vrblvl > 0 then
+          put("calling findNextNode on this.lv("); put(sn,1);
+          put(").fTest ...");
+        end if;
         findNextNode(this,depth,lvl,feaNum,this.lv(sn).fTest,flag,vrblvl-1);
       end if;
       return flag;
@@ -1457,6 +1493,12 @@ package body demics_mvc is
       demics_fTest.class_lvData.get_info
         (this.lv(sn),this.mRepN,this.mFeaIdx,this.mFea);
       lvl := 0;
+      if vrblvl > 0 then
+        put("calling iCheck on this.lv("); put(sn,1); put(").fTest(");
+        put(lvl,1); put_line(")");
+        put("and on this.iLv("); put(depth,1); put(").inif(");
+        put(sn,1); put_line(") ...");
+      end if;
       flag := iCheck(this,depth,parent,this.lv(sn).fTest(lvl),
                      this.iLv(depth).inif(sn));
       lvl := lvl + 1;
@@ -1464,12 +1506,20 @@ package body demics_mvc is
       flag := DEMiCs_Global_Constants.CONTINUE;
       loop
         if flag = DEMiCs_Global_Constants.CONTINUE then
+          if vrblvl > 0 then
+            put("calling findNode on this.lv("); put(sn,1);
+            put(").fTest ...");
+          end if;
           findNode(this,depth,lvl,feaNum,this.lv(sn).fTest,
                    flag,vrblvl-1);
           if flag = DEMiCs_Global_Constants.STOP
            then exit;
           end if;
         else
+          if vrblvl > 0 then
+            put("calling findNextNode on this.lv("); put(sn,1);
+            put(").fTest ...");
+          end if;
           findNextNode(this,depth,lvl,feaNum,this.lv(sn).fTest,
                        flag,vrblvl-1);
           if flag = DEMiCs_Global_Constants.STOP
@@ -1547,7 +1597,7 @@ package body demics_mvc is
         put_line("<< PRE >>");
         demics_fTest.class_theData.info_p_sol_ptr(parent);
         demics_fTest.class_theData.info_d_sol_ptr(parent);
-        demics_fTest.class_theData.info_invB_ptr(parent);
+       -- demics_fTest.class_theData.info_invB_ptr(parent);
         demics_fTest.class_theData.info_basisIdx_ptr(parent);
         demics_fTest.class_theData.info_nf_pos_ptr(parent);
         demics_fTest.class_theData.info_nbIdx_ptr(parent);

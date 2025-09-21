@@ -418,23 +418,31 @@ package body demics_ftest is
     begin
       put_line("<< p_sol_ptr >>");
       put("this.col-1 : "); put(this.col-1,1);
-      if this.p_sol_ptr = null
-       then put_line("  bug!");
+      if this.p_sol_ptr = null then
+        put_line("  this.p_sol_ptr = null, bug!");
+      else
+        put("  p_sol_ptr'last : "); put(this.p_sol_ptr'last,1); new_line;
+        for i in 0..this.col-1 loop
+          put(this.p_sol_ptr(i)); put(" ");
+        end loop;
+        new_line;
       end if;
-      put("  p_sol_ptr'last : "); put(this.p_sol_ptr'last,1); new_line;
-      for i in 0..this.col-1 loop
-        put(this.p_sol_ptr(i)); put(" ");
-      end loop;
-      new_line;
     end info_p_sol_ptr;
 
     procedure info_d_sol_ptr ( this : in Link_to_theData ) is
+
+      use Standard_Floating_Vectors;
+
     begin
       put_line("<< d_sol_ptr >>");
-      for i in 0..this.row-1 loop
-        put(this.d_sol_ptr(i)); put(" ");
-      end loop;
-      new_line;
+      if this.d_sol_ptr /= null then
+        for i in 0..this.row-1 loop
+          put(this.d_sol_ptr(i)); put(" ");
+        end loop;
+        new_line;
+      else
+        put_line("this.d_sol_ptr = null, bug!");
+      end if;
     end info_d_sol_ptr;
 
     procedure info_invB_ptr ( this : in Link_to_theData ) is
@@ -493,12 +501,19 @@ package body demics_ftest is
     end info_transRed_ptr;
 
     procedure info_basisIdx_ptr ( this : in Link_to_theData ) is
+
+      use Standard_Integer_Vectors;
+
     begin
       put_line("<< basisIdx_ptr >>");
-      for i in 0..this.row-1 loop
-        put(this.basisIdx_ptr(i),1); put(" ");
-      end loop;
-      new_line;
+      if this.basisIdx_ptr /= null then
+        for i in 0..this.row-1 loop
+          put(this.basisIdx_ptr(i),1); put(" ");
+        end loop;
+        new_line;
+      else
+        put_line("this.basisIdx_ptr = null, bug?");
+      end if;
     end info_basisIdx_ptr;
 
     procedure info_nf_pos_ptr ( this : in Link_to_theData ) is
@@ -511,21 +526,35 @@ package body demics_ftest is
     end info_nf_pos_ptr;
 
     procedure info_nbIdx_ptr ( this : in Link_to_theData ) is
+
+      use Standard_Integer_Vectors;
+
     begin
       put_line("<< nbIdx_ptr >>");
-      for i in 0..this.col-1 loop
-        put(this.nbIdx_ptr(i),1); put(" ");
-      end loop;
-      new_line;
+      if this.nbIdx_ptr /= null then
+        for i in 0..this.col-1 loop
+          put(this.nbIdx_ptr(i),1); put(" ");
+        end loop;
+        new_line;
+      else
+        put_line("this.nbIdx_ptr = null, bug?");
+      end if;
     end info_nbIdx_ptr;
 
     procedure info_redVec_ptr ( this : in Link_to_theData ) is
+
+      use Standard_Floating_Vectors;
+
     begin
       put_line("<< redVec_ptr >>");
-      for i in 0..this.col-1 loop
-        put(this.redVec_ptr(i)); put(" ");
-      end loop;
-      new_line;
+      if this.redVec_ptr /= null then
+        for i in 0..this.col-1 loop
+          put(this.redVec_ptr(i)); put(" ");
+        end loop;
+        new_line;
+      else
+        put_line("this.redVec_ptr = null, bug?");
+      end if;
     end info_redVec_ptr;
 
     procedure info_fIdx ( this : in Link_to_theData ) is
@@ -719,17 +748,51 @@ package body demics_ftest is
 
     procedure copy ( this : in Link_to_ftData;
                      col : in integer32; pre_data : in Link_to_theData ) is
+
+      use Standard_Integer_Vectors;
+      use Standard_Floating_Vectors;
+
     begin
-      for i in 0..col-1 loop
-        this.cur.p_sol(i) := pre_data.p_sol_ptr(i);
-      end loop;
-      for i in 0..this.dim-1 loop
-        this.cur.d_sol(i) := pre_data.d_sol_ptr(i);
-        this.cur.basisIdx(i) := pre_data.basisIdx_ptr(i);
-      end loop;
-      for i in 0..col-this.dim-1 loop
-        this.cur.nbIdx(i) := pre_data.nbIdx_ptr(i);
-      end loop;
+      if pre_data.p_sol_ptr /= null then
+        for i in 0..col-1 loop
+          this.cur.p_sol(i) := pre_data.p_sol_ptr(i);
+        end loop;
+      else
+        put_line("pre_data.p_sol_ptr = null, bug?");
+        for i in 0..col-1 loop
+          this.cur.p_sol(i) := pre_data.p_sol(i);
+        end loop;
+      end if;
+      if pre_data.d_sol_ptr /= null then
+        for i in 0..this.dim-1 loop
+          this.cur.d_sol(i) := pre_data.d_sol_ptr(i);
+        end loop;
+      else
+        put_line("pre_data.d_sol_ptr = null, bug?");
+        for i in 0..this.dim-1 loop
+          this.cur.d_sol(i) := pre_data.d_sol(i);
+        end loop;
+      end if;
+      if pre_data.basisIdx_ptr /= null then
+        put_line("pre_data.basisIdx_ptr = null, bug?");
+        for i in 0..this.dim-1 loop
+          this.cur.basisIdx(i) := pre_data.basisIdx_ptr(i);
+        end loop;
+      else
+        for i in 0..this.dim-1 loop
+          this.cur.basisIdx(i) := pre_data.basisIdx(i);
+        end loop;
+      end if;
+      if pre_data.nbIdx_ptr /= null then
+        for i in 0..col-this.dim-1 loop
+          this.cur.nbIdx(i) := pre_data.nbIdx_ptr(i);
+        end loop;
+      else
+        put_line("pre_data.nbIdx_ptr = null, bug?");
+        for i in 0..col-this.dim-1 loop
+          this.cur.nbIdx(i) := pre_data.nbIdx(i);
+        end loop;
+      end if;
     end copy;
 
     procedure get_ptr ( this : in Link_to_ftData;
@@ -820,6 +883,8 @@ package body demics_ftest is
       cnt : integer32 := 0;
       idx,sub_idx,ii,nfPos : integer32;
 
+      use Standard_Floating_Vectors;
+
     begin
       for i in 0..nfN-1 loop
         this.cur.nf_pos(i) := pre_data.nf_pos_ptr(i);
@@ -841,9 +906,16 @@ package body demics_ftest is
       for j in 0..nfN-1 loop
         nfPos := pre_data.nf_pos_ptr(j);
         ii := nfPos*this.dim;
-        for i in 0..this.dim-1 loop
-          this.cur.invB(ii+i) := pre_data.invB_ptr(ii+i);
-        end loop;
+        if pre_data.invB_ptr /= null then
+          for i in 0..this.dim-1 loop
+            this.cur.invB(ii+i) := pre_data.invB_ptr(ii+i);
+          end loop;
+        else
+          put_line("pre_data.invB_ptr = null, bug?");
+          for i in 0..this.dim-1 loop
+            this.cur.invB(ii+i) := pre_data.invB(ii+i);
+          end loop;
+        end if;
       end loop;
     end iCopy;
 
