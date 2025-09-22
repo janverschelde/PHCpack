@@ -122,6 +122,15 @@ package DEMiCs_Algorithm is
   --   Returns random lifting values for each of the support sets,
   --   as arranged in the order of their mixture, defined by mix.
 
+  function User_Lifting
+             ( mix : Standard_Integer_Vectors.Link_to_Vector;
+               sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
+             return Standard_Floating_VecVecs.Link_to_VecVec;
+
+  -- DESCRIPTION :
+  --   Prompts the user for a lifting value for each point in sup.
+  --   Returns the lifting values.
+
   function Random_Lifting
              ( mix : Standard_Integer_Vectors.Link_to_Vector;
                sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists;

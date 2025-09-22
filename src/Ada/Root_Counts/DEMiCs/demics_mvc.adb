@@ -15,6 +15,8 @@ package body demics_mvc is
 
       elemLen,div : integer32;
 
+      use demics_ftest.class_ftData;
+
     begin
       if vrblvl > 0
        then put("-> in demics_mvc.getMemory, ");
@@ -32,9 +34,14 @@ package body demics_mvc is
         put(", lvl : "); put(lvl,1);
         put(", elemLen : "); put(elemLen,1); new_line;
       end if;
-      this.lv(depth).fTest(lvl)
-        := new demics_fTest.class_ftData.ftData'
-              (demics_fTest.class_ftData.new_ftData);
+      if this.lv(depth).fTest(lvl) = null then
+        this.lv(depth).fTest(lvl)
+          := new demics_fTest.class_ftData.ftData'
+                (demics_fTest.class_ftData.new_ftData);
+        if lvl = this.lv(depth).fTest'last
+         then this.lv(depth).node := this.lv(depth).fTest(lvl);
+        end if;
+      end if;
       for i in 0..this.termSet(depth)-1 loop
         demics_fTest.class_ftData.create_elem
           (this.lv(depth).fTest(lvl),this.row,this.col,

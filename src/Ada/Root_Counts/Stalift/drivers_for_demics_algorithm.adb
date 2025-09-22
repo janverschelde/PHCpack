@@ -285,9 +285,13 @@ package body Drivers_for_DEMiCs_Algorithm is
         tstart(timer);
         Call_DEMiCs(mix,sup,stable,stlb,false);
         tstop(timer);
-      else
+      elsif stlb /= -1.0 then
         tstart(timer);
         Call_DEMiCs(mix,sup,false);
+        tstop(timer);
+      else -- stlb = -1.0 user given lifting for debugging
+        tstart(timer);
+        Call_DEMiCs(mix,sup,stable,stlb,false);
         tstop(timer);
       end if;
       Run_Polyhedral_Homotopies
@@ -382,7 +386,13 @@ package body Drivers_for_DEMiCs_Algorithm is
          then put("The lifting bound :"); put(stlb); new_line;
         end if;
       else
-        stlb := 0.0;
+        new_line;
+        put("User defined lifting values ? (y/n) ");
+        Ask_Yes_or_No(ans);
+        if ans = 'y'
+         then stlb := -1.0;
+         else stlb := 0.0;
+        end if;
       end if;
     end if;
     new_line;
@@ -402,7 +412,7 @@ package body Drivers_for_DEMiCs_Algorithm is
     Extract_Supports(p,mix,perm,sup,false); -- verbose is false
     Run_DEMiCs_Algorithm
       (file,nt,mcc2file,ranstart,subfile,ranfile,
-       p,dim,mix,perm,sup,stable,stlb,q,qsols,qsols0,mv,smv,tmv);
+       p,dim,mix,perm,sup,stable,stlb,q,qsols,qsols0,mv,smv,tmv,vrblvl-1);
   end Driver_for_DEMiCs_Algorithm;
 
   procedure Driver_for_DEMiCs_Algorithm

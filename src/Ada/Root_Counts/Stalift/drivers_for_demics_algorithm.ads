@@ -170,7 +170,9 @@ package Drivers_for_DEMiCs_Algorithm is
   --   perm     permutation used to put same supports consecutively;
   --   sup      points in the supports;
   --   stable   if the stable mixed volume is wanted;
-  --   stlb     value of the lifting bound if stable;
+  --   stlb     value of the lifting bound if stable,
+  --            or if equal to -1, then the user will be prompted
+  --            to enter lifting values for each point (for debugging);
   --   vrblvl   the verbose level.
 
   -- ON RETURN :

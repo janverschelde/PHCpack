@@ -245,6 +245,37 @@ package body DEMiCs_Algorithm is
     return res;
   end Random_Lifting;
 
+  function User_Lifting
+             ( mix : Standard_Integer_Vectors.Link_to_Vector;
+               sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
+             return Standard_Floating_VecVecs.Link_to_VecVec is
+
+    res : Standard_Floating_VecVecs.Link_to_VecVec;
+    resrep : Standard_Floating_VecVecs.VecVec(mix'range);
+    idx : integer32 := 1;
+    len : integer32;
+
+  begin
+    for i in resrep'range loop
+      len := integer32(Lists_of_Integer_Vectors.Length_Of(sup(idx)));
+      declare
+        vals : Standard_Floating_Vectors.Vector(1..len) := (1..len => 0.0);
+        tmp : Lists_of_Integer_Vectors.List := sup(idx);
+        lpt : Standard_Integer_Vectors.Link_to_Vector;
+      begin
+        for j in 1..len loop
+          lpt := Lists_of_Integer_Vectors.Head_of(tmp);
+          put("-> lift"); put(lpt); put(" : "); get(vals(j));
+          tmp := Lists_of_Integer_Vectors.Tail_Of(tmp);
+        end loop;
+        resrep(i) := new Standard_Floating_Vectors.Vector'(vals);
+      end;
+      idx := idx + mix(i);
+    end loop;
+    res := new Standard_Floating_VecVecs.VecVec'(resrep);
+    return res;
+  end User_Lifting;
+
   function Random_Lifting
              ( mix : Standard_Integer_Vectors.Link_to_Vector;
                sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists;
@@ -406,20 +437,25 @@ package body DEMiCs_Algorithm is
 
   begin
     if not stable then
-      nbrpts := Number_of_Points(mix.all,sup);
-      Call_DEMiCs(mix,sup,verbose);
+      if stlb /= -1.0 then
+        Call_DEMiCs(mix,sup,verbose); return;
+      else
+        nbrpts := Number_of_Points(mix.all,sup);
+        put("Prompting for "); put(nbrpts,1); put_line(" lifting values ...");
+        lifting := User_Lifting(mix,sup);
+      end if;
     else
       Add_Artificial_Origins(dim,sup,nbadded,added);
       nbrpts := Number_of_Points(mix.all,sup);
       lifting := Random_Lifting(mix,sup,stlb,added);
-      declare
-        lifvals : constant Standard_Floating_Vectors.Vector
-                := Flatten(lifting);
-        lif : constant C_Double_Array := Copy_Lifting(lifvals);
-      begin
-        Call_DEMiCs(mix,sup,nbrpts,lif,verbose);
-      end;
     end if;
+    declare
+      lifvals : constant Standard_Floating_Vectors.Vector
+              := Flatten(lifting);
+      lif : constant C_Double_Array := Copy_Lifting(lifvals);
+    begin
+      Call_DEMiCs(mix,sup,nbrpts,lif,verbose);
+    end;
   end Call_DEMiCs;
 
   procedure Call_DEMiCs
