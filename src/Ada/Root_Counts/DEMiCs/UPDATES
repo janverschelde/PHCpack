@@ -1,3 +1,6 @@
+Sun 21 Sep 2025 : modified demics_ftest.adb and demics_mvc, works for one
+  unmixed cell.
+
 Sat 20 Sep 2025 : added checks on the joint functions in demics_ftest,
   updated demics_mvc.adb.  Tried patching demics_ftest.adb and demics_mvc.adb.
 

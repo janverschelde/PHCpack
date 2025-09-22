@@ -48,13 +48,17 @@ package body demics_mvc is
     procedure initMemoryCheck
                 ( this : in Link_to_mvc;
                   data : in demics_fTest.class_ftData.Link_to_ftData;
-                  depth : in integer32 ) is
+                  depth : in integer32; vrblvl : in integer32 := 0 ) is
 
       sn : constant integer32 := this.sp(depth);
 
       use demics_fTest.class_theData;
 
     begin
+      if vrblvl > 0 then
+        put("-> in demics_mvc.class_mvc.initMemoryCheck, depth : ");
+        put(depth,1); put_line(" ...");
+      end if;
       if data.cur = null then
         demics_fTest.class_ftData.create_elem
           (data,this.row,this.col,this.termSet(sn),this.supType(sn));
@@ -65,8 +69,12 @@ package body demics_mvc is
     procedure memoryCheck
                 ( this : in Link_to_mvc;
                   data : in demics_fTest.class_ftData.Link_to_ftData;
-                  depth : in integer32 ) is
+                  depth : in integer32; vrblvl : in integer32 := 0 ) is
     begin
+      if vrblvl > 0 then
+        put("-> in demics_mvc.class_mvc.memoryCheck, depth : ");
+        put(depth,1); put_line(" ...");
+      end if;
       initMemoryCheck(this,data,depth); -- same code as initMemoryCheck
     end memoryCheck;
 
@@ -1149,6 +1157,10 @@ package body demics_mvc is
 
       length : integer32;
 
+      use demics_fTest.class_ftData;
+      use demics_fTest.class_lvData;
+      use demics_iTest.class_iLvData;
+
     begin
       if vrblvl > 0
        then put_line("-> in demics_mvc.allocateAndIni ...");
@@ -1186,19 +1198,27 @@ package body demics_mvc is
       for i in 0..this.supN-1 loop
         this.re_termStart(i+1) := this.termStart(i+1) - i - 1;
         this.sp(i) := i;
-        this.lv(i) := new demics_fTest.class_lvData.lvData'
-                         (demics_fTest.class_lvData.new_lvData);
+        if this.lv(i) = null then
+          this.lv(i) := new demics_fTest.class_lvData.lvData'
+                           (demics_fTest.class_lvData.new_lvData);
+        end if;
         demics_fTest.class_lvData.create
           (this.lv(i),i,--this.supN,this.dim,
            this.supType(i)+1,this.termMax,vrblvl-1);
-        this.iLv(i) := new demics_itest.class_iLvData.ilvData'
-                          (demics_itest.class_iLvData.new_iLvData);
+        if this.iLv(i) = null then
+          this.iLv(i) := new demics_itest.class_iLvData.ilvData'
+                            (demics_itest.class_iLvData.new_iLvData);
+        end if;
         demics_itest.class_iLvData.create
           (this.iLv(i),i,this.supN,this.dim,this.termMax,vrblvl-1);
         length := this.supType(i) + 1;
         for j in 0..length-1 loop
           getMemory(this,i,j,length,vrblvl-1);
         end loop;
+       -- only after getMemory is this.lv(i).fTest(length-1) /= null
+        if this.lv(i).node = null
+         then this.lv(i).node := this.lv(i).fTest(length-1);
+        end if;
       end loop;
       this.the_Simplex := new demics_simplex.class_simplex.simplex'
                              (demics_simplex.class_simplex.new_simplex);
@@ -1286,7 +1306,7 @@ package body demics_mvc is
           put("------------------- Idx : "); put(idx_one+1,1);
           put_line(" -------------------");
         end if;
-        initMemoryCheck(this,data,depth);
+        initMemoryCheck(this,data,depth,vrblvl-1);
         demics_fTest.class_theData.clear(data.cur);
         this.firIdx(sn) := idx_one;
         demics_simplex.class_simplex.get_iNbN_nfN
@@ -1425,13 +1445,13 @@ package body demics_mvc is
       if flag = DEMiCs_Global_Constants.CONTINUE then
         if vrblvl > 0 then
           put("calling findNode on this.lv("); put(sn,1);
-          put(").fTest ...");
+          put_line(").fTest ...");
         end if;
         findNode(this,depth,lvl,feaNum,this.lv(sn).fTest,flag,vrblvl-1);
       else
         if vrblvl > 0 then
           put("calling findNextNode on this.lv("); put(sn,1);
-          put(").fTest ...");
+          put_line(").fTest ...");
         end if;
         findNextNode(this,depth,lvl,feaNum,this.lv(sn).fTest,flag,vrblvl-1);
       end if;
@@ -1508,7 +1528,7 @@ package body demics_mvc is
         if flag = DEMiCs_Global_Constants.CONTINUE then
           if vrblvl > 0 then
             put("calling findNode on this.lv("); put(sn,1);
-            put(").fTest ...");
+            put_line(").fTest ...");
           end if;
           findNode(this,depth,lvl,feaNum,this.lv(sn).fTest,
                    flag,vrblvl-1);
@@ -1518,7 +1538,7 @@ package body demics_mvc is
         else
           if vrblvl > 0 then
             put("calling findNextNode on this.lv("); put(sn,1);
-            put(").fTest ...");
+            put_line(").fTest ...");
           end if;
           findNextNode(this,depth,lvl,feaNum,this.lv(sn).fTest,
                        flag,vrblvl-1);
@@ -1688,7 +1708,7 @@ package body demics_mvc is
         put(depth,1); put_line(" ...");
       end if;
       sn := this.sp(depth);
-      initMemoryCheck(this,data,depth);
+      initMemoryCheck(this,data,depth,vrblvl-1);
       repIdx := idx_one;
       this.firIdx(sn) := repIdx;
      -- termS := this.termStart(sn);
@@ -1792,10 +1812,10 @@ package body demics_mvc is
     begin
       if vrblvl > 0 then
         put("-> in demics_mvc.class_mvc.iLP_art, depth : ");
-        put(depth,1); put_line(" ...");
+        put(depth,1); put(", idx_one : "); put(idx_one,1); put_line(" ...");
       end if;
       sn := this.sp(depth);
-      initMemoryCheck(this,data,depth);
+      initMemoryCheck(this,data,depth,vrblvl-1);
       repIdx := idx_one;
       this.firIdx(sn) := repIdx;
      -- termS := this.termStart(sn);
@@ -1910,7 +1930,7 @@ package body demics_mvc is
     procedure findNextNode
                 ( this : in Link_to_mvc; depth : in integer32;
                   lvl : in out integer32; feaNum : in out integer32;
-                  Data : in demics_fTest.class_ftData.Link_to_Array_of_ftData;
+                  data : in demics_fTest.class_ftData.Link_to_Array_of_ftData;
                   flag : out integer32; vrblvl : in integer32 := 0 ) is
 
       sn : constant integer32 := this.sp(depth);
@@ -2015,7 +2035,9 @@ package body demics_mvc is
     begin
       if vrblvl > 0 then
         put("-> in demics_mvc.class_mvc.mLP, depth : ");
-        put(depth,1); put(", lvl : "); put(lvl,1); put_line(" ...");
+        put(depth,1); put(", lvl : "); put(lvl,1);
+        put(", taridx : "); put(taridx,1); 
+        put(", totalN : "); put(totalN,1); put_line(" ...");
         if this.lv(sn).node = null
          then put("this.lv("); put(sn,1); put_line(").node = null");
          else put("this.lv("); put(sn,1); put_line(").node /= null");
@@ -2031,11 +2053,13 @@ package body demics_mvc is
         end if;
         if vrblvl > 0 then -- #if DBG_S_PRE_INFO
           put_line("<< Pre_ptr >>");
-          demics_fTest.class_ftData.info_parent_ptr(pre);
+         -- commented next line out because of crash
+         -- demics_fTest.class_ftData.info_parent_ptr(pre);
           put_line("<< Pre >>");
-          demics_fTest.class_ftData.info_parent_rIdx(pre);
+         -- commented next line out because of crash
+         -- demics_fTest.class_ftData.info_parent_rIdx(pre);
         end if;
-        memoryCheck(this,cur,depth);
+        memoryCheck(this,cur,depth,vrblvl-1);
         if (table_out(this,colPos,rowStartPos + repIdx(i))
             = DEMiCs_Global_Constants.OPT) then
           if lvl > 0
@@ -2081,6 +2105,11 @@ package body demics_mvc is
              -- demics_fTest.class_ftData.info_cur_ptr(cur); => crash!
               put_line("<< Cur >>");
               demics_fTest.class_ftData.info_cur_rIdx(cur);
+            end if;
+            if vrblvl > 0 then
+              put_line("checking if NODE is returned ...");
+              put("lvl : "); put(lvl,1);
+              put(", length : "); put(length,1); new_line;
             end if;
             if lvl = length - 1 then
              -- get_tuple_index(this,this.lv(sn).node,data,length);
@@ -2238,7 +2267,7 @@ package body demics_mvc is
       flag : integer32;
       ftlast : integer32;
 
-      use demics_fTest.class_theData;
+     -- use demics_fTest.class_theData;
       use demics_fTest.class_ftData;
 
     begin

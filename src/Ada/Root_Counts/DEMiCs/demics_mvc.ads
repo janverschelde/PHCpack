@@ -70,7 +70,7 @@ package demics_mvc is
     procedure initMemoryCheck
                 ( this : in Link_to_mvc;
                   data : in demics_fTest.class_ftData.Link_to_ftData;
-                  depth : in integer32 );
+                  depth : in integer32; vrblvl : in integer32 := 0 );
 
     -- DESCRIPTION :
     --   Adds an element to data if data.cur is null.
@@ -78,7 +78,7 @@ package demics_mvc is
     procedure memoryCheck
                 ( this : in Link_to_mvc;
                   data : in demics_fTest.class_ftData.Link_to_ftData;
-                  depth : in integer32 );
+                  depth : in integer32; vrblvl : in integer32 := 0 );
 
     -- DESCRIPTION :
     --   Same as initMemoryCheck.

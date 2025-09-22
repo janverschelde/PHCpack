@@ -1,4 +1,4 @@
-with unchecked_deallocation;
+with Ada.unchecked_deallocation;
 with Ada.text_io;                       use Ada.text_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
@@ -598,8 +598,8 @@ package body demics_ftest is
     procedure clear ( lftd : in out Link_to_Array_of_ftData ) is
 
       procedure free is
-        new unchecked_deallocation(Array_of_ftData,
-                                   Link_to_Array_of_ftData);
+        new Ada.unchecked_deallocation(Array_of_ftData,
+                                       Link_to_Array_of_ftData);
 
     begin
       free(lftd);
@@ -1393,8 +1393,8 @@ package body demics_ftest is
     procedure clear ( lvd : in out Link_to_Array_of_lvData ) is
 
       procedure free is
-        new unchecked_deallocation(Array_of_lvData,
-                                   Link_to_Array_of_lvData);
+        new Ada.unchecked_deallocation(Array_of_lvData,
+                                       Link_to_Array_of_lvData);
 
     begin
       free(lvd);
