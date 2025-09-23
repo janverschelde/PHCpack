@@ -45,11 +45,10 @@ package body demics_mvc is
       for i in 0..this.termSet(depth)-1 loop
         demics_fTest.class_ftData.create_elem
           (this.lv(depth).fTest(lvl),this.row,this.col,
-           this.termSet(depth),this.supType(depth),0); -- vrblvl-1);
-        demics_fTest.class_ftData.add_elem(this.lv(depth).fTest(lvl),0);
-          --vrblvl-1);
+           this.termSet(depth),this.supType(depth),vrblvl-1);
+        demics_fTest.class_ftData.add_elem(this.lv(depth).fTest(lvl),vrblvl-1);
       end loop;
-      demics_fTest.class_ftData.mark(this.lv(depth).fTest(lvl),0); -- vrblvl-1);
+      demics_fTest.class_ftData.mark(this.lv(depth).fTest(lvl),vrblvl-1);
       this.lv(depth).fTest(lvl).cur := this.lv(depth).fTest(lvl).head;
     end getMemory;
 
@@ -1214,13 +1213,13 @@ package body demics_mvc is
         end if;
         demics_fTest.class_lvData.create
           (this.lv(i),i,--this.supN,this.dim,
-           this.supType(i)+1,this.termMax,0); -- vrblvl-1);
+           this.supType(i)+1,this.termMax,vrblvl-1);
         if this.iLv(i) = null then
           this.iLv(i) := new demics_itest.class_iLvData.ilvData'
                             (demics_itest.class_iLvData.new_iLvData);
         end if;
         demics_itest.class_iLvData.create
-          (this.iLv(i),i,this.supN,this.dim,this.termMax,0); -- vrblvl-1);
+          (this.iLv(i),i,this.supN,this.dim,this.termMax,vrblvl-1);
         length := this.supType(i) + 1;
         for j in 0..length-1 loop
           getMemory(this,i,j,length,vrblvl-1);
@@ -1233,16 +1232,16 @@ package body demics_mvc is
       this.the_Simplex := new demics_simplex.class_simplex.simplex'
                              (demics_simplex.class_simplex.new_simplex);
       demics_simplex.class_simplex.allocateAndIni
-        (this.the_Simplex,data,this.firIdx,seedNum,output,0); -- vrblvl-1);
+        (this.the_Simplex,data,this.firIdx,seedNum,output,vrblvl-1);
       this.the_Reltab := new demics_reltab.class_reltab.reltab'
                             (demics_reltab.class_reltab.new_reltab);
       demics_reltab.class_reltab.allocateAndIni
         (this.the_Reltab,this.the_Simplex,this.firIdx,this.dim,this.supN,
          this.termSumNum,this.termSet,this.termStart,this.re_termStart,
-         0); -- vrblvl-1);
+         vrblvl-1);
       demics_itest.class_iLvData.getInit
         (this.iLv(0),data,this.the_Simplex.lifting,this.termSet,
-         this.termStart,this.dim,this.supN,0); -- vrblvl-1);
+         this.termStart,this.dim,this.supN,vrblvl-1);
     end allocateAndIni;
 
     procedure initFeasTest
@@ -1348,7 +1347,7 @@ package body demics_mvc is
         negIdx(idx_one)(0) := negNum;
         demics_fTest.class_ftData.make_init_data
           (data,this.termSumNum,this.supN,this.termSet(sn),
-           this.re_termStart(sn),0); -- vrblvl-1);
+           this.re_termStart(sn),vrblvl-1);
         initLP(this,data,negIdx,depth,idx_one,feaNum,vrblvl-1);
       end loop;
       Standard_Floating_Vectors.Clear(val);
@@ -1391,7 +1390,7 @@ package body demics_mvc is
         if vrblvl > 0
          then put_line("calling joint on data.cur ...");
         end if;
-        demics_fTest.class_theData.joint(data.cur,0); -- vrblvl-1);
+        demics_fTest.class_theData.joint(data.cur,vrblvl-1);
         data.cur.fIdx := idx;
         demics_simplex.class_simplex.get_res(this.the_Simplex,data);
         demics_simplex.class_simplex.get_pivOutNum
@@ -1486,7 +1485,7 @@ package body demics_mvc is
       loop
         demics_iTest.class_iLvData.init
           (this.iLv(depth),this.supN,depth-1,this.iLv(depth - 1).rsp,
-           0); -- vrblvl-1);
+           vrblvl-1);
         demics_fTest.class_ftData.delete_addedElem 
           (this.lv(this.sp(depth-1)).node);
         demics_fTest.class_ftData.init_ptr(this.lv(this.sp(depth-1)).node);
@@ -1674,7 +1673,7 @@ package body demics_mvc is
           end if;
           demics_simplex.class_simplex.fstRed_candIdx
             (this.the_Simplex,curInif,this.candIdx,fst_pivInIdx,
-             sub_fst_pivInIdx,0); -- vrblvl-1);
+             sub_fst_pivInIdx,vrblvl-1);
           preNbN := parent.nbN;
           curr := curInif.fHead;
           while curr /= null loop
@@ -1751,7 +1750,7 @@ package body demics_mvc is
         demics_simplex.class_simplex.solLP
           (this.the_Simplex,depth,fst_pivInIdx2,sub_fst_pivInIdx2,
            fst_redCost,DEMiCs_Global_Constants.ICHECK,
-           this.termSet(sn),reTermS,preNbN,iter,flag,0); -- vrblvl-1);
+           this.termSet(sn),reTermS,preNbN,iter,flag,vrblvl-1);
         this.total_LPs := this.total_LPs + 1.0;
         this.total_1PT := this.total_1PT + 1.0;
         this.lvl_1PT(depth) := this.lvl_1PT(depth) + 1.0;
@@ -1766,7 +1765,7 @@ package body demics_mvc is
           if vrblvl > 0
            then put_line("calling joint on data.cur ...");
           end if;
-          demics_fTest.class_theData.joint(data.cur,0); --vrblvl-1);
+          demics_fTest.class_theData.joint(data.cur,vrblvl-1);
           data.cur.fIdx := idx_one;
           if vrblvl > 0 then -- #if DBG_CUR_INFO
             put_line("<< Cur >>");
@@ -1797,7 +1796,7 @@ package body demics_mvc is
         demics_simplex.class_simplex.copy_eye(this.the_Simplex,data.cur); 
         demics_simplex.class_simplex.cal_redVec
           (this.the_Simplex,this.termSet(sn),reTermS,fst_pivInIdx,data.cur,
-           0); --vrblvl-1); 
+           vrblvl-1); 
         demics_fTest.class_ftData.iGetPtr(data,parent);
         demics_fTest.class_ftData.get_nbIdx_rIdx
           (data,preNbN,repIdx,this.candIdx,reTermS,parent);
@@ -1805,7 +1804,7 @@ package body demics_mvc is
         if vrblvl > 0
          then put_line("calling iJoint on data.cur ...");
         end if;
-        demics_fTest.class_theData.iJoint(data.cur,0); -- vrblvl-1);
+        demics_fTest.class_theData.iJoint(data.cur,vrblvl-1);
         if vrblvl > 0 then -- #if DBG_CUR_INFO
           put_line("<< Cur_ptr >>");
           demics_ftest.class_ftData.info_cur_ptr(data);
@@ -1844,7 +1843,7 @@ package body demics_mvc is
       demics_simplex.class_simplex.get_iNbN_nfN
         (this.the_Simplex,data.cur,preNbN+this.candIdx(0)-1, lNfN);
       demics_simplex.class_simplex.copy_eye(this.the_Simplex,data.cur);
-      demics_fTest.class_ftData.copy(data,this.col,parent);
+      demics_fTest.class_ftData.copy(data,this.col,parent,vrblvl-1);
       demics_fTest.class_ftData.iCopy
         (data,preNbN,lNfN,repIdx, --this.termSet(sn),
          reTermS,this.candIdx,parent);
@@ -1853,7 +1852,7 @@ package body demics_mvc is
       iter := 0;
       demics_simplex.class_simplex.solLP_art
         (this.the_Simplex,depth, -- repIdx,fst_pivInIdx,
-         preNbN,this.termSet(sn),reTermS,iter,flag,0); -- vrblvl-1);
+         preNbN,this.termSet(sn),reTermS,iter,flag,vrblvl-1);
       this.total_LPs := this.total_LPs + 1.0;
       this.total_1PT := this.total_1PT + 1.0;
       this.lvl_1PT(depth) := this.lvl_1PT(depth) + 1.0;
@@ -1866,7 +1865,7 @@ package body demics_mvc is
         if vrblvl > 0
          then put_line("calling joint on data.cur ...");
         end if;
-        demics_fTest.class_theData.joint(data.cur,0); -- vrblvl-1);
+        demics_fTest.class_theData.joint(data.cur,vrblvl-1);
         data.cur.fIdx := idx_one;
         demics_simplex.class_simplex.get_res(this.the_Simplex,data);
         demics_simplex.class_simplex.get_pivOutNum(this.the_Simplex,data.cur);
@@ -2126,7 +2125,7 @@ package body demics_mvc is
             if vrblvl > 0
              then put_line("calling mJoint on cur.cur ...");
             end if;
-            demics_fTest.class_theData.mJoint(cur.cur,0); -- vrblvl-1);
+            demics_fTest.class_theData.mJoint(cur.cur,vrblvl-1);
             demics_fTest.class_ftData.copy_rIdx(cur,target,this.termSet(sn));
             demics_fTest.class_ftData.copy_pivOutIdx(cur,target);      
             if vrblvl > 0 then -- #if DBG_S_CUR_INFO
@@ -2145,7 +2144,7 @@ package body demics_mvc is
               get_tuple_index(this.lv(sn).node,data,length,vrblvl-1);
               if depth = this.supN - 1 then
                 demics_simplex.class_simplex.calMixedVol
-                  (this.the_Simplex,this.lv.all,this.sp,this.supN,0); -- vrblvl-1);
+                  (this.the_Simplex,this.lv.all,this.sp,this.supN,vrblvl-1);
               end if;
               mRepN(lvl) := mRepN(lvl) + (i - tarIdx);
               cur.cur := cur.cur.next;
@@ -2170,7 +2169,7 @@ package body demics_mvc is
               (this.the_Simplex,depth,fst_pivInIdx,fst_sub_pivInIdx,
                fst_redCost,DEMiCs_Global_Constants.MCHECK,
                this.termSet(sn),this.re_termStart(sn),lNbN,
-               iter,flag,0); -- vrblvl-1);
+               iter,flag,vrblvl-1);
             this.total_LPs := this.total_LPs + 1.0;
             this.total_2PT := this.total_2PT + 1.0;
             this.lvl_2PT(depth) := this.lvl_2PT(depth) + 1.0;
@@ -2186,7 +2185,7 @@ package body demics_mvc is
               if vrblvl > 0
                then put_line("calling joint on cur.cur ...");
               end if;
-              demics_fTest.class_theData.joint(cur.cur,0); -- vrblvl-1);	
+              demics_fTest.class_theData.joint(cur.cur,vrblvl-1);	
               demics_fTest.class_ftData.decrease_nfN(cur);
               cur.cur.fIdx := repIdx(i);
               feaIdx(feaNum) := repIdx(i);
@@ -2202,8 +2201,7 @@ package body demics_mvc is
                   (this.lv(sn).Node,this.lv(sn).fTest,length,vrblvl-1);
                 if depth = this.supN - 1 then
                   demics_simplex.class_simplex.calMixedVol
-                    (this.the_Simplex,this.lv.all,this.sp,this.supN,0);
-                   -- vrblvl-1);
+                    (this.the_Simplex,this.lv.all,this.sp,this.supN,vrblvl-1);
                 end if;
                 this.mRepN(lvl) := this.mRepN(lvl) + (i - tarIdx);
                 cur.cur := cur.cur.next;
@@ -2308,30 +2306,32 @@ package body demics_mvc is
         put_line("-> in demics_mvc.class_mvc.enum ...");
       end if;
       demics_reltab.class_reltab.makeTable
-        (this.the_Reltab,this.total_unbLP_tab,0); -- vrblvl-1);
+        (this.the_Reltab,this.total_unbLP_tab,vrblvl-1);
       this.table := this.the_Reltab.table;
       for i in this.lv'range loop
-        put("checking this.lv("); put(i,1); put(").node");
-        if this.lv(i).node /= null then
-          put_line(" /= null");
-        else
-          put_line(" = null, assigning to last component ...");
-          ftlast := this.lv(i).fTest'last;
-          this.lv(i).node := this.lv(i).fTest(ftlast);
-        end if;
-        put_line("checking fTest ...");
-        if this.lv(i).fTest = null then
-          put("this.lv("); put(i,1); put_line(").fTest = null");
-        else
-          put("this.lv("); put(i,1); put_line(").fTest /= null");
-          for j in this.lv(i).fTest'range loop
-            put("this.lv("); put(i,1); 
-            put(").fTest("); put(j,1); put(")");
-            if this.lv(i).fTest(j) = null
-             then put_line(" = null");
-             else put_line(" /= null");
-            end if;
-          end loop;
+        if vrblvl > 0 then
+          put("checking this.lv("); put(i,1); put(").node");
+          if this.lv(i).node /= null then
+            put_line(" /= null");
+          else
+            put_line(" = null, assigning to last component ...");
+            ftlast := this.lv(i).fTest'last;
+            this.lv(i).node := this.lv(i).fTest(ftlast);
+          end if;
+          put_line("checking fTest ...");
+          if this.lv(i).fTest = null then
+            put("this.lv("); put(i,1); put_line(").fTest = null");
+          else
+            put("this.lv("); put(i,1); put_line(").fTest /= null");
+            for j in this.lv(i).fTest'range loop
+              put("this.lv("); put(i,1); 
+              put(").fTest("); put(j,1); put(")");
+              if this.lv(i).fTest(j) = null
+               then put_line(" = null");
+               else put_line(" /= null");
+              end if;
+            end loop;
+          end if;
         end if;
       end loop;
       if this.supN = 1 then

@@ -2923,7 +2923,7 @@ package body demics_simplex is
                redCost,--termS,
                reTermS,preNbN,redFlag,vrblvl-1);
             if redFlag = opt then
-              if vrblvl < 0 then -- #if DBG_MSOLLP
+              if vrblvl > 0 then -- #if DBG_MSOLLP
                 put_line("----- OPT -----");
                 info_basisIdx(this);
                 info_nbIdx(this);

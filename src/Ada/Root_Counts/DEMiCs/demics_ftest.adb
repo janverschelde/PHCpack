@@ -748,7 +748,8 @@ package body demics_ftest is
     end next_data;
 
     procedure copy ( this : in Link_to_ftData;
-                     col : in integer32; pre_data : in Link_to_theData ) is
+                     col : in integer32; pre_data : in Link_to_theData;
+                     vrblvl : in integer32 := 0 ) is
 
       use Standard_Integer_Vectors;
       use Standard_Floating_Vectors;
@@ -759,7 +760,9 @@ package body demics_ftest is
           this.cur.p_sol(i) := pre_data.p_sol_ptr(i);
         end loop;
       else
-        put_line("pre_data.p_sol_ptr = null, bug?");
+        if vrblvl > 0
+         then put_line("pre_data.p_sol_ptr = null, bug?");
+        end if;
         for i in 0..col-1 loop
           this.cur.p_sol(i) := pre_data.p_sol(i);
         end loop;
@@ -769,13 +772,17 @@ package body demics_ftest is
           this.cur.d_sol(i) := pre_data.d_sol_ptr(i);
         end loop;
       else
-        put_line("pre_data.d_sol_ptr = null, bug?");
+        if vrblvl > 0
+         then put_line("pre_data.d_sol_ptr = null, bug?");
+        end if;
         for i in 0..this.dim-1 loop
           this.cur.d_sol(i) := pre_data.d_sol(i);
         end loop;
       end if;
       if pre_data.basisIdx_ptr /= null then
-        put_line("pre_data.basisIdx_ptr = null, bug?");
+        if vrblvl > 0
+         then put_line("pre_data.basisIdx_ptr = null, bug?");
+        end if;
         for i in 0..this.dim-1 loop
           this.cur.basisIdx(i) := pre_data.basisIdx_ptr(i);
         end loop;
@@ -789,7 +796,9 @@ package body demics_ftest is
           this.cur.nbIdx(i) := pre_data.nbIdx_ptr(i);
         end loop;
       else
-        put_line("pre_data.nbIdx_ptr = null, bug?");
+        if vrblvl > 0
+         then put_line("pre_data.nbIdx_ptr = null, bug?");
+        end if;
         for i in 0..col-this.dim-1 loop
           this.cur.nbIdx(i) := pre_data.nbIdx(i);
         end loop;

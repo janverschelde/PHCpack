@@ -349,7 +349,8 @@ package demics_ftest is
     --   Sets the this.parent to this.parent.next if not null.
 
     procedure copy ( this : in Link_to_ftData;
-                     col : in integer32; pre_data : in Link_to_theData );
+                     col : in integer32; pre_data : in Link_to_theData;
+                     vrblvl : in integer32 := 0 );
 
     -- DESCRIPTION :
     --   Copies values of p_sol, d_sol, basisIdx, and nbIdx
