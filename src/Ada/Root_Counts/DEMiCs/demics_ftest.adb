@@ -155,6 +155,7 @@ package body demics_ftest is
       end if;
       this.invB_ptr := this.invB;
       this.transMat_ptr := this.transMat;
+      this.transRed_ptr := this.transRed;
       this.p_sol_ptr := this.p_sol;
       this.d_sol_ptr := this.d_sol;
       this.redVec_ptr := this.redVec;

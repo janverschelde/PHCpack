@@ -1,3 +1,7 @@
+Tue 23 Sep 2025 : defined mGetPtr correctly in demics_ftest, modified
+  demics_simplex.adb, demics_main.adb, and demics_mvc.adb.
+  Fixed joint in demics_ftest.adb.
+
 Mon 22 Sep 2025 : modified demics_ftest.adb and demics.mvc.adb,
   extended demics_algorithm with user defined lifting.
 
