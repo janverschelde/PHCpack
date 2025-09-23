@@ -998,16 +998,20 @@ package body demics_ftest is
     end mCopy;
 
     procedure mGetPtr ( this : in Link_to_ftData;
-                        pre_data : in Link_to_theData ) is
+                        pre_data : in Link_to_theData;
+                        vrblvl : in integer32 := 0 ) is
     begin
-      Standard_Floating_Vectors.clear(this.cur.p_sol);
-      Standard_Floating_Vectors.clear(this.cur.d_sol);
-      Standard_Integer_Vectors.clear(this.cur.basisIdx);
-      Standard_Integer_Vectors.clear(this.cur.nbIdx);
-      this.cur.p_sol := pre_data.p_sol;
-      this.cur.d_sol := pre_data.d_sol;
-      this.cur.basisIdx := pre_data.basisIdx;
-      this.cur.nbIdx := pre_data.nbIdx;
+      if vrblvl > 0
+       then put_line("-> in demics_ftest.class_ftData.mGetPtr ...");
+      end if;
+      this.cur.invB_ptr := pre_data.invB_ptr;
+      this.cur.transMat_ptr := pre_data.transMat_ptr;
+      this.cur.transRed_ptr := pre_data.transRed_ptr;
+      this.cur.p_sol_ptr := pre_data.p_sol_ptr;
+      this.cur.d_sol_ptr := pre_data.d_sol_ptr;
+      this.cur.redVec_ptr := pre_data.redVec_ptr;
+      this.cur.basisIdx_ptr := pre_data.basisIdx_ptr;
+      this.cur.nbIdx_ptr := pre_data.nbIdx_ptr;
     end mGetPtr;
 
     procedure put_sup ( this : in Link_to_ftData; sup : out integer32 ) is

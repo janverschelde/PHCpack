@@ -443,7 +443,8 @@ package demics_ftest is
                       pre_data : in Link_to_theData );
 
     procedure mGetPtr ( this : in Link_to_ftData;
-                        pre_data : in Link_to_theData );
+                        pre_data : in Link_to_theData;
+                        vrblvl : in integer32 := 0 );
 
     -- DESCRIPTION :
     --   Copies into this.cur the values p_sol, d_sol, basisIdx, nbIdx

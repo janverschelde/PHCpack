@@ -2265,6 +2265,8 @@ package body demics_simplex is
       end loop;
       if this.output > 0 then
         put_line("----------------------------------");
+        put_line("The supports :");
+        info_oriSup(this);
         put("* Seed number = "); put(seedNum,1); new_line;
         put_line("* Lifting values for elements in each support set");
         cnt := 0;
