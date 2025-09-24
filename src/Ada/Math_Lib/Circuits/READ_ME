@@ -1,4 +1,4 @@
-Algorithmic differentiation and arithmetic circuits in PHCv2.4.87
+Algorithmic differentiation and arithmetic circuits in PHCv2.4.91
 
 This directory was created new in v2.3.98, with code that had been building
 up in the directory Functions.  In Functions, polynomials are evaluated by
@@ -52,7 +52,8 @@ ts_vmpdiff                         : tests variable precision differentiation
 ts_cffsup                          : test on coefficient supported polynomials
 ts_speel                           : development of Speelpenning product
 ts_speelsys                        : test on eval and diff of systems
-ts_cycfun                          : on the cyclic n-roots problems
+test_cyclic_polynomials            : tests on cyclic n-roots polynomials
+ts_cycfun                          : main test on cyclic n-roots polynomials
 -------------------------------------------------------------------------------
 standard_gradient_circuits         : eval & diff circuits for polynomials
 dobldobl_gradient_circuits         : gradient circuits for double doubles

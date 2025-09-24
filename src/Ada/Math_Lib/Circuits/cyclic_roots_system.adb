@@ -226,4 +226,40 @@ package body Cyclic_Roots_System is
     return res;
   end Multprec_Cyclic_Polynomial_System;
 
+  function Double_Cyclic_System ( n : integer32 )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
+
+    sup : constant Standard_Natural_VecVecs.Array_of_VecVecs(1..n)
+        := Supports_of_Cyclic(n);
+    res : constant Standard_Complex_Poly_Systems.Poly_Sys(1..n)
+        := Standard_Cyclic_Polynomial_System(sup);
+
+  begin
+    return res;
+  end Double_Cyclic_System;
+
+  function DoblDobl_Cyclic_System ( n : integer32 )
+             return DoblDobl_Complex_Poly_Systems.Poly_Sys is
+
+    sup : constant Standard_Natural_VecVecs.Array_of_VecVecs(1..n)
+        := Supports_of_Cyclic(n);
+    res : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(1..n)
+        := DoblDobl_Cyclic_Polynomial_System(sup);
+
+  begin
+    return res;
+  end DoblDobl_Cyclic_System;
+
+  function QuadDobl_Cyclic_System ( n : integer32 )
+             return QuadDobl_Complex_Poly_Systems.Poly_Sys is
+
+    sup : constant Standard_Natural_VecVecs.Array_of_VecVecs(1..n)
+        := Supports_of_Cyclic(n);
+    res : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(1..n)
+        := QuadDobl_Cyclic_Polynomial_System(sup);
+
+  begin
+    return res;
+  end QuadDobl_Cyclic_System;
+
 end Cyclic_Roots_System;

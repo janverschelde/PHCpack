@@ -103,4 +103,22 @@ package Cyclic_Roots_System is
   --   Returns the polynomial system defined by the supports in s,
   --   with coefficients of arbitrary precision type.
 
+  function Double_Cyclic_System ( n : integer32 )
+             return Standard_Complex_Poly_Systems.Poly_Sys;
+
+  -- DESCRIPTION :
+  --   Returns the cyclic n-roots system with double coefficients.
+
+  function DoblDobl_Cyclic_System ( n : integer32 )
+             return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+
+  -- DESCRIPTION :
+  --   Returns the cyclic n-roots system with double double coefficients.
+
+  function QuadDobl_Cyclic_System ( n : integer32 )
+             return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+
+  -- DESCRIPTION :
+  --   Returns the cyclic n-roots system with quad double coefficients.
+
 end Cyclic_Roots_System;

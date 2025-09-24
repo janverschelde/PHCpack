@@ -1,3 +1,6 @@
+Wed 24 Sep 2025 : new package test_cyclic_polynomials, with code refactored
+  out of ts_cycfun.  Extended cyclic_roots_system with wrappers.
+
 Fri 8 Dec 2023 : in convergence_radius_estimates, adjusted the error
   estimate to take into account the logarithmic convergence.
 
