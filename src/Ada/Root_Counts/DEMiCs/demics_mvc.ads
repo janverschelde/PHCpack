@@ -1,3 +1,4 @@
+with Ada.Execution_Time;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
@@ -465,11 +466,17 @@ package demics_mvc is
     --   Sets the value of this.firIdx(sn).
 
     procedure info_cpuTime
-                ( this : in Link_to_mvc;
-                  cpuTime_start : in double_float;
-                  cpuTime_end : in double_float );
+                ( cpuTime_start : in Ada.Execution_Time.CPU_Time;
+                  cpuTime_end : in Ada.Execution_Time.CPU_Time );
+
+    -- DESCRIPTION :
+    --   Computes and displays the elapsed CPU time.
 
     procedure info_final ( this : in Link_to_mvc );
+
+    -- DESCRIPTION :
+    --   Displays statistics about number of linear programming
+    --   problems solved.
 
     procedure enum ( this : in Link_to_mvc; vrblvl : in integer32 := 0 );
 

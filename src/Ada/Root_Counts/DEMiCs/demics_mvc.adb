@@ -1,4 +1,5 @@
 with Ada.text_io;                       use Ada.text_io;
+with Ada.Real_Time;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Random_Numbers;
@@ -2280,16 +2281,47 @@ package body demics_mvc is
     end get_firIdx;
 
     procedure info_cpuTime
-                ( this : in Link_to_mvc;
-                  cpuTime_start : in double_float;
-                  cpuTime_end : in double_float ) is
+                ( cpuTime_start : in Ada.Execution_Time.CPU_Time;
+                  cpuTime_end : in Ada.Execution_Time.CPU_Time ) is
+
+      use Ada.Execution_Time;
+
+      elapsed : constant Ada.Real_Time.Time_Span
+              := cpuTime_end - cpuTime_start;
+
     begin
-      null;
+      put_line("Elapsed CPU time : "
+             & Duration'Image(Ada.Real_Time.To_Duration(elapsed))
+             & " seconds");
     end info_cpuTime;
 
     procedure info_final ( this : in Link_to_mvc ) is
+
+      total_LP_tab,levelNode : double_float;
+      totalNode : double_float := 0.0;
+
     begin
-      null;
+      put_line("----- Final Info. -----");
+      total_LP_tab := double_float(this.termSumNum*(this.termSumNum - 1))/2.0;
+      put("(Unb. LPs / # Total LPs) at Table: ");
+      put(this.total_unbLP_tab/total_LP_tab); new_line;
+      put("# LPs: "); put(this.total_LPs); new_line;
+      put("# LPs at iLP: "); put(this.total_1PT); new_line;
+      put("# LPs at mLP: "); put(this.total_2PT); new_line;
+      put("# Feas. LPs: "); put(this.total_feasLP); new_line;
+      put("# Tri. LPs at mLP: "); put(this.total_triLPs_mLP); new_line;
+      put("Avg. Iter for Feas. LPs: ");
+      put(this.total_iter/this.total_feasLP); new_line;
+      levelNode := this.actNode(0);
+      totalNode := totalNode + levelNode;
+      for i in 0..this.supN - 2 loop
+        levelNode := double_float(this.termSet(i + 1) - 1)
+                    *double_float(this.termSet(i + 1))
+                    *this.actNode(i)/2.0;
+        totalNode := totalNode + levelNode;
+      end loop;
+      put("Total nodes: "); put(totalNode); new_line;
+      put_line("-----------------------");
     end info_final;
 
     procedure enum ( this : in Link_to_mvc; vrblvl : in integer32 := 0 ) is
@@ -2368,7 +2400,10 @@ package body demics_mvc is
           depth := depth + 1; -- DOWN
         end loop;
       end if;
-      demics_simplex.class_simplex.info_mv(this.the_Simplex);
+      if this.the_Simplex.output = 1 then
+        info_final(this);
+        demics_simplex.class_simplex.info_mv(this.the_Simplex);
+      end if;
     end enum;
 
   end class_mvc;

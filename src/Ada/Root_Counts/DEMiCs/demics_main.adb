@@ -1,4 +1,5 @@
-with Ada.text_io;                       use Ada.text_io;
+with Ada.Text_IO;                       use Ada.Text_IO;
+with Ada.Execution_Time;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Random_Numbers;
@@ -18,13 +19,17 @@ procedure demics_main is
     ptr2MVC : constant class_mvc.Link_to_mvc
             := new class_mvc.mvc'(class_mvc.new_mvc);
     seed : constant integer32 := Standard_Random_Numbers.Get_Seed;
+    cputstart,cputstop : Ada.Execution_Time.CPU_Time;
 
   begin
     if vrblvl > 0
      then put("the seed : "); put(seed,1); new_line;
     end if;
+    cputstart := Ada.Execution_Time.Clock;
     class_mvc.allocateAndIni(ptr2MVC,data,seed,1,vrblvl);
     class_mvc.Enum(ptr2MVC,vrblvl);
+    cputstop := Ada.Execution_Time.Clock;
+    class_mvc.info_cpuTime(cputstart,cputstop);
   end Compute_Mixed_Volume;
  
   procedure Main is
