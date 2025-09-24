@@ -1,3 +1,7 @@
+Wed 24 Sep 2025 : updated demics_mvc.adb to suppress output.
+  New packages demics_translated and test_demics_translated, called
+  by ts_demicstrl.adb, extended demics.gpr.
+
 Tue 23 Sep 2025 : defined mGetPtr correctly in demics_ftest, modified
   demics_simplex.adb, demics_main.adb, and demics_mvc.adb.
   Fixed joint in demics_ftest.adb.  Cleaned up demics_ftest,
