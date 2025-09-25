@@ -736,6 +736,10 @@ package demics_simplex is
     -- DESCRIPTION :
     --   Allocates and initializes the simplex record.
     --   Generates random lifting values, setting the seed to seedNum.
+    --   If output = 1, then output is written to screen.
+    --   If output = 2, then data is stored in demics_output_cells,
+    --   which requires the initialization of demics_output_cells
+    --   with the dimension and type of mixture.
 
 -- for relation table
 

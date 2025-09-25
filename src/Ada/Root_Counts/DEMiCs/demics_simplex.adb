@@ -3,6 +3,7 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Random_Numbers;
+with Standard_Floating_VecVecs_io;      use Standard_Floating_VecVecs_io;
 with DEMiCs_Global_Constants;
 with DEMiCs_Output_Cells;
 
@@ -2234,6 +2235,32 @@ package body demics_simplex is
       for i in 0..this.termSumNum-1 loop
         this.lifting(i) := 10.0*abs(Standard_Random_Numbers.Random);
       end loop;
+      if this.output = 2 then -- assign the lifting
+        declare
+          crdsup : Standard_Integer_Vectors.Vector(1..this.SupN);
+          idxcnt : integer32 := 0;
+        begin
+          for i in this.termSet'range loop
+            crdsup(i+1) := this.termSet(i);
+          end loop;
+          DEMiCs_Output_Cells.Initialize_Lifting(crdsup);
+          for i in this.termSet'range loop
+            for j in 1..this.termSet(i) loop
+              DEMiCs_Output_Cells.Assign_Lifting(i+1,j,this.lifting(idxcnt));
+              idxcnt := idxcnt + 1;
+            end loop;
+          end loop;
+        end;
+        if vrblvl > 0 then
+          declare
+            lifvals : constant Standard_Floating_VecVecs.Link_to_VecVec
+                    := DEMiCs_Output_Cells.Lifting_Values;
+          begin
+            put_line("The lifting values in DEMiCs_Output_Cells : ");
+            put(lifvals);
+          end;
+        end if;
+      end if;
       this.supp := new VecVec_of_supportSets(0..this.supN);
       for i in 0..this.supN-1 loop
         this.re_termStart(i+1) := data.termStart(i+1) - i - 1;
