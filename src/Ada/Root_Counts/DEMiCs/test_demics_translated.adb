@@ -25,6 +25,23 @@ package body Test_DEMiCs_Translated is
     put("-roots : "); put(mv,1); new_line;
   end Test_Cyclic;
 
+  procedure Test_Labels ( dim : in integer32; vrblvl : in integer32 := 0 ) is
+
+    p : constant Poly_Sys(1..dim)
+      := Cyclic_Roots_System.Double_Cyclic_System(dim);
+    mv : integer32;
+
+  begin
+    if vrblvl > 0 then
+      new_line;
+      put("the cyclic "); put(dim,1); put_line("-roots polynomials : ");
+      put(p);
+    end if;
+    mv := DEMiCs_Translated.Mixed_Labels(p,true,vrblvl);
+    put("mixed volume of cyclic "); put(dim,1);
+    put("-roots : "); put(mv,1); new_line;
+  end Test_Labels;
+
   procedure Test_Cyclic_Roots ( vrblvl : in integer32 := 0 ) is
   begin
     put_line("-> running tests on the cyclic n-roots system ...");
@@ -46,7 +63,17 @@ package body Test_DEMiCs_Translated is
     if ans = 'n'
      then vrblvl := 0;
     end if;
-    Test_Cyclic_Roots(vrblvl);
+    new_line;
+    put_line("MENU for testing the translated DEMiCs :");
+    put_line(" 1. test sequence of cyclic n-roots problems");
+    put_line(" 2. test computation of labels to mixed cells");
+    put("Type 1 or 2 to select a test : ");
+    Ask_Alternative(ans,"12");
+    case ans is
+      when '1' => Test_Cyclic_Roots(vrblvl);
+      when '2' => Test_Labels(5,vrblvl);
+      when others => null;
+    end case;
   end Main;
 
 end Test_DEMiCs_Translated;

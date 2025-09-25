@@ -69,6 +69,7 @@ demics_input_main           : main input procedures
 test_demics_input           : tests input for DEMiCs
 ts_demics_input             : main test on input for DEMiCs
 ------------------------------------------------------------------------------
+demics_output_cells         : to store the labels of the cells
 demics_global_constants     : global constants, translates global.h
 demics_itest                : translates iTest
 demics_ftest                : translates fTest

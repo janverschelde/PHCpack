@@ -16,4 +16,13 @@ package DEMiCs_Translated is
   -- DESCRIPTION :
   --   Returns the mixed volume of the polynomials in p.
 
+  function Mixed_Labels
+             ( p : Poly_Sys; monitor : boolean := true;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the mixed volume and the labels to the mixed cell indices.
+  --   If monitor is true, then the cell is written to screen each time
+  --   the cell is added to the data stored in demics_output_cells.
+
 end DEMiCs_Translated;

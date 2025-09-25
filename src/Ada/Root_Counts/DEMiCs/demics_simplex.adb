@@ -4,6 +4,7 @@ with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Random_Numbers;
 with DEMiCs_Global_Constants;
+with DEMiCs_Output_Cells;
 
 package body demics_simplex is
 
@@ -2979,6 +2980,23 @@ package body demics_simplex is
       end case;
     end initIter;
 
+    function Offset_for_Index
+                ( mix : Standard_Integer_Vectors.Link_to_Vector;
+                  idx : integer32 ) return integer32 is
+
+    -- DESCRIPTION :
+    --   Returns the offset for the index of the component idx,
+    --   relative to the type of mixture in mix.
+
+      res : integer32 := 0;
+  
+    begin
+      for i in mix'first..(idx-1) loop
+        res := res + mix(i)+1;
+      end loop;
+      return res;
+    end Offset_for_Index;
+
     procedure calMixedVol
                 ( this : in Link_to_simplex;
                   lv : in demics_fTest.class_lvData.Array_of_lvData;
@@ -2987,29 +3005,77 @@ package body demics_simplex is
 
       ii,jj,idx,cnt,polyDim,fIdx : integer32;
       det : double_float;
+      size,lblidx : integer32;
+      mixtype,labels : Standard_Integer_Vectors.Link_to_Vector;
 
     begin
       if vrblvl > 0 then
         put_line("-> in demics_simplex.class_simplex.calMixedVol ...");
       end if;
       this.mixedCell := this.mixedCell + 1;
-      if this.output /= 0
-       then put("# "); put(this.mixedCell,1); put(" : ");
+      if vrblvl > 0 then
+        if this.output > 0 then -- print both for testing purposes
+          put("# "); put(this.mixedCell,1); put(" : ");
+        end if;
+        if this.output = 2 then
+          mixtype := Demics_Output_Cells.Get_Mixture;
+          size := Demics_Output_Cells.Get_Labels_Size;
+          labels := new Standard_Integer_Vectors.Vector(1..size);
+          lblidx := 0;
+        end if;
+      else -- otherwise print only one set of indices
+        if this.output = 1 then
+          put("# "); put(this.mixedCell,1); put(" : ");
+        elsif this.output = 2 then
+          mixtype := Demics_Output_Cells.Get_Mixture;
+          size := Demics_Output_Cells.Get_Labels_Size;
+          labels := new Standard_Integer_Vectors.Vector(1..size);
+          lblidx := 0;
+        end if;
       end if;
       cnt := 0;
       for i in 0..supN-1 loop
         polyDim := lv(sp(i)).Node.parent.polyDim; 
         fIdx := lv(sp(i)).Node.parent.nodeLabel(0);
         jj := fIdx*this.dim;
-        if this.output /= 0 then
-          put(sp(i)+1,1); put(" : ( ");
-          put(fIdx+1,1); put(" ");
+        if vrblvl > 0 then
+          if this.output > 0 then
+            put(sp(i)+1,1); put(" : ( ");
+            put(fIdx+1,1); put(" ");
+          end if;
+          if this.output = 2 then
+            lblidx := Offset_for_Index(mixtype,sp(i)+1);
+            lblidx := lblidx + 1;
+            labels(lblidx) := fIdx+1;
+          end if;
+        else
+          if this.output = 1 then
+            put(sp(i)+1,1); put(" : ( ");
+            put(fIdx+1,1); put(" ");
+          elsif this.output = 2 then
+            lblidx := Offset_for_Index(mixtype,sp(i)+1);
+            lblidx := lblidx + 1;
+            labels(lblidx) := fIdx+1;
+          end if;
         end if;
         for j in 0..polyDim-1 loop
           idx := lv(sp(i)).Node.parent.nodeLabel(j+1);
           ii := idx*this.dim;
-          if this.output /= 0 then
-            put(idx+1,1); put(" ");
+          if vrblvl > 0 then
+            if this.output > 0 then
+              put(idx+1,1); put(" ");
+            end if;
+            if this.output = 2 then
+              lblidx := lblidx + 1;
+              labels(lblidx) := idx+1;
+            end if;
+          else
+            if this.output = 1 then
+              put(idx+1,1); put(" ");
+            elsif this.output = 2 then
+              lblidx := lblidx + 1;
+              labels(lblidx) := idx+1;
+            end if;
           end if;
           for k in 0..this.dim-1 loop
             this.vol(this.dim*cnt+k)
@@ -3017,17 +3083,29 @@ package body demics_simplex is
           end loop;
           cnt := cnt + 1;
         end loop; 
-        if this.output /= 0
-         then put(") ");
+        if vrblvl > 0 then
+          if this.output > 0
+           then put(") ");
+          end if;
+        else
+          if this.output = 1
+           then put(") ");
+          end if;
         end if;
       end loop;
       lu(this,this.dim,this.vol,det);
       det := abs(det);
       this.mixedVol := this.mixedVol + det;
-      if this.output /= 0 then
+      if this.output > 0 then
+        if vrblvl > 0
+         then new_line;
+        end if;
+        put("volume : "); put(integer32(det));
+        put(", accumulated volume : "); put(integer32(this.mixedVol));
         new_line;
-        put("Volume : "); put(det);
-        new_line;
+      end if;
+      if this.output = 2
+        then DEMiCs_Output_Cells.Add_Cell_Indices(labels);
       end if;
     end calMixedVol;
 

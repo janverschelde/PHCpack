@@ -6,6 +6,12 @@ package Test_DEMiCs_Translated is
 --   Runs tests on the mixed volume computation with the translated DEMiCs
 --   on some benchmarks.
 
+  procedure Test_Labels ( dim : in integer32; vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Tests the computation of the labels to the mixed cells of
+  --   a cyclic n-roots problem where n = dim.
+
   procedure Test_Cyclic_Roots ( vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :

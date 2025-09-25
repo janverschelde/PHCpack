@@ -1,3 +1,6 @@
+Thu 25 Sep 2025 : new package demics_output_cells, used in demics_simplex.adb,
+  updated demics_translated and test_demics_translated.
+
 Wed 24 Sep 2025 : updated demics_mvc.adb to suppress output.
   New packages demics_translated and test_demics_translated, called
   by ts_demicstrl.adb, extended demics.gpr.
