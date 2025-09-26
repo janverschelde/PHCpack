@@ -1,5 +1,6 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
+with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 
 package DEMiCs_Translated is
 
@@ -15,6 +16,9 @@ package DEMiCs_Translated is
 
   -- DESCRIPTION :
   --   Returns the mixed volume of the polynomials in p.
+  --   This function is equivalent to the main function of DEMiCs.
+  --   If the mixed cells are required, then the functions
+  --   Mixed_Labels and Mixed_Cells need to be called.
 
   function Mixed_Labels
              ( p : Poly_Sys; monitor : boolean := true;
@@ -24,5 +28,21 @@ package DEMiCs_Translated is
   --   Returns the mixed volume and the labels to the mixed cell indices.
   --   If monitor is true, then the cell is written to screen each time
   --   the cell is added to the data stored in demics_output_cells.
+
+  -- SIDE EFFECT :
+  --   The package DEMiCs_Output_Cells contains the labels.
+
+  function Mixed_Cells ( vrblvl : integer32 := 0 ) return Mixed_Subdivision;
+
+  -- DESCRIPTION :
+  --   Returns the mixed-cell configuration computed by Mixed_Labels.
+
+  -- REQUIRED :
+  --   Mixed_Labels has been executed successfully.
+
+  procedure Clear ( vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Deallocates all allocated memory.
 
 end DEMiCs_Translated;

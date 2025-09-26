@@ -4,6 +4,7 @@ with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Cyclic_Roots_System;
+with Floating_Mixed_Subdivisions;       use Floating_Mixed_Subdivisions;
 with DEMiCs_Translated;
 
 package body Test_DEMiCs_Translated is
@@ -42,6 +43,27 @@ package body Test_DEMiCs_Translated is
     put("-roots : "); put(mv,1); new_line;
   end Test_Labels;
 
+  procedure Test_Cells ( dim : in integer32; vrblvl : in integer32 := 0 ) is
+
+    p : constant Poly_Sys(1..dim)
+      := Cyclic_Roots_System.Double_Cyclic_System(dim);
+    mv : integer32;
+    mcc : Mixed_Subdivision;
+
+  begin
+    if vrblvl > 0 then
+      new_line;
+      put("the cyclic "); put(dim,1); put_line("-roots polynomials : ");
+      put(p);
+    end if;
+    mv := DEMiCs_Translated.Mixed_Labels(p,true,vrblvl);
+    put("mixed volume of cyclic "); put(dim,1);
+    put("-roots : "); put(mv,1); new_line;
+    mcc := DEMiCs_Translated.Mixed_Cells(vrblvl);
+    put("number of mixed cells : ");
+    put(integer32(Length_Of(mcc)),1); new_line;
+  end Test_Cells;
+
   procedure Test_Cyclic_Roots ( vrblvl : in integer32 := 0 ) is
   begin
     put_line("-> running tests on the cyclic n-roots system ...");
@@ -65,13 +87,15 @@ package body Test_DEMiCs_Translated is
     end if;
     new_line;
     put_line("MENU for testing the translated DEMiCs :");
-    put_line(" 1. test sequence of cyclic n-roots problems");
-    put_line(" 2. test computation of labels to mixed cells");
-    put("Type 1 or 2 to select a test : ");
-    Ask_Alternative(ans,"12");
+    put_line(" 1. run sequence of cyclic n-roots problems");
+    put_line(" 2. compute labels to points in the mixed cells");
+    put_line(" 3. convert labels into mixed cells");
+    put("Type 1, 2, or 3 to select a test : ");
+    Ask_Alternative(ans,"123");
     case ans is
       when '1' => Test_Cyclic_Roots(vrblvl);
       when '2' => Test_Labels(5,vrblvl);
+      when '3' => Test_Cells(5,vrblvl);
       when others => null;
     end case;
   end Main;

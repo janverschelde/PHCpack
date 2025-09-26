@@ -1,3 +1,6 @@
+Fri 26 Sep 2025 : extended demics_translated with the cells computation,
+  tested in test_demics_translated.adb.
+
 Thu 25 Sep 2025 : new package demics_output_cells, used in demics_simplex.adb,
   updated demics_translated and test_demics_translated.
   Updated demics_simplex to store lifting in demics_output_cells.
