@@ -1,6 +1,7 @@
 with Ada.Text_IO;                        use Ada.Text_IO;
 with Communications_with_User;           use Communications_with_User;
 with Timing_Package;                     use Timing_Package;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
@@ -15,6 +16,8 @@ with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with Standard_Random_Vectors;
 with DoblDobl_Random_Vectors;
 with QuadDobl_Random_Vectors;
+with Arrays_of_Integer_Vector_Lists;
+with Arrays_of_Integer_Vector_Lists_io;  use Arrays_of_Integer_Vector_Lists_io;
 with Standard_Complex_Polynomials_io;    use Standard_Complex_Polynomials_io;
 with DoblDobl_Complex_Polynomials_io;    use DoblDobl_Complex_Polynomials_io;
 with QuadDobl_Complex_Polynomials_io;    use QuadDobl_Complex_Polynomials_io;
@@ -24,10 +27,13 @@ with QuadDobl_Complex_Poly_Functions;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
+with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Speelpenning_Products;     use Standard_Speelpenning_Products;
 with DoblDobl_Speelpenning_Products;     use DoblDobl_Speelpenning_Products;
 with QuadDobl_Speelpenning_Products;     use QuadDobl_Speelpenning_Products;
 with Cyclic_Roots_System;                use Cyclic_Roots_System;
+with Cyclic_Laurent_System;
 
 package body test_cyclic_polynomials is
 
@@ -693,6 +699,21 @@ package body test_cyclic_polynomials is
     end if;
   end QuadDobl_Test;
 
+  procedure Laurent_Test ( n : in integer32 ) is
+
+    use Cyclic_Laurent_System;
+
+    sup : constant Arrays_of_Integer_Vector_Lists.Array_of_Lists(1..n-1)
+        := System_Support(natural32(n));
+    p : Laur_Sys(sup'range);
+
+  begin
+    put("The supports of the reformulated cyclic "); put(n,1);
+    put_line("-roots :"); put(sup);
+    p := Cyclic_System(natural32(n));
+    put_line("The Laurent polynomial system :"); put(p);
+  end Laurent_Test;
+
   procedure Main is
 
     n : integer32 := 0;
@@ -700,22 +721,30 @@ package body test_cyclic_polynomials is
 
   begin
     new_line;
-    put_line("Testing evaluation and differentiation of cyclic n system.");
-    new_line;
-    put("Give the dimension : "); get(n);
-    new_line;
-    put_line("MENU to select the precision :");
-    put_line("  0. standard double precision; or");
-    put_line("  1. double double precision; or");
-    put_line("  2. quad double precision.");
-    put("Type 0, 1, or 2 to select the precision : ");
-    Ask_Alternative(ans,"012");
-    case ans is
-      when '0' => Double_Test(n);
-      when '1' => DoblDobl_Test(n);
-      when '2' => QuadDobl_Test(n);
-      when others => null;
-    end case;
+    put("Test cyclic n-roots system, reformulated as Laurent system ? ");
+    put(" (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put("Give the dimension : "); get(n);
+      Laurent_Test(n);
+    else
+      new_line;
+      put_line("Testing evaluation and differentiation of cyclic n system.");
+      new_line;
+      put("Give the dimension : "); get(n);
+      new_line;
+      put_line("MENU to select the precision :");
+      put_line("  0. standard double precision; or");
+      put_line("  1. double double precision; or");
+      put_line("  2. quad double precision.");
+      put("Type 0, 1, or 2 to select the precision : ");
+      Ask_Alternative(ans,"012");
+      case ans is
+        when '0' => Double_Test(n);
+        when '1' => DoblDobl_Test(n);
+        when '2' => QuadDobl_Test(n);
+        when others => null;
+      end case;
+    end if;
   end Main;
 
 end test_cyclic_polynomials;

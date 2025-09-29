@@ -1,3 +1,7 @@
+Sun 28 Sep 2025 : new package cyclic_laurent_system to reformulate the
+  cyclic n-roots system as a Laurent polynomial system, tested in the
+  updated package test_cyclic_polynomials.
+
 Wed 24 Sep 2025 : new package test_cyclic_polynomials, with code refactored
   out of ts_cycfun.  Extended cyclic_roots_system with wrappers.
 

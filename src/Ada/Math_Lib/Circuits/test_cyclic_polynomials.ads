@@ -260,6 +260,12 @@ package Test_Cyclic_Polynomials is
   --   Generates the support for the cyclic n-roots system and
   --   the coefficients in quad double precision.
 
+  procedure Laurent_Test ( n : in integer32 );
+
+   -- DESCRIPTION :
+   --   Generates the supports of the cyclic n-roots system,
+   --   reformulated as a Laurent system.
+
   procedure Main;
 
   -- DESCRIPTION :
