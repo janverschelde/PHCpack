@@ -78,6 +78,7 @@ demics_reltab               : translates reltab
 demics_mvc                  : translates mvc
 demics_main                 : main Ada procedure
 ------------------------------------------------------------------------------
+demics_translated_setup     : setting the stage to use DEMiCs translated
 demics_translated           : interface to the translated DEMiCs
 test_demics_translated      : test package on the translated DEMiCs
 ts_demicstrl                : calls the main test on the translated DEMiCs
