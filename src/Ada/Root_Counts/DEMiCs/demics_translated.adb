@@ -1,11 +1,9 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Random_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
-with Standard_Floating_Vectors;
 with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
 with Standard_Floating_VecVecs;
 with Lists_of_Integer_Vectors;
@@ -31,6 +29,10 @@ package body DEMiCs_Translated is
                 sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
+
+  -- DESCRIPTION :
+  --   Given the supports in sup and type of mixture in mix,
+  --   defines the data. 
 
     mixidx,supidx,size : integer32;
     tmp : Lists_of_Integer_Vectors.List;
@@ -69,16 +71,14 @@ package body DEMiCs_Translated is
     end loop;
   end Make_Supports;
 
-  function Make_Data ( p : Poly_sys; storemix : boolean;
-                       vrblvl : integer32 := 0 ) 
-             return demics_input_data.class_dataSet.dataSet is
+  procedure Make_Data
+              ( res : out demics_input_data.class_dataSet.dataSet;
+                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                storemix : in boolean; vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Returns the data object for input to DEMiCs.
 
-    res : demics_input_data.class_dataSet.dataSet;
-    sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range)
-        := Supports_of_Polynomial_Systems.Create(p);
     mix,prm : Standard_Integer_Vectors.Link_to_Vector;
     nbr : natural32;
     idx : integer32;
@@ -86,18 +86,17 @@ package body DEMiCs_Translated is
   begin
     if vrblvl > 0 then
       put_line("-> in DEMiCs_Translated.make_data ...");
-      put_line("the support sets : "); put(sup);
     end if;
     Mixed_Volume_Computation.Compute_Mixture(sup,mix,prm);
     if storemix
-     then DEMiCs_Output_Cells.Store_Dimension_and_Mixture(p'last,mix);
+     then DEMiCs_Output_Cells.Store_Dimension_and_Mixture(sup'last,mix);
     end if;
     if vrblvl > 0 then
       put("number of different supports : "); put(mix'last,1); new_line;
       put("type of mixture : "); put(mix);
       put(", permutation : "); put(prm); new_line;
     end if;
-    res.dim := p'last;
+    res.dim := sup'last;
     res.supN := mix'last;
     res.supType := new Standard_Integer_Vectors.Vector(0..mix'last-1);
     res.termSet := new Standard_Integer_Vectors.Vector(0..mix'last-1);
@@ -123,23 +122,74 @@ package body DEMiCs_Translated is
      then Standard_Integer_Vectors.Clear(mix);
     end if;
     Standard_Integer_Vectors.Clear(prm);
+  end Make_Data;
+
+  function Make_Data ( p : Poly_sys; storemix : boolean;
+                       vrblvl : integer32 := 0 ) 
+             return demics_input_data.class_dataSet.dataSet is
+
+  -- DESCRIPTION :
+  --   Returns the data object for input to DEMiCs,
+  --   for the polynomial system p.
+
+    res : demics_input_data.class_dataSet.dataSet;
+    sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range)
+        := Supports_of_Polynomial_Systems.Create(p);
+
+  begin
+    if vrblvl > 0 then
+      put_line("-> in DEMiCs_Translated.make_data for polynomials ...");
+      put_line("the support sets : "); put(sup);
+    end if;
+    Make_Data(res,sup,storemix,vrblvl-1);
+    Arrays_of_Integer_Vector_Lists.Deep_Clear(sup);
+    return res;
+  end Make_Data;
+
+  function Make_Data ( p : Laur_sys; storemix : boolean;
+                       vrblvl : integer32 := 0 ) 
+             return demics_input_data.class_dataSet.dataSet is
+
+  -- DESCRIPTION :
+  --   Returns the data object for input to DEMiCs,
+  --   for the Laurent polynomial system p.
+
+    res : demics_input_data.class_dataSet.dataSet;
+    sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range)
+        := Supports_of_Polynomial_Systems.Create(p);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in DEMiCs_Translated.make_data for Laurent polynomials");
+      put_line(" ...");
+      put_line("the support sets : "); put(sup);
+    end if;
+    Make_Data(res,sup,storemix,vrblvl-1);
     Arrays_of_Integer_Vector_Lists.Deep_Clear(sup);
     return res;
   end Make_Data;
 
   procedure Compute_Mixed_Volume
               ( data : in demics_input_data.class_dataSet.dataSet;
-                mixvol : out integer32;
+                mixvol : out integer32; seednbr : in integer32 := 0;
+                stlb : in double_float := 0.0;
+                uselif : in Standard_Floating_Vectors.Link_to_Vector := null;
                 vrblvl : in integer32 := 0 ) is
 
-    use DEMiCs_MVC;
+  -- DESCRIPTION :
+  --   Makes an mvc object and dynamically enumerates the mixed cells.
 
-    seed : constant integer32 := Standard_Random_Numbers.Get_Seed;
+    use DEMiCs_MVC;
+    seed : integer32;
 
   begin
     if vrblvl > 0 then
-      put("-> in DEMiCs_Translated.compute_mixed_volume, the seed : ");
-      put(seed,1); put_line(" ...");
+      put("-> in DEMiCs_Translated.compute_mixed_volume, seednbr : ");
+      put(seednbr,1); put_line(" ...");
+    end if;
+    if seednbr = 0
+     then seed := Standard_Random_Numbers.Get_Seed;
+     else seed := seednbr;
     end if;
     ptr2MVC := new class_mvc.mvc'(class_mvc.new_mvc);
     if vrblvl > 0
@@ -152,17 +202,25 @@ package body DEMiCs_Translated is
 
   procedure Compute_Mixed_Labels
               ( data : in demics_input_data.class_dataSet.dataSet;
-                mixvol : out integer32;
+                mixvol : out integer32; seednbr : in integer32 := 0;
+                stlb : in double_float := 0.0;
+                uselif : in Standard_Floating_Vectors.Link_to_Vector := null;
                 vrblvl : in integer32 := 0 ) is
 
-    use DEMiCs_MVC;
+  -- DESCRIPTION :
+  --   Stores the labels to the mixed cells.
 
-    seed : constant integer32 := Standard_Random_Numbers.Get_Seed;
+    use DEMiCs_MVC;
+    seed : integer32;
 
   begin
     if vrblvl > 0 then
-      put("-> in DEMiCs_Translated.compute_mixed_lables, the seed : ");
-      put(seed,1); put_line(" ...");
+      put("-> in DEMiCs_Translated.compute_mixed_labels, seednbr : ");
+      put(seednbr,1); put_line(" ...");
+    end if;
+    if seednbr = 0
+     then seed := Standard_Random_Numbers.Get_Seed;
+     else seed := seednbr;
     end if;
     ptr2MVC := new class_mvc.mvc'(class_mvc.new_mvc);
     if vrblvl > 0
@@ -269,7 +327,9 @@ package body DEMiCs_Translated is
 -- EXPORTED OPERATIONS :
 
   function Mixed_Volume
-             ( p : Poly_Sys; vrblvl : integer32 := 0 ) return integer32 is
+             ( p : Laur_Sys; seednbr : integer32 := 0;
+               uselif : Standard_Floating_Vectors.Link_to_Vector := null;
+               vrblvl : integer32 := 0 ) return integer32 is
 
     res : integer32 := -1;
     data : DEMiCs_Input_Data.class_dataSet.dataSet;
@@ -285,14 +345,14 @@ package body DEMiCs_Translated is
       put_line("the supports of the DEMiCs input data : ");
       DEMiCs_Input_Data.class_dataSet.info_supports(data);
     end if;
-    Compute_Mixed_Volume(data,res,vrblvl-1);
+    Compute_Mixed_Volume(data,res,seednbr,0.0,uselif,vrblvl-1);
     return res;
-  exception
-    when others => return -1;
   end Mixed_Volume;
 
-  function Mixed_Labels
-             ( p : Poly_Sys; monitor : boolean := true;
+  function Mixed_Volume
+             ( p : Poly_Sys; seednbr : integer32 := 0;
+               stlb : double_float := 0.0;
+               uselif : Standard_Floating_Vectors.Link_to_Vector := null;
                vrblvl : integer32 := 0 ) return integer32 is
 
     res : integer32 := -1;
@@ -300,7 +360,32 @@ package body DEMiCs_Translated is
 
   begin
     if vrblvl > 0
-     then put_line("-> in DEMiCs_Translated.mixed_labels ...");
+     then put_line("-> in DEMiCs_Translated.mixed_volume ...");
+    end if;
+    data := Make_Data(p,false,vrblvl-1);
+    if vrblvl > 0 then
+      put_line("the preamble of the DEMiCs input data : ");
+      DEMiCs_Input_Data.class_dataSet.info_preamble(data);
+      put_line("the supports of the DEMiCs input data : ");
+      DEMiCs_Input_Data.class_dataSet.info_supports(data);
+    end if;
+    Compute_Mixed_Volume(data,res,seednbr,stlb,uselif,vrblvl-1);
+    return res;
+  end Mixed_Volume;
+
+  function Mixed_Labels
+             ( p : Poly_Sys; monitor : boolean := true;
+               seednbr : integer32 := 0; stlb : double_float := 0.0;
+               uselif : Standard_Floating_Vectors.Link_to_Vector := null;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    res : integer32 := -1;
+    data : DEMiCs_Input_Data.class_dataSet.dataSet;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in DEMiCs_Translated.mixed_labels, seednbr : ");
+      put(seednbr,1); put_line(" ...");
     end if;
     data := Make_Data(p,true,vrblvl-1);
     if vrblvl > 0 then
@@ -310,10 +395,34 @@ package body DEMiCs_Translated is
       DEMiCs_Input_Data.class_dataSet.info_supports(data);
     end if;
     DEMiCs_Output_Cells.monitor := monitor;
-    Compute_Mixed_Labels(data,res,vrblvl-1);
+    Compute_Mixed_Labels(data,res,seednbr,stlb,uselif,vrblvl-1);
     return res;
-  exception
-    when others => return -1;
+  end Mixed_Labels;
+
+  function Mixed_Labels
+             ( p : Laur_Sys; monitor : boolean := true;
+               seednbr : integer32 := 0;
+               uselif : Standard_Floating_Vectors.Link_to_Vector := null;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    res : integer32 := -1;
+    data : DEMiCs_Input_Data.class_dataSet.dataSet;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in DEMiCs_Translated.mixed_labels, seednbr : ");
+      put(seednbr,1); put_line(" ...");
+    end if;
+    data := Make_Data(p,true,vrblvl-1);
+    if vrblvl > 0 then
+      put_line("the preamble of the DEMiCs input data : ");
+      DEMiCs_Input_Data.class_dataSet.info_preamble(data);
+      put_line("the supports of the DEMiCs input data : ");
+      DEMiCs_Input_Data.class_dataSet.info_supports(data);
+    end if;
+    DEMiCs_Output_Cells.monitor := monitor;
+    Compute_Mixed_Labels(data,res,seednbr,0.0,uselif,vrblvl-1);
+    return res;
   end Mixed_Labels;
 
   function Mixed_Cells ( vrblvl : integer32 := 0 ) return Mixed_Subdivision is

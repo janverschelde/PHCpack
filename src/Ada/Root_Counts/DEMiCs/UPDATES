@@ -1,3 +1,5 @@
+Sun 29 Sep 2025 : extended demics_translated to work for Laurent systems.
+
 Fri 26 Sep 2025 : extended demics_translated with the cells computation,
   tested in test_demics_translated.adb.
 
