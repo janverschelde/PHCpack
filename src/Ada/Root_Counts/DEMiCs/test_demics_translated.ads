@@ -17,6 +17,12 @@ package Test_DEMiCs_Translated is
   -- DESCRIPTION :
   --   Runs tests on the cyclic n-roots benchmark systems.
 
+  procedure Test_Reformulated_Cyclic ( vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   The reformulated cyclic n-root systems is a Laurent system.
+  --   This test is thus on using Laurent systems as input.
+
   procedure Main;
 
   -- DESCRIPTION :

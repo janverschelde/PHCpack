@@ -1,3 +1,6 @@
+Mon 30 Sep 2025 : extended test_demics_translated with a test on the
+  reformulated cyclic n-roots systems.
+
 Sun 29 Sep 2025 : extended demics_translated to work for Laurent systems.
 
 Fri 26 Sep 2025 : extended demics_translated with the cells computation,
