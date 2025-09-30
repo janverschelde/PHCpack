@@ -1,6 +1,4 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
-with Standard_Floating_Vectors;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
@@ -16,12 +14,12 @@ package DEMiCs_Translated is
 
   function Mixed_Volume
              ( p : Poly_Sys; seednbr : integer32 := 0;
-               stlb : double_float := 0.0;
-               uselif : Standard_Floating_Vectors.Link_to_Vector := null;
+               stablemv : boolean := false;
+               userlifting : boolean := false;
                vrblvl : integer32 := 0 ) return integer32;
   function Mixed_Volume
              ( p : Laur_Sys; seednbr : integer32 := 0;
-               uselif : Standard_Floating_Vectors.Link_to_Vector := null;
+               userlifting : boolean := false;
                vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :
@@ -30,27 +28,25 @@ package DEMiCs_Translated is
   --   If the mixed cells are required, then the functions
   --   Mixed_Labels and Mixed_Cells need to be called.
 
-  -- REQUIRED :
-  --   uselif must be of the correct size and sufficiently generic.
-
   -- ON ENTRY :
   --   p       a system of polynomial equations;
   --   seednbr is the number to seed the random number generator,
   --           if nonzero;
-  --   stlb    stable lifting bound, to compute the stable mixed volume,
-  --           if nonzero;
-  --   uselif  are the lifting values to be used, if not null,
+  --   stablemv flags if the stable mixed volume needs to be computed;
+  --   userlifting indicates that the user will be prompted to provide
+  --           lifting values interactively for each point in the supports,
   --           otherwise the lifting is randomly generated.
 
   function Mixed_Labels
              ( p : Poly_Sys; monitor : boolean := true;
-               seednbr : integer32 := 0; stlb : double_float := 0.0;
-               uselif : Standard_Floating_Vectors.Link_to_Vector := null;
+               seednbr : integer32 := 0;
+               stablemv : boolean := false;
+               userlifting : boolean := false;
                vrblvl : integer32 := 0 ) return integer32;
   function Mixed_Labels
              ( p : Laur_Sys; monitor : boolean := true;
                seednbr : integer32 := 0;
-               uselif : Standard_Floating_Vectors.Link_to_Vector := null;
+               userlifting : boolean := false;
                vrblvl : integer32 := 0 ) return integer32;
 
   -- DESCRIPTION :

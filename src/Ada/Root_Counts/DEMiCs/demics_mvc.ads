@@ -324,10 +324,22 @@ package demics_mvc is
                 ( this : in Link_to_mvc;
                   data : in demics_input_data.class_dataSet.dataSet;
                   seedNum : in integer32; output : in integer32;
+                  lft : in Standard_Floating_Vectors.Link_to_Vector := null;
                   vrblvl : in integer32 := 0 );
 
     -- DESCRIPTION :
-    --   Allocates and initializes the data.
+    --   Allocates and initializes the data, using the dataSet object.
+
+    -- ON ENTRY :
+    --   this     a valid MVC object, made with new_mvc;
+    --   data     input data for DEMiCs;
+    --   seedNum  seed number for the random number generator;
+    --   output   0, if no output is needed,
+    --            1, if output should be written to screen,
+    --            2, if the labels to the mixed cells are wanted;
+    --   lft      user defined lifting, one floating-point number
+    --            for each point in the supports of data;
+    --   vrblvl   is the verbose level.
 
     procedure initFeasTest
                 ( this : in Link_to_mvc; depth : in integer32;

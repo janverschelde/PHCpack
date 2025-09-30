@@ -731,15 +731,21 @@ package demics_simplex is
                   data : in demics_input_data.class_dataSet.dataSet;
                   ori_firIdx : in Standard_Integer_Vectors.Link_to_Vector;
                   seedNum : in integer32; ori_output : in integer32;
+                  lft : in Standard_Floating_Vectors.Link_to_Vector := null;
                   vrblvl : in integer32 := 0 );
 
     -- DESCRIPTION :
     --   Allocates and initializes the simplex record.
-    --   Generates random lifting values, setting the seed to seedNum.
+    --   Generates random lifting values, setting the seed to seedNum,
+    --   if lft = null, otherwise, if lft /= null, then the lifting
+    --   values in lft will be used to lift the points.
     --   If output = 1, then output is written to screen.
     --   If output = 2, then data is stored in demics_output_cells,
     --   which requires the initialization of demics_output_cells
     --   with the dimension and type of mixture.
+
+    -- REQUIRED :
+    --   if lft /= null, then lft'range = 0..this.termSumNum-1.
 
 -- for relation table
 

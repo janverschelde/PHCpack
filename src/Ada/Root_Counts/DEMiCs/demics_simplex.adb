@@ -2172,10 +2172,13 @@ package body demics_simplex is
                   data : demics_input_data.class_dataSet.dataSet;
                   ori_firIdx : in Standard_Integer_Vectors.Link_to_Vector;
                   seedNum : in integer32; ori_output : in integer32;
+                  lft : in Standard_Floating_Vectors.Link_to_Vector := null;
                   vrblvl : in integer32 := 0 ) is
 
       cnt,tmp_nDim,tmp_mDim : integer32;
      -- rand_max : double_float;
+
+      use Standard_Floating_Vectors; -- for the if lft = null test
 
     begin
       if vrblvl > 0
@@ -2232,9 +2235,15 @@ package body demics_simplex is
      --   rand_max := 2.0*rand_max;
      -- end loop;
      -- rand_max := (rand_max - 1.0)*2.0 + 1.0;
-      for i in 0..this.termSumNum-1 loop
-        this.lifting(i) := 10.0*abs(Standard_Random_Numbers.Random);
-      end loop;
+      if lft = null then
+        for i in 0..this.termSumNum-1 loop
+          this.lifting(i) := 10.0*abs(Standard_Random_Numbers.Random);
+        end loop;
+      else
+        for i in 0..this.termSumNum-1 loop
+          this.lifting(i) := lft(i);
+        end loop;
+      end if;
       if this.output = 2 then -- assign the lifting
         declare
           crdsup : Standard_Integer_Vectors.Vector(1..this.SupN);

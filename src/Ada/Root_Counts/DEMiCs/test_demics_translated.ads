@@ -23,6 +23,17 @@ package Test_DEMiCs_Translated is
   --   The reformulated cyclic n-root systems is a Laurent system.
   --   This test is thus on using Laurent systems as input.
 
+  procedure Test_Eigenvalue_Problem
+              ( dim : in integer32; vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Generates a sparse eigenvalue problem of dimension dim.
+
+  procedure Test_User_Lifting ( vrblvl : in integer32 := 0 );
+ 
+  -- DESCRIPTION :
+  --   Tests user defined lifting on a small example.
+
   procedure Main;
 
   -- DESCRIPTION :

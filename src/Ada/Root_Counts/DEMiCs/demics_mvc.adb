@@ -1163,6 +1163,7 @@ package body demics_mvc is
                 ( this : in Link_to_mvc;
                   data : in demics_input_data.class_dataSet.dataSet;
                   seedNum : in integer32; output : in integer32;
+                  lft : in Standard_Floating_Vectors.Link_to_Vector := null;
                   vrblvl : in integer32 := 0 ) is
 
       length : integer32;
@@ -1233,7 +1234,7 @@ package body demics_mvc is
       this.the_Simplex := new demics_simplex.class_simplex.simplex'
                              (demics_simplex.class_simplex.new_simplex);
       demics_simplex.class_simplex.allocateAndIni
-        (this.the_Simplex,data,this.firIdx,seedNum,output,vrblvl-1);
+        (this.the_Simplex,data,this.firIdx,seedNum,output,lft,vrblvl-1);
       this.the_Reltab := new demics_reltab.class_reltab.reltab'
                             (demics_reltab.class_reltab.new_reltab);
       demics_reltab.class_reltab.allocateAndIni

@@ -31,13 +31,13 @@ package DEMiCs_Translated_Setup is
   procedure Make_Data
               ( res : out DEMiCs_Input_Data.class_dataSet.dataSet;
                 sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
-                storemix : in boolean; vrblvl : in integer32 := 0 );
+                mix : out Standard_Integer_Vectors.Link_to_Vector;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
-  --   Returns the data object for input to DEMiCs.
-  --   If storemix, then the dimension and mixture type will be
-  --   stored in the DEMiCs_Output_Cells for processing the labels
-  --   to the cells into a mixed cell configuration.
+  --  Makes the data object for input to DEMiCs,
+  --  given the supports sup, which may be permuted when the type
+  --  of mixture is computed.
 
   function Make_Data ( p : Poly_sys; storemix : boolean;
                        vrblvl : integer32 := 0 ) 
@@ -46,6 +46,9 @@ package DEMiCs_Translated_Setup is
   -- DESCRIPTION :
   --   Returns the data object for input to DEMiCs,
   --   for the polynomial system p.
+  --   If storemix, then the dimension and mixture type will be
+  --   stored in the DEMiCs_Output_Cells for processing the labels
+  --   to the cells into a mixed cell configuration.
 
   function Make_Data ( p : Laur_sys; storemix : boolean;
                        vrblvl : integer32 := 0 ) 
@@ -54,6 +57,9 @@ package DEMiCs_Translated_Setup is
   -- DESCRIPTION :
   --   Returns the data object for input to DEMiCs,
   --   for the Laurent polynomial system p.
+  --   If storemix, then the dimension and mixture type will be
+  --   stored in the DEMiCs_Output_Cells for processing the labels
+  --   to the cells into a mixed cell configuration.
 
   function Extract_Support
              ( dim : integer32;
@@ -81,5 +87,14 @@ package DEMiCs_Translated_Setup is
 
   -- DESCRIPTION :
   --   Extends the supports sup with the lifting in lft.
+
+  function User_Lifting
+             ( mix : Standard_Integer_Vectors.Link_to_Vector;
+               sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
+             return Standard_Floating_Vectors.Link_to_Vector;
+
+  -- DESCRIPTION :
+  --   Prompts the user for a lifting value for each point in sup.
+  --   Returns the lifting values.
 
 end DEMiCs_Translated_Setup;

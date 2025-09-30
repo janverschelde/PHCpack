@@ -1,11 +1,14 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Random_Numbers;
 with Standard_Integer_Vectors;
+with Standard_Floating_Vectors;
 with Lists_of_Integer_Vectors;
 with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Integer_Vector_Lists_io; use Arrays_of_Integer_Vector_Lists_io;
 with Arrays_of_Floating_Vector_Lists;
+with Supports_of_Polynomial_Systems;
 with Floating_Mixed_Subdivisions_io;
 with DEMiCs_Input_Data;
 with DEMiCs_MVC;
@@ -41,8 +44,8 @@ package body DEMiCs_Translated is
     end if;
     ptr2MVC := new class_mvc.mvc'(class_mvc.new_mvc);
     if vrblvl > 0
-     then class_mvc.allocateAndIni(ptr2MVC,data,seed,1,vrblvl);
-     else class_mvc.allocateAndIni(ptr2MVC,data,seed,0);
+     then class_mvc.allocateAndIni(ptr2MVC,data,seed,1,uselif,vrblvl);
+     else class_mvc.allocateAndIni(ptr2MVC,data,seed,0,uselif);
     end if;
     class_mvc.Enum(ptr2MVC,vrblvl);
     mixvol := integer32(ptr2MVC.the_Simplex.mixedvol);
@@ -72,8 +75,8 @@ package body DEMiCs_Translated is
     end if;
     ptr2MVC := new class_mvc.mvc'(class_mvc.new_mvc);
     if vrblvl > 0
-     then class_mvc.allocateAndIni(ptr2MVC,data,seed,2,vrblvl);
-     else class_mvc.allocateAndIni(ptr2MVC,data,seed,2);
+     then class_mvc.allocateAndIni(ptr2MVC,data,seed,2,uselif,vrblvl);
+     else class_mvc.allocateAndIni(ptr2MVC,data,seed,2,uselif);
     end if;
     class_mvc.Enum(ptr2MVC,vrblvl);
     mixvol := integer32(ptr2MVC.the_Simplex.mixedvol);
@@ -83,17 +86,27 @@ package body DEMiCs_Translated is
 
   function Mixed_Volume
              ( p : Laur_Sys; seednbr : integer32 := 0;
-               uselif : Standard_Floating_Vectors.Link_to_Vector := null;
+               userlifting : boolean := false;
                vrblvl : integer32 := 0 ) return integer32 is
 
     res : integer32 := -1;
     data : DEMiCs_Input_Data.class_dataSet.dataSet;
+    sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
+    mix : Standard_Integer_Vectors.Link_to_Vector;
+    uselif : Standard_Floating_Vectors.Link_to_Vector := null;
 
   begin
     if vrblvl > 0
      then put_line("-> in DEMiCs_Translated.mixed_volume ...");
     end if;
-    data := DEMiCs_Translated_Setup.Make_Data(p,false,vrblvl-1);
+    if not userlifting then
+      data := DEMiCs_Translated_Setup.Make_Data(p,false,vrblvl-1);
+    else
+      sup := Supports_of_Polynomial_Systems.Create(p);
+      DEMiCs_Translated_Setup.Make_Data(data,sup,mix,vrblvl-1);
+      DEMiCs_Output_Cells.Store_Dimension_and_Mixture(sup'last,mix);
+      uselif := DEMiCs_Translated_Setup.User_Lifting(mix,sup);
+    end if;
     if vrblvl > 0 then
       put_line("the preamble of the DEMiCs input data : ");
       DEMiCs_Input_Data.class_dataSet.info_preamble(data);
@@ -106,18 +119,29 @@ package body DEMiCs_Translated is
 
   function Mixed_Volume
              ( p : Poly_Sys; seednbr : integer32 := 0;
-               stlb : double_float := 0.0;
-               uselif : Standard_Floating_Vectors.Link_to_Vector := null;
+               stablemv : boolean := false;
+               userlifting : boolean := false;
                vrblvl : integer32 := 0 ) return integer32 is
 
     res : integer32 := -1;
     data : DEMiCs_Input_Data.class_dataSet.dataSet;
+    sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
+    mix : Standard_Integer_Vectors.Link_to_Vector;
+    uselif : Standard_Floating_Vectors.Link_to_Vector := null;
+    stlb : double_float := 0.0;
 
   begin
     if vrblvl > 0
      then put_line("-> in DEMiCs_Translated.mixed_volume ...");
     end if;
-    data := DEMiCs_Translated_Setup.Make_Data(p,false,vrblvl-1);
+    if (not stablemv) and (not userlifting) then
+      data := DEMiCs_Translated_Setup.Make_Data(p,false,vrblvl-1);
+    else
+      sup := Supports_of_Polynomial_Systems.Create(p);
+      DEMiCs_Translated_Setup.Make_Data(data,sup,mix,vrblvl-1);
+      DEMiCs_Output_Cells.Store_Dimension_and_Mixture(sup'last,mix);
+      uselif := DEMiCs_Translated_Setup.User_Lifting(mix,sup);
+    end if;
     if vrblvl > 0 then
       put_line("the preamble of the DEMiCs input data : ");
       DEMiCs_Input_Data.class_dataSet.info_preamble(data);
@@ -130,19 +154,31 @@ package body DEMiCs_Translated is
 
   function Mixed_Labels
              ( p : Poly_Sys; monitor : boolean := true;
-               seednbr : integer32 := 0; stlb : double_float := 0.0;
-               uselif : Standard_Floating_Vectors.Link_to_Vector := null;
+               seednbr : integer32 := 0;
+               stablemv : boolean := false;
+               userlifting : boolean := false;
                vrblvl : integer32 := 0 ) return integer32 is
 
     res : integer32 := -1;
     data : DEMiCs_Input_Data.class_dataSet.dataSet;
+    sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
+    mix : Standard_Integer_Vectors.Link_to_Vector;
+    uselif : Standard_Floating_Vectors.Link_to_Vector := null;
+    stlb : double_float := 0.0;
 
   begin
     if vrblvl > 0 then
       put("-> in DEMiCs_Translated.mixed_labels, seednbr : ");
       put(seednbr,1); put_line(" ...");
     end if;
-    data := DEMiCs_Translated_Setup.Make_Data(p,true,vrblvl-1);
+    if (not stablemv) and (not userlifting) then
+      data := DEMiCs_Translated_Setup.Make_Data(p,true,vrblvl-1);
+    else
+      sup := Supports_of_Polynomial_Systems.Create(p);
+      DEMiCs_Translated_Setup.Make_Data(data,sup,mix,vrblvl-1);
+      DEMiCs_Output_Cells.Store_Dimension_and_Mixture(sup'last,mix);
+      uselif := DEMiCs_Translated_Setup.User_Lifting(mix,sup);
+    end if;
     if vrblvl > 0 then
       put_line("the preamble of the DEMiCs input data : ");
       DEMiCs_Input_Data.class_dataSet.info_preamble(data);
@@ -157,18 +193,28 @@ package body DEMiCs_Translated is
   function Mixed_Labels
              ( p : Laur_Sys; monitor : boolean := true;
                seednbr : integer32 := 0;
-               uselif : Standard_Floating_Vectors.Link_to_Vector := null;
+               userlifting : boolean := false;
                vrblvl : integer32 := 0 ) return integer32 is
 
     res : integer32 := -1;
     data : DEMiCs_Input_Data.class_dataSet.dataSet;
+    sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
+    mix : Standard_Integer_Vectors.Link_to_Vector;
+    uselif : Standard_Floating_Vectors.Link_to_Vector := null;
 
   begin
     if vrblvl > 0 then
       put("-> in DEMiCs_Translated.mixed_labels, seednbr : ");
       put(seednbr,1); put_line(" ...");
     end if;
-    data := DEMiCs_Translated_Setup.Make_Data(p,true,vrblvl-1);
+    if not userlifting then
+      data := DEMiCs_Translated_Setup.Make_Data(p,true,vrblvl-1);
+    else
+      sup := Supports_of_Polynomial_Systems.Create(p);
+      DEMiCs_Translated_Setup.Make_Data(data,sup,mix,vrblvl-1);
+      DEMiCs_Output_Cells.Store_Dimension_and_Mixture(sup'last,mix);
+      uselif := DEMiCs_Translated_Setup.User_Lifting(mix,sup);
+    end if;
     if vrblvl > 0 then
       put_line("the preamble of the DEMiCs input data : ");
       DEMiCs_Input_Data.class_dataSet.info_preamble(data);

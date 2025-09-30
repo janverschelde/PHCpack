@@ -2,6 +2,7 @@ with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
 with Standard_Floating_VecVecs;
@@ -60,12 +61,13 @@ package body DEMiCs_Translated_Setup is
   procedure Make_Data
               ( res : out DEMiCs_Input_Data.class_dataSet.dataSet;
                 sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
-                storemix : in boolean; vrblvl : in integer32 := 0 ) is
+                mix : out Standard_Integer_Vectors.Link_to_Vector;
+                vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Returns the data object for input to DEMiCs.
 
-    mix,prm : Standard_Integer_Vectors.Link_to_Vector;
+    prm : Standard_Integer_Vectors.Link_to_Vector;
     nbr : natural32;
     idx : integer32;
 
@@ -74,9 +76,6 @@ package body DEMiCs_Translated_Setup is
       put_line("-> in DEMiCs_Translated_Setup.make_data ...");
     end if;
     Mixed_Volume_Computation.Compute_Mixture(sup,mix,prm);
-    if storemix
-     then DEMiCs_Output_Cells.Store_Dimension_and_Mixture(sup'last,mix);
-    end if;
     if vrblvl > 0 then
       put("number of different supports : "); put(mix'last,1); new_line;
       put("type of mixture : "); put(mix);
@@ -104,9 +103,6 @@ package body DEMiCs_Translated_Setup is
       end if;
     end loop;
     Make_Supports(res,sup,mix,vrblvl-1);
-    if not storemix
-     then Standard_Integer_Vectors.Clear(mix);
-    end if;
     Standard_Integer_Vectors.Clear(prm);
   end Make_Data;
 
@@ -117,13 +113,17 @@ package body DEMiCs_Translated_Setup is
     res : DEMiCs_Input_Data.class_dataSet.dataSet;
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range)
         := Supports_of_Polynomial_Systems.Create(p);
+    mix : Standard_Integer_Vectors.Link_to_Vector;
 
   begin
     if vrblvl > 0 then
       put_line("-> in DEMiCs_Translated_Setup.make_data for polynomials ...");
       put_line("the support sets : "); put(sup);
     end if;
-    Make_Data(res,sup,storemix,vrblvl-1);
+    Make_Data(res,sup,mix,vrblvl-1);
+    if storemix
+     then DEMiCs_Output_Cells.Store_Dimension_and_Mixture(sup'last,mix);
+    end if;
     Arrays_of_Integer_Vector_Lists.Deep_Clear(sup);
     return res;
   end Make_Data;
@@ -135,6 +135,7 @@ package body DEMiCs_Translated_Setup is
     res : DEMiCs_Input_Data.class_dataSet.dataSet;
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range)
         := Supports_of_Polynomial_Systems.Create(p);
+    mix : Standard_Integer_Vectors.Link_to_Vector;
 
   begin
     if vrblvl > 0 then
@@ -142,7 +143,10 @@ package body DEMiCs_Translated_Setup is
       put_line(" ...");
       put_line("the support sets : "); put(sup);
     end if;
-    Make_Data(res,sup,storemix,vrblvl-1);
+    Make_Data(res,sup,mix,vrblvl-1);
+    if storemix
+     then DEMiCs_Output_Cells.Store_Dimension_and_Mixture(sup'last,mix);
+    end if;
     Arrays_of_Integer_Vector_Lists.Deep_Clear(sup);
     return res;
   end Make_Data;
@@ -234,5 +238,40 @@ package body DEMiCs_Translated_Setup is
     end loop;
     return res;
   end Apply_Lifting;
+
+  function User_Lifting
+             ( mix : Standard_Integer_Vectors.Link_to_Vector;
+               sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
+             return Standard_Floating_Vectors.Link_to_Vector is
+
+    res : Standard_Floating_Vectors.Link_to_Vector;
+    supidx : integer32 := 1;
+    len : integer32 := 0;
+    lftidx : integer32 := 0;
+
+  begin
+    for i in sup'range loop
+      len := len + integer32(Lists_of_Integer_Vectors.Length_Of(sup(supidx)));
+      supidx := supidx + mix(i);
+    end loop;
+    res := new Standard_Floating_Vectors.Vector(0..len-1);
+    supidx := 1;
+    for i in sup'range loop
+      len := integer32(Lists_of_Integer_Vectors.Length_Of(sup(supidx)));
+      declare
+        tmp : Lists_of_Integer_Vectors.List := sup(supidx);
+        lpt : Standard_Integer_Vectors.Link_to_Vector;
+      begin
+        for j in 1..len loop
+          lpt := Lists_of_Integer_Vectors.Head_of(tmp);
+          put("-> lift"); put(lpt); put(" : "); get(res(lftidx));
+          tmp := Lists_of_Integer_Vectors.Tail_Of(tmp);
+          lftidx := lftidx + 1;
+        end loop;
+      end;
+      supidx := supidx + mix(i);
+    end loop;
+    return res;
+  end User_Lifting;
 
 end DEMiCs_Translated_Setup;
