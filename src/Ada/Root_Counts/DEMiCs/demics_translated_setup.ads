@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
@@ -96,5 +97,53 @@ package DEMiCs_Translated_Setup is
   -- DESCRIPTION :
   --   Prompts the user for a lifting value for each point in sup.
   --   Returns the lifting values.
+
+  function Random_Lifting
+             ( mix : Standard_Integer_Vectors.Link_to_Vector;
+               sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+               stlb : double_float;
+               added : Standard_Integer_Vectors.Vector )
+             return Standard_Floating_Vectors.Link_to_Vector;
+
+  -- DESCRIPTION :
+  --   Returns random lifting values for each of the support sets,
+  --   assigning the stable lifting bound to the artifial origins,
+  --   added to compute the stable mixed volume.
+
+  -- ON ENTRY :
+  --   mix     type of mixture;
+  --   sup     supports of a polynomial system;
+  --   stlb    stable lifting bound, for the stable mixed volume;
+  --   added   if added(k), then the artificial origin has been
+  --           added to the k-th support set, as returned by the
+  --           procedure Add_Artificial_Origins.
+
+  procedure Add_Artificial_Origin
+              ( dim : in integer32;
+                sup : in out Lists_of_Integer_Vectors.List;
+                added : out boolean );
+
+  -- DESCRIPTION :
+  --   If the origin does not belong to the list of points sup,
+  --   then the origin is appended to sup and added is true on return.
+  --   The dimension dim on entry equals the dimension of the points.
+
+  procedure Add_Artificial_Origins
+              ( dim : in integer32;
+                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                nbadd : out integer32;
+                added : out Standard_Integer_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Add artificial origins to the supports for the stable mixed volume.
+
+  -- ON ENTRY :
+  --   dim      dimension of the points in the supports;
+  --   sup      supports of a polynomial system.
+
+  -- ON RETURN :
+  --   nbadd    number of artificial origins added;
+  --   added    vector of sup'range to indicate where the artificial origins
+  --            are in sup: sup(k) = 1 then added to k-th support, 0 if not.
 
 end DEMiCs_Translated_Setup;

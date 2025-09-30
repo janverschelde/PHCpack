@@ -1,8 +1,8 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
+with Standard_Random_Numbers;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
 with Standard_Floating_VecVecs;
@@ -245,8 +245,8 @@ package body DEMiCs_Translated_Setup is
              return Standard_Floating_Vectors.Link_to_Vector is
 
     res : Standard_Floating_Vectors.Link_to_Vector;
-    supidx : integer32 := 1;
     len : integer32 := 0;
+    supidx : integer32 := 1;
     lftidx : integer32 := 0;
 
   begin
@@ -273,5 +273,92 @@ package body DEMiCs_Translated_Setup is
     end loop;
     return res;
   end User_Lifting;
+
+  function Random_Lifting
+             ( mix : Standard_Integer_Vectors.Link_to_Vector;
+               sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+               stlb : double_float;
+               added : Standard_Integer_Vectors.Vector )
+             return Standard_Floating_Vectors.Link_to_Vector is
+
+    res : Standard_Floating_Vectors.Link_to_Vector;
+    len : integer32 := 0;
+    supidx : integer32 := 1;
+    lftidx : integer32 := 0;
+
+  begin
+    for i in sup'range loop
+      len := len + integer32(Lists_of_Integer_Vectors.Length_Of(sup(supidx)));
+      supidx := supidx + mix(i);
+    end loop;
+    res := new Standard_Floating_Vectors.Vector(0..len-1);
+    supidx := 1;
+    for i in sup'range loop
+      len := integer32(Lists_of_Integer_Vectors.Length_Of(sup(supidx)));
+      for j in 1..len loop
+        res(lftidx) := abs(Standard_Random_Numbers.Random);
+        lftidx := lftidx + 1;
+      end loop;
+      if added(supidx) = 1          -- artificial origin is the last point
+       then res(lftidx-1) := stlb;  -- and receives the lifting stlb
+      end if;
+      supidx := supidx + mix(i);
+    end loop;
+    return res;
+  end Random_Lifting;
+
+  procedure Add_Artificial_Origin
+              ( dim : in integer32;
+                sup : in out Lists_of_Integer_Vectors.List;
+                added : out boolean ) is
+
+    tmp : Lists_of_Integer_Vectors.List := sup;
+    last : Lists_of_Integer_Vectors.List;
+    lpt : Standard_Integer_Vectors.Link_to_Vector;
+    found : boolean := false;
+    origin : constant Standard_Integer_Vectors.Vector(1..dim)
+           := (1..dim => 0);
+
+  begin
+    while not Lists_of_Integer_Vectors.Is_Null(tmp) loop
+      lpt := Lists_of_Integer_Vectors.Head_Of(tmp);
+      found := false;
+      for k in lpt'range loop
+        if lpt(k) /= 0
+         then found := false; exit;
+        end if;
+      end loop;
+      exit when found;
+      last := tmp;
+      tmp := Lists_of_Integer_Vectors.Tail_Of(tmp);
+    end loop;
+    if found then
+      added := false;
+    else
+      Lists_of_Integer_Vectors.Append(sup,last,origin);
+      added := true;
+    end if;
+  end Add_Artificial_Origin;
+
+  procedure Add_Artificial_Origins
+              ( dim : in integer32;
+                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                nbadd : out integer32;
+                added : out Standard_Integer_Vectors.Vector ) is
+
+    origin_added : boolean;
+
+  begin
+    nbadd := 0;
+    for k in sup'range loop
+      Add_Artificial_Origin(dim,sup(k),origin_added);
+      if origin_added then
+        nbadd := nbadd + 1;
+        added(k) := 1;
+      else
+        added(k) := 0;
+      end if;
+    end loop;
+  end Add_Artificial_Origins;
 
 end DEMiCs_Translated_Setup;

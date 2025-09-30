@@ -18,6 +18,7 @@ package DEMiCs_Output_Cells is
   mixed_volume : integer32;    -- use -1 to indicate an error occurred
   monitor : boolean := false;  -- write cell indices with every add
   stable : boolean := false;   -- if stable mixed volume wanted
+  stlb : double_float := 0.0;  -- stable lifting bound if stable
   done : boolean := false;     -- have all cell indices been computed?
   allocate : boolean := false; -- allocate memory for the mixed cells?
 
