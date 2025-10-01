@@ -11,6 +11,7 @@ with Arrays_of_Floating_Vector_Lists;
 with Supports_of_Polynomial_Systems;
 with Floating_Lifting_Functions;
 with Floating_Mixed_Subdivisions_io;
+with Mixed_Volume_Computation;
 with DEMiCs_Input_Data;
 with DEMiCs_MVC;
 with DEMiCs_Output_Cells;
@@ -91,7 +92,7 @@ package body DEMiCs_Translated is
     res : integer32 := -1;
     data : DEMiCs_Input_Data.class_dataSet.dataSet;
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
-    mix : Standard_Integer_Vectors.Link_to_Vector;
+    mix,prm : Standard_Integer_Vectors.Link_to_Vector;
     uselif : Standard_Floating_Vectors.Link_to_Vector := null;
 
   begin
@@ -102,6 +103,7 @@ package body DEMiCs_Translated is
       data := DEMiCs_Translated_Setup.Make_Data(p,false,vrblvl-1);
     else
       sup := Supports_of_Polynomial_Systems.Create(p);
+      Mixed_Volume_Computation.Compute_Mixture(sup,mix,prm);
       DEMiCs_Translated_Setup.Make_Data(data,sup,mix,vrblvl-1);
       DEMiCs_Output_Cells.Store_Dimension_and_Mixture(sup'last,mix);
       uselif := DEMiCs_Translated_Setup.User_Lifting(mix,sup);
@@ -125,7 +127,7 @@ package body DEMiCs_Translated is
     res : integer32 := -1;
     data : DEMiCs_Input_Data.class_dataSet.dataSet;
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
-    mix : Standard_Integer_Vectors.Link_to_Vector;
+    mix,prm : Standard_Integer_Vectors.Link_to_Vector;
     uselif : Standard_Floating_Vectors.Link_to_Vector := null;
     stlb : double_float := 0.0;
     dim : constant integer32 := sup'last;
@@ -140,7 +142,7 @@ package body DEMiCs_Translated is
       data := DEMiCs_Translated_Setup.Make_Data(p,false,vrblvl-1);
     else
       sup := Supports_of_Polynomial_Systems.Create(p);
-      DEMiCs_Translated_Setup.Make_Data(data,sup,mix,vrblvl-1);
+      Mixed_Volume_Computation.Compute_Mixture(sup,mix,prm);
       DEMiCs_Output_Cells.Store_Dimension_and_Mixture(sup'last,mix);
       if userlifting then
         uselif := DEMiCs_Translated_Setup.User_Lifting(mix,sup);
@@ -151,6 +153,7 @@ package body DEMiCs_Translated is
         DEMiCs_Output_Cells.stable := true;
         DEMiCs_Output_Cells.stlb := stlb;
       end if;
+      DEMiCs_Translated_Setup.Make_Data(data,sup,mix,vrblvl-1);
     end if;
     if vrblvl > 0 then
       put_line("the preamble of the DEMiCs input data : ");
@@ -172,7 +175,7 @@ package body DEMiCs_Translated is
     res : integer32 := -1;
     data : DEMiCs_Input_Data.class_dataSet.dataSet;
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
-    mix : Standard_Integer_Vectors.Link_to_Vector;
+    mix,prm : Standard_Integer_Vectors.Link_to_Vector;
     uselif : Standard_Floating_Vectors.Link_to_Vector := null;
     stlb : double_float := 0.0;
     dim : constant integer32 := sup'last;
@@ -188,7 +191,7 @@ package body DEMiCs_Translated is
       data := DEMiCs_Translated_Setup.Make_Data(p,true,vrblvl-1);
     else
       sup := Supports_of_Polynomial_Systems.Create(p);
-      DEMiCs_Translated_Setup.Make_Data(data,sup,mix,vrblvl-1);
+      Mixed_Volume_Computation.Compute_Mixture(sup,mix,prm);
       DEMiCs_Output_Cells.Store_Dimension_and_Mixture(sup'last,mix);
       if userlifting then
         uselif := DEMiCs_Translated_Setup.User_Lifting(mix,sup);
@@ -199,6 +202,7 @@ package body DEMiCs_Translated is
         DEMiCs_Output_Cells.stable := true;
         DEMiCs_Output_Cells.stlb := stlb;
       end if;
+      DEMiCs_Translated_Setup.Make_Data(data,sup,mix,vrblvl-1);
     end if;
     if vrblvl > 0 then
       put_line("the preamble of the DEMiCs input data : ");
@@ -220,7 +224,7 @@ package body DEMiCs_Translated is
     res : integer32 := -1;
     data : DEMiCs_Input_Data.class_dataSet.dataSet;
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
-    mix : Standard_Integer_Vectors.Link_to_Vector;
+    mix,prm : Standard_Integer_Vectors.Link_to_Vector;
     uselif : Standard_Floating_Vectors.Link_to_Vector := null;
 
   begin
@@ -232,6 +236,7 @@ package body DEMiCs_Translated is
       data := DEMiCs_Translated_Setup.Make_Data(p,true,vrblvl-1);
     else
       sup := Supports_of_Polynomial_Systems.Create(p);
+      Mixed_Volume_Computation.Compute_Mixture(sup,mix,prm);
       DEMiCs_Translated_Setup.Make_Data(data,sup,mix,vrblvl-1);
       DEMiCs_Output_Cells.Store_Dimension_and_Mixture(sup'last,mix);
       uselif := DEMiCs_Translated_Setup.User_Lifting(mix,sup);

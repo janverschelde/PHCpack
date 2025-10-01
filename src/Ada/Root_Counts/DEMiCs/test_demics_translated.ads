@@ -34,6 +34,11 @@ package Test_DEMiCs_Translated is
   -- DESCRIPTION :
   --   Tests user defined lifting on a small example.
 
+  procedure Test_Stable_Mixed_Volume ( vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Tests the stable mixed volume computation.
+
   procedure Main;
 
   -- DESCRIPTION :

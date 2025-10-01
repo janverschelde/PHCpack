@@ -1,6 +1,7 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Communications_with_User;          use Communications_with_User;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
@@ -16,6 +17,7 @@ with Cyclic_Roots_System;
 with Cyclic_Laurent_System;
 with Floating_Mixed_Subdivisions;       use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;
+with Drivers_for_Static_Lifting;
 with DEMiCs_Translated;
 with DEMiCs_Output_Cells;
 
@@ -275,6 +277,86 @@ package body Test_DEMiCs_Translated is
     end if;
   end Test_User_Lifting;
 
+  function Stable_Test_Polynomial
+             ( dim,idx : integer32 )
+             return Standard_Complex_Polynomials.Poly is
+
+  -- DESCRIPTION :
+  --   A polynomial with index idx in dim variable to test the
+  --   stable mixed volumes is x(idx)*x(idx+1)^2 + x(idx+2)^2,
+  --   where the addition of the index wraps around dim.
+
+    use Standard_Complex_Polynomials;
+
+    res : Poly := Null_Poly;
+    trm : Term;
+    ldg : Standard_Natural_Vectors.Link_to_Vector
+        := new Standard_Natural_Vectors.Vector(1..dim);
+
+  begin
+    trm.cf := create(1.0);
+    trm.dg := degrees(ldg);
+    trm.dg(idx) := 1;
+    if idx+1 > dim
+     then trm.dg(1) := 2;
+     else trm.dg(idx+1) := 2;
+    end if;
+    res := Create(trm);
+    trm.dg(idx) := 0;
+    if idx+1 > dim
+     then trm.dg(1) := 0;
+     else trm.dg(idx+1) := 0;
+    end if;
+    if idx+2 > dim
+     then trm.dg(idx+2-dim) := 2;
+     else trm.dg(idx+2) := 2;
+    end if;
+    Add(res,trm);
+    Standard_Natural_Vectors.Clear(ldg);
+    return res;
+  end Stable_Test_Polynomial;
+
+  function Stable_Test_System
+             ( dim : integer32 )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
+
+  -- DESCRIPTION :
+  --   Returns a system of dimension dim to test stable mixed volumes.
+
+    res : Standard_Complex_Poly_Systems.Poly_Sys(1..dim);
+
+  begin
+    for i in 1..dim loop
+      res(i) := Stable_Test_Polynomial(dim,i);
+    end loop;
+    return res;
+  end Stable_Test_System;
+
+  procedure Test_Stable_Mixed_Volume ( vrblvl : in integer32 := 0 ) is
+
+    p : constant Standard_Complex_Poly_Systems.Poly_Sys(1..4)
+      := Stable_Test_System(4);
+    mv : integer32;
+    nmv,smv,tmv : natural32;
+    mcc,orgmcc,stbmcc : Mixed_Subdivision;
+    orgcnt,stbcnt : natural32;
+    mix : Standard_Integer_Vectors.Link_to_Vector;
+    stlb : double_float;
+
+  begin
+    new_line;
+    put_line("-> the test system : "); put(p);
+    mv := DEMiCs_Translated.Mixed_Labels(p,true,0,true,false,vrblvl);
+    put("total mixed volume : "); put(mv,1); new_line;
+    mcc := DEMiCs_Translated.Mixed_Cells(vrblvl);
+    mix := DEMiCs_Output_Cells.Get_Mixture;
+    Floating_Mixed_Subdivisions_io.put(4,mix.all,mcc);
+    stlb := DEMiCs_Output_Cells.stlb;
+    Drivers_for_Static_Lifting.Floating_Volume_Computation
+      (standard_output,p'last,stlb,mix.all,mcc,nmv,smv,tmv);
+    put("mixed volume : "); put(nmv,1); new_line;
+  end Test_Stable_Mixed_Volume;
+
   procedure Main is
 
     vrblvl : integer32 := 99; -- default verbose level
@@ -296,8 +378,9 @@ package body Test_DEMiCs_Translated is
     put_line("  3. convert labels into mixed cells");
     put_line("  4. test on the reformulated cyclic n-roots systems");
     put_line("  5. test user defined lifting");
-    put("Type 0, 1, 2, 3, 4, or 5 to select a test : ");
-    Ask_Alternative(ans,"012345");
+    put_line("  6. compute a stable mixed volume");
+    put("Type 0, 1, 2, 3, 4, 5, or 6 to select a test : ");
+    Ask_Alternative(ans,"0123456");
     case ans is
       when '0' => Test_Eigenvalue_Problem(5,vrblvl);
       when '1' => Test_Cyclic_Roots(vrblvl);
@@ -305,6 +388,7 @@ package body Test_DEMiCs_Translated is
       when '3' => Test_Cells(5,vrblvl);
       when '4' => Test_Reformulated_Cyclic(vrblvl);
       when '5' => Test_User_Lifting(vrblvl);
+      when '6' => Test_Stable_Mixed_Volume(vrblvl);
       when others => null;
     end case;
   end Main;

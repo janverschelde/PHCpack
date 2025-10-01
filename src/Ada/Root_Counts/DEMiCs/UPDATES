@@ -3,6 +3,8 @@ Tue 30 Sep 2025 : extended demics_mvc, demics_simplex, demics_translated,
   with added tests in test_demics_translated.
   For stable mixed volumes, extended demics_translated_setup,
   demics_output_cells.ads, and demics_translated.adb.
+  Added test on stable mixed volumes in test_demics_translated,
+  fixed bugs, adjusting demics_translated_setup and demics_translated.adb.
 
 Mon 29 Sep 2025 : extended test_demics_translated with a test on the
   reformulated cyclic n-roots systems.  New demics_translated_setup package,

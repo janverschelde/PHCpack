@@ -60,8 +60,8 @@ package body DEMiCs_Translated_Setup is
 
   procedure Make_Data
               ( res : out DEMiCs_Input_Data.class_dataSet.dataSet;
-                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
-                mix : out Standard_Integer_Vectors.Link_to_Vector;
+                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
@@ -75,7 +75,6 @@ package body DEMiCs_Translated_Setup is
     if vrblvl > 0 then
       put_line("-> in DEMiCs_Translated_Setup.make_data ...");
     end if;
-    Mixed_Volume_Computation.Compute_Mixture(sup,mix,prm);
     if vrblvl > 0 then
       put("number of different supports : "); put(mix'last,1); new_line;
       put("type of mixture : "); put(mix);
@@ -113,18 +112,20 @@ package body DEMiCs_Translated_Setup is
     res : DEMiCs_Input_Data.class_dataSet.dataSet;
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range)
         := Supports_of_Polynomial_Systems.Create(p);
-    mix : Standard_Integer_Vectors.Link_to_Vector;
+    mix,prm : Standard_Integer_Vectors.Link_to_Vector;
 
   begin
     if vrblvl > 0 then
       put_line("-> in DEMiCs_Translated_Setup.make_data for polynomials ...");
       put_line("the support sets : "); put(sup);
     end if;
+    Mixed_Volume_Computation.Compute_Mixture(sup,mix,prm);
     Make_Data(res,sup,mix,vrblvl-1);
     if storemix
      then DEMiCs_Output_Cells.Store_Dimension_and_Mixture(sup'last,mix);
     end if;
     Arrays_of_Integer_Vector_Lists.Deep_Clear(sup);
+    Standard_Integer_Vectors.Clear(prm);
     return res;
   end Make_Data;
 
@@ -135,7 +136,7 @@ package body DEMiCs_Translated_Setup is
     res : DEMiCs_Input_Data.class_dataSet.dataSet;
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range)
         := Supports_of_Polynomial_Systems.Create(p);
-    mix : Standard_Integer_Vectors.Link_to_Vector;
+    mix,prm : Standard_Integer_Vectors.Link_to_Vector;
 
   begin
     if vrblvl > 0 then
@@ -143,11 +144,13 @@ package body DEMiCs_Translated_Setup is
       put_line(" ...");
       put_line("the support sets : "); put(sup);
     end if;
+    Mixed_Volume_Computation.Compute_Mixture(sup,mix,prm);
     Make_Data(res,sup,mix,vrblvl-1);
     if storemix
      then DEMiCs_Output_Cells.Store_Dimension_and_Mixture(sup'last,mix);
     end if;
     Arrays_of_Integer_Vector_Lists.Deep_Clear(sup);
+    Standard_Integer_Vectors.Clear(prm);
     return res;
   end Make_Data;
 

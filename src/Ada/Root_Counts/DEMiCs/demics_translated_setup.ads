@@ -31,8 +31,8 @@ package DEMiCs_Translated_Setup is
 
   procedure Make_Data
               ( res : out DEMiCs_Input_Data.class_dataSet.dataSet;
-                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
-                mix : out Standard_Integer_Vectors.Link_to_Vector;
+                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
