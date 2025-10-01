@@ -31,12 +31,12 @@ On windows, type "gprbuild tasking.gpr -Xos=windows"
 at the PowerShell prompt.
 The "gprclean tasking.gpr" removes all files created by gprbuild.
 
+In version 2.4.91, the C files to count the cores were removed.
+
 -------------------------------------------------------------------------------
 file name                         : short description
 -------------------------------------------------------------------------------
-corecount.c                       : to get the number of cores
-corecountwindows.c                : version of corecount for Windows
-number_of_cores                   : wraps the C function in corecount
+number_of_cores                   : returns number of available cores
 ts_corecount                      : prints the number of cores
 -------------------------------------------------------------------------------
 multitasking                      : exports generic task creation

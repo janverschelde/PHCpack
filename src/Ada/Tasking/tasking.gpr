@@ -29,10 +29,6 @@ project tasking is
                  "../CtoPHC/Types", "../CtoPHC/Structures",
                  "../CtoPHC/State", "../Main");
             for Languages use ("Ada", "C", "C++");
-            for Excluded_Source_Files use
-                (
-                    "corecount.c", "corecountwindows.c"
-                );
         when "windows" =>
             for Source_Dirs use
             (
@@ -58,10 +54,6 @@ project tasking is
                 "../Schubert/Induction",
                 "../CtoPHC/Types", "../CtoPHC/Structures",
                 "../CtoPHC/State", "../Main"
-            );
-            for Excluded_Source_Files use
-            (
-                "corecount.c"
             );
             for Languages use ("Ada", "C", "C++");
     end case;

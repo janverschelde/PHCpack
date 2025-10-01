@@ -1,3 +1,9 @@
+Wed 1 Oct 2025 : removed the C files to count the cores, corecount.c
+  and corecountwindows.c, from this folder.
+  In tasking.gpr, removed the "Excluded_Source_Files" section.
+  In number_of_cores.adb, removed the comments that used the C code
+  to return the number of available cores.
+
 Sat 31 May 2025 : added identifcation, generic_task_array,
   multitasked_geometric_products, and ts_mtgeoprod.
 
