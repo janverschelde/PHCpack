@@ -26,7 +26,7 @@ procedure demics_main is
      then put("the seed : "); put(seed,1); new_line;
     end if;
     cputstart := Ada.Execution_Time.Clock;
-    class_mvc.allocateAndIni(ptr2MVC,data,seed,1,vrblvl);
+    class_mvc.allocateAndIni(ptr2MVC,data,seed,1,null,vrblvl);
     class_mvc.Enum(ptr2MVC,vrblvl);
     cputstop := Ada.Execution_Time.Clock;
     class_mvc.info_cpuTime(cputstart,cputstop);
