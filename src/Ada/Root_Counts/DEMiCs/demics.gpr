@@ -35,7 +35,6 @@ project demics is
             for Languages use ("Ada", "C", "C++");
             for Excluded_Source_Files use
             (
-                "corecount.c", "corecountwindows.c",
                 "ts_diahom.adb", "ts_elim.adb",
                 "ts_itrack.adb", "ts_ilocal.adb",
                 "ts_inewt.adb",
@@ -72,7 +71,6 @@ project demics is
             );
             for Excluded_Source_Files use
             (
-                "corecount.c",
                 "ts_diahom.adb", "ts_elim.adb",
                 "ts_itrack.adb", "ts_ilocal.adb",
                 "ts_inewt.adb",
