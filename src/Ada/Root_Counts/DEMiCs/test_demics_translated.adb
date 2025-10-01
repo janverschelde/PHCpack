@@ -338,8 +338,9 @@ package body Test_DEMiCs_Translated is
       := Stable_Test_System(4);
     mv : integer32;
     nmv,smv,tmv : natural32;
-    mcc,orgmcc,stbmcc : Mixed_Subdivision;
-    orgcnt,stbcnt : natural32;
+    mcc : Mixed_Subdivision;
+   -- orgmcc,stbmcc : Mixed_Subdivision; -- for use in split cells
+   -- orgcnt,stbcnt : natural32;
     mix : Standard_Integer_Vectors.Link_to_Vector;
     stlb : double_float;
 

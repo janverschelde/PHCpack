@@ -1,3 +1,5 @@
+Wed 1 Oct 2025 : modified test_demics_translated.adb for compiler warning.
+
 Tue 30 Sep 2025 : extended demics_mvc, demics_simplex, demics_translated,
   and demics_translated_setup to allow for user defined lifting,
   with added tests in test_demics_translated.
