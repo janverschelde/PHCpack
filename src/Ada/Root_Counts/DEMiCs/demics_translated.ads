@@ -1,6 +1,9 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Vectors;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
+with Arrays_of_Integer_Vector_Lists;
+with Arrays_of_Floating_Vector_Lists;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 
 package DEMiCs_Translated is
@@ -64,6 +67,44 @@ package DEMiCs_Translated is
 
   -- REQUIRED :
   --   Mixed_Labels has been executed successfully.
+
+-- INTERFACE :
+--   The procedures below have the same specifications as the
+--   original interface to DEMiCs.
+
+  procedure Call_DEMiCs
+              ( mix : in Standard_Integer_Vectors.Link_to_Vector;
+                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Calls DEMiCs on the given supports, of type of mixture mix.
+
+  procedure Process_Output
+              ( dim : in integer32;
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                lif : out Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                mcc : out Mixed_Subdivision; vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Converts the output of DEMiCs to lifted supports
+  --   and a mixed cell configuration.
+
+  -- REQUIRED :
+  --   Mixed_Labels has been executed successfully.
+
+  -- ON ENTRY :
+  --   dim      dimension of the points before lifting;
+  --   mix      type of mixture;
+  --   sup      supports of a polynomial system;
+  --   verbose  flag to indicate if extra output is wanted.
+
+  -- ON RETURN :
+  --   lif      lifted support sets;
+  --   mcc      a regular mixed-cell configuration.
+
+-- DESTRUCTOR :
 
   procedure Clear ( vrblvl : in integer32 := 0 );
 

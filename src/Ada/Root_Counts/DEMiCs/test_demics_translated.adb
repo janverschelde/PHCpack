@@ -8,15 +8,21 @@ with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
+with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
+with Arrays_of_Integer_Vector_Lists;
+with Arrays_of_Integer_Vector_Lists_io; use Arrays_of_Integer_Vector_Lists_io;
+with Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
+with Supports_of_Polynomial_Systems;
 with Cyclic_Roots_System;
 with Cyclic_Laurent_System;
 with Floating_Mixed_Subdivisions;       use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;
+with Mixed_Volume_Computation;
 with Drivers_for_Static_Lifting;
 with DEMiCs_Translated;
 with DEMiCs_Output_Cells;
@@ -358,6 +364,59 @@ package body Test_DEMiCs_Translated is
     put("mixed volume : "); put(nmv,1); new_line;
   end Test_Stable_Mixed_Volume;
 
+  procedure Test_Call_DEMiCs ( vrblvl : in integer32 := 0 ) is
+
+    c3 : constant Standard_Complex_Poly_Systems.Poly_Sys(1..3)
+       := Cyclic_Roots_System.Double_Cyclic_System(3);
+    mix,prm : Standard_Integer_Vectors.Link_to_Vector;
+    sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(c3'range)
+        := Supports_of_Polynomial_Systems.create(c3);
+    lif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(c3'range);
+    mv : integer32;
+    mcc : Mixed_Subdivision;
+
+  begin
+    new_line;
+    put_line("-> testing call_DEMiCs on cyclic 3-roots ...");
+    Mixed_Volume_Computation.Compute_Mixture(sup,mix,prm);
+    DEMiCs_Translated.call_DEMiCs(mix,sup,vrblvl);
+    DEMiCs_Translated.Process_Output(3,mix,sup,lif,mcc,vrblvl-1);
+    Floating_Mixed_Subdivisions_io.put(3,mix.all,mcc);
+    mv := DEMiCs_Output_Cells.mixed_volume;
+    put("The mixed volume : "); put(mv,1); new_line;
+  end Test_Call_DEMiCs;
+
+  procedure Interactive_Test_Call_DEMiCs ( vrblvl : in integer32 := 0 ) is
+
+    lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    mix,prm : Standard_Integer_Vectors.Link_to_Vector;
+    mv : integer32;
+    mcc : Mixed_Subdivision;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ...");
+    get(lp);
+    declare
+      sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(lp'range)
+          := Supports_of_Polynomial_Systems.create(lp.all);
+    begin
+      Mixed_Volume_Computation.Compute_Mixture(sup,mix,prm);
+      if vrblvl > 0 then
+        put_line("The supports :"); put(sup);
+        put("Mixture type : "); put(mix); new_line;
+      end if;
+      DEMiCs_Translated.call_DEMiCs(mix,sup,vrblvl);
+      declare
+        lif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
+      begin
+        DEMiCs_Translated.Process_Output(lp'last,mix,sup,lif,mcc,vrblvl-1);
+        mv := DEMiCs_Output_Cells.mixed_volume;
+        put("the mixed volume : "); put(mv,1); new_line;
+      end;
+    end;
+  end Interactive_Test_Call_DEMiCs;
+
   procedure Main is
 
     vrblvl : integer32 := 99; -- default verbose level
@@ -380,8 +439,10 @@ package body Test_DEMiCs_Translated is
     put_line("  4. test on the reformulated cyclic n-roots systems");
     put_line("  5. test user defined lifting");
     put_line("  6. compute a stable mixed volume");
-    put("Type 0, 1, 2, 3, 4, 5, or 6 to select a test : ");
-    Ask_Alternative(ans,"0123456");
+    put_line("  7. run call_DEMiCs to test the interface code");
+    put_line("  8. interactive test on call_DEMiCs");
+    put("Type 0, 1, 2, 3, 4, 5, 6, 7, or 8 to select a test : ");
+    Ask_Alternative(ans,"012345678");
     case ans is
       when '0' => Test_Eigenvalue_Problem(5,vrblvl);
       when '1' => Test_Cyclic_Roots(vrblvl);
@@ -390,6 +451,8 @@ package body Test_DEMiCs_Translated is
       when '4' => Test_Reformulated_Cyclic(vrblvl);
       when '5' => Test_User_Lifting(vrblvl);
       when '6' => Test_Stable_Mixed_Volume(vrblvl);
+      when '7' => Test_Call_DEMiCs(vrblvl);
+      when '8' => Interactive_Test_Call_DEMiCs(vrblvl);
       when others => null;
     end case;
   end Main;

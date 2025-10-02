@@ -87,7 +87,21 @@ package DEMiCs_Translated_Setup is
              return Arrays_of_Floating_Vector_Lists.Array_of_Lists;
 
   -- DESCRIPTION :
-  --   Extends the supports sup with the lifting in lft.
+  --   Extends the supports sup with the lifting in lft,
+  --   assuming every support set appears only once in sup.
+
+  function Apply_Lifting
+             ( mix : Standard_Integer_Vectors.Link_to_Vector;
+               sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+               lft : Standard_Floating_Vectors.Link_to_Vector;
+               vrblvl : integer32 := 0 )
+             return Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+
+  -- DESCRIPTION :
+  --   Extends the supports sup with the lifting in lft,
+  --   taking into account the type of mixture,
+  --   that is the multiplicity of each support in sup.
+  --   The array on return has the range 1..mix'length.
 
   function User_Lifting
              ( mix : Standard_Integer_Vectors.Link_to_Vector;

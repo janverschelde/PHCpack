@@ -39,6 +39,16 @@ package Test_DEMiCs_Translated is
   -- DESCRIPTION :
   --   Tests the stable mixed volume computation.
 
+  procedure Test_Call_DEMiCs ( vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Tests the interface code to call DEMiCs.
+
+  procedure Interactive_Test_Call_DEMICS ( vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Prompts for a polynomial system and then calls DEMiCs.
+
   procedure Main;
 
   -- DESCRIPTION :

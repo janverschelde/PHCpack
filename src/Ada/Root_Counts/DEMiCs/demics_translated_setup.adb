@@ -211,9 +211,6 @@ package body DEMiCs_Translated_Setup is
                vrblvl : integer32 := 0 )
              return Arrays_of_Floating_Vector_Lists.Array_of_Lists is
 
-  -- DESCRIPTION :
-  --   Extends the supports sup with the lifting in lft.
-
     res : Arrays_of_Floating_Vector_Lists.Array_of_Lists(sup'range);
     res_last : Arrays_of_Floating_Vector_Lists.Array_of_Lists(sup'range);
     idx : integer32 := lft'first;
@@ -223,7 +220,7 @@ package body DEMiCs_Translated_Setup is
 
   begin
     if vrblvl > 0
-     then put_line("-> in DEMiCs_Translated.apply_lifting ...");
+     then put_line("-> in DEMiCs_Translated.apply_lifting 1 ...");
     end if;
     for i in sup'range loop
       p2sup := sup(i);
@@ -238,6 +235,44 @@ package body DEMiCs_Translated_Setup is
         Lists_of_Floating_Vectors.Append(res(i),res_last(i),fpt);
         p2sup := Lists_of_Integer_Vectors.Tail_Of(p2sup);
       end loop;
+    end loop;
+    return res;
+  end Apply_Lifting;
+
+  function Apply_Lifting
+             ( mix : Standard_Integer_Vectors.Link_to_Vector;
+               sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+               lft : Standard_Floating_Vectors.Link_to_Vector;
+               vrblvl : integer32 := 0 )
+             return Arrays_of_Floating_Vector_Lists.Array_of_Lists is
+
+    res : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
+    res_last : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
+    supidx : integer32;
+    idx : integer32 := lft'first;
+    ipt : Standard_Integer_Vectors.Link_to_Vector;
+    fpt : Standard_Floating_Vectors.Link_to_Vector;
+    p2sup : Lists_of_Integer_Vectors.List;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in DEMiCs_Translated.apply_lifting 2 ...");
+    end if;
+    supidx := sup'first;
+    for i in mix'range loop
+      p2sup := sup(supidx);
+      while not Lists_of_Integer_Vectors.Is_Null(p2sup) loop
+        ipt := Lists_of_Integer_Vectors.Head_Of(p2sup);
+        fpt := new Standard_Floating_Vectors.Vector(ipt'first..ipt'last+1);
+        for j in ipt'range loop
+          fpt(j) := double_float(ipt(j));
+        end loop;
+        fpt(fpt'last) := lft(idx);
+        idx := idx + 1;
+        Lists_of_Floating_Vectors.Append(res(i),res_last(i),fpt);
+        p2sup := Lists_of_Integer_Vectors.Tail_Of(p2sup);
+      end loop;
+      supidx := supidx + mix(i);
     end loop;
     return res;
   end Apply_Lifting;

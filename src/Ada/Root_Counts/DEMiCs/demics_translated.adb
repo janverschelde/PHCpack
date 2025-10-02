@@ -2,12 +2,9 @@ with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Random_Numbers;
-with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Lists_of_Integer_Vectors;
-with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Integer_Vector_Lists_io; use Arrays_of_Integer_Vector_Lists_io;
-with Arrays_of_Floating_Vector_Lists;
 with Supports_of_Polynomial_Systems;
 with Floating_Lifting_Functions;
 with Floating_Mixed_Subdivisions_io;
@@ -50,6 +47,7 @@ package body DEMiCs_Translated is
     end if;
     class_mvc.Enum(ptr2MVC,vrblvl);
     mixvol := integer32(ptr2MVC.the_Simplex.mixedvol);
+    DEMiCs_Output_Cells.mixed_volume := mixvol;
   end Compute_Mixed_Volume;
 
   procedure Compute_Mixed_Labels
@@ -80,6 +78,7 @@ package body DEMiCs_Translated is
     end if;
     class_mvc.Enum(ptr2MVC,vrblvl);
     mixvol := integer32(ptr2MVC.the_Simplex.mixedvol);
+    DEMiCs_Output_Cells.mixed_volume := mixvol;
   end Compute_Mixed_Labels;
 
 -- EXPORTED OPERATIONS :
@@ -271,11 +270,12 @@ package body DEMiCs_Translated is
           := ptr2MVC.the_Simplex.lifting;
       labels : constant Lists_of_Integer_Vectors.List
              := DEMiCs_Output_Cells.Retrieve_Cell_Indices;
+
     begin
       if vrblvl > 0
        then put_line("the extracted supports : "); put(sup);
       end if;
-      lifsup := DEMiCs_Translated_Setup.Apply_Lifting(sup,lft,vrblvl-1);
+      lifsup := DEMiCs_Translated_Setup.Apply_Lifting(mix,sup,lft,vrblvl-1);
       if vrblvl > 0 then
         put_line("the lifted supports : ");
         Floating_Mixed_Subdivisions_io.put(lifsup);
@@ -288,6 +288,61 @@ package body DEMiCs_Translated is
     end;
     return res;
   end Mixed_Cells;
+
+  procedure Call_DEMiCs
+              ( mix : in Standard_Integer_Vectors.Link_to_Vector;
+                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                vrblvl : in integer32 := 0 ) is
+
+    data : DEMiCs_Input_Data.class_dataSet.dataSet;
+    mv : integer32 := -1;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in DEMiCs_Translated.call_DEMiCs ...");
+    end if;
+    DEMiCs_Translated_Setup.Make_Data(data,sup,mix,vrblvl-1);
+    DEMiCs_Output_Cells.Store_Dimension_and_Mixture(sup'last,mix);
+    if vrblvl > 0 then
+      put_line("the preamble of the DEMiCs input data : ");
+      DEMiCs_Input_Data.class_dataSet.info_preamble(data);
+      put_line("the supports of the DEMiCs input data : ");
+      DEMiCs_Input_Data.class_dataSet.info_supports(data);
+    end if;
+    DEMiCs_Output_Cells.monitor := (vrblvl > 0);
+    Compute_Mixed_Labels(data,mv,0,null,vrblvl-1);
+    if vrblvl > 0
+     then put("the mixed volume : "); put(mv,1); new_line;
+    end if;
+  end Call_DEMiCs;
+
+  procedure Process_Output
+              ( dim : in integer32;
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                lif : out Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                mcc : out Mixed_Subdivision; vrblvl : in integer32 := 0 ) is
+
+      lft : constant Standard_Floating_Vectors.Link_to_Vector
+          := ptr2MVC.the_Simplex.lifting;
+      labels : constant Lists_of_Integer_Vectors.List
+             := DEMiCs_Output_Cells.Retrieve_Cell_Indices;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in DEMiCs_Translated.process_output ...");
+    end if;
+    lif := DEMiCs_Translated_Setup.Apply_Lifting(mix,sup,lft,vrblvl-1);
+    if vrblvl > 0 then
+      put_line("the lifted supports : ");
+      Floating_Mixed_Subdivisions_io.put(lif);
+      mcc := DEMiCs_Output_Convertors.Make_Mixed_Cells
+               (dim,mix.all,labels,lif,true);
+    else
+      mcc := DEMiCs_Output_Convertors.Make_Mixed_Cells
+               (dim,mix.all,labels,lif,false);
+    end if;
+  end Process_Output;
 
   procedure Clear ( vrblvl : in integer32 := 0 ) is
   begin
