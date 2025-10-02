@@ -1,3 +1,6 @@
+Thu 2 Oct 2025 : updated main.gpr and phclib.gpr for the removal of
+  the C code to count cores, no longer among the excluded_source_files.
+
 Wed 20 Mar 2024 : updated greeting_banners for version 2.4.90.
   Extended main.gpr to allow for the building of use_phc.
 

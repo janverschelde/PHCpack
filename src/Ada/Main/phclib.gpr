@@ -36,7 +36,6 @@ library project phclib is
             for Excluded_Source_Files use
             (
                 "ts_use_syscon.c",
-                "corecount.c", "corecountwindows.c",
                 "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c",
               -- to avoid multiple mains ...
                 "ts_divide.c", "ts_explore_Cpoles.c" ,
@@ -85,7 +84,7 @@ library project phclib is
             );
             for Excluded_Source_Files use
             (
-                "ts_use_syscon.c", "corecount.c",
+                "ts_use_syscon.c",
                 "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c",
               -- to avoid multiple mains ...
                 "ts_divide.c", "ts_explore_Cpoles.c" ,
