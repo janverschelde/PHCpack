@@ -1,3 +1,6 @@
+Thu 2 Oct 2025 : removed the excluded_source_files section in induction.gpr
+  for the removal of corecount.c.
+
 Sun 27 Jun 2021 : removed the obsolete evaluate_schubert_conditions package.
 
 Thu 10 Jun 2021 : defined the exec_dir attribute in induction.gpr.

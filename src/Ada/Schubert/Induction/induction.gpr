@@ -46,7 +46,6 @@ project induction is
                  "../../Components/Samplers",
                  "../../Components/Decomposition",
                  "../../CtoPHC/State", "../../Tasking", "../../Main");
-            for Excluded_Source_Files use ("corecount.c");
             for Languages use ("Ada", "C");
     end case;
 
