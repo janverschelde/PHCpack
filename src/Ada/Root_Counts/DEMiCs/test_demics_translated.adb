@@ -9,6 +9,7 @@ with Standard_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
+with Standard_Floating_Vectors;
 with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Integer_Vector_Lists_io; use Arrays_of_Integer_Vector_Lists_io;
 with Arrays_of_Floating_Vector_Lists;
@@ -20,10 +21,12 @@ with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with Supports_of_Polynomial_Systems;
 with Cyclic_Roots_System;
 with Cyclic_Laurent_System;
+with Floating_Lifting_FUnctions;
 with Floating_Mixed_Subdivisions;       use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;
 with Mixed_Volume_Computation;
 with Drivers_for_Static_Lifting;
+with DEMiCs_Translated_Setup;
 with DEMiCs_Translated;
 with DEMiCs_Output_Cells;
 
@@ -379,7 +382,7 @@ package body Test_DEMiCs_Translated is
     new_line;
     put_line("-> testing call_DEMiCs on cyclic 3-roots ...");
     Mixed_Volume_Computation.Compute_Mixture(sup,mix,prm);
-    DEMiCs_Translated.call_DEMiCs(mix,sup,vrblvl);
+    DEMiCs_Translated.call_DEMiCs(mix,sup,0.0,null,vrblvl);
     DEMiCs_Translated.Process_Output(3,mix,sup,lif,mcc,vrblvl-1);
     Floating_Mixed_Subdivisions_io.put(3,mix.all,mcc);
     mv := DEMiCs_Output_Cells.mixed_volume;
@@ -392,11 +395,23 @@ package body Test_DEMiCs_Translated is
     mix,prm : Standard_Integer_Vectors.Link_to_Vector;
     mv : integer32;
     mcc : Mixed_Subdivision;
+    ans : character;
+    stlb : double_float := 0.0;
+    userlifting : boolean := false;
+    liftvals : Standard_Floating_Vectors.Link_to_Vector := null;
 
   begin
     new_line;
     put_line("Reading a polynomial system ...");
     get(lp);
+    new_line;
+    put("Stable mixed volume wanted ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      stlb := Floating_Lifting_Functions.Lifting_Bound(lp.all);
+    else
+      put("Give your own lifting values ? (y/n) "); Ask_Yes_or_No(ans);
+      userlifting := true;
+    end if;
     declare
       sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(lp'range)
           := Supports_of_Polynomial_Systems.create(lp.all);
@@ -406,13 +421,19 @@ package body Test_DEMiCs_Translated is
         put_line("The supports :"); put(sup);
         put("Mixture type : "); put(mix); new_line;
       end if;
-      DEMiCs_Translated.call_DEMiCs(mix,sup,vrblvl);
+      if userlifting
+       then liftvals := DEMiCs_Translated_Setup.User_Lifting(mix,sup);
+      end if;
+      DEMiCs_Translated.call_DEMiCs(mix,sup,stlb,liftvals,vrblvl);
       declare
         lif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
       begin
         DEMiCs_Translated.Process_Output(lp'last,mix,sup,lif,mcc,vrblvl-1);
         mv := DEMiCs_Output_Cells.mixed_volume;
-        put("the mixed volume : "); put(mv,1); new_line;
+        if stlb = 0.0
+         then put("the mixed volume : "); put(mv,1); new_line;
+         else put("the stable mixed volume : "); put(mv,1); new_line;
+        end if;
       end;
     end;
   end Interactive_Test_Call_DEMiCs;

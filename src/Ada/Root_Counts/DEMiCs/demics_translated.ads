@@ -1,5 +1,7 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
+with Standard_Floating_Vectors;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
 with Arrays_of_Integer_Vector_Lists;
@@ -74,11 +76,29 @@ package DEMiCs_Translated is
 
   procedure Call_DEMiCs
               ( mix : in Standard_Integer_Vectors.Link_to_Vector;
-                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                stlb : in double_float := 0.0;
+                lft : in Standard_Floating_Vectors.Link_to_Vector := null;
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
-  --   Calls DEMiCs on the given supports, of type of mixture mix.
+  --   Calls DEMiCs on the given supports in sup, of type of mixture mix.
+
+  -- ON ENTRY :
+  --   mix      type of mixture of the supports.
+  --   sup      supports of a polynomial system,
+  --            sorted along the type of mixture;
+  --   stlb     stable lifting bound:
+  --            if zero, then no stable mixed volume will be computed,
+  --            otherwise, stlb is the lifting for the artificial origins;
+  --   lft      null if random numbers need to be generated,
+  --            otherwise, as many values as points as in sup,
+  --            with sufficiently random values for the lifting,
+  --            note that is stlb /= 0, then lft is treated as null;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   supp     artificial origins added if stlb /= 0.0.
 
   procedure Process_Output
               ( dim : in integer32;

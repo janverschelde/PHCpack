@@ -1,8 +1,6 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Random_Numbers;
-with Standard_Floating_Vectors;
 with Lists_of_Integer_Vectors;
 with Arrays_of_Integer_Vector_Lists_io; use Arrays_of_Integer_Vector_Lists_io;
 with Supports_of_Polynomial_Systems;
@@ -291,18 +289,30 @@ package body DEMiCs_Translated is
 
   procedure Call_DEMiCs
               ( mix : in Standard_Integer_Vectors.Link_to_Vector;
-                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                stlb : in double_float := 0.0;
+                lft : in Standard_Floating_Vectors.Link_to_Vector := null;
                 vrblvl : in integer32 := 0 ) is
 
+    dim : constant integer32 := sup'last;
     data : DEMiCs_Input_Data.class_dataSet.dataSet;
     mv : integer32 := -1;
+    nbrad : integer32;
+    added : Standard_Integer_Vectors.Vector(mix'range);
+    rndlif : Standard_Floating_Vectors.Link_to_Vector;
 
   begin
     if vrblvl > 0
      then put_line("-> in DEMiCs_Translated.call_DEMiCs ...");
     end if;
+    if stlb /= 0.0 then
+      DEMiCs_Translated_Setup.Add_Artificial_Origins(dim,sup,nbrad,added);
+      rndlif := DEMiCs_Translated_Setup.Random_Lifting(mix,sup,stlb,added);
+      DEMiCs_Output_Cells.stable := true;
+      DEMiCs_Output_Cells.stlb := stlb;
+    end if;
     DEMiCs_Translated_Setup.Make_Data(data,sup,mix,vrblvl-1);
-    DEMiCs_Output_Cells.Store_Dimension_and_Mixture(sup'last,mix);
+    DEMiCs_Output_Cells.Store_Dimension_and_Mixture(dim,mix);
     if vrblvl > 0 then
       put_line("the preamble of the DEMiCs input data : ");
       DEMiCs_Input_Data.class_dataSet.info_preamble(data);
@@ -310,9 +320,15 @@ package body DEMiCs_Translated is
       DEMiCs_Input_Data.class_dataSet.info_supports(data);
     end if;
     DEMiCs_Output_Cells.monitor := (vrblvl > 0);
-    Compute_Mixed_Labels(data,mv,0,null,vrblvl-1);
-    if vrblvl > 0
-     then put("the mixed volume : "); put(mv,1); new_line;
+    if stlb = 0.0
+     then Compute_Mixed_Labels(data,mv,0,lft,vrblvl-1);
+     else Compute_Mixed_Labels(data,mv,0,rndlif,vrblvl-1);
+    end if;
+    if vrblvl > 0 then
+      if stlb = 0.0
+       then put("the mixed volume : "); put(mv,1); new_line;
+       else put("the stable mixed volume : "); put(mv,1); new_line;
+      end if;
     end if;
   end Call_DEMiCs;
 
