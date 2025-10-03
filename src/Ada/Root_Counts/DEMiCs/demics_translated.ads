@@ -74,6 +74,37 @@ package DEMiCs_Translated is
 --   The procedures below have the same specifications as the
 --   original interface to DEMiCs.
 
+
+  procedure Extract_Supports 
+              ( p : in Poly_Sys;
+                mix : out Standard_Integer_Vectors.Link_to_Vector;
+                supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                verbose : in boolean := true );
+  procedure Extract_Supports 
+              ( p : in Laur_Sys;
+                mix : out Standard_Integer_Vectors.Link_to_Vector;
+                supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Extracts the supports and computes the type of mixture.
+
+  procedure Extract_Supports 
+              ( p : in Poly_Sys;
+                mix,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                verbose : in boolean := true );
+  procedure Extract_Supports 
+              ( p : in Laur_Sys;
+                mix,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                verbose : in boolean := true );
+
+  -- DESCRIPTION :
+  --   Extracts the supports and computes the type of mixture.
+  --   In addition, returns the permutation to put the same supports
+  --   in consecutive order.
+
   procedure Call_DEMiCs
               ( mix : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
@@ -99,6 +130,11 @@ package DEMiCs_Translated is
 
   -- ON RETURN :
   --   supp     artificial origins added if stlb /= 0.0.
+
+  procedure Show_Output;
+
+  -- DESCRIPITON :
+  --   Shows the output stored in DEMiCs_Output_Cells.
 
   procedure Process_Output
               ( dim : in integer32;

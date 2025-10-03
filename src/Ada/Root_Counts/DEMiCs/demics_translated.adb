@@ -1,6 +1,9 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Random_Numbers;
+with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
+with Standard_Floating_VecVecs;
+with Standard_Floating_VecVecs_io;      use Standard_Floating_VecVecs_io;
 with Lists_of_Integer_Vectors;
 with Arrays_of_Integer_Vector_Lists_io; use Arrays_of_Integer_Vector_Lists_io;
 with Supports_of_Polynomial_Systems;
@@ -287,6 +290,72 @@ package body DEMiCs_Translated is
     return res;
   end Mixed_Cells;
 
+-- ORIGINAL INTERFACE :
+
+  procedure Extract_Supports 
+               ( p : in Poly_Sys;
+                 mix : out Standard_Integer_Vectors.Link_to_Vector;
+                 supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                 verbose : in boolean := true ) is
+
+    perm : Standard_Integer_Vectors.Link_to_Vector;
+
+  begin
+    supports := Supports_of_Polynomial_Systems.Create(p);
+    Mixed_Volume_Computation.Compute_Mixture(supports,mix,perm);
+    if verbose then
+      put_line("The supports : "); put(supports);
+      put("The mixture type : "); put(mix.all); new_line;
+    end if;
+  end Extract_Supports;
+
+  procedure Extract_Supports 
+               ( p : in Poly_Sys;
+                 mix,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                 supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                 verbose : in boolean := true ) is
+  begin
+    supports := Supports_of_Polynomial_Systems.Create(p);
+    Mixed_Volume_Computation.Compute_Mixture(supports,mix,perm);
+    if verbose then
+      put_line("The supports : "); put(supports);
+      put("The mixture type : "); put(mix.all); new_line;
+      put("The permutation : "); put(perm.all); new_line;
+    end if;
+  end Extract_Supports;
+
+  procedure Extract_Supports 
+              ( p : in Laur_Sys;
+                mix : out Standard_Integer_Vectors.Link_to_Vector;
+                supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                verbose : in boolean := true ) is
+
+    perm : Standard_Integer_Vectors.Link_to_Vector;
+
+  begin
+    supports := Supports_of_Polynomial_Systems.Create(p);
+    Mixed_Volume_Computation.Compute_Mixture(supports,mix,perm);
+    if verbose then
+      put_line("The supports : "); put(supports);
+      put("The mixture type : "); put(mix.all); new_line;
+    end if;
+  end Extract_Supports;
+
+  procedure Extract_Supports 
+              ( p : in Laur_Sys;
+                mix,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                supports : out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                verbose : in boolean := true ) is
+  begin
+    supports := Supports_of_Polynomial_Systems.Create(p);
+    Mixed_Volume_Computation.Compute_Mixture(supports,mix,perm);
+    if verbose then
+      put_line("The supports : "); put(supports);
+      put("The mixture type : "); put(mix.all); new_line;
+      put("The permutation : "); put(perm.all); new_line;
+    end if;
+  end Extract_Supports;
+
   procedure Call_DEMiCs
               ( mix : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
@@ -332,6 +401,31 @@ package body DEMiCs_Translated is
     end if;
   end Call_DEMiCs;
 
+  procedure Show_Output is
+
+    lifting : constant Standard_Floating_VecVecs.Link_to_VecVec
+            := DEMiCs_Output_Cells.Lifting_Values;
+    cells : constant Lists_of_Integer_Vectors.List
+          := DEMiCs_Output_Cells.Retrieve_Cell_Indices;
+    tmp : Lists_of_Integer_Vectors.List := cells;
+    lpt : Standard_Integer_Vectors.Link_to_Vector;
+    mv : constant integer32 := DEMiCs_Output_Cells.mixed_volume;
+    cnt : integer32 := 0;
+
+  begin
+    put_line("The lifting values :");
+    put(lifting.all);
+    put_line("The labels to the mixed cells :");
+    while not Lists_of_Integer_Vectors.Is_Null(tmp) loop
+      lpt := Lists_of_Integer_Vectors.Head_Of(tmp);
+      cnt := cnt + 1;
+      put("cell "); put(cnt,1); put(" : ");
+      put(lpt); new_line;
+      tmp := Lists_of_Integer_Vectors.Tail_Of(tmp);
+    end loop;
+    put("The mixed volume : "); put(mv,1); new_line;
+  end Show_Output;
+
   procedure Process_Output
               ( dim : in integer32;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
@@ -339,10 +433,10 @@ package body DEMiCs_Translated is
                 lif : out Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mcc : out Mixed_Subdivision; vrblvl : in integer32 := 0 ) is
 
-      lft : constant Standard_Floating_Vectors.Link_to_Vector
-          := ptr2MVC.the_Simplex.lifting;
-      labels : constant Lists_of_Integer_Vectors.List
-             := DEMiCs_Output_Cells.Retrieve_Cell_Indices;
+    lft : constant Standard_Floating_Vectors.Link_to_Vector
+        := ptr2MVC.the_Simplex.lifting;
+    labels : constant Lists_of_Integer_Vectors.List
+           := DEMiCs_Output_Cells.Retrieve_Cell_Indices;
 
   begin
     if vrblvl > 0
