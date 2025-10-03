@@ -2,7 +2,6 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Floating_VecVecs;
 with Arrays_of_Integer_Vector_Lists;
-with Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Laur_Systems;
 with Standard_Complex_Solutions;
 
@@ -16,7 +15,7 @@ package Pipelined_Polyhedral_Homotopies is
   procedure Pipeline_Cells_to_Paths
               ( dim,nt : in integer32;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
-                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 lif : in Standard_Floating_VecVecs.Link_to_VecVec;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List;

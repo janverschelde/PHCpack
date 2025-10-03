@@ -1,3 +1,8 @@
+Fri 3 Oct 2025 : new package test_multitasked_pipelining with code extracted
+  from ts_mtcelidx.adb.  Replaced DEMiCs_Algorithm by DEMiCs_Translated and
+  DEMiCs_Output_Data by DEMiCs_Output_Cells in pipelined_cell_indices and
+  pipelined_polyhedral_homotopies.
+
 Thu 2 Oct 2025 : from ts_mtcelidx.adb and pipelined_polyhedral_homotopies.adb
   removed "use DEMiCs_Algorithm" for the transition to DEMiCs_Translated.
 

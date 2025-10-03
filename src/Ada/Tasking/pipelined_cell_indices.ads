@@ -14,8 +14,8 @@ package Pipelined_Cell_Indices is
 
   procedure Produce_Cells
               ( mix : in Standard_Integer_Vectors.Link_to_Vector;
-                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
-                verbose : in boolean := true );
+                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                verbose : in boolean := true; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calls DEMiCs to produce the cells.
@@ -29,7 +29,7 @@ package Pipelined_Cell_Indices is
               ( mix : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 stable : in boolean; stlb : in double_float;
-                verbose : in boolean := true );
+                verbose : in boolean := true; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calls DEMiCs to produce the cells, with the option
@@ -47,9 +47,9 @@ package Pipelined_Cell_Indices is
 
   procedure Produce_Cells
               ( mix : in Standard_Integer_Vectors.Link_to_Vector;
-                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 lif : in Standard_Floating_VecVecs.Link_to_VecVec;
-                verbose : in boolean := true );
+                verbose : in boolean := true; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Calls DEMiCs to produce the cells, for given lifting values.
@@ -86,12 +86,12 @@ package Pipelined_Cell_Indices is
   procedure Pipelined_Mixed_Indices
               ( nt : in integer32;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
-                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 process : access procedure
                   ( idtask : in integer32;
                     mix : in Standard_Integer_Vectors.Link_to_Vector;
                     idx : in Standard_Integer_Vectors.Vector ) := null;
-                verbose : in boolean := true );
+                verbose : in boolean := true; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Implements a 2-stage pipeline where the first task produces
@@ -109,14 +109,14 @@ package Pipelined_Cell_Indices is
   procedure Pipelined_Mixed_Cells
               ( nt,dim : in integer32;
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
-                sup : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 lif : in Standard_Floating_VecVecs.Link_to_VecVec;
                 lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 process : access procedure
                   ( idtask : in integer32;
                     mix : in Standard_Integer_Vectors.Link_to_Vector;
                     mic : in Mixed_Cell ) := null;
-                verbose : in boolean := true );
+                verbose : in boolean := true; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Implements a 2-stage pipeline where the first task produces
@@ -132,6 +132,8 @@ package Pipelined_Cell_Indices is
   --   lifsup   lifted supports of mix'range;
   --   process  optional procedure which takes the task number, the type
   --            of mixture, and the integer cell indices on input;
-  --   verbose  if true, then the integer cell indices are written.
+  --   verbose  if true, then the integer cell indices are written;
+  --   vrblvl   verbose level to track calls and write additional
+  --            debugging information.
 
 end Pipelined_Cell_Indices;
