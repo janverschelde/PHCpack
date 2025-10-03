@@ -1,3 +1,6 @@
+Thu 2 Oct 2025 : from ts_mtcelidx.adb and pipelined_polyhedral_homotopies.adb
+  removed "use DEMiCs_Algorithm" for the transition to DEMiCs_Translated.
+
 Wed 1 Oct 2025 : removed the C files to count the cores, corecount.c
   and corecountwindows.c, from this folder.
   In tasking.gpr, removed the "Excluded_Source_Files" section.
