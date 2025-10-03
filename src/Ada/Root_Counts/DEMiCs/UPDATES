@@ -1,6 +1,8 @@
 Fri 3 Oct 2025 : modified demics_simplex.adb to take into account the
   monitor value of DEMiCs_Output_Cells.  Extended demics_tranlated
   and improved the tests in test_demics_translated.adb.
+  Made result of Flatten in demics_translated start at index 0,
+  added verbose levels, more debugging output to demics_simplex.adb.
 
 Thu 2 Oct 2025 : added interface code to demics_translated, fixed bug on
   semi-mixed problems, extended demics_translated_setup, added tests to 

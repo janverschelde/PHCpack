@@ -115,7 +115,8 @@ package DEMiCs_Translated is
   --   Returns random lifting values for each of the support sets,
   --   as arranged in the order of their mixture, defined by mix.
  
-  function Flatten ( v : Standard_Floating_VecVecs.Link_to_VecVec )
+  function Flatten ( v : Standard_Floating_VecVecs.Link_to_VecVec;
+                     vrblvl : integer32 := 0 )
                    return Standard_Floating_Vectors.Link_to_Vector;
 
   -- DESCRIPTION :

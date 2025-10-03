@@ -397,18 +397,28 @@ package body DEMiCs_Translated is
     return res;
   end Size;
 
-  function Flatten ( v : Standard_Floating_VecVecs.Link_to_VecVec )
+  function Flatten ( v : Standard_Floating_VecVecs.Link_to_VecVec;
+                     vrblvl : integer32 := 0 )
                    return Standard_Floating_Vectors.Link_to_Vector is
 
+  -- NOTE :
+  --   Copied from DEMiCs_Algorithm.Flatten, where the output
+  --   was converted into a C_Double_Array, starting at index 0.
+  --   With DEMiCs_Translated, the output of Flatten goes directly
+  --   to demics_simplex.allocateAndIni and must therefore start at 0.
+
     res : Standard_Floating_Vectors.Link_to_Vector;
-    res_rep : Standard_Floating_Vectors.Vector(1..Size(v));
+    res_rep : Standard_Floating_Vectors.Vector(0..Size(v)-1);
     idx : integer32 := 0;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in DEMiCs_Translated.flatten ...");
+    end if;
     for i in v'range loop
       for j in v(i)'range loop
-        idx := idx + 1;
         res_rep(idx) := v(i)(j);
+        idx := idx + 1;
       end loop;
     end loop;
     res := new Standard_Floating_Vectors.Vector'(res_rep);
@@ -430,8 +440,9 @@ package body DEMiCs_Translated is
     rndlif : Standard_Floating_Vectors.Link_to_Vector;
 
   begin
-    if vrblvl > 0
-     then put_line("-> in DEMiCs_Translated.call_DEMiCs ...");
+    if vrblvl > 0 then
+      put("-> in DEMiCs_Translated.call_DEMiCs, vrblvl : ");
+      put(vrblvl,1); put_line(" ...");
     end if;
     if stlb /= 0.0 then
       DEMiCs_Translated_Setup.Add_Artificial_Origins(dim,sup,nbrad,added);

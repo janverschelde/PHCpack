@@ -2181,8 +2181,9 @@ package body demics_simplex is
       use Standard_Floating_Vectors; -- for the if lft = null test
 
     begin
-      if vrblvl > 0
-       then put_line("-> in demics_simplex.class_simplex.allocateAndIni ...");
+      if vrblvl > 0 then
+        put("-> in demics_simplex.class_simplex.allocateAndIni, ");
+        put("ori_output : "); put(ori_output,1); put_line(" ...");
       end if;
       tmp_nDim := data.dim;
       tmp_mDim := data.dim;
@@ -2228,7 +2229,12 @@ package body demics_simplex is
       this.tmp_newInvB := new Standard_Floating_Vectors.Vector(0..this.dim-1);
       this.tmp_transMat := new Standard_Floating_Vectors.Vector(0..this.dim-1);
       this.nIdx := new Standard_Integer_Vectors.Vector(0..2*tmp_nDim-1);
-      Standard_Random_Numbers.Set_Seed(natural32(seedNum));
+      if vrblvl > 0
+       then put_line("setting the seed for the random numbers ...");
+      end if;
+      if seedNum /= 0
+       then Standard_Random_Numbers.Set_Seed(natural32(seedNum));
+      end if;
      -- rand_max was needed because of rand()/rand_max*10 was used ...
      -- rand_max := 2.0;  
      -- for i in 1..29 loop
@@ -2236,15 +2242,27 @@ package body demics_simplex is
      -- end loop;
      -- rand_max := (rand_max - 1.0)*2.0 + 1.0;
       if lft = null then
+        if vrblvl > 0 then
+          put_line("generating this.termSumNum random numbers ...");
+          put("this.termSumNum : "); put(this.termSumNum,1); new_line;
+        end if;
         for i in 0..this.termSumNum-1 loop
           this.lifting(i) := 10.0*abs(Standard_Random_Numbers.Random);
         end loop;
       else
+        if vrblvl > 0 then
+          put_line("copying this.termSumNum numbers for the lifting ...");
+          put("this.termSumNum : "); put(this.termSumNum,1); new_line;
+        end if;
         for i in 0..this.termSumNum-1 loop
+          put(" i = "); put(i,1); new_line;
           this.lifting(i) := lft(i);
         end loop;
       end if;
       if this.output = 2 then -- assign the lifting
+        if vrblvl > 0
+         then put_line("assigning the lifting ...");
+        end if;
         declare
           crdsup : Standard_Integer_Vectors.Vector(1..this.SupN);
           idxcnt : integer32 := 0;
@@ -2261,6 +2279,7 @@ package body demics_simplex is
           end loop;
         end;
         if vrblvl > 0 then
+          put_line("... done assigning the lifting, storing ...");
           declare
             lifvals : constant Standard_Floating_VecVecs.Link_to_VecVec
                     := DEMiCs_Output_Cells.Lifting_Values;
