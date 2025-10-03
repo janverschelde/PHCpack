@@ -12,7 +12,7 @@ with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Floating_Lifting_Functions;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;
-with DEMiCs_Algorithm;                   use DEMiCs_Algorithm;
+with DEMiCs_Algorithm;
 with DEMiCs_Output_Data;
 with Drivers_for_Static_Lifting;
 with use_c2phc; -- to force the compilation of use_c2phc.adb ...
@@ -37,7 +37,7 @@ procedure ts_demicsrun is
     mv,smv,tmv,orgcnt,stbcnt : natural32;
 
   begin
-    Process_Output(dim,mix,sup,lifsup,mcc,verbose);
+    DEMiCs_Algorithm.Process_Output(dim,mix,sup,lifsup,mcc,verbose);
     put_line("The lifted supports :");
     Floating_Mixed_Subdivisions_io.put(lifsup);
     if not stable then
@@ -86,9 +86,9 @@ procedure ts_demicsrun is
      then stlb := Floating_Lifting_Functions.Lifting_Bound(p);
      else stlb := 0.0;
     end if;
-    Extract_Supports(p,mix,sup,verbose);
-    Call_DEMiCs(mix,sup,stable,stlb,verbose);
-    Show_Output;
+    DEMiCs_Algorithm.Extract_Supports(p,mix,sup,verbose);
+    DEMiCs_Algorithm.Call_DEMiCs(mix,sup,stable,stlb,verbose);
+    DEMiCs_Algorithm.Show_Output;
     Process_Output(dim,mix,sup,stable,stlb,verbose);
   end Compute_Mixed_Volume;
 

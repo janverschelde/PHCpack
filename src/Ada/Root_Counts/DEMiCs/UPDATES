@@ -2,6 +2,7 @@ Thu 2 Oct 2025 : added interface code to demics_translated, fixed bug on
   semi-mixed problems, extended demics_translated_setup, added tests to 
   test_demics_translated.  Extended call_demics in demics_translated,
   with extra testing in test_demics_translated.adb.
+  Removed the "use DEMiCs_Algorithm" from ts_demicsrun.adb.
 
 Wed 1 Oct 2025 : modified test_demics_translated.adb for compiler warning.
   Fixed demics_main.adb for the additional parameter of the allocateAndIni

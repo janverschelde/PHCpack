@@ -33,7 +33,7 @@ with Random_Coefficient_Systems;
 with Lists_of_Strings;
 with DEMiCs_Command_Line;
 with DEMiCs_Output_Convertors;
-with DEMiCs_Algorithm;                   use DEMiCs_Algorithm;
+with DEMiCs_Algorithm;
 with DEMiCs_Output_Data;
 with Pipelined_Cell_Indices;
 with Semaphore;
@@ -88,7 +88,7 @@ procedure ts_mtcelidx is
     mv,smv,tmv : natural32;
 
   begin
-    Process_Output(dim,mix,sup,lifsup,mcc,verbose);
+    DEMiCs_Algorithm.Process_Output(dim,mix,sup,lifsup,mcc,verbose);
     put_line("The lifted supports :");
     Floating_Mixed_Subdivisions_io.put(lifsup);
     if not stable then
@@ -189,7 +189,7 @@ procedure ts_mtcelidx is
     put("Give the number of tasks (0 for no tasks) : ");
     get(nbtasks);
     new_line;
-    Extract_Supports(p,mix,sup,verbose);
+    DEMiCs_Algorithm.Extract_Supports(p,mix,sup,verbose);
     if stable
      then stlb := Floating_Lifting_Functions.Lifting_Bound(p);
      else stlb := 0.0;
@@ -222,7 +222,7 @@ procedure ts_mtcelidx is
   --   Computes the lifted supports and runs the pipeline as a test.
 
     lif : constant Standard_Floating_VecVecs.Link_to_VecVec
-        := Random_Lifting(mix,sup);
+        := DEMiCs_Algorithm.Random_Lifting(mix,sup);
     lsp : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
         := DEMiCs_Output_Convertors.Apply_Lifting(mix.all,sup,lif.all);
     cellcnt : natural32 := 0;
@@ -276,7 +276,7 @@ procedure ts_mtcelidx is
   --   to solve a random coefficient system with polyhedral homotopies.
 
     lif : constant Standard_Floating_VecVecs.Link_to_VecVec
-        := Random_Lifting(mix,sup);
+        := DEMiCs_Algorithm.Random_Lifting(mix,sup);
     q : Standard_Complex_Laur_Systems.Laur_Sys(sup'range);
     qsols : Standard_Complex_Solutions.Solution_List;
     file : file_type;
@@ -323,7 +323,7 @@ procedure ts_mtcelidx is
     put("Give the number of tasks (at least 2) : ");
     get(nbtasks);
     new_line;
-    Extract_Supports(p,mix,sup,verbose);
+    DEMiCs_Algorithm.Extract_Supports(p,mix,sup,verbose);
     if not randstart
      then Test_Pipeline(dim,nbtasks,mix,sup,verbose);
      else Random_Coefficient_System(dim,nbtasks,mix,sup,verbose);

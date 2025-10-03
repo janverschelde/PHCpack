@@ -1,3 +1,6 @@
+Thu 2 Oct 2025 : from drivers_for_demics_algorithm.adb removed the
+  "use DEMiCs_Algorithm" for the transition to DEMiCs_Translated.
+
 Mon 22 Sep 2025 : modified drivers_for_demics_algorithm, added the question
   if the user wants to define the lifting values, for debugging purposes.
 

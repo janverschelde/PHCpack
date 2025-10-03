@@ -12,7 +12,7 @@ with Random_Coefficient_Systems;
 with Lists_of_Strings;
 with DEMiCs_Command_Line;
 with DEMiCs_Output_Convertors;
-with DEMiCs_Algorithm;                   use DEMiCs_Algorithm;
+with DEMiCs_Algorithm;
 with DEMiCs_Output_Data;
 with Pipelined_Cell_Indices;
 with Semaphore;
