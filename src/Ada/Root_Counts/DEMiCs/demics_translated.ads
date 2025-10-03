@@ -2,6 +2,7 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
+with Standard_Floating_VecVecs;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
 with Arrays_of_Integer_Vector_Lists;
@@ -104,6 +105,22 @@ package DEMiCs_Translated is
   --   Extracts the supports and computes the type of mixture.
   --   In addition, returns the permutation to put the same supports
   --   in consecutive order.
+
+  function Random_Lifting
+             ( mix : Standard_Integer_Vectors.Link_to_Vector;
+               sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
+             return Standard_Floating_VecVecs.Link_to_VecVec;
+
+  -- DESCRIPTION :
+  --   Returns random lifting values for each of the support sets,
+  --   as arranged in the order of their mixture, defined by mix.
+ 
+  function Flatten ( v : Standard_Floating_VecVecs.Link_to_VecVec )
+                   return Standard_Floating_Vectors.Link_to_Vector;
+
+  -- DESCRIPTION :
+  --   Returns a vector with all values in v,
+  --   used when the user lifting is provided as a vector of vectors.
 
   procedure Call_DEMiCs
               ( mix : in Standard_Integer_Vectors.Link_to_Vector;

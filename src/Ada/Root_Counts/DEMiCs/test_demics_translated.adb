@@ -410,8 +410,10 @@ package body Test_DEMiCs_Translated is
       stlb := Floating_Lifting_Functions.Lifting_Bound(lp.all);
     else
       put("Give your own lifting values ? (y/n) "); Ask_Yes_or_No(ans);
-      userlifting := true;
+      userlifting := (ans = 'y');
     end if;
+    put("Monitor computation of mixed cells ? (y/n) "); Ask_Yes_or_No(ans);
+    DEMiCs_Output_Cells.monitor := (ans = 'y');
     declare
       sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(lp'range)
           := Supports_of_Polynomial_Systems.create(lp.all);
@@ -446,7 +448,7 @@ package body Test_DEMiCs_Translated is
   begin
     put_line("Testing the DEMiCs algorithm ...");
     new_line;
-    put("Intermediate output wanted ? (y/n) ");
+    put("Run with positive verbose level ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'n'
      then vrblvl := 0;

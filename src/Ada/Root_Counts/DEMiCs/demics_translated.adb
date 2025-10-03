@@ -2,7 +2,6 @@ with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Random_Numbers;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
-with Standard_Floating_VecVecs;
 with Standard_Floating_VecVecs_io;      use Standard_Floating_VecVecs_io;
 with Lists_of_Integer_Vectors;
 with Arrays_of_Integer_Vector_Lists_io; use Arrays_of_Integer_Vector_Lists_io;
@@ -356,6 +355,66 @@ package body DEMiCs_Translated is
     end if;
   end Extract_Supports;
 
+  function Random_Lifting
+             ( mix : Standard_Integer_Vectors.Link_to_Vector;
+               sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists )
+             return Standard_Floating_VecVecs.Link_to_VecVec is
+
+    res : Standard_Floating_VecVecs.Link_to_VecVec;
+    resrep : Standard_Floating_VecVecs.VecVec(mix'range);
+    idx : integer32 := 1;
+    len : integer32;
+
+  begin
+    for i in resrep'range loop
+      len := integer32(Lists_of_Integer_Vectors.Length_Of(sup(idx)));
+      declare
+        vals : Standard_Floating_Vectors.Vector(1..len);
+      begin
+        for j in 1..len loop
+          vals(j) := Standard_Random_Numbers.Random;
+        end loop;
+        resrep(i) := new Standard_Floating_Vectors.Vector'(vals);
+      end;
+      idx := idx + mix(i);
+    end loop;
+    res := new Standard_Floating_VecVecs.VecVec'(resrep);
+    return res;
+  end Random_Lifting;
+
+  function Size ( v : Standard_Floating_VecVecs.Link_to_VecVec )
+                return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the total number of values in v.
+
+    res : integer32 := 0;
+
+  begin
+    for i in v'range loop
+      res := res + v(i)'last;
+    end loop;
+    return res;
+  end Size;
+
+  function Flatten ( v : Standard_Floating_VecVecs.Link_to_VecVec )
+                   return Standard_Floating_Vectors.Link_to_Vector is
+
+    res : Standard_Floating_Vectors.Link_to_Vector;
+    res_rep : Standard_Floating_Vectors.Vector(1..Size(v));
+    idx : integer32 := 0;
+
+  begin
+    for i in v'range loop
+      for j in v(i)'range loop
+        idx := idx + 1;
+        res_rep(idx) := v(i)(j);
+      end loop;
+    end loop;
+    res := new Standard_Floating_Vectors.Vector'(res_rep);
+    return res;
+  end Flatten;
+
   procedure Call_DEMiCs
               ( mix : in Standard_Integer_Vectors.Link_to_Vector;
                 sup : in out Arrays_of_Integer_Vector_Lists.Array_of_Lists;
@@ -388,7 +447,9 @@ package body DEMiCs_Translated is
       put_line("the supports of the DEMiCs input data : ");
       DEMiCs_Input_Data.class_dataSet.info_supports(data);
     end if;
-    DEMiCs_Output_Cells.monitor := (vrblvl > 0);
+    if vrblvl > 0 -- be aware that it may have been already true
+     then DEMiCs_Output_Cells.monitor := true;
+    end if;
     if stlb = 0.0
      then Compute_Mixed_Labels(data,mv,0,lft,vrblvl-1);
      else Compute_Mixed_Labels(data,mv,0,rndlif,vrblvl-1);

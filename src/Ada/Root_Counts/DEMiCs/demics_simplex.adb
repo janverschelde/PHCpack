@@ -3060,9 +3060,10 @@ package body demics_simplex is
           lblidx := 0;
         end if;
       else -- otherwise print only one set of indices
-        if this.output = 1 then
+        if this.output = 1 or DEMiCs_Output_Cells.monitor then
           put("# "); put(this.mixedCell,1); put(" : ");
-        elsif this.output = 2 then
+        end if;
+        if this.output = 2 then
           mixtype := Demics_Output_Cells.Get_Mixture;
           size := Demics_Output_Cells.Get_Labels_Size;
           labels := new Standard_Integer_Vectors.Vector(1..size);
@@ -3085,10 +3086,11 @@ package body demics_simplex is
             labels(lblidx) := fIdx+1;
           end if;
         else
-          if this.output = 1 then
+          if this.output = 1 or DEMiCs_Output_Cells.monitor then
             put(sp(i)+1,1); put(" : ( ");
             put(fIdx+1,1); put(" ");
-          elsif this.output = 2 then
+          end if;
+          if this.output = 2 then
             lblidx := Offset_for_Index(mixtype,sp(i)+1);
             lblidx := lblidx + 1;
             labels(lblidx) := fIdx+1;
@@ -3097,7 +3099,7 @@ package body demics_simplex is
         for j in 0..polyDim-1 loop
           idx := lv(sp(i)).Node.parent.nodeLabel(j+1);
           ii := idx*this.dim;
-          if vrblvl > 0 then
+          if vrblvl > 0 or DEMiCs_Output_Cells.monitor then
             if this.output > 0 then
               put(idx+1,1); put(" ");
             end if;
@@ -3106,9 +3108,10 @@ package body demics_simplex is
               labels(lblidx) := idx+1;
             end if;
           else
-            if this.output = 1 then
+            if this.output = 1 or DEMiCs_Output_Cells.monitor then
               put(idx+1,1); put(" ");
-            elsif this.output = 2 then
+            end if;
+            if this.output = 2 then
               lblidx := lblidx + 1;
               labels(lblidx) := idx+1;
             end if;
@@ -3124,7 +3127,7 @@ package body demics_simplex is
            then put(") ");
           end if;
         else
-          if this.output = 1
+          if this.output = 1 or DEMiCs_Output_Cells.monitor
            then put(") ");
           end if;
         end if;
@@ -3136,9 +3139,11 @@ package body demics_simplex is
         if vrblvl > 0
          then new_line;
         end if;
-        put("volume : "); put(integer32(det));
-        put(", accumulated volume : "); put(integer32(this.mixedVol));
-        new_line;
+        if this.output = 1 or DEMiCs_Output_Cells.monitor then
+          put("volume : "); put(integer32(det));
+          put(", accumulated volume : "); put(integer32(this.mixedVol));
+          new_line;
+        end if;
       end if;
       if this.output = 2
         then DEMiCs_Output_Cells.Add_Cell_Indices(labels);
