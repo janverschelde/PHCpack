@@ -44,7 +44,7 @@ project stalift is
             );
             for Excluded_Source_Files use
             (
-                "demicsrun.cpp", "main.cpp", "corecount.c"
+                "demicsrun.cpp", "main.cpp"
             );
             for Languages use ("Ada", "C", "C++");
     end case;

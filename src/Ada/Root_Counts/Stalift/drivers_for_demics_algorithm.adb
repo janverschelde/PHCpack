@@ -10,8 +10,10 @@ with Floating_Lifting_Functions;
 with Floating_Mixed_Subdivisions_io;
 with Drivers_for_Static_Lifting;
 with Drivers_for_MixedVol_Algorithm;
-with DEMiCs_Output_Data;
-with DEMiCs_Algorithm;
+-- with DEMiCs_Output_Data;
+-- with DEMiCs_Algorithm;
+with DEMiCs_Output_Cells;
+with DEMiCs_Translated;
 with Pipelined_Polyhedral_Homotopies;    use Pipelined_Polyhedral_Homotopies;
 
 with Standard_Floating_Numbers_io;
@@ -54,15 +56,19 @@ package body Drivers_for_DEMiCs_Algorithm is
       put("-> in drivers_for_demics_algorithm.");
       put_line("Blackbox_DEMiCs_Algorithm 1 ...");
     end if;
-    DEMiCs_Algorithm.Extract_Supports(p,mix,sup,false); -- verbose is false
-    DEMiCs_Algorithm.Call_DEMiCs(mix,sup,false);
+   -- DEMiCs_Algorithm.Extract_Supports(p,mix,sup,false); -- verbose is false
+   -- DEMiCs_Algorithm.Call_DEMiCs(mix,sup,false);
+    DEMiCs_Translated.Extract_Supports(p,mix,sup,false); -- verbose is false
+    DEMiCs_Translated.Call_DEMiCs(mix,sup,vrblvl=>vrblvl-1);
     declare
       lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
     begin
-      DEMiCs_Algorithm.Process_Output(dim,mix,sup,lifsup,mcc,false);
+     -- DEMiCs_Algorithm.Process_Output(dim,mix,sup,lifsup,mcc,false);
+      DEMiCs_Translated.Process_Output(dim,mix,sup,lifsup,mcc,vrblvl-1);
       lif := new Arrays_of_Floating_Vector_Lists.Array_of_Lists'(lifsup);
     end;
-    mv := natural32(DEMiCs_Output_Data.mixed_volume);
+   -- mv := natural32(DEMiCs_Output_Data.mixed_volume);
+    mv := natural32(DEMiCs_Output_Cells.mixed_volume);
   end BlackBox_DEMiCs_Algorithm;
 
   procedure BlackBox_DEMiCs_Algorithm
@@ -80,15 +86,19 @@ package body Drivers_for_DEMiCs_Algorithm is
       put("-> in drivers_for_demics_algorithm.");
       put_line("Blackbox_DEMiCs_Algorithm 2 ...");
     end if;
-    DEMiCs_Algorithm.Extract_Supports(p,mix,sup,false);  -- verbose is false
-    DEMiCs_Algorithm.Call_DEMiCs(mix,sup,false);
+   -- DEMiCs_Algorithm.Extract_Supports(p,mix,sup,false);  -- verbose is false
+   -- DEMiCs_Algorithm.Call_DEMiCs(mix,sup,false);
+    DEMiCs_Translated.Extract_Supports(p,mix,sup,false);  -- verbose is false
+    DEMiCs_Translated.Call_DEMiCs(mix,sup,vrblvl=>vrblvl-1);
     declare
       lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
     begin
-      DEMiCs_Algorithm.Process_Output(dim,mix,sup,lifsup,mcc,false);
+     -- DEMiCs_Algorithm.Process_Output(dim,mix,sup,lifsup,mcc,false);
+      DEMiCs_Translated.Process_Output(dim,mix,sup,lifsup,mcc,vrblvl-1);
       lif := new Arrays_of_Floating_Vector_Lists.Array_of_Lists'(lifsup);
     end;
-    mv := natural32(DEMiCs_Output_Data.mixed_volume);
+   -- mv := natural32(DEMiCs_Output_Data.mixed_volume);
+    mv := natural32(DEMiCs_Output_Cells.mixed_volume);
   end BlackBox_DEMiCs_Algorithm;
 
   procedure BlackBox_DEMiCs_Algorithm
@@ -108,12 +118,15 @@ package body Drivers_for_DEMiCs_Algorithm is
       put("-> in drivers_for_demics_algorithm.");
       put_line("Blackbox_DEMiCs_Algorithm 3 ...");
     end if;
-    DEMiCs_Algorithm.Extract_Supports(p,mix,sup,false);    -- verbose is false
-    DEMiCs_Algorithm.Call_DEMiCs(mix,sup,true,stlb,false); -- stable is true
+   -- DEMiCs_Algorithm.Extract_Supports(p,mix,sup,false);    -- verbose is false
+   -- DEMiCs_Algorithm.Call_DEMiCs(mix,sup,true,stlb,false); -- stable is true
+    DEMiCs_Translated.Extract_Supports(p,mix,sup,false);    -- verbose is false
+    DEMiCs_Translated.Call_DEMiCs(mix,sup,stlb,null,vrblvl-1); -- stable is true
     declare
       lifsup : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
     begin
-      DEMiCs_Algorithm.Process_Output(dim,mix,sup,lifsup,mcc,false);
+     -- DEMiCs_Algorithm.Process_Output(dim,mix,sup,lifsup,mcc,false);
+      DEMiCs_Translated.Process_Output(dim,mix,sup,lifsup,mcc,vrblvl-1);
       lif := new Arrays_of_Floating_Vector_Lists.Array_of_Lists'(lifsup);
     end;
     Drivers_for_Static_Lifting.Floating_Volume_Computation
@@ -196,7 +209,8 @@ package body Drivers_for_DEMiCs_Algorithm is
       put("-> in drivers_for_demics_algorithm");
       put_line("Run_Polyhedral_Homotopies ...");
     end if;
-    DEMiCs_Algorithm.Process_Output(dim,mix,sup,lifsup,mcc,false);
+   -- DEMiCs_Algorithm.Process_Output(dim,mix,sup,lifsup,mcc,false);
+    DEMiCs_Translated.Process_Output(dim,mix,sup,lifsup,mcc,vrblvl-1);
     new_line(file);
     put_line(file,"The lifted supports :");
     Floating_Mixed_Subdivisions_io.put(file,lifsup);
@@ -280,15 +294,20 @@ package body Drivers_for_DEMiCs_Algorithm is
     if nt < 2 or not ranstart then -- no multitasking or no path tracking
       if stable then
         tstart(timer);
-        DEMiCs_Algorithm.Call_DEMiCs(mix,sup,stable,stlb,false);
+       -- DEMiCs_Algorithm.Call_DEMiCs(mix,sup,stable,stlb,false);
+       -- if stable, then stlb must be defined ...
+        DEMiCs_Translated.Call_DEMiCs(mix,sup,stlb,null,vrblvl-1);
         tstop(timer);
       elsif stlb /= -1.0 then
         tstart(timer);
-        DEMiCs_Algorithm.Call_DEMiCs(mix,sup,false);
+       -- DEMiCs_Algorithm.Call_DEMiCs(mix,sup,false);
+        DEMiCs_Translated.Call_DEMiCs(mix,sup,vrblvl=>vrblvl-1);
         tstop(timer);
       else -- stlb = -1.0 user given lifting for debugging
         tstart(timer);
-        DEMiCs_Algorithm.Call_DEMiCs(mix,sup,stable,stlb,false);
+       -- DEMiCs_Algorithm.Call_DEMiCs(mix,sup,stable,stlb,false);
+       -- instead of null, the user should be prompted for lifting!
+        DEMiCs_Translated.Call_DEMiCs(mix,sup,stlb,null,vrblvl-1);
         tstop(timer);
       end if;
       Run_Polyhedral_Homotopies
@@ -296,10 +315,12 @@ package body Drivers_for_DEMiCs_Algorithm is
          sup,orgsup,stable,stlb,timer,q,qsols,qsols0,mv,smv,tmv);
     else -- if random coefficient system is needed with pipelining
       tstart(timer);
-      lif := DEMiCs_Algorithm.Random_Lifting(mix,sup);
+     -- lif := DEMiCs_Algorithm.Random_Lifting(mix,sup);
+      lif := DEMiCs_Translated.Random_Lifting(mix,sup);
       Pipeline_Cells_to_Paths(dim,nt,mix,sup,lif,q,qsols,false);
       tstop(timer);
-      DEMiCs_Algorithm.Process_Output(dim,mix,sup,lifsup,mcc,false);
+     -- DEMiCs_Algorithm.Process_Output(dim,mix,sup,lifsup,mcc,false);
+      DEMiCs_Translated.Process_Output(dim,mix,sup,lifsup,mcc,vrblvl-1);
       new_line(file);
       put_line(file,"The lifted supports :");
       Floating_Mixed_Subdivisions_io.put(file,lifsup);
@@ -353,7 +374,7 @@ package body Drivers_for_DEMiCs_Algorithm is
     dim : constant integer32 := p'last;
     mix,perm : Standard_Integer_Vectors.Link_to_Vector;
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
-    timer : Timing_Widget;
+   -- timer : Timing_Widget;
     mcc2file : boolean := false;
     ranstart : boolean := false;
     subfile,ranfile : file_type;
@@ -395,7 +416,8 @@ package body Drivers_for_DEMiCs_Algorithm is
     new_line;
     put("Monitor the progress of the computations on screen ? (y/n) ");
     Ask_Yes_or_No(ans);
-    DEMiCs_Output_Data.monitor := (ans = 'y');
+   -- DEMiCs_Output_Data.monitor := (ans = 'y');
+    DEMiCs_Output_Cells.monitor := (ans = 'y');
     new_line;
     put("Run polyhedral homotopies ");
     put("to solve a random coefficient system ? (y/n) ");
@@ -406,7 +428,8 @@ package body Drivers_for_DEMiCs_Algorithm is
       put_line("for the random coefficient system ...");
       Read_Name_and_Create_File(ranfile);
     end if;
-    DEMiCs_Algorithm.Extract_Supports(p,mix,perm,sup,false); -- verbose is false
+   -- DEMiCs_Algorithm.Extract_Supports(p,mix,perm,sup,false); -- verbose is false
+    DEMiCs_Translated.Extract_Supports(p,mix,perm,sup,false); -- verbose is false
     Run_DEMiCs_Algorithm
       (file,nt,mcc2file,ranstart,subfile,ranfile,
        p,dim,mix,perm,sup,stable,stlb,q,qsols,qsols0,mv,smv,tmv,vrblvl-1);
