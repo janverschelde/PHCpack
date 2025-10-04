@@ -38,7 +38,6 @@ project factorization is
                  "../../Root_Counts/Product", "../../Root_Counts/Symmetry",
                  "../Samplers", "../Interpolators", "../Decomposition",
                  "../../Tasking", "../../Main", "../../CtoPHC/State");
-            for Excluded_Source_Files use ("corecount.c");
             for Languages use ("Ada", "C");
     end case;
 

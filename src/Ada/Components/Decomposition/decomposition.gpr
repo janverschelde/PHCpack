@@ -44,7 +44,6 @@ project decomposition is
                  "../../Root_Counts/Symmetry",
                  "../Samplers", "../Interpolators", "../Factorization",
                  "../../Tasking", "../../Main", "../../CtoPHC/State");
-            for Excluded_Source_Files use ("corecount.c");
             for Languages use ("Ada", "C"); -- C needed for timer ...
     end case;
 

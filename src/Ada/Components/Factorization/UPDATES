@@ -1,3 +1,6 @@
+Sat 4 Oct 2025 : removed corecount.c from the excluded_source_files
+  in factorization.gpr.
+
 Tue 21 Mar 2023 : updated factorization.gpr for ts_filfac.adb,
   moved from the ../Decomposition folder.
 
