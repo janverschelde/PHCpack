@@ -42,7 +42,7 @@ project main is
                 "rewrite_polynomials.ads", "rewrite_polynomials.adb",
                 "ts_rwpoly.adb", "pieri_solver_trf.adb"
             );
-            for Languages use ("Ada", "C++", "C");
+            for Languages use ("Ada", "C");
         when "windows" =>
             for Source_Dirs use
             (
@@ -80,7 +80,7 @@ project main is
                 "rewrite_polynomials.ads", "rewrite_polynomials.adb",
                 "ts_rwpoly.adb", "pieri_solver_trf.adb"
             );
-            for Languages use ("Ada", "C", "C++");
+            for Languages use ("Ada", "C");
     end case;
 
     for Object_Dir use "../../Objects";
@@ -99,19 +99,12 @@ project main is
 
         for Switches ("use_c2phc.adb") use ("-c");
 
-        for Switches ("simplex.cpp") use 
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc=1"
-        );
-        for Switches ("mvc.cpp") use
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc=1"
-        );
-        for Switches ("demicsrun.cpp") use 
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc"
-        );
-        for Switches ("outputData.cpp") use ("-Dcompilewgpp=1");
+        for Switches ("feedback.c") use ("-fPIE");
+        for Switches ("pieri_sols.c") use ("-fPIE");
+        for Switches ("timer.c") use ("-fPIE");
+        for Switches ("dc_inverse.c") use ("-fPIE");
+        for Switches ("dc_matrix.c") use ("-fPIE");
+        for Switches ("dcmplx.c") use ("-fPIE");
 
     end Compiler;
 
@@ -119,13 +112,11 @@ project main is
 
         for Switches ("use_c2phc.adb") use ("-n");
 
-        for Switches ("pieri_solver.adb") use ("-n");
-
     end Binder;
 
     package Linker is
 
-        for Switches ("main.cpp") use ("-o demics");
+        for Switches ("phctop.adb") use ("-lm");
 
     end Linker;
 
