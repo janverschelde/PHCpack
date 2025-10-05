@@ -1,4 +1,4 @@
-Ada source code of Polynomial Homotopy Continuation version 2.4.90
+Ada source code of Polynomial Homotopy Continuation version 2.4.91
 
 The same hierarchical structure as in the original version is preserved,
 with the addition of numerical Schubert calculus in release 2,
@@ -36,6 +36,9 @@ The Laurent folder was added to the mathematical library in v2.4.85 and
 in CtoPHC, code was redistributed into new folders Types and Structures.
 Version 2.4.85 added .gpr files to build with gprbuild.
 An alire workspace is provided in version 2.4.88.
+In version 2.4.91, DEMiCs was translated into Ada, to remove the
+dependency on C++ code.  Multiple word arithmetic is introduced
+to prepare for multiple double arithmetic on tensor cores.
 
 The Ada sources are organized in a tree of directories:
 
@@ -55,6 +58,7 @@ The Ada sources are organized in a tree of directories:
   |      |-- Series        : 1.B. manipulating truncated series
   |      |-- Laurent       : 1.C. series with integer leading exponents
   |      |-- AD            : 1.D. algorithmic differentiation of Path library
+  |      |-- Words         : 1.E. multiple word arithmetic
   |-- Deformations         : 2. homotopies, Newton's method & path trackers
   |      |-- Solutions     : 2.1. solutions of systems and homotopies
   |      |-- Homotopy      : 2.2. homotopies, scaling and reduction

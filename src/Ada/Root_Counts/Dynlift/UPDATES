@@ -1,3 +1,5 @@
+Sun 5 Oct 2025 : updated dynlift.gpr for the removal of the C++ DEMiCs.
+
 Sun 27 Jun 2021 : removed the obsolete package face_structures.
 
 Sat 26 Jun 2021 : updated dynlift.gpr to no longer exclude double_double.c.

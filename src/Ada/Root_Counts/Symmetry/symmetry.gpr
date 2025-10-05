@@ -50,22 +50,6 @@ project symmetry is
 
         for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
 
-        for Switches ("simplex.cpp") use 
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc=1"
-        );
-        for Switches ("mvc.cpp") use 
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc=1"
-        );
-        for Switches ("demicsrun.cpp") use 
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc=1"
-        );
-        for Switches ("outputData.cpp") use ("-Dcompilewgpp=1");
-
-        for Switches ("use_c2phc.adb") use ("-c");
-
     end Compiler;
 
 end symmetry;

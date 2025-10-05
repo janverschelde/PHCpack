@@ -1,3 +1,5 @@
+Sun 5 Oct 2025 : modified stalift.gpr for the removal of C++ DEMiCs.
+
 Sat 4 Oct 2025 : in drivers_for_demics_algorithm.adb, replaced
   DEMiCs_Output_Data by DEMiCs_Output_Cells, and replaced
   DEMiCs_Algorithm by DEMiCs_Translated.

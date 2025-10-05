@@ -1,3 +1,5 @@
+Sun 5 Oct 2025 : updated symmetry.gpr for the removal of C++ DEMiCs.
+
 Fri 31 May 2024 : in mixed_volume_calculator.adb, applied verbose level 
   parameters in the calls to the drivers.
 

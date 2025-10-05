@@ -1,3 +1,5 @@
+Sun 5 Oct 2025 : removed excluded_source_files from puiseux.gpr.
+
 Thu 17 Jun 2021 : removed the obsolete parallel_edges, parallel_directions,
   tropisms_of_supports, and ts_degcurve.  Updated puiseux.gpr.
 

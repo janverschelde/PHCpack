@@ -1,3 +1,5 @@
+Sun 5 Oct 2025 : updated mixedvol.gpr for the removal of C++ DEMiCs.
+
 Sun 27 Jun 2021 : renamed all *.c files into *1.c; nine files in total:
   cell_stack1, form_lp1, index_tree_lp1, mixed_volume1, mv1,
   one_level_lp1, prepare_for_mv1, relation_tabl1, zero_index_tree1;
