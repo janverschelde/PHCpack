@@ -1,3 +1,5 @@
+Sun 5 Oct 2025 : moved C++ code to the Source folder.
+
 Fri 3 Oct 2025 : modified demics_simplex.adb to take into account the
   monitor value of DEMiCs_Output_Cells.  Extended demics_tranlated
   and improved the tests in test_demics_translated.adb.

@@ -1,0 +1,51 @@
+This folder contains the C++ source code for DEMiCs
+and the Ada interface code to run DEMiCs.
+
+The README.txt is copied from the SRC folder 
+of the DEMiCs.0951 distribution archive.
+This README.txt describes the definition of the input files 
+and the option to the executable demics.
+
+The second interface links with the original C++ code directly.
+To integrate the original C++ code, it should be compiled with
+a particular flag to apply the modifications to run demics silently
+and write the output into the proper output data suitable for processing.
+This second interface is defined by the package DEMiCs_Algorithm
+and is tested by ts_demicsrun.
+
+Modifications made to the code of DEMiCs (for callback operations and
+directly processing of the cells) is within #if blocks, compiled when
+the flag compile4phc is set.  See the makefiles in the Objects folder
+for the compilation instructions.
+
+The switches "-Dcompilewgpp=1" and "-Dcompile4phc=1" are critical,
+see the demics.gpr file.
+
+Run "gprbuild demics.gpr" to make all test programs.
+On windows, type "gprbuild demics.gpr -Xos=windows"
+at the PowerShell prompt.
+The "gprclean demics.gpr" removes all files created by gprbuild.
+
+------------------------------------------------------------------------------
+file name                   : short description
+------------------------------------------------------------------------------
+global.h                    : definition of global parameters
+inputData                   : processing of input data
+ts_inputData                : unit test on reading the input data
+iTest                       : data storage for linear programs
+fTest                       : floating data for linear programs
+simplex                     : simplex algorithm
+reltab                      : relation table
+mvc                         : enumerates all mixed cells
+main                        : the main program
+------------------------------------------------------------------------------
+demicsrun                   : basic C interface to run demics
+lists_of_strings            : defines lists of strings
+demics_output_data          : to store the output data of demics
+ts_outdata                  : test on demics_output_data
+use_outdata                 : to export the operations in demics_output_data
+outputData                  : interface to the Ada package demics_output_data
+ts_outputData               : test on outputData
+demics_algorithm            : defines the interface to DEMiCs
+ts_demicsrun                : test on calling demicsrun
+------------------------------------------------------------------------------
