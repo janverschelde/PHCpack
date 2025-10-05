@@ -30,7 +30,6 @@ project continuation is
                  "../../CtoPHC/State", "../../Components/Samplers",
                  "../../Root_Counts/Symmetry",
                  "../../Components/Decomposition");
-            for Excluded_Source_Files use ("corecount.c");
             for Languages use ("Ada", "C");
     end case;
 

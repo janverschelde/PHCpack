@@ -24,7 +24,6 @@ project curves is
                  "../../Math_Lib/Series", "../../Math_Lib/Circuits",
                  "../Solutions", "../Homotopy", "../Newton", "../Sweep",
                  "../../Root_Counts/Product", "../../Tasking", "../../Main");
-            for Excluded_Source_Files use ("corecount.c");
             for Languages use ("Ada", "C");
     end case;
 

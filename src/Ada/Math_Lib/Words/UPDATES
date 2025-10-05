@@ -1,3 +1,5 @@
+Sun 5 Oct 2025 : removed excluded_source_files from words.gpr.
+
 Sat 8 Feb 2025 : added ts_modbal.adb to test the balancing of a sequence
   of doubles by the addition of a modifier constant; updated words.gpr.
 

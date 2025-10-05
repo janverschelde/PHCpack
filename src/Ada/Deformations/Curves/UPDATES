@@ -1,3 +1,5 @@
+Sun 5 Oct 2025 : removed excluded_source_files from curves.gpr.
+
 Wed 19 Jun 2024 : added two procedures to power_series_methods to return
   the evaluated power series at the end solution.
 

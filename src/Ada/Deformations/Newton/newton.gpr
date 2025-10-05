@@ -26,7 +26,6 @@ project newton is
                  "../Solutions", "../Homotopy", "../../Tasking",
                  "../../Schubert/SAGBI",
                  "../../Components/Interpolators");
-            for Excluded_Source_Files use ("corecount.c");
             for Languages use ("Ada", "C");
     end case;
 

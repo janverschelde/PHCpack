@@ -1,3 +1,5 @@
+Sun 5 Oct 2025 : removed excluded_source_files from newton.gpr.
+
 Tue 13 Feb 2024 : to {dobldobl,quaddobl}_root_refiners, added verbose level.
   Added verbose level to standard_root_refiners.
 

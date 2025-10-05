@@ -1,3 +1,5 @@
+Sun 5 Oct 2025 : removed excluded_source_files from continuation.gpr.
+
 Mon 25 Dec 2023 : added verbose level to *_blackbox_refiners.a* and
   adjusted calls in *_blackbox_continuations.adb.
   After adding verbose level in {standard,dobldobl,quaddobl}_root_refiners,

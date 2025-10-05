@@ -8,18 +8,10 @@ project Words is
             for Source_Dirs use
                 (".", "../../System", "../../System/Unix_Timer",
                  "../Numbers", "../Vectors", "../QD", "../../Tasking");
-            for Excluded_Source_Files use
-                (
-                    "corecount.c", "corecountwindows.c"
-                );
         when "windows" =>
             for Source_Dirs use
                 (".", "../../System", "../../System/Basic_Timer",
                  "../Numbers", "../Vectors", "../QD", "../../Tasking");
-            for Excluded_Source_Files use
-            (
-                "corecount.c"
-            );
             for Languages use ("Ada", "C");
     end case;
 
