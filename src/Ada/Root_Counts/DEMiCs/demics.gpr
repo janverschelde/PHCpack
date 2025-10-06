@@ -32,7 +32,7 @@ project demics is
                 "../../Schubert/Induction",
                 "../../Tasking", "../../Main"
             );
-            for Languages use ("Ada", "C", "C++");
+            for Languages use ("Ada", "C");
             for Excluded_Source_Files use
             (
                 "ts_diahom.adb", "ts_elim.adb",
@@ -78,7 +78,7 @@ project demics is
                 "ts_rwpoly.adb",
                 "pieri_solver_trf.adb"
             );
-            for Languages use ("Ada", "C", "C++");
+            for Languages use ("Ada", "C");
     end case;
 
     for Object_Dir use "../../../Objects";
@@ -86,13 +86,8 @@ project demics is
 
     for Main use
     (
-      -- "use_c2phc.adb",     -- how to force compilation?
-       "ts_calldemics.adb",   -- file based interface to DEMiCs
-      -- "main.cpp",            -- the main of demics
-       "ts_outdata.adb",      -- tests demics_output_data
-      -- "ts_outputData.cpp",   -- tests output data from C++
+       "ts_calldemics.adb",    -- file based interface to DEMiCs
        "ts_demics_input.adb",  -- tests input data for demics
-       "ts_demicsrun.adb" ,    -- tests the second interface to demics
        "demics_main.adb",      -- translated demics main procedure
        "ts_demicstrl.adb"      -- tests the translated DEMiCs
     );
@@ -101,39 +96,6 @@ project demics is
 
         for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
 
-        for Switches ("simplex.cpp") use 
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc=1"
-        );
-        for Switches ("mvc.cpp") use 
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc=1"
-        );
-        for Switches ("demicsrun.cpp") use 
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc=1"
-        );
-        for Switches ("outputData.cpp") use ("-Dcompilewgpp=1");
-
-        for Switches ("use_c2phc.adb") use ("-c");
-
     end Compiler;
-
-    package Binder is
-
-        for Switches ("use_c2phc.adb") use ("-n");
-        for Switches ("ts_demicsrun.adb") use ("use_c2phc");
-
-    end Binder;
-
-    package Linker is
-
-        for Switches ("main.cpp") use ("-o demics");
-
-      -- for Switches ("use_c2phc.adb") use ("-c");
-
-      --  for Switches ("ts_demicsrun.adb") use ("use_c2phc.o");
-
-    end Linker;
 
 end demics;
