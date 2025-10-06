@@ -28,7 +28,7 @@ project tasking is
                  "../Schubert/Induction",
                  "../CtoPHC/Types", "../CtoPHC/Structures",
                  "../CtoPHC/State", "../Main");
-            for Languages use ("Ada", "C", "C++");
+            for Languages use ("Ada", "C");
         when "windows" =>
             for Source_Dirs use
             (
@@ -55,7 +55,7 @@ project tasking is
                 "../CtoPHC/Types", "../CtoPHC/Structures",
                 "../CtoPHC/State", "../Main"
             );
-            for Languages use ("Ada", "C", "C++");
+            for Languages use ("Ada", "C");
     end case;
 
     for Object_Dir use "../../Objects";
@@ -102,20 +102,6 @@ project tasking is
         for Default_Switches ("Ada") use ("-O3", "-gnatv", "-gnatp", "-gnatf");
 
         for Switches ("use_c2phc.adb") use ("-c");
-
-        for Switches ("simplex.cpp") use 
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc=1"
-        );
-        for Switches ("mvc.cpp") use
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc=1"
-        );
-        for Switches ("demicsrun.cpp") use 
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc"
-        );
-        for Switches ("outputData.cpp") use ("-Dcompilewgpp=1");
 
     end Compiler;
 
