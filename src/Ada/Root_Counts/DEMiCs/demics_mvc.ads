@@ -1,4 +1,4 @@
-with Ada.Execution_Time;
+-- with Ada.Execution_Time;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
@@ -477,9 +477,9 @@ package demics_mvc is
     -- DESCRIPTION :
     --   Sets the value of this.firIdx(sn).
 
-    procedure info_cpuTime
-                ( cpuTime_start : in Ada.Execution_Time.CPU_Time;
-                  cpuTime_end : in Ada.Execution_Time.CPU_Time );
+    -- procedure info_cpuTime
+    --             ( cpuTime_start : in Ada.Execution_Time.CPU_Time;
+    --               cpuTime_end : in Ada.Execution_Time.CPU_Time );
 
     -- DESCRIPTION :
     --   Computes and displays the elapsed CPU time.

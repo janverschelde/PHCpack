@@ -1,5 +1,6 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
-with Ada.Execution_Time;
+with Timing_Package;                    use Timing_Package;
+-- with Ada.Execution_Time;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Random_Numbers;
@@ -19,17 +20,22 @@ procedure demics_main is
     ptr2MVC : constant class_mvc.Link_to_mvc
             := new class_mvc.mvc'(class_mvc.new_mvc);
     seed : constant integer32 := Standard_Random_Numbers.Get_Seed;
-    cputstart,cputstop : Ada.Execution_Time.CPU_Time;
+   -- cputstart,cputstop : Ada.Execution_Time.CPU_Time;
+    timer : Timing_Widget;
 
   begin
     if vrblvl > 0
      then put("the seed : "); put(seed,1); new_line;
     end if;
-    cputstart := Ada.Execution_Time.Clock;
+    tstart(timer);
+   -- cputstart := Ada.Execution_Time.Clock;
     class_mvc.allocateAndIni(ptr2MVC,data,seed,1,null,vrblvl);
     class_mvc.Enum(ptr2MVC,vrblvl);
-    cputstop := Ada.Execution_Time.Clock;
-    class_mvc.info_cpuTime(cputstart,cputstop);
+   -- cputstop := Ada.Execution_Time.Clock;
+    tstop(timer);
+   -- class_mvc.info_cpuTime(cputstart,cputstop);
+    new_line;
+    print_times(standard_output,timer,"computing the mixed volume");
   end Compute_Mixed_Volume;
  
   procedure Main is

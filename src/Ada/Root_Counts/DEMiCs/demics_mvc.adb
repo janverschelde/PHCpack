@@ -1,5 +1,5 @@
 with Ada.text_io;                       use Ada.text_io;
-with Ada.Real_Time;
+-- with Ada.Real_Time;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Random_Numbers;
@@ -2281,20 +2281,20 @@ package body demics_mvc is
       end if;
     end get_firIdx;
 
-    procedure info_cpuTime
-                ( cpuTime_start : in Ada.Execution_Time.CPU_Time;
-                  cpuTime_end : in Ada.Execution_Time.CPU_Time ) is
+   -- procedure info_cpuTime
+   --             ( cpuTime_start : in Ada.Execution_Time.CPU_Time;
+   --               cpuTime_end : in Ada.Execution_Time.CPU_Time ) is
 
-      use Ada.Execution_Time;
+   --   use Ada.Execution_Time;
 
-      elapsed : constant Ada.Real_Time.Time_Span
-              := cpuTime_end - cpuTime_start;
+   --   elapsed : constant Ada.Real_Time.Time_Span
+   --           := cpuTime_end - cpuTime_start;
 
-    begin
-      put_line("Elapsed CPU time : "
-             & Duration'Image(Ada.Real_Time.To_Duration(elapsed))
-             & " seconds");
-    end info_cpuTime;
+   -- begin
+   --   put_line("Elapsed CPU time : "
+   --          & Duration'Image(Ada.Real_Time.To_Duration(elapsed))
+   --          & " seconds");
+   -- end info_cpuTime;
 
     procedure info_final ( this : in Link_to_mvc ) is
 
