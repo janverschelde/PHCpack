@@ -14,34 +14,14 @@ project demics is
                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
                 "../../Math_Lib/Series", "../../Math_Lib/Circuits",
                 "../../Math_Lib/Supports",
-                "../../Deformations/Solutions",
-                "../../Deformations/Homotopy",
+                "../../Deformations/Solutions", "../../Deformations/Homotopy",
                 "../../Deformations/Newton", "../../Deformations/Curves",
-                "../../Deformations/End_Games",
-                "../../Deformations/Trackers", "../../Deformations/Sweep",
-                "../../Deformations/Continuation",
+                "../../Deformations/End_Games", "../../Deformations/Trackers",
+                "../../Deformations/Sweep", "../../Deformations/Continuation",
                 "../Product", "../Binomials", "../Implift", "../Stalift",
-                "../MixedVol", "../Dynlift", "../Symmetry", "../Puiseux",
-                "../../CtoPHC/Types", "../../CtoPHC/Structures",
-                "../../CtoPHC/Funky", "../../CtoPHC/State",
-                "../../Components/Samplers", "../../Components/Interpolators",
-                "../../Components/Factorization",
-                "../../Components/Decomposition",
-                "../../Components/Solver", "../../Components/Tropical",
-                "../../Schubert/SAGBI", "../../Schubert/Pieri",
-                "../../Schubert/Induction",
-                "../../Tasking", "../../Main"
+                "../../Tasking"
             );
-            for Languages use ("Ada", "C");
-            for Excluded_Source_Files use
-            (
-                "ts_diahom.adb", "ts_elim.adb",
-                "ts_itrack.adb", "ts_ilocal.adb",
-                "ts_inewt.adb",
-                "rewrite_polynomials.ads", "rewrite_polynomials.adb",
-                "ts_rwpoly.adb",
-                "pieri_solver_trf.adb"
-            );
+            for Languages use ("Ada");
         when "windows" =>
             for Source_Dirs use
             (
@@ -54,31 +34,12 @@ project demics is
                 "../../Math_Lib/Supports",
                 "../../Deformations/Solutions", "../../Deformations/Homotopy",
                 "../../Deformations/Newton", "../../Deformations/Curves",
-                "../../Deformations/End_Games",
-                "../../Deformations/Trackers", "../../Deformations/Sweep",
-                "../../Deformations/Continuation",
+                "../../Deformations/End_Games", "../../Deformations/Trackers",
+                "../../Deformations/Sweep", "../../Deformations/Continuation",
                 "../Product", "../Binomials", "../Implift", "../Stalift",
-                "../Dynlift", "../MixedVol", "../Symmetry", "../Puiseux",
-                "../../CtoPHC/Types", "../../CtoPHC/Structures",
-                "../../CtoPHC/Funky", "../../CtoPHC/State",
-                "../../Components/Samplers", "../../Components/Interpolators",
-                "../../Components/Factorization",
-                "../../Components/Decomposition",
-                "../../Components/Solver", "../../Components/Tropical",
-                "../../Schubert/SAGBI", "../../Schubert/Pieri",
-                "../../Schubert/Induction",
-                "../../Tasking", "../../Main"
+                "../../Tasking"
             );
-            for Excluded_Source_Files use
-            (
-                "ts_diahom.adb", "ts_elim.adb",
-                "ts_itrack.adb", "ts_ilocal.adb",
-                "ts_inewt.adb",
-                "rewrite_polynomials.ads", "rewrite_polynomials.adb",
-                "ts_rwpoly.adb",
-                "pieri_solver_trf.adb"
-            );
-            for Languages use ("Ada", "C");
+            for Languages use ("Ada");
     end case;
 
     for Object_Dir use "../../../Objects";

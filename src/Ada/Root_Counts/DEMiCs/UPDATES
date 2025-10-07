@@ -1,6 +1,7 @@
 Tue 7 Oct 2025 : commented out info_cpuTime in demics_mvc because
   Execution_Time is not supported on Apple M1 chips.
   In demics_main, replaced info_cpuTime with a timing widget.
+  Simplified demics.gpr, removing unneeded coding folders.
 
 Sun 5 Oct 2025 : moved C++ code to the Source folder.
 
