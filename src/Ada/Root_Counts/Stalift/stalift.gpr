@@ -20,10 +20,9 @@ project stalift is
                 "../../Deformations/Trackers",
                 "../../Deformations/Continuation",
                 "../Product", "../Binomials", "../Implift", "../MixedVol",
-                "../DEMiCs", "../../Tasking", "../../CtoPHC/Types"
+                "../DEMiCs", "../../Tasking"
             );
-            for Excluded_Source_Files use ("demicsrun.cpp", "main.cpp");
-            for Languages use ("Ada", "C++");
+            for Languages use ("Ada");
         when "windows" =>
             for Source_Dirs use
             (
@@ -40,13 +39,9 @@ project stalift is
                 "../../Deformations/Trackers",
                 "../../Deformations/Continuation",
                 "../Product", "../Binomials", "../Implift", "../MixedVol",
-                "../DEMiCs", "../../Tasking", "../../CtoPHC/Funky"
+                "../DEMiCs", "../../Tasking"
             );
-            for Excluded_Source_Files use
-            (
-                "demicsrun.cpp", "main.cpp"
-            );
-            for Languages use ("Ada", "C", "C++");
+            for Languages use ("Ada", "C");
     end case;
 
     for Object_Dir use "../../../Objects";
