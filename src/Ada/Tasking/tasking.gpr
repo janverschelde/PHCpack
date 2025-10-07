@@ -28,7 +28,7 @@ project tasking is
                  "../Schubert/Induction",
                  "../CtoPHC/Types", "../CtoPHC/Structures",
                  "../CtoPHC/State", "../Main");
-            for Languages use ("Ada", "C");
+            for Languages use ("Ada");
         when "windows" =>
             for Source_Dirs use
             (
