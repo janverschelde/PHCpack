@@ -18,11 +18,11 @@ sys.path[:0] = [os.path.abspath('../../phcpy'), os.path.abspath('../..')]
 # -- Project information -----------------------------------------------------
 
 project = 'phcpy'
-copyright = u'2016-2024, Jan Verschelde'
+copyright = u'2016-2025, Jan Verschelde'
 author = 'Jan Verschelde'
 
 # The full version, including alpha/beta/rc tags
-release = '1.1.4'
+release = '1.1.5'
 
 # -- General configuration ---------------------------------------------------
 

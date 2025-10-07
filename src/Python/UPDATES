@@ -1,3 +1,8 @@
+Tue 7 Oct 2025 : to families in phcpy, added cyclic_reformulated(n)
+  to define the cyclic n-roots problem as a Laurent system.
+  To prepare for version 1.1.5, adjusted __init__.py, setup.py,
+  and conf.py.
+
 Sat 19 Oct 2024 : extended the volumes module with functions to extract
   the lifted supports and inner normals from a mixed cell configuration.
 

@@ -36,6 +36,24 @@ def cyclic(dim):
     result.append(pol)
     return result
 
+def cyclic_reformulated(dim):
+    """
+    Returns the Laurent system representation of the cyclic n-roots
+    problem, where n = dim, as reformulated by Uffe Haagerup, in
+    Cyclic p-roots of prime length p and related complex Hadamard
+    matrices, arXiv:0803.2629, 2008.
+    """
+    result = []
+    for i in range(dim-1):
+        pol = 'x' + str(i+1)
+        for j in range(dim-1):
+            pol = pol + ' + x' + str(j+1) + '^-1'
+            idx = (j+i+2) % dim
+            if not idx == 0:
+                pol = pol + '*x' + str(idx)
+        result.append(pol + ';')
+    return result
+
 def katsura_variable(var, dim):
     """
     Returns the variable U(var, dim) for use in the function katsura.
@@ -328,6 +346,9 @@ def test():
     """
     print('\ncyclic 5-roots :\n')
     for pol in cyclic(5):
+        print(pol)
+    print('\nreformulated cyclic 5-roots :\n')
+    for pol in cyclic_reformulated(5):
         print(pol)
     print('\nnoon for n = 5 :\n')
     for pol in noon(5):
