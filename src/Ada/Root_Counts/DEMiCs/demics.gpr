@@ -39,7 +39,7 @@ project demics is
                 "../Product", "../Binomials", "../Implift", "../Stalift",
                 "../../Tasking"
             );
-            for Languages use ("Ada");
+            for Languages use ("Ada", "C");
     end case;
 
     for Object_Dir use "../../../Objects";
