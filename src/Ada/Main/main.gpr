@@ -40,7 +40,7 @@ project main is
                 "ts_diahom.adb", "ts_elim.adb",
                 "ts_itrack.adb", "ts_ilocal.adb", "ts_inewt.adb",
                 "rewrite_polynomials.ads", "rewrite_polynomials.adb",
-                "ts_rwpoly.adb", "pieri_solver_trf.adb"
+                "ts_rwpoly.adb"
             );
             for Languages use ("Ada", "C");
         when "windows" =>
@@ -78,7 +78,7 @@ project main is
                 "ts_diahom.adb", "ts_elim.adb",
                 "ts_itrack.adb", "ts_ilocal.adb", "ts_inewt.adb",
                 "rewrite_polynomials.ads", "rewrite_polynomials.adb",
-                "ts_rwpoly.adb", "pieri_solver_trf.adb"
+                "ts_rwpoly.adb"
             );
             for Languages use ("Ada", "C");
     end case;
@@ -111,6 +111,8 @@ project main is
     package Binder is
 
         for Switches ("use_c2phc.adb") use ("-n");
+
+       -- for Switches ("pieri_solver.adb") use ("-n");
 
     end Binder;
 
