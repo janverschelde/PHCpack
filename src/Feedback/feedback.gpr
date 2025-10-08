@@ -36,11 +36,10 @@ project feedback is
                 "../Ada/CtoPHC/Structures", "../Ada/CtoPHC/State",
                 "../Ada/Tasking", "../Ada/Main"
             );
-            for Languages use ("Ada", "C++", "C");
+            for Languages use ("Ada", "C");
             for Excluded_Source_Files use
             (
                 "ts_timer.c", "ts_roots.adb",
-                "corecount.c", "corecountwindows.c",
                 "multithreading.ads", "multithreading.adb",
                 "ts_threads.adb", "ts_natdiv.adb",
                 "ts_gcd.adb", "ts_smith.adb"
@@ -77,11 +76,10 @@ project feedback is
                 "../Ada/CtoPHC/Structures", "../Ada/CtoPHC/State",
                 "../Ada/Tasking", "../Ada/Main"
             );
-            for Languages use ("Ada", "C++", "C");
+            for Languages use ("Ada", "C");
             for Excluded_Source_Files use
             (
                 "ts_timer.c", "ts_roots.adb",
-                "corecount.c", "corecountwindows.c",
                 "multithreading.ads", "multithreading.adb",
                 "ts_threads.adb", "ts_natdiv.adb",
                 "ts_gcd.adb", "ts_smith.adb"
@@ -114,20 +112,6 @@ project feedback is
 
         for Switches ("use_c2phc.adb") use ("-c");
 
-        for Switches ("simplex.cpp") use 
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc=1"
-        );
-        for Switches ("mvc.cpp") use
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc=1"
-        );
-        for Switches ("demicsrun.cpp") use 
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc"
-        );
-        for Switches ("outputData.cpp") use ("-Dcompilewgpp=1");
-
     end Compiler;
 
     package Binder is
@@ -138,7 +122,19 @@ project feedback is
 
     package Linker is
 
-        for Switches ("main.cpp") use ("-o demics");
+        for Switches ("ts_dcmplx.c") use ("-lm");
+        for Switches ("ts_roots.c") use ("-lm");
+        for Switches ("ts_dc_determinant.c") use ("-lm");
+        for Switches ("ts_dc_inverse.c") use ("-lm");
+        for Switches ("ts_gcd.c") use ("-lm");
+        for Switches ("ts_hermite.c") use ("-lm");
+        for Switches ("ts_smith.c") use ("-lm");
+        for Switches ("ts_multiply.c") use ("-lm");
+        for Switches ("ts_divide.c") use ("-lm");
+        for Switches ("ts_poly_inverse.c") use ("-lm");
+        for Switches ("ts_c2ada.c") use ("-lm");
+        for Switches ("ts_realization.c") use ("-lm");
+        for Switches ("ts_feedback.c") use ("-lm");
 
     end Linker;
 

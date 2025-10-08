@@ -1,3 +1,5 @@
+Tue 7 Oct 2025 : removed C++ from feedback.gpr and references to C++ demics.
+
 Wed 22 Mar 2023 : after removing the filter_and_split_solutions procedure,
   updated feedback.gpr.  Updated feedback.gpr after the removal of 
   the package multihomogeneous_solutions.  After removing testnine.adb
