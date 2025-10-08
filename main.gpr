@@ -36,14 +36,13 @@ project main is
       );
       for Excluded_Source_Files use
       (
-        "corecount.c",
         "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c",
         "ts_diahom.adb", "ts_elim.adb",
         "ts_itrack.adb", "ts_ilocal.adb", "ts_inewt.adb",
         "rewrite_polynomials.ads", "rewrite_polynomials.adb",
-        "ts_rwpoly.adb", "pieri_solver_trf.adb"
+        "ts_rwpoly.adb"
       );
-      for Languages use ("Ada", "C", "C++");
+      for Languages use ("Ada", "C");
 
     when others =>
 
@@ -77,14 +76,14 @@ project main is
       );
       for Excluded_Source_Files use
       (
-        "ts_use_syscon.c", "corecount.c", "corecountwindows.c",
+        "ts_use_syscon.c"
         "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c",
         "ts_diahom.adb", "ts_elim.adb",
         "ts_itrack.adb", "ts_ilocal.adb", "ts_inewt.adb",
         "rewrite_polynomials.ads", "rewrite_polynomials.adb",
-        "ts_rwpoly.adb", "pieri_solver_trf.adb"
+        "ts_rwpoly.adb"
       );
-      for Languages use ("Ada", "C++", "C");
+      for Languages use ("Ada", "C");
 
     end case;
 
@@ -103,20 +102,6 @@ project main is
 
       for Switches ("use_c2phc.adb") use ("-c");
 
-      for Switches ("simplex.cpp") use 
-      (
-        "-Dcompilewgpp=1", "-Dcompile4phc=1"
-      );
-      for Switches ("mvc.cpp") use
-      (
-        "-Dcompilewgpp=1", "-Dcompile4phc=1"
-      );
-      for Switches ("demicsrun.cpp") use 
-      (
-        "-Dcompilewgpp=1", "-Dcompile4phc"
-      );
-      for Switches ("outputData.cpp") use ("-Dcompilewgpp=1");
-
     end Compiler;
 
     package Binder is
@@ -129,12 +114,8 @@ project main is
 
     package Linker is
 
-      for Switches ("main.cpp") use ("-o demics");
-
       case phcpack_config.Alire_Host_OS is
         when "windows" => null;
-        when "linux" =>
-          for Switches ("phctop.adb") use ("-static-libstdc++");
         when others =>
           for Switches ("phctop.adb") use ("-static-libgcc");
       end case;

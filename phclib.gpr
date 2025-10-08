@@ -36,7 +36,7 @@ library project phclib is
        );
        for Excluded_Source_Files use
        (
-         "ts_use_syscon.c", "corecount.c",
+         "ts_use_syscon.c", 
          "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c",
         -- to avoid multiple mains ...
          "ts_divide.c", "ts_explore_Cpoles.c" ,
@@ -53,7 +53,7 @@ library project phclib is
          "ts_phc_sys_rw.c" , "ts_use_c2pieri.c", 
          "ts_inputData.cpp", "ts_outputData.cpp", "getsys2.c"
        );
-       for Languages use ("Ada", "C", "C++");
+       for Languages use ("Ada", "C");
 
      when others =>
 
@@ -88,7 +88,6 @@ library project phclib is
        for Excluded_Source_Files use
        (
          "ts_use_syscon.c",
-         "corecount.c", "corecountwindows.c",
          "ts_smith.c", "ts_roots.c", "ts_timer.c", "ts_gcd.c",
         -- to avoid multiple mains ...
          "ts_divide.c", "ts_explore_Cpoles.c" ,
@@ -105,7 +104,7 @@ library project phclib is
          "ts_phc_sys_rw.c" , "ts_use_c2pieri.c", 
          "ts_inputData.cpp", "ts_outputData.cpp", "getsys2.c"
       );
-      for Languages use ("Ada", "C++", "C");
+      for Languages use ("Ada", "C");
 
     end case;
 
@@ -129,20 +128,6 @@ library project phclib is
         for Default_Switches ("Ada") use ("-O3", "-gnatv", "-gnatp", "-gnatf");
 
         for Switches ("use_c2phc.adb") use ("-c");
-
-        for Switches ("simplex.cpp") use 
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc=1"
-        );
-        for Switches ("mvc.cpp") use
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc=1"
-        );
-        for Switches ("demicsrun.cpp") use 
-        (
-            "-Dcompilewgpp=1", "-Dcompile4phc"
-        );
-        for Switches ("outputData.cpp") use ("-Dcompilewgpp=1");
 
     end Compiler;
 
