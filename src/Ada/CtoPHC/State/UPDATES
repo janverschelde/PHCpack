@@ -1,3 +1,5 @@
+Wed 8 Oct 2025 : added state.gpr to build use_c2phc.
+
 Sat 4 Oct 2025 : updated use_c2phc.adb for the removal of use_outdata,
   used to process the output of the C++ version of DEMiCs.
 

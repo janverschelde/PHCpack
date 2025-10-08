@@ -1,0 +1,87 @@
+project state is
+
+    type OS_type is ("linux", "windows", "macosx");
+    os : OS_type := external("os", "linux");
+
+    case os is
+        when "linux" | "macosx" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Unix_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Circuits", "../../Math_Lib/Supports",
+                 "../../Math_Lib/Series", "../../Math_Lib/Laurent",
+                 "../../Deformations/Solutions",
+                 "../../Deformations/Homotopy", "../../Deformations/Newton", 
+                 "../../Deformations/Trackers", "../../Deformations/Curves",
+                 "../../Deformations/End_Games", "../../Deformations/Sweep", 
+                 "../../Deformations/Continuation", 
+                 "../../Root_Counts/Product", "../../Root_Counts/Binomials", 
+                 "../../Root_Counts/Implift", "../../Root_Counts/Stalift", 
+                 "../../Root_Counts/MixedVol", "../../Root_Counts/DEMiCs", 
+                 "../../Root_Counts/Dynlift", "../../Root_Counts/Symmetry", 
+                 "../../Root_Counts/Puiseux", 
+                 "../../Components/Samplers", "../../Components/Interpolators", 
+                 "../../Components/Factorization", 
+                 "../../Components/Decomposition",
+                 "../../Components/Solver", "../../Components/Tropical", 
+                 "../../Schubert/SAGBI", "../../Schubert/Pieri", 
+                 "../../Schubert/Induction",
+                 "../Types", "../Structures", "../Funky",
+                 "../../Tasking", "../../Main");
+            for Languages use ("Ada", "C");
+        when "windows" =>
+            for Source_Dirs use
+                (".", "../../System", "../../System/Basic_Timer",
+                 "../../Math_Lib/Numbers", "../../Math_Lib/QD",
+                 "../../Math_Lib/Vectors", "../../Math_Lib/Matrices",
+                 "../../Math_Lib/Reduction", "../../Math_Lib/Divisors",
+                 "../../Math_Lib/Polynomials", "../../Math_Lib/Functions",
+                 "../../Math_Lib/Supports", "../../Math_Lib/Circuits", 
+                 "../../Math_Lib/Series", "../../Math_Lib/Laurent",
+                 "../../Deformations/Solutions",
+                 "../../Deformations/Homotopy", "../../Deformations/Newton",
+                 "../../Deformations/Trackers", "../../Deformations/Curves",
+                 "../../Deformations/End_Games", "../../Deformations/Sweep",
+                 "../../Deformations/Continuation",
+                 "../../Root_Counts/Product", "../../Root_Counts/Binomials",
+                 "../../Root_Counts/Implift", "../../Root_Counts/Stalift",
+                 "../../Root_Counts/MixedVol", "../../Root_Counts/DEMiCs",
+                 "../../Root_Counts/Dynlift", "../../Root_Counts/Symmetry",
+                 "../../Root_Counts/Puiseux",
+                 "../../Components/Samplers", "../../Components/Interpolators",
+                 "../../Components/Factorization",
+                 "../../Components/Decomposition",
+                 "../../Components/Solver", "../../Components/Tropical",
+                 "../../Schubert/SAGBI", "../../Schubert/Pieri",
+                 "../../Schubert/Induction",
+                 "../Types", "../Structures", "../Funky",
+                 "../../Tasking", "../../Main");
+            for Languages use ("Ada", "C");
+    end case;
+
+    for Object_Dir use "../../../Objects";
+    for Exec_Dir use "../../../bin";
+
+    for Main use
+    (
+        "use_phc.adb"
+    );
+
+    package Compiler is
+
+        for Default_Switches ("Ada") use ("-gnatwa", "-gnatva");
+
+        for Switches ("use_c2phc.adb") use ("-c");
+
+    end Compiler;
+
+    package Binder is
+
+        for Switches ("use_c2phc.adb") use ("-n");
+
+    end Binder;
+
+end state;
