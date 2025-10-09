@@ -1,0 +1,5 @@
+This folder contains the sources of the documentation in restructured text,
+to be processed with Sphinx, with instructions defined in Makefile.
+
+At the command prompt, type 'make html' and 'make latexpdf' to 
+respectively make the HTML and pdf version of the documentation.

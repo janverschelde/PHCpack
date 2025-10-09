@@ -208,6 +208,8 @@ enabling the solution of polynomial systems in the cloud.
 DEMiCs applies dynamic enumeration for all mixed cells and
 computes the mixed volume at a faster pace than MixedVol.
 Since version 2.4.53, DEMiCs is distributed with PHCpack.
+In release 2.4.91, the C++ sources of DEMiCs were replaced
+by translated Ada packages.
 Triple, penta, octo, and deca double arithmetic were added
 in version 2.4.80.
 

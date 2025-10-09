@@ -211,8 +211,8 @@ for example as
 
 ::
 
-   phc -b2 cyclic7 /tmp/c7out2
-   phc -b4 cyclic7 /tmp/c7out4
+   phc -b2 cyclic7 c7out2
+   phc -b4 cyclic7 c7out4
 
 The most computational intensive stage in the solver is in the
 path tracking.  Shared memory multitasked path trackers are
