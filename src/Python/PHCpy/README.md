@@ -2,9 +2,10 @@ PHCpy is the latest development of phcpy.
 
 Ctypes allows to import dynamically linked libraries into a Python session.
 
-For the Python scripts to work, the file libPHCpack,
-for the proper platform (extension .so, .dylib, or .dll) must be present
-in the phcpy folder.
+For the Python scripts to work, the file libPHCpack, for the proper platform
+(extension .so, .dylib, or .dll) must be present in the phcpy folder.
+To make libPHCpack, execute gprbuild phclib.gpr in the src/Ada/Main folder 
+and copy the libPHCpack file from the src/lib folder into the phcpy folder.
 
 | module name    | description of each module                        |
 |----------------|---------------------------------------------------|
