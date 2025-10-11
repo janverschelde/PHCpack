@@ -121,6 +121,31 @@ of the source code.
 The same folder contains ``phclib.gpr`` with instructions to build
 the :index:`library` ``libPHCpack``.
 
+By default, which works on Linux and Windows, 
+an encapsulated library will be build as defined in ``phclib.gpr``
+by the line
+
+::
+
+   for Library_Standalone use "encapsulated";
+
+On MacOS X (and perhaps other platforms), encapsulated library projects
+may not be supported.  If that is the case, then do the following:
+
+1. Remove, or comment out, 
+   the line ``for Library_Standalone use "encapsulated";``
+   from ``phclib.gpr`` and run ``gprbuild phclib.gpr`` again.
+
+2. In the ``.zshrc`` file on MacOS X (or equivalent files depending on
+   the shell used), add the following line:
+
+   ::
+
+       export DYLIB_LIBRARY_PATH=P
+
+   where ``P`` is the absolute path to the ``adalib`` folder
+   which contains the ``libgnarl.dylib`` file.
+
 The ``GPRbuild`` is a multi-language builder tool.
 of the GNAT Project Manager.
 The folders of the source contain each one file with the extension
