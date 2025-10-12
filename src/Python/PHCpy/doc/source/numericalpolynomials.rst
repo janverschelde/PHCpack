@@ -170,3 +170,48 @@ then show
 ::
 
     ' + x-3.33333333333333333333333333333324E-1;'
+
+Laurent polynomials
+-------------------
+
+Laurent polynomials have integer numbers as expeonents
+and therefore admit negative values.
+Some problems benefit from representations as Laurent polynomials.
+Consider for example the cyclic 5-roots problem:
+
+::
+
+   from phcpy.families import cyclic
+   for pol in cyclic(5): print(pol)
+
+which shows
+
+::
+
+
+   x0 + x1 + x2 + x3 + x4;
+   x0*x1 + x1*x2 + x2*x3 + x3*x4 + x4*x0;
+   x0*x1*x2 + x1*x2*x3 + x2*x3*x4 + x3*x4*x0 + x4*x0*x1;
+   x0*x1*x2*x3 + x1*x2*x3*x4 + x2*x3*x4*x0 + x3*x4*x0*x1 + x4*x0*x1*x2;
+   x0*x1*x2*x3*x4 - 1;
+
+The cyclic n-roots problem reformulated as a Laurent system,
+appears in a paper of Uffe Haagerup, available as
+
+::
+
+   from phcpy.families import cyclic_reformulated
+   for pol in cyclic_reformulated(5): print(pol)
+
+which shows
+
+::
+
+
+   x1 + x1^-1*x2 + x2^-1*x3 + x3^-1*x4 + x4^-1;
+   x2 + x1^-1*x3 + x2^-1*x4 + x3^-1 + x4^-1*x1;
+   x3 + x1^-1*x4 + x2^-1 + x3^-1*x1 + x4^-1*x2;
+   x4 + x1^-1 + x2^-1*x1 + x3^-1*x2 + x4^-1*x3;
+
+Compared to the original cyclic 5-root problem,
+the Laurent version has a more regular structure.
