@@ -127,6 +127,24 @@ the solution is right, because the problem on input is very close
 to a linear system which has infinitely many solutions
 (the line ``x + y - 1 = 0``) and not the isolated point ``(1,0)``.
 
+For a list of solutions, the magnitudes of the ``err``, ``rco``, ``res``
+triplet are summarized in a frequency table, computed by
+``condition_tables`` of the ``solutions`` module.
+Consider the solutions of the cyclic 5-roots system:
+
+::
+
+    from phcpy.families import cyclic
+    s = solve(cyclic(5))
+    e, c, r = condition_tables(s)
+ 
+The list ``e`` of 16 numbers uses ``floor((-log10(err))``
+for each error ``err`` as the index in the frequency table.
+Typically, all solutions have ``err`` of the magnitude ``1.0e-15``
+or ``1.0e-16``.  And the same holds for the values in ``r`` as
+all solutions of this problem are well conditioned, as all ``rco``
+values are of the order ``1.0`` or ``1.0e-1``.
+
 For a solution of the example ``noon`` from the module ``families``,
 we convert the PHCpack format solution string to a dictionary as follows:
 
