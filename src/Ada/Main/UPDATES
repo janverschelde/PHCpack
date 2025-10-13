@@ -1,3 +1,5 @@
+Mon 13 Oct 2025 : adjusted greeting_banners for version 2.4.91.
+
 Tue 7 Oct 2025 : updated main.gpr for the removal of pieri_solver_trf.adb.
 
 Sun 5 Oct 2025 : updated main.gpr and phclib.gpr for the removal of C++.
