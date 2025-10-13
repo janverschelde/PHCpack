@@ -2319,7 +2319,7 @@ package body demics_simplex is
         this.eye(i*(this.dim+1)) := 1.0;
         cnt := cnt + 1;
       end loop;
-      if this.output > 0 then
+      if this.output = 1 then
         put_line("----------------------------------");
         put_line("The supports :");
         info_oriSup(this);

@@ -1,3 +1,6 @@
+Mon 13 Oct 2025 : adjusted output level in demics_simplex.adb
+  in the allocateAndIni procedure.
+
 Tue 7 Oct 2025 : commented out info_cpuTime in demics_mvc because
   Execution_Time is not supported on Apple M1 chips.
   In demics_main, replaced info_cpuTime with a timing widget.
