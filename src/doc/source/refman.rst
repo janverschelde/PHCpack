@@ -1322,6 +1322,12 @@ callback functions.
 The pace at which the mixed cells are computed is faster than
 MixedVol which is beneficial for pipelined polyhedral homotopies.
 
+To remove the dependency on C++, translation of the C++ source code into Ada
+was accomplished in version 2.4.91.  The translation was initiated by
+running ``g++ -c -fdump-ada-spec`` on the header files in the C++ source.
+The bodies of those generated Ada packages were then converted into Ada.
+So, the translated code is literal, following the original logic.
+
 The Newton-Puiseux Method
 -------------------------
 
