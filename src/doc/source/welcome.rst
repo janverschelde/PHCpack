@@ -141,7 +141,7 @@ may not be supported.  If that is the case, then do the following:
 
    ::
 
-       export DYLIB_LIBRARY_PATH=P
+       export DYLD_LIBRARY_PATH=P
 
    where ``P`` is the absolute path to the ``adalib`` folder
    which contains the ``libgnarl.dylib`` file.
