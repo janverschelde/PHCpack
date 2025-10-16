@@ -14,7 +14,8 @@ project Laurent is
         "ts_pslaur.adb",   -- tests Laurent power series
         "ts_laurmat.adb",  -- tests matrices of Laurent series
         "ts_lserpol.adb",  -- tests Laurent series polynomials
-        "ts_lsernew.adb"   -- tests Newton's method on Laurent series
+        "ts_lsernew.adb",  -- tests Newton's method on Laurent series
+        "ts_hunwas.adb"    -- tests the Hungarian algorithm
     );
 
     package Compiler is

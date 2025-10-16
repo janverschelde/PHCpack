@@ -1,8 +1,10 @@
-Laurent series with complex coefficients for PHCv2.4.85
+Laurent series and series with real powers for PHCv2.4.92
 
 Power series with leading nonzero coefficients work provide Taylor series
 expansions of regular solutions of polynomial systems.
 Laurent series allow for negative exponents and are arithmetically closed.
+
+In version 2.4.92, code for series with real powers was added.
 
 Run "gprbuild laurent.gpr" to make all test programs.
 
@@ -26,4 +28,8 @@ double_lseries_newton_steps       : runs Newton's method on Laurent series
 test_double_lseries_newton        : tests Newton on Laurent series polynomials
 ts_lsernew                        : main test on Laurent series Newton
 main_laurent_series_newton        : main procedure for phc -u
+------------------------------------------------------------------------------
+double_weighted_assignment        : solves the weighted assignment problem
+test_weighted_assignment          : test on weighted assignment solutions
+ts_hunwas                         : test Hungarian algorithm
 ------------------------------------------------------------------------------
