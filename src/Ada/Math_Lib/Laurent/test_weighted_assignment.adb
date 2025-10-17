@@ -179,6 +179,32 @@ package body Test_Weighted_Assignment is
     end if;
   end Run_Random_Example;
 
+  procedure Check_Two_Sum
+              ( A : in Matrix; b,c : in Standard_Floating_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Adds the components to the Cramer vector to the elements in A and b
+  --   to verify that the minimum is attained twice.
+
+    s : double_float;
+ 
+  begin
+    put_line("A : "); put(A,1,A'last(1),0);
+    put_line("b : "); put(b,0); new_line;
+    put_line("c : "); put(c,0); new_line;
+    put_line("Adding Cramer vector to A | b :");
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        s := A(i,j) + c(j);
+        put(s,4,2,0);
+      end loop;
+      put(" | ");
+      s := b(i) + c(0);
+      put(s,4,2,0);
+      new_line;
+    end loop;
+  end Check_Two_Sum;
+
   procedure Test_Cramer_Vector ( dim : in integer32 ) is
 
     A : constant Matrix(1..dim,1..dim) := Random_Matrix(dim);
@@ -198,6 +224,8 @@ package body Test_Weighted_Assignment is
       put(i,1); put(" : "); put(c(i),0);
       put(" :"); put(m(i).all); new_line;
     end loop;
+    put_line("-> checking if minimum is attained twice ...");
+    Check_Two_Sum(A,b,c);
   end Test_Cramer_Vector;
 
   procedure Main is

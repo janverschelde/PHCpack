@@ -1,3 +1,7 @@
+Fri 17 Oct 2025 : in double_weighted_assignment.adb, fixed re-initialization
+  of mincost in the Cramer vector computation, added test to verify that the
+  minimum is attained twice in test_weighted_assignment.adb.
+
 Thu 16 Oct 2025 : new ts_humwas, test_weighted_assignment, and
   double_weighted_assignment, updated laurent.gpr.
   Added Cramer vector to double_weighted_assignment, with extra test

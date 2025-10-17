@@ -213,6 +213,7 @@ package body Double_Weighted_Assignment is
         wrk(i,k) := b(i);
       end loop;
       Hungarian(wrk,u,v,p,w,vrblvl-1);
+      mincost := 0.0;
       for i in 1..u'last loop
         mincost := mincost + u(i);
       end loop;
