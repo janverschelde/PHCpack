@@ -22,6 +22,13 @@ package Test_Weighted_Assignment is
   --   Generates a random matrix of dimension dim
   --   and then solves the weighted matching problem.
 
+  procedure Test_Cramer_Vector ( dim : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random matrix of dimension dim,
+  --   a random vector of dimension dim, and then
+  --   computes the Cramer vector.
+
   procedure Main;
 
   -- DESCRIPTION :

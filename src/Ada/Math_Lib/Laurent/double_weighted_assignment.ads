@@ -1,6 +1,7 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
+with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
 with Standard_Floating_Matrices;        use Standard_Floating_Matrices;
 
@@ -10,12 +11,13 @@ package Double_Weighted_Assignment is
 --   Applies the Hungarian algorithm to solve the weighted assignment
 --   problem in double arithmetic.
 
-  procedure enumerate ( A : in Matrix; k : in integer32;
-                        selcols : out Standard_Integer_Vectors.Vector;
-                        selsum : in double_float;
-                        mincols : out Standard_Integer_Vectors.Vector;
-                        minsum : in out double_float;
-                        vrblvl : in integer32 := 0 );
+  procedure enumerate
+              ( A : in Matrix; k : in integer32;
+                selcols : out Standard_Integer_Vectors.Vector;
+                selsum : in double_float;
+                mincols : out Standard_Integer_Vectors.Vector;
+                minsum : in out double_float;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Runs a brute force method enumerating all choices of columns,
@@ -38,22 +40,29 @@ package Double_Weighted_Assignment is
   --   minsum   the minimum sum of weights.
 
   function Value_Selection
-             ( A : Matrix; cols : Standard_Integer_Vectors.Vector ) 
-             return double_float;
+              ( A : Matrix; cols : Standard_Integer_Vectors.Vector ) 
+              return double_float;
 
   -- DESCRIPTION :
   --   Given the weights in the matrix A and columns in cols,
   --   returns the value of the selected columns,
   --   which should match the minimum cost.
 
-  procedure Hungarian ( A : in Matrix;
-                        u,v : out Standard_Floating_Vectors.Vector;
-                        p,way : out Standard_Integer_Vectors.Vector;
-                        vrblvl : in integer32 := 0 );
+  procedure Hungarian
+              ( A : in Matrix;
+                u,v : out Standard_Floating_Vectors.Vector;
+                p,way : out Standard_Integer_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Runs the Hungarian algorithm to solve the weighted assignment
   --   problem with weights given in the matrix A.
+
+  -- ACKNOWLEDGEMENT :
+  --   The code is based on the description at
+  --   https://cp-algorithms.com/graph/hungarian-algorithm.html
+  --   which attributes the short code for the Hungarian algorithm
+  --   to Andrey Lopatin.
 
   -- ON ENTRY :
   --   A        matrix with weights;
@@ -70,14 +79,39 @@ package Double_Weighted_Assignment is
   --   way      defines the augmenting path.
 
   function Row_Matching
-             ( cols : Standard_Integer_Vectors.Vector;
-               nbrows : integer32 )
-             return Standard_Integer_Vectors.Vector;
+              ( cols : Standard_Integer_Vectors.Vector;
+                nbrows : integer32 )
+              return Standard_Integer_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Given in cols the selected columns, as in p
   --   computed by running the Hungarian algorithm,
   --   returns an integer vector of range 1..nbrows,
   --   defining the matching row wise.
+
+  procedure Cramer_Vector
+              ( A : in Matrix;
+                b : in Standard_Floating_Vectors.Vector;
+                c : out Standard_Floating_Vectors.Vector;
+                m : out Standard_Integer_VecVecs.VecVec;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Applies the Hungarian algorithm to compute the Cramer vector
+  --   of the system with matrix A and right hand side b.
+
+  -- ON ENTRY :
+  --   A        matrix with weights;
+  --   b        right hand side vector;
+  --   c        vector of range 0..A'last(2);
+  --   m        space of A'last(2)+1 vectors, available as
+  --            a vector of range 0..A'last(2).
+
+  -- ON RETURN :
+  --   c        c(k) equals the minimum costs,
+  --            where the k-th column of A is replaced by b,
+  --            c(0) is the minimum cost of A;
+  --   m        m(0) is the matching of A, and
+  --            m(k) is the matching of replacing column k by b.
 
 end Double_Weighted_Assignment;

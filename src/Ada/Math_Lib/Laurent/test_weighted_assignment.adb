@@ -6,7 +6,9 @@ with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Random_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
+with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
+with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
 with Standard_Floating_Matrices;        use Standard_Floating_Matrices;
 with Standard_Floating_Matrices_io;     use Standard_Floating_Matrices_io;
 with Double_Weighted_Assignment;
@@ -122,20 +124,51 @@ package body Test_Weighted_Assignment is
     end if;
   end Run_Test_Example;
 
-  procedure Run_Random_Example ( dim : in integer32 ) is
+  function Random_Matrix ( dim : integer32 ) return Matrix is
 
-    A : Matrix(1..dim,1..dim);
+  -- DESCRIPTION :
+  --   Returns a random matrix of dimension dim,
+  --   with random integers in the range 1 to 9.
+
+    res : Matrix(1..dim,1..dim);
     random_digit : integer32;
-    v1,v2 : double_float;
 
   begin
     for i in 1..dim loop
       for j in 1..dim loop
         random_digit := Standard_Random_Numbers.Random(1,9);
-        A(i,j) := double_float(random_digit);
+        res(i,j) := double_float(random_digit);
       end loop;
     end loop;
-    put_line("The input matrix : "); put(A,1,5,0);
+    return res;
+  end Random_Matrix;
+
+  function Random_Vector
+             ( dim : integer32 )
+             return Standard_Floating_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns a random vector of dimension dim,
+  --   with random integers in the range 1 to 9.
+
+    res : Standard_Floating_Vectors.Vector(1..dim);
+    random_digit : integer32;
+
+  begin
+    for i in 1..dim loop
+      random_digit := Standard_Random_Numbers.Random(1,9);
+      res(i) := double_float(random_digit);
+    end loop;
+    return res;
+  end Random_Vector;
+
+  procedure Run_Random_Example ( dim : in integer32 ) is
+
+    A : constant Matrix(1..dim,1..dim) := Random_Matrix(dim);
+    v1,v2 : double_float;
+
+  begin
+    put_line("The input matrix : "); put(A,1,dim,0);
     put_line("-> running the brute force method ...");
     Run_Brute_Force(A,v1,1);
     put_line("-> running the Hungarian algorithm ...");
@@ -146,6 +179,27 @@ package body Test_Weighted_Assignment is
     end if;
   end Run_Random_Example;
 
+  procedure Test_Cramer_Vector ( dim : in integer32 ) is
+
+    A : constant Matrix(1..dim,1..dim) := Random_Matrix(dim);
+    b : constant Standard_Floating_Vectors.Vector(1..dim)
+      := Random_Vector(dim);
+    c : Standard_Floating_Vectors.Vector(0..dim);
+    m : Standard_Integer_VecVecs.VecVec(0..dim);
+
+  begin
+    put_line("A random matrix A : "); put(A,1,dim,0);
+    put_line("A random vector b : "); put(b,0); new_line;
+    for i in m'range loop
+      m(i) := new Standard_Integer_Vectors.Vector'(1..dim => 0);
+    end loop;
+    Double_Weighted_Assignment.cramer_vector(A,b,c,m,1);
+    for i in 0..dim loop
+      put(i,1); put(" : "); put(c(i),0);
+      put(" :"); put(m(i).all); new_line;
+    end loop;
+  end Test_Cramer_Vector;
+
   procedure Main is
 
     ans : character;
@@ -153,15 +207,24 @@ package body Test_Weighted_Assignment is
 
   begin
     new_line;
-    put("Run random example ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    if ans = 'n' then
-      put_line("-> testing textbook example ...");
-      Run_Test_Example;
-    else
-      put("-> give the dimension of the matrix : "); get(dim);
-      Run_Random_Example(dim);
-    end if;
+    put_line("MENU to test the weighted assignment solvers :");
+    put_line("  0. test a textbook example");
+    put_line("  1. generate a random example to test");
+    put_line("  2. compute a Cramer vector on random data");
+    put("Type 0, 1, or 2 to select a test : ");
+    Ask_Alternative(ans,"012");
+    new_line;
+    case ans is
+      when '0' =>
+        put_line("-> testing textbook example ...");
+        Run_Test_Example;
+      when others =>
+        put("-> give the dimension of the matrix : "); get(dim);
+        if ans = '1'
+         then Run_Random_Example(dim);
+         else Test_Cramer_Vector(dim);
+        end if;
+    end case;
   end Main;
 
 end Test_Weighted_Assignment;

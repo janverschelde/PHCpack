@@ -1,5 +1,7 @@
 Thu 16 Oct 2025 : new ts_humwas, test_weighted_assignment, and
   double_weighted_assignment, updated laurent.gpr.
+  Added Cramer vector to double_weighted_assignment, with extra test
+  in added to test_weighted_assignement.
 
 Thu 24 Jun 2021 : fixed test_double_lseries_polynomials.adb for the move
   Write procedure, moved out of the test_double_lseries_matrices.

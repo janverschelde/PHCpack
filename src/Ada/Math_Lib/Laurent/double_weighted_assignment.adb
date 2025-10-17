@@ -171,4 +171,65 @@ package body Double_Weighted_Assignment is
     return res;
   end Row_Matching;
 
+  procedure Cramer_Vector
+              ( A : in Matrix;
+                b : in Standard_Floating_Vectors.Vector;
+                c : out Standard_Floating_Vectors.Vector;
+                m : out Standard_Integer_VecVecs.VecVec;
+                vrblvl : in integer32 := 0 ) is
+
+    u : Standard_Floating_Vectors.Vector(0..A'last(1));
+    v : Standard_Floating_Vectors.Vector(0..A'last(2));
+    p : Standard_Integer_Vectors.Vector(0..A'last(2));
+    w : Standard_Integer_Vectors.Vector(1..A'last(2));
+    match : Standard_Integer_Vectors.Vector(A'range(1));
+    mincost : double_float := 0.0;
+    wrk : Matrix(A'range(1),A'range(2));
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Double_Weighted_Assignment.cramer_vector ...");
+    end if;
+    Hungarian(A,u,v,p,w,vrblvl-1);
+    for i in 1..u'last loop
+      mincost := mincost + u(i);
+    end loop;
+    for i in 1..v'last loop
+      mincost := mincost + v(i);
+    end loop;
+    match := Double_Weighted_Assignment.Row_Matching(p,A'last(1));
+    if vrblvl > 0 then
+      put("0 : "); 
+      put("minimum : "); put(mincost,1,3,3);
+      put(" at"); put(match); new_line;
+    end if;
+    c(0) := mincost;
+    for i in match'range loop
+      m(0)(i) := match(i);
+    end loop;
+    for k in A'range(2) loop
+      wrk := A;
+      for i in A'range(1) loop
+        wrk(i,k) := b(i);
+      end loop;
+      Hungarian(wrk,u,v,p,w,vrblvl-1);
+      for i in 1..u'last loop
+        mincost := mincost + u(i);
+      end loop;
+      for i in 1..v'last loop
+        mincost := mincost + v(i);
+      end loop;
+      match := Double_Weighted_Assignment.Row_Matching(p,A'last(1));
+      if vrblvl > 0 then
+        put(k,1); put(" : ");
+        put("minimum : "); put(mincost,1,3,3);
+        put(" at"); put(match); new_line;
+      end if;
+      c(k) := mincost;
+      for i in match'range loop
+        m(k)(i) := match(i);
+      end loop;
+    end loop;
+  end Cramer_Vector;
+
 end Double_Weighted_Assignment;
