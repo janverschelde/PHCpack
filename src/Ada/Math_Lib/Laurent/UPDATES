@@ -1,3 +1,8 @@
+Sat 18 Oct 2025 : to test_weighted_assignment.adb, added an explicit check
+  that the minimum is attained at least twice.  Added second_index function
+  to double_weighted_assignment to compute the second index where the
+  minimum is attained.
+
 Fri 17 Oct 2025 : in double_weighted_assignment.adb, fixed re-initialization
   of mincost in the Cramer vector computation, added test to verify that the
   minimum is attained twice in test_weighted_assignment.adb.

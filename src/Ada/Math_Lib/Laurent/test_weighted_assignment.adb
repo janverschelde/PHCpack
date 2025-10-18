@@ -136,8 +136,8 @@ package body Test_Weighted_Assignment is
   begin
     for i in 1..dim loop
       for j in 1..dim loop
-        random_digit := Standard_Random_Numbers.Random(1,9);
-        res(i,j) := double_float(random_digit);
+        random_digit := Standard_Random_Numbers.Random(1000,9999);
+        res(i,j) := double_float(random_digit)/1000.0;
       end loop;
     end loop;
     return res;
@@ -156,8 +156,8 @@ package body Test_Weighted_Assignment is
 
   begin
     for i in 1..dim loop
-      random_digit := Standard_Random_Numbers.Random(1,9);
-      res(i) := double_float(random_digit);
+      random_digit := Standard_Random_Numbers.Random(1000,9999);
+      res(i) := double_float(random_digit)/1000.0;
     end loop;
     return res;
   end Random_Vector;
@@ -179,8 +179,48 @@ package body Test_Weighted_Assignment is
     end if;
   end Run_Random_Example;
 
+  function argmin ( abc : Matrix ) return Standard_Floating_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Given in abc is the sum of the weights in A extended with b,
+  --   augmented with the values of the Cramer vector,
+  --   computes the minimum on each row and the indices
+  --   where the minimum is attained.
+
+    res : Standard_Floating_Vectors.Vector(abc'range(1));
+    minval : double_float;
+    cnt : integer32;
+
+  begin
+    for i in abc'range(1) loop
+      minval := abc(i,abc'first(2));
+      for j in abc'first(2)..abc'last(2) loop
+        if abc(i,j) < minval
+         then minval := abc(i,j);
+        end if;
+      end loop;
+      put("min : "); put(minval,2,2,0);
+      put(" at");
+      cnt := 0;
+      for j in abc'range(2) loop
+        if abs(abc(i,j) - minval) < 1.0e-10
+         then put(" "); put(j,1); cnt := cnt + 1;
+        end if;
+      end loop;
+      if cnt >= 2
+       then put_line(" okay");
+       else put_line(" minimum not attained at least twice, bug!");
+      end if;
+      res(i) := minval;
+    end loop;
+    return res;
+  end argmin;
+
   procedure Check_Two_Sum
-              ( A : in Matrix; b,c : in Standard_Floating_Vectors.Vector ) is
+              ( A : in Matrix; b,c : in Standard_Floating_Vectors.Vector;
+                abc : out Matrix;
+                minvals : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Adds the components to the Cramer vector to the elements in A and b
@@ -189,6 +229,9 @@ package body Test_Weighted_Assignment is
     s : double_float;
  
   begin
+    if vrblvl > 0
+     then put_line("-> in Test_Weighted_Assignment.check_two_sum ...");
+    end if;
     put_line("A : "); put(A,1,A'last(1),0);
     put_line("b : "); put(b,0); new_line;
     put_line("c : "); put(c,0); new_line;
@@ -197,12 +240,15 @@ package body Test_Weighted_Assignment is
       for j in A'range(2) loop
         s := A(i,j) + c(j);
         put(s,4,2,0);
+        abc(i,j) := s;
       end loop;
       put(" | ");
       s := b(i) + c(0);
       put(s,4,2,0);
+      abc(i,abc'last(2)) := s;
       new_line;
     end loop;
+    minvals := argmin(abc);
   end Check_Two_Sum;
 
   procedure Test_Cramer_Vector ( dim : in integer32 ) is
@@ -212,6 +258,10 @@ package body Test_Weighted_Assignment is
       := Random_Vector(dim);
     c : Standard_Floating_Vectors.Vector(0..dim);
     m : Standard_Integer_VecVecs.VecVec(0..dim);
+    idx2 : Standard_Integer_Vectors.Vector(1..dim);
+    abc : Matrix(A'range(1),A'first(2)..A'last(2)+1);
+    mv : Standard_Floating_Vectors.Vector(1..dim);
+    corrected : boolean;
 
   begin
     put_line("A random matrix A : "); put(A,1,dim,0);
@@ -225,7 +275,22 @@ package body Test_Weighted_Assignment is
       put(" :"); put(m(i).all); new_line;
     end loop;
     put_line("-> checking if minimum is attained twice ...");
-    Check_Two_Sum(A,b,c);
+    Check_Two_Sum(A,b,c,abc,mv,1);
+    put("1st index :"); put(m(0).all); new_line;
+    idx2 := Double_Weighted_Assignment.second_index(m);
+    put("2nd index :"); put(idx2); new_line;
+    corrected := false;
+    for i in mv'range loop
+      if idx2(i) /= A'last(2)+1 then
+        if abs(mv(i) - abc(i,abc'last(2))) < 1.0E-10 then
+          idx2(i) := A'last(2) + 1;
+          corrected := true;
+        end if;
+      end if;
+    end loop;
+    if corrected
+     then put("corrected :"); put(idx2); new_line;
+    end if;
   end Test_Cramer_Vector;
 
   procedure Main is

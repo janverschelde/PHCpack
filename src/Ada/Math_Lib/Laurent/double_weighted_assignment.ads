@@ -114,4 +114,14 @@ package Double_Weighted_Assignment is
   --   m        m(0) is the matching of A, and
   --            m(k) is the matching of replacing column k by b.
 
+  function Second_Index
+              ( m : Standard_Integer_VecVecs.VecVec )
+              return Standard_Integer_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   The first index where the minimum is attained in [A|b]+c
+  --   is in the vector m(0).  The second index is determined by
+  --   the different indices in the other vectors in m,
+  --   and all second indices are in the returned vector.
+
 end Double_Weighted_Assignment;

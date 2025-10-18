@@ -233,4 +233,34 @@ package body Double_Weighted_Assignment is
     end loop;
   end Cramer_Vector;
 
+  function Second_Index
+              ( m : Standard_Integer_VecVecs.VecVec )
+              return Standard_Integer_Vectors.Vector is
+
+    res : Standard_Integer_Vectors.Vector(1..m'last);
+    first : boolean;
+
+  begin
+    for k in res'range loop
+      res(k) := m(0)(k);
+      first := true;
+      for i in 1..m'last loop
+        if m(i)(k) /= res(k) then   -- different index
+          if first then
+            res(k) := m(i)(k);
+            first := false;
+          else
+            if m(i)(k) /= m(0)(k)     -- different from first and second
+             then res(k) := m'last+1; -- must use b-index
+            end if;
+          end if;
+        end if;
+      end loop;
+      if res(k) = m(0)(k)
+       then res(k) := m'last+1;
+      end if;
+    end loop;
+    return res;
+  end Second_Index;
+
 end Double_Weighted_Assignment;
