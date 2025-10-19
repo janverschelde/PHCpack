@@ -24,7 +24,7 @@ package body Double_Weighted_Assignment is
   end Is_In;
 
   procedure enumerate ( A : in Matrix; k : in integer32;
-                        selcols : out Standard_Integer_Vectors.Vector;
+                        selcols : in out Standard_Integer_Vectors.Vector;
                         selsum : in double_float;
                         mincols : out Standard_Integer_Vectors.Vector;
                         minsum : in out double_float;
@@ -175,7 +175,7 @@ package body Double_Weighted_Assignment is
               ( A : in Matrix;
                 b : in Standard_Floating_Vectors.Vector;
                 c : out Standard_Floating_Vectors.Vector;
-                m : out Standard_Integer_VecVecs.VecVec;
+                m : in Standard_Integer_VecVecs.VecVec;
                 vrblvl : in integer32 := 0 ) is
 
     u : Standard_Floating_Vectors.Vector(0..A'last(1));
@@ -262,5 +262,123 @@ package body Double_Weighted_Assignment is
     end loop;
     return res;
   end Second_Index;
+
+  function Abc_Matrix ( A : Matrix;
+                        b,c : Standard_Floating_Vectors.Vector )
+                      return Matrix is
+
+    res : Matrix(A'range(1),A'first(2)..A'last(2)+1);
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        res(i,j) := A(i,j) + c(j);
+      end loop;
+      res(i,res'last(2)) := b(i) + c(0);
+    end loop;
+    return res;
+  end Abc_Matrix;
+
+  procedure Abc_Argmin
+              ( abc : in Matrix; tol : in double_float;
+                minvals : out Standard_Floating_Vectors.Vector;
+                idxmins : out Standard_Integer_Vectors.Vector;
+                fail : out boolean; vrblvl : in integer32 := 0 ) is
+
+    minval : double_float;
+    cnt : integer32;
+    idx : integer32 := 0;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Double_Weighted_Assignment.abc_argmin ...");
+    end if;
+    fail := false;
+    for i in abc'range(1) loop
+      minval := abc(i,abc'first(2));
+      for j in abc'first(2)..abc'last(2) loop
+        if abc(i,j) < minval
+         then minval := abc(i,j);
+        end if;
+      end loop;
+      if vrblvl > 0
+       then put("min : "); put(minval,2,1,0); put(" at");
+      end if;
+      cnt := 0;
+      for j in abc'range(2) loop
+        if abs(abc(i,j) - minval) < tol then
+          if vrblvl > 0
+           then put(" "); put(j,1);
+          end if;
+          cnt := cnt + 1;
+          if cnt <= 2 then
+            idx := idx + 1;
+            idxmins(idx) := j;
+          end if;
+        end if;
+      end loop;
+      if vrblvl > 0 then
+        if cnt >= 2
+         then put_line(" okay");
+         else put_line(" minimum not attained at least twice, bug!");
+        end if;
+      end if;
+      fail := fail or (cnt /= 2);
+      minvals(i) := minval;
+    end loop;
+  end Abc_Argmin;
+
+  procedure sort ( idx1,idx2 : in out Standard_Integer_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Sorts the indices such that idx1(k) < idx2(k), for all k.
+
+    val : integer32;
+
+  begin
+    for k in idx1'range loop
+      if idx1(k) > idx2(k) then
+        val := idx2(k);
+        idx2(k) := idx1(k);
+        idx1(k) := val;
+      end if;
+    end loop;
+  end sort;
+
+  procedure Abc_Indices
+              ( abc : in Matrix; tol : in double_float;
+                m : in Standard_Integer_VecVecs.VecVec;
+                minvals : in Standard_Floating_Vectors.Vector;
+                idx1,idx2 : out Standard_Integer_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    corrected : boolean;
+
+  begin
+    if vrblvl > 0 then
+      put_line("-> in Double_Weighted_Assignment.abc_indices ...");
+    end if;
+    idx1 := m(0).all;
+    idx2 := Double_Weighted_Assignment.second_index(m);
+    if vrblvl > 0 then
+      put("1st index :"); put(idx1); new_line;
+      put("2nd index :"); put(idx2); new_line;
+    end if;
+    corrected := false;
+    for i in minvals'range loop
+      if idx2(i) /= abc'last(2) then
+        if abs(minvals(i) - abc(i,abc'last(2))) < tol then
+          idx2(i) := abc'last(2);
+          corrected := true;
+        end if;
+      end if;
+    end loop;
+    if vrblvl > 0 then
+      if corrected then
+        put("corrected :"); put(idx2); new_line;
+      end if;
+    end if;
+    sort(idx1,idx2); -- only sort at end, as idx1 is always correct
+  end Abc_Indices;
 
 end Double_Weighted_Assignment;

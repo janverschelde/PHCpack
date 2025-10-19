@@ -1,3 +1,6 @@
+Sun 19 Oct 2025 : improved index testing in test_weighted_assignment.adb
+  and moved index computation procedures to double_weighted_assignment.
+
 Sat 18 Oct 2025 : to test_weighted_assignment.adb, added an explicit check
   that the minimum is attained at least twice.  Added second_index function
   to double_weighted_assignment to compute the second index where the
