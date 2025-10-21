@@ -5,6 +5,7 @@ with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Integer_Vectors;
+with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
 with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
@@ -55,14 +56,22 @@ procedure ts_hunsys is
     b : Standard_Floating_Vectors.Vector(1..dim);
     c : Standard_Floating_Vectors.Vector(0..dim);
     d : Standard_Floating_Vectors.Vector(1..dim);
+    r : Standard_Floating_Vectors.Vector(1..dim);
     m : Standard_Integer_VecVecs.VecVec(0..dim);
     abc : Matrix(1..dim,1..dim+1);
+    mv : Standard_Floating_Vectors.Vector(1..dim);
+    idxmv : Standard_Integer_Vectors.Vector(1..2*dim);
+    idxmv1,idxmv2 : Standard_Integer_Vectors.Vector(1..dim);
+    fail : boolean;
 
   begin
     for i in 1..dim loop
       x(i) := 1.0 + abs(x(i));
       for j in A'range(2) loop
-        A(i,j) := 1.0 + abs(A(i,j));
+        if i = j
+         then A(i,j) := abs(A(i,j));
+         else A(i,j) := 1.0 + abs(A(i,j));
+        end if;
       end loop;
     end loop;
     put("A random "); put(dim,1);
@@ -90,10 +99,28 @@ procedure ts_hunsys is
       put(abc(i,abc'last(2)),3);
       new_line;
     end loop;
+    Double_Weighted_Assignment.Abc_ArgMin(abc,1.0e-10,mv,idxmv,fail,1);
+    if fail
+     then put_line("Failed to reach minimum exactly twice!");
+    end if;
+    for i in 1..dim loop
+      idxmv1(i) := idxmv(2*i-1);
+      idxmv2(i) := idxmv(2*i);
+    end loop;
+    put("1st index :"); put(idxmv1); new_line;
+    put("2nd index :"); put(idxmv2); new_line;
     for i in d'range loop
       d(i) := c(i) - c(0);
     end loop;
     put_line("The leading degrees : "); put(d,3); new_line;
+    put_line("The original x : "); put(x,3); new_line;
+    r := Row_Min_Plus(A,d);
+    put_line("Comparing right hand sides :");
+    for i in r'range loop
+      put("b("); put(i,1); put(") :"); put(b(i));
+      put(" - r("); put(i,1); put(") :"); put(r(i));
+      put(" = "); put(b(i)-r(i),2,3,3); new_line;
+    end loop;
   end Test_Random_Input;
 
   procedure Main is

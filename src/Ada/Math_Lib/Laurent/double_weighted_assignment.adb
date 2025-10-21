@@ -302,7 +302,7 @@ package body Double_Weighted_Assignment is
         end if;
       end loop;
       if vrblvl > 0
-       then put("min : "); put(minval,2,1,0); put(" at");
+       then put("min : "); put(minval); put(" at");
       end if;
       cnt := 0;
       for j in abc'range(2) loop
