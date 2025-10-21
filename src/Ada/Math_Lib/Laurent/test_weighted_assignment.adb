@@ -179,11 +179,10 @@ package body Test_Weighted_Assignment is
     end if;
   end Run_Random_Example;
 
-  procedure Test_Cramer_Vector ( dim : in integer32 ) is
+  procedure Test_Cramer_Vector
+              ( dim : in integer32; A : in Matrix;
+                b : in Standard_Floating_Vectors.Vector ) is
 
-    A : constant Matrix(1..dim,1..dim) := Random_Matrix(dim);
-    b : constant Standard_Floating_Vectors.Vector(1..dim)
-      := Random_Vector(dim);
     c : Standard_Floating_Vectors.Vector(0..dim);
     m : Standard_Integer_VecVecs.VecVec(0..dim);
     idx1,idx2 : Standard_Integer_Vectors.Vector(1..dim);
@@ -235,6 +234,33 @@ package body Test_Weighted_Assignment is
      then put_line("equal index vectors");
      else put_line("index vectors are not equal!");
     end if;
+  end Test_Cramer_Vector;
+
+  procedure Test_Cramer_Vector ( dim : in integer32 ) is
+
+    ans : character;
+    A : Matrix(1..dim,1..dim);
+    b : Standard_Floating_Vectors.Vector(1..dim);
+
+  begin
+    put("Random data ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      A := Random_Matrix(dim);
+      b := Random_Vector(dim);
+    else
+      put("-> reading "); put(dim*dim,1); put_line(" values for A ...");
+      for i in A'range(1) loop
+        for j in A'range(2) loop
+          put("give A("); put(i,1); put(","); put(j,1); put(") : ");
+          get(A(i,j));
+        end loop;
+      end loop;
+      put("-> reading "); put(dim,1); put_line(" values for b ...");
+      for i in b'range loop
+        put("give b("); put(i,1); put(") : "); get(b(i));
+      end loop;
+    end if;
+    Test_Cramer_Vector(dim,A,b);
   end Test_Cramer_Vector;
 
   procedure Main is

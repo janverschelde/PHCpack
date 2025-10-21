@@ -1,3 +1,6 @@
+Mon 20 Oct 2025 : new ts_hunsys to test the retrieval of the leading degrees
+  via the weighted assignment problem.  Updated laurent.gpr.
+
 Sun 19 Oct 2025 : improved index testing in test_weighted_assignment.adb
   and moved index computation procedures to double_weighted_assignment.
 
