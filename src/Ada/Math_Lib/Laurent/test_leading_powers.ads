@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Boolean_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Floating_Matrices;        use Standard_Floating_Matrices;
@@ -17,6 +18,15 @@ package Test_Leading_Powers is
   --   Returns the minimum of the sum of the elements on each row of A,
   --   augmented in each column with the corresponding element in x,
   --   representing the leading powers of t^A*t^x.
+
+  function Row_Min_Plus
+             ( A : Matrix; x : Standard_Floating_Vectors.Vector;
+               skip : Boolean_Vectors.Vector )
+             return Standard_Floating_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Same as Row_Min_Plus(A,x), but columns k for which skip(k) is true
+  --   are skipped.
 
   function id ( n : integer32 ) return Standard_Integer_Vectors.Vector;
 
@@ -103,6 +113,32 @@ package Test_Leading_Powers is
   --   x        original leading powers of the solution;
   --   d        leading powers of the solution,
   --            computed via the tropical Cramer vector.
+
+  procedure Check_Correctness
+              ( dim : in integer32;
+                x,d : in Standard_Floating_Vectors.Vector;
+                idx1,idx2 : in Standard_Integer_Vectors.Vector;
+                correct : out Boolean_Vectors.Vector;
+                cd : in out Standard_Floating_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Determines which of the entries in d are correct,
+  --   using the indices computed by the tropical Cramer vector,
+  --   updating the Boolean vector correct.
+
+  -- ON ENTRY :
+  --   dim      dimension, number of rows and columns of A;
+  --   A        matrix with prescribed locations of the minima;
+  --   x        original leading powers of the solution;
+  --   d        leading powers of the solution,
+  --            computed via the tropical Cramer vector;
+  --   idx1     first set of indices in the tropical Cramer vector;
+  --   idx2     second set of indices in the tropical Cramer vector;
+  --   cd       current correct values.
+
+  -- ON RETURN :
+  --   correct  updated vector of indices to correct values;
+  --   cd       updated correct values.
 
   procedure Test_Leading_Random ( dim : in integer32 );
 

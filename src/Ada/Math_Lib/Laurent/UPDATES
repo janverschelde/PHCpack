@@ -1,6 +1,8 @@
 Wed 22 Oct 2025 : new package test_leading_powers to develop the case when
   one single Cramer vector decides all leading powers, called by ts_hunsys.
-  Extended test_leading_powes with test on general random input.
+  Extended test_leading_powers with test on general random input.
+  Iterated Cramer vector computations in test_leading_powers recovers
+  all leading powers.
 
 Tue 21 Oct 2025 : updated double_weighted_assignment.adb and ts_hunsys.adb
   with more tests.

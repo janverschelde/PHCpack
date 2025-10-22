@@ -35,6 +35,29 @@ package body Test_Leading_Powers is
     return res;
   end Row_Min_Plus;
 
+  function Row_Min_Plus
+             ( A : Matrix; x : Standard_Floating_Vectors.Vector;
+               skip : Boolean_Vectors.Vector )
+             return Standard_Floating_Vectors.Vector is
+
+    res : Standard_Floating_Vectors.Vector(A'range(1));
+    val : double_float;
+
+  begin
+    for i in res'range loop
+      res(i) := 1.0E+99;
+      for j in A'range(2) loop
+        if not skip(j) then
+          val := A(i,j) + x(j);
+          if val < res(i)
+           then res(i) := val;
+          end if;
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Row_Min_Plus;
+
   function id ( n : integer32 ) return Standard_Integer_Vectors.Vector is
 
     res : Standard_Integer_Vectors.Vector(1..n);
@@ -207,14 +230,58 @@ package body Test_Leading_Powers is
     end if;
   end Check_Differences;
 
+  procedure Check_Correctness
+              ( dim : in integer32;
+                x,d : in Standard_Floating_Vectors.Vector;
+                idx1,idx2 : in Standard_Integer_Vectors.Vector;
+                correct : out Boolean_Vectors.Vector;
+                cd : in out Standard_Floating_Vectors.Vector ) is
+
+    cnt : integer32 := 0;
+    err : double_float;
+
+  begin
+    cnt := 0;
+    for i in idx2'range loop
+      put("-> value for "); put(idx1(i),1);
+      if idx2(i) = dim+1
+       then put(" is correct? ");
+       else put(" not correct ");
+      end if;
+      err := abs(x(idx1(i)) - d(idx1(i)));
+      put(":"); put(err,3);
+      if idx2(i) = dim+1 then
+        if err < 1.0e-12 then
+          put_line(", okay"); cnt := cnt + 1;
+          correct(idx1(i)) := true;
+          cd(idx1(i)) := d(idx1(i));
+        else
+          put_line(", bug!");
+        end if;
+      else
+        if err < 1.0e-12 
+         then put_line(", minimum attained 3 times?");
+         else put_line(", okay");
+        end if;
+      end if;
+    end loop;
+    put("Found "); put(cnt,1); put_line(" correct values.");
+    for i in correct'range loop
+      if correct(i) then
+        put("-> value "); put(i,1); put_line(" is correct :");
+        put("d("); put(i,1); put(") :"); put(cd(i)); new_line;
+        put("x("); put(i,1); put(") :"); put(x(i));
+        err := cd(i) - x(i);
+        put(", err : "); put(err,3); new_line;
+      end if;
+    end loop;
+  end Check_Correctness;
+
   procedure Test_Leading_Random ( dim : in integer32 ) is
 
     A : Matrix(1..dim,1..dim);
-    x : Standard_Floating_Vectors.Vector(1..dim);
-    p : Standard_Integer_Vectors.Vector(1..dim);
-    b : Standard_Floating_Vectors.Vector(1..dim);
-    d : Standard_Floating_Vectors.Vector(1..dim);
-    idx1,idx2 : Standard_Integer_Vectors.Vector(1..dim);
+    x,b,d : Standard_Floating_Vectors.Vector(1..dim);
+    p,idx1,idx2 : Standard_Integer_Vectors.Vector(1..dim);
     fail : boolean;
 
   begin
@@ -244,48 +311,40 @@ package body Test_Leading_Powers is
   procedure Test_General_Random ( dim : in integer32 ) is
 
     A : Matrix(1..dim,1..dim);
-    x : Standard_Floating_Vectors.Vector(1..dim);
-    b : Standard_Floating_Vectors.Vector(1..dim);
-    d : Standard_Floating_Vectors.Vector(1..dim);
+    x,b,d,cd : Standard_Floating_Vectors.Vector(1..dim);
     idx1,idx2 : Standard_Integer_Vectors.Vector(1..dim);
-    fail : boolean;
-    err : double_float;
-    cnt : integer32;
+    fail,done : boolean;
+    correct : Boolean_Vectors.Vector(1..dim) := (1..dim => false);
 
   begin
     put_line("-> generating random data ...");
     Random_General_Input(dim,A,x,b);
-    put_line("-> computing the tropical Cramer vector ...");
-    Leading_Powers(dim,A,b,d,idx1,idx2,fail);
-    if not fail then
-      put_line("No failure reported, unexpected.");
-      put_line("-> checking differences ...");
-      Check_Differences(dim,A,b,x,d);
-    else
-      put_line("Failure reported, as expected.");
-      cnt := 0;
-      for i in idx2'range loop
-        put("-> value for "); put(idx1(i),1);
-        if idx2(i) = dim+1
-         then put(" is correct? ");
-         else put(" not correct ");
-        end if;
-        err := abs(x(idx1(i)) - d(idx1(i)));
-        put(":"); put(err,3);
-        if idx2(i) = dim+1 then
-          if err < 1.0e-12 
-           then put_line(", okay"); cnt := cnt + 1;
-           else put_line(", bug!");
-          end if;
+    cd := (1..dim => -1.0);
+    for i in 1..dim loop
+      put("*** running step "); put(i,1); put_line(" ***");
+      put_line("-> computing the tropical Cramer vector ...");
+      Leading_Powers(dim,A,b,d,idx1,idx2,fail);
+      if not fail then
+        put_line("No failure reported, unexpected.");
+        put_line("-> checking differences ...");
+        Check_Differences(dim,A,b,x,d);
+      else
+        put_line("Failure reported, as expected.");
+        Check_Correctness(dim,x,d,idx1,idx2,correct,cd);
+        done := true;
+        for i in correct'range loop
+          done := done and correct(i);
+        end loop;
+        if done then
+          fail := false;
+          put("A step "); put(i,1);
+          put_line(", all values are correct, done!");
         else
-          if err < 1.0e-12 
-           then put_line(", minimum attained 3 times?");
-           else put_line(", okay");
-          end if;
+          b := Row_Min_Plus(A,x,correct);
         end if;
-      end loop;
-      put("Found "); put(cnt,1); put_line(" correct values.");
-    end if;
+      end if;
+      exit when not fail;
+    end loop;
   end Test_General_Random;
 
   procedure Main is
