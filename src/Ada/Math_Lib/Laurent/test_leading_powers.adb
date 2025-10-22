@@ -1,4 +1,5 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
+with Communications_with_User;          use Communications_with_User;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
@@ -101,18 +102,42 @@ package body Test_Leading_Powers is
     put_line("The right hand side vector : "); put(b,3); new_line;
   end Random_Leading_Input;
 
+  procedure Random_General_Input 
+              ( dim : in integer32;
+                A : out Matrix;
+                x,b : out Standard_Floating_Vectors.Vector ) is
+
+    n : constant natural32 := natural32(dim);
+
+  begin
+    A := Standard_Random_Matrices.Random_Matrix(n,n);
+    x := Standard_Random_Vectors.Random_Vector(1,dim);
+    for i in 1..dim loop
+      x(i) := abs(x(i));
+      for j in A'range(2) loop
+        A(i,j) := abs(A(i,j));
+      end loop;
+    end loop;
+    put("A random "); put(dim,1);
+    put_line("-dimensional matrix :"); put(A,3);
+    put("A random "); put(dim,1);
+    put_line("-dimensional vector :"); put(x,3); new_line;
+    b := Row_Min_Plus(A,x);
+    put_line("The right hand side vector : "); put(b,3); new_line;
+  end Random_General_Input;
+
   procedure Leading_Powers
               ( dim : in integer32; A : in Matrix;
                 b : in Standard_Floating_Vectors.Vector;
-                d : out Standard_Floating_Vectors.Vector ) is
+                d : out Standard_Floating_Vectors.Vector;
+                idxone,idxtwo : out Standard_Integer_Vectors.Vector;
+                fail : out boolean ) is
 
     c : Standard_Floating_Vectors.Vector(0..dim);
     m : Standard_Integer_VecVecs.VecVec(0..dim);
     abc : Matrix(1..dim,1..dim+1);
     mv : Standard_Floating_Vectors.Vector(1..dim);
     idxmv : Standard_Integer_Vectors.Vector(1..2*dim);
-    idxmv1,idxmv2 : Standard_Integer_Vectors.Vector(1..dim);
-    fail : boolean;
 
   begin
     for i in m'range loop
@@ -138,11 +163,11 @@ package body Test_Leading_Powers is
      then put_line("Failed to reach minimum exactly twice!");
     end if;
     for i in 1..dim loop
-      idxmv1(i) := idxmv(2*i-1);
-      idxmv2(i) := idxmv(2*i);
+      idxone(i) := idxmv(2*i-1);
+      idxtwo(i) := idxmv(2*i);
     end loop;
-    put("1st index :"); put(idxmv1); new_line;
-    put("2nd index :"); put(idxmv2); new_line;
+    put("1st index :"); put(idxone); new_line;
+    put("2nd index :"); put(idxtwo); new_line;
     for i in d'range loop
       d(i) := c(i) - c(0);
     end loop;
@@ -182,32 +207,102 @@ package body Test_Leading_Powers is
     end if;
   end Check_Differences;
 
-  procedure Test_Random_Input ( dim : in integer32 ) is
+  procedure Test_Leading_Random ( dim : in integer32 ) is
 
     A : Matrix(1..dim,1..dim);
     x : Standard_Floating_Vectors.Vector(1..dim);
     p : Standard_Integer_Vectors.Vector(1..dim);
     b : Standard_Floating_Vectors.Vector(1..dim);
     d : Standard_Floating_Vectors.Vector(1..dim);
+    idx1,idx2 : Standard_Integer_Vectors.Vector(1..dim);
+    fail : boolean;
 
   begin
     put_line("-> generating random data ...");
     Random_Leading_Input(dim,p,A,x,b);
     put_line("-> computing the tropical Cramer vector ...");
-    Leading_Powers(dim,A,b,d);
-    put_line("-> checking differences ...");
-    Check_Differences(dim,A,b,x,d);
-  end Test_Random_Input;
+    Leading_Powers(dim,A,b,d,idx1,idx2,fail);
+    if fail then
+      put_line("Unexpected failure reported!");
+    else
+      fail := false;
+      for i in idx2'range loop
+        fail := fail or (idx2(i) /= dim+1);
+      end loop;
+      if not fail then
+        put("All second indices equal ");
+        put(dim+1,1); put_line(", okay.");
+      else
+        put("All second indices are not equal to ");
+        put(dim+1,1); put_line(", bug!");
+      end if;
+      put_line("-> checking differences ...");
+      Check_Differences(dim,A,b,x,d);
+    end if;
+  end Test_Leading_Random;
+
+  procedure Test_General_Random ( dim : in integer32 ) is
+
+    A : Matrix(1..dim,1..dim);
+    x : Standard_Floating_Vectors.Vector(1..dim);
+    b : Standard_Floating_Vectors.Vector(1..dim);
+    d : Standard_Floating_Vectors.Vector(1..dim);
+    idx1,idx2 : Standard_Integer_Vectors.Vector(1..dim);
+    fail : boolean;
+    err : double_float;
+    cnt : integer32;
+
+  begin
+    put_line("-> generating random data ...");
+    Random_General_Input(dim,A,x,b);
+    put_line("-> computing the tropical Cramer vector ...");
+    Leading_Powers(dim,A,b,d,idx1,idx2,fail);
+    if not fail then
+      put_line("No failure reported, unexpected.");
+      put_line("-> checking differences ...");
+      Check_Differences(dim,A,b,x,d);
+    else
+      put_line("Failure reported, as expected.");
+      cnt := 0;
+      for i in idx2'range loop
+        put("-> value for "); put(idx1(i),1);
+        if idx2(i) = dim+1
+         then put(" is correct? ");
+         else put(" not correct ");
+        end if;
+        err := abs(x(idx1(i)) - d(idx1(i)));
+        put(":"); put(err,3);
+        if idx2(i) = dim+1 then
+          if err < 1.0e-12 
+           then put_line(", okay"); cnt := cnt + 1;
+           else put_line(", bug!");
+          end if;
+        else
+          if err < 1.0e-12 
+           then put_line(", minimum attained 3 times?");
+           else put_line(", okay");
+          end if;
+        end if;
+      end loop;
+      put("Found "); put(cnt,1); put_line(" correct values.");
+    end if;
+  end Test_General_Random;
 
   procedure Main is
 
     dim : integer32 := 0;
+    ans : character;
 
   begin
     new_line;
     put_line("Testing leading powers computation ...");
+    put("-> Test specific random data ? (y/n) ");
+    Ask_Yes_or_No(ans);
     put("-> Give the dimension : "); get(dim);
-    Test_Random_Input(dim);
+    if ans = 'y'
+     then Test_Leading_Random(dim);
+     else Test_General_Random(dim);
+    end if;
   end Main;
 
 end Test_Leading_Powers;

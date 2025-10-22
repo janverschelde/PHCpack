@@ -53,10 +53,23 @@ package Test_Leading_Powers is
   --            occur exactly twice in the [A|b]+c matrix;
   --   b        leading powers of the right hand side vector.
 
+  procedure Random_General_Input 
+              ( dim : in integer32; A : out Matrix;
+                x,b : out Standard_Floating_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Generates a random matrix A of positive numbers in [0, 1],
+  --   and leading powers in x, also in [0, 1].
+  --   The right hand side vector is then computed.
+  --   One single Cramer vector is unlikely to suffice to recover
+  --   all leading powers for this general input.
+
   procedure Leading_Powers
               ( dim : in integer32; A : in Matrix;
                 b : in Standard_Floating_Vectors.Vector;
-                d : out Standard_Floating_Vectors.Vector );
+                d : out Standard_Floating_Vectors.Vector;
+                idxone,idxtwo : out Standard_Integer_Vectors.Vector;
+                fail : out boolean );
 
   -- DESCRIPTION :
   --   Returns in d the leading powers via a tropical Cramer vector
@@ -70,6 +83,10 @@ package Test_Leading_Powers is
   -- ON RETURN :
   --   d        leading powers of the solution,
   --            computed via the tropical Cramer vector.
+  --   idxone   indices where the minimum is first obtained;
+  --   idxtwo   indices where the minimum is obtained the second time;
+  --   fail     true if the minimum is not everywhere exactly obtained twice,
+  --            false if the minimum is obtained exactly twice, everywhere.
 
   procedure Check_Differences
               ( dim : in integer32; A : in Matrix;
@@ -87,12 +104,19 @@ package Test_Leading_Powers is
   --   d        leading powers of the solution,
   --            computed via the tropical Cramer vector.
 
-  procedure Test_Random_Input ( dim : in integer32 );
+  procedure Test_Leading_Random ( dim : in integer32 );
 
   -- DESCRIPTION :
-  --   Generates a random problem of dimension dim
-  --   and then computes the tropical Cramer vector
+  --   Generates a random problem of dimension dim and then computes 
+  --   the tropical Cramer vector to recover the leading powers.
+  --   In this test case, one Cramer vector should suffice.
+
+  procedure Test_General_Random ( dim : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random problem of dimension dim and then attempts
   --   to recover the leading powers.
+  --   In this test case, one Cramer vector will not suffice.
 
   procedure Main;
 
