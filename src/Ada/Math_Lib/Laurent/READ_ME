@@ -32,4 +32,6 @@ main_laurent_series_newton        : main procedure for phc -u
 double_weighted_assignment        : solves the weighted assignment problem
 test_weighted_assignment          : test on weighted assignment solutions
 ts_hunwas                         : test Hungarian algorithm
+test_leading_powers               : tests leading powers computation
+ts_hunsys                         : calls main test on leading powers
 ------------------------------------------------------------------------------
