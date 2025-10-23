@@ -11,7 +11,7 @@ with Standard_Random_Numbers;
 with Standard_Random_Vectors;
 with Standard_Random_Matrices;
 with Standard_Floating_Matrices_io;     use Standard_Floating_Matrices_io;
-with Double_Weighted_Assignment;
+with Double_Puiseux_Operations;
 
 package body Test_Leading_Powers is
 
@@ -149,56 +149,6 @@ package body Test_Leading_Powers is
     put_line("The right hand side vector : "); put(b,3); new_line;
   end Random_General_Input;
 
-  procedure Leading_Powers
-              ( dim : in integer32; A : in Matrix;
-                b : in Standard_Floating_Vectors.Vector;
-                d : out Standard_Floating_Vectors.Vector;
-                idxone,idxtwo : out Standard_Integer_Vectors.Vector;
-                fail : out boolean ) is
-
-    c : Standard_Floating_Vectors.Vector(0..dim);
-    m : Standard_Integer_VecVecs.VecVec(0..dim);
-    abc : Matrix(1..dim,1..dim+1);
-    mv : Standard_Floating_Vectors.Vector(1..dim);
-    idxmv : Standard_Integer_Vectors.Vector(1..2*dim);
-
-  begin
-    for i in m'range loop
-      m(i) := new Standard_Integer_Vectors.Vector'(1..dim => 0);
-    end loop;
-    Double_Weighted_Assignment.cramer_vector(A,b,c,m,1);
-    abc := Double_Weighted_Assignment.Abc_Matrix(A,b,c);
-    put_line("-> checking if minimum is attained twice ...");
-    put_line("A : "); put(A,1,A'last(1),3);
-    put_line("b : "); put(b,3); new_line;
-    put_line("c : "); put(c,3); new_line;
-    put_line("Cramer vector added to A | b :");
-    for i in abc'range(1) loop
-      for j in abc'first(2)..abc'last(2)-1 loop
-        put(abc(i,j),3);
-      end loop;
-      put(" | ");
-      put(abc(i,abc'last(2)),3);
-      new_line;
-    end loop;
-    Double_Weighted_Assignment.Abc_ArgMin(abc,1.0e-10,mv,idxmv,fail,1);
-    if fail
-     then put_line("Failed to reach minimum exactly twice!");
-    end if;
-    for i in 1..dim loop
-      idxone(i) := idxmv(2*i-1);
-      idxtwo(i) := idxmv(2*i);
-    end loop;
-    put("1st index :"); put(idxone); new_line;
-    put("2nd index :"); put(idxtwo); new_line;
-    for i in d'range loop
-      d(i) := c(i) - c(0);
-    end loop;
-    for i in m'range loop
-      Standard_Integer_Vectors.Clear(m(i));
-    end loop;
-  end Leading_Powers;
-
   procedure Check_Differences
               ( dim : in integer32; A : in Matrix;
                 b,x,d : in Standard_Floating_Vectors.Vector ) is
@@ -230,65 +180,23 @@ package body Test_Leading_Powers is
     end if;
   end Check_Differences;
 
-  procedure Check_Correctness
-              ( dim : in integer32;
-                x,d : in Standard_Floating_Vectors.Vector;
-                idx1,idx2 : in Standard_Integer_Vectors.Vector;
-                correct : out Boolean_Vectors.Vector;
-                cd : in out Standard_Floating_Vectors.Vector ) is
-
-    cnt : integer32 := 0;
-    err : double_float;
-
-  begin
-    cnt := 0;
-    for i in idx2'range loop
-      put("-> value for "); put(idx1(i),1);
-      if idx2(i) = dim+1
-       then put(" is correct? ");
-       else put(" not correct ");
-      end if;
-      err := abs(x(idx1(i)) - d(idx1(i)));
-      put(":"); put(err,3);
-      if idx2(i) = dim+1 then
-        if err < 1.0e-12 then
-          put_line(", okay"); cnt := cnt + 1;
-          correct(idx1(i)) := true;
-          cd(idx1(i)) := d(idx1(i));
-        else
-          put_line(", bug!");
-        end if;
-      else
-        if err < 1.0e-12 
-         then put_line(", minimum attained 3 times?");
-         else put_line(", okay");
-        end if;
-      end if;
-    end loop;
-    put("Found "); put(cnt,1); put_line(" correct values.");
-    for i in correct'range loop
-      if correct(i) then
-        put("-> value "); put(i,1); put_line(" is correct :");
-        put("d("); put(i,1); put(") :"); put(cd(i)); new_line;
-        put("x("); put(i,1); put(") :"); put(x(i));
-        err := cd(i) - x(i);
-        put(", err : "); put(err,3); new_line;
-      end if;
-    end loop;
-  end Check_Correctness;
-
   procedure Test_Leading_Random ( dim : in integer32 ) is
 
     A : Matrix(1..dim,1..dim);
     x,b,d : Standard_Floating_Vectors.Vector(1..dim);
     p,idx1,idx2 : Standard_Integer_Vectors.Vector(1..dim);
+    m : Standard_Integer_VecVecs.VecVec(0..dim);
     fail : boolean;
 
   begin
     put_line("-> generating random data ...");
     Random_Leading_Input(dim,p,A,x,b);
     put_line("-> computing the tropical Cramer vector ...");
-    Leading_Powers(dim,A,b,d,idx1,idx2,fail);
+    for i in m'range loop
+      m(i) := new Standard_Integer_Vectors.Vector'(1..dim => 0);
+    end loop;
+    Double_Puiseux_Operations.Leading_Powers
+      (dim,1.0E-12,A,b,m,d,idx1,idx2,fail,2);
     if fail then
       put_line("Unexpected failure reported!");
     else
@@ -306,6 +214,9 @@ package body Test_Leading_Powers is
       put_line("-> checking differences ...");
       Check_Differences(dim,A,b,x,d);
     end if;
+    for i in m'range loop
+      Standard_Integer_Vectors.Clear(m(i));
+    end loop;
   end Test_Leading_Random;
 
   procedure Test_General_Random ( dim : in integer32 ) is
@@ -313,6 +224,7 @@ package body Test_Leading_Powers is
     A : Matrix(1..dim,1..dim);
     x,b,d,cd : Standard_Floating_Vectors.Vector(1..dim);
     idx1,idx2 : Standard_Integer_Vectors.Vector(1..dim);
+    m : Standard_Integer_VecVecs.VecVec(0..dim);
     fail,done : boolean;
     correct : Boolean_Vectors.Vector(1..dim) := (1..dim => false);
 
@@ -323,14 +235,19 @@ package body Test_Leading_Powers is
     for i in 1..dim loop
       put("*** running step "); put(i,1); put_line(" ***");
       put_line("-> computing the tropical Cramer vector ...");
-      Leading_Powers(dim,A,b,d,idx1,idx2,fail);
+      for i in m'range loop
+        m(i) := new Standard_Integer_Vectors.Vector'(1..dim => 0);
+      end loop;
+      Double_Puiseux_Operations.Leading_Powers
+        (dim,1.0E-12,A,b,m,d,idx1,idx2,fail,2);
       if not fail then
         put_line("No failure reported, unexpected.");
         put_line("-> checking differences ...");
         Check_Differences(dim,A,b,x,d);
       else
         put_line("Failure reported, as expected.");
-        Check_Correctness(dim,x,d,idx1,idx2,correct,cd);
+        Double_Puiseux_Operations.Check_Correctness
+          (dim,1.0E-12,x,d,idx1,idx2,correct,cd,1);
         done := true;
         for i in correct'range loop
           done := done and correct(i);
@@ -344,6 +261,9 @@ package body Test_Leading_Powers is
         end if;
       end if;
       exit when not fail;
+    end loop;
+    for i in m'range loop
+      Standard_Integer_Vectors.Clear(m(i));
     end loop;
   end Test_General_Random;
 

@@ -74,30 +74,6 @@ package Test_Leading_Powers is
   --   One single Cramer vector is unlikely to suffice to recover
   --   all leading powers for this general input.
 
-  procedure Leading_Powers
-              ( dim : in integer32; A : in Matrix;
-                b : in Standard_Floating_Vectors.Vector;
-                d : out Standard_Floating_Vectors.Vector;
-                idxone,idxtwo : out Standard_Integer_Vectors.Vector;
-                fail : out boolean );
-
-  -- DESCRIPTION :
-  --   Returns in d the leading powers via a tropical Cramer vector
-  --   on A and b.
-
-  -- ON ENTRY :
-  --   dim      dimension, number of rows and columns of A;
-  --   A        matrix with prescribed locations of the minima;
-  --   b        leading powers of the right hand side vector.
-
-  -- ON RETURN :
-  --   d        leading powers of the solution,
-  --            computed via the tropical Cramer vector.
-  --   idxone   indices where the minimum is first obtained;
-  --   idxtwo   indices where the minimum is obtained the second time;
-  --   fail     true if the minimum is not everywhere exactly obtained twice,
-  --            false if the minimum is obtained exactly twice, everywhere.
-
   procedure Check_Differences
               ( dim : in integer32; A : in Matrix;
                 b,x,d : in Standard_Floating_Vectors.Vector );
@@ -113,32 +89,6 @@ package Test_Leading_Powers is
   --   x        original leading powers of the solution;
   --   d        leading powers of the solution,
   --            computed via the tropical Cramer vector.
-
-  procedure Check_Correctness
-              ( dim : in integer32;
-                x,d : in Standard_Floating_Vectors.Vector;
-                idx1,idx2 : in Standard_Integer_Vectors.Vector;
-                correct : out Boolean_Vectors.Vector;
-                cd : in out Standard_Floating_Vectors.Vector );
-
-  -- DESCRIPTION :
-  --   Determines which of the entries in d are correct,
-  --   using the indices computed by the tropical Cramer vector,
-  --   updating the Boolean vector correct.
-
-  -- ON ENTRY :
-  --   dim      dimension, number of rows and columns of A;
-  --   A        matrix with prescribed locations of the minima;
-  --   x        original leading powers of the solution;
-  --   d        leading powers of the solution,
-  --            computed via the tropical Cramer vector;
-  --   idx1     first set of indices in the tropical Cramer vector;
-  --   idx2     second set of indices in the tropical Cramer vector;
-  --   cd       current correct values.
-
-  -- ON RETURN :
-  --   correct  updated vector of indices to correct values;
-  --   cd       updated correct values.
 
   procedure Test_Leading_Random ( dim : in integer32 );
 
