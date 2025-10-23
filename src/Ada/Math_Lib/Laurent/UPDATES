@@ -1,6 +1,7 @@
 Thu 23 Oct 2025 : new package double_puiseux_operations, with code from
   test_leading_powers.  New package test_leading_terms to compute also
   the coefficients of the leading terms.  Updated ts_hunsys.adb.
+  Extended test_leading_terms, updated test_leading_powers.adb.
 
 Wed 22 Oct 2025 : new package test_leading_powers to develop the case when
   one single Cramer vector decides all leading powers, called by ts_hunsys.

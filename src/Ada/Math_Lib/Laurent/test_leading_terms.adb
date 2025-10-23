@@ -5,7 +5,6 @@ with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
-with Boolean_Vectors;
 with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
 with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
@@ -39,6 +38,49 @@ package body Test_Leading_Terms is
       for j in B'first(2)..B'last(2)-1 loop -- select minimum
         minb := B(i,j); minidx := j;
         for k in j+1..B'last(2) loop
+          if B(i,k) < minb
+           then minb := B(i,k); minidx := k;
+          end if;
+        end loop;
+        if minidx /= j then -- swap if minimum not at position j
+          B(i,minidx) := B(i,j); B(i,j) := minb;
+          nbr := cB(i,minidx);  
+          cB(i,minidx) := cB(i,j); cB(i,j) := nbr;
+        end if;
+      end loop;
+    end loop;
+  end Series_Product;
+
+  procedure Series_Product
+              ( A : in Standard_Floating_Matrices.Matrix;
+                x : in Standard_Floating_Vectors.Vector;
+                cA : in Standard_Complex_Matrices.Matrix;
+                cx : in Standard_Complex_Vectors.Vector;
+                skip : in Boolean_Vectors.Vector;
+                B : out Standard_Floating_Matrices.Matrix;
+                cB : out Standard_Complex_Matrices.Matrix;
+                nbrcols : out integer32 ) is
+
+    minb : double_float;
+    minidx : integer32;
+    nbr : Complex_Number;
+    colidx : integer32 := 0;
+
+  begin
+    for j in A'range(2) loop
+      if not skip(j) then
+        colidx := colidx + 1;
+        for i in A'range(1) loop
+          B(i,colidx) := A(i,j) + x(j);
+          cB(i,colidx) := cA(i,j)*cx(j);
+        end loop;
+      end if;
+    end loop;
+    nbrcols := colidx;
+    for i in B'range(1) loop             -- sort i-th row
+      for j in B'first(2)..colidx-1 loop -- select minimum
+        minb := B(i,j); minidx := j;
+        for k in j+1..colidx loop
           if B(i,k) < minb
            then minb := B(i,k); minidx := k;
           end if;
@@ -88,10 +130,10 @@ package body Test_Leading_Terms is
     cx,cy : Standard_Complex_Vectors.Vector(1..dim);
     m : Standard_Integer_VecVecs.VecVec(0..dim);
     idx1,idx2 : Standard_Integer_Vectors.Vector(1..dim);
-    fail : boolean;
+    fail,done : boolean;
     prev,next : Boolean_Vectors.Vector(1..dim) := (1..dim => false);
-    rowidx : integer32;
-    err : double_float;
+    rowidx,nbrcols : integer32;
+    err,sumerr : double_float;
 
   begin
     put_line("-> generating random data ...");
@@ -100,29 +142,55 @@ package body Test_Leading_Terms is
     for i in m'range loop
       m(i) := new Standard_Integer_Vectors.Vector'(1..dim => 0);
     end loop;
-    for i in vb'range loop
-      vb(i) := rB(i,rB'first(2));
-    end loop;
-    Double_Puiseux_Operations.Leading_Powers
-      (dim,1.0E-12,rA,vb,m,ry,idx1,idx2,fail,2);
-    Double_Puiseux_Operations.Check_Correctness
-      (dim,1.0E-12,rx,ry,idx1,idx2,next,rz,1);
-    for i in next'range loop
-      if not prev(i) and next(i) then -- found new correct power
-        rowidx := 0;
-        for j in idx1'range loop -- look for row index
-          if idx1(j) = i
-           then rowidx := j; exit;
-          end if;
-        end loop;
-        cy(i) := cB(rowidx,cB'first(2))/cA(rowidx,i);
-        put("cy("); put(i,1); put(") :"); put(cy(i)); new_line;
-        put("cx("); put(i,1); put(") :"); put(cx(i));
-        err := AbsVal(cy(i) - cx(i));
-        put(", err :"); put(err,3); new_line;
+    for step in 1..dim loop
+      put("*** running step "); put(step,1); put_line(" ***");
+      for i in vb'range loop
+        vb(i) := rB(i,rB'first(2));
+      end loop;
+      Double_Puiseux_Operations.Leading_Powers
+        (dim,1.0E-12,rA,vb,m,ry,idx1,idx2,fail,2);
+      Double_Puiseux_Operations.Check_Correctness
+        (dim,1.0E-12,rx,ry,idx1,idx2,next,rz,1);
+      done := true;
+      for i in next'range loop
+        done := done and next(i);
+      end loop;
+      for i in next'range loop
+        if not prev(i) and next(i) then -- found new correct power
+          rowidx := 0;
+          for j in idx1'range loop -- look for row index
+            if idx1(j) = i
+             then rowidx := j; exit;
+            end if;
+          end loop;
+          cy(i) := cB(rowidx,cB'first(2))/cA(rowidx,i);
+          put("cy("); put(i,1); put(") : "); put(cy(i)); new_line;
+          put("cx("); put(i,1); put(") : "); put(cx(i));
+          err := AbsVal(cy(i) - cx(i));
+          put(", err :"); put(err,3); new_line;
+        end if;
+      end loop;
+      if done then
+        put("At step "); put(step,1);
+        put_line(", all values are correct, done!"); exit;
       end if;
+      prev := next; -- for the next round
+      Series_Product(rA,rx,cA,cx,next,rB,cB,nbrcols);
     end loop;
-    prev := next; -- for the next round
+    put_line("checking final coefficients :");
+    sumerr := 0.0;
+    for i in cy'range loop
+      put("cy("); put(i,1); put(") : "); put(cy(i)); new_line;
+      put("cx("); put(i,1); put(") : "); put(cx(i));
+      err := AbsVal(cy(i) - cx(i));
+      put(", err :"); put(err,3); new_line;
+      sumerr := sumerr + err;
+    end loop;
+    put("Sum of errors :"); put(sumerr,3);
+    if sumerr < 1.0E-12
+     then put_line(", okay.");
+     else put_line(", failure!");
+    end if;
   end Test_Random_Input;
 
   procedure Main is

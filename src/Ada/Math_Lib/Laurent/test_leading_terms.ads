@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Boolean_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Floating_Matrices;
@@ -44,6 +45,21 @@ package Test_Leading_Terms is
   -- ON RETURN :
   --   B        power matrix of [t^A]*[t^x], sorted columnwise;
   --   cB       corresponding coefficients of B.
+
+  procedure Series_Product
+              ( A : in Standard_Floating_Matrices.Matrix;
+                x : in Standard_Floating_Vectors.Vector;
+                cA : in Standard_Complex_Matrices.Matrix;
+                cx : in Standard_Complex_Vectors.Vector;
+                skip : in Boolean_Vectors.Vector;
+                B : out Standard_Floating_Matrices.Matrix;
+                cB : out Standard_Complex_Matrices.Matrix;
+                nbrcols : out integer32 );
+
+  -- DESCRIPTION :
+  --   Similar as Series_Product(A,x,cA,cx,B,cB), columns k for which
+  --   skip(k) is true are skipped.  The number of columns nbrcols in
+  --   B and cB that count may be less than B'last(2).
 
   procedure Random_Input
               ( dim : in integer32;

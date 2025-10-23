@@ -109,7 +109,7 @@ package body Test_Leading_Powers is
     p := Random_Permutation(dim);
     put("A random permutation :"); put(p); new_line;
     for i in 1..dim loop
-      x(i) := abs(x(i))/double_float(2*dim);
+      x(i) := abs(x(i))/double_float(10*dim);
       for j in A'range(2) loop
         if j = p(i) -- permutation determines on which row minimum occurs
          then A(i,j) := abs(A(i,j));
@@ -254,7 +254,7 @@ package body Test_Leading_Powers is
         end loop;
         if done then
           fail := false;
-          put("A step "); put(i,1);
+          put("At step "); put(i,1);
           put_line(", all values are correct, done!");
         else
           b := Row_Min_Plus(A,x,correct);
