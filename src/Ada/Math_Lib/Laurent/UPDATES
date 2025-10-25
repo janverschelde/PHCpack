@@ -1,3 +1,6 @@
+Sat 25 Oct 2025 : extended test_leading_terms to work with series in the
+  solution of a linear system.
+
 Thu 23 Oct 2025 : new package double_puiseux_operations, with code from
   test_leading_powers.  New package test_leading_terms to compute also
   the coefficients of the leading terms.  Updated ts_hunsys.adb.
