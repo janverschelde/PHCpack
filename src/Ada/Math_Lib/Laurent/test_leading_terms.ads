@@ -191,9 +191,10 @@ package Test_Leading_Terms is
               ( cy : in out Standard_Complex_Vectors.Vector;
                 cA,cB : in Standard_Complex_Matrices.Matrix;
                 idx1 : in Standard_Integer_Vectors.Vector;
-                prev,next : in Boolean_Vectors.Vector;
+                next : in Boolean_Vectors.Vector;
                 correct : in out Standard_Integer_Vectors.Vector;
-                cx : in Standard_Complex_Vectors.Vector );
+                cx : in Standard_Complex_Vectors.Vector;
+                cZ : in out Standard_Complex_Matrices.Matrix );
 
   -- DESCRIPTION :
   --   Computes the next coefficients of the power series.
@@ -203,23 +204,35 @@ package Test_Leading_Terms is
   --   cA       coefficients of the matrix of the linear system;
   --   cB       coefficients of the right hand side of the system;
   --   idx1     first set of indices of the tropical Cramer vector;
-  --   prev     previously correct indices;
   --   next     current set of correct indices;
   --   correct  correct(i) indicates the number of correct values
   --            in the series cX*[t^X];
   --   cx       correct values of the leading coefficients,
-  --            used for comparison.
+  --            used for comparison;
+  --   cZ       accumulates matrix of computed coefficients.
 
   -- ON RETURN :
   --   correct  updated indices of correct values;
-  --   cy       updated vector of coefficients.
+  --   cy       updated vector of coefficients;
+  --   cZ       updated matrix of computed coefficients.
 
   procedure Coefficient_Check
               ( tol : in double_float;
-                cx,cy : in Standard_Complex_Vectors.Vector );
+                cX,cY : in Standard_Complex_Vectors.Vector );
+  procedure Coefficient_Check
+              ( tol : in double_float;
+                cX,cY : in Standard_Complex_Matrices.matrix );
 
   -- DESCRIPTION :
-  --   Compares the computed coefficients cy to the original cx,
+  --   Compares the computed coefficients cY to the original cX,
+  --   using tol to decide whether a number is small enough.
+
+  procedure Power_Check
+              ( tol : in double_float;
+                eX,eY : in Standard_Floating_Matrices.matrix );
+
+  -- DESCRIPTION :
+  --   Compares the computed powers eY to the original eX,
   --   using tol to decide whether a number is small enough.
 
   procedure Test_Random_Vector ( dim : in integer32 );

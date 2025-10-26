@@ -1,3 +1,5 @@
+Sun 26 Oct 2025 : added checks on computed powers and coefficients.
+
 Sat 25 Oct 2025 : extended test_leading_terms to work with series in the
   solution of a linear system.
 

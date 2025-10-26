@@ -240,16 +240,17 @@ package body Test_Leading_Terms is
               ( cy : in out Standard_Complex_Vectors.Vector;
                 cA,cB : in Standard_Complex_Matrices.Matrix;
                 idx1 : in Standard_Integer_Vectors.Vector;
-                prev,next : in Boolean_Vectors.Vector;
+                next : in Boolean_Vectors.Vector;
                 correct : in out Standard_Integer_Vectors.Vector;
-                cx : in Standard_Complex_Vectors.Vector ) is
+                cx : in Standard_Complex_Vectors.Vector;
+                cZ : in out Standard_Complex_Matrices.Matrix ) is
 
     rowidx : integer32;
     err : double_float;
 
   begin
     for i in next'range loop
-      if not prev(i) and next(i) then -- found new correct power
+      if next(i) then -- found new correct power
         rowidx := 0;
         for j in idx1'range loop -- look for row index
           if idx1(j) = i
@@ -262,22 +263,23 @@ package body Test_Leading_Terms is
         err := AbsVal(cy(i) - cx(i));
         put(", err :"); put(err,3); new_line;
         correct(i) := correct(i) + 1;
+        cZ(i,correct(i)) := cy(i);
       end if;
     end loop;
   end Next_Series_Coefficients;
 
   procedure Coefficient_Check
               ( tol : in double_float;
-                cx,cy : in Standard_Complex_Vectors.Vector ) is
+                cX,cY : in Standard_Complex_Vectors.Vector ) is
 
     err : double_float;
     sumerr : double_float := 0.0;
 
   begin
-    for i in cy'range loop
-      put("cy("); put(i,1); put(") : "); put(cy(i)); new_line;
-      put("cx("); put(i,1); put(") : "); put(cx(i));
-      err := AbsVal(cy(i) - cx(i));
+    for i in cY'range loop
+      put("cY("); put(i,1); put(") : "); put(cy(i)); new_line;
+      put("cX("); put(i,1); put(") : "); put(cx(i));
+      err := AbsVal(cY(i) - cX(i));
       put(", err :"); put(err,3); new_line;
       sumerr := sumerr + err;
     end loop;
@@ -287,6 +289,57 @@ package body Test_Leading_Terms is
      else put_line(", failure!");
     end if;
   end Coefficient_Check;
+
+  procedure Coefficient_Check
+              ( tol : in double_float;
+                cX,cY : in Standard_Complex_Matrices.matrix ) is
+
+    err : double_float;
+    sumerr : double_float := 0.0;
+
+  begin
+    for i in cY'range(1) loop
+      for j in cY'range(2) loop
+        put("cY("); put(i,1); put(","); put(j,1); put(") : ");
+        put(cY(i,j)); new_line;
+        put("cX("); put(i,1); put(","); put(j,1); put(") : ");
+        put(cX(i,j));
+        err := AbsVal(cY(i,j) - cX(i,j));
+        put(", err :"); put(err,3); new_line;
+        sumerr := sumerr + err;
+      end loop;
+    end loop;
+    put("Sum of errors :"); put(sumerr,3);
+    if sumerr < tol
+     then put_line(", okay.");
+     else put_line(", failure!");
+    end if;
+  end Coefficient_Check;
+
+  procedure Power_Check
+              ( tol : in double_float;
+                eX,eY : in Standard_Floating_Matrices.matrix ) is
+
+    err : double_float;
+    sumerr : double_float := 0.0;
+
+  begin
+    for i in eY'range(1) loop
+      for j in eY'range(2) loop
+        put("eY("); put(i,1); put(","); put(j,1); put(") : "); put(eY(i,j));
+        new_line;
+        put("eX("); put(i,1); put(","); put(j,1); put(") : "); put(eX(i,j));
+        err := abs(eY(i,j) - eX(i,j));
+        put(", err :"); put(err,3); new_line;
+        sumerr := sumerr + err;
+      end loop;
+    end loop;
+    put("Sum of errors :"); put(sumerr,3);
+    if sumerr < tol
+     then put_line(", okay.");
+     else put_line(", failure!");
+    end if;
+  end Power_Check;
 
   procedure Test_Random_Vector ( dim : in integer32 ) is
 
@@ -337,16 +390,16 @@ package body Test_Leading_Terms is
 
     prd : constant integer32 := dim*nbr;
     eA : Standard_Floating_Matrices.Matrix(1..dim,1..dim);
-    eX : Standard_Floating_Matrices.Matrix(1..dim,1..nbr);
+    eX,eZ : Standard_Floating_Matrices.Matrix(1..dim,1..nbr);
     eB : Standard_Floating_Matrices.Matrix(1..dim,1..prd);
     cA : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
-    cX : Standard_Complex_Matrices.Matrix(1..dim,1..nbr);
+    cX,cZ : Standard_Complex_Matrices.Matrix(1..dim,1..nbr);
     cB : Standard_Complex_Matrices.Matrix(1..dim,1..prd);
     vB,ry,rX,rz : Standard_Floating_Vectors.Vector(1..dim);
     cy,vX : Standard_Complex_Vectors.Vector(1..dim);
     m : Standard_Integer_VecVecs.VecVec(0..dim);
     idx1,idx2,correct : Standard_Integer_Vectors.Vector(1..dim);
-    prev,next : Boolean_Vectors.Vector(1..dim) := (1..dim => false);
+    next : Boolean_Vectors.Vector(1..dim) := (1..dim => false);
     fail,done : boolean;
     tol : constant double_float := 1.0E-12;
     nbrcols : integer32;
@@ -374,21 +427,28 @@ package body Test_Leading_Terms is
         (dim,tol,eA,vB,m,rY,idx1,idx2,fail,2);
       Double_Puiseux_Operations.Check_Correctness
         (dim,tol,rX,rY,idx1,idx2,next,rz,1);
-      Next_Series_Coefficients(cy,cA,cB,idx1,prev,next,correct,vX);
+      Next_Series_Coefficients(cy,cA,cB,idx1,next,correct,vX,cZ);
+      for i in next'range loop
+        if next(i)
+         then eZ(i,correct(i)) := rY(i);
+        end if;
+      end loop;
+      put("correct indices :"); put(correct); new_line;
       done := true;
       for i in next'range loop
         done := done and (correct(i) = eX'last(2));
       end loop;
       if done then
         put("At step "); put(step,1);
-        put_line(", all values are correct, done!");
+        put_line(", all values are correct, done!"); exit;
       end if;
-      put("correct indices :"); put(correct); new_line;
-      exit when done;
-      prev := (1..dim => false);
       next := (1..dim => false);
       Series_Product(eA,eX,cA,cX,correct,eB,cB,nbrcols);
     end loop;
+    put_line("-> checking final powers :");
+    Power_Check(tol,eX,eZ);
+    put_line("-> checking final coefficients :");
+    Coefficient_Check(tol,cX,cZ);
   end Test_Random_Series;
 
   procedure Main is
