@@ -36,4 +36,6 @@ double_puiseux_operations         : procedures to compute leading terms
 test_leading_powers               : tests leading powers computation
 test_leading_terms                : tests leading terms computation
 ts_hunsys                         : calls main test on leading powers/terms
+test_leading_evaluations          : test evaluating at leading terms
+ts_hunval                         : calls main test on evaluating at series
 ------------------------------------------------------------------------------
