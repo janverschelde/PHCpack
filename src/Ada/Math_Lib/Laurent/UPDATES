@@ -1,6 +1,6 @@
 Wed 29 Oct 2025 : new test_leading_evaluations and ts_hunval to develop
   the evaluation at leading terms of a series with real powers.
-  Updated laurent.gpr.
+  Updated laurent.gpr.  Added test on derivative computations.
 
 Sun 26 Oct 2025 : added checks on computed powers and coefficients.
 

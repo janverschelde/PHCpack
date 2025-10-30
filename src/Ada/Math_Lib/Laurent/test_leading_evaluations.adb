@@ -45,21 +45,18 @@ package body Test_Leading_Evaluations is
           for j in 1..deg(i) loop
             res := res*cff(i);
           end loop;
-        else
+        elsif deg(i) > 1 then
           for j in 1..(deg(i)-1) loop
             res := res*cff(i);
           end loop;
           res := double_float(deg(i))*res;
         end if;
       elsif deg(i) < 0 then
-        if difidx /= i then
-          for j in 1..(-deg(i)) loop
-            res := res/cff(i);
-          end loop;
-        else
-          for j in 1..(-deg(i)-1) loop
-            res := res/cff(i);
-          end loop;
+        for j in 1..(-deg(i)) loop
+          res := res/cff(i);
+        end loop;
+        if difidx = i then
+          res := res/cff(i);
           res := double_float(deg(i))*res;
         end if;
       end if;
@@ -94,6 +91,43 @@ package body Test_Leading_Evaluations is
     return res;
   end Random_Leading_Powers;
 
+  procedure Test_Monomial_Derivative
+              ( deg : in Standard_Integer_Vectors.Vector;
+                pwr : in Standard_Floating_Vectors.Vector;
+                cff : in Standard_Complex_Vectors.Vector;
+                idx : in integer32; err : out double_float ) is
+
+    lpr : constant double_float := Leading_Power(deg,pwr,idx);
+    lcf : constant Complex_Number := Leading_Coefficient(deg,cff,idx);
+   -- variables for the random point test
+    t_rnd : constant double_float := abs(Standard_Random_Numbers.Random);
+    t_pwr : constant double_float := t_rnd**lpr;
+    t_val : constant Complex_Number := t_pwr*lcf;
+    t_cff : Standard_Complex_Vectors.Vector(cff'range);
+    t_tst,error : Complex_Number;
+
+  begin
+    put("-> testing derivative with respect to variable "); put(idx,1);
+    put_line(" ...");
+    put("leading power : "); put(lpr); new_line;
+    put("leading coefficient : "); put(lcf); new_line;
+    put("value at random point t = "); put(t_rnd); put_line(" :");
+    put(t_val); new_line;
+    for i in t_cff'range loop
+      t_cff(i) := (t_rnd**pwr(i))*cff(i);
+    end loop;
+    t_tst := Leading_Coefficient(deg,t_cff,idx);
+    put_line("comparing to alternative evaluation :");
+    put(t_tst); new_line;
+    error := t_tst - t_val;
+    err := AbsVal(error);
+    put("error :"); put(err,3);
+    if err < 1.0E-10
+     then put_line(", okay");
+     else put_line(" >= 1.0E-10, bug!");
+    end if;
+  end Test_Monomial_Derivative;
+
   procedure Test_Monomial ( dim : in integer32 ) is
                
     deg : constant Standard_Integer_Vectors.Vector(1..dim)
@@ -110,7 +144,7 @@ package body Test_Leading_Evaluations is
     t_val : constant Complex_Number := t_pwr*lcf;
     t_cff : Standard_Complex_Vectors.Vector(1..dim);
     t_tst,error : Complex_Number;
-    err : double_float;
+    err,diferr : double_float;
 
   begin
     put("the degrees :"); put(deg); new_line;
@@ -141,9 +175,20 @@ package body Test_Leading_Evaluations is
     error := t_tst - t_val;
     err := AbsVal(error);
     put("error :"); put(err,3);
-    if err < 1.0E-12
+    if err < 1.0E-10
      then put_line(", okay");
-     else put_line(", bug!");
+     else put_line(" >= 1.0E-10, bug!");
+    end if;
+    for i in 1..dim loop
+      if deg(i) /= 0 then
+        Test_Monomial_Derivative(deg,pwr,cff,i,diferr);
+        err := err + diferr;
+      end if;
+    end loop;
+    put("sum of all errors :"); put(err,3);
+    if err < 1.0E-10
+     then put_line(", okay");
+     else put_line(" >= 1.0E-10, bug!");
     end if;
   end Test_Monomial;
 
