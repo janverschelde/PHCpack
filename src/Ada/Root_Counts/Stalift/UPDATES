@@ -1,3 +1,6 @@
+Fri 31 Oct 2025 : in drivers_for_demics_algorithm.adb, passed the verbose
+  level to the pipelined polyhedral homotopies.
+
 Tue 7 Oct 2025 : simplified stalift.gpr.
 
 Sun 5 Oct 2025 : modified stalift.gpr for the removal of C++ DEMiCs.

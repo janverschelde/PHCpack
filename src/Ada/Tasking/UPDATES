@@ -1,3 +1,5 @@
+Fri 31 Oct 2025 : in pipelined_polyhedral_homotopies, added vrblvl parameter.
+
 Tue 7 Oct 2025 : on linux/macosx, no C needed, updated tasking.gpr.
 
 Mon 6 Oct 2025 : updated tasking.gpr for the removal of C++.

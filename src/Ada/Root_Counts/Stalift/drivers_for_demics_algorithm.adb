@@ -317,7 +317,7 @@ package body Drivers_for_DEMiCs_Algorithm is
       tstart(timer);
      -- lif := DEMiCs_Algorithm.Random_Lifting(mix,sup);
       lif := DEMiCs_Translated.Random_Lifting(mix,sup);
-      Pipeline_Cells_to_Paths(dim,nt,mix,sup,lif,q,qsols,false);
+      Pipeline_Cells_to_Paths(dim,nt,mix,sup,lif,q,qsols,false,vrblvl-1);
       tstop(timer);
      -- DEMiCs_Algorithm.Process_Output(dim,mix,sup,lifsup,mcc,false);
       DEMiCs_Translated.Process_Output(dim,mix,sup,lifsup,mcc,vrblvl-1);

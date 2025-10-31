@@ -19,7 +19,7 @@ package Pipelined_Polyhedral_Homotopies is
                 lif : in Standard_Floating_VecVecs.Link_to_VecVec;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List;
-                verbose : in boolean := true );
+                verbose : in boolean := true; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Computes the lifted supports and runs the pipeline with nt tasks.
@@ -31,6 +31,7 @@ package Pipelined_Polyhedral_Homotopies is
   --   sup      supports of the system, orded along occurrence;
   --   lif      random lifting values for the points in the supports;
   --   verbose  if additional output is needed;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   q        random coefficient start system with same supports as sup;

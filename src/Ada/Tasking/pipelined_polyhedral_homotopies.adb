@@ -1,3 +1,4 @@
+with Ada.Text_IO;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Complex_VecVecs;
@@ -24,7 +25,7 @@ package body Pipelined_Polyhedral_Homotopies is
                 lif : in Standard_Floating_VecVecs.Link_to_VecVec;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List;
-                verbose : in boolean := true ) is
+                verbose : in boolean := true; vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Laur_SysFun;
     use Standard_Complex_Laur_JacoMats;
@@ -55,6 +56,10 @@ package body Pipelined_Polyhedral_Homotopies is
     end Track;
 
   begin
+    if vrblvl > 0 then
+      Ada.Text_IO.put("-> in Pipelined_Polyhedral_Homotopies.");
+      Ada.Text_IO.put_line("pipeline_cells_to_paths ...");
+    end if;
     q := Random_Coefficient_Systems.Create(natural32(dim),sup);
    -- q := Random_Coefficient_Systems.Create(natural32(dim),mix.all,sup);
    -- DEMiCs_Output_Data.allocate := true;
@@ -70,7 +75,7 @@ package body Pipelined_Polyhedral_Homotopies is
     Allocate_Workspace_for_Exponents(epv,dpw);
     Allocate_Workspace_for_Coefficients(cff,cft);
     Pipelined_Cell_Indices.Pipelined_Mixed_Cells
-      (nt,dim,mix,sup,lif,lsp,Track'access,verbose);
+      (nt,dim,mix,sup,lif,lsp,Track'access,verbose,vrblvl-1);
     for k in tasksols'range loop
       Standard_Complex_Solutions.Push(tasksols(k),qsols);
     end loop;
