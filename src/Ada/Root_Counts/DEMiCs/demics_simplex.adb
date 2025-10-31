@@ -2255,7 +2255,6 @@ package body demics_simplex is
           put("this.termSumNum : "); put(this.termSumNum,1); new_line;
         end if;
         for i in 0..this.termSumNum-1 loop
-          put(" i = "); put(i,1); new_line;
           this.lifting(i) := lft(i);
         end loop;
       end if;
