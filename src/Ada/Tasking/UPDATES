@@ -1,4 +1,6 @@
 Fri 31 Oct 2025 : in pipelined_polyhedral_homotopies, added vrblvl parameter.
+  To pipelined_polyhedral_homotopies and pipelined_cell_trackers added
+  the monitor option for the number of paths tracked.
 
 Tue 7 Oct 2025 : on linux/macosx, no C needed, updated tasking.gpr.
 

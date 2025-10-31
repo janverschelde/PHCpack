@@ -1,3 +1,4 @@
+with Ada.Text_IO;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Double_Double_Vectors;
@@ -44,7 +45,8 @@ package body Pipelined_Cell_Trackers is
                 q : in Standard_Complex_Laur_Systems.Laur_Sys;
                 tmv : in out natural32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                last : in out Standard_Complex_Solutions.Solution_List ) is
+                last : in out Standard_Complex_Solutions.Solution_List;
+                monitor : in boolean := false; vrblvl : in integer32 := 0 ) is
 
     use Supports_of_Polynomial_Systems;
 
@@ -59,8 +61,13 @@ package body Pipelined_Cell_Trackers is
     bsc : Standard_Complex_Vectors.Vector(b'range);
     ls : Standard_Complex_Solutions.Link_to_Solution;
     ptr : Standard_Complex_Solutions.Solution_List;
+    accu : natural32 := 0;
 
   begin
+    if vrblvl > 0 then
+      Ada.Text_IO.put("-> in Pipelined_Cell_Trackers.");
+      Ada.Text_IO.put_line("standard_track_cell ...");
+    end if;
     if r = n then
       Select_Coefficients(cff,epv,mic.pts.all,s_c);
       Fully_Mixed_To_Binomial_Format(s_c,mic.pts.all,A,b);
@@ -74,6 +81,7 @@ package body Pipelined_Cell_Trackers is
     pdetU := Volume_of_Diagonal(U);
     Semaphore.Request(sem);
     ptr := last;
+    accu := Standard_Complex_Solutions.Length_Of(sols);
     Allocate(sols,last,n,integer32(pdetU));
     if Standard_Complex_Solutions.Is_Null(ptr)
      then ptr := sols;
@@ -82,6 +90,12 @@ package body Pipelined_Cell_Trackers is
     brd := Standard_Radial_Solvers.Radii(b);
     bsc := Standard_Radial_Solvers.Scale(b,brd);
     Standard_Binomial_Solvers.Solve_Upper_Square(U,bsc,ptr);
+    if monitor then
+      Ada.Text_IO.put_line("Task" & idtask'image
+                         & " tracked" & accu'image
+                         & " paths, tracks" & pdetU'image
+                         & " paths ...");
+    end if;
     Semaphore.Release(sem);
     logbrd := Standard_Radial_Solvers.Log10(brd);
     logx := Standard_Radial_Solvers.Radial_Upper_Solve(U,logbrd);
@@ -113,7 +127,8 @@ package body Pipelined_Cell_Trackers is
                 q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 tmv : in out natural32;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                last : in out DoblDobl_Complex_Solutions.Solution_List ) is
+                last : in out DoblDobl_Complex_Solutions.Solution_List;
+                monitor : in boolean := false; vrblvl : in integer32 := 0 ) is
 
     use Supports_of_Polynomial_Systems;
 
@@ -128,8 +143,13 @@ package body Pipelined_Cell_Trackers is
     bsc : DoblDobl_Complex_Vectors.Vector(b'range);
     ls : DoblDobl_Complex_Solutions.Link_to_Solution;
     ptr : DoblDobl_Complex_Solutions.Solution_List;
+    accu : natural32 := 0;
 
   begin
+    if vrblvl > 0 then
+      Ada.Text_IO.put("-> in Pipelined_Cell_Trackers.");
+      Ada.Text_IO.put_line("dobldobl_track_cell ...");
+    end if;
     if r = n then
       Select_Coefficients(cff,epv,mic.pts.all,s_c);
       Fully_Mixed_To_Binomial_Format(s_c,mic.pts.all,A,b);
@@ -143,6 +163,7 @@ package body Pipelined_Cell_Trackers is
     pdetU := Volume_of_Diagonal(U);
     Semaphore.Request(sem);
     ptr := last;
+    accu := DoblDobl_Complex_Solutions.Length_Of(sols);
     Allocate(sols,last,n,integer32(pdetU));
     if DoblDobl_Complex_Solutions.Is_Null(ptr)
      then ptr := sols;
@@ -151,6 +172,12 @@ package body Pipelined_Cell_Trackers is
     brd := DoblDobl_Radial_Solvers.Radii(b);
     bsc := DoblDobl_Radial_Solvers.Scale(b,brd);
     DoblDobl_Binomial_Solvers.Solve_Upper_Square(U,bsc,ptr);
+    if monitor then
+      Ada.Text_IO.put_line("Task" & idtask'image
+                         & " tracked" & accu'image
+                         & " paths, tracks" & pdetU'image
+                         & " paths ...");
+    end if;
     Semaphore.Release(sem);
     logbrd := DoblDobl_Radial_Solvers.Log10(brd);
     logx := DoblDobl_Radial_Solvers.Radial_Upper_Solve(U,logbrd);
@@ -182,7 +209,8 @@ package body Pipelined_Cell_Trackers is
                 q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 tmv : in out natural32;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                last : in out QuadDobl_Complex_Solutions.Solution_List ) is
+                last : in out QuadDobl_Complex_Solutions.Solution_List;
+                monitor : in boolean := false; vrblvl : in integer32 := 0 ) is
 
     use Supports_of_Polynomial_Systems;
 
@@ -197,8 +225,13 @@ package body Pipelined_Cell_Trackers is
     bsc : QuadDobl_Complex_Vectors.Vector(b'range);
     ls : QuadDobl_Complex_Solutions.Link_to_Solution;
     ptr : QuadDobl_Complex_Solutions.Solution_List;
+    accu : natural32 := 0;
 
   begin
+    if vrblvl > 0 then
+      Ada.Text_IO.put("-> in Pipelined_Cell_Trackers.");
+      Ada.Text_IO.put_line("quaddobl_track_cell ...");
+    end if;
     if r = n then
       Select_Coefficients(cff,epv,mic.pts.all,s_c);
       Fully_Mixed_To_Binomial_Format(s_c,mic.pts.all,A,b);
@@ -212,6 +245,7 @@ package body Pipelined_Cell_Trackers is
     pdetU := Volume_of_Diagonal(U);
     Semaphore.Request(sem);
     ptr := last;
+    accu := QuadDobl_Complex_Solutions.Length_Of(sols);
     Allocate(sols,last,n,integer32(pdetU));
     if QuadDobl_Complex_Solutions.Is_Null(ptr)
      then ptr := sols;
@@ -220,6 +254,12 @@ package body Pipelined_Cell_Trackers is
     brd := QuadDobl_Radial_Solvers.Radii(b);
     bsc := QuadDobl_Radial_Solvers.Scale(b,brd);
     QuadDobl_Binomial_Solvers.Solve_Upper_Square(U,bsc,ptr);
+    if monitor then
+      Ada.Text_IO.put_line("Task" & idtask'image
+                         & " tracked" & accu'image
+                         & " paths, tracks" & pdetU'image
+                         & " paths ...");
+    end if;
     Semaphore.Release(sem);
     logbrd := QuadDobl_Radial_Solvers.Log10(brd);
     logx := QuadDobl_Radial_Solvers.Radial_Upper_Solve(U,logbrd);

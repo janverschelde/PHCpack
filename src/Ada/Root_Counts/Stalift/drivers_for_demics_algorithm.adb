@@ -270,6 +270,7 @@ package body Drivers_for_DEMiCs_Algorithm is
     mcc : Mixed_Subdivision;
     oc : natural32;
     contrep : boolean;
+    monitor : constant boolean := DEMiCs_Output_Cells.monitor;
 
   begin
     if vrblvl > 0 then
@@ -317,7 +318,8 @@ package body Drivers_for_DEMiCs_Algorithm is
       tstart(timer);
      -- lif := DEMiCs_Algorithm.Random_Lifting(mix,sup);
       lif := DEMiCs_Translated.Random_Lifting(mix,sup);
-      Pipeline_Cells_to_Paths(dim,nt,mix,sup,lif,q,qsols,false,vrblvl-1);
+      Pipeline_Cells_to_Paths
+        (dim,nt,mix,sup,lif,q,qsols,false,monitor,vrblvl-1);
       tstop(timer);
      -- DEMiCs_Algorithm.Process_Output(dim,mix,sup,lifsup,mcc,false);
       DEMiCs_Translated.Process_Output(dim,mix,sup,lifsup,mcc,vrblvl-1);
@@ -428,8 +430,8 @@ package body Drivers_for_DEMiCs_Algorithm is
       put_line("for the random coefficient system ...");
       Read_Name_and_Create_File(ranfile);
     end if;
-   -- DEMiCs_Algorithm.Extract_Supports(p,mix,perm,sup,false); -- verbose is false
-    DEMiCs_Translated.Extract_Supports(p,mix,perm,sup,false); -- verbose is false
+   -- DEMiCs_Algorithm.Extract_Supports(p,mix,perm,sup,false);
+    DEMiCs_Translated.Extract_Supports(p,mix,perm,sup,false);
     Run_DEMiCs_Algorithm
       (file,nt,mcc2file,ranstart,subfile,ranfile,
        p,dim,mix,perm,sup,stable,stlb,q,qsols,qsols0,mv,smv,tmv,vrblvl-1);

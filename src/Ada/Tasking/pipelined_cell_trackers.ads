@@ -44,7 +44,8 @@ package Pipelined_Cell_Trackers is
                 q : in Standard_Complex_Laur_Systems.Laur_Sys;
                 tmv : in out natural32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
-                last : in out Standard_Complex_Solutions.Solution_List );
+                last : in out Standard_Complex_Solutions.Solution_List;
+                monitor : in boolean := false; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   One task tracks all paths defined by a polyhedral homotopy determined
@@ -70,7 +71,9 @@ package Pipelined_Cell_Trackers is
   --   q        a random coefficient system;
   --   tmv      current number of paths tracked by the task;
   --   sols     pointer to the first solution in a list;
-  --   last     pointer to the last solution in a list.
+  --   last     pointer to the last solution in a list;
+  --   monitor  if true a message will be written for each cell;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   tmv      updated number of paths tracked by the task;
@@ -95,7 +98,8 @@ package Pipelined_Cell_Trackers is
                 q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 tmv : in out natural32;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                last : in out DoblDobl_Complex_Solutions.Solution_List );
+                last : in out DoblDobl_Complex_Solutions.Solution_List;
+                monitor : in boolean := false; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   One task tracks all paths defined by a polyhedral homotopy determined
@@ -120,7 +124,9 @@ package Pipelined_Cell_Trackers is
   --   q        a random coefficient system;
   --   tmv      current number of paths tracked by the task;
   --   sols     pointer to the first solution in a list;
-  --   last     pointer to the last solution in a list.
+  --   last     pointer to the last solution in a list;
+  --   monitor  if true a message will be written for each cell;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   tmv      updated number of paths tracked by the task;
@@ -145,7 +151,8 @@ package Pipelined_Cell_Trackers is
                 q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 tmv : in out natural32;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                last : in out QuadDobl_Complex_Solutions.Solution_List );
+                last : in out QuadDobl_Complex_Solutions.Solution_List;
+                monitor : in boolean := false; vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   One task tracks all paths defined by a polyhedral homotopy determined
@@ -170,7 +177,9 @@ package Pipelined_Cell_Trackers is
   --   q        a random coefficient system;
   --   tmv      current number of paths tracked by the task;
   --   sols     pointer to the first solution in a list;
-  --   last     pointer to the last solution in a list.
+  --   last     pointer to the last solution in a list;
+  --   monitor  if true a message will be written for each cell;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   tmv      updated number of paths tracked by the task;

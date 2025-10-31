@@ -1,5 +1,7 @@
 Fri 31 Oct 2025 : in drivers_for_demics_algorithm.adb, passed the verbose
   level to the pipelined polyhedral homotopies.
+  In drivers_for_demics_algorithm.adb, passed the monitor flag to the
+  pipelined cell trackers.
 
 Tue 7 Oct 2025 : simplified stalift.gpr.
 

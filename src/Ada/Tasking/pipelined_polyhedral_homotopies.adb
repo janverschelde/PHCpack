@@ -25,7 +25,8 @@ package body Pipelined_Polyhedral_Homotopies is
                 lif : in Standard_Floating_VecVecs.Link_to_VecVec;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols : out Standard_Complex_Solutions.Solution_List;
-                verbose : in boolean := true; vrblvl : in integer32 := 0 ) is
+                verbose : in boolean := true;
+                monitor : in boolean := false; vrblvl : in integer32 := 0 ) is
 
     use Standard_Complex_Laur_SysFun;
     use Standard_Complex_Laur_JacoMats;
@@ -52,7 +53,7 @@ package body Pipelined_Polyhedral_Homotopies is
     begin
       Standard_Track_Cell(sem,idtask,nbequ,r,mix.all,mic,lsp,cff,
         dpw(idtask),cft(idtask),epv,hom,ejf,jmf,q,tmv(idtask),
-        tasksols(idtask),lastsols(idtask));
+        tasksols(idtask),lastsols(idtask),monitor,vrblvl-1);
     end Track;
 
   begin
