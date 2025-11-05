@@ -170,7 +170,7 @@ package body Test_Leading_Evaluations is
         := Random_Polynomial(nbr,dim,-9,9);
     pwr : constant Standard_Floating_Vectors.Vector(1..dim)
         := Random_Leading_Powers(dim);
-    lpr : double_float;
+    lpr,diflpr,df2 : double_float;
     idx : integer32;
 
   begin
@@ -182,6 +182,23 @@ package body Test_Leading_Evaluations is
     Double_Leading_Evaluations.Leading_Power(deg,pwr,lpr,idx,1);
     put("power value : "); put(lpr);
     put(" at index "); put(idx,1); new_line;
+    for k in 1..dim loop
+      put("-> derivative "); put(k,1); 
+      put(", at index "); put(idx,1);
+      diflpr := Double_Leading_Evaluations.Leading_Power(deg(idx).all,pwr,k);
+      put(" : "); put(diflpr); new_line;
+      for j in 1..nbr loop
+        if j /= idx then
+          df2 := Double_Leading_Evaluations.Leading_Power(deg(j).all,pwr,k);
+          put("  at monomial "); put(j,1);
+          put(" : "); put(df2);
+          if df2 < diflpr
+           then put_line(", larger!");
+           else put_line(", okay.");
+          end if;
+        end if;
+      end loop;
+    end loop;
   end Test_Polynomial;
 
   procedure Main is

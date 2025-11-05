@@ -40,9 +40,10 @@ package body Double_Leading_Evaluations is
     if vrblvl > 0 then
       put_line("-> in Double_Leading_Evaluations.leading_power 2 ...");
     end if;
-    val := Leading_Power(deg(deg'first).all,pwr,0,vrblvl-1);
+    idx := deg'first;
+    val := Leading_Power(deg(idx).all,pwr,0,vrblvl-1);
     if vrblvl > 0 then
-      put("leading power at i = "); put(deg'first,1); put(" : ");
+      put("leading power at i = "); put(idx,1); put(" : ");
       put(val); new_line;
     end if;
     for i in deg'first+1..deg'last loop
