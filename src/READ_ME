@@ -1,4 +1,4 @@
-The public distribution for PHCpack version 2.4.90 contains
+The public distribution for PHCpack version 2.4.92 contains
 
   Ada        Ada sources
   bin        binary versions of phc
@@ -32,6 +32,8 @@ For each release, a single one line description gives a title to the release.
 While 2.4 could be viewed as another major release, marking it as 2.4.00
 simply continues the process of frequent releases.
 
+release 2.4.92 on 2025-11-07 : improved monitoring of pipelining in phc -m -t
+release 2.4.91 on 2025-10-15 : translated C++ code of DEMiCs into Ada
 release 2.4.90 on 2024-03-20 : new manual folder, small bug fixes
 release 2.4.89 on 2024-02-20 : modifications as needed for phcpy 1.1.3
 release 2.4.88 on 2023-12-26 : bugs fixed and alire workspace provided
