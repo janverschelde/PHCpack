@@ -58,6 +58,50 @@ package body Double_Leading_Evaluations is
     end loop;
   end Leading_Power;
 
+  procedure Sort ( x : in out Standard_Floating_Vectors.Vector ) is
+
+    val : double_float;
+
+  begin
+    for i in x'range loop
+      for j in i+1..x'last loop
+        val := x(j);
+        if val < x(i) then -- x(j) is the new minimum
+          x(j) := x(i);    -- swap x(i) and x(j)
+          x(i) := val;     -- x(i) is the minimum
+        end if;
+      end loop;
+    end loop;
+  end Sort;
+
+  procedure Evaluate_Powers
+              ( deg : in Standard_Integer_VecVecs.VecVec;
+                pwr : in Standard_Floating_Vectors.Vector;
+                val : out Standard_Floating_Vectors.Vector;
+                idx : out integer32; vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0 then
+      put_line("-> in Double_Leading_Evaluations.evaluate_powers ...");
+    end if;
+    idx := deg'first;
+    val(idx) := Leading_Power(deg(idx).all,pwr,0,vrblvl-1);
+    if vrblvl > 0 then
+      put("leading power at i = "); put(idx,1); put(" : ");
+      put(val(idx)); new_line;
+    end if;
+    for i in deg'first+1..deg'last loop
+      val(i) := Leading_Power(deg(i).all,pwr,0,vrblvl-1);
+      if vrblvl > 0 then
+        put("leading power at i = "); put(i,1); put(" : ");
+        put(val(i)); new_line;
+      end if;
+      if val(i) < val(idx)
+       then idx := i;
+      end if;
+    end loop;
+    Sort(val);
+  end Evaluate_Powers;
+
   function Leading_Coefficient
              ( deg : Standard_Integer_Vectors.Vector;
                cff : Standard_Complex_Vectors.Vector;

@@ -53,6 +53,33 @@ package Double_Leading_Evaluations is
   --   val      value of the minimum power over all monomials;
   --   idx      index in deg'range where the minimum happened.
 
+  procedure Evaluate_Powers
+              ( deg : in Standard_Integer_VecVecs.VecVec;
+                pwr : in Standard_Floating_Vectors.Vector;
+                val : out Standard_Floating_Vectors.Vector;
+                idx : out integer32; vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Returns the value of the Laurent monomials at real powers
+  --   in a sorted vector, also returning the index where the
+  --   minimum occurred in the original degrees.
+
+  -- REQUIRED :
+  --   for all i in deg'range: deg(i)'range = pwr'range = 1..nvr,
+  --   where nvr equals the number of variables,
+  --   as pwr(j) is the power for the variable raised to deg(i)(j);
+  --   and val'range = deg'range.
+
+  -- ON ENTRY :
+  --   deg      exponents of the monomials in a Laurent polynomial;
+  --   pwr      leading positive powers of a series;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   val      values of the minimum power over all monomials,
+  --            sorted in increasing order;
+  --   idx      index in deg'range where the minimum happened.
+
   function Leading_Coefficient
              ( deg : Standard_Integer_Vectors.Vector;
                cff : Standard_Complex_Vectors.Vector;

@@ -1,3 +1,6 @@
+Sun 9 Nov 2025 : extended double_leading_evaluations, tested in
+  test_leading_evaluations.adb.
+
 Wed 5 Nov 2025 : fixed bug in double_leading_evaluations.adb and added
   test in test_leading_evaluations.adb.
 
