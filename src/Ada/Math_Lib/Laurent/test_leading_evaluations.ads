@@ -59,6 +59,13 @@ package Test_Leading_Evaluations is
   --   of a polynomial with nbr many terms, at the leading terms of a series
   --   with real positive powers.
 
+  procedure Test_System ( nbp,nbr,dim : in integer32 );
+
+  -- DESCRIPTION :
+  --   Tests polynomial evaluation and differentiation in dim many variables,
+  --   of a system of nbp polynomials, each with nbr many terms,
+  --   at the leading terms of a series with real positive powers.
+
   procedure Main;
 
   -- DESCRIPTION :

@@ -8,6 +8,7 @@ with Standard_Mathematical_Functions;   use Standard_Mathematical_Functions;
 with Standard_Random_Numbers;
 with Standard_Random_Vectors;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
+with Standard_Integer_VecVecs_io;       use Standard_Integer_VecVecs_io;
 with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Double_Leading_Evaluations;
@@ -205,17 +206,43 @@ package body Test_Leading_Evaluations is
     end loop;
   end Test_Polynomial;
 
+  procedure Test_System ( nbp,nbr,dim : in integer32 ) is
+
+    deg : Standard_Integer_VecVecs.Array_of_VecVecs(1..nbp);
+    pwr : constant Standard_Floating_Vectors.Vector(1..dim)
+        := Random_Leading_Powers(dim);
+
+  begin
+    for i in 1..nbp loop
+      declare
+        dpi : constant Standard_Integer_VecVecs.VecVec(1..nbr)
+            := Random_Polynomial(nbr,dim,-9,9);
+      begin
+        deg(i) := new Standard_Integer_VecVecs.VecVec'(dpi);
+      end;
+    end loop;
+    for i in 1..nbp loop
+      put("-> degrees of polynomial "); put(i,1); put_line(" :");
+      put(deg(i));
+    end loop;
+    put_line("leading powers of the series :"); put_line(pwr);
+  end Test_System;
+
   procedure Main is
 
-    nbr,dim : integer32 := 0;
+    nbr,dim,nbp : integer32 := 0;
 
   begin
     new_line;
     put("Give the number of variables : "); get(dim);
     put("Give the number of monomials : "); get(nbr);
-    if nbr = 1
-     then Test_Monomial(dim);
-     else Test_Polynomial(nbr,dim);
+    put("Give the number of polynomials : "); get(nbp);
+    if nbr = 1 then
+      Test_Monomial(dim);
+    elsif nbp = 1 then
+      Test_Polynomial(nbr,dim);
+    else
+      Test_System(nbp,nbr,dim);
     end if;
   end Main;
 

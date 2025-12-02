@@ -1,3 +1,5 @@
+Tue 2 Dec 2025 : extended test_leading_evaluations with a test on system.
+
 Sun 9 Nov 2025 : extended double_leading_evaluations, tested in
   test_leading_evaluations.adb.
 
