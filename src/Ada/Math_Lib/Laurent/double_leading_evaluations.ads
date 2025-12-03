@@ -4,7 +4,9 @@ with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
+with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
+with Standard_Complex_VecVecs;
 
 package Double_Leading_Evaluations is
 
@@ -96,5 +98,68 @@ package Double_Leading_Evaluations is
   -- REQUIRED : deg'range = cff'range, and
   --   if any of the deg(i)'s are negative, then cff(i) is nonzero,
   --   which is implied by cff being leading coefficients.
+
+  procedure Evaluate_Polynomial
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                xcf : in Standard_Complex_Vectors.Vector;
+                xdg : in Standard_Floating_Vectors.Vector;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                idx : out integer32; vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Returns the value of the Laurent polynomial p at real powers
+  --   in a sorted vector, also returning the index where the
+  --   minimum occurred in the original degrees.
+
+  -- REQUIRED :
+  --   for all i in pdg'range: pdg(i)'range = xdg'range = 1..nvr,
+  --   where nvr equals the number of variables,
+  --   as xdg(j) is the power for the variable raised to pdg(i)(j);
+  --   and ydg'range = pdg'range.
+
+  -- ON ENTRY :
+  --   pcf      coefficients of the Laurent monomials in p;
+  --   pdg      exponents of the Laurent monomials in p;
+  --   xcf      leading coefficients of the series;
+  --   xdg      leading exponents of the series;
+  --   vrblvl   is the verbose level.
+
+   -- ON RETURN :
+  --   ycf      coefficients of the evaluated series,
+  --            sorted according to the powers in ydg;
+  --   ydg      values of the minimum power over all monomials,
+  --            sorted in increasing order;
+  --   idx      index in pdg'range where the minimum happened.
+
+  procedure Evaluate_System
+              ( pcf : in Standard_Complex_VecVecs.VecVec;
+                pdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                xcf : in Standard_Complex_Vectors.Vector;
+                xdg : in Standard_Floating_Vectors.Vector;
+                ycf : in Standard_Complex_VecVecs.VecVec;
+                ydg : in Standard_Floating_VecVecs.VecVec;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Evaluates a system of Laurent polynomials at the leading term
+  --   of a series with real powers and complex coefficients.
+
+  -- REQUIRED :
+  --   All ranges conform and ycf and ydg are properly allocated.
+
+  -- ON ENTRY :
+  --   pcf      pcf(i) holds the coefficients of the i-th polynomial;
+  --   pdg      pdg(i) holds the exponents of the i-th polynomial;
+  --   xcf      leading coefficients of the series;
+  --   xdg      leading exponents of the series;
+  --   vrblvl   is the verbose level.
+
+   -- ON RETURN :
+  --   ycf      coefficients of the series, evaluated at i-th polynomial,
+  --            sorted according to the powers in ydg;
+  --   ydg      values of the minimum power over all monomials,
+  --            sorted in increasing order;
 
 end Double_Leading_Evaluations;

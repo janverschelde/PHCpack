@@ -8,9 +8,10 @@ with Standard_Mathematical_Functions;   use Standard_Mathematical_Functions;
 with Standard_Random_Numbers;
 with Standard_Random_Vectors;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
-with Standard_Integer_VecVecs_io;       use Standard_Integer_VecVecs_io;
 with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
+with Standard_Floating_VecVecs;
+with Standard_Complex_VecVecs;
 with Double_Leading_Evaluations;
 
 package body Test_Leading_Evaluations is
@@ -206,43 +207,96 @@ package body Test_Leading_Evaluations is
     end loop;
   end Test_Polynomial;
 
-  procedure Test_System ( nbp,nbr,dim : in integer32 ) is
+  procedure Test_System
+              ( nbp,dim : in integer32;
+                nbm : in Standard_Integer_Vectors.Vector ) is
 
-    deg : Standard_Integer_VecVecs.Array_of_VecVecs(1..nbp);
+    pdg : Standard_Integer_VecVecs.Array_of_VecVecs(1..nbp);
+    pcf : Standard_Complex_VecVecs.VecVec(1..nbp);
     pwr : constant Standard_Floating_Vectors.Vector(1..dim)
         := Random_Leading_Powers(dim);
+    cff : constant Standard_Complex_Vectors.Vector(1..dim)
+        := Standard_Random_Vectors.Random_Vector(1,dim);
 
   begin
     for i in 1..nbp loop
       declare
-        dpi : constant Standard_Integer_VecVecs.VecVec(1..nbr)
-            := Random_Polynomial(nbr,dim,-9,9);
+        dpi : constant Standard_Integer_VecVecs.VecVec(1..nbm(i))
+            := Random_Polynomial(nbm(i),dim,-9,9);
+        cfi : constant Standard_Complex_Vectors.Vector(1..nbm(i))
+            := Standard_Random_Vectors.Random_Vector(1,nbm(i));
       begin
-        deg(i) := new Standard_Integer_VecVecs.VecVec'(dpi);
+        pdg(i) := new Standard_Integer_VecVecs.VecVec'(dpi);
+        pcf(i) := new Standard_Complex_Vectors.Vector'(cfi);
       end;
     end loop;
     for i in 1..nbp loop
-      put("-> degrees of polynomial "); put(i,1); put_line(" :");
-      put(deg(i));
+      put("-> coefficients and degrees of polynomial ");
+      put(i,1); put_line(" :");
+      for j in 1..nbm(i) loop
+        put(pcf(i)(j)); put("  "); put(pdg(i)(j)); new_line;
+      end loop;
     end loop;
-    put_line("leading powers of the series :"); put_line(pwr);
+    put_line("Leading coefficients and powers of the series :");
+    for i in 1..dim loop
+      put(cff(i)); put("  t^"); put(pwr(i)); new_line;
+    end loop;
+    for i in 1..nbp loop
+      declare
+        val : Standard_Floating_Vectors.Vector(1..nbm(i));
+        ycf : Standard_Complex_Vectors.Vector(1..nbm(i));
+        idx : integer32;
+      begin
+        put("Evaluating polynomial "); put(i,1); put_line(" ...");
+        Double_Leading_Evaluations.Evaluate_Polynomial
+          (pcf(i).all,pdg(i).all,cff,pwr,ycf,val,idx,1);
+        put_line("evaluated powers :"); put_line(val);
+        put("power value : "); put(val(val'first));
+        put(" at index "); put(idx,1); new_line;
+      end;
+    end loop;
+    put_line("Evaluating the system ...");
+    declare
+      ycf : Standard_Complex_VecVecs.VecVec(1..nbp);
+      ydg : Standard_Floating_VecVecs.VecVec(1..nbp);
+    begin
+      for i in 1..nbp loop
+        ycf(i) := new Standard_Complex_Vectors.Vector(1..nbm(i));
+        ydg(i) := new Standard_Floating_Vectors.Vector(1..nbm(i));
+      end loop;
+      Double_Leading_Evaluations.Evaluate_System(pcf,pdg,cff,pwr,ycf,ydg,1);
+      for i in 1..nbp loop
+        put("evaluated powers at "); put(i,1); put_line(" :");
+        put_line(ydg(i).all);
+      end loop;
+    end;   
   end Test_System;
 
   procedure Main is
 
-    nbr,dim,nbp : integer32 := 0;
+    nbr,dim,npol : integer32 := 0;
 
   begin
     new_line;
     put("Give the number of variables : "); get(dim);
-    put("Give the number of monomials : "); get(nbr);
-    put("Give the number of polynomials : "); get(nbp);
-    if nbr = 1 then
-      Test_Monomial(dim);
-    elsif nbp = 1 then
-      Test_Polynomial(nbr,dim);
+    put("Give the number of polynomials : "); get(npol);
+    if npol = 1 then
+      put("Give the number of monomials : "); get(nbr);
+      if nbr = 1
+       then Test_Monomial(dim);
+       else Test_Polynomial(nbr,dim);
+      end if;
     else
-      Test_System(nbp,nbr,dim);
+      put_line("Reading the number of monomials for every polynomial ...");
+      declare
+        nbm : Standard_Integer_Vectors.Vector(1..npol) := (1..npol => 0);
+      begin
+        for i in 1..npol loop
+          put("  Give the number of monomials in polynomial "); put(i,1);
+          put(" : "); get(nbm(i));
+        end loop;
+        Test_System(npol,dim,nbm);
+      end;
     end if;
   end Main;
 
