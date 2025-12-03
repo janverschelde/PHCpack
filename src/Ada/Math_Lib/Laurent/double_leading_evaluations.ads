@@ -101,6 +101,7 @@ package Double_Leading_Evaluations is
 
   procedure Evaluate_Polynomial
               ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
                 xcf : in Standard_Complex_Vectors.Vector;
                 xdg : in Standard_Floating_Vectors.Vector;
@@ -121,6 +122,7 @@ package Double_Leading_Evaluations is
 
   -- ON ENTRY :
   --   pcf      coefficients of the Laurent monomials in p;
+  --   pct      powers of t with the coefficients of the monomials of p;
   --   pdg      exponents of the Laurent monomials in p;
   --   xcf      leading coefficients of the series;
   --   xdg      leading exponents of the series;
@@ -135,6 +137,7 @@ package Double_Leading_Evaluations is
 
   procedure Evaluate_System
               ( pcf : in Standard_Complex_VecVecs.VecVec;
+                pct : in Standard_Floating_VecVecs.VecVec;
                 pdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
                 xcf : in Standard_Complex_Vectors.Vector;
                 xdg : in Standard_Floating_Vectors.Vector;
@@ -150,8 +153,9 @@ package Double_Leading_Evaluations is
   --   All ranges conform and ycf and ydg are properly allocated.
 
   -- ON ENTRY :
-  --   pcf      pcf(i) holds the coefficients of the i-th polynomial;
-  --   pdg      pdg(i) holds the exponents of the i-th polynomial;
+  --   pcf      pcf(i) has the coefficients of the i-th polynomial;
+  --   pct      pct(i) has the power of t in the coefficients;
+  --   pdg      pdg(i) has the exponents of the i-th polynomial;
   --   xcf      leading coefficients of the series;
   --   xdg      leading exponents of the series;
   --   vrblvl   is the verbose level.

@@ -213,6 +213,7 @@ package body Test_Leading_Evaluations is
 
     pdg : Standard_Integer_VecVecs.Array_of_VecVecs(1..nbp);
     pcf : Standard_Complex_VecVecs.VecVec(1..nbp);
+    pct : Standard_Floating_VecVecs.VecVec(1..nbp);
     pwr : constant Standard_Floating_Vectors.Vector(1..dim)
         := Random_Leading_Powers(dim);
     cff : constant Standard_Complex_Vectors.Vector(1..dim)
@@ -225,16 +226,21 @@ package body Test_Leading_Evaluations is
             := Random_Polynomial(nbm(i),dim,-9,9);
         cfi : constant Standard_Complex_Vectors.Vector(1..nbm(i))
             := Standard_Random_Vectors.Random_Vector(1,nbm(i));
+        cti : constant Standard_Floating_Vectors.Vector(1..nbm(i))
+            := Random_Leading_Powers(nbm(i));
       begin
         pdg(i) := new Standard_Integer_VecVecs.VecVec'(dpi);
         pcf(i) := new Standard_Complex_Vectors.Vector'(cfi);
+        pct(i) := new Standard_Floating_Vectors.Vector'(cti);
       end;
     end loop;
     for i in 1..nbp loop
       put("-> coefficients and degrees of polynomial ");
       put(i,1); put_line(" :");
       for j in 1..nbm(i) loop
-        put(pcf(i)(j)); put("  "); put(pdg(i)(j)); new_line;
+        put(pcf(i)(j)); 
+        put(" t^"); put(pct(i)(j));
+        put("  "); put(pdg(i)(j)); new_line;
       end loop;
     end loop;
     put_line("Leading coefficients and powers of the series :");
@@ -249,7 +255,7 @@ package body Test_Leading_Evaluations is
       begin
         put("Evaluating polynomial "); put(i,1); put_line(" ...");
         Double_Leading_Evaluations.Evaluate_Polynomial
-          (pcf(i).all,pdg(i).all,cff,pwr,ycf,val,idx,1);
+          (pcf(i).all,pct(i).all,pdg(i).all,cff,pwr,ycf,val,idx,1);
         put_line("evaluated powers :"); put_line(val);
         put("power value : "); put(val(val'first));
         put(" at index "); put(idx,1); new_line;
@@ -264,7 +270,8 @@ package body Test_Leading_Evaluations is
         ycf(i) := new Standard_Complex_Vectors.Vector(1..nbm(i));
         ydg(i) := new Standard_Floating_Vectors.Vector(1..nbm(i));
       end loop;
-      Double_Leading_Evaluations.Evaluate_System(pcf,pdg,cff,pwr,ycf,ydg,1);
+      Double_Leading_Evaluations.Evaluate_System
+        (pcf,pct,pdg,cff,pwr,ycf,ydg,1);
       for i in 1..nbp loop
         put("evaluated powers at "); put(i,1); put_line(" :");
         put_line(ydg(i).all);

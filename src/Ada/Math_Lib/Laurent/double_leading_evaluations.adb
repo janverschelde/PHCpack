@@ -171,6 +171,7 @@ package body Double_Leading_Evaluations is
 
   procedure Evaluate_Polynomial
               ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
                 xcf : in Standard_Complex_Vectors.Vector;
                 xdg : in Standard_Floating_Vectors.Vector;
@@ -182,7 +183,7 @@ package body Double_Leading_Evaluations is
       put_line("-> in Double_Leading_Evaluations.evaluate_polynomial ...");
     end if;
     idx := pdg'first;
-    ydg(idx) := Leading_Power(pdg(idx).all,xdg,0,vrblvl-1);
+    ydg(idx) := pct(idx) + Leading_Power(pdg(idx).all,xdg,0,vrblvl-1);
     ycf(idx) := pcf(idx)*Leading_Coefficient(pdg(idx).all,xcf,0,vrblvl-1);
     if vrblvl > 0 then
       put("leading power at i = "); put(idx,1); put(" : ");
@@ -204,6 +205,7 @@ package body Double_Leading_Evaluations is
 
   procedure Evaluate_System
               ( pcf : in Standard_Complex_VecVecs.VecVec;
+                pct : in Standard_Floating_VecVecs.VecVec;
                 pdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
                 xcf : in Standard_Complex_Vectors.Vector;
                 xdg : in Standard_Floating_Vectors.Vector;
@@ -222,7 +224,8 @@ package body Double_Leading_Evaluations is
         put("Evaluating polynomial "); put(i,1); put_line(" ...");
       end if;
       Double_Leading_Evaluations.Evaluate_Polynomial
-        (pcf(i).all,pdg(i).all,xcf,xdg,ycf(i).all,ydg(i).all,idx,1);
+        (pcf(i).all,pct(i).all,pdg(i).all,xcf,xdg,ycf(i).all,ydg(i).all,idx,
+         vrblvl-1);
       if vrblvl > 0 then
         put_line("evaluated powers :"); put_line(ydg(i).all);
         put("power value : "); put(ydg(i)(ydg(i)'first));
