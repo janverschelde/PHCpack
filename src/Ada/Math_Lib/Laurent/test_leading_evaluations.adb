@@ -100,7 +100,7 @@ package body Test_Leading_Evaluations is
       begin
         cff(i) := new Standard_Complex_Vectors.Vector'(cfi);
         rnd := Standard_Random_Numbers.Random;
-        pwi(1) := abs(rnd);
+        pwi(1) := 1.0; -- abs(rnd);
         for j in 2..nbt(i) loop
           rnd := Standard_Random_Numbers.Random;
           pwi(j) := pwi(j-1) + 0.01 + abs(rnd);
@@ -183,8 +183,8 @@ package body Test_Leading_Evaluations is
   function Evaluate_Monomial
              ( deg : Standard_Integer_Vectors.Vector;
                cff : Complex_Number; tpw : double_float;
-               zpt : Standard_Complex_Vectors.Vector; tpt : double_float )
-             return Complex_Number is
+               zpt : Standard_Complex_Vectors.Vector; tpt : double_float;
+               vrblvl : integer32 := 0 ) return Complex_Number is
 
   -- DESCRIPTION :
   --   Evaluates the monomial with exponents in deg, coefficient in cff,
@@ -194,6 +194,14 @@ package body Test_Leading_Evaluations is
     res : Complex_Number := pwr*cff;
 
   begin
+    if vrblvl > 0 then
+      put_line("-> in Test_Leading_Evaluations.evaluate_monomial ...");
+      put("deg : "); put(deg);
+      put(", cff : "); put(cff); new_line;
+      put("zpt : "); put(zpt); new_line;
+      put("tpw : "); put(tpw); new_line;
+      put("tpt : "); put(tpt); new_line;
+    end if;
     for i in zpt'range loop
       if deg(i) > 0 then
         for j in 1..deg(i) loop
@@ -205,6 +213,9 @@ package body Test_Leading_Evaluations is
         end loop;
       end if;
     end loop;
+    if vrblvl > 0 then
+      put("res : "); put(res); new_line;
+    end if;
     return res;
   end Evaluate_Monomial;
 
@@ -220,7 +231,7 @@ package body Test_Leading_Evaluations is
   begin
     for i in res'range loop
       res(i) := create(0.0);
-      for j in cff'range loop
+      for j in cff(i)'range loop
         res(i) := res(i)
           + Evaluate_Monomial(deg(i)(j).all,cff(i)(j),tpw(i)(j),zpt,tpt);
       end loop;
