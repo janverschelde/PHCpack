@@ -17,7 +17,8 @@ project Laurent is
         "ts_lsernew.adb",  -- tests Newton's method on Laurent series
         "ts_hunwas.adb",   -- tests the Hungarian algorithm
         "ts_hunsys.adb",   -- tests computation of leading powers
-        "ts_hunval.adb"    -- tests evaluation at series of real powers
+        "ts_hunval.adb",   -- tests evaluation at series of real powers
+        "ts_hunnew.adb"    -- tests Newton-Puiseux for real power series
     );
 
     package Compiler is

@@ -28,7 +28,7 @@ double_lseries_newton_steps       : runs Newton's method on Laurent series
 test_double_lseries_newton        : tests Newton on Laurent series polynomials
 ts_lsernew                        : main test on Laurent series Newton
 main_laurent_series_newton        : main procedure for phc -u
-------------------------------------------------------------------------------
+==============================================================================
 double_weighted_assignment        : solves the weighted assignment problem
 test_weighted_assignment          : test on weighted assignment solutions
 ts_hunwas                         : test Hungarian algorithm
@@ -36,7 +36,10 @@ double_puiseux_operations         : procedures to compute leading terms
 test_leading_powers               : tests leading powers computation
 test_leading_terms                : tests leading terms computation
 ts_hunsys                         : calls main test on leading powers/terms
+------------------------------------------------------------------------------
 double_leading_evaluations        : evaluates at leading terms of series
 test_leading_evaluations          : test evaluating at leading terms
+random_laurent_homotopy           : defines a homotopy with series solution
 ts_hunval                         : calls main test on evaluating at series
+ts_hunnew                         : develops Newton-Puiseux for real powers
 ------------------------------------------------------------------------------

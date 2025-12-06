@@ -1,5 +1,7 @@
 Sat 6 Dec 2025 : fixed bug in test_leading_evaluations.adb, in the
-  evaluate_homotopy procedure.
+  evaluate_homotopy procedure.  New random_laurent_homotopy, with code
+  extracted from test_leading_evaluations, new test procedure ts_hunnew,
+  updated laurent.gpr.
 
 Fri 5 Dec 2025 : extended test_leading_evaluations with a random homotopy.
   Fix for one variable/one equation homotopies.
