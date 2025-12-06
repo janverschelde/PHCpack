@@ -506,7 +506,7 @@ package body Test_Leading_Evaluations is
     new_line;
     put("Give the number of variables : "); get(dim);
     put("Give the number of polynomials : "); get(npol);
-    if npol = 1 then
+    if npol = 1 and dim > 1 then
       put("Give the number of monomials : "); get(nbr);
       if nbr = 1
        then Test_Monomial(dim);

@@ -1,4 +1,5 @@
 Fri 5 Dec 2025 : extended test_leading_evaluations with a random homotopy.
+  Fix for one variable/one equation homotopies.
 
 Wed 3 Dec 2025 : added evaluations of system to double_leading_evaluations,
   tested by test_leading_evaluations.  In double_leading_evaluations, added
