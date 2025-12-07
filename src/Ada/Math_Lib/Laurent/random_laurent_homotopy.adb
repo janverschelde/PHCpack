@@ -95,7 +95,7 @@ package body Random_Laurent_Homotopy is
       begin
         cff(i) := new Standard_Complex_Vectors.Vector'(cfi);
         rnd := Standard_Random_Numbers.Random;
-        pwi(1) := 1.0; -- abs(rnd);
+        pwi(1) := abs(rnd);
         for j in 2..nbt(i) loop
           rnd := Standard_Random_Numbers.Random;
           pwi(j) := pwi(j-1) + 0.01 + abs(rnd);
