@@ -1,3 +1,5 @@
+Tue 9 Dec 2025 : extended test_newton_puiseux.
+
 Sun 7 Dec 2025 : modified random_laurent_homotopy.adb for random powers
   of the series solution; added new package test_newton_puiseux with
   code extracted from ts_hunnew.adb.
