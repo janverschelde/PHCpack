@@ -1,3 +1,5 @@
+Wed 10 Dec 2025 : test_newton_puiseux computes next term following constant.
+
 Tue 9 Dec 2025 : extended test_newton_puiseux.  From test_newton_puiseux.adb
   removed the call to the tropical Cramer rule.
 

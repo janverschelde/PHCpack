@@ -1,7 +1,6 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Double_Leading_Evaluations;
@@ -41,6 +40,7 @@ package body Test_Newton_Puiseux is
         ejm(i,k) := hct(i)(1);
         cjm(i,k) := hcf(i)(1)*Leading_Coefficient(hdg(i)(1).all,zt0,k);
       end loop;
+      put(ycf(i)); put(" t^"); put(ydg(i)); new_line;
       for j in 2..hcf(i)'last loop -- run over all monomials
         if vrblvl > 0 then
           put("at monomial "); put(j,1);
@@ -61,9 +61,64 @@ package body Test_Newton_Puiseux is
             cjm(i,k) := hcf(i)(j)*Leading_Coefficient(hdg(i)(j).all,zt0,k);
           end loop;
         end if;
+        put(ycf(i)); put(" t^"); put(ydg(i)); new_line;
       end loop;
     end loop;
   end Evaluate_and_Differentiate;
+
+  procedure Evaluate_All_Monomials
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                zt0 : in Standard_Complex_Vectors.Vector;
+                ycf : in Standard_Complex_VecVecs.VecVec;
+                ydg : in Standard_Floating_VecVecs.VecVec;
+                vrblvl : in integer32 := 0 ) is
+
+    dim : constant integer32 := hcf'last;
+
+    use Double_Leading_Evaluations;
+
+  begin
+    if vrblvl > 0 then
+      put_line("-> in Test_Newton_Puiseux.evaluate_all_monomials ...");
+    end if;
+    for i in 1..dim loop -- run over all polynomials
+      for j in hcf(i)'range loop -- run over all monomials
+        if vrblvl > 0 then
+          put("at monomial "); put(j,1);
+          put(" of polynomial "); put(i,1); put_line(" ...");
+        end if;
+        ydg(i)(j) := hct(i)(j);
+        ycf(i)(j) := hcf(i)(j)*Leading_Coefficient(hdg(i)(j).all,zt0);
+        put(ycf(i)(j)); put(" t^"); put(ydg(i)(j)); new_line;
+      end loop;
+    end loop;
+  end Evaluate_All_Monomials;
+
+  procedure Sum ( cf : in out Standard_Complex_Vectors.Vector;
+                  dg : in Standard_Floating_Vectors.Vector ) is
+
+    tol : constant double_float := 1.0e-12;
+    dif : double_float;
+
+  begin
+    for i in cf'first..cf'last-1 loop
+      dif := abs(dg(i) - dg(i+1));
+      if dif < tol then
+        cf(i) := cf(i) + cf(i+1);
+        cf(i+1) := create(0.0);
+      end if;
+    end loop;
+  end Sum;
+
+  procedure Sum ( cf : in Standard_Complex_VecVecs.VecVec;
+                  dg : in Standard_Floating_VecVecs.VecVec ) is
+  begin
+    for i in cf'range loop
+      Sum(cf(i).all,dg(i).all);
+    end loop;
+  end Sum;
 
   function Positive_Minimum
              ( v : Standard_Floating_Vectors.Vector ) return double_float is
@@ -88,6 +143,112 @@ package body Test_Newton_Puiseux is
     return res;
   end Positive_Minimum;
 
+  function Positive_Minimum
+             ( c : Standard_Complex_Vectors.Vector;
+               v : Standard_Floating_Vectors.Vector ) return double_float is
+
+    res : double_float;
+    tol : constant double_float := 1.0E-12;
+    idx : integer32;
+
+  begin
+    for i in v'range loop -- find first positive number
+      if AbsVal(c(i)) > tol then
+        if v(i) > tol then
+          idx := i;
+          res := v(i);
+          exit;
+        end if;
+      end if;
+    end loop;
+    for i in idx+1..v'last loop
+      if AbsVal(c(i)) > tol then
+        if v(i) > tol and then v(i) < res
+         then res := v(i);
+        end if;
+      end if;
+    end loop;
+    return res;
+  end Positive_Minimum;
+
+  function Coefficient ( c : Standard_Complex_Vectors.Vector;
+                         e : Standard_Floating_Vectors.Vector;
+                         p : double_float ) return Complex_Number is
+
+    tol : constant double_float := 1.0e-12;
+
+  begin
+    for i in e'range loop
+      if abs(e(i) - p) < tol
+       then return c(i);
+      end if;
+    end loop;
+    return create(0.0);
+  end Coefficient;
+
+  procedure Leading_Powers_by_Evaluation
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                lcf : in Standard_Complex_Vectors.Vector;
+                lpw : in Standard_Floating_Vectors.Vector;
+                psm : out Standard_Floating_Vectors.Vector; 
+                cfp : out Standard_Complex_Vectors.Vector; 
+                vrblvl : in integer32 := 0 ) is
+
+    cfy : Standard_Complex_VecVecs.VecVec(hcf'range);
+    dgy : Standard_Floating_VecVecs.VecVec(hct'range);
+    err,sumerr : double_float;
+
+  begin
+    for i in hcf'range loop
+      cfy(i) := new Standard_Complex_Vectors.Vector(hcf(i)'range);
+      dgy(i) := new Standard_Floating_Vectors.Vector(hcf(i)'range);
+    end loop;
+    Evaluate_All_Monomials(hcf,hct,hdg,lcf,cfy,dgy,vrblvl-1);
+    if vrblvl > 0 then
+      for i in cfy'range loop
+        put("all values of polynomial "); put(i,1); put_line(" :");
+        for j in cfy(i)'range loop
+          put(cfy(i)(j)); put(" t^"); put(dgy(i)(j)); new_line;
+        end loop;
+      end loop;
+    end if;
+    Sum(cfy,dgy);
+    if vrblvl > 0 then
+      put_line("After adding coefficients with same monomial :");
+      for i in cfy'range loop
+        put("all values of polynomial "); put(i,1); put_line(" :");
+        for j in cfy(i)'range loop
+          put(cfy(i)(j)); put(" t^"); put(dgy(i)(j)); new_line;
+        end loop;
+      end loop;
+    end if;
+    if vrblvl > 0 then
+      put_line("Computing the positive minima :");
+      sumerr := 0.0;
+    end if;
+    for i in cfy'range loop
+      psm(i) := Positive_Minimum(cfy(i).all,dgy(i).all);       
+      if vrblvl > 0 then
+        put("p :"); put(psm(i));
+        put(", lpw :"); put(lpw(i)); err := abs(psm(i) - lpw(i));
+        put(", err :"); put(err,3); new_line;
+        sumerr := sumerr + err;
+      end if;
+    end loop;
+    if vrblvl > 0
+     then put("error sum :"); put(sumerr,3); new_line;
+    end if;
+    for i in cfy'range loop
+      cfp(i) := Coefficient(cfy(i).all,dgy(i).all,psm(i));
+    end loop;
+    for i in cfy'range loop
+      Standard_Complex_Vectors.Clear(cfy(i));
+      Standard_Floating_Vectors.Clear(dgy(i));
+    end loop;
+  end Leading_Powers_by_Evaluation;
+
   procedure Run_Newton_Step
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
@@ -103,6 +264,8 @@ package body Test_Newton_Puiseux is
     cA : Standard_Complex_Matrices.Matrix(hcf'range,hcf'range);
     eA : Standard_Floating_Matrices.Matrix(hcf'range,hcf'range);
     posmin,err,sumerr : double_float;
+    psm : Standard_Floating_Vectors.Vector(hcf'range);
+    cfp : Standard_Complex_Vectors.Vector(hcf'range);
 
   begin
     if vrblvl > 0 then
@@ -115,12 +278,12 @@ package body Test_Newton_Puiseux is
     sumerr := 0.0;
     for i in hct'range loop
       posmin := Positive_minimum(hct(i).all);
-      put("p : "); put(posmin);
-      put(", lpw : "); put(lpw(i)); err := abs(posmin - lpw(i));
-      put(", err : "); put(err,3); new_line;
+      put("p :"); put(posmin);
+      put(", lpw :"); put(lpw(i)); err := abs(posmin - lpw(i));
+      put(", err :"); put(err,3); new_line;
       sumerr := sumerr + err;
     end loop;
-    put("error sum : "); put(sumerr,3); new_line;
+    put("error sum :"); put(sumerr,3); new_line;
     Evaluate_and_Differentiate(hcf,hct,hdg,lcf,ycf,ydg,cA,eA,1);
     if vrblvl > 0 then
       put_line("the function value :");
@@ -135,6 +298,21 @@ package body Test_Newton_Puiseux is
         end loop;
       end loop;
     end if;
+    Leading_Powers_by_Evaluation(hcf,hct,hdg,lcf,lpw,psm,cfp,vrblvl);
+    for i in cfp'range loop -- Jacobian is diagonal for the test example
+      cfp(i) := -cfp(i)/cA(i,i);
+    end loop;
+    for i in cfp'range loop
+      put(cfp(i)); put(" t^"); put(psm(i)); new_line;
+    end loop;
+    sumerr := 0.0;
+    for i in cff'range loop
+      put(cff(i)(cff(i)'first+1));
+      err := AbsVal(cfp(i) - cff(i)(cff(i)'first+1));
+      put(", err :"); put(err,3); new_line;
+      sumerr := sumerr + err;
+    end loop;
+    put("error sum :"); put(sumerr,3); new_line;
   end Run_Newton_Step;
 
   procedure Scale_Homotopy_Powers
