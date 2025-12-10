@@ -1,4 +1,5 @@
-Tue 9 Dec 2025 : extended test_newton_puiseux.
+Tue 9 Dec 2025 : extended test_newton_puiseux.  From test_newton_puiseux.adb
+  removed the call to the tropical Cramer rule.
 
 Sun 7 Dec 2025 : modified random_laurent_homotopy.adb for random powers
   of the series solution; added new package test_newton_puiseux with

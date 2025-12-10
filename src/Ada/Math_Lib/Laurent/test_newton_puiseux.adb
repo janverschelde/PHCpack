@@ -4,9 +4,7 @@ with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
-with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
 with Double_Leading_Evaluations;
-with Double_Puiseux_Operations;
 with Random_Laurent_Homotopy;
 
 package body Test_Newton_Puiseux is
@@ -98,18 +96,12 @@ package body Test_Newton_Puiseux is
                 pwr : in Standard_Floating_VecVecs.VecVec;
                 vrblvl : in integer32 := 0 ) is
 
-    dim : constant integer32 := hcf'last;
     ycf : Standard_Complex_Vectors.Vector(hcf'range);
     ydg : Standard_Floating_Vectors.Vector(hcf'range);
     lcf : Standard_Complex_Vectors.Vector(hcf'range);
     lpw : Standard_Floating_Vectors.Vector(hcf'range);
     cA : Standard_Complex_Matrices.Matrix(hcf'range,hcf'range);
     eA : Standard_Floating_Matrices.Matrix(hcf'range,hcf'range);
-    tol : constant double_float := 1.0e-12;
-    idx1,idx2 : Standard_Integer_Vectors.Vector(hcf'range);
-    work : Standard_Integer_VecVecs.VecVec(0..dim);
-    sol : Standard_Floating_Vectors.Vector(hcf'range);
-    fail : boolean;
     posmin,err,sumerr : double_float;
 
   begin
@@ -143,13 +135,6 @@ package body Test_Newton_Puiseux is
         end loop;
       end loop;
     end if;
-    put_line("-> computing the tropical Cramer vector ...");
-    for i in work'range loop
-      work(i) := new Standard_Integer_Vectors.Vector'(1..dim => 0);
-    end loop;
-    Double_Puiseux_Operations.Leading_Powers
-      (dim,tol,eA,ydg,work,sol,idx1,idx2,fail,2);
-    put_line("the solution :"); put_line(sol);
   end Run_Newton_Step;
 
   procedure Scale_Homotopy_Powers
