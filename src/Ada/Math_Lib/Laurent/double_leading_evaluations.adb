@@ -144,6 +144,11 @@ package body Double_Leading_Evaluations is
       put("-> in Double_Leaving_Evaluations.leading_coefficient, difidx : ");
       put(difidx,1); put_line(" ...");
     end if;
+    if difidx > 0 then
+      if deg(difidx) = 0
+       then return create(0.0);
+      end if;
+    end if;
     for i in deg'range loop
       if deg(i) > 0 then
         if difidx /= i then
