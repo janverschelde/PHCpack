@@ -61,9 +61,6 @@ package body Double_Leading_Evaluations is
 
   procedure Sort ( x : in out Standard_Floating_Vectors.Vector ) is
 
-  -- DESCRIPTION :
-  --   Sorts the numbers in x in increasing order.
-
     val : double_float;
 
   begin
@@ -80,10 +77,6 @@ package body Double_Leading_Evaluations is
 
   procedure Sort ( x : in out Standard_Floating_Vectors.Vector;
                    y : in out Standard_Complex_Vectors.Vector ) is
-
-  -- DESCRIPTION :
-  --   Sorts the numbers in x in increasing order
-  --   and swaps the corresponding numbers in y accordingly.
 
     val : double_float;
     tmp : Complex_Number;

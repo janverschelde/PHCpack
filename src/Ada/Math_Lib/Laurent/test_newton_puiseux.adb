@@ -4,6 +4,7 @@ with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Double_Leading_Evaluations;
+with Double_Ordered_Evaluations;
 with Random_Laurent_Homotopy;
 
 package body Test_Newton_Puiseux is
@@ -249,6 +250,35 @@ package body Test_Newton_Puiseux is
     end loop;
   end Leading_Powers_by_Evaluation;
 
+  procedure First_Order_Evaluation
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec;
+                vrblvl : in integer32 := 0 ) is
+
+    dim : constant integer32 := hcf'last;
+    nbr : integer32;
+
+  begin
+    for i in hcf'range loop
+      nbr := hcf(i)'last;
+      declare
+        ycf : Standard_Complex_Vectors.Vector(1..(dim+1)*nbr);
+        ydg : Standard_Floating_Vectors.Vector(1..(dim+1)*nbr);
+      begin
+        Double_Ordered_Evaluations.First_Order_Evaluation
+          (hcf(i).all,hct(i).all,hdg(i).all,cff,pwr,ycf,ydg,vrblvl-1);
+        put("the first order evaluation of polynomial ");
+        put(i,1); put_line(" :");
+        for i in ycf'range loop
+           put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+        end loop;
+      end;
+    end loop;
+  end First_Order_Evaluation;
+
   procedure Run_Newton_Step
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
@@ -313,6 +343,7 @@ package body Test_Newton_Puiseux is
       sumerr := sumerr + err;
     end loop;
     put("error sum :"); put(sumerr,3); new_line;
+    First_Order_Evaluation(hcf,hct,hdg,cff,pwr,vrblvl-1);
   end Run_Newton_Step;
 
   procedure Scale_Homotopy_Powers

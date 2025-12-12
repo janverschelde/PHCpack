@@ -1,3 +1,8 @@
+Thu 11 Dec 2025 : new package double_ordered_evaluations to compute first
+  order evaluations of polynomials at series, test_ordered_evaluation tests
+  this new package.  Updated double_leading_evaluations, extended ts_hunval.
+  Extended test_newton_puiseux.adb with first order evaluations.
+
 Wed 10 Dec 2025 : test_newton_puiseux computes next term following constant.
   Bug fixed in derivative computation in double_leading_evaluations.adb.
 
