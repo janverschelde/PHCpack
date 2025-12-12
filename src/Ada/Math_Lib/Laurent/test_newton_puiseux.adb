@@ -260,6 +260,7 @@ package body Test_Newton_Puiseux is
 
     dim : constant integer32 := hcf'last;
     nbr : integer32;
+    psm : Standard_Floating_Vectors.Vector(hcf'range);
 
   begin
     for i in hcf'range loop
@@ -275,7 +276,12 @@ package body Test_Newton_Puiseux is
         for i in ycf'range loop
            put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
         end loop;
+        psm(i) := Positive_Minimum(ycf,ydg);
       end;
+    end loop;
+    put_line("smallest positive powers :");
+    for i in psm'range loop
+      put(i,1); put(" :"); put(psm(i)); new_line;
     end loop;
   end First_Order_Evaluation;
 
@@ -344,6 +350,10 @@ package body Test_Newton_Puiseux is
     end loop;
     put("error sum :"); put(sumerr,3); new_line;
     First_Order_Evaluation(hcf,hct,hdg,cff,pwr,vrblvl-1);
+    put_line("First order terms :");
+    for i in cfp'range loop
+      put(cfp(i)); put(" t^"); put(psm(i)); new_line;
+    end loop;
   end Run_Newton_Step;
 
   procedure Scale_Homotopy_Powers
