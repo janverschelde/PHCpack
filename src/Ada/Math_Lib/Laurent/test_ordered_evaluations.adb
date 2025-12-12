@@ -1,8 +1,6 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_IO;      use Standard_Floating_Numbers_IO;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_IO;       use Standard_Complex_Numbers_IO;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_IO;       use Standard_Integer_Vectors_IO;
