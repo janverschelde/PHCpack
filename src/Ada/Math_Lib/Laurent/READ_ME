@@ -9,40 +9,41 @@ In version 2.4.92, code for series with real powers was added.
 Run "gprbuild laurent.gpr" to make all test programs.
 
 ------------------------------------------------------------------------------
-file name                         : short description
+file name                        : short description
 ------------------------------------------------------------------------------
-double_laurent_series             : defines operations on Laurent series
-test_double_laurent_series        : basic tests on truncated Laurent series
-ts_pslaur                         : call the main test on Laurent series
+double_laurent_series            : defines operations on Laurent series
+test_double_laurent_series       : basic tests on truncated Laurent series
+ts_pslaur                        : call the main test on Laurent series
 ------------------------------------------------------------------------------
-random_laurent_series             : random vectors/matrices of Laurent series
-double_linear_laurent_solvers     : solvers of linear Laurent series systems
-test_double_lseries_matrices      : tests matrices of Laurent series
-ts_laurmat                        : the main test on Laurent series matrices
+random_laurent_series            : random vectors/matrices of Laurent series
+double_linear_laurent_solvers    : solvers of linear Laurent series systems
+test_double_lseries_matrices     : tests matrices of Laurent series
+ts_laurmat                       : the main test on Laurent series matrices
 ------------------------------------------------------------------------------
-double_lseries_polynomials        : Laurent series polynomials
-test_double_lseries_polynomials   : tests on Laurent series polynomials
-ts_lserpol                        : main test on Laurent series polynomials
+double_lseries_polynomials       : Laurent series polynomials
+test_double_lseries_polynomials  : tests on Laurent series polynomials
+ts_lserpol                       : main test on Laurent series polynomials
 ------------------------------------------------------------------------------
-double_lseries_newton_steps       : runs Newton's method on Laurent series
-test_double_lseries_newton        : tests Newton on Laurent series polynomials
-ts_lsernew                        : main test on Laurent series Newton
-main_laurent_series_newton        : main procedure for phc -u
+double_lseries_newton_steps      : runs Newton's method on Laurent series
+test_double_lseries_newton       : tests Newton on Laurent series polynomials
+ts_lsernew                       : main test on Laurent series Newton
+main_laurent_series_newton       : main procedure for phc -u
 ==============================================================================
-double_weighted_assignment        : solves the weighted assignment problem
-test_weighted_assignment          : test on weighted assignment solutions
-ts_hunwas                         : test Hungarian algorithm
-double_puiseux_operations         : procedures to compute leading terms
-test_leading_powers               : tests leading powers computation
-test_leading_terms                : tests leading terms computation
-ts_hunsys                         : calls main test on leading powers/terms
+double_weighted_assignment       : solves the weighted assignment problem
+test_weighted_assignment         : test on weighted assignment solutions
+ts_hunwas                        : test Hungarian algorithm
+double_puiseux_operations        : procedures to compute leading terms
+test_leading_powers              : tests leading powers computation
+test_leading_terms               : tests leading terms computation
+ts_hunsys                        : calls main test on leading powers/terms
 ------------------------------------------------------------------------------
-double_leading_evaluations        : evaluates at leading terms of series
-double_ordered_evaluations        : first order evaluation at series
-test_leading_evaluations          : test evaluating at leading terms
-test_ordered_evaluations          : test first order evaluations
-random_laurent_homotopy           : defines a homotopy with series solution
-ts_hunval                         : calls main test on evaluating at series
-test_newton_puiseux               : develops Newton-Puiseux for real powers
-ts_hunnew                         : calls main test on Newton-Puiseux
+double_leading_evaluations       : evaluates at leading terms of series
+double_ordered_evaluations       : first order evaluation at series
+test_leading_evaluations         : test evaluating at leading terms
+test_ordered_evaluations         : test first order evaluations
+random_laurent_homotopy          : defines a homotopy with series solution
+ts_hunval                        : calls main test on evaluating at series
+laurent_homotopy_derivatives     : evaluates derivatives of Laurent homotopies
+test_newton_puiseux              : develops Newton-Puiseux for real powers
+ts_hunnew                        : calls main test on Newton-Puiseux
 ------------------------------------------------------------------------------

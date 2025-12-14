@@ -116,8 +116,8 @@ package Test_Newton_Puiseux is
   --   of the power series.
 
   -- ON ENTRY :
-  --   hdg      supports of the Laurent homotopy;
   --   hcf      coefficients of the polynomials in the homotopy;
+  --   hdg      supports of the Laurent homotopy;
   --   hct      powers of t in the homotopy for each monomial;
   --   lcf      constant coefficients of a power series solution;
   --   lpw      exponents of the second term in the series;
@@ -126,6 +126,48 @@ package Test_Newton_Puiseux is
   -- ON RETURN :
   --   psm      powers computed as positive minima;
   --   cfp      coefficients corresponding to the powers in psm.
+
+  procedure First_Order_Evaluation
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Computes a Taylor series expansion of the Laurent homotopy
+  --   using the constant coefficients of the power series solution.
+  --   Computes the smallest positive exponents of this evaluation.
+
+  -- ON ENTRY :
+  --   hcf      coefficients of the polynomials in the homotopy;
+  --   hdg      supports of the Laurent homotopy;
+  --   hct      powers of t in the homotopy for each monomial;
+  --   cff      coefficients of the power series solution;
+  --   pwr      exponents of the power series solution;
+  --   vrblvl   is the verbose level.
+
+  procedure Second_Order_Derivatives
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Evaluates a Laurent homotopy at a random t value
+  --   and then computes the values of all second derivatives
+  --   at the power series solution evaluated up to first order.
+
+  -- ON ENTRY :
+  --   hcf      coefficients of the polynomials in the homotopy;
+  --   hdg      supports of the Laurent homotopy;
+  --   hct      powers of t in the homotopy for each monomial;
+  --   cff      coefficients of the power series solution;
+  --   pwr      exponents of the power series solution;
+  --   vrblvl   is the verbose level.
 
   procedure Run_Newton_Step
               ( hcf : in Standard_Complex_VecVecs.VecVec;

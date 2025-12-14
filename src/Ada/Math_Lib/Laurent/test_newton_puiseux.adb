@@ -2,10 +2,14 @@ with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
+with Standard_Random_Numbers;
+with Standard_Mathematical_Functions;   use Standard_Mathematical_Functions;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
+with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Double_Leading_Evaluations;
 with Double_Ordered_Evaluations;
 with Random_Laurent_Homotopy;
+with Laurent_Homotopy_Derivatives;
 
 package body Test_Newton_Puiseux is
 
@@ -285,6 +289,42 @@ package body Test_Newton_Puiseux is
     end loop;
   end First_Order_Evaluation;
 
+  procedure Second_Order_Derivatives
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec;
+                vrblvl : in integer32 := 0 ) is
+
+    t : constant double_float := abs(Standard_Random_Numbers.Random);
+    z,dhzt : Standard_Complex_Vectors.Vector(cff'range);
+    idx : Standard_Integer_Vectors.Vector(z'range) := (z'range => 0);
+
+  begin
+    if vrblvl > 0
+     then put("a random t :"); put(t); new_line;
+    end if;
+    for i in z'range loop
+      z(i) := cff(i)(cff(i)'first);
+      z(i) := z(i) + cff(i)(cff(i)'first)*(t**pwr(i)(pwr'first));
+    end loop;
+    if vrblvl > 0
+     then put_line("first order evaluated at t :"); put_line(z);
+    end if;
+    for i in z'range loop
+      idx(i) := 1;
+      for j in i..z'last loop
+        idx(j) := idx(j) + 1;
+        put("idx :"); put(idx); new_line;
+        dhzt := Laurent_Homotopy_Derivatives.Diff(hcf,hct,hdg,idx,z,t);
+        put("derivatives at"); put(idx); put_line(" :"); put_line(dhzt);
+        idx(j) := idx(j) - 1;
+      end loop;
+      idx(i) := 0;
+    end loop;
+  end Second_Order_Derivatives;
+
   procedure Run_Newton_Step
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
@@ -354,6 +394,7 @@ package body Test_Newton_Puiseux is
     for i in cfp'range loop
       put(cfp(i)); put(" t^"); put(psm(i)); new_line;
     end loop;
+    Second_Order_Derivatives(hcf,hct,hdg,cff,pwr,vrblvl-1);
   end Run_Newton_Step;
 
   procedure Scale_Homotopy_Powers

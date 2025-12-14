@@ -1,3 +1,6 @@
+Sun 14 Dec 2025 : new package laurent_homotopy_derivatives, for use in
+  test_newton_puiseux.
+
 Fri 12 Dec 2025 : updated test_ordered_evaluations.adb for compiler warnings.
   To test_newton_puiseux.adb, added computation of smallest positive powers.
 
