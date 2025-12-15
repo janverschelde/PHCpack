@@ -33,11 +33,13 @@ package Laurent_Homotopy_Derivatives is
   --   t          value for the continuation parameter.
 
   function Diff ( p : Standard_Complex_Laurentials.Poly;
-                  idx : Standard_Integer_Vectors.Vector )
+                  idx : Standard_Integer_Vectors.Vector;
+                  vrblvl : integer32 := 0 )
                 return Standard_Complex_Laurentials.Poly;
 
   -- DESCRIPTION :
   --   Returns the derivative of p according to the indices in idx.
+  --   The verbose level is defined by vrblvl.
 
   function Eval ( cff : Standard_Complex_VecVecs.VecVec;
                   ctp : Standard_Floating_VecVecs.VecVec;
@@ -59,7 +61,8 @@ package Laurent_Homotopy_Derivatives is
                   ctp : Standard_Floating_VecVecs.VecVec;
                   deg : Standard_Integer_VecVecs.Array_of_VecVecs;
                   idx : Standard_Integer_Vectors.Vector;
-                  z : Standard_Complex_Vectors.Vector; t : double_float )
+                  z : Standard_Complex_Vectors.Vector; t : double_float;
+                  vrblvl : integer32 := 0 )
                 return Standard_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
@@ -72,6 +75,7 @@ package Laurent_Homotopy_Derivatives is
   --   deg        supports of the polynomials in the homotopy;
   --   idx        differential indices;
   --   z          values for the variables in the homotopy;
-  --   t          value for the continuation parameter.
+  --   t          value for the continuation parameter;
+  --   vrblvl     is the verbose level.
 
 end Laurent_Homotopy_Derivatives;

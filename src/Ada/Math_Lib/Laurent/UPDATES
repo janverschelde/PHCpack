@@ -1,3 +1,5 @@
+Mon 15 Dec 2025 : bug fixed in laurent_homotopy_derivatives.
+
 Sun 14 Dec 2025 : new package laurent_homotopy_derivatives, for use in
   test_newton_puiseux.
 
