@@ -73,6 +73,7 @@ package Random_Laurent_Homotopy is
 
   -- DESCRIPTION :
   --   Generates dim power series with random coefficients and real powers.
+  --   The next term has power less than twice the power of the previous term.
 
   -- REQUIRED :
   --   cff'range = nbt'range = pwr'range = 1..dim.

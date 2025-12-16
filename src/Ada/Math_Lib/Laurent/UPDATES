@@ -1,3 +1,6 @@
+Tue 16 Dec 2025 : changed generation of random power series so that power
+  of second term is less than twice that of the first term.
+
 Mon 15 Dec 2025 : bug fixed in laurent_homotopy_derivatives.
   Extended double_leading_evaluations with second derivatives,
   applied in double_ordered_evaluations and test_newton_puiseux.adb.

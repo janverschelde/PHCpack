@@ -97,8 +97,12 @@ package body Random_Laurent_Homotopy is
         rnd := Standard_Random_Numbers.Random;
         pwi(1) := abs(rnd);
         for j in 2..nbt(i) loop
-          rnd := Standard_Random_Numbers.Random;
-          pwi(j) := pwi(j-1) + 0.01 + abs(rnd);
+          rnd := abs(Standard_Random_Numbers.Random); -- rnd in [0,1]
+          pwi(j) := pwi(j-1) + rnd;
+          while pwi(j) > pwi(j-1) loop -- make pwi(j) < 2*pwi(j-1)
+            rnd := rnd/2.0;
+            pwi(j) := pwi(j-1) + rnd;
+          end loop;
         end loop;
         pwr(i) := new Standard_Floating_Vectors.Vector'(pwi);
       end;
