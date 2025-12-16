@@ -111,6 +111,30 @@ package Double_Leading_Evaluations is
   --   if any of the deg(i)'s are negative, then cff(i) is nonzero,
   --   which is implied by cff being leading coefficients.
 
+  function Second_Derivative
+             ( deg : Standard_Integer_Vectors.Vector;
+               cff : Standard_Complex_Vectors.Vector;
+               i : integer32; vrblvl : integer32 := 0 )
+             return Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns the value of the second derivative with respect to i
+  --   of the monomial with exponents in deg, evaluated at cff.
+
+  -- REQUIRED : i in deg'range.
+
+  function Second_Mixed_Derivative
+             ( deg : Standard_Integer_Vectors.Vector;
+               cff : Standard_Complex_Vectors.Vector;
+               i,j : integer32; vrblvl : integer32 := 0 )
+             return Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns the value of the second derivative with respect to i
+  --   and j of the monomial with exponents in deg, evaluated at cff.
+
+  -- REQUIRED : i /= j and both i and j are in deg'range.
+
   procedure Evaluate_Polynomial
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;

@@ -167,6 +167,95 @@ package body Double_Leading_Evaluations is
     return res;
   end Leading_Coefficient;
 
+  function Second_Derivative
+             ( deg : Standard_Integer_Vectors.Vector;
+               cff : Standard_Complex_Vectors.Vector;
+               i : integer32; vrblvl : integer32 := 0 )
+             return Complex_Number is
+
+    res : Complex_Number := create(1.0);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Leaving_Evaluations.second_derivative, i : ");
+      put(i,1); put_line(" ...");
+    end if;
+    if deg(i) = 0 then
+      return create(0.0);
+    elsif deg(i) = 1 then
+      return create(0.0);
+    end if;
+    for k in deg'range loop
+      if deg(k) > 0 then
+        if k /= i then
+          for j in 1..deg(k) loop
+            res := res*cff(k);
+          end loop;
+        elsif deg(k) > 1 then
+          for j in 1..(deg(k)-2) loop
+            res := res*cff(k);
+          end loop;
+          res := double_float(deg(k)*(deg(k)-1))*res;
+        end if;
+      elsif deg(k) < 0 then
+        for j in 1..(-deg(k)) loop
+          res := res/cff(k);
+        end loop;
+        if k = i then
+          res := res/cff(k);
+          res := res/cff(k);
+          res := double_float(deg(k)*(deg(k)-1))*res;
+        end if;
+      end if;
+    end loop;
+    return res;
+  end Second_Derivative;
+
+  function Second_Mixed_Derivative
+             ( deg : Standard_Integer_Vectors.Vector;
+               cff : Standard_Complex_Vectors.Vector;
+               i,j : integer32; vrblvl : integer32 := 0 )
+             return Complex_Number is
+
+    res : Complex_Number := create(1.0);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Leaving_Evaluations.second_mixed_derivative, i : ");
+      put(i,1); put(", j : "); put(j,1); put_line(" ...");
+    end if;
+    if deg(i) = 0 then
+      return create(0.0);
+    elsif deg(j) = 0 then
+      return create(0.0);
+    end if;
+    for k in deg'range loop
+      if k = i or k = j then
+        if deg(k) > 1 then
+          for kk in 1..(deg(k)-1) loop   
+            res := res*cff(k);
+          end loop;
+        elsif deg(k) < 0 then
+          for kk in 1..(-deg(k)+1) loop
+            res := res/cff(k);
+          end loop;
+        end if;
+        res := double_float(deg(k))*res;
+      else
+        if deg(k) > 0 then
+          for kk in 1..deg(k) loop
+            res := res*cff(k);
+          end loop;
+        elsif deg(k) < 0 then
+          for kk in 1..(-deg(k)) loop
+            res := res/cff(k);
+          end loop;
+        end if;
+      end if;
+    end loop;
+    return res;
+  end Second_Mixed_Derivative;
+
   procedure Evaluate_Polynomial
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;

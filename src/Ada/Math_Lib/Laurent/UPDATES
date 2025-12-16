@@ -1,4 +1,6 @@
 Mon 15 Dec 2025 : bug fixed in laurent_homotopy_derivatives.
+  Extended double_leading_evaluations with second derivatives,
+  applied in double_ordered_evaluations and test_newton_puiseux.adb.
 
 Sun 14 Dec 2025 : new package laurent_homotopy_derivatives, for use in
   test_newton_puiseux.

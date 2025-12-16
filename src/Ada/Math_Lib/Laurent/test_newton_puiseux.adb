@@ -289,6 +289,42 @@ package body Test_Newton_Puiseux is
     end loop;
   end First_Order_Evaluation;
 
+  procedure Second_Order_Evaluation
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec;
+                vrblvl : in integer32 := 0 ) is
+
+    dim : constant integer32 := hcf'last;
+    nbr,size : integer32;
+    psm : Standard_Floating_Vectors.Vector(hcf'range);
+
+  begin
+    for i in hcf'range loop
+      nbr := hcf(i)'last;
+      size := (1 + dim + dim*(dim+1)/2)*nbr;
+      declare
+        ycf : Standard_Complex_Vectors.Vector(1..size);
+        ydg : Standard_Floating_Vectors.Vector(1..size);
+      begin
+        Double_Ordered_Evaluations.Second_Order_Evaluation
+          (hcf(i).all,hct(i).all,hdg(i).all,cff,pwr,ycf,ydg,vrblvl-1);
+        put("the second order evaluation of polynomial ");
+        put(i,1); put_line(" :");
+        for i in ycf'range loop
+          put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+        end loop;
+        psm(i) := Positive_Minimum(ycf,ydg);
+      end;
+    end loop;
+    put_line("smallest positive powers :");
+    for i in psm'range loop
+      put(i,1); put(" :"); put(psm(i)); new_line;
+    end loop;
+  end Second_Order_Evaluation;
+
   procedure Second_Order_Derivatives
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
@@ -333,6 +369,7 @@ package body Test_Newton_Puiseux is
                 pwr : in Standard_Floating_VecVecs.VecVec;
                 vrblvl : in integer32 := 0 ) is
 
+    nbr : constant integer32 := pwr(pwr'first)'last;
     ycf : Standard_Complex_Vectors.Vector(hcf'range);
     ydg : Standard_Floating_Vectors.Vector(hcf'range);
     lcf : Standard_Complex_Vectors.Vector(hcf'range);
@@ -345,7 +382,8 @@ package body Test_Newton_Puiseux is
 
   begin
     if vrblvl > 0 then
-      put_line("-> in Test_Newton_Puiseux.run_newton_step ...");
+      put("-> in Test_Newton_Puiseux.run_newton_step, deg : ");
+      put(nbr,1);  put_line(" ...");
     end if;
     for i in hcf'range loop
       lcf(i) := cff(i)(cff(i)'first); -- get leading coefficients
@@ -394,7 +432,14 @@ package body Test_Newton_Puiseux is
     for i in cfp'range loop
       put(cfp(i)); put(" t^"); put(psm(i)); new_line;
     end loop;
-    Second_Order_Derivatives(hcf,hct,hdg,cff,pwr,vrblvl-1);
+    if nbr > 1 then
+      Second_Order_Evaluation(hcf,hct,hdg,cff,pwr,vrblvl-1);
+      put_line("Second order terms :");
+      for i in cfp'range loop
+        put(cff(i)(2)); put(" t^"); put(pwr(i)(2)); new_line;
+      end loop;
+     -- Second_Order_Derivatives(hcf,hct,hdg,cff,pwr,vrblvl-1);
+    end if;
   end Run_Newton_Step;
 
   procedure Scale_Homotopy_Powers
@@ -494,7 +539,7 @@ package body Test_Newton_Puiseux is
       put(" : "); get(nbt(i));
     end loop;
     Define_Homotopy(dim,nbm,nbt,cff,pwr,hdg,hcf,hct,1);
-    Run_Newton_Step(hcf,hct,hdg,cff,pwr,1);
+    Run_Newton_Step(hcf,hct,hdg,cff,pwr,4);
   end Test;
 
   procedure Main is
