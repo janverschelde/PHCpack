@@ -93,6 +93,14 @@ package Test_Newton_Puiseux is
   --   Returns the smallest positive number in v,
   --   skipping the entries from which the corresponding c is zero.
 
+  function Positive_Minimum_Index
+             ( c : Standard_Complex_Vectors.Vector;
+               v : Standard_Floating_Vectors.Vector ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns index of the smallest positive number in v,
+  --   skipping the entries from which the corresponding c is zero.
+
   function Coefficient ( c : Standard_Complex_Vectors.Vector;
                          e : Standard_Floating_Vectors.Vector;
                          p : double_float ) return Complex_Number;
@@ -133,11 +141,14 @@ package Test_Newton_Puiseux is
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
                 cff : in Standard_Complex_VecVecs.VecVec;
                 pwr : in Standard_Floating_VecVecs.VecVec;
+                psm : out Standard_Floating_Vectors.Vector;
+                csm : out Standard_Complex_Vectors.Vector;
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Computes a Taylor series expansion of the Laurent homotopy
-  --   using the constant coefficients of the power series solution.
+  --   using the constant coefficients of the power series solution,
+  --   truncated after the first order.
   --   Computes the smallest positive exponents of this evaluation.
 
   -- ON ENTRY :
@@ -147,6 +158,38 @@ package Test_Newton_Puiseux is
   --   cff      coefficients of the power series solution;
   --   pwr      exponents of the power series solution;
   --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   psm      smallest positive powers in the evaluated series;
+  --   csm      coefficients corresponding to the smallest positive powers.
+
+  procedure Second_Order_Evaluation
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec;
+                psm : out Standard_Floating_Vectors.Vector;
+                csm : out Standard_Complex_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Computes a Taylor series expansion of the Laurent homotopy
+  --   using the constant coefficients of the power series solution,
+  --   truncated after the second order.
+  --   Computes the smallest positive exponents of this evaluation.
+
+  -- ON ENTRY :
+  --   hcf      coefficients of the polynomials in the homotopy;
+  --   hdg      supports of the Laurent homotopy;
+  --   hct      powers of t in the homotopy for each monomial;
+  --   cff      coefficients of the power series solution;
+  --   pwr      exponents of the power series solution;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   psm      smallest positive powers in the evaluated series;
+  --   csm      coefficients corresponding to the smallest positive powers.
 
   procedure Second_Order_Derivatives
               ( hcf : in Standard_Complex_VecVecs.VecVec;
