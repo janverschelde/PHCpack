@@ -135,6 +135,43 @@ package Double_Leading_Evaluations is
 
   -- REQUIRED : i /= j and both i and j are in deg'range.
 
+  function Third_Derivative
+             ( deg : Standard_Integer_Vectors.Vector;
+               cff : Standard_Complex_Vectors.Vector;
+               i : integer32; vrblvl : integer32 := 0 )
+             return Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns the value of the third derivative with respect to i
+  --   of the monomial with exponents in deg, evaluated at cff.
+
+  -- REQUIRED : i in deg'range.
+
+  function Third_Semi_Mixed_Derivative
+             ( deg : Standard_Integer_Vectors.Vector;
+               cff : Standard_Complex_Vectors.Vector;
+               i,j : integer32; vrblvl : integer32 := 0 )
+             return Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns the value of the third derivative, twice with respect to i
+  --   and once with respect to j of the monomial with exponents in deg,
+  --   evaluated at cff.
+
+  -- REQUIRED : i /= j and both i and j are in deg'range.
+
+  function Third_Fully_Mixed_Derivative
+             ( deg : Standard_Integer_Vectors.Vector;
+               cff : Standard_Complex_Vectors.Vector;
+               i,j,k : integer32; vrblvl : integer32 := 0 )
+             return Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns the value of the third derivative with respect to i,
+  --   j, and k of the monomial with exponents in deg, evaluated at cff.
+
+  -- REQUIRED : i, j, k are in deg'range and i, j, k are mutually distinct.
+
   procedure Evaluate_Polynomial
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;

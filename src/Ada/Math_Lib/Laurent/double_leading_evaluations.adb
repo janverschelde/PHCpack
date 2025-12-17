@@ -134,7 +134,7 @@ package body Double_Leading_Evaluations is
 
   begin
     if vrblvl > 0 then
-      put("-> in Double_Leaving_Evaluations.leading_coefficient, difidx : ");
+      put("-> in Double_Leading_Evaluations.leading_coefficient, difidx : ");
       put(difidx,1); put_line(" ...");
     end if;
     if difidx > 0 then
@@ -177,7 +177,7 @@ package body Double_Leading_Evaluations is
 
   begin
     if vrblvl > 0 then
-      put("-> in Double_Leaving_Evaluations.second_derivative, i : ");
+      put("-> in Double_Leading_Evaluations.second_derivative, i : ");
       put(i,1); put_line(" ...");
     end if;
     if deg(i) = 0 then
@@ -221,7 +221,7 @@ package body Double_Leading_Evaluations is
 
   begin
     if vrblvl > 0 then
-      put("-> in Double_Leaving_Evaluations.second_mixed_derivative, i : ");
+      put("-> in Double_Leading_Evaluations.second_mixed_derivative, i : ");
       put(i,1); put(", j : "); put(j,1); put_line(" ...");
     end if;
     if deg(i) = 0 then
@@ -255,6 +255,163 @@ package body Double_Leading_Evaluations is
     end loop;
     return res;
   end Second_Mixed_Derivative;
+
+  function Third_Derivative
+             ( deg : Standard_Integer_Vectors.Vector;
+               cff : Standard_Complex_Vectors.Vector;
+               i : integer32; vrblvl : integer32 := 0 )
+             return Complex_Number is
+
+    res : Complex_Number := create(1.0);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Leading_Evaluations.third_derivative, i : ");
+      put(i,1); put_line(" ...");
+    end if;
+    if deg(i) = 0 then
+      return create(0.0);
+    elsif deg(i) = 1 then
+      return create(0.0);
+    elsif deg(i) = 2 then
+      return create(0.0);
+    end if;
+    for k in deg'range loop
+      if deg(k) > 0 then
+        if k /= i then
+          for j in 1..deg(k) loop
+            res := res*cff(k);
+          end loop;
+        elsif deg(k) > 2 then
+          for j in 1..(deg(k)-3) loop
+            res := res*cff(k);
+          end loop;
+          res := double_float(deg(k)*(deg(k)-1)*(deg(k)-2))*res;
+        end if;
+      elsif deg(k) < 0 then
+        for j in 1..(-deg(k)) loop
+          res := res/cff(k);
+        end loop;
+        if k = i then
+          res := res/cff(k);
+          res := res/cff(k);
+          res := res/cff(k);
+          res := double_float(deg(k)*(deg(k)-1)*(deg(k)-2))*res;
+        end if;
+      end if;
+    end loop;
+    return res;
+  end Third_Derivative;
+
+  function Third_Semi_Mixed_Derivative
+             ( deg : Standard_Integer_Vectors.Vector;
+               cff : Standard_Complex_Vectors.Vector;
+               i,j : integer32; vrblvl : integer32 := 0 )
+             return Complex_Number is
+
+    res : Complex_Number := create(1.0);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Leading_Evaluations.");
+      put_line("third_semi_mixed_derivative ...");
+      put("  i : "); put(i,1);
+      put(", j : "); put(j,1); new_line;
+    end if;
+    if deg(i) = 0 then
+      return create(0.0);
+    elsif deg(i) = 1 then
+      return create(0.0);
+    elsif deg(j) = 0 then
+      return create(0.0);
+    end if;
+    for k in deg'range loop
+      if k = i then -- take second derivative w.r.t. i
+        if deg(k) > 1 then
+          for kk in 1..(deg(k)-2) loop
+            res := res*cff(k);
+          end loop;
+        elsif deg(k) < 0 then
+          for kk in 1..(-deg(k)+2) loop
+            res := res/cff(k);
+          end loop;
+        end if;
+        res := double_float(deg(k)*(deg(k)-1))*res;
+      elsif k = j then -- take first derivative w.r.t. j
+        if deg(k) > 1 then
+          for kk in 1..(deg(k)-1) loop
+            res := res*cff(k);
+          end loop;
+        else
+          for kk in 1..(-deg(k)+1) loop
+            res := res/cff(k);
+          end loop;
+        end if;
+        res := double_float(deg(k))*res;
+      else -- just evaluate 
+        if deg(k) > 0 then
+          for kk in 1..deg(k) loop
+            res := res*cff(k);
+          end loop;
+        elsif deg(k) < 0 then
+          for kk in 1..(-deg(k)) loop
+            res := res/cff(k);
+          end loop;
+        end if;
+      end if;
+    end loop;
+    return res;
+  end Third_Semi_Mixed_Derivative;
+
+  function Third_Fully_Mixed_Derivative
+             ( deg : Standard_Integer_Vectors.Vector;
+               cff : Standard_Complex_Vectors.Vector;
+               i,j,k : integer32; vrblvl : integer32 := 0 )
+             return Complex_Number is
+
+    res : Complex_Number := create(1.0);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Leading_Evaluations.");
+      put_line("third_fully_mixed_derivative ...");
+      put("  i : "); put(i,1);
+      put(", j : "); put(j,1);
+      put(", k : "); put(k,1); new_line;
+    end if;
+    if deg(i) = 0 then
+      return create(0.0);
+    elsif deg(j) = 0 then
+      return create(0.0);
+    elsif deg(k) = 0 then
+      return create(0.0);
+    end if;
+    for L in deg'range loop
+      if L = i or L = j or L = k then
+        if deg(L) > 1 then
+          for kk in 1..(deg(L)-1) loop   
+            res := res*cff(L);
+          end loop;
+        elsif deg(L) < 0 then
+          for kk in 1..(-deg(L)+1) loop
+            res := res/cff(L);
+          end loop;
+        end if;
+        res := double_float(deg(L))*res;
+      else
+        if deg(L) > 0 then
+          for kk in 1..deg(L) loop
+            res := res*cff(L);
+          end loop;
+        elsif deg(L) < 0 then
+          for kk in 1..(-deg(L)) loop
+            res := res/cff(L);
+          end loop;
+        end if;
+      end if;
+    end loop;
+    return res;
+  end Third_Fully_Mixed_Derivative;
 
   procedure Evaluate_Polynomial
               ( pcf : in Standard_Complex_Vectors.Vector;

@@ -176,35 +176,6 @@ package body Test_Newton_Puiseux is
     return res;
   end Positive_Minimum;
 
-  function Positive_Minimum_Index
-             ( c : Standard_Complex_Vectors.Vector;
-               v : Standard_Floating_Vectors.Vector ) return integer32 is
-
-    res,idx : integer32;
-    psm : double_float;
-    tol : constant double_float := 1.0E-12;
-
-  begin
-    for i in v'range loop -- find first positive number
-      if AbsVal(c(i)) > tol then
-        if v(i) > tol then
-          idx := i;
-          psm := v(i);
-          exit;
-        end if;
-      end if;
-    end loop;
-    res := idx;
-    for i in idx+1..v'last loop
-      if AbsVal(c(i)) > tol then
-        if v(i) > tol and then v(i) < psm
-         then psm := v(i); res := i;
-        end if;
-      end if;
-    end loop;
-    return res;
-  end Positive_Minimum_Index;
-
   function Coefficient ( c : Standard_Complex_Vectors.Vector;
                          e : Standard_Floating_Vectors.Vector;
                          p : double_float ) return Complex_Number is
@@ -282,79 +253,6 @@ package body Test_Newton_Puiseux is
       Standard_Floating_Vectors.Clear(dgy(i));
     end loop;
   end Leading_Powers_by_Evaluation;
-
-  procedure First_Order_Evaluation
-              ( hcf : in Standard_Complex_VecVecs.VecVec;
-                hct : in Standard_Floating_VecVecs.VecVec;
-                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cff : in Standard_Complex_VecVecs.VecVec;
-                pwr : in Standard_Floating_VecVecs.VecVec;
-                psm : out Standard_Floating_Vectors.Vector;
-                csm : out Standard_Complex_Vectors.Vector;
-                vrblvl : in integer32 := 0 ) is
-
-    dim : constant integer32 := hcf'last;
-    nbr,idx : integer32;
-
-  begin
-    for i in hcf'range loop
-      nbr := hcf(i)'last;
-      declare
-        ycf : Standard_Complex_Vectors.Vector(1..(dim+1)*nbr);
-        ydg : Standard_Floating_Vectors.Vector(1..(dim+1)*nbr);
-      begin
-        Double_Ordered_Evaluations.First_Order_Evaluation
-          (hcf(i).all,hct(i).all,hdg(i).all,cff,pwr,ycf,ydg,vrblvl-1);
-        if vrblvl > 0 then
-          put("the first order evaluation of polynomial ");
-          put(i,1); put_line(" :");
-          for i in ycf'range loop
-             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
-          end loop;
-        end if;
-        idx := Positive_Minimum_Index(ycf,ydg);
-        psm(i) := ydg(idx);
-        csm(i) := ycf(idx);
-      end;
-    end loop;
-  end First_Order_Evaluation;
-
-  procedure Second_Order_Evaluation
-              ( hcf : in Standard_Complex_VecVecs.VecVec;
-                hct : in Standard_Floating_VecVecs.VecVec;
-                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cff : in Standard_Complex_VecVecs.VecVec;
-                pwr : in Standard_Floating_VecVecs.VecVec;
-                psm : out Standard_Floating_Vectors.Vector;
-                csm : out Standard_Complex_Vectors.Vector;
-                vrblvl : in integer32 := 0 ) is
-
-    dim : constant integer32 := hcf'last;
-    nbr,size,idx : integer32;
-
-  begin
-    for i in hcf'range loop
-      nbr := hcf(i)'last;
-      size := (1 + dim + dim*(dim+1)/2)*nbr;
-      declare
-        ycf : Standard_Complex_Vectors.Vector(1..size);
-        ydg : Standard_Floating_Vectors.Vector(1..size);
-      begin
-        Double_Ordered_Evaluations.Second_Order_Evaluation
-          (hcf(i).all,hct(i).all,hdg(i).all,cff,pwr,ycf,ydg,vrblvl-1);
-        if vrblvl > 0 then
-          put("the second order evaluation of polynomial ");
-          put(i,1); put_line(" :");
-          for i in ycf'range loop
-            put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
-          end loop;
-        end if;
-        idx := Positive_Minimum_Index(ycf,ydg);
-        psm(i) := ydg(idx);
-        csm(i) := ycf(idx);
-      end;
-    end loop;
-  end Second_Order_Evaluation;
 
   procedure Second_Order_Derivatives
               ( hcf : in Standard_Complex_VecVecs.VecVec;
@@ -458,7 +356,8 @@ package body Test_Newton_Puiseux is
       sumerr := sumerr + err;
     end loop;
     put("error sum :"); put(sumerr,3); new_line;
-    First_Order_Evaluation(hcf,hct,hdg,cff,pwr,psm,cfp,vrblvl-1);
+    Double_Ordered_Evaluations.First_Order_Evaluation
+      (hcf,hct,hdg,cff,pwr,psm,cfp,vrblvl-1);
     put_line("smallest positive powers :");
     for i in psm'range loop
       put(i,1); put(" :"); put(psm(i)); new_line;
@@ -468,7 +367,8 @@ package body Test_Newton_Puiseux is
       put(cfp(i)); put(" t^"); put(psm(i)); new_line;
     end loop;
     if nbr > 1 then
-      Second_Order_Evaluation(hcf,hct,hdg,cff,pwr,psm,cfp,vrblvl-1);
+      Double_Ordered_Evaluations.Second_Order_Evaluation
+        (hcf,hct,hdg,cff,pwr,psm,cfp,vrblvl-1);
       put_line("smallest positive powers :");
       for i in psm'range loop
         put(i,1); put(" :"); put(psm(i)); new_line;
@@ -488,6 +388,17 @@ package body Test_Newton_Puiseux is
       end loop;
       put("sum of errors :"); put(sumerr,3); new_line;
      -- Second_Order_Derivatives(hcf,hct,hdg,cff,pwr,vrblvl-1);
+      put_line("Computing third order evaluations ...");
+      Double_Ordered_Evaluations.Third_Order_Evaluation
+        (hcf,hct,hdg,cff,pwr,psm,cfp,vrblvl-1);
+      put_line("smallest positive powers :");
+      for i in psm'range loop
+        put(i,1); put(" :"); put(psm(i)); new_line;
+      end loop;
+      put_line("second order terms :");
+      for i in psm'range loop
+        put(cff(i)(2)); put(" t^"); put(pwr(i)(2)); new_line;
+      end loop;
     end if;
   end Run_Newton_Step;
 
