@@ -361,6 +361,7 @@ package body Double_Ordered_Evaluations is
 
     dim : constant integer32 := hcf'last;
     nbr,size,idx : integer32;
+    dd1 : constant integer32 := dim*(dim-1);
 
   begin
     if vrblvl > 0 then
@@ -369,7 +370,7 @@ package body Double_Ordered_Evaluations is
     end if;
     for i in hcf'range loop
       nbr := hcf(i)'last;
-      size := (1 + dim + dim*(dim+1)/2 + dim + 3*dim*(dim-1)/2)*nbr;
+      size := (1 + dim + dim*(dim+1)/2 + dim + dd1 + dd1*(dim-2)/6)*nbr;
       declare
         ycf : Standard_Complex_Vectors.Vector(1..size);
         ydg : Standard_Floating_Vectors.Vector(1..size);
