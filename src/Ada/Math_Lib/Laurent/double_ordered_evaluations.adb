@@ -56,7 +56,7 @@ package body Double_Ordered_Evaluations is
     return res;
   end Positive_Minimum_Index;
 
-  procedure First_Order_Evaluation
+  procedure First_Derivative_First_Order
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
@@ -99,9 +99,9 @@ package body Double_Ordered_Evaluations is
     end loop;
     Sort(ydg,ycf); 
     Normalize(ycf,ydg);
-  end First_Order_Evaluation;
+  end First_Derivative_First_Order;
 
-  procedure Second_Order_Evaluation
+  procedure Second_Derivative_First_Order
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
@@ -168,9 +168,9 @@ package body Double_Ordered_Evaluations is
     end if;
     Sort(ydg,ycf); 
     Normalize(ycf,ydg);
-  end Second_Order_Evaluation;
+  end Second_Derivative_First_Order;
 
-  procedure Third_Order_Evaluation
+  procedure Third_Derivative_First_Order
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
@@ -264,11 +264,11 @@ package body Double_Ordered_Evaluations is
     end if;
     Sort(ydg,ycf); 
     Normalize(ycf,ydg);
-  end Third_Order_Evaluation;
+  end Third_Derivative_First_Order;
 
 -- ON A POLYNOMIAL HOMOTOPY :
 
-  procedure First_Order_Evaluation
+  procedure First_Derivative_First_Order
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
@@ -292,7 +292,7 @@ package body Double_Ordered_Evaluations is
         ycf : Standard_Complex_Vectors.Vector(1..(dim+1)*nbr);
         ydg : Standard_Floating_Vectors.Vector(1..(dim+1)*nbr);
       begin
-        First_Order_Evaluation
+        First_Derivative_First_Order
           (hcf(i).all,hct(i).all,hdg(i).all,cff,pwr,ycf,ydg,vrblvl-1);
         if vrblvl > 0 then
           put("the first order evaluation of polynomial ");
@@ -306,9 +306,9 @@ package body Double_Ordered_Evaluations is
         csm(i) := ycf(idx);
       end;
     end loop;
-  end First_Order_Evaluation;
+  end First_Derivative_First_Order;
 
-  procedure Second_Order_Evaluation
+  procedure Second_Derivative_First_Order
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
@@ -333,7 +333,7 @@ package body Double_Ordered_Evaluations is
         ycf : Standard_Complex_Vectors.Vector(1..size);
         ydg : Standard_Floating_Vectors.Vector(1..size);
       begin
-        Second_Order_Evaluation
+        Second_Derivative_First_Order
           (hcf(i).all,hct(i).all,hdg(i).all,cff,pwr,ycf,ydg,vrblvl-1);
         if vrblvl > 0 then
           put("the second order evaluation of polynomial ");
@@ -347,9 +347,9 @@ package body Double_Ordered_Evaluations is
         csm(i) := ycf(idx);
       end;
     end loop;
-  end Second_Order_Evaluation;
+  end Second_Derivative_First_Order;
 
-  procedure Third_Order_Evaluation
+  procedure Third_Derivative_First_Order
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
@@ -375,7 +375,7 @@ package body Double_Ordered_Evaluations is
         ycf : Standard_Complex_Vectors.Vector(1..size);
         ydg : Standard_Floating_Vectors.Vector(1..size);
       begin
-        Third_Order_Evaluation
+        Third_Derivative_First_Order
           (hcf(i).all,hct(i).all,hdg(i).all,cff,pwr,ycf,ydg,vrblvl-1);
         if vrblvl > 0 then
           put("the third order evaluation of polynomial ");
@@ -389,6 +389,6 @@ package body Double_Ordered_Evaluations is
         csm(i) := ycf(idx);
       end;
     end loop;
-  end Third_Order_Evaluation;
+  end Third_Derivative_First_Order;
 
 end Double_Ordered_Evaluations;

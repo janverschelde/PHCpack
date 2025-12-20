@@ -29,7 +29,7 @@ package Double_Ordered_Evaluations is
   --   Returns index of the smallest positive number in v,
   --   skipping the entries from which the corresponding c is zero.
 
-  procedure First_Order_Evaluation
+  procedure First_Derivative_First_Order
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
@@ -40,7 +40,8 @@ package Double_Ordered_Evaluations is
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
-  --   Computes the first order evaluation of a series in a polynomial.
+  --   Evaluates a polynomial at a series truncated at the first order,
+  --   using constants and the first derivatives.
 
   -- REQUIRED : ycf'range = 1..(dim+1)*nbr = ydg'range,
   --   where nbr is the number of terms in the polynomial, and
@@ -58,7 +59,7 @@ package Double_Ordered_Evaluations is
   --   ycf      coefficients of the evaluated series, up to first order;
   --   ydg      corresponding exponents of the evaluated series.
 
-  procedure Second_Order_Evaluation
+  procedure Second_Derivative_First_Order
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
@@ -69,7 +70,8 @@ package Double_Ordered_Evaluations is
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
-  --   Computes up to the 2nd order evaluation of a series in a polynomial.
+  --   Evaluates a polynomial at a series truncated at the first order,
+  --   using constants, first and second derivatives.
 
   -- REQUIRED : ycf'range = 1..size*nbr = ydg'range,
   --   where size = 1 + dim + dim*(dim+1)/2,
@@ -88,7 +90,7 @@ package Double_Ordered_Evaluations is
   --   ycf      coefficients of the evaluated series, up to first order;
   --   ydg      corresponding exponents of the evaluated series.
 
-  procedure Third_Order_Evaluation
+  procedure Third_Derivative_First_Order
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
@@ -99,7 +101,8 @@ package Double_Ordered_Evaluations is
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
-  --   Computes up to the 3rd order evaluation of a series in a polynomial.
+  --   Evaluates a polynomial at a series truncated at the first order,
+  --   using constants, first, second, and third derivatives.
 
   -- REQUIRED : ycf'range = 1..size*nbr = ydg'range,
   --   where size = 1 + dim + dim*(dim+1)/2 + dim + 3*dim*(dim-1)/2,
@@ -120,7 +123,7 @@ package Double_Ordered_Evaluations is
 
 -- ON A POLYNOMIAL HOMOTOPY :
 
-  procedure First_Order_Evaluation
+  procedure First_Derivative_First_Order
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
@@ -133,7 +136,7 @@ package Double_Ordered_Evaluations is
   -- DESCRIPTION :
   --   Computes a Taylor series expansion of the Laurent homotopy
   --   using the constant coefficients of the power series solution,
-  --   truncated after the first order.
+  --   truncated after the first order, using first derivatives.
   --   Computes the smallest positive exponents of this evaluation.
 
   -- ON ENTRY :
@@ -148,7 +151,7 @@ package Double_Ordered_Evaluations is
   --   psm      smallest positive powers in the evaluated series;
   --   csm      coefficients corresponding to the smallest positive powers.
 
-  procedure Second_Order_Evaluation
+  procedure Second_Derivative_First_Order
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
@@ -161,7 +164,7 @@ package Double_Ordered_Evaluations is
   -- DESCRIPTION :
   --   Computes a Taylor series expansion of the Laurent homotopy
   --   using the constant coefficients of the power series solution,
-  --   truncated after the second order.
+  --   truncated after the first order, using up to 2nd derivatives.
   --   Computes the smallest positive exponents of this evaluation.
 
   -- ON ENTRY :
@@ -176,7 +179,7 @@ package Double_Ordered_Evaluations is
   --   psm      smallest positive powers in the evaluated series;
   --   csm      coefficients corresponding to the smallest positive powers.
 
-  procedure Third_Order_Evaluation
+  procedure Third_Derivative_First_Order
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
@@ -189,7 +192,7 @@ package Double_Ordered_Evaluations is
   -- DESCRIPTION :
   --   Computes a Taylor series expansion of the Laurent homotopy
   --   using the constant coefficients of the power series solution,
-  --   truncated after the third order.
+  --   truncated after the first order, using up to 3rd derivatives.
   --   Computes the smallest positive exponents of this evaluation.
 
   -- ON ENTRY :

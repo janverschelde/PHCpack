@@ -356,7 +356,7 @@ package body Test_Newton_Puiseux is
       sumerr := sumerr + err;
     end loop;
     put("error sum :"); put(sumerr,3); new_line;
-    Double_Ordered_Evaluations.First_Order_Evaluation
+    Double_Ordered_Evaluations.First_Derivative_First_Order
       (hcf,hct,hdg,cff,pwr,psm,cfp,vrblvl-1);
     put_line("smallest positive powers :");
     for i in psm'range loop
@@ -367,7 +367,7 @@ package body Test_Newton_Puiseux is
       put(cfp(i)); put(" t^"); put(psm(i)); new_line;
     end loop;
     if nbr > 1 then
-      Double_Ordered_Evaluations.Second_Order_Evaluation
+      Double_Ordered_Evaluations.Second_Derivative_First_Order
         (hcf,hct,hdg,cff,pwr,psm,cfp,vrblvl-1);
       put_line("smallest positive powers :");
       for i in psm'range loop
@@ -388,8 +388,8 @@ package body Test_Newton_Puiseux is
       end loop;
       put("sum of errors :"); put(sumerr,3); new_line;
      -- Second_Order_Derivatives(hcf,hct,hdg,cff,pwr,vrblvl-1);
-      put_line("Computing third order evaluations ...");
-      Double_Ordered_Evaluations.Third_Order_Evaluation
+      put_line("Computing third derivative first order evaluations ...");
+      Double_Ordered_Evaluations.Third_Derivative_First_Order
         (hcf,hct,hdg,cff,pwr,psm,cfp,vrblvl-1);
       put_line("smallest positive powers :");
       for i in psm'range loop
