@@ -388,17 +388,33 @@ package body Test_Newton_Puiseux is
       end loop;
       put("sum of errors :"); put(sumerr,3); new_line;
      -- Second_Order_Derivatives(hcf,hct,hdg,cff,pwr,vrblvl-1);
-      put_line("Computing third derivative first order evaluations ...");
-      Double_Ordered_Evaluations.Third_Derivative_First_Order
+    --  put_line("Computing third derivative first order evaluations ...");
+    --  Double_Ordered_Evaluations.Third_Derivative_First_Order
+    --    (hcf,hct,hdg,cff,pwr,psm,cfp,vrblvl-1);
+    --  put_line("Computing first derivative second order evaluations ...");
+    --  Double_Ordered_Evaluations.First_Derivative_Second_Order
+    --    (hcf,hct,hdg,cff,pwr,psm,cfp,vrblvl-1);
+      put_line("Computing second derivative second order evaluations ...");
+      Double_Ordered_Evaluations.Second_Derivative_Second_Order
         (hcf,hct,hdg,cff,pwr,psm,cfp,vrblvl-1);
       put_line("smallest positive powers :");
       for i in psm'range loop
         put(i,1); put(" :"); put(psm(i)); new_line;
       end loop;
+      put_line("first order terms :");
+      for i in psm'range loop
+        put(cff(i)(1)); put(" t^"); put(pwr(i)(1)); new_line;
+      end loop;
       put_line("second order terms :");
       for i in psm'range loop
         put(cff(i)(2)); put(" t^"); put(pwr(i)(2)); new_line;
       end loop;
+      if nbr > 2 then
+        put_line("third order terms :");
+        for i in psm'range loop
+          put(cff(i)(3)); put(" t^"); put(pwr(i)(3)); new_line;
+        end loop;
+      end if;
     end if;
   end Run_Newton_Step;
 

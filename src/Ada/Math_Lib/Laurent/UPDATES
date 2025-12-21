@@ -1,6 +1,8 @@
 Sat 20 Dec 2025 : name changes in double_ordered_evaluations to better reflect
   what the procedures are doing, updated test_newton_puiseux.adb.
   Bug fixed in making random power series in random_laurent_homotopy.adb.
+  Extended double_ordered_evaluations and test_newton_puiseux to compute
+  the third order term in a power series solution.
 
 Thu 18 Dec 2025 : fixed size in third_order_evaluation procedure in
   double_ordered_evaluations.adb.
