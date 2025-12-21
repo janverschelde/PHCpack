@@ -99,7 +99,7 @@ package body Random_Laurent_Homotopy is
         for j in 2..nbt(i) loop
           rnd := abs(Standard_Random_Numbers.Random); -- rnd in [0,1]
           pwi(j) := pwi(j-1) + rnd;
-          while pwi(j) > pwi(j-1) loop -- make pwi(j) < 2*pwi(j-1)
+          while pwi(j) > 2.0*pwi(j-1) loop -- make pwi(j) < 2*pwi(j-1)
             rnd := rnd/2.0;
             pwi(j) := pwi(j-1) + rnd;
           end loop;
