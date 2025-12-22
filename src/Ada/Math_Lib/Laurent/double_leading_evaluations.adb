@@ -2,6 +2,7 @@ with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
 with Standard_Floating_Numbers_IO;      use Standard_Floating_Numbers_IO;
 with Standard_Floating_Vectors_IO;      use Standard_Floating_Vectors_IO;
+with Double_Real_Powered_Series;
 
 package body Double_Leading_Evaluations is
 
@@ -59,43 +60,6 @@ package body Double_Leading_Evaluations is
     end loop;
   end Leading_Power;
 
-  procedure Sort ( x : in out Standard_Floating_Vectors.Vector ) is
-
-    val : double_float;
-
-  begin
-    for i in x'range loop
-      for j in i+1..x'last loop
-        val := x(j);
-        if val < x(i) then -- x(j) is the new minimum
-          x(j) := x(i);    -- swap x(i) and x(j)
-          x(i) := val;     -- x(i) is the minimum
-        end if;
-      end loop;
-    end loop;
-  end Sort;
-
-  procedure Sort ( x : in out Standard_Floating_Vectors.Vector;
-                   y : in out Standard_Complex_Vectors.Vector ) is
-
-    val : double_float;
-    tmp : Complex_Number;
-
-  begin
-    for i in x'range loop
-      for j in i+1..x'last loop
-        val := x(j);
-        if val < x(i) then -- x(j) is the new minimum
-          x(j) := x(i);    -- swap x(i) and x(j)
-          x(i) := val;     -- x(i) is the minimum
-          tmp := y(i);     -- swap y(i) and y(j)
-          y(i) := y(j);
-          y(j) := tmp;
-        end if;
-      end loop;
-    end loop;
-  end Sort;
-
   procedure Evaluate_Powers
               ( deg : in Standard_Integer_VecVecs.VecVec;
                 pwr : in Standard_Floating_Vectors.Vector;
@@ -121,7 +85,7 @@ package body Double_Leading_Evaluations is
        then idx := i;
       end if;
     end loop;
-    Sort(val);
+    Double_Real_Powered_Series.Sort(val);
   end Evaluate_Powers;
 
   function Leading_Coefficient
@@ -444,7 +408,7 @@ package body Double_Leading_Evaluations is
        then idx := i;
       end if;
     end loop;
-    sort(ydg,ycf);
+    Double_Real_Powered_Series.Sort(ydg,ycf);
   end Evaluate_Polynomial;
 
   procedure Evaluate_System

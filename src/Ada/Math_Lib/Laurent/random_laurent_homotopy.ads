@@ -58,32 +58,6 @@ package Random_Laurent_Homotopy is
   --   cff      coefficients of the monomials;
   --   tpw      powers of t in the coefficients of the homotopy.      
 
-  function Random_Leading_Powers
-             ( dim : integer32 ) return Standard_Floating_Vectors.Vector;
-
-  -- DESCRIPTION :
-  --   Returns a vector of range 1..dim with random powers of series
-  --   with real positive powers. 
-
-  procedure Random_Power_Series
-              ( dim : in integer32;
-                nbt : in Standard_Integer_Vectors.Vector;
-                cff : out Standard_Complex_VecVecs.VecVec;
-                pwr : out Standard_Floating_VecVecs.VecVec );
-
-  -- DESCRIPTION :
-  --   Generates dim power series with random coefficients and real powers.
-  --   The next term has power less than twice the power of the previous term.
-
-  -- REQUIRED :
-  --   cff'range = nbt'range = pwr'range = 1..dim.
-
-  -- ON ENTRY :
-  --   dim      number of power series;
-  --   nbt      nbt(i) equals the number of terms in the i-th series;
-  --   cff      coefficients of the power series;
-  --   pwr      powers of the series.
-
   procedure Random_Homotopy
               ( pdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
                 pcf : in Standard_Complex_VecVecs.VecVec;
@@ -113,15 +87,6 @@ package Random_Laurent_Homotopy is
   --   hdg      exponents of the monomials in the homotopy;
   --   hcf      coefficients of the homotopy;
   --   htp      leading powers of the series coefficients of the homotopy.
-
-  function Evaluate_Series
-             ( cff : Standard_Complex_VecVecs.VecVec;
-               pwr : Standard_Floating_VecVecs.VecVec; tpt : double_float )
-             return Standard_Complex_Vectors.Vector;
-
-  -- DESCRIPTION :
-  --   Given in cff and pwr are the coefficients and real powers of a series,
-  --   and in tpt a value for t.  Returns the value of the series.
 
   function Evaluate_Homotopy
              ( deg : Standard_Integer_VecVecs.Array_of_VecVecs;

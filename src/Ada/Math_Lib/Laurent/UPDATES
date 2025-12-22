@@ -1,3 +1,7 @@
+Mon 22 Dec 2025 : new package double_real_powered_series, with code taken
+  from random_laurent_homotopy, double_{leading,ordered}_evaluations,
+  and tset_newton_puiseux.adb.
+
 Sat 20 Dec 2025 : name changes in double_ordered_evaluations to better reflect
   what the procedures are doing, updated test_newton_puiseux.adb.
   Bug fixed in making random power series in random_laurent_homotopy.adb.

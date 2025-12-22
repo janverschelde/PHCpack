@@ -8,6 +8,7 @@ with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Double_Leading_Evaluations;
 with Double_Ordered_Evaluations;
+with Double_Real_Powered_Series;
 with Random_Laurent_Homotopy;
 with Laurent_Homotopy_Derivatives;
 
@@ -467,7 +468,7 @@ package body Test_Newton_Puiseux is
         end loop;
       end loop;
     end if;
-    Random_Laurent_Homotopy.Random_Power_Series(dim,nbt,cff,pwr);
+    Double_Real_Powered_Series.Random_Power_Series(dim,nbt,cff,pwr);
     if vrblvl > 0 then
       for i in 1..dim loop
         put("-> a random power series "); put(i,1); put_line(" : ");

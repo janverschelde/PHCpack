@@ -13,22 +13,6 @@ package Double_Ordered_Evaluations is
 
 -- ON ONE POLYNOMIAL :
 
-  procedure Normalize
-              ( cf : in out Standard_Complex_Vectors.Vector;
-                dg : in Standard_Floating_Vectors.Vector );
-
-  -- DESCRIPTION :
-  --   Given a sorted sequence of powers in dg,
-  --   adds the coefficients in cf which correspond to equal powers. 
-
-  function Positive_Minimum_Index
-             ( c : Standard_Complex_Vectors.Vector;
-               v : Standard_Floating_Vectors.Vector ) return integer32;
-
-  -- DESCRIPTION :
-  --   Returns index of the smallest positive number in v,
-  --   skipping the entries from which the corresponding c is zero.
-
   procedure First_Derivative_First_Order
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;

@@ -7,6 +7,7 @@ with Standard_Random_Numbers;
 with Standard_Random_Vectors;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
+with Double_Real_Powered_Series;
 
 package body Random_Laurent_Homotopy is
 
@@ -55,7 +56,7 @@ package body Random_Laurent_Homotopy is
         cfi : constant Standard_Complex_Vectors.Vector(1..nbm(i))
             := Standard_Random_Vectors.Random_Vector(1,nbm(i));
         cti : constant Standard_Floating_Vectors.Vector(1..nbm(i))
-            := Random_Leading_Powers(nbm(i));
+            := Double_Real_Powered_Series.Random_Leading_Powers(nbm(i));
       begin
         deg(i) := new Standard_Integer_VecVecs.VecVec'(dpi);
         cff(i) := new Standard_Complex_Vectors.Vector'(cfi);
@@ -63,51 +64,6 @@ package body Random_Laurent_Homotopy is
       end;
     end loop;
   end Random_Laurent_System;
-
-  function Random_Leading_Powers
-             ( dim : integer32 ) return Standard_Floating_Vectors.Vector is
-
-    res : Standard_Floating_Vectors.Vector(1..dim);
-    rnd : double_float;
-
-  begin
-    for i in 1..dim loop
-      rnd := Standard_Random_Numbers.Random;
-      res(i) := abs(rnd);
-    end loop;
-    return res;
-  end Random_Leading_Powers;
-
-  procedure Random_Power_Series
-              ( dim : in integer32;
-                nbt : in Standard_Integer_Vectors.Vector;
-                cff : out Standard_Complex_VecVecs.VecVec;
-                pwr : out Standard_Floating_VecVecs.VecVec ) is
-
-    rnd : double_float;
-
-  begin
-    for i in 1..dim loop
-      declare
-        cfi : constant Standard_Complex_Vectors.Vector(0..nbt(i))
-            := Standard_Random_Vectors.Random_Vector(0,nbt(i));
-        pwi : Standard_Floating_Vectors.Vector(1..nbt(i));
-      begin
-        cff(i) := new Standard_Complex_Vectors.Vector'(cfi);
-        rnd := Standard_Random_Numbers.Random;
-        pwi(1) := abs(rnd);
-        for j in 2..nbt(i) loop
-          rnd := abs(Standard_Random_Numbers.Random); -- rnd in [0,1]
-          pwi(j) := pwi(j-1) + rnd;
-          while pwi(j) > 2.0*pwi(j-1) loop -- make pwi(j) < 2*pwi(j-1)
-            rnd := rnd/2.0;
-            pwi(j) := pwi(j-1) + rnd;
-          end loop;
-        end loop;
-        pwr(i) := new Standard_Floating_Vectors.Vector'(pwi);
-      end;
-    end loop;
-  end Random_Power_Series;
 
   procedure Random_Homotopy
               ( pdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
@@ -161,23 +117,6 @@ package body Random_Laurent_Homotopy is
       end;
     end loop;
   end Random_Homotopy;
-
-  function Evaluate_Series
-             ( cff : Standard_Complex_VecVecs.VecVec;
-               pwr : Standard_Floating_VecVecs.VecVec; tpt : double_float )
-             return Standard_Complex_Vectors.Vector is
-
-    res : Standard_Complex_Vectors.Vector(cff'range);
-
-  begin
-    for i in res'range loop
-      res(i) := cff(i)(0);
-      for j in 1..cff(i)'last loop
-        res(i) := res(i) + cff(i)(j)*(tpt**pwr(i)(j));
-      end loop;
-    end loop;
-    return res;
-  end Evaluate_Series;
 
   function Evaluate_Monomial
              ( deg : Standard_Integer_Vectors.Vector;
@@ -247,7 +186,7 @@ package body Random_Laurent_Homotopy is
 
     tpt : constant double_float := abs(Standard_Random_Numbers.Random);
     zpt : constant Standard_Complex_Vectors.Vector(scf'range)
-        := Evaluate_Series(scf,spw,tpt);
+        := Double_Real_Powered_Series.Evaluate_Series(scf,spw,tpt);
     hpt : constant Standard_Complex_Vectors.Vector(hcf'range)
         := Evaluate_Homotopy(hdg,hcf,htp,zpt,tpt);
 

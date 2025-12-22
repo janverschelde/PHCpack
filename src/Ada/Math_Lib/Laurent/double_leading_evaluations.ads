@@ -55,18 +55,6 @@ package Double_Leading_Evaluations is
   --   val      value of the minimum power over all monomials;
   --   idx      index in deg'range where the minimum happened.
 
-  procedure Sort ( x : in out Standard_Floating_Vectors.Vector );
-
-  -- DESCRIPTION :
-  --   Sorts the numbers in x in increasing order.
-
-  procedure Sort ( x : in out Standard_Floating_Vectors.Vector;
-                   y : in out Standard_Complex_Vectors.Vector );
-
-  -- DESCRIPTION :
-  --   Sorts the numbers in x in increasing order
-  --   and swaps the corresponding numbers in y accordingly.
-
   procedure Evaluate_Powers
               ( deg : in Standard_Integer_VecVecs.VecVec;
                 pwr : in Standard_Floating_Vectors.Vector;

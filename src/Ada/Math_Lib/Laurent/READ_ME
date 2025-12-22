@@ -37,6 +37,7 @@ test_leading_powers              : tests leading powers computation
 test_leading_terms               : tests leading terms computation
 ts_hunsys                        : calls main test on leading powers/terms
 ------------------------------------------------------------------------------
+double_real_powered_series       : series with real powers, double precision
 double_leading_evaluations       : evaluates at leading terms of series
 double_ordered_evaluations       : first order evaluation at series
 test_leading_evaluations         : test evaluating at leading terms
