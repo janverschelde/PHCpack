@@ -1,6 +1,10 @@
+Wed 24 Dec 2025 : to double_leading_evaluatios, added indexed derivative 
+  function, tested by test_leading_evaluations; extended ts_hunval.adb.
+  Updated test_ordered_evaluations.adb for double_real_powered_series.
+
 Mon 22 Dec 2025 : new package double_real_powered_series, with code taken
   from random_laurent_homotopy, double_{leading,ordered}_evaluations,
-  and tset_newton_puiseux.adb.
+  and test_newton_puiseux.adb.
 
 Sat 20 Dec 2025 : name changes in double_ordered_evaluations to better reflect
   what the procedures are doing, updated test_newton_puiseux.adb.

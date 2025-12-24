@@ -22,6 +22,29 @@ package Test_Leading_Evaluations is
   --   with respect to the variable index idx.
   --   On return in err is the magnitude of the error of a random point test.
 
+  procedure Test_Indexed_Derivative
+              ( deg : in Standard_Integer_Vectors.Vector;
+                cff : in Standard_Complex_Vectors.Vector;
+                err : out double_float );
+
+  -- DESCRPITION :
+  --   Computes all derivatives up to the third order
+  --   and compares the outcome of the indexed derivative function
+  --   with the values of the dedicated derivative functions.
+  --   Returns the sum of the errors.
+
+  procedure Test_Indexed_Monomial_Derivatives ( dim : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random Laurent monomial in dim many variables
+  --   and tests the indexed derivatives.
+
+  procedure Test_Indexed_Derivatives;
+
+  -- DESCRIPTION :
+  --   Prompts for the number of variables and then tests the
+  --   indexed derivatives of a random Laurent monomial.
+
   procedure Test_Monomial ( dim : in integer32 );
                
   -- DESCRIPTION :

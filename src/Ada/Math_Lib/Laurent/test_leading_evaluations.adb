@@ -15,6 +15,7 @@ with Standard_Integer_VecVecs;
 with Standard_Floating_VecVecs;
 with Standard_Complex_VecVecs;
 with Double_Leading_Evaluations;
+with Double_Real_Powered_Series;
 with Random_Laurent_Homotopy;
 
 package body Test_Leading_Evaluations is
@@ -58,12 +59,132 @@ package body Test_Leading_Evaluations is
     end if;
   end Test_Monomial_Derivative;
 
+  procedure Test_Indexed_Derivative
+              ( deg : in Standard_Integer_Vectors.Vector;
+                cff : in Standard_Complex_Vectors.Vector;
+                err : out double_float ) is
+
+    x,y : Complex_Number;
+    idx : Standard_Integer_Vectors.Vector(deg'range) := (deg'range => 0);
+    idxerr : double_float;
+
+    use Double_Leading_Evaluations;
+
+  begin
+    err := 0.0;
+    put_line("testing first derivatives ...");
+    for i in deg'range loop
+      x := Leading_Coefficient(deg,cff,i,0);
+      idx(i) := 1;
+      y := Indexed_Derivative(deg,cff,idx);
+      idx(i) := 0;
+      idxerr := AbsVal(x - y);
+      err := err + idxerr;
+      put("x"); put(i,1); put(" : "); put(x); new_line;
+      put("y"); put(i,1); put(" : "); put(y);
+      put(", err :"); put(idxerr,3); new_line;
+    end loop;
+    put_line("testing second pure derivatives ...");
+    for i in deg'range loop
+      x := Second_Derivative(deg,cff,i,0);
+      idx(i) := 2;
+      y := Indexed_Derivative(deg,cff,idx);
+      idx(i) := 0;
+      idxerr := AbsVal(x - y);
+      err := err + idxerr;
+      put("x"); put(i,1); put(" : "); put(x); new_line;
+      put("y"); put(i,1); put(" : "); put(y);
+      put(", err :"); put(idxerr,3); new_line;
+    end loop;
+    put_line("testing second mixed derivatives ...");
+    for i in deg'range loop
+      for j in i+1..deg'last loop
+        x := Second_Mixed_Derivative(deg,cff,i,j,0);
+        idx(i) := 1; idx(j) := 1;
+        y := Indexed_Derivative(deg,cff,idx);
+        idx(i) := 0; idx(j) := 0;
+        idxerr := AbsVal(x - y);
+        err := err + idxerr;
+        put("x"); put(i,1); put(","); put(j,1); put(" : "); put(x); new_line;
+        put("y"); put(i,1); put(","); put(j,1); put(" : "); put(y);
+        put(", err :"); put(idxerr,3); new_line;
+      end loop;
+    end loop;
+    put_line("testing third pure derivatives ...");
+    for i in deg'range loop
+      x := Third_Derivative(deg,cff,i,0);
+      idx(i) := 3;
+      y := Indexed_Derivative(deg,cff,idx);
+      idx(i) := 0;
+      idxerr := AbsVal(x - y);
+      err := err + idxerr;
+      put("x"); put(i,1); put(" : "); put(x); new_line;
+      put("y"); put(i,1); put(" : "); put(y);
+      put(", err :"); put(idxerr,3); new_line;
+    end loop;
+    put_line("testing third semi mixed derivatives ...");
+    for i in deg'range loop
+      for j in i+1..deg'last loop
+        x := Third_Semi_Mixed_Derivative(deg,cff,i,j,0);
+        idx(i) := 2; idx(j) := 1;
+        y := Indexed_Derivative(deg,cff,idx);
+        idx(i) := 0; idx(j) := 0;
+        idxerr := AbsVal(x - y);
+        err := err + idxerr;
+        put("x"); put(i,1); put(","); put(j,1); put(" : "); put(x); new_line;
+        put("y"); put(i,1); put(","); put(j,1); put(" : "); put(y);
+        put(", err :"); put(idxerr,3); new_line;
+      end loop;
+    end loop;
+    put_line("testing third fully mixed derivatives ...");
+    for i in deg'range loop
+      for j in i+1..deg'last loop
+        for k in j+1..deg'last loop
+          x := Third_Fully_Mixed_Derivative(deg,cff,i,j,k,0);
+          idx(i) := 1; idx(j) := 1; idx(k) := 1;
+          y := Indexed_Derivative(deg,cff,idx);
+          idx(i) := 0; idx(j) := 0; idx(k) := 0;
+          idxerr := AbsVal(x - y);
+          err := err + idxerr;
+          put("x"); put(i,1); put(","); put(j,1); put(","); put(k,1);
+          put(" : "); put(x); new_line;
+          put("y"); put(i,1); put(","); put(j,1); put(","); put(k,1);
+          put(" : "); put(y);
+          put(", err :"); put(idxerr,3); new_line;
+        end loop;
+      end loop;
+    end loop;
+  end Test_Indexed_Derivative;
+
+  procedure Test_Indexed_Monomial_Derivatives ( dim : in integer32 ) is
+               
+    deg : constant Standard_Integer_Vectors.Vector(1..dim)
+        := Random_Laurent_Homotopy.Random_Monomial_Support(dim,-9,9);
+    cff : constant Standard_Complex_Vectors.Vector(1..dim)
+        := Standard_Random_Vectors.Random_Vector(1,dim);
+    err : double_float;
+
+  begin
+    Test_Indexed_Derivative(deg,cff,err);
+    put("sum of errors :"); put(err,3); new_line;
+  end Test_Indexed_Monomial_Derivatives;
+
+  procedure Test_Indexed_Derivatives is
+
+    dim : integer32 := 0;
+
+  begin
+    new_line;
+    put("Give the dimension : "); get(dim);
+    Test_Indexed_Monomial_Derivatives(dim);
+  end Test_Indexed_Derivatives;
+
   procedure Test_Monomial ( dim : in integer32 ) is
                
     deg : constant Standard_Integer_Vectors.Vector(1..dim)
         := Random_Laurent_Homotopy.Random_Monomial_Support(dim,-9,9);
     pwr : constant Standard_Floating_Vectors.Vector(1..dim)
-        := Random_Laurent_Homotopy.Random_Leading_Powers(dim);
+        := Double_Real_Powered_Series.Random_Leading_Powers(dim);
     cff : constant Standard_Complex_Vectors.Vector(1..dim)
         := Standard_Random_Vectors.Random_Vector(1,dim);
     lpr : constant double_float
@@ -129,7 +250,7 @@ package body Test_Leading_Evaluations is
     deg : constant Standard_Integer_VecVecs.VecVec(1..nbr)
         := Random_Laurent_Homotopy.Random_Polynomial_Support(nbr,dim,-9,9);
     pwr : constant Standard_Floating_Vectors.Vector(1..dim)
-        := Random_Laurent_Homotopy.Random_Leading_Powers(dim);
+        := Double_Real_Powered_Series.Random_Leading_Powers(dim);
     val : Standard_Floating_Vectors.Vector(1..nbr);
    -- lpr : double_float;
     diflpr,df2 : double_float;
@@ -173,7 +294,7 @@ package body Test_Leading_Evaluations is
     pcf : Standard_Complex_VecVecs.VecVec(1..nbp);
     pct : Standard_Floating_VecVecs.VecVec(1..nbp);
     pwr : constant Standard_Floating_Vectors.Vector(1..dim)
-        := Random_Laurent_Homotopy.Random_Leading_Powers(dim);
+        := Double_Real_Powered_Series.Random_Leading_Powers(dim);
     cff : constant Standard_Complex_Vectors.Vector(1..dim)
         := Standard_Random_Vectors.Random_Vector(1,dim);
 
@@ -250,7 +371,7 @@ package body Test_Leading_Evaluations is
         put("  "); put(pdg(i)(j)); new_line;
       end loop;
     end loop;
-    Random_Laurent_Homotopy.Random_Power_Series(dim,nbt,cff,pwr);
+    Double_Real_Powered_Series.Random_Power_Series(dim,nbt,cff,pwr);
     for i in 1..dim loop
       put("-> a random power series "); put(i,1); put_line(" : ");
       put(cff(i)(0)); new_line;

@@ -1,6 +1,7 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
 with Standard_Floating_Numbers_IO;      use Standard_Floating_Numbers_IO;
+with Standard_Integer_Vectors_IO;       use Standard_Integer_Vectors_IO;
 with Standard_Floating_Vectors_IO;      use Standard_Floating_Vectors_IO;
 with Double_Real_Powered_Series;
 
@@ -376,6 +377,60 @@ package body Double_Leading_Evaluations is
     end loop;
     return res;
   end Third_Fully_Mixed_Derivative;
+
+  function Indexed_Derivative
+             ( deg : Standard_Integer_Vectors.Vector;
+               cff : Standard_Complex_Vectors.Vector;
+               idx : Standard_Integer_Vectors.Vector; 
+               vrblvl : integer32 := 0 ) return Complex_Number is
+
+    res : Complex_Number := create(1.0);
+
+  begin
+    if vrblvl > 0 then
+      put_line("-> in Double_Leading_Evaluations.indexed_derivative ...");
+      put("  deg :"); put(deg);
+      put("  idx :"); put(idx); new_line;
+    end if;
+    for i in idx'range loop -- cases where derivative is zero
+      if deg(i) = 0 then
+        if idx(i) > 0
+         then return create(0.0);
+        end if;
+      elsif deg(i) > 0 then
+        if idx(i) > deg(i)
+         then return create(0.0);
+        end if;
+      end if;
+    end loop;
+    for i in idx'range loop
+      if idx(i) = 0 then -- compute cff(i)**deg(i)
+        if deg(i) > 0 then
+          for j in 1..deg(i) loop
+            res := res*cff(i);
+          end loop;
+        elsif deg(i) < 0 then
+          for j in 1..(-deg(i)) loop
+            res := res/cff(i);
+          end loop;
+        end if;
+      else -- in this case, idx(i) > 0, evaluate the derivative
+        if deg(i) > idx(i) then
+          for j in 1..(deg(i)-idx(i)) loop
+            res := res*cff(i);
+          end loop;
+        elsif deg(i) < 0 then
+          for j in 1..(-deg(i)+idx(i)) loop
+            res := res/cff(i);
+          end loop;
+        end if;
+        for j in 0..idx(i)-1 loop
+          res := res*double_float(deg(i)-j);
+        end loop;
+      end if;
+    end loop;
+    return res;
+  end Indexed_Derivative;
 
   procedure Evaluate_Polynomial
               ( pcf : in Standard_Complex_Vectors.Vector;

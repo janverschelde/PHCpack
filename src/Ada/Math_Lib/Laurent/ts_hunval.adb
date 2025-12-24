@@ -16,8 +16,14 @@ begin
   Ada.Text_IO.new_line;
   Ada.Text_IO.put("Test higher order evaluations ? (y/n) ");
   Communications_with_User.Ask_Yes_or_No(ans);
-  if ans = 'y'
-   then Test_Ordered_Evaluations.main;
-   else Test_Leading_Evaluations.main;
+  if ans = 'y' then
+    Test_Ordered_Evaluations.main;
+  else
+    Ada.Text_IO.put("Test indexed derivatives of monomial ? (y/n) ");
+    Communications_with_User.Ask_Yes_or_No(ans);
+    if ans = 'y' 
+     then Test_Leading_Evaluations.test_indexed_derivatives;
+     else Test_Leading_Evaluations.main;
+    end if;
   end if;
 end ts_hunval;

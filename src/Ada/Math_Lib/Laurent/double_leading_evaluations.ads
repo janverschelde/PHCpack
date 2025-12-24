@@ -160,6 +160,26 @@ package Double_Leading_Evaluations is
 
   -- REQUIRED : i, j, k are in deg'range and i, j, k are mutually distinct.
 
+  function Indexed_Derivative
+             ( deg : Standard_Integer_Vectors.Vector;
+               cff : Standard_Complex_Vectors.Vector;
+               idx : Standard_Integer_Vectors.Vector; 
+               vrblvl : integer32 := 0 ) return Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns the value of the derivative with respect to the indices idx 
+  --   of the monomial with exponents in deg, evaluated at cff.
+
+  -- REQUIRED : deg'range = cff'range = idx'range.
+
+  -- ON ENTRY :
+  --   deg      exponents of a Laurent monomial;
+  --   cff      values of the variables must be nonzero
+  --            if exponents in deg are negative;
+  --   idx      the k-th derivative with respect to the i-th variable
+  --            will be evaluated if idx(i) = k, otherwise, if idx(i) = 0,
+  --            then the result will be multiplied with cff(i)**deg(i).
+
   procedure Evaluate_Polynomial
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
