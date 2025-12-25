@@ -432,6 +432,42 @@ package body Double_Leading_Evaluations is
     return res;
   end Indexed_Derivative;
 
+  procedure Enumerate_Indices ( dim,idxsum : in integer32 ) is
+
+    wrk : Standard_Integer_Vectors.Vector(1..dim) := (1..dim => 0);
+    cnt : boolean := true;
+    wrksum : integer32 := 0;
+
+    procedure Enumerate ( k : in integer32 ) is
+    begin
+      if k > dim then
+        if wrksum = idxsum
+         then process(wrk,cnt);
+        end if;
+      else
+        wrk(k) := 0;
+        Enumerate(k+1);
+        if cnt then
+          for i in 1..idxsum loop
+            wrk(k) := i;
+            wrksum := wrksum + i;
+            if wrksum = idxsum then
+              Process(wrk,cnt);
+            elsif wrksum < idxsum then
+              Enumerate(k+1);
+            end if;
+            exit when (cnt = false);
+            wrksum := wrksum - i;
+          end loop;
+          wrk(k) := 0;
+        end if;
+      end if;
+    end Enumerate;
+
+  begin
+    Enumerate(1);
+  end Enumerate_Indices;
+
   procedure Evaluate_Polynomial
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;

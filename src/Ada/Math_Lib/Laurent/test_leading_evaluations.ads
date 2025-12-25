@@ -33,6 +33,12 @@ package Test_Leading_Evaluations is
   --   with the values of the dedicated derivative functions.
   --   Returns the sum of the errors.
 
+  procedure Show_Indices ( dim,idxsum : in integer32 );
+
+  -- DESCRIPTION :
+  --   Writes all index vectors of range 1..dim and
+  --   with sum of the indices equal to idxsum.
+
   procedure Test_Indexed_Monomial_Derivatives ( dim : in integer32 );
 
   -- DESCRIPTION :

@@ -59,6 +59,25 @@ package body Test_Leading_Evaluations is
     end if;
   end Test_Monomial_Derivative;
 
+  procedure Show_Indices ( dim,idxsum : in integer32 ) is
+
+    cnt : integer32 := 0;
+
+    procedure Write ( idx : in Standard_Integer_Vectors.Vector;
+                      continue : out boolean ) is
+    begin
+      cnt := cnt + 1;
+      put(cnt,3); put(" :"); put(idx); new_line;
+      continue := true;
+    end Write;
+ 
+    procedure Write_Indices is
+      new Double_Leading_Evaluations.Enumerate_Indices(Write);
+
+  begin
+    Write_Indices(dim,idxsum);
+  end Show_Indices;
+
   procedure Test_Indexed_Derivative
               ( deg : in Standard_Integer_Vectors.Vector;
                 cff : in Standard_Complex_Vectors.Vector;
@@ -177,6 +196,8 @@ package body Test_Leading_Evaluations is
     new_line;
     put("Give the dimension : "); get(dim);
     Test_Indexed_Monomial_Derivatives(dim);
+    put_line("All indices with sum equal to 4 :");
+    Show_Indices(dim,4);
   end Test_Indexed_Derivatives;
 
   procedure Test_Monomial ( dim : in integer32 ) is

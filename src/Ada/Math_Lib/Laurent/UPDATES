@@ -1,3 +1,6 @@
+Thu 25 Dec 2025 : added to double_leading_evaluation the enumeration of
+  all indices, tested in test_leading_evaluations.
+
 Wed 24 Dec 2025 : to double_leading_evaluatios, added indexed derivative 
   function, tested by test_leading_evaluations; extended ts_hunval.adb.
   Updated test_ordered_evaluations.adb for double_real_powered_series.

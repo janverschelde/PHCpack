@@ -180,6 +180,18 @@ package Double_Leading_Evaluations is
   --            will be evaluated if idx(i) = k, otherwise, if idx(i) = 0,
   --            then the result will be multiplied with cff(i)**deg(i).
 
+  generic
+    with procedure Process ( idx : in Standard_Integer_Vectors.Vector;
+                             continue : out boolean );
+  procedure Enumerate_Indices ( dim,idxsum : in integer32 );
+
+  -- DESCRIPTION :
+  --   Enumerates all index vectors of range 1..dim
+  --   with sum of the indices equal to idxsum.
+  --   Calls Process on each generated index vector.
+  --   The enumeration stops when the return value of continue
+  --   is set to false by Process.
+
   procedure Evaluate_Polynomial
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
