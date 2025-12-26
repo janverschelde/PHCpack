@@ -1,7 +1,6 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Communications_with_User;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
@@ -228,12 +227,90 @@ package body Test_Newton_Puiseux is
     end if;
   end Diagonal_Leading_Terms;
 
+  procedure Diagonal_Second_Terms
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cf0 : in Standard_Complex_Vectors.Vector;
+                cf1 : in Standard_Complex_Vectors.Vector;
+                pw1 : in Standard_Floating_Vectors.Vector;
+                cA : in Standard_Complex_Matrices.Matrix;
+                cf2 : out Standard_Complex_Vectors.Vector;
+                pw2 : out Standard_Floating_Vectors.Vector;
+                tol : in double_float := 1.0E-12;
+                vrblvl : in integer32 := 0 ) is
+
+    cf2a : Standard_Complex_Vectors.Vector(cf1'range);
+    pw2a : Standard_Floating_Vectors.Vector(pw1'range);
+    dif,sumdif : double_float;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Test_Newton_Puiseux.diagonal_second_terms ...");
+    end if;
+    Double_Ordered_Evaluations.First_Derivative_First_Order
+      (hcf,hct,hdg,cf0,cf1,pw1,cf2a,pw2a,vrblvl-1);
+    for i in cf1'range loop -- Jacobian is diagonal for the test example
+      cf2a(i) := -cf2a(i)/cA(i,i);
+    end loop;
+    Double_Ordered_Evaluations.Second_Derivative_First_Order
+      (hcf,hct,hdg,cf0,cf1,pw1,cf2,pw2,vrblvl-1);
+    for i in cf1'range loop -- Jacobian is diagonal for the test example
+      cf2(i) := -cf2(i)/cA(i,i);
+    end loop;
+    if vrblvl > 0
+     then put_line("first and second derivative evaluations :");
+    end if;
+    sumdif := 0.0;
+    for i in cf1'range loop
+      if vrblvl > 0 then
+        put(cf2a(i)); put(" t^"); put(pw2a(i)); new_line;
+        put(cf2(i)); put(" t^"); put(pw2(i)); new_line;
+      end if;
+      dif := AbsVal(cf2a(i) - cf2(i)) + abs(pw2a(i)-pw2(i));
+      if vrblvl > 0
+       then put("difference :"); put(dif,3); new_line;
+      end if;
+      sumdif := sumdif + dif;
+    end loop;
+    if vrblvl > 0
+     then put("sum of differences :"); put(sumdif,3); new_line;
+    end if;
+    if sumdif > tol then
+      cf2a := cf2; pw2a := pw2;
+      Double_Ordered_Evaluations.Third_Derivative_First_Order
+        (hcf,hct,hdg,cf0,cf1,pw1,cf2,pw2,vrblvl-1);
+      for i in cf1'range loop -- Jacobian is diagonal for the test example
+        cf2(i) := -cf2(i)/cA(i,i);
+      end loop;
+      if vrblvl > 0
+       then put_line("second and third derivative evaluations :");
+      end if;
+      sumdif := 0.0;
+      for i in cf1'range loop
+        if vrblvl > 0 then
+          put(cf2a(i)); put(" t^"); put(pw2a(i)); new_line;
+          put(cf2(i)); put(" t^"); put(pw2(i)); new_line;
+        end if;
+        dif := AbsVal(cf2a(i) - cf2(i)) + abs(pw2a(i)-pw2(i));
+        if vrblvl > 0
+         then put("difference :"); put(dif,3); new_line;
+        end if;
+        sumdif := sumdif + dif;
+      end loop;
+      if vrblvl > 0
+       then put("sum of differences :"); put(sumdif,3); new_line;
+      end if;
+    end if;
+  end Diagonal_Second_Terms;
+
   procedure Run_Newton_Step
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
                 cff : in Standard_Complex_VecVecs.VecVec;
                 pwr : in Standard_Floating_VecVecs.VecVec;
+                tol : in double_float := 1.0E-12;
                 vrblvl : in integer32 := 0 ) is
 
     nbr : constant integer32 := pwr(pwr'first)'last;
@@ -241,8 +318,8 @@ package body Test_Newton_Puiseux is
     cA : Standard_Complex_Matrices.Matrix(hcf'range,hcf'range);
     eA : Standard_Floating_Matrices.Matrix(hcf'range,hcf'range);
     err,sumerr : double_float;
-    psm : Standard_Floating_Vectors.Vector(hcf'range);
-    cfp : Standard_Complex_Vectors.Vector(hcf'range);
+    psm,pw2 : Standard_Floating_Vectors.Vector(hcf'range);
+    cfp,cf2 : Standard_Complex_Vectors.Vector(hcf'range);
     ans : character;
 
   begin
@@ -268,41 +345,32 @@ package body Test_Newton_Puiseux is
       sumerr := sumerr + err;
     end loop;
     put("error sum :"); put(sumerr,3); new_line;
+    if nbr > 1 then
+      put("Continue ? (y/n) "); Communications_with_User.Ask_Yes_or_No(ans);
+      if ans /= 'y'
+       then return;
+      end if;
+      Diagonal_Second_Terms(hcf,hct,hdg,lcf,cfp,psm,cA,cf2,pw2,tol,1);
+      put_line("Computing error sum ...");
+      sumerr := 0.0;
+      for i in cff'range loop
+        put("x"); put(i,1); put(" :");
+        put(cff(i)(cff(i)'first+2)); put(" t^"); put(pwr(i)(2)); new_line;
+        put("y"); put(i,1); put(" :");
+        put(cf2(i)); put(" t^"); put(pw2(i)); new_line;
+        err := AbsVal(cf2(i) - cff(i)(cff(i)'first+2));
+        put("error :"); put(err,3); sumerr := sumerr + err;
+        put(" t^");
+        err := abs(pw2(i) - pwr(i)(2)); put(err,3); new_line;
+        sumerr := sumerr + err;
+      end loop;
+      put("error sum :"); put(sumerr,3); new_line;
+    end if;
     put("Continue ? (y/n) "); Communications_with_User.Ask_Yes_or_No(ans);
     if ans /= 'y'
      then return;
     end if;
-    Double_Ordered_Evaluations.First_Derivative_First_Order
-      (hcf,hct,hdg,cff,pwr,psm,cfp,vrblvl-1);
-    put_line("smallest positive powers :");
-    for i in psm'range loop
-      put(i,1); put(" :"); put(psm(i)); new_line;
-    end loop;
-    put_line("first order terms :");
-    for i in cfp'range loop
-      put(cfp(i)); put(" t^"); put(psm(i)); new_line;
-    end loop;
-    if nbr > 1 then
-      Double_Ordered_Evaluations.Second_Derivative_First_Order
-        (hcf,hct,hdg,cff,pwr,psm,cfp,vrblvl-1);
-      put_line("smallest positive powers :");
-      for i in psm'range loop
-        put(i,1); put(" :"); put(psm(i)); new_line;
-      end loop;
-      put_line("Second order terms :");
-      sumerr := 0.0;
-      for i in cfp'range loop
-        cfp(i) := -cfp(i)/cA(i,i);
-        put(cfp(i)); put(" t^"); put(psm(i)); new_line;
-        put(cff(i)(2)); put(" t^"); put(pwr(i)(2)); new_line;
-        err := AbsVal(cfp(i) - cff(i)(2));
-        sumerr := sumerr + err;
-        put("error : "); put(err,3); put(" t^");
-        err := abs(psm(i) - pwr(i)(2));
-        put(err,3); new_line;
-        sumerr := sumerr + err;
-      end loop;
-      put("sum of errors :"); put(sumerr,3); new_line;
+    if nbr > 2 then
      -- Second_Order_Derivatives(hcf,hct,hdg,cff,pwr,vrblvl-1);
     --  put_line("Computing third derivative first order evaluations ...");
     --  Double_Ordered_Evaluations.Third_Derivative_First_Order
@@ -431,7 +499,7 @@ package body Test_Newton_Puiseux is
       put(" : "); get(nbt(i));
     end loop;
     Define_Homotopy(dim,nbm,nbt,cff,pwr,hdg,hcf,hct,1);
-    Run_Newton_Step(hcf,hct,hdg,cff,pwr,4);
+    Run_Newton_Step(hcf,hct,hdg,cff,pwr,vrblvl=>4);
   end Test;
 
   procedure Main is

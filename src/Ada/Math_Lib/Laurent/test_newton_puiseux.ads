@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
@@ -139,12 +140,46 @@ package Test_Newton_Puiseux is
   --   cf1      coefficients corresponding to the exponents in pw1;
   --   pw1      leading exponents of a power series solution.
 
+  procedure Diagonal_Second_Terms
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cf0 : in Standard_Complex_Vectors.Vector;
+                cf1 : in Standard_Complex_Vectors.Vector;
+                pw1 : in Standard_Floating_Vectors.Vector;
+                cA : in Standard_Complex_Matrices.Matrix;
+                cf2 : out Standard_Complex_Vectors.Vector;
+                pw2 : out Standard_Floating_Vectors.Vector;
+                tol : in double_float := 1.0E-12;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Computes the second terms of a power series solution,
+  --   starting at the constant and leading terms,
+  --   exploiting the diagonal structure of the Jacobian matrix.
+
+  -- ON ENTRY :
+  --   hdg      supports of the Laurent homotopy;
+  --   hcf      coefficients of the polynomials in the homotopy;
+  --   hct      powers of t in the homotopy for each monomial;
+  --   cf0      constant coefficients of a power series solution;
+  --   cA       coefficients of the Jacobian matrix;
+  --   cf1      coefficients corresponding to the exponents in pw1;
+  --   pw1      leading exponents of a power series solution;
+  --   tol      tolerance to decide if a number is zero;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   cf2      coefficients corresponding to the exponents in pw1;
+  --   pw2      second exponents of a power series solution.
+
   procedure Run_Newton_Step
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
                 cff : in Standard_Complex_VecVecs.VecVec;
                 pwr : in Standard_Floating_VecVecs.VecVec;
+                tol : in double_float := 1.0E-12;
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
@@ -157,6 +192,7 @@ package Test_Newton_Puiseux is
   --   hct      powers of t in the homotopy for each monomial;
   --   cff      coefficients of a power series solution;
   --   pwr      exponents of a power series solution;
+  --   tol      tolerance to decide if a number is zero;
   --   vrblvl   is the verbose level.
 
   procedure Scale_Homotopy_Powers
