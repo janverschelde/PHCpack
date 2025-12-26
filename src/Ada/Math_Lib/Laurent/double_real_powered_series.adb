@@ -1,4 +1,3 @@
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Mathematical_Functions;   use Standard_Mathematical_Functions;
 with Standard_Random_Numbers;
 with Standard_Random_Vectors;
@@ -43,9 +42,9 @@ package body Double_Real_Powered_Series is
   end Sort;
 
   procedure Normalize ( cf : in out Standard_Complex_Vectors.Vector;
-                        dg : in Standard_Floating_Vectors.Vector ) is
+                        dg : in Standard_Floating_Vectors.Vector;
+                        tol : in double_float := 1.0E-12 ) is 
 
-    tol : constant double_float := 1.0E-12;
     dif : double_float;
 
   begin
@@ -59,13 +58,22 @@ package body Double_Real_Powered_Series is
     end loop;
   end Normalize;
 
+  procedure Normalize ( cf : in Standard_Complex_VecVecs.VecVec;
+                        dg : in Standard_Floating_VecVecs.VecVec;
+                        tol : in double_float := 1.0E-12 ) is
+  begin
+    for i in cf'range loop
+      Normalize(cf(i).all,dg(i).all,tol);
+    end loop;
+  end Normalize;
+
   function Positive_Minimum_Index
              ( c : Standard_Complex_Vectors.Vector;
-               v : Standard_Floating_Vectors.Vector ) return integer32 is
+               v : Standard_Floating_Vectors.Vector;
+               tol : double_float := 1.0E-12 ) return integer32 is
 
     res,idx : integer32;
     psm : double_float;
-    tol : constant double_float := 1.0E-12;
 
   begin
     for i in v'range loop -- find first positive number
@@ -87,6 +95,100 @@ package body Double_Real_Powered_Series is
     end loop;
     return res;
   end Positive_Minimum_Index;
+
+  function Positive_Minimum
+             ( v : Standard_Floating_Vectors.Vector;
+               tol : double_float := 1.0E-12 ) return double_float is
+
+    res : double_float;
+    idx : integer32;
+
+  begin
+    for i in v'range loop -- find first positive number
+      if v(i) > tol then
+        idx := i;
+        res := v(i);
+        exit;
+      end if;
+    end loop;
+    for i in idx+1..v'last loop
+      if v(i) > tol and then v(i) < res
+       then res := v(i);
+      end if;
+    end loop;
+    return res;
+  end Positive_Minimum;
+
+  function Positive_Minimum
+             ( c : Standard_Complex_Vectors.Vector;
+               v : Standard_Floating_Vectors.Vector;
+               tol : double_float := 1.0E-12 ) return double_float is
+
+    res : double_float;
+    idx : integer32;
+
+  begin
+    for i in v'range loop -- find first positive number
+      if AbsVal(c(i)) > tol then
+        if v(i) > tol then
+          idx := i;
+          res := v(i);
+          exit;
+        end if;
+      end if;
+    end loop;
+    for i in idx+1..v'last loop
+      if AbsVal(c(i)) > tol then
+        if v(i) > tol and then v(i) < res
+         then res := v(i);
+        end if;
+      end if;
+    end loop;
+    return res;
+  end Positive_Minimum;
+
+  function Positive_Minima
+             ( c : Standard_Complex_VecVecs.VecVec;
+               v : Standard_Floating_VecVecs.VecVec;
+               tol : double_float := 1.0E-12 )
+             return Standard_Floating_Vectors.Vector is
+
+    res : Standard_Floating_Vectors.Vector(c'range);
+
+  begin
+    for i in c'range loop
+      res(i) := Positive_Minimum(c(i).all,v(i).all,tol);
+    end loop;
+    return res;
+  end Positive_Minima;
+
+  function Coefficient ( c : Standard_Complex_Vectors.Vector;
+                         e : Standard_Floating_Vectors.Vector;
+                         p : double_float; tol : double_float := 1.0E-12 )
+                       return Complex_Number is
+  begin
+    for i in e'range loop
+      if abs(e(i) - p) < tol
+       then return c(i);
+      end if;
+    end loop;
+    return create(0.0);
+  end Coefficient;
+
+  function Coefficients ( c : Standard_Complex_VecVecs.VecVec;
+                          e : Standard_Floating_VecVecs.VecVec;
+                          p : Standard_Floating_Vectors.Vector;
+                          tol : double_float := 1.0E-12 )
+                       return Standard_Complex_Vectors.Vector is
+
+    res : Standard_Complex_Vectors.Vector(p'range);
+
+  begin
+    for i in res'range loop
+      res(i) := Coefficient(c(i).all,e(i).all,p(i),tol);
+    end loop;
+    return res;
+  end Coefficients;
 
   function Random_Leading_Powers
              ( dim : integer32 ) return Standard_Floating_Vectors.Vector is

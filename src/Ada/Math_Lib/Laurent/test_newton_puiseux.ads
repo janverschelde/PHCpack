@@ -1,6 +1,4 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
@@ -66,46 +64,11 @@ package Test_Newton_Puiseux is
   --   ycf      ycf(i) is the coefficient value of monomial i;
   --   ydg      ydg(i) is the exponent value of monomial i.
 
-  procedure Sum ( cf : in out Standard_Complex_Vectors.Vector;
-                  dg : in Standard_Floating_Vectors.Vector );
-
-  -- DESCRIPTION :
-  --   Exploiting that monomials with the same exponent in dg are consecutive,
-  --   adds the coefficients with the same exponent in cf.
-
-  procedure Sum ( cf : in Standard_Complex_VecVecs.VecVec;
-                  dg : in Standard_Floating_VecVecs.VecVec );
-
-  -- DESCRIPTION :
-  --   Sums the coefficients with same exponents.
-
-  function Positive_Minimum
-             ( v : Standard_Floating_Vectors.Vector ) return double_float;
-
-  -- DESCRIPTION :
-  --   Returns the smallest positive number in v.
-
-  function Positive_Minimum
-             ( c : Standard_Complex_Vectors.Vector;
-               v : Standard_Floating_Vectors.Vector ) return double_float;
-
-  -- DESCRIPTION :
-  --   Returns the smallest positive number in v,
-  --   skipping the entries from which the corresponding c is zero.
-
-  function Coefficient ( c : Standard_Complex_Vectors.Vector;
-                         e : Standard_Floating_Vectors.Vector;
-                         p : double_float ) return Complex_Number;
-
-  -- DESCRIPTION :
-  --   Returns the coefficient c(i) for which e(i) = p.
-
   procedure Leading_Powers_by_Evaluation
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
                 lcf : in Standard_Complex_Vectors.Vector;
-                lpw : in Standard_Floating_Vectors.Vector;
                 psm : out Standard_Floating_Vectors.Vector;
                 cfp : out Standard_Complex_Vectors.Vector;
                 vrblvl : in integer32 := 0 );
@@ -120,7 +83,6 @@ package Test_Newton_Puiseux is
   --   hdg      supports of the Laurent homotopy;
   --   hct      powers of t in the homotopy for each monomial;
   --   lcf      constant coefficients of a power series solution;
-  --   lpw      exponents of the second term in the series;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
@@ -147,6 +109,35 @@ package Test_Newton_Puiseux is
   --   cff      coefficients of the power series solution;
   --   pwr      exponents of the power series solution;
   --   vrblvl   is the verbose level.
+
+  procedure Diagonal_Leading_Terms
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cf0 : in Standard_Complex_Vectors.Vector;
+                cA : out Standard_Complex_Matrices.Matrix;
+                eA : out Standard_Floating_Matrices.Matrix;
+                cf1 : out Standard_Complex_Vectors.Vector;
+                pw1 : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Computes the leading terms of a power series solution,
+  --   starting at the constant terms, exploiting the diagonal
+  --   structure of the Jacobian matrix.
+
+  -- ON ENTRY :
+  --   hdg      supports of the Laurent homotopy;
+  --   hcf      coefficients of the polynomials in the homotopy;
+  --   hct      powers of t in the homotopy for each monomial;
+  --   cf0      constant coefficients of a power series solution;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   cA       coefficients of the Jacobian matrix;
+  --   eA       corresponding leading exponents of the Jacobian matrix;
+  --   cf1      coefficients corresponding to the exponents in pw1;
+  --   pw1      leading exponents of a power series solution.
 
   procedure Run_Newton_Step
               ( hcf : in Standard_Complex_VecVecs.VecVec;

@@ -1,5 +1,6 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
@@ -27,19 +28,76 @@ package Double_Real_Powered_Series is
   --   and swaps the corresponding numbers in y accordingly.
 
   procedure Normalize ( cf : in out Standard_Complex_Vectors.Vector;
-                        dg : in Standard_Floating_Vectors.Vector );
+                        dg : in Standard_Floating_Vectors.Vector;
+                        tol : in double_float := 1.0E-12 );
 
   -- DESCRIPTION :
   --   Given a sorted sequence of powers in dg,
   --   adds the coefficients in cf which correspond to equal powers. 
+  --   The tolerance is used to decide on the equality of coefficients.
+
+  procedure Normalize ( cf : in Standard_Complex_VecVecs.VecVec;
+                        dg : in Standard_Floating_VecVecs.VecVec;
+                        tol : in double_float := 1.0E-12 );
+
+  -- DESCRIPTION :
+  --   Applies the normalization to all vectors in (cf, dg).
 
   function Positive_Minimum_Index
              ( c : Standard_Complex_Vectors.Vector;
-               v : Standard_Floating_Vectors.Vector ) return integer32;
+               v : Standard_Floating_Vectors.Vector;
+               tol : double_float := 1.0E-12 ) return integer32;
 
   -- DESCRIPTION :
   --   Returns index of the smallest positive number in v,
   --   skipping the entries from which the corresponding c is zero.
+  --   The tolerance tol is used to decide if a number is zero.
+
+  function Positive_Minimum
+             ( v : Standard_Floating_Vectors.Vector;
+               tol : double_float := 1.0E-12 ) return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the smallest positive number in v,
+  --   using the tolerance tol to decide if a number is zero.
+
+  function Positive_Minimum
+             ( c : Standard_Complex_Vectors.Vector;
+               v : Standard_Floating_Vectors.Vector;
+               tol : double_float := 1.0E-12 ) return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the smallest positive number in v,
+  --   skipping the entries from which the corresponding c is zero.
+  --   The tolerance tol is used to decide if a number is zero.
+
+  function Positive_Minima
+             ( c : Standard_Complex_VecVecs.VecVec;
+               v : Standard_Floating_VecVecs.VecVec;
+               tol : double_float := 1.0E-12 )
+             return Standard_Floating_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the positive minima for each (c(i), v(i)).
+
+  function Coefficient ( c : Standard_Complex_Vectors.Vector;
+                         e : Standard_Floating_Vectors.Vector;
+                         p : double_float; tol : double_float := 1.0E-12 )
+                       return Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns the coefficient c(i) for which e(i) = p,
+  --   decided by the test |e(i) - p| < tol.
+
+  function Coefficients ( c : Standard_Complex_VecVecs.VecVec;
+                          e : Standard_Floating_VecVecs.VecVec;
+                          p : Standard_Floating_Vectors.Vector;
+                          tol : double_float := 1.0E-12 )
+                       return Standard_Complex_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the coefficients in each (c(i), e(i))
+  --   corresponding to the power p(i).
 
   function Random_Leading_Powers
              ( dim : integer32 ) return Standard_Floating_Vectors.Vector;

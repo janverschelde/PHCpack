@@ -1,3 +1,7 @@
+Fri 26 Dec 2025 : in test_newton_puiseux, isolated the computation of
+  the leading terms in a separate procedure and moved functions to
+  double_real_powered_series.
+
 Thu 25 Dec 2025 : added to double_leading_evaluation the enumeration of
   all indices, tested in test_leading_evaluations.
 
