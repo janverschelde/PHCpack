@@ -11,6 +11,14 @@ package Double_Ordered_Evaluations is
 --   Evaluates power series of first and higher order terms 
 --   in Laurent polynomials, with coefficients in double precision.
 
+  function Size_Evaluation
+             ( dim,ndf,ord,nbr : integer32 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the size of the evaluation for dim variables,
+  --   for all derivatives up to ndf, for ord as the number of terms
+  --   (or order) of the series, and for nbr monomials.
+
 -- ON ONE POLYNOMIAL :
 
   procedure First_Derivative_First_Order
@@ -215,7 +223,8 @@ package Double_Ordered_Evaluations is
   --   using constants, first, second, and third derivatives.
 
   -- REQUIRED : ycf'range = 1..size*nbr = ydg'range,
-  --   where size = 1 + dim + dim*(dim+1)/2 + dim + 3*dim*(dim-1)/2,
+  --   where size = 1 + dim + dim*(dim+1)/2
+  --                  + dim + dim*(dim-1) + dim*(dim-1)*(dim-2)/3,
   --   where nbr is the number of terms in the polynomial, and
   --   where dim is the number of variables.
 

@@ -16,6 +16,90 @@ with Double_Ordered_Evaluations;
 
 package body Test_Ordered_Evaluations is
 
+  procedure Test_First_Derivative_First_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Tests the first derivative first order evaluation of a polynomial 
+  --   represented by (pcf, pct, pdg), evaluated at a series
+  --   with coefficients in cff and powers in pwr.
+
+    use Double_Ordered_Evaluations;
+
+    dim : constant integer32 := cff'last;
+    nbr : constant integer32 := pdg'last;
+    size : constant integer32 := Size_Evaluation(dim,1,1,nbr);
+    ycf : Standard_Complex_Vectors.Vector(1..size);
+    ydg : Standard_Floating_Vectors.Vector(1..size);
+
+  begin
+    First_Derivative_First_Order(pcf,pct,pdg,cff,pwr,ycf,ydg,1);
+    put_line("the first derivative first order evaluation :");
+    for i in ycf'range loop
+      put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+    end loop;
+  end Test_First_Derivative_First_Order;
+
+  procedure Test_Second_Derivative_First_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Tests the first derivative first order evaluation of a polynomial
+  --   represented by (pcf, pct, pdg), evaluated at a series
+  --   with coefficients in cff and powers in pwr.
+
+    use Double_Ordered_Evaluations;
+
+    dim : constant integer32 := cff'last;
+    nbr : constant integer32 := pdg'last;
+    size : constant integer32 := Size_Evaluation(dim,2,1,nbr);
+    ycf : Standard_Complex_Vectors.Vector(1..size);
+    ydg : Standard_Floating_Vectors.Vector(1..size);
+
+  begin
+    Second_Derivative_First_Order(pcf,pct,pdg,cff,pwr,ycf,ydg,1);
+    put_line("the second derivative first order evaluation :");
+    for i in ycf'range loop
+      put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+    end loop;
+  end Test_Second_Derivative_First_Order;
+
+  procedure Test_Third_Derivative_First_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Tests the first derivative first order evaluation of a polynomial
+  --   represented by (pdg, pcf, pct), evaluated at a series
+  --   with coefficients in cff and powers in pwr.
+
+    use Double_Ordered_Evaluations;
+
+    dim : constant integer32 := cff'last;
+    nbr : constant integer32 := pdg'last;
+    size : constant integer32 := Size_Evaluation(dim,3,1,nbr);
+    ycf : Standard_Complex_Vectors.Vector(1..size);
+    ydg : Standard_Floating_Vectors.Vector(1..size);
+
+  begin
+    Third_Derivative_First_Order(pcf,pct,pdg,cff,pwr,ycf,ydg,1);
+    put_line("the third derivative first order evaluation :");
+    for i in ycf'range loop
+      put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+    end loop;
+  end Test_Third_Derivative_First_Order;
+
   procedure Test ( dim,nbr,ord : in integer32 ) is
 
     cff : Standard_Complex_VecVecs.VecVec(1..dim);
@@ -32,8 +116,6 @@ package body Test_Ordered_Evaluations is
     hdg : Standard_Integer_VecVecs.VecVec(1..size);
     hcf : Standard_Complex_Vectors.Vector(1..size);
     hct : Standard_Floating_Vectors.Vector(1..size);
-
-    use Double_Ordered_Evaluations;
 
   begin
     Double_Real_Powered_Series.Random_Power_Series(dim,nbt,cff,pwr);
@@ -59,39 +141,9 @@ package body Test_Ordered_Evaluations is
       put(" t^"); put(hct(i));
       put("  "); put(hdg(i)); new_line;
     end loop;
-    declare
-      ycf : Standard_Complex_Vectors.Vector(1..(dim+1)*nbr);
-      ydg : Standard_Floating_Vectors.Vector(1..(dim+1)*nbr);
-    begin
-      First_Derivative_First_Order(pcf,pct,pdg,cff,pwr,ycf,ydg,1);
-      put_line("the first derivative first order evaluation :");
-      for i in ycf'range loop
-        put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
-      end loop;
-    end;
-    declare
-      size : constant integer32 := 1 + dim + dim*(dim+1)/2;
-      ycf : Standard_Complex_Vectors.Vector(1..size*nbr);
-      ydg : Standard_Floating_Vectors.Vector(1..size*nbr);
-    begin
-      Second_Derivative_First_Order(pcf,pct,pdg,cff,pwr,ycf,ydg,1);
-      put_line("the second derivative first order evaluation :");
-      for i in ycf'range loop
-        put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
-      end loop;
-    end;
-    declare
-      size : constant integer32
-           := 1 + dim + dim*(dim+1)/2 + dim + 3*dim*(dim-1)/2;
-      ycf : Standard_Complex_Vectors.Vector(1..size*nbr);
-      ydg : Standard_Floating_Vectors.Vector(1..size*nbr);
-    begin
-      Third_Derivative_First_Order(pcf,pct,pdg,cff,pwr,ycf,ydg,1);
-      put_line("the third derivative first order evaluation :");
-      for i in ycf'range loop
-        put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
-      end loop;
-    end;
+    Test_First_Derivative_First_Order(pcf,pct,pdg,cff,pwr);
+    Test_Second_Derivative_First_Order(pcf,pct,pdg,cff,pwr);
+    Test_Third_Derivative_First_Order(pcf,pct,pdg,cff,pwr);
   end Test;
 
   procedure Main is

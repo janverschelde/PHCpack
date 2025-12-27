@@ -9,6 +9,26 @@ with Double_Leading_Evaluations;
 
 package body Double_Ordered_Evaluations is
 
+  function Size_Evaluation
+             ( dim,ndf,ord,nbr : integer32 ) return integer32 is
+
+    res : integer32 := -1;
+
+  begin
+    if ord = 1 then
+      if ndf = 1 then -- first derivative first order
+        res := (dim+1)*nbr;
+      elsif ndf = 2 then -- second derivative first order
+        res := (1 + dim + dim*(dim+1)/2)*nbr;
+      elsif ndf = 3 then -- third derivative first order
+        res := 1 + dim + dim*(dim+1)/2 
+                 + dim + dim*(dim-1) + dim*(dim-1)*(dim-2)/6;
+        res := res*nbr;
+      end if;
+    end if;
+    return res;
+  end Size_Evaluation;
+
   procedure First_Derivative_First_Order
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
@@ -559,7 +579,7 @@ package body Double_Ordered_Evaluations is
                 vrblvl : in integer32 := 0 ) is
 
     dim : constant integer32 := hcf'last;
-    nbr,idx : integer32;
+    nbr,idx,size : integer32;
 
   begin
     if vrblvl > 0 then
@@ -568,9 +588,10 @@ package body Double_Ordered_Evaluations is
     end if;
     for i in hcf'range loop
       nbr := hcf(i)'last;
+      size := Size_Evaluation(dim,1,1,nbr);
       declare
-        ycf : Standard_Complex_Vectors.Vector(1..(dim+1)*nbr);
-        ydg : Standard_Floating_Vectors.Vector(1..(dim+1)*nbr);
+        ycf : Standard_Complex_Vectors.Vector(1..size);
+        ydg : Standard_Floating_Vectors.Vector(1..size);
       begin
         First_Derivative_First_Order
           (hcf(i).all,hct(i).all,hdg(i).all,cf0,cf1,pw1,ycf,ydg,vrblvl-1);
@@ -599,7 +620,7 @@ package body Double_Ordered_Evaluations is
                 vrblvl : in integer32 := 0 ) is
 
     dim : constant integer32 := hcf'last;
-    nbr,idx : integer32;
+    nbr,idx,size : integer32;
 
   begin
     if vrblvl > 0 then
@@ -608,9 +629,10 @@ package body Double_Ordered_Evaluations is
     end if;
     for i in hcf'range loop
       nbr := hcf(i)'last;
+      size := Size_Evaluation(dim,1,1,nbr);
       declare
-        ycf : Standard_Complex_Vectors.Vector(1..(dim+1)*nbr);
-        ydg : Standard_Floating_Vectors.Vector(1..(dim+1)*nbr);
+        ycf : Standard_Complex_Vectors.Vector(1..size);
+        ydg : Standard_Floating_Vectors.Vector(1..size);
       begin
         First_Derivative_First_Order
           (hcf(i).all,hct(i).all,hdg(i).all,cff,pwr,ycf,ydg,vrblvl-1);
@@ -689,7 +711,7 @@ package body Double_Ordered_Evaluations is
     end if;
     for i in hcf'range loop
       nbr := hcf(i)'last;
-      size := (1 + dim + dim*(dim+1)/2)*nbr;
+      size := Size_Evaluation(dim,2,1,nbr);
       declare
         ycf : Standard_Complex_Vectors.Vector(1..size);
         ydg : Standard_Floating_Vectors.Vector(1..size);
@@ -730,7 +752,7 @@ package body Double_Ordered_Evaluations is
     end if;
     for i in hcf'range loop
       nbr := hcf(i)'last;
-      size := (1 + dim + dim*(dim+1)/2)*nbr;
+      size := Size_Evaluation(dim,2,1,nbr);
       declare
         ycf : Standard_Complex_Vectors.Vector(1..size);
         ydg : Standard_Floating_Vectors.Vector(1..size);
@@ -805,7 +827,6 @@ package body Double_Ordered_Evaluations is
 
     dim : constant integer32 := hcf'last;
     nbr,size,idx : integer32;
-    dd1 : constant integer32 := dim*(dim-1);
 
   begin
     if vrblvl > 0 then
@@ -814,7 +835,7 @@ package body Double_Ordered_Evaluations is
     end if;
     for i in hcf'range loop
       nbr := hcf(i)'last;
-      size := (1 + dim + dim*(dim+1)/2 + dim + dd1 + dd1*(dim-2)/6)*nbr;
+      size := Size_Evaluation(dim,3,1,nbr);
       declare
         ycf : Standard_Complex_Vectors.Vector(1..size);
         ydg : Standard_Floating_Vectors.Vector(1..size);
@@ -847,7 +868,6 @@ package body Double_Ordered_Evaluations is
 
     dim : constant integer32 := hcf'last;
     nbr,size,idx : integer32;
-    dd1 : constant integer32 := dim*(dim-1);
 
   begin
     if vrblvl > 0 then
@@ -856,7 +876,7 @@ package body Double_Ordered_Evaluations is
     end if;
     for i in hcf'range loop
       nbr := hcf(i)'last;
-      size := (1 + dim + dim*(dim+1)/2 + dim + dd1 + dd1*(dim-2)/6)*nbr;
+      size := Size_Evaluation(dim,3,1,nbr);
       declare
         ycf : Standard_Complex_Vectors.Vector(1..size);
         ydg : Standard_Floating_Vectors.Vector(1..size);
@@ -864,7 +884,7 @@ package body Double_Ordered_Evaluations is
         Third_Derivative_First_Order
           (hcf(i).all,hct(i).all,hdg(i).all,cff,pwr,ycf,ydg,vrblvl-1);
         if vrblvl > 0 then
-          put("the third order evaluation of polynomial ");
+          put("the third order evaluation of the polynomial ");
           put(i,1); put_line(" :");
           for i in ycf'range loop
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
