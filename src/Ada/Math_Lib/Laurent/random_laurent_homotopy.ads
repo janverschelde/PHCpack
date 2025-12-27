@@ -58,6 +58,41 @@ package Random_Laurent_Homotopy is
   --   cff      coefficients of the monomials;
   --   tpw      powers of t in the coefficients of the homotopy.      
 
+  procedure Random_Homotopy_Polynomial
+              ( pdg : in Standard_Integer_VecVecs.VecVec;
+                pcf : in Standard_Complex_Vectors.Vector;
+                ptp : in Standard_Floating_Vectors.Vector;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                spw : in Standard_Floating_VecVecs.VecVec;
+                idxfac : in integer32;
+                hdg : out Standard_Integer_VecVecs.VecVec;
+                hcf : out Standard_Complex_Vectors.Vector;
+                htp : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Given a Laurent polynomial and a power series,
+  --   makes a homotopy polynomial that has the power series as a factor.
+
+  -- REQUIRED :
+  --   The size of the vectors hdg, hcf, and htp is the product
+  --   of the number of monomials and two plus the number of terms 
+  --   in the series.
+
+  -- ON ENTRY :
+  --   pdg      exponents of the monomials in the system;
+  --   pcf      coefficients of the system;
+  --   ptp      leading powers of the series coefficients of the system;
+  --   scf      coefficients of the power series solution;
+  --   spw      real powers of the series solution;
+  --   idxfac   index i of the variable used for the factor x(i) - series;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   hdg      exponents of the monomials in the homotopy;
+  --   hcf      coefficients of the homotopy;
+  --   htp      leading powers of the series coefficients of the homotopy.
+
   procedure Random_Homotopy
               ( pdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
                 pcf : in Standard_Complex_VecVecs.VecVec;
@@ -66,7 +101,8 @@ package Random_Laurent_Homotopy is
                 spw : in Standard_Floating_VecVecs.VecVec;
                 hdg : out Standard_Integer_VecVecs.Array_of_VecVecs;
                 hcf : out Standard_Complex_VecVecs.VecVec;
-                htp : out Standard_Floating_VecVecs.VecVec );
+                htp : out Standard_Floating_VecVecs.VecVec;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Given a Laurent polynomial system and a power series,
@@ -81,12 +117,21 @@ package Random_Laurent_Homotopy is
   --   pcf      coefficients of the system;
   --   ptp      leading powers of the series coefficients of the system;
   --   scf      coefficients of the power series solution;
-  --   spw      real powers of the series solution.
+  --   spw      real powers of the series solution;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   hdg      exponents of the monomials in the homotopy;
   --   hcf      coefficients of the homotopy;
   --   htp      leading powers of the series coefficients of the homotopy.
+
+  procedure Scale_Homotopy_Powers
+              ( hct : in out Standard_Floating_Vectors.Vector );
+  procedure Scale_Homotopy_Powers
+              ( hct : in Standard_Floating_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Subtracts the minimum power from all other powers in hct.
 
   function Evaluate_Homotopy
              ( deg : Standard_Integer_VecVecs.Array_of_VecVecs;

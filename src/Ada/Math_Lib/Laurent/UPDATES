@@ -1,3 +1,6 @@
+Sat 27 Dec 2025 : extended random_laurent_homotopy with code taken from
+  test_newton_puiseux, extended test_ordered_evaluations.adb.
+
 Fri 26 Dec 2025 : in test_newton_puiseux, isolated the computation of
   the leading terms in a separate procedure and moved functions to
   double_real_powered_series.  Update double_ordered_evaluations to

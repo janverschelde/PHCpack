@@ -1,4 +1,5 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
@@ -65,6 +66,56 @@ package body Random_Laurent_Homotopy is
     end loop;
   end Random_Laurent_System;
 
+  procedure Random_Homotopy_Polynomial
+              ( pdg : in Standard_Integer_VecVecs.VecVec;
+                pcf : in Standard_Complex_Vectors.Vector;
+                ptp : in Standard_Floating_Vectors.Vector;
+                scf : in Standard_Complex_VecVecs.VecVec;
+                spw : in Standard_Floating_VecVecs.VecVec;
+                idxfac : in integer32;
+                hdg : out Standard_Integer_VecVecs.VecVec;
+                hcf : out Standard_Complex_Vectors.Vector;
+                htp : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    dim : constant integer32 := scf'last;
+    nbt : constant integer32
+        := spw(idxfac)'last;  -- number of powers in the series
+    deg : Standard_Integer_Vectors.Vector(1..dim);
+    idx : integer32 := 0;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Random_Laurent_Homotopy.");
+      put_line("random_homotopy_polynomial ...");
+    end if;
+    for j in pdg'range loop -- consider j-th monomial
+      if vrblvl > 0
+       then put("processing monomial "); put(j,1); put_line(" ...");
+      end if;
+      deg := pdg(j).all;
+      deg(idxfac) := deg(idxfac) + 1; -- multiply by x(i)
+      idx := idx + 1;
+      hdg(idx) := new Standard_Integer_Vectors.Vector'(deg);
+      hcf(idx) := pcf(j);
+      htp(idx) := ptp(j);
+      deg(idxfac) := deg(idxfac) - 1; -- multiply by series
+      idx := idx + 1;
+      hdg(idx) := new Standard_Integer_Vectors.Vector'(deg);
+      hcf(idx) := -scf(idxfac)(0)*pcf(j); -- constant of series
+      htp(idx) := ptp(j);
+      for k in 1..nbt loop -- run over all terms of series
+        idx := idx + 1;
+        hdg(idx) := new Standard_Integer_Vectors.Vector'(deg);
+        hcf(idx) := -scf(idxfac)(k)*pcf(j); -- k-th term of series
+        htp(idx) := spw(idxfac)(k) + ptp(j);
+      end loop;
+      if vrblvl > 0 
+       then put("idx : "); put(idx,1); new_line;
+      end if;
+    end loop;
+  end Random_Homotopy_Polynomial;
+
   procedure Random_Homotopy
               ( pdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
                 pcf : in Standard_Complex_VecVecs.VecVec;
@@ -73,50 +124,62 @@ package body Random_Laurent_Homotopy is
                 spw : in Standard_Floating_VecVecs.VecVec;
                 hdg : out Standard_Integer_VecVecs.Array_of_VecVecs;
                 hcf : out Standard_Complex_VecVecs.VecVec;
-                htp : out Standard_Floating_VecVecs.VecVec ) is
+                htp : out Standard_Floating_VecVecs.VecVec;
+                vrblvl : in integer32 := 0 ) is
 
-    dim : constant integer32 := pdg'last;
-    nbt,nbm,size,idx : integer32;
+    nbt,nbm,size : integer32;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in Random_Laurent_Homotopy.random_homotopy ...");
+    end if;
     for i in pdg'range loop
       nbt := spw(i)'last;  -- number of powers in i-th series
       nbm := pdg(i)'last;  -- number of monomials in i-th polynomial
       size := (nbt+2)*nbm; -- size of i-th homotopy polynomial
+      if vrblvl > 0 then
+        put("nbt : "); put(nbt,1);
+        put(", nbm : "); put(nbm,1); new_line;
+        put("polynomial "); put(i,1);
+        put(" has size "); put(size,1); new_line;
+      end if;
       declare
         hdi : Standard_Integer_VecVecs.VecVec(1..size);
         hci : Standard_Complex_Vectors.Vector(1..size);
         hti : Standard_Floating_Vectors.Vector(1..size);
       begin
-        idx := 0;
-        for j in pdg(i)'range loop -- consider j-th monomial
-          declare
-            deg : Standard_Integer_Vectors.Vector(1..dim) := pdg(i)(j).all;
-          begin
-            deg(i) := deg(i) + 1; -- multiply by x(i)
-            idx := idx + 1;
-            hdi(idx) := new Standard_Integer_Vectors.Vector'(deg);
-            hci(idx) := pcf(i)(j);
-            hti(idx) := ptp(i)(j);
-            deg(i) := deg(i) - 1; -- multiply by series
-            idx := idx + 1;
-            hdi(idx) := new Standard_Integer_Vectors.Vector'(deg);
-            hci(idx) := -scf(i)(0)*pcf(i)(j); -- constant of series
-            hti(idx) := ptp(i)(j);
-            for k in 1..nbt loop -- run over all terms of series
-              idx := idx + 1;
-              hdi(idx) := new Standard_Integer_Vectors.Vector'(deg);
-              hci(idx) := -scf(i)(k)*pcf(i)(j); -- k-th term of series
-              hti(idx) := spw(i)(k) + ptp(i)(j);
-            end loop;
-          end;
-        end loop;
+        Random_Homotopy_Polynomial
+          (pdg(i).all,pcf(i).all,ptp(i).all,scf,spw,i,hdi,hci,hti,vrblvl-1);
         hdg(i) := new Standard_Integer_VecVecs.VecVec'(hdi);
         hcf(i) := new Standard_Complex_Vectors.Vector'(hci);
         htp(i) := new Standard_Floating_Vectors.Vector'(hti);
       end;
     end loop;
   end Random_Homotopy;
+
+  procedure Scale_Homotopy_Powers
+              ( hct : in out Standard_Floating_Vectors.Vector ) is
+
+    minpwr : double_float := hct(hct'first);
+
+  begin
+    for j in hct'first+1..hct'last loop
+      if hct(j) < minpwr
+       then minpwr := hct(j);
+      end if;
+    end loop;
+    for j in hct'range loop
+       hct(j) := hct(j) - minpwr;
+    end loop;
+  end Scale_Homotopy_Powers;
+
+  procedure Scale_Homotopy_Powers
+              ( hct : in Standard_Floating_VecVecs.VecVec ) is
+  begin
+    for i in hct'range loop
+      Scale_Homotopy_Powers(hct(i).all);
+    end loop;
+  end Scale_Homotopy_Powers;
 
   function Evaluate_Monomial
              ( deg : Standard_Integer_Vectors.Vector;

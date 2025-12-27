@@ -402,27 +402,6 @@ package body Test_Newton_Puiseux is
     end if;
   end Run_Newton_Step;
 
-  procedure Scale_Homotopy_Powers
-              ( hct : in Standard_Floating_VecVecs.VecVec ) is
-
-    powers : Standard_Floating_Vectors.Link_to_Vector;
-    minpwr : double_float;
-
-  begin
-    for i in hct'range loop
-      powers := hct(i);
-      minpwr := powers(powers'first);
-      for j in powers'first+1..powers'last loop
-        if powers(j) < minpwr
-         then minpwr := powers(j);
-        end if;
-      end loop;
-      for j in powers'range loop
-        powers(j) := powers(j) - minpwr;
-      end loop;
-    end loop;
-  end Scale_Homotopy_Powers;
-
   procedure Define_Homotopy
               ( dim : in integer32;
                 nbm,nbt : in Standard_Integer_Vectors.Vector;
@@ -461,8 +440,8 @@ package body Test_Newton_Puiseux is
         end loop;
       end loop;
     end if;
-    Random_Laurent_Homotopy.Random_Homotopy(pdg,pcf,pct,cff,pwr,hdg,hcf,hct);
-    Scale_Homotopy_Powers(hct);
+    Random_Laurent_Homotopy.Random_Homotopy(pdg,pcf,pct,cff,pwr,hdg,hcf,hct,1);
+    Random_Laurent_Homotopy.Scale_Homotopy_Powers(hct);
     if vrblvl > 0 then
       for i in 1..dim loop
         put("-> coefficients and degrees of homotopy ");

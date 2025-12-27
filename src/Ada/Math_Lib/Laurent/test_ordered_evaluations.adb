@@ -28,8 +28,10 @@ package body Test_Ordered_Evaluations is
         := Standard_Random_Vectors.Random_Vector(1,nbr);
     pct : constant Standard_Floating_Vectors.Vector(1..nbr)
         := Double_Real_Powered_Series.Random_Leading_Powers(nbr);
-    ycf : Standard_Complex_Vectors.Vector(1..(dim+1)*nbr);
-    ydg : Standard_Floating_Vectors.Vector(1..(dim+1)*nbr);
+    size : constant integer32 := (ord+2)*nbr;
+    hdg : Standard_Integer_VecVecs.VecVec(1..size);
+    hcf : Standard_Complex_Vectors.Vector(1..size);
+    hct : Standard_Floating_Vectors.Vector(1..size);
 
     use Double_Ordered_Evaluations;
 
@@ -48,11 +50,48 @@ package body Test_Ordered_Evaluations is
       put(" t^"); put(pct(i));
       put("  "); put(pdg(i)); new_line;
     end loop;
-    First_Derivative_First_Order(pcf,pct,pdg,cff,pwr,ycf,ydg,1);
-    put_line("the first order evaluation :");
-    for i in ycf'range loop
-       put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+    Random_Laurent_Homotopy.Random_Homotopy_Polynomial
+      (pdg,pcf,pct,cff,pwr,1,hdg,hcf,hct);
+    Random_Laurent_Homotopy.Scale_Homotopy_Powers(hct);
+    put_line("the homotopy polynomial :");
+    for i in hcf'range loop
+      put(hcf(i)); 
+      put(" t^"); put(hct(i));
+      put("  "); put(hdg(i)); new_line;
     end loop;
+    declare
+      ycf : Standard_Complex_Vectors.Vector(1..(dim+1)*nbr);
+      ydg : Standard_Floating_Vectors.Vector(1..(dim+1)*nbr);
+    begin
+      First_Derivative_First_Order(pcf,pct,pdg,cff,pwr,ycf,ydg,1);
+      put_line("the first derivative first order evaluation :");
+      for i in ycf'range loop
+        put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+      end loop;
+    end;
+    declare
+      size : constant integer32 := 1 + dim + dim*(dim+1)/2;
+      ycf : Standard_Complex_Vectors.Vector(1..size*nbr);
+      ydg : Standard_Floating_Vectors.Vector(1..size*nbr);
+    begin
+      Second_Derivative_First_Order(pcf,pct,pdg,cff,pwr,ycf,ydg,1);
+      put_line("the second derivative first order evaluation :");
+      for i in ycf'range loop
+        put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+      end loop;
+    end;
+    declare
+      size : constant integer32
+           := 1 + dim + dim*(dim+1)/2 + dim + 3*dim*(dim-1)/2;
+      ycf : Standard_Complex_Vectors.Vector(1..size*nbr);
+      ydg : Standard_Floating_Vectors.Vector(1..size*nbr);
+    begin
+      Third_Derivative_First_Order(pcf,pct,pdg,cff,pwr,ycf,ydg,1);
+      put_line("the third derivative first order evaluation :");
+      for i in ycf'range loop
+        put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+      end loop;
+    end;
   end Test;
 
   procedure Main is

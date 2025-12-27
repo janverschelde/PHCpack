@@ -195,12 +195,6 @@ package Test_Newton_Puiseux is
   --   tol      tolerance to decide if a number is zero;
   --   vrblvl   is the verbose level.
 
-  procedure Scale_Homotopy_Powers
-              ( hct : in Standard_Floating_VecVecs.VecVec );
-
-  -- DESCRIPTION :
-  --   Subtracts the minimum power from all other powers in hct.
-
   procedure Define_Homotopy
               ( dim : in integer32;
                 nbm,nbt : in Standard_Integer_Vectors.Vector;
