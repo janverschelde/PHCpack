@@ -1,3 +1,6 @@
+Sun 28 Dec 2025 : applied indexed derivatives in double_ordered_evaluations,
+  tested in test_ordered_evaluations.adb.
+
 Sat 27 Dec 2025 : extended random_laurent_homotopy with code taken from
   test_newton_puiseux, extended test_ordered_evaluations.adb.
   Improved double_ordered_evaluations and defined test setup in

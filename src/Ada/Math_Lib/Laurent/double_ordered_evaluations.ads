@@ -272,6 +272,73 @@ package Double_Ordered_Evaluations is
   --   ycf      coefficients of the evaluated series, up to second order;
   --   ydg      corresponding exponents of the evaluated series.
 
+-- INDEXED DERIVATIVES ON ONE POLYNOMIAL :
+
+  procedure Fixed_Derivative_First_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cf0 : in Standard_Complex_Vectors.Vector;
+                cf1 : in Standard_Complex_Vectors.Vector;
+                pw1 : in Standard_Floating_Vectors.Vector;
+                difsum : in integer32; idxnxt : in out integer32;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Updates (ycf, ydg) with all first order evaluations
+  --   using indexed derivative with fixed sum difsum.
+
+  -- ON ENTRY :
+  --   pcf      coefficients of a Laurent polynomial;
+  --   pct      powers of t of the coefficients;
+  --   pdg      supports of a Laurent polynomial;
+  --   cf0      constant coefficients of a power series;
+  --   cf1      coefficients corresponding to pw1;
+  --   pw1      leading exponents in the power series;
+  --   difsum   sum of all derivative indices;
+  --   idxnxt   next index in (ycf, ydg) to be updated;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   idxnxt   next index in (ycf, ydg) to be updated;
+  --   ycf      coefficients of the evaluated series, up to first order;
+  --   ydg      corresponding exponents of the evaluated series.
+
+  procedure First_Order_Evaluation
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cf0 : in Standard_Complex_Vectors.Vector;
+                cf1 : in Standard_Complex_Vectors.Vector;
+                pw1 : in Standard_Floating_Vectors.Vector;
+                difmax : in integer32;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Evaluates a Laurent polynomial at a series truncated at first order,
+  --   using indexed derivatives sum up to difmax.
+
+  -- REQUIRED :
+  --   ycf and ydg have wide enough ranges.
+
+  -- ON ENTRY :
+  --   pcf      coefficients of a Laurent polynomial;
+  --   pct      powers of t of the coefficients;
+  --   pdg      supports of a Laurent polynomial;
+  --   cf0      constant coefficients of a power series;
+  --   cf1      coefficients corresponding to pw1;
+  --   pw1      leading exponents in the power series;
+  --   difmax   maximum sum of all derivative indices;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   ycf      coefficients of the evaluated series, up to first order;
+  --   ydg      corresponding exponents of the evaluated series.
+
 -- ON A POLYNOMIAL HOMOTOPY :
 
   procedure First_Derivative_First_Order

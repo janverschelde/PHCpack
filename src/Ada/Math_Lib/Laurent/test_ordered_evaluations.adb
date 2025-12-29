@@ -1,6 +1,8 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_IO;      use Standard_Floating_Numbers_IO;
+with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_IO;       use Standard_Complex_Numbers_IO;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_IO;       use Standard_Integer_Vectors_IO;
@@ -33,15 +35,30 @@ package body Test_Ordered_Evaluations is
     dim : constant integer32 := cff'last;
     nbr : constant integer32 := pdg'last;
     size : constant integer32 := Size_Evaluation(dim,1,1,nbr);
-    ycf : Standard_Complex_Vectors.Vector(1..size);
-    ydg : Standard_Floating_Vectors.Vector(1..size);
+    ycf1,ycf2 : Standard_Complex_Vectors.Vector(1..size);
+    ydg1,ydg2 : Standard_Floating_Vectors.Vector(1..size);
+    err,sumerr : double_float;
+    cf0,cf1 : Standard_Complex_Vectors.Vector(1..dim);
+    pw1 : Standard_Floating_Vectors.Vector(1..dim);
 
   begin
-    First_Derivative_First_Order(pcf,pct,pdg,cff,pwr,ycf,ydg,1);
-    put_line("the first derivative first order evaluation :");
-    for i in ycf'range loop
-      put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+    First_Derivative_First_Order(pcf,pct,pdg,cff,pwr,ycf1,ydg1,1);
+    for i in cf0'range loop
+      cf0(i) := cff(i)(cff(i)'first);
+      cf1(i) := cff(i)(cff(i)'first+1);
+      pw1(i) := pwr(i)(pwr(i)'first);
     end loop;
+    First_Order_Evaluation(pcf,pct,pdg,cf0,cf1,pw1,1,ycf2,ydg2,1);
+    put_line("the first derivative first order evaluation :");
+    sumerr := 0.0;
+    for i in ycf1'range loop
+      put(ycf1(i)); put("  t^"); put(ydg1(i)); new_line;
+      put(ycf2(i)); put("  t^"); put(ydg2(i)); new_line;
+      err := AbsVal(ycf1(i) - ycf2(i)) + abs(ydg1(i) - ydg2(i));
+      put("error :"); put(err,3); new_line;
+      sumerr := sumerr + err;
+    end loop;
+    put("sum of errors :"); put(sumerr,3); new_line;
   end Test_First_Derivative_First_Order;
 
   procedure Test_Second_Derivative_First_Order
@@ -61,15 +78,30 @@ package body Test_Ordered_Evaluations is
     dim : constant integer32 := cff'last;
     nbr : constant integer32 := pdg'last;
     size : constant integer32 := Size_Evaluation(dim,2,1,nbr);
-    ycf : Standard_Complex_Vectors.Vector(1..size);
-    ydg : Standard_Floating_Vectors.Vector(1..size);
+    ycf1,ycf2 : Standard_Complex_Vectors.Vector(1..size);
+    ydg1,ydg2 : Standard_Floating_Vectors.Vector(1..size);
+    err,sumerr : double_float;
+    cf0,cf1 : Standard_Complex_Vectors.Vector(1..dim);
+    pw1 : Standard_Floating_Vectors.Vector(1..dim);
 
   begin
-    Second_Derivative_First_Order(pcf,pct,pdg,cff,pwr,ycf,ydg,1);
-    put_line("the second derivative first order evaluation :");
-    for i in ycf'range loop
-      put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+    Second_Derivative_First_Order(pcf,pct,pdg,cff,pwr,ycf1,ydg1,1);
+    for i in cf0'range loop
+      cf0(i) := cff(i)(cff(i)'first);
+      cf1(i) := cff(i)(cff(i)'first+1);
+      pw1(i) := pwr(i)(pwr(i)'first);
     end loop;
+    First_Order_Evaluation(pcf,pct,pdg,cf0,cf1,pw1,2,ycf2,ydg2,1);
+    put_line("the second derivative first order evaluation :");
+    sumerr := 0.0;
+    for i in ycf1'range loop
+      put(ycf1(i)); put("  t^"); put(ydg1(i)); new_line;
+      put(ycf2(i)); put("  t^"); put(ydg2(i)); new_line;
+      err := AbsVal(ycf1(i) - ycf2(i)) + abs(ydg1(i) - ydg2(i));
+      put("error :"); put(err,3); new_line;
+      sumerr := sumerr + err;
+    end loop;
+    put("sum of errors :"); put(sumerr,3); new_line;
   end Test_Second_Derivative_First_Order;
 
   procedure Test_Third_Derivative_First_Order
@@ -89,15 +121,30 @@ package body Test_Ordered_Evaluations is
     dim : constant integer32 := cff'last;
     nbr : constant integer32 := pdg'last;
     size : constant integer32 := Size_Evaluation(dim,3,1,nbr);
-    ycf : Standard_Complex_Vectors.Vector(1..size);
-    ydg : Standard_Floating_Vectors.Vector(1..size);
+    ycf1,ycf2 : Standard_Complex_Vectors.Vector(1..size);
+    ydg1,ydg2 : Standard_Floating_Vectors.Vector(1..size);
+    err,sumerr : double_float;
+    cf0,cf1 : Standard_Complex_Vectors.Vector(1..dim);
+    pw1 : Standard_Floating_Vectors.Vector(1..dim);
 
   begin
-    Third_Derivative_First_Order(pcf,pct,pdg,cff,pwr,ycf,ydg,1);
-    put_line("the third derivative first order evaluation :");
-    for i in ycf'range loop
-      put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+    Third_Derivative_First_Order(pcf,pct,pdg,cff,pwr,ycf1,ydg1,1);
+    for i in cf0'range loop
+      cf0(i) := cff(i)(cff(i)'first);
+      cf1(i) := cff(i)(cff(i)'first+1);
+      pw1(i) := pwr(i)(pwr(i)'first);
     end loop;
+    First_Order_Evaluation(pcf,pct,pdg,cf0,cf1,pw1,3,ycf2,ydg2,1);
+    put_line("the third derivative first order evaluation :");
+    sumerr := 0.0;
+    for i in ycf1'range loop
+      put(ycf1(i)); put("  t^"); put(ydg1(i)); new_line;
+      put(ycf2(i)); put("  t^"); put(ydg2(i)); new_line;
+      err := AbsVal(ycf1(i) - ycf2(i)) + abs(ydg1(i) - ydg2(i));
+      put("error :"); put(err,3); new_line;
+      sumerr := sumerr + err;
+    end loop;
+    put("sum of errors :"); put(sumerr,3); new_line;
   end Test_Third_Derivative_First_Order;
 
   procedure Test ( dim,nbr,ord : in integer32 ) is

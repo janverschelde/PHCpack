@@ -4,6 +4,8 @@ with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_IO;      use Standard_Floating_Numbers_IO;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_IO;       use Standard_Complex_Numbers_IO;
+with Standard_Integer_Vectors;
+with Standard_Integer_Vectors_IO;       use Standard_Integer_Vectors_IO;
 with Double_Real_Powered_Series;
 with Double_Leading_Evaluations;
 
@@ -28,6 +30,8 @@ package body Double_Ordered_Evaluations is
     end if;
     return res;
   end Size_Evaluation;
+
+-- ON ONE POLYNOMIAL :
 
   procedure First_Derivative_First_Order
               ( pcf : in Standard_Complex_Vectors.Vector;
@@ -366,7 +370,7 @@ package body Double_Ordered_Evaluations is
         idx := idx + 1;
         ydg(idx) := pct(i) + 3.0*pw1(j);
         ycf(idx) := pcf(i)*Third_Derivative(pdg(i).all,cf0,j,vrblvl-1);
-        ycf(idx) := ycf(idx)*cf1(j)*cf1(j)/create(6.0); -- Taylor series
+        ycf(idx) := ycf(idx)*cf1(j)*cf1(j)*cf1(j)/create(6.0); -- Taylor series
       end loop;
       for j in cf0'range loop -- all semi mixed third derivative terms
         for k in j+1..cf0'last loop
@@ -374,12 +378,12 @@ package body Double_Ordered_Evaluations is
           ydg(idx) := pct(i) + 2.0*pw1(j) + pw1(k);
           ycf(idx) := pcf(i)*Third_Semi_Mixed_Derivative
                                (pdg(i).all,cf0,j,k,vrblvl-1);
-          ycf(idx) := ycf(idx)*cf1(j)*cf1(k)/create(2.0);
+          ycf(idx) := ycf(idx)*cf1(j)*cf1(j)*cf1(k)/create(2.0);
           idx := idx + 1; -- flip role of j and k
           ydg(idx) := pct(i) + 2.0*pw1(k) + pw1(j);
           ycf(idx) := pcf(i)*Third_Semi_Mixed_Derivative
                                (pdg(i).all,cf0,k,j,vrblvl-1);
-          ycf(idx) := ycf(idx)*cf1(k)*cf1(j)/create(2.0);
+          ycf(idx) := ycf(idx)*cf1(k)*cf1(k)*cf1(j)/create(2.0);
         end loop;
       end loop;
       for j in cf0'range loop -- all fully mixed third derivative terms
@@ -564,6 +568,122 @@ package body Double_Ordered_Evaluations is
     Double_Real_Powered_Series.Sort(ydg,ycf); 
     Double_Real_Powered_Series.Normalize(ycf,ydg);
   end Third_Derivative_Second_Order;
+
+-- INDEXED DERIVATIVES ON ONE POLYNOMIAL :
+
+  procedure Fixed_Derivative_First_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cf0 : in Standard_Complex_Vectors.Vector;
+                cf1 : in Standard_Complex_Vectors.Vector;
+                pw1 : in Standard_Floating_Vectors.Vector;
+                difsum : in integer32; idxnxt : in out integer32;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    dim : constant integer32 := cf0'last;
+    lstidx : integer32; -- last index
+    cnt : integer32 := 0;
+    deg : Standard_Integer_Vectors.Vector(1..dim);
+    pdgidx : integer32; -- index of the monomial
+
+    procedure Next ( difidx : in Standard_Integer_Vectors.Vector;
+                     continue : out boolean ) is
+
+      val : Complex_Number;
+
+    begin
+      cnt := cnt + 1;
+      if vrblvl > 0 then
+        put(cnt,3); put(" :"); put(difidx); new_line;
+      end if;
+      deg := pdg(pdgidx).all;
+      val := Double_Leading_Evaluations.Indexed_Derivative(deg,cf0,difidx);
+      val := pcf(pdgidx)*val;
+      for k in difidx'range loop   -- multiply with cf1(k)**difidx(k)
+        for j in 1..difidx(k) loop
+          val := val*cf1(k);
+          val := val/double_float(j); -- divide by difidx(k)!
+        end loop;
+      end loop;
+      ycf(idxnxt) := val;
+      ydg(idxnxt) := pct(pdgidx);
+      for k in difidx'range loop
+        if difidx(k) > 0 
+         then ydg(idxnxt) := ydg(idxnxt) + double_float(difidx(k))*pw1(k);
+        end if;
+      end loop;
+      idxnxt := idxnxt + 1;
+      continue := true;
+    end Next;
+
+    procedure Differentiation_Indices is
+      new Double_Leading_Evaluations.Enumerate_Indices(Next);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Ordered_Evaluations.");
+      put_line("fixed_derivative_first_order ...");
+      put("difsum : "); put(difsum,1);
+      put(", idxnxt : "); put(idxnxt,1); new_line;
+    end if;
+    pdgidx := pdg'first-1;
+    while pdgidx < pdg'last loop
+      pdgidx := pdgidx + 1;
+      Differentiation_Indices(dim,difsum);
+    end loop;
+    if vrblvl > 0
+     then put("idxnxt : "); put(idxnxt,1); new_line;
+    end if;
+    lstidx := idxnxt-1;
+    Double_Real_Powered_Series.Sort(ydg(ydg'first..lstidx),
+                                    ycf(ycf'first..lstidx)); 
+    Double_Real_Powered_Series.Normalize(ycf(ycf'first..lstidx),
+                                         ydg(ydg'first..lstidx));
+  end Fixed_Derivative_First_Order;
+
+  procedure First_Order_Evaluation
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cf0 : in Standard_Complex_Vectors.Vector;
+                cf1 : in Standard_Complex_Vectors.Vector;
+                pw1 : in Standard_Floating_Vectors.Vector;
+                difmax : in integer32;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    idx : integer32 := ycf'first-1;
+
+    use Double_Leading_Evaluations;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Ordered_Evaluations.");
+      put_line("fixed_derivative_first_order ...");
+      put("difmax : "); put(difmax,1); new_line;
+    end if;
+    for i in pcf'range loop -- first compute all zero-th order terms
+      idx := idx + 1;
+      ydg(idx) := pct(i);
+      ycf(idx) := pcf(i)*Leading_Coefficient(pdg(i).all,cf0,0,vrblvl-1);
+    end loop;
+    Double_Real_Powered_Series.Sort(ydg(ydg'first..idx),
+                                    ycf(ycf'first..idx)); 
+    Double_Real_Powered_Series.Normalize(ycf(ycf'first..idx),
+                                         ydg(ydg'first..idx));
+    idx := idx + 1;
+    for difsum in 1..difmax loop
+      Fixed_Derivative_First_Order
+        (pcf,pct,pdg,cf0,cf1,pw1,difsum,idx,ycf,ydg,vrblvl-1);
+    end loop;
+    if vrblvl > 0
+     then put("idx : "); put(idx,1); new_line;
+    end if;
+  end First_Order_Evaluation;
 
 -- ON A POLYNOMIAL HOMOTOPY :
 
