@@ -26,6 +26,76 @@ package body Double_Ordered_Evaluations is
         res := 1 + dim + dim*(dim+1)/2 
                  + dim + dim*(dim-1) + dim*(dim-1)*(dim-2)/6;
         res := res*nbr;
+      elsif ndf = 4 then
+        res := 1 + dim + dim*(dim+1)/2 
+                 + dim + dim*(dim-1) + dim*(dim-1)*(dim-2)/6
+                 + dim + 3*dim*(dim-1)/2 + dim*(dim-1)*(dim-2)/2
+                 + dim*(dim-1)*(dim-2)*(dim-3)/24;
+        res := res*nbr;
+      elsif ndf = 5 then
+        res := 1 + dim + dim*(dim+1)/2 
+                 + dim + dim*(dim-1) + dim*(dim-1)*(dim-2)/6
+                 + dim + 3*dim*(dim-1)/2 + dim*(dim-1)*(dim-2)/2
+                       + dim*(dim-1)*(dim-2)*(dim-3)/24
+                 + dim + 2*dim*(dim-1) + dim*(dim-1)*(dim-2)
+                       + dim*(dim-1)*(dim-2)*(dim-3)/6
+                       + dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)/120;
+        res := res*nbr;
+      elsif ndf = 6 then
+        res := 1 + dim + dim*(dim+1)/2 
+                 + dim + dim*(dim-1) + dim*(dim-1)*(dim-2)/6
+                 + dim + 3*dim*(dim-1)/2 + dim*(dim-1)*(dim-2)/2
+                       + dim*(dim-1)*(dim-2)*(dim-3)/24
+                 + dim + 2*dim*(dim-1) + dim*(dim-1)*(dim-2)
+                       + dim*(dim-1)*(dim-2)*(dim-3)/6
+                       + dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)/120
+                 + dim + 5*dim*(dim-1)/2 + 10*dim*(dim-1)*(dim-2)/6
+                       + 10*dim*(dim-1)*(dim-2)*(dim-3)/24
+                       + 5*dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)/120
+                       + dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)*(dim-5)/720;
+        res := res*nbr;
+      elsif ndf = 7 then
+        res := 1 + dim + dim*(dim+1)/2 
+                 + dim + dim*(dim-1) + dim*(dim-1)*(dim-2)/6
+                 + dim + 3*dim*(dim-1)/2 + dim*(dim-1)*(dim-2)/2
+                       + dim*(dim-1)*(dim-2)*(dim-3)/24
+                 + dim + 2*dim*(dim-1) + dim*(dim-1)*(dim-2)
+                       + dim*(dim-1)*(dim-2)*(dim-3)/6
+                       + dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)/120
+                 + dim + 5*dim*(dim-1)/2 + 10*dim*(dim-1)*(dim-2)/6
+                       + 10*dim*(dim-1)*(dim-2)*(dim-3)/24
+                       + 5*dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)/120
+                       + dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)*(dim-5)/720
+                 + dim + 3*dim*(dim-1) + 15*dim*(dim-1)*(dim-2)/6
+                       + 20*dim*(dim-1)*(dim-2)*(dim-3)/24
+                       + 15*dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)/120
+                       + 6*dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)*(dim-5)/720
+                 + dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)*(dim-5)*(dim-6)/5040;
+        res := res*nbr;
+      elsif ndf = 8 then
+        res := 1 + dim + dim*(dim+1)/2 
+                 + dim + dim*(dim-1) + dim*(dim-1)*(dim-2)/6
+                 + dim + 3*dim*(dim-1)/2 + dim*(dim-1)*(dim-2)/2
+                       + dim*(dim-1)*(dim-2)*(dim-3)/24
+                 + dim + 2*dim*(dim-1) + dim*(dim-1)*(dim-2)
+                       + dim*(dim-1)*(dim-2)*(dim-3)/6
+                       + dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)/120
+                 + dim + 5*dim*(dim-1)/2 + 10*dim*(dim-1)*(dim-2)/6
+                       + 10*dim*(dim-1)*(dim-2)*(dim-3)/24
+                       + 5*dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)/120
+                       + dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)*(dim-5)/720
+                 + dim + 3*dim*(dim-1) + 15*dim*(dim-1)*(dim-2)/6
+                       + 20*dim*(dim-1)*(dim-2)*(dim-3)/24
+                       + 15*dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)/120
+                       + 6*dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)*(dim-5)/720
+                 + dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)*(dim-5)*(dim-6)/5040
+          + dim + 7*dim*(dim-1)/2 + 21*dim*(dim-1)*(dim-2)/6
+                + 35*dim*(dim-1)*(dim-2)*(dim-3)/24
+                + 35*dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)/120
+                + 21*dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)*(dim-5)/720
+          + 7*dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)*(dim-5)*(dim-6)/5040
+          + dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)*(dim-5)*(dim-6)*(dim-7)/40320;
+        res := res*nbr;
       end if;
     end if;
     return res;
@@ -663,7 +733,7 @@ package body Double_Ordered_Evaluations is
   begin
     if vrblvl > 0 then
       put("-> in Double_Ordered_Evaluations.");
-      put_line("fixed_derivative_first_order ...");
+      put_line("first_order_evaluation 1 ...");
       put("difmax : "); put(difmax,1); new_line;
     end if;
     for i in pcf'range loop -- first compute all zero-th order terms
@@ -685,7 +755,7 @@ package body Double_Ordered_Evaluations is
     end if;
   end First_Order_Evaluation;
 
--- ON A POLYNOMIAL HOMOTOPY :
+-- ON A LAURENT HOMOTOPY :
 
   procedure First_Derivative_First_Order
               ( hcf : in Standard_Complex_VecVecs.VecVec;
@@ -963,7 +1033,7 @@ package body Double_Ordered_Evaluations is
         Third_Derivative_First_Order
           (hcf(i).all,hct(i).all,hdg(i).all,cf0,cf1,pw1,ycf,ydg,vrblvl-1);
         if vrblvl > 0 then
-          put("the third order evaluation of polynomial ");
+          put("third derivative first order evaluation of polynomial ");
           put(i,1); put_line(" :");
           for i in ycf'range loop
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
@@ -1004,7 +1074,7 @@ package body Double_Ordered_Evaluations is
         Third_Derivative_First_Order
           (hcf(i).all,hct(i).all,hdg(i).all,cff,pwr,ycf,ydg,vrblvl-1);
         if vrblvl > 0 then
-          put("the third order evaluation of the polynomial ");
+          put("third derivative first order evaluation of the polynomial ");
           put(i,1); put_line(" :");
           for i in ycf'range loop
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
@@ -1016,5 +1086,52 @@ package body Double_Ordered_Evaluations is
       end;
     end loop;
   end Third_Derivative_First_Order;
+
+-- INDEXED DERIVATIVES ON A LAURENT HOMOTOPY :
+
+  procedure First_Order_Evaluation
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cf0 : in Standard_Complex_Vectors.Vector;
+                cf1 : in Standard_Complex_Vectors.Vector;
+                pw1 : in Standard_Floating_Vectors.Vector;
+                difmax : in integer32;
+                cf2 : out Standard_Complex_Vectors.Vector;
+                pw2 : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    dim : constant integer32 := hcf'last;
+    nbr,size,idx : integer32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Ordered_Evaluations.");
+      put_line("first_order_evaluation 2 ...");
+    end if;
+    for i in hcf'range loop
+      nbr := hcf(i)'last;
+      size := Size_Evaluation(dim,difmax,1,nbr);
+      declare
+        ycf : Standard_Complex_Vectors.Vector(1..size);
+        ydg : Standard_Floating_Vectors.Vector(1..size);
+      begin
+        First_Order_Evaluation
+          (hcf(i).all,hct(i).all,hdg(i).all,cf0,cf1,pw1,difmax,
+           ycf,ydg,vrblvl-1);
+        if vrblvl > 0 then
+          put("derivative "); put(difmax,1);
+          put("first order evaluation of polynomial ");
+          put(i,1); put_line(" :");
+          for i in ycf'range loop
+            put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+          end loop;
+        end if;
+        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        pw2(i) := ydg(idx);
+        cf2(i) := ycf(idx);
+      end;
+    end loop;
+  end First_Order_Evaluation;
 
 end Double_Ordered_Evaluations;

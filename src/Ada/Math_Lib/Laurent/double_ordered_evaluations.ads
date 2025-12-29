@@ -19,7 +19,7 @@ package Double_Ordered_Evaluations is
   --   for all derivatives up to ndf, for ord as the number of terms
   --   (or order) of the series, and for nbr monomials.
 
--- ON ONE POLYNOMIAL :
+-- ON ONE LAURENT POLYNOMIAL :
 
   procedure First_Derivative_First_Order
               ( pcf : in Standard_Complex_Vectors.Vector;
@@ -272,7 +272,7 @@ package Double_Ordered_Evaluations is
   --   ycf      coefficients of the evaluated series, up to second order;
   --   ydg      corresponding exponents of the evaluated series.
 
--- INDEXED DERIVATIVES ON ONE POLYNOMIAL :
+-- INDEXED DERIVATIVES ON ONE LAURENT POLYNOMIAL :
 
   procedure Fixed_Derivative_First_Order
               ( pcf : in Standard_Complex_Vectors.Vector;
@@ -339,7 +339,7 @@ package Double_Ordered_Evaluations is
   --   ycf      coefficients of the evaluated series, up to first order;
   --   ydg      corresponding exponents of the evaluated series.
 
--- ON A POLYNOMIAL HOMOTOPY :
+-- ON A LAURENT HOMOTOPY :
 
   procedure First_Derivative_First_Order
               ( hcf : in Standard_Complex_VecVecs.VecVec;
@@ -565,6 +565,40 @@ package Double_Ordered_Evaluations is
   --   hct      powers of t in the homotopy for each monomial;
   --   cff      coefficients of the power series solution;
   --   pwr      exponents of the power series solution;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   psm      smallest positive powers in the evaluated series;
+  --   csm      coefficients corresponding to the smallest positive powers.
+
+-- INDEXED DERIVATIVES ON A LAURENT HOMOTOPY :
+
+  procedure First_Order_Evaluation
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cf0 : in Standard_Complex_Vectors.Vector;
+                cf1 : in Standard_Complex_Vectors.Vector;
+                pw1 : in Standard_Floating_Vectors.Vector;
+                difmax : in integer32;
+                cf2 : out Standard_Complex_Vectors.Vector;
+                pw2 : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Computes a Taylor series expansion of the Laurent homotopy
+  --   using the constant coefficients of the power series solution,
+  --   truncated after the first order, using up to some derivatives.
+  --   Computes the smallest positive exponents of this evaluation.
+
+  -- ON ENTRY :
+  --   hcf      coefficients of the polynomials in the homotopy;
+  --   hdg      supports of the Laurent homotopy;
+  --   hct      powers of t in the homotopy for each monomial;
+  --   cf0      constant coefficients of a power series;
+  --   cf1      coefficients corresponding to pw1;
+  --   pw1      leading exponents in the power series;
+  --   difmax   maximum sum of all derivative indices;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
