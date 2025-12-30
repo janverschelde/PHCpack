@@ -336,6 +336,31 @@ package body Test_Newton_Puiseux is
     end loop;
   end Diagonal_Second_Terms;
 
+  procedure Diagonal_Third_Terms
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cf0 : in Standard_Complex_Vectors.Vector;
+                cf1 : in Standard_Complex_Vectors.Vector;
+                cf2 : in Standard_Complex_Vectors.Vector;
+                pw1 : in Standard_Floating_Vectors.Vector;
+                pw2 : in Standard_Floating_Vectors.Vector;
+                cA : in Standard_Complex_Matrices.Matrix;
+                cf3 : out Standard_Complex_Vectors.Vector;
+                pw3 : out Standard_Floating_Vectors.Vector;
+                tol : in double_float := 1.0E-12;
+                vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in Test_Newton_Puiseux.diagonal_third_terms ...");
+    end if;
+    Double_Ordered_Evaluations.First_Derivative_Second_Order
+      (hcf,hct,hdg,cf0,cf1,cf2,pw1,pw2,cf3,pw3,vrblvl-1);
+    for i in cf3'range loop -- Jacobian is diagonal for the test example
+      cf3(i) := -cf3(i)/cA(i,i);
+    end loop;
+  end Diagonal_Third_Terms;
+
   procedure Run_Newton_Step
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
@@ -350,8 +375,8 @@ package body Test_Newton_Puiseux is
     cA : Standard_Complex_Matrices.Matrix(hcf'range,hcf'range);
     eA : Standard_Floating_Matrices.Matrix(hcf'range,hcf'range);
     err,sumerr : double_float;
-    psm,pw2 : Standard_Floating_Vectors.Vector(hcf'range);
-    cfp,cf2 : Standard_Complex_Vectors.Vector(hcf'range);
+    psm,pw2,pw3 : Standard_Floating_Vectors.Vector(hcf'range);
+    cfp,cf2,cf3 : Standard_Complex_Vectors.Vector(hcf'range);
     ans : character;
 
   begin
@@ -398,11 +423,30 @@ package body Test_Newton_Puiseux is
       end loop;
       put("error sum :"); put(sumerr,3); new_line;
     end if;
-    put("Continue ? (y/n) "); Communications_with_User.Ask_Yes_or_No(ans);
-    if ans /= 'y'
-     then return;
-    end if;
     if nbr > 2 then
+      put("Continue ? (y/n) "); Communications_with_User.Ask_Yes_or_No(ans);
+      if ans /= 'y'
+       then return;
+      end if;
+      Diagonal_Third_Terms(hcf,hct,hdg,lcf,cfp,cf2,psm,pw2,cA,cf3,pw3,tol,1);
+      put_line("Computing error sum ...");
+      sumerr := 0.0;
+      for i in cff'range loop
+        put("x"); put(i,1); put(" :");
+        put(cff(i)(cff(i)'first+3)); put(" t^"); put(pwr(i)(3)); new_line;
+        put("y"); put(i,1); put(" :");
+        put(cf3(i)); put(" t^"); put(pw3(i)); new_line;
+        err := AbsVal(cf3(i) - cff(i)(cff(i)'first+3));
+        put("error :"); put(err,3); sumerr := sumerr + err;
+        put(" t^");
+        err := abs(pw3(i) - pwr(i)(3)); put(err,3); new_line;
+        sumerr := sumerr + err;
+      end loop;
+      put("error sum :"); put(sumerr,3); new_line;
+      put("Continue ? (y/n) "); Communications_with_User.Ask_Yes_or_No(ans);
+      if ans /= 'y'
+       then return;
+      end if;
      -- Second_Order_Derivatives(hcf,hct,hdg,cff,pwr,vrblvl-1);
     --  put_line("Computing third derivative first order evaluations ...");
     --  Double_Ordered_Evaluations.Third_Derivative_First_Order

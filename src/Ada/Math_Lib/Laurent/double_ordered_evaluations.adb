@@ -97,6 +97,10 @@ package body Double_Ordered_Evaluations is
           + dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)*(dim-5)*(dim-6)*(dim-7)/40320;
         res := res*nbr;
       end if;
+    elsif ord = 2 then
+      if ndf = 1 then -- first derivative second order
+        res := (2*dim+1)*nbr;
+      end if;
     end if;
     return res;
   end Size_Evaluation;
@@ -169,6 +173,53 @@ package body Double_Ordered_Evaluations is
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
+                cf0 : in Standard_Complex_Vectors.Vector;
+                cf1 : in Standard_Complex_Vectors.Vector;
+                cf2 : in Standard_Complex_Vectors.Vector;
+                pw1 : in Standard_Floating_Vectors.Vector;
+                pw2 : in Standard_Floating_Vectors.Vector;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    idx : integer32 := 0;
+    shared : Complex_Number;
+
+    use Double_Leading_Evaluations;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Ordered_Evaluations.");
+      put_line("first_derivative_second_order 0 ...");
+    end if;
+    for i in pcf'range loop -- run over all monomials
+      idx := idx + 1;
+      ydg(idx) := pct(i);     -- first the constant term
+      ycf(idx) := pcf(i)*Leading_Coefficient(pdg(i).all,cf0,0,vrblvl-1);
+      for j in cf0'range loop -- all first order terms
+        idx := idx + 1;
+        ydg(idx) := pct(i) + pw1(j);
+        shared := pcf(i)*Leading_Coefficient(pdg(i).all,cf0,j,vrblvl-1);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf1(j);
+        idx := idx + 1;              -- second order terms
+        ydg(idx) := pct(i) + pw2(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf2(j);
+      end loop;
+    end loop;
+    if vrblvl > 0 then
+      put("idx : "); put(idx,1); new_line;
+      put("ycf'last : "); put(ycf'last,1); new_line;
+    end if;
+    Double_Real_Powered_Series.Sort(ydg,ycf); 
+    Double_Real_Powered_Series.Normalize(ycf,ydg);
+  end First_Derivative_Second_Order;
+
+  procedure First_Derivative_Second_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
                 cff : in Standard_Complex_VecVecs.VecVec;
                 pwr : in Standard_Floating_VecVecs.VecVec;
                 ycf : out Standard_Complex_Vectors.Vector;
@@ -180,10 +231,6 @@ package body Double_Ordered_Evaluations is
     lc2 : Standard_Complex_Vectors.Vector(cff'range);
     pw1 : Standard_Floating_Vectors.Vector(pwr'range);
     pw2 : Standard_Floating_Vectors.Vector(pwr'range);
-    idx : integer32 := 0;
-    shared : Complex_Number;
-
-    use Double_Leading_Evaluations;
 
   begin
     if vrblvl > 0 then
@@ -197,28 +244,8 @@ package body Double_Ordered_Evaluations is
       pw1(i) := pwr(i)(pwr(i)'first);
       pw2(i) := pwr(i)(pwr(i)'first+1);
     end loop;
-    for i in pcf'range loop -- run over all monomials
-      idx := idx + 1;
-      ydg(idx) := pct(i);     -- first the constant term
-      ycf(idx) := pcf(i)*Leading_Coefficient(pdg(i).all,lc0,0,vrblvl-1);
-      for j in cff'range loop -- all first order terms
-        idx := idx + 1;
-        ydg(idx) := pct(i) + pw1(j);
-        shared := pcf(i)*Leading_Coefficient(pdg(i).all,lc0,j,vrblvl-1);
-        ycf(idx) := shared;
-        ycf(idx) := ycf(idx)*lc1(j);
-        idx := idx + 1;              -- second order terms
-        ydg(idx) := pct(i) + pw2(j);
-        ycf(idx) := shared;
-        ycf(idx) := ycf(idx)*lc2(j);
-      end loop;
-    end loop;
-    if vrblvl > 0 then
-      put("idx : "); put(idx,1); new_line;
-      put("ycf'last : "); put(ycf'last,1); new_line;
-    end if;
-    Double_Real_Powered_Series.Sort(ydg,ycf); 
-    Double_Real_Powered_Series.Normalize(ycf,ydg);
+    First_Derivative_Second_Order
+      (pcf,pct,pdg,lc0,lc1,lc2,pw1,pw2,ycf,ydg,vrblvl);
   end First_Derivative_Second_Order;
 
   procedure Second_Derivative_First_Order
@@ -844,14 +871,17 @@ package body Double_Ordered_Evaluations is
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cff : in Standard_Complex_VecVecs.VecVec;
-                pwr : in Standard_Floating_VecVecs.VecVec;
-                psm : out Standard_Floating_Vectors.Vector;
-                csm : out Standard_Complex_Vectors.Vector;
+                cf0 : in Standard_Complex_Vectors.Vector;
+                cf1 : in Standard_Complex_Vectors.Vector;
+                cf2 : in Standard_Complex_Vectors.Vector;
+                pw1 : in Standard_Floating_Vectors.Vector;
+                pw2 : in Standard_Floating_Vectors.Vector;
+                cf3 : out Standard_Complex_Vectors.Vector;
+                pw3 : out Standard_Floating_Vectors.Vector;
                 vrblvl : in integer32 := 0 ) is
 
     dim : constant integer32 := hcf'last;
-    nbr,idx : integer32;
+    nbr,idx,size : integer32;
 
   begin
     if vrblvl > 0 then
@@ -860,17 +890,60 @@ package body Double_Ordered_Evaluations is
     end if;
     for i in hcf'range loop
       nbr := hcf(i)'last;
+      size := Size_Evaluation(dim,1,2,nbr);
       declare
-        ycf : Standard_Complex_Vectors.Vector(1..(2*dim+1)*nbr);
-        ydg : Standard_Floating_Vectors.Vector(1..(2*dim+1)*nbr);
+        ycf : Standard_Complex_Vectors.Vector(1..size);
+        ydg : Standard_Floating_Vectors.Vector(1..size);
+      begin
+        First_Derivative_Second_Order
+          (hcf(i).all,hct(i).all,hdg(i).all,cf0,cf1,cf2,pw1,pw2,
+           ycf,ydg,vrblvl-1);
+        if vrblvl > 0 then
+          put("the first derivative second order evaluation of polynomial ");
+          put(i,1); put_line(" :");
+          for i in ycf'range loop
+            put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+          end loop;
+        end if;
+        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        pw3(i) := ydg(idx);
+        cf3(i) := ycf(idx);
+      end;
+    end loop;
+  end First_Derivative_Second_Order;
+
+  procedure First_Derivative_Second_Order
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec;
+                psm : out Standard_Floating_Vectors.Vector;
+                csm : out Standard_Complex_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    dim : constant integer32 := hcf'last;
+    nbr,idx,size : integer32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Ordered_Evaluations.");
+      put_line("first_derivative_second_order 3 ...");
+    end if;
+    for i in hcf'range loop
+      nbr := hcf(i)'last;
+      size := Size_Evaluation(dim,1,2,nbr);
+      declare
+        ycf : Standard_Complex_Vectors.Vector(1..size);
+        ydg : Standard_Floating_Vectors.Vector(1..size);
       begin
         First_Derivative_Second_Order
           (hcf(i).all,hct(i).all,hdg(i).all,cff,pwr,ycf,ydg,vrblvl-1);
         if vrblvl > 0 then
-          put("the first order evaluation of polynomial ");
+          put("the first derivative second order evaluation of polynomial ");
           put(i,1); put_line(" :");
           for i in ycf'range loop
-             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+            put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
           end loop;
         end if;
         idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
@@ -909,7 +982,7 @@ package body Double_Ordered_Evaluations is
         Second_Derivative_First_Order
           (hcf(i).all,hct(i).all,hdg(i).all,cf0,cf1,pw1,ycf,ydg,vrblvl-1);
         if vrblvl > 0 then
-          put("the second order evaluation of polynomial ");
+          put("the second derivative first order evaluation of polynomial ");
           put(i,1); put_line(" :");
           for i in ycf'range loop
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
@@ -950,7 +1023,7 @@ package body Double_Ordered_Evaluations is
         Second_Derivative_First_Order
           (hcf(i).all,hct(i).all,hdg(i).all,cff,pwr,ycf,ydg,vrblvl-1);
         if vrblvl > 0 then
-          put("the second order evaluation of polynomial ");
+          put("the second derivative first order evaluation of polynomial ");
           put(i,1); put_line(" :");
           for i in ycf'range loop
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
@@ -991,7 +1064,7 @@ package body Double_Ordered_Evaluations is
         Second_Derivative_Second_Order
           (hcf(i).all,hct(i).all,hdg(i).all,cff,pwr,ycf,ydg,vrblvl-1);
         if vrblvl > 0 then
-          put("the second order evaluation of polynomial ");
+          put("the second derivative second order evaluation of polynomial ");
           put(i,1); put_line(" :");
           for i in ycf'range loop
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
