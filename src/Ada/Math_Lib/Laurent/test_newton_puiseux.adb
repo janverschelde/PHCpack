@@ -350,15 +350,75 @@ package body Test_Newton_Puiseux is
                 pw3 : out Standard_Floating_Vectors.Vector;
                 tol : in double_float := 1.0E-12;
                 vrblvl : in integer32 := 0 ) is
+
+    cf3a : Standard_Complex_Vectors.Vector(cf1'range);
+    pw3a : Standard_Floating_Vectors.Vector(pw1'range);
+    dif,sumdif : double_float;
+
   begin
     if vrblvl > 0
      then put_line("-> in Test_Newton_Puiseux.diagonal_third_terms ...");
     end if;
     Double_Ordered_Evaluations.First_Derivative_Second_Order
+      (hcf,hct,hdg,cf0,cf1,cf2,pw1,pw2,cf3a,pw3a,vrblvl-1);
+    for i in cf3a'range loop -- Jacobian is diagonal for the test example
+      cf3a(i) := -cf3a(i)/cA(i,i);
+    end loop;
+    Double_Ordered_Evaluations.Second_Derivative_Second_Order
       (hcf,hct,hdg,cf0,cf1,cf2,pw1,pw2,cf3,pw3,vrblvl-1);
     for i in cf3'range loop -- Jacobian is diagonal for the test example
       cf3(i) := -cf3(i)/cA(i,i);
     end loop;
+    if vrblvl > 0
+     then put_line("first and second derivative evaluations :");
+    end if;
+    sumdif := 0.0;
+    for i in cf1'range loop
+      if vrblvl > 0 then
+        put(cf3a(i)); put(" t^"); put(pw3a(i)); new_line;
+        put(cf3(i)); put(" t^"); put(pw3(i)); new_line;
+      end if;
+      dif := AbsVal(cf3a(i) - cf3(i)) + abs(pw3a(i)-pw3(i));
+      if vrblvl > 0
+       then put("difference :"); put(dif,3); new_line;
+      end if;
+      sumdif := sumdif + dif;
+    end loop;
+    if vrblvl > 0 then
+      put("sum of differences :"); put(sumdif,3); new_line;
+      if sumdif > tol
+       then put_line("higher derivatives are needed ...");
+      end if;
+    end if;
+    if sumdif > tol then
+      cf3a := cf3; pw3a := pw3;
+      Double_Ordered_Evaluations.Third_Derivative_Second_Order
+        (hcf,hct,hdg,cf0,cf1,cf2,pw1,pw2,cf3,pw3,vrblvl-1);
+      for i in cf3'range loop -- Jacobian is diagonal for the test example
+        cf3(i) := -cf3(i)/cA(i,i);
+      end loop;
+      if vrblvl > 0
+       then put_line("second and third derivative evaluations :");
+      end if;
+      sumdif := 0.0;
+      for i in cf1'range loop
+        if vrblvl > 0 then
+          put(cf3a(i)); put(" t^"); put(pw3a(i)); new_line;
+          put(cf3(i)); put(" t^"); put(pw3(i)); new_line;
+        end if;
+        dif := AbsVal(cf3a(i) - cf3(i)) + abs(pw3a(i)-pw3(i));
+        if vrblvl > 0
+         then put("difference :"); put(dif,3); new_line;
+        end if;
+        sumdif := sumdif + dif;
+      end loop;
+      if vrblvl > 0 then
+        put("sum of differences :"); put(sumdif,3); new_line;
+        if sumdif > tol
+         then put_line("higher derivatives are needed ...");
+        end if;
+      end if;
+    end if;
   end Diagonal_Third_Terms;
 
   procedure Run_Newton_Step
@@ -447,20 +507,6 @@ package body Test_Newton_Puiseux is
       if ans /= 'y'
        then return;
       end if;
-     -- Second_Order_Derivatives(hcf,hct,hdg,cff,pwr,vrblvl-1);
-    --  put_line("Computing third derivative first order evaluations ...");
-    --  Double_Ordered_Evaluations.Third_Derivative_First_Order
-    --    (hcf,hct,hdg,cff,pwr,psm,cfp,vrblvl-1);
-    --  put_line("Computing first derivative second order evaluations ...");
-    --  Double_Ordered_Evaluations.First_Derivative_Second_Order
-    --    (hcf,hct,hdg,cff,pwr,psm,cfp,vrblvl-1);
-      put_line("Computing second derivative second order evaluations ...");
-      Double_Ordered_Evaluations.Second_Derivative_Second_Order
-        (hcf,hct,hdg,cff,pwr,psm,cfp,vrblvl-1);
-      put_line("smallest positive powers :");
-      for i in psm'range loop
-        put(i,1); put(" :"); put(psm(i)); new_line;
-      end loop;
       put_line("first order terms :");
       for i in psm'range loop
         put(cff(i)(1)); put(" t^"); put(pwr(i)(1)); new_line;

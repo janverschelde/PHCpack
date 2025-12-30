@@ -6,11 +6,19 @@ package Test_Ordered_Evaluations is
 --   Develops tests on power series of first and higher order terms, 
 --   their evaluation in Laurent polynomials.
 
-  procedure Test ( dim,nbr,ord : in integer32 );
+  procedure Test_First_Order ( dim,nbr,ord : in integer32 );
 
   -- DESCRIPTION :
   --   Generates a Laurent polynomial of nbr monomials in dim many variables
   --   and a power series of order ord.
+  --   Then tests the first order evaluation.
+
+  procedure Test_Second_Order ( dim,nbr,ord : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a Laurent polynomial of nbr monomials in dim many variables
+  --   and a power series of order ord.
+  --   Then tests the second order evaluation.
 
   procedure Main;
 
