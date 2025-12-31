@@ -417,6 +417,42 @@ package Double_Ordered_Evaluations is
   --   ycf      coefficients of the evaluated series, up to first order;
   --   ydg      corresponding exponents of the evaluated series.
 
+  procedure Fixed_Derivative_Second_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cf0 : in Standard_Complex_Vectors.Vector;
+                cf1 : in Standard_Complex_Vectors.Vector;
+                cf2 : in Standard_Complex_Vectors.Vector;
+                pw1 : in Standard_Floating_Vectors.Vector;
+                pw2 : in Standard_Floating_Vectors.Vector;
+                difsum : in integer32; idxnxt : in out integer32;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Updates (ycf, ydg) with all second order evaluations
+  --   using indexed derivative with fixed sum difsum.
+
+  -- ON ENTRY :
+  --   pcf      coefficients of a Laurent polynomial;
+  --   pct      powers of t of the coefficients;
+  --   pdg      supports of a Laurent polynomial;
+  --   cf0      constant coefficients of a power series;
+  --   cf1      coefficients corresponding to pw1;
+  --   cf2      coefficients corresponding to pw2;
+  --   pw1      leading exponents in the power series;
+  --   pw2      second exponents in the power series;
+  --   difsum   sum of all derivative indices;
+  --   idxnxt   next index in (ycf, ydg) to be updated;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   idxnxt   next index in (ycf, ydg) to be updated;
+  --   ycf      coefficients of the evaluated series, up to 2nd order;
+  --   ydg      corresponding exponents of the evaluated series.
+
   procedure First_Order_Evaluation
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
@@ -448,6 +484,43 @@ package Double_Ordered_Evaluations is
 
   -- ON RETURN :
   --   ycf      coefficients of the evaluated series, up to first order;
+  --   ydg      corresponding exponents of the evaluated series.
+
+  procedure Second_Order_Evaluation
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cf0 : in Standard_Complex_Vectors.Vector;
+                cf1 : in Standard_Complex_Vectors.Vector;
+                cf2 : in Standard_Complex_Vectors.Vector;
+                pw1 : in Standard_Floating_Vectors.Vector;
+                pw2 : in Standard_Floating_Vectors.Vector;
+                difmax : in integer32;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Evaluates a Laurent polynomial at a series truncated at 2nd order,
+  --   using indexed derivatives sum up to difmax.
+
+  -- REQUIRED :
+  --   ycf and ydg have wide enough ranges.
+
+  -- ON ENTRY :
+  --   pcf      coefficients of a Laurent polynomial;
+  --   pct      powers of t of the coefficients;
+  --   pdg      supports of a Laurent polynomial;
+  --   cf0      constant coefficients of a power series;
+  --   cf1      coefficients corresponding to pw1;
+  --   cf2      coefficients corresponding to pw2;
+  --   pw1      leading exponents in the power series;
+  --   pw2      second exponents in the power series;
+  --   difmax   maximum sum of all derivative indices;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   ycf      coefficients of the evaluated series, up to 2nd order;
   --   ydg      corresponding exponents of the evaluated series.
 
 -- ON A LAURENT HOMOTOPY :
@@ -815,7 +888,43 @@ package Double_Ordered_Evaluations is
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
-  --   psm      smallest positive powers in the evaluated series;
-  --   csm      coefficients corresponding to the smallest positive powers.
+  --   cf2      coefficients corresponding to pw2;
+  --   pw2      smallest positive powers in the evaluated series.
+
+  procedure Second_Order_Evaluation
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cf0 : in Standard_Complex_Vectors.Vector;
+                cf1 : in Standard_Complex_Vectors.Vector;
+                cf2 : in Standard_Complex_Vectors.Vector;
+                pw1 : in Standard_Floating_Vectors.Vector;
+                pw2 : in Standard_Floating_Vectors.Vector;
+                difmax : in integer32;
+                cf3 : out Standard_Complex_Vectors.Vector;
+                pw3 : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Computes a Taylor series expansion of the Laurent homotopy
+  --   using the constant coefficients of the power series solution,
+  --   truncated after the second order, using up to some derivatives.
+  --   Computes the smallest positive exponents of this evaluation.
+
+  -- ON ENTRY :
+  --   hcf      coefficients of the polynomials in the homotopy;
+  --   hdg      supports of the Laurent homotopy;
+  --   hct      powers of t in the homotopy for each monomial;
+  --   cf0      constant coefficients of a power series;
+  --   cf1      coefficients corresponding to pw1;
+  --   cf2      coefficients corresponding to pw2;
+  --   pw1      leading exponents in the power series;
+  --   pw2      second exponents in the power series;
+  --   difmax   maximum sum of all derivative indices;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   cf2      coefficients corresponding to pw2;
+  --   pw2      smallest positive powers in the evaluated series.
 
 end Double_Ordered_Evaluations;
