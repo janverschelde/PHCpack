@@ -192,6 +192,15 @@ package Double_Leading_Evaluations is
   --   The enumeration stops when the return value of continue
   --   is set to false by Process.
 
+  generic
+    with procedure Process ( idx : in Standard_Integer_Vectors.Vector;
+                             continue : out boolean );
+  procedure Enumerate_Numbers ( dim,nbr : in integer32 );
+
+  -- DESCRIPTION :
+  --   Enumerates all numbers where the digits are in the range 0..nbr
+  --   represented by idx which is of range 1..dim.
+
   procedure Evaluate_Polynomial
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;

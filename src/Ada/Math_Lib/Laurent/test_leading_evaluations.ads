@@ -51,6 +51,17 @@ package Test_Leading_Evaluations is
   --   Prompts for the number of variables and then tests the
   --   indexed derivatives of a random Laurent monomial.
 
+  procedure Show_Numbers ( dim,nbr : in integer32 );
+
+  -- DESCRIPTION :
+  --   Writes all numbers of size dim with digits in 0..nbr.
+
+  procedure Test_Number_Enumeration;
+
+  -- DESCRIPTION :
+  --   Prompts for the dimension and a base number
+  --   and then all numbers in this base.
+
   procedure Test_Monomial ( dim : in integer32 );
                
   -- DESCRIPTION :

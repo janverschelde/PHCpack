@@ -468,6 +468,28 @@ package body Double_Leading_Evaluations is
     Enumerate(1);
   end Enumerate_Indices;
 
+  procedure Enumerate_Numbers ( dim,nbr : in integer32 ) is
+
+    wrk : Standard_Integer_Vectors.Vector(1..dim) := (1..dim => 0);
+    cnt : boolean := true;
+
+    procedure Enumerate ( k : in integer32 ) is
+    begin
+      if k > dim then
+        process(wrk,cnt);
+      else
+        for i in 0..nbr loop
+          wrk(k) := i;
+          Enumerate(k+1);
+          exit when (cnt = false);
+        end loop;
+      end if;
+    end Enumerate;
+
+  begin
+    Enumerate(1);
+  end Enumerate_Numbers;
+
   procedure Evaluate_Polynomial
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;

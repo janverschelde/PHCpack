@@ -1,5 +1,7 @@
 Tue 30 Dec 2025 : added 2nd order to double_ordered_evaluations, tested
   in test_ordered_evaluations and applied in test_newton_puiseux.adb.
+  Added number enumeration to double_leading_evaluations,
+  tested by test_leading_evaluations, and called in ts_hunval.adb.
 
 Mon 29 Dec 2025 : extended double_ordered_evaluations with higher derivatives,
   tested by test_ordered_evaluations.adb, applied in test_newton_puiseux.adb.

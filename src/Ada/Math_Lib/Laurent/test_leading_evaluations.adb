@@ -200,6 +200,37 @@ package body Test_Leading_Evaluations is
     Show_Indices(dim,4);
   end Test_Indexed_Derivatives;
 
+  procedure Show_Numbers ( dim,nbr : in integer32 ) is
+
+    cnt : integer32 := 0;
+
+    procedure Write ( idx : in Standard_Integer_Vectors.Vector;
+                      continue : out boolean ) is
+    begin
+      cnt := cnt + 1;
+      put(cnt,3); put(" :"); put(idx); new_line;
+      continue := true;
+    end Write;
+ 
+    procedure Write_Numbers is
+      new Double_Leading_Evaluations.Enumerate_Numbers(Write);
+
+  begin
+    Write_Numbers(dim,nbr);
+  end Show_Numbers;
+
+  procedure Test_Number_Enumeration is
+
+    dim,nbr : integer32 := 0;
+
+  begin
+    new_line;
+    put("Give the dimension : "); get(dim);
+    put("Give a base number : "); get(nbr);
+    put("All numbers with digits in 0.."); put(nbr,1); put_line(" :");
+    Show_Numbers(dim,nbr);
+  end Test_Number_Enumeration;
+
   procedure Test_Monomial ( dim : in integer32 ) is
                
     deg : constant Standard_Integer_Vectors.Vector(1..dim)
