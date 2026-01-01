@@ -104,7 +104,7 @@ package body Double_Ordered_Evaluations is
         res := (1 + 2*dim + 3*dim + 2*dim*(dim-1))*nbr;
       elsif ndf = 3 then
         res := 1 + 2*dim + 3*dim + 2*dim*(dim-1)
-             + 4*dim + 4*dim*(dim-1) + 8*dim*(dim-1)*(dim-2)/6;
+             + 4*dim + 6*dim*(dim-1) + 8*dim*(dim-1)*(dim-2)/6;
         res := res*nbr;
       end if;
     end if;
@@ -728,42 +728,60 @@ package body Double_Ordered_Evaluations is
       end loop;
       for j in cf0'range loop -- all semi mixed third derivative terms
         for k in j+1..cf0'last loop
-          idx := idx + 1;
-          ydg(idx) := pct(i) + 2.0*pw1(j) + pw1(k);
+         -- (2,1) for components (j,k)
           shared := pcf(i)*Third_Semi_Mixed_Derivative
                              (pdg(i).all,cf0,j,k,vrblvl-1);
+          idx := idx + 1; -- 2*alpha_j + alpha_k
+          ydg(idx) := pct(i) + 2.0*pw1(j) + pw1(k);
           ycf(idx) := shared;
           ycf(idx) := ycf(idx)*cf1(j)*cf1(j)*cf1(k)/create(2.0);
-          idx := idx + 1;
+          idx := idx + 1; -- 2*alpha_j + beta_k
           ydg(idx) := pct(i) + 2.0*pw1(j) + pw2(k);
           ycf(idx) := shared;
           ycf(idx) := ycf(idx)*cf1(j)*cf1(j)*cf2(k)/create(2.0);
-          idx := idx + 1;
+          idx := idx + 1; -- 2*beta_j + alpha_k
           ydg(idx) := pct(i) + 2.0*pw2(j) + pw1(k);
           ycf(idx) := shared;
           ycf(idx) := ycf(idx)*cf2(j)*cf2(j)*cf1(k)/create(2.0);
-          idx := idx + 1;
+          idx := idx + 1; -- 2*beta_j + beta_k
           ydg(idx) := pct(i) + 2.0*pw2(j) + pw2(k);
           ycf(idx) := shared;
           ycf(idx) := ycf(idx)*cf2(j)*cf2(j)*cf2(k)/create(2.0);
-          idx := idx + 1;                     -- flip role of j and k
-          ydg(idx) := pct(i) + 2.0*pw1(k) + pw1(j);
+          idx := idx + 1; -- alpha_j + beta_j + alpha_k
+          ydg(idx) := pct(i) + pw1(j) + pw2(j) + pw1(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(j)*cf2(j)*cf1(k)/create(2.0);
+          idx := idx + 1; -- alpha_j + beta_j + beta_k
+          ydg(idx) := pct(i) + pw1(j) + pw2(j) + pw2(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(j)*cf2(j)*cf2(k)/create(2.0);
+         -- (2,1) for components (k,j) flipping role of j and k
           shared := pcf(i)*Third_Semi_Mixed_Derivative
                              (pdg(i).all,cf0,k,j,vrblvl-1);
+          idx := idx + 1; -- 2*alpha_k + alpha_j
+          ydg(idx) := pct(i) + 2.0*pw1(k) + pw1(j);
           ycf(idx) := shared;
           ycf(idx) := ycf(idx)*cf1(k)*cf1(k)*cf1(j)/create(2.0);
-          idx := idx + 1; 
+          idx := idx + 1; -- 2*alpha_k + beta_j
           ydg(idx) := pct(i) + 2.0*pw1(k) + pw2(j);
           ycf(idx) := shared;
           ycf(idx) := ycf(idx)*cf1(k)*cf1(k)*cf2(j)/create(2.0);
-          idx := idx + 1; 
+          idx := idx + 1;  -- 2*beta_k + alpha_j
           ydg(idx) := pct(i) + 2.0*pw2(k) + pw1(j);
           ycf(idx) := shared;
           ycf(idx) := ycf(idx)*cf2(k)*cf2(k)*cf1(j)/create(2.0);
-          idx := idx + 1; 
+          idx := idx + 1;  -- 2*beta_k + beta_j
           ydg(idx) := pct(i) + 2.0*pw2(k) + pw2(j);
           ycf(idx) := shared;
           ycf(idx) := ycf(idx)*cf2(k)*cf2(k)*cf2(j)/create(2.0);
+          idx := idx + 1;  -- alpha_k + beta_k + alpha_j
+          ydg(idx) := pct(i) + pw1(k) + pw2(k) + pw1(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(k)*cf2(k)*cf1(j)/create(2.0);
+          idx := idx + 1;  -- alpha_k + beta_k + beta_j
+          ydg(idx) := pct(i) + pw1(k) + pw2(k) + pw2(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(k)*cf2(k)*cf2(j)/create(2.0);
         end loop;
       end loop;
       for j in cf0'range loop -- all fully mixed third derivative terms
@@ -999,32 +1017,36 @@ package body Double_Ordered_Evaluations is
         ycf(idxnxt) := ycfval;
         ydg(idxnxt) := ydgval;
         idxnxt := idxnxt + 1;
-      elsif difidx(k) > 0 then -- skip component k
+      elsif difidx(k) = 0 then -- skip component k
         Accumulate(k+1,difidx,ycfval,ydgval);
       else -- make the combinations
         difval := difidx(k);
+        newycf := ycfval;
         for j in 1..difval loop -- multiply with cf1(k)**difval
           newycf := newycf*cf1(k)/double_float(j);
         end loop;
-        newydg := newydg + double_float(difval)*pw1(k);
+        newydg := ydgval + double_float(difval)*pw1(k);
         Accumulate(k+1,difidx,newycf,newydg);
         for j in 1..difval-1 loop
-          newycf := ycfval; newydg := ydgval;
+          newycf := ycfval;
           for k in 1..difval-j loop -- multiply with cf1(k)
-            newycf := newycf*cf1(k)/double_float(k);
+            newycf := newycf*cf1(k);
           end loop;
           for k in 1..j loop -- multiply with cf2(k)
-            newycf := newycf*cf2(k)/double_float(k);
+            newycf := newycf*cf2(k);
           end loop;
-          newydg := newydg + double_float(difval-j)*pw1(k)
+          for k in 2..difval loop
+            newycf := newycf/double_float(k);
+          end loop;
+          newydg := ydgval + double_float(difval-j)*pw1(k)
                            + double_float(j)*pw2(k);
           Accumulate(k+1,difidx,newycf,newydg);
         end loop;
-        newycf := ycfval; newydg := ydgval;
+        newycf := ycfval;
         for j in 1..difval loop -- multiply with cf2(k)**difval
           newycf := newycf*cf2(k)/double_float(j);
         end loop;
-        newydg := newydg + double_float(difval)*pw2(k);
+        newydg := ydgval + double_float(difval)*pw2(k);
         Accumulate(k+1,difidx,newycf,newydg);
       end if;
     end Accumulate;
@@ -1153,8 +1175,9 @@ package body Double_Ordered_Evaluations is
       Fixed_Derivative_First_Order
         (pcf,pct,pdg,cf0,cf1,pw1,difsum,idx,ycf,ydg,vrblvl-1);
     end loop;
-    if vrblvl > 0
-     then put("idx : "); put(idx,1); new_line;
+    if vrblvl > 0 then
+      put("ycf'last : "); put(ycf'last,1);
+      put(", idx : "); put(idx,1); new_line;
     end if;
   end First_Order_Evaluation;
 
@@ -1196,8 +1219,9 @@ package body Double_Ordered_Evaluations is
       Fixed_Derivative_Second_Order
         (pcf,pct,pdg,cf0,cf1,cf2,pw1,pw2,difsum,idx,ycf,ydg,vrblvl-1);
     end loop;
-    if vrblvl > 0
-     then put("idx : "); put(idx,1); new_line;
+    if vrblvl > 0 then
+      put("ycf'last : "); put(ycf'last,1);
+      put(", idx : "); put(idx,1); new_line;
     end if;
   end Second_Order_Evaluation;
 

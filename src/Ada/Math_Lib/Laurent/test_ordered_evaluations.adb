@@ -134,7 +134,7 @@ package body Test_Ordered_Evaluations is
       cf1(i) := cff(i)(cff(i)'first+1);
       pw1(i) := pwr(i)(pwr(i)'first);
     end loop;
-    First_Order_Evaluation(pcf,pct,pdg,cf0,cf1,pw1,3,ycf2,ydg2,1);
+    First_Order_Evaluation(pcf,pct,pdg,cf0,cf1,pw1,3,ycf2,ydg2,2);
     put_line("the third derivative first order evaluation :");
     sumerr := 0.0;
     for i in ycf1'range loop
@@ -337,13 +337,13 @@ package body Test_Ordered_Evaluations is
   begin
     Generate_Input(dim,nbr,ord,hcf,hct,hdg,cff,pwr);
    -- for derivatives 1, 2, 3, we have two different ways to compute
-    Test_First_Derivative_First_Order(hcf,hct,hdg,cff,pwr);
-    Test_Second_Derivative_First_Order(hcf,hct,hdg,cff,pwr);
+   -- Test_First_Derivative_First_Order(hcf,hct,hdg,cff,pwr);
+   -- Test_Second_Derivative_First_Order(hcf,hct,hdg,cff,pwr);
     Test_Third_Derivative_First_Order(hcf,hct,hdg,cff,pwr);
    -- for derivatives 4, 5, 6, 7, 8, there is only one way to compute
-    for k in 4..8 loop
-      Test_First_Order_Evaluation(hcf,hct,hdg,cff,pwr,integer32(k));
-    end loop;
+   -- for k in 4..8 loop
+   --   Test_First_Order_Evaluation(hcf,hct,hdg,cff,pwr,integer32(k));
+   -- end loop;
   end Test_First_Order;
 
   procedure Test_Second_Order ( dim,nbr,ord : in integer32 ) is
@@ -357,8 +357,8 @@ package body Test_Ordered_Evaluations is
 
   begin
     Generate_Input(dim,nbr,ord,hcf,hct,hdg,cff,pwr);
-    Test_Second_Derivative_Second_Order(hcf,hct,hdg,cff,pwr);
-   -- Test_Third_Derivative_Second_Order(hcf,hct,hdg,cff,pwr);
+   -- Test_Second_Derivative_Second_Order(hcf,hct,hdg,cff,pwr);
+    Test_Third_Derivative_Second_Order(hcf,hct,hdg,cff,pwr);
   end Test_Second_Order;
 
   procedure Main is
@@ -370,9 +370,9 @@ package body Test_Ordered_Evaluations is
     put("Give the dimension : "); get(dim);
     put("Give the number of monomials : "); get(nbr);
     put("Give the order of the series : "); get(ord);
-   -- if ord > 0
-   --  then Test_First_Order(dim,nbr,ord);
-   -- end if;
+    if ord > 0
+     then Test_First_Order(dim,nbr,ord);
+    end if;
     if ord > 1
      then Test_Second_Order(dim,nbr,ord);
     end if;
