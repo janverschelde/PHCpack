@@ -750,11 +750,11 @@ package body Double_Ordered_Evaluations is
           idx := idx + 1; -- alpha_j + beta_j + alpha_k
           ydg(idx) := pct(i) + pw1(j) + pw2(j) + pw1(k);
           ycf(idx) := shared;
-          ycf(idx) := ycf(idx)*cf1(j)*cf2(j)*cf1(k)/create(2.0);
+          ycf(idx) := ycf(idx)*cf1(j)*cf2(j)*cf1(k); -- /create(2.0);
           idx := idx + 1; -- alpha_j + beta_j + beta_k
           ydg(idx) := pct(i) + pw1(j) + pw2(j) + pw2(k);
           ycf(idx) := shared;
-          ycf(idx) := ycf(idx)*cf1(j)*cf2(j)*cf2(k)/create(2.0);
+          ycf(idx) := ycf(idx)*cf1(j)*cf2(j)*cf2(k); -- /create(2.0);
          -- (2,1) for components (k,j) flipping role of j and k
           shared := pcf(i)*Third_Semi_Mixed_Derivative
                              (pdg(i).all,cf0,k,j,vrblvl-1);
@@ -777,11 +777,11 @@ package body Double_Ordered_Evaluations is
           idx := idx + 1;  -- alpha_k + beta_k + alpha_j
           ydg(idx) := pct(i) + pw1(k) + pw2(k) + pw1(j);
           ycf(idx) := shared;
-          ycf(idx) := ycf(idx)*cf1(k)*cf2(k)*cf1(j)/create(2.0);
+          ycf(idx) := ycf(idx)*cf1(k)*cf2(k)*cf1(j); -- /create(2.0);
           idx := idx + 1;  -- alpha_k + beta_k + beta_j
           ydg(idx) := pct(i) + pw1(k) + pw2(k) + pw2(j);
           ycf(idx) := shared;
-          ycf(idx) := ycf(idx)*cf1(k)*cf2(k)*cf2(j)/create(2.0);
+          ycf(idx) := ycf(idx)*cf1(k)*cf2(k)*cf2(j); -- /create(2.0);
         end loop;
       end loop;
       for j in cf0'range loop -- all fully mixed third derivative terms
@@ -1029,14 +1029,11 @@ package body Double_Ordered_Evaluations is
         Accumulate(k+1,difidx,newycf,newydg);
         for j in 1..difval-1 loop
           newycf := ycfval;
-          for k in 1..difval-j loop -- multiply with cf1(k)
-            newycf := newycf*cf1(k);
+          for kk in 1..difval-j loop -- multiply with cf1(k)
+            newycf := newycf*cf1(k)/double_float(kk);
           end loop;
-          for k in 1..j loop -- multiply with cf2(k)
-            newycf := newycf*cf2(k);
-          end loop;
-          for k in 2..difval loop
-            newycf := newycf/double_float(k);
+          for kk in 1..j loop -- multiply with cf2(k)
+            newycf := newycf*cf2(k)/double_float(kk);
           end loop;
           newydg := ydgval + double_float(difval-j)*pw1(k)
                            + double_float(j)*pw2(k);

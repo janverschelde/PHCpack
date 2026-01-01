@@ -1,4 +1,5 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
+with Communications_with_User;
 with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_IO;      use Standard_Floating_Numbers_IO;
@@ -190,12 +191,14 @@ package body Test_Ordered_Evaluations is
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
                 cff : in Standard_Complex_VecVecs.VecVec;
-                pwr : in Standard_Floating_VecVecs.VecVec ) is
+                pwr : in Standard_Floating_VecVecs.VecVec;
+                sumerr : out double_float ) is
 
   -- DESCRIPTION :
   --   Tests the 2nd derivative 2nd order evaluation of a polynomial
   --   represented by (pcf, pct, pdg), evaluated at a series
   --   with coefficients in cff and powers in pwr.
+  --   The sum of errors is in sumerr.
 
     use Double_Ordered_Evaluations;
 
@@ -206,7 +209,7 @@ package body Test_Ordered_Evaluations is
     ydg1,ydg2 : Standard_Floating_Vectors.Vector(1..size);
     cf0,cf1,cf2 : Standard_Complex_Vectors.Vector(1..dim);
     pw1,pw2 : Standard_Floating_Vectors.Vector(1..dim);
-    err,sumerr : double_float;
+    err : double_float;
 
   begin
     for i in cf0'range loop
@@ -236,12 +239,14 @@ package body Test_Ordered_Evaluations is
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
                 cff : in Standard_Complex_VecVecs.VecVec;
-                pwr : in Standard_Floating_VecVecs.VecVec ) is
+                pwr : in Standard_Floating_VecVecs.VecVec;
+                sumerr : out double_float ) is
 
   -- DESCRIPTION :
   --   Tests the 3rd derivative 2nd order evaluation of a polynomial
   --   represented by (pcf, pct, pdg), evaluated at a series
   --   with coefficients in cff and powers in pwr.
+  --   The sum of errors is in sumerr.
 
     use Double_Ordered_Evaluations;
 
@@ -252,7 +257,7 @@ package body Test_Ordered_Evaluations is
     ydg1,ydg2 : Standard_Floating_Vectors.Vector(1..size);
     cf0,cf1,cf2 : Standard_Complex_Vectors.Vector(1..dim);
     pw1,pw2 : Standard_Floating_Vectors.Vector(1..dim);
-    err,sumerr : double_float;
+    err : double_float;
 
   begin
     for i in cf0'range loop
@@ -337,13 +342,13 @@ package body Test_Ordered_Evaluations is
   begin
     Generate_Input(dim,nbr,ord,hcf,hct,hdg,cff,pwr);
    -- for derivatives 1, 2, 3, we have two different ways to compute
-   -- Test_First_Derivative_First_Order(hcf,hct,hdg,cff,pwr);
-   -- Test_Second_Derivative_First_Order(hcf,hct,hdg,cff,pwr);
+    Test_First_Derivative_First_Order(hcf,hct,hdg,cff,pwr);
+    Test_Second_Derivative_First_Order(hcf,hct,hdg,cff,pwr);
     Test_Third_Derivative_First_Order(hcf,hct,hdg,cff,pwr);
    -- for derivatives 4, 5, 6, 7, 8, there is only one way to compute
-   -- for k in 4..8 loop
-   --   Test_First_Order_Evaluation(hcf,hct,hdg,cff,pwr,integer32(k));
-   -- end loop;
+    for k in 4..8 loop
+      Test_First_Order_Evaluation(hcf,hct,hdg,cff,pwr,integer32(k));
+    end loop;
   end Test_First_Order;
 
   procedure Test_Second_Order ( dim,nbr,ord : in integer32 ) is
@@ -354,24 +359,32 @@ package body Test_Ordered_Evaluations is
     hcf : Standard_Complex_Vectors.Vector(1..size);
     hct : Standard_Floating_Vectors.Vector(1..size);
     hdg : Standard_Integer_VecVecs.VecVec(1..size);
+    sumerr2,sumerr3 : double_float;
 
   begin
     Generate_Input(dim,nbr,ord,hcf,hct,hdg,cff,pwr);
-   -- Test_Second_Derivative_Second_Order(hcf,hct,hdg,cff,pwr);
-    Test_Third_Derivative_Second_Order(hcf,hct,hdg,cff,pwr);
+    Test_Second_Derivative_Second_Order(hcf,hct,hdg,cff,pwr,sumerr2);
+    Test_Third_Derivative_Second_Order(hcf,hct,hdg,cff,pwr,sumerr3);
+    put("error of 2nd derivatives :"); put(sumerr2,3); new_line;
+    put("error of 3rd derivatives :"); put(sumerr3,3); new_line;
   end Test_Second_Order;
 
   procedure Main is
 
     dim,nbr,ord : integer32 := 0;
+    ans : character;
 
   begin
     new_line;
     put("Give the dimension : "); get(dim);
     put("Give the number of monomials : "); get(nbr);
     put("Give the order of the series : "); get(ord);
-    if ord > 0
-     then Test_First_Order(dim,nbr,ord);
+    if ord > 0 then
+      put("Test first order ? ");
+      Communications_with_User.Ask_Yes_or_No(ans);
+      if ans = 'y'
+       then Test_First_Order(dim,nbr,ord);
+      end if;
     end if;
     if ord > 1
      then Test_Second_Order(dim,nbr,ord);

@@ -1,5 +1,7 @@
 Thu 1 Jan 2026 : fixed index error by correcting size computation in 
   double_ordered_evaluations.adb, modified test_ordered_evaluations.adb.
+  Factorials and loop counters fixed in double_ordered_evaluations.adb,
+  improved test_ordered_evaluations.adb.
 
 Wed 31 Dec 2025 : in double_ordered_evaluations, started development of
   general second order evaluations, tested in test_ordered_evaluations.adb.
