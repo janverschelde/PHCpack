@@ -200,6 +200,9 @@ package body Double_Real_Powered_Series is
     for i in 1..dim loop
       rnd := Standard_Random_Numbers.Random;
       res(i) := abs(rnd);
+      while res(i) < 1.0 loop -- make larger than 1.0
+        res(i) := res(i) + 0.1;
+      end loop;
     end loop;
     return res;
   end Random_Leading_Powers;
@@ -222,6 +225,9 @@ package body Double_Real_Powered_Series is
         cff(i) := new Standard_Complex_Vectors.Vector'(cfi);
         rnd := Standard_Random_Numbers.Random;
         pwi(1) := abs(rnd);
+        while pwi(1) < 1.0 loop  -- make larger than 1.0
+          pwi(1) := pwi(1) + 0.1;
+        end loop;
         for j in 2..nbt(i) loop
           rnd := abs(Standard_Random_Numbers.Random); -- rnd in [0,1]
           pwi(j) := pwi(j-1) + rnd;
