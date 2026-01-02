@@ -128,7 +128,7 @@ package body Double_Ordered_Evaluations is
       elsif ndf = 2 then
         res := (1 + 9*dim + 9*dim*(dim-1)/2)*nbr;
       elsif ndf = 3 then
-        res := 1 + 9*dim + 9*dim*(dim-1)/2 + 9*dim + 36*dim*(dim-1)/2
+        res := 1 + 9*dim + 9*dim*(dim-1)/2 + 10*dim + 36*dim*(dim-1)/2
              + 27*dim*(dim-1)*(dim-2)/6;
         res := res*nbr;
       end if;
@@ -1178,6 +1178,10 @@ package body Double_Ordered_Evaluations is
         ydg(idx) := pct(i) + pw2(j) + 2.0*pw3(j);
         ycf(idx) := shared;
         ycf(idx) := ycf(idx)*cf2(j)*cf3(j)*cf3(j)/create(2.0);
+        idx := idx + 1;
+        ydg(idx) := pct(i) + pw1(j) + pw2(j) + pw3(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf1(j)*cf2(j)*cf3(j);
       end loop;
       for j in cf0'range loop -- all semi mixed third derivative terms
         for k in j+1..cf0'last loop
@@ -1756,6 +1760,160 @@ package body Double_Ordered_Evaluations is
                                          ydg(ydg'first..lstidx));
   end Fixed_Derivative_Second_Order;
 
+  procedure Fixed_Derivative_Third_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cf0,cf1,cf2,cf3 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2,pw3 : in Standard_Floating_Vectors.Vector;
+                difsum : in integer32; idxnxt : in out integer32;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    dim : constant integer32 := cf0'last;
+    lstidx : integer32; -- last index
+    cnt : integer32 := 0;
+    deg : Standard_Integer_Vectors.Vector(1..dim);
+    pdgidx : integer32; -- index of the monomial
+
+    procedure Accumulate
+                ( k : in integer32;
+                  difidx : in Standard_Integer_Vectors.Vector;
+                  ycfval : in Complex_Number; ydgval : in double_float ) is
+
+    -- DESCRIPTION :
+    --   Accumulates the values for ycf and ydg at the current index k
+    --   of the differentiation indices.
+
+      newycf : Complex_Number := ycfval;
+      newydg : double_float := ydgval;
+      difval,p3 : integer32;
+ 
+    begin
+      if vrblvl > 0 then
+        put("accumulating at k = "); put(k,1); put_line(" ...");
+      end if;
+      if k > difidx'last then
+        if vrblvl > 0 then
+          put("exponent "); put(idxnxt,1); put(" :"); put(ydgval); new_line;
+          put("coefficient : "); put(ycfval); new_line;
+        end if;
+        ycf(idxnxt) := ycfval;
+        ydg(idxnxt) := ydgval;
+        idxnxt := idxnxt + 1;
+      elsif difidx(k) = 0 then -- skip component k
+        Accumulate(k+1,difidx,ycfval,ydgval);
+      else -- make the combinations
+        difval := difidx(k);
+        for p1 in 0..difval loop      -- multiply with cf1(k)**p1
+          for p2 in 0..difval-p1 loop -- multiply with cf2(k)**p2
+            p3 := difval - p1 - p2;   -- multiply with cf3(k)**p3
+            newycf := ycfval; newydg := ydgval;
+            if p1 > 0 then
+              for j in 1..p1 loop -- multiply with cf1(k)**p1
+                newycf := newycf*cf1(k)/double_float(j);
+              end loop;
+              newydg := newydg + double_float(p1)*pw1(k);
+            end if;
+            if p2 > 0 then
+              for j in 1..p2 loop -- multiply with cf2(k)**p2
+                newycf := newycf*cf2(k)/double_float(j);
+              end loop;
+              newydg := newydg + double_float(p2)*pw2(k);
+            end if;
+            if p3 > 0 then
+              for j in 1..p3 loop -- multiply with cf3(k)**p3
+                newycf := newycf*cf3(k)/double_float(j);
+              end loop;
+              newydg := newydg + double_float(p3)*pw3(k);
+            end if;
+            Accumulate(k+1,difidx,newycf,newydg);
+          end loop;
+        end loop;
+      end if;
+    end Accumulate;
+
+    procedure Next ( difidx : in Standard_Integer_Vectors.Vector;
+                     continue : out boolean ) is
+
+      val : Complex_Number;
+      poscnt : constant integer32 := Positive_Count(difidx);
+      posidx,posval,p3 : integer32;
+
+    begin
+      cnt := cnt + 1;
+      if vrblvl > 0 then
+        put(cnt,3); put(" :"); put(difidx); new_line;
+      end if;
+      deg := pdg(pdgidx).all;
+      val := Double_Leading_Evaluations.Indexed_Derivative(deg,cf0,difidx);
+      val := pcf(pdgidx)*val;
+      if poscnt = 1 then -- no mixed derivative
+        posidx := Positive_Index(difidx);
+        posval := difidx(posidx);
+        for p1 in 0..posval loop      -- cf1(posidx)**p1
+          for p2 in 0..posval-p1 loop -- cf2(posidx)**p2
+            p3 := posval - p1 - p2;   -- cf3(posidx)**p3
+            ycf(idxnxt) := val; -- value of D_I(c_a x**a)
+            ydg(idxnxt) := pct(pdgidx);
+            if p1 > 0 then
+              for L in 1..p1 loop -- multiply with cf1(posidx)**p1
+                ycf(idxnxt) := ycf(idxnxt)*cf1(posidx)/double_float(L);
+              end loop;
+              ydg(idxnxt) := ydg(idxnxt) + double_float(p1)*pw1(posidx);
+            end if;
+            if p2 > 0 then
+              for L in 1..p2 loop -- multiply with cf2(posidx)**p2
+                ycf(idxnxt) := ycf(idxnxt)*cf2(posidx)/double_float(L);
+              end loop;
+              ydg(idxnxt) := ydg(idxnxt) + double_float(p2)*pw2(posidx);
+            end if;
+            if p3 > 0 then
+              for L in 1..p3 loop -- multiply with cf3(posidx)**p3
+                ycf(idxnxt) := ycf(idxnxt)*cf3(posidx)/double_float(L);
+              end loop;
+              ydg(idxnxt) := ydg(idxnxt) + double_float(p3)*pw3(posidx);
+            end if;
+            if vrblvl > 0 then
+              put("exponent "); put(idxnxt,1); put(" :");
+              put(ydg(idxnxt)); new_line;
+              put("coefficient : "); put(ycf(idxnxt)); new_line;
+            end if;
+            idxnxt := idxnxt + 1;
+          end loop;
+        end loop;
+      else
+        Accumulate(difidx'first,difidx,val,pct(pdgidx));
+      end if;
+      continue := true;
+    end Next;
+
+    procedure Differentiation_Indices is
+      new Double_Leading_Evaluations.Enumerate_Indices(Next);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Ordered_Evaluations.");
+      put_line("fixed_derivative_third_order 0 ...");
+      put("difsum : "); put(difsum,1);
+      put(", idxnxt : "); put(idxnxt,1); new_line;
+    end if;
+    pdgidx := pdg'first-1;
+    while pdgidx < pdg'last loop
+      pdgidx := pdgidx + 1;
+      Differentiation_Indices(dim,difsum);
+    end loop;
+    if vrblvl > 0
+     then put("idxnxt : "); put(idxnxt,1); new_line;
+    end if;
+    lstidx := idxnxt-1;
+    Double_Real_Powered_Series.Sort(ydg(ydg'first..lstidx),
+                                    ycf(ycf'first..lstidx)); 
+    Double_Real_Powered_Series.Normalize(ycf(ycf'first..lstidx),
+                                         ydg(ydg'first..lstidx));
+  end Fixed_Derivative_Third_Order;
+
   procedure First_Order_Evaluation
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
@@ -1837,6 +1995,48 @@ package body Double_Ordered_Evaluations is
       put(", idx : "); put(idx,1); new_line;
     end if;
   end Second_Order_Evaluation;
+
+  procedure Third_Order_Evaluation
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cf0,cf1,cf2,cf3 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2,pw3 : in Standard_Floating_Vectors.Vector;
+                difmax : in integer32;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    idx : integer32 := ycf'first-1;
+
+    use Double_Leading_Evaluations;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Ordered_Evaluations.");
+      put_line("third_order_evaluation 1 ...");
+      put("difmax : "); put(difmax,1); new_line;
+    end if;
+    for i in pcf'range loop -- first compute all zero-th order terms
+      idx := idx + 1;
+      ydg(idx) := pct(i);
+      ycf(idx) := pcf(i)*Leading_Coefficient(pdg(i).all,cf0,0,vrblvl-1);
+    end loop;
+    Double_Real_Powered_Series.Sort(ydg(ydg'first..idx),
+                                    ycf(ycf'first..idx)); 
+    Double_Real_Powered_Series.Normalize(ycf(ycf'first..idx),
+                                         ydg(ydg'first..idx));
+    idx := idx + 1;
+    for difsum in 1..difmax loop
+      Fixed_Derivative_Third_Order
+        (pcf,pct,pdg,cf0,cf1,cf2,cf3,pw1,pw2,pw3,difsum,
+         idx,ycf,ydg,vrblvl-1);
+    end loop;
+    if vrblvl > 0 then
+      put("ycf'last : "); put(ycf'last,1);
+      put(", idx : "); put(idx,1); new_line;
+    end if;
+  end Third_Order_Evaluation;
 
 -- ON A LAURENT HOMOTOPY :
 
@@ -2509,5 +2709,49 @@ package body Double_Ordered_Evaluations is
       end;
     end loop;
   end Second_Order_Evaluation;
+
+  procedure Third_Order_Evaluation
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cf0,cf1,cf2,cf3 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2,pw3 : in Standard_Floating_Vectors.Vector;
+                difmax : in integer32;
+                cf4 : out Standard_Complex_Vectors.Vector;
+                pw4 : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    dim : constant integer32 := hcf'last;
+    nbr,size,idx : integer32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Ordered_Evaluations.");
+      put_line("third_order_evaluation 2 ...");
+    end if;
+    for i in hcf'range loop
+      nbr := hcf(i)'last;
+      size := Size_Evaluation(dim,difmax,3,nbr);
+      declare
+        ycf : Standard_Complex_Vectors.Vector(1..size);
+        ydg : Standard_Floating_Vectors.Vector(1..size);
+      begin
+        Third_Order_Evaluation
+          (hcf(i).all,hct(i).all,hdg(i).all,cf0,cf1,cf2,cf3,
+           pw1,pw2,pw3,difmax,ycf,ydg,vrblvl-1);
+        if vrblvl > 0 then
+          put("derivative "); put(difmax,1);
+          put("third order evaluation of polynomial ");
+          put(i,1); put_line(" :");
+          for i in ycf'range loop
+            put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+          end loop;
+        end if;
+        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        pw4(i) := ydg(idx);
+        cf4(i) := ycf(idx);
+      end;
+    end loop;
+  end Third_Order_Evaluation;
 
 end Double_Ordered_Evaluations;
