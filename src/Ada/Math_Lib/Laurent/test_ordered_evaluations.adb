@@ -186,6 +186,54 @@ package body Test_Ordered_Evaluations is
     end loop;
   end Test_First_Order_Evaluation;
 
+  procedure Test_First_Derivative_Second_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec;
+                sumerr : out double_float ) is
+
+  -- DESCRIPTION :
+  --   Tests the 1st derivative 2nd order evaluation of a polynomial
+  --   represented by (pcf, pct, pdg), evaluated at a series
+  --   with coefficients in cff and powers in pwr.
+  --   The sum of errors is in sumerr.
+
+    use Double_Ordered_Evaluations;
+
+    dim : constant integer32 := cff'last;
+    nbr : constant integer32 := pdg'last;
+    size : constant integer32 := Size_Evaluation(dim,1,2,nbr);
+    ycf1,ycf2 : Standard_Complex_Vectors.Vector(1..size);
+    ydg1,ydg2 : Standard_Floating_Vectors.Vector(1..size);
+    cf0,cf1,cf2 : Standard_Complex_Vectors.Vector(1..dim);
+    pw1,pw2 : Standard_Floating_Vectors.Vector(1..dim);
+    err : double_float;
+
+  begin
+    for i in cf0'range loop
+      cf0(i) := cff(i)(cff(i)'first);
+      cf1(i) := cff(i)(cff(i)'first+1);
+      cf2(i) := cff(i)(cff(i)'first+2);
+      pw1(i) := pwr(i)(pwr(i)'first);
+      pw2(i) := pwr(i)(pwr(i)'first+1);
+    end loop;
+    First_Derivative_Second_Order
+      (pcf,pct,pdg,cf0,cf1,cf2,pw1,pw2,ycf1,ydg1,1);
+    Second_Order_Evaluation(pcf,pct,pdg,cf0,cf1,cf2,pw1,pw2,1,ycf2,ydg2,2);
+    put_line("second derivative second order evaluation :");
+    sumerr := 0.0;
+    for i in ycf1'range loop
+      put(ycf1(i)); put("  t^"); put(ydg1(i)); new_line;
+      put(ycf2(i)); put("  t^"); put(ydg2(i)); new_line;
+      err := AbsVal(ycf1(i) - ycf2(i)) + abs(ydg1(i) - ydg2(i));
+      put("error :"); put(err,3); new_line;
+      sumerr := sumerr + err;
+    end loop;
+    put("sum of errors :"); put(sumerr,3); new_line;
+  end Test_First_Derivative_Second_Order;
+
   procedure Test_Second_Derivative_Second_Order
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
@@ -323,6 +371,126 @@ package body Test_Ordered_Evaluations is
     end loop;
   end Test_Second_Order_Evaluation;
 
+  procedure Test_First_Derivative_Third_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Tests the 1st derivative 3rd order evaluation of a polynomial
+  --   represented by (pcf, pct, pdg), evaluated at a series
+  --   with coefficients in cff and powers in pwr.
+
+    use Double_Ordered_Evaluations;
+
+    dim : constant integer32 := cff'last;
+    nbr : constant integer32 := pdg'last;
+    size : constant integer32 := Size_Evaluation(dim,1,3,nbr);
+    ycf1 : Standard_Complex_Vectors.Vector(1..size);
+    ydg1 : Standard_Floating_Vectors.Vector(1..size);
+    cf0,cf1,cf2,cf3 : Standard_Complex_Vectors.Vector(1..dim);
+    pw1,pw2,pw3 : Standard_Floating_Vectors.Vector(1..dim);
+
+  begin
+    for i in cf0'range loop
+      cf0(i) := cff(i)(cff(i)'first);
+      cf1(i) := cff(i)(cff(i)'first+1);
+      cf2(i) := cff(i)(cff(i)'first+2);
+      cf3(i) := cff(i)(cff(i)'first+3);
+      pw1(i) := pwr(i)(pwr(i)'first);
+      pw2(i) := pwr(i)(pwr(i)'first+1);
+      pw3(i) := pwr(i)(pwr(i)'first+1);
+    end loop;
+    First_Derivative_Third_Order
+      (pcf,pct,pdg,cf0,cf1,cf2,cf3,pw1,pw2,pw3,ycf1,ydg1,1);
+    put_line("first derivative third order evaluation :");
+    for i in ycf1'range loop
+      put(ycf1(i)); put("  t^"); put(ydg1(i)); new_line;
+    end loop;
+  end Test_First_Derivative_Third_Order;
+
+  procedure Test_Second_Derivative_Third_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Tests the 2nd derivative 3rd order evaluation of a polynomial
+  --   represented by (pcf, pct, pdg), evaluated at a series
+  --   with coefficients in cff and powers in pwr.
+
+    use Double_Ordered_Evaluations;
+
+    dim : constant integer32 := cff'last;
+    nbr : constant integer32 := pdg'last;
+    size : constant integer32 := Size_Evaluation(dim,2,3,nbr);
+    ycf1 : Standard_Complex_Vectors.Vector(1..size);
+    ydg1 : Standard_Floating_Vectors.Vector(1..size);
+    cf0,cf1,cf2,cf3 : Standard_Complex_Vectors.Vector(1..dim);
+    pw1,pw2,pw3 : Standard_Floating_Vectors.Vector(1..dim);
+
+  begin
+    for i in cf0'range loop
+      cf0(i) := cff(i)(cff(i)'first);
+      cf1(i) := cff(i)(cff(i)'first+1);
+      cf2(i) := cff(i)(cff(i)'first+2);
+      cf3(i) := cff(i)(cff(i)'first+3);
+      pw1(i) := pwr(i)(pwr(i)'first);
+      pw2(i) := pwr(i)(pwr(i)'first+1);
+      pw3(i) := pwr(i)(pwr(i)'first+1);
+    end loop;
+    Second_Derivative_Third_Order
+      (pcf,pct,pdg,cf0,cf1,cf2,cf3,pw1,pw2,pw3,ycf1,ydg1,1);
+    put_line("second derivative third order evaluation :");
+    for i in ycf1'range loop
+      put(ycf1(i)); put("  t^"); put(ydg1(i)); new_line;
+    end loop;
+  end Test_Second_Derivative_Third_Order;
+
+  procedure Test_Third_Derivative_Third_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Tests the 3rd derivative 3rd order evaluation of a polynomial
+  --   represented by (pcf, pct, pdg), evaluated at a series
+  --   with coefficients in cff and powers in pwr.
+
+    use Double_Ordered_Evaluations;
+
+    dim : constant integer32 := cff'last;
+    nbr : constant integer32 := pdg'last;
+    size : constant integer32 := Size_Evaluation(dim,3,3,nbr);
+    ycf1 : Standard_Complex_Vectors.Vector(1..size);
+    ydg1 : Standard_Floating_Vectors.Vector(1..size);
+    cf0,cf1,cf2,cf3 : Standard_Complex_Vectors.Vector(1..dim);
+    pw1,pw2,pw3 : Standard_Floating_Vectors.Vector(1..dim);
+
+  begin
+    for i in cf0'range loop
+      cf0(i) := cff(i)(cff(i)'first);
+      cf1(i) := cff(i)(cff(i)'first+1);
+      cf2(i) := cff(i)(cff(i)'first+2);
+      cf3(i) := cff(i)(cff(i)'first+3);
+      pw1(i) := pwr(i)(pwr(i)'first);
+      pw2(i) := pwr(i)(pwr(i)'first+1);
+      pw3(i) := pwr(i)(pwr(i)'first+1);
+    end loop;
+    Third_Derivative_Third_Order
+      (pcf,pct,pdg,cf0,cf1,cf2,cf3,pw1,pw2,pw3,ycf1,ydg1,1);
+    put_line("third derivative third order evaluation :");
+    for i in ycf1'range loop
+      put(ycf1(i)); put("  t^"); put(ydg1(i)); new_line;
+    end loop;
+  end Test_Third_Derivative_Third_Order;
+
   procedure Generate_Input
               ( dim,nbr,ord : in integer32;
                 hcf : out Standard_Complex_Vectors.Vector;
@@ -400,18 +568,36 @@ package body Test_Ordered_Evaluations is
     hcf : Standard_Complex_Vectors.Vector(1..size);
     hct : Standard_Floating_Vectors.Vector(1..size);
     hdg : Standard_Integer_VecVecs.VecVec(1..size);
-    sumerr2,sumerr3 : double_float;
+    sumerr1,sumerr2,sumerr3 : double_float;
 
   begin
     Generate_Input(dim,nbr,ord,hcf,hct,hdg,cff,pwr);
+    Test_First_Derivative_Second_Order(hcf,hct,hdg,cff,pwr,sumerr1);
     Test_Second_Derivative_Second_Order(hcf,hct,hdg,cff,pwr,sumerr2);
     Test_Third_Derivative_Second_Order(hcf,hct,hdg,cff,pwr,sumerr3);
+    put("error of 1st derivatives :"); put(sumerr1,3); new_line;
     put("error of 2nd derivatives :"); put(sumerr2,3); new_line;
     put("error of 3rd derivatives :"); put(sumerr3,3); new_line;
     for k in 4..5 loop
       Test_Second_Order_Evaluation(hcf,hct,hdg,cff,pwr,integer32(k));
     end loop;
   end Test_Second_Order;
+
+  procedure Test_Third_Order ( dim,nbr,ord : in integer32 ) is
+
+    cff : Standard_Complex_VecVecs.VecVec(1..dim);
+    pwr : Standard_Floating_VecVecs.VecVec(1..dim);
+    size : constant integer32 := (ord+2)*nbr;
+    hcf : Standard_Complex_Vectors.Vector(1..size);
+    hct : Standard_Floating_Vectors.Vector(1..size);
+    hdg : Standard_Integer_VecVecs.VecVec(1..size);
+
+  begin
+    Generate_Input(dim,nbr,ord,hcf,hct,hdg,cff,pwr);
+    Test_First_Derivative_Third_Order(hcf,hct,hdg,cff,pwr);
+    Test_Second_Derivative_Third_Order(hcf,hct,hdg,cff,pwr);
+    Test_Third_Derivative_Third_Order(hcf,hct,hdg,cff,pwr);
+  end Test_Third_Order;
 
   procedure Main is
 
@@ -430,8 +616,15 @@ package body Test_Ordered_Evaluations is
        then Test_First_Order(dim,nbr,ord);
       end if;
     end if;
-    if ord > 1
-     then Test_Second_Order(dim,nbr,ord);
+    if ord > 1 then
+      put("Test second order ? ");
+      Communications_with_User.Ask_Yes_or_No(ans);
+      if ans = 'y'
+       then Test_Second_Order(dim,nbr,ord);
+      end if;
+    end if;
+    if ord > 2
+     then Test_Third_Order(dim,nbr,ord);
     end if;
   end Main;
 

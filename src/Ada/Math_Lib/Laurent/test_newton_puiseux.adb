@@ -231,8 +231,7 @@ package body Test_Newton_Puiseux is
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 cA : in Standard_Complex_Matrices.Matrix;
                 cf2 : out Standard_Complex_Vectors.Vector;
@@ -340,11 +339,8 @@ package body Test_Newton_Puiseux is
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
-                pw1 : in Standard_Floating_Vectors.Vector;
-                pw2 : in Standard_Floating_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2 : in Standard_Floating_Vectors.Vector;
                 cA : in Standard_Complex_Matrices.Matrix;
                 cf3 : out Standard_Complex_Vectors.Vector;
                 pw3 : out Standard_Floating_Vectors.Vector;
@@ -453,6 +449,126 @@ package body Test_Newton_Puiseux is
     end loop;
   end Diagonal_Third_Terms;
 
+  procedure Diagonal_Fourth_Terms
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cf0,cf1,cf2,cf3 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2,pw3 : in Standard_Floating_Vectors.Vector;
+                cA : in Standard_Complex_Matrices.Matrix;
+                cf4 : out Standard_Complex_Vectors.Vector;
+                pw4 : out Standard_Floating_Vectors.Vector;
+                tol : in double_float := 1.0E-12;
+                vrblvl : in integer32 := 0 ) is
+
+    cf4a : Standard_Complex_Vectors.Vector(cf1'range);
+    pw4a : Standard_Floating_Vectors.Vector(pw1'range);
+    dif,sumdif : double_float;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Test_Newton_Puiseux.diagonal_fourth_terms ...");
+    end if;
+    Double_Ordered_Evaluations.First_Derivative_Third_Order
+      (hcf,hct,hdg,cf0,cf1,cf2,cf3,pw1,pw2,pw3,cf4a,pw4a,vrblvl-1);
+    for i in cf4a'range loop -- Jacobian is diagonal for the test example
+      cf4a(i) := -cf4a(i)/cA(i,i);
+    end loop;
+    Double_Ordered_Evaluations.Second_Derivative_Third_Order
+      (hcf,hct,hdg,cf0,cf1,cf2,cf3,pw1,pw2,pw3,cf4,pw4,vrblvl-1);
+    for i in cf3'range loop -- Jacobian is diagonal for the test example
+      cf4(i) := -cf4(i)/cA(i,i);
+    end loop;
+    if vrblvl > 0
+     then put_line("first and second derivative evaluations :");
+    end if;
+    sumdif := 0.0;
+    for i in cf1'range loop
+      if vrblvl > 0 then
+        put(cf4a(i)); put(" t^"); put(pw4a(i)); new_line;
+        put(cf4(i)); put(" t^"); put(pw4(i)); new_line;
+      end if;
+      dif := AbsVal(cf4a(i) - cf4(i)) + abs(pw4a(i) - pw4(i));
+      if vrblvl > 0
+       then put("difference :"); put(dif,3); new_line;
+      end if;
+      sumdif := sumdif + dif;
+    end loop;
+    if vrblvl > 0 then
+      put("sum of differences :"); put(sumdif,3); new_line;
+      if sumdif > tol
+       then put_line("higher derivatives are needed ...");
+      end if;
+    end if;
+    if sumdif > tol then
+      cf4a := cf4; pw4a := pw4;
+      Double_Ordered_Evaluations.Third_Derivative_Third_Order
+        (hcf,hct,hdg,cf0,cf1,cf2,cf3,pw1,pw2,pw3,cf4,pw4,vrblvl-1);
+      for i in cf4'range loop -- Jacobian is diagonal for the test example
+        cf4(i) := -cf4(i)/cA(i,i);
+      end loop;
+      if vrblvl > 0
+       then put_line("second and third derivative evaluations :");
+      end if;
+      sumdif := 0.0;
+      for i in cf1'range loop
+        if vrblvl > 0 then
+          put(cf4a(i)); put(" t^"); put(pw4a(i)); new_line;
+          put(cf4(i)); put(" t^"); put(pw4(i)); new_line;
+        end if;
+        dif := AbsVal(cf4a(i) - cf4(i)) + abs(pw4a(i) - pw4(i));
+        if vrblvl > 0
+         then put("difference :"); put(dif,3); new_line;
+        end if;
+        sumdif := sumdif + dif;
+      end loop;
+      if vrblvl > 0 then
+        put("sum of differences :"); put(sumdif,3); new_line;
+        if sumdif > tol
+         then put_line("higher derivatives are needed ...");
+        end if;
+      end if;
+    end if;
+  end Diagonal_Fourth_Terms;
+
+  function Error_Sum ( idx : in integer32;
+                       cff : in Standard_Complex_VecVecs.VecVec;
+                       pwr : in Standard_Floating_VecVecs.VecVec;
+                       cfp : in Standard_Complex_Vectors.Vector;
+                       psm : in Standard_Floating_Vectors.Vector;
+                       vrblvl : in integer32 := 0 )
+                     return double_float is
+
+  -- DESCRIPTION :
+  --   Given the generated power series in (cff, pwr) and the
+  --   computed new coefficients and powers in (cfp, pwr),
+  --   returns the sum of the errors.
+  --   If vrblvl > 0, then the series and errors are written.
+                     
+    res : double_float := 0.0;
+    err : double_float;
+
+  begin
+    for i in cff'range loop
+      if vrblvl > 0 then
+        put("x"); put(i,1); put(" :");
+        put(cff(i)(idx)); put(" t^"); put(pwr(i)(idx)); new_line;
+        put("y"); put(i,1); put(" :");
+        put(cfp(i)); put(" t^"); put(psm(i)); new_line;
+      end if;
+      err := AbsVal(cfp(i) - cff(i)(idx)); res := res + err;
+      if vrblvl > 0 then
+        put("error :"); put(err,3);
+        put(" t^");
+      end if;
+      err := abs(psm(i) - pwr(i)(idx)); res := res + err;
+      if vrblvl > 0 then
+        put(err,3); new_line;
+      end if;
+    end loop;
+    return res;
+  end Error_Sum;
+
   procedure Run_Newton_Step
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
@@ -466,9 +582,9 @@ package body Test_Newton_Puiseux is
     lcf : Standard_Complex_Vectors.Vector(hcf'range);
     cA : Standard_Complex_Matrices.Matrix(hcf'range,hcf'range);
     eA : Standard_Floating_Matrices.Matrix(hcf'range,hcf'range);
-    err,sumerr : double_float;
-    psm,pw2,pw3 : Standard_Floating_Vectors.Vector(hcf'range);
-    cfp,cf2,cf3 : Standard_Complex_Vectors.Vector(hcf'range);
+    sumerr : double_float;
+    psm,pw2,pw3,pw4 : Standard_Floating_Vectors.Vector(hcf'range);
+    cfp,cf2,cf3,cf4 : Standard_Complex_Vectors.Vector(hcf'range);
     ans : character;
 
   begin
@@ -481,18 +597,7 @@ package body Test_Newton_Puiseux is
     end loop;
     Diagonal_Leading_Terms(hcf,hct,hdg,lcf,cA,eA,cfp,psm,1);
     put_line("Computing error sum ...");
-    sumerr := 0.0;
-    for i in cff'range loop
-      put("x"); put(i,1); put(" :");
-      put(cff(i)(cff(i)'first+1)); put(" t^"); put(pwr(i)(1)); new_line;
-      put("y"); put(i,1); put(" :");
-      put(cfp(i)); put(" t^"); put(psm(i)); new_line;
-      err := AbsVal(cfp(i) - cff(i)(cff(i)'first+1));
-      put("error :"); put(err,3); sumerr := sumerr + err;
-      put(" t^");
-      err := abs(psm(i) - pwr(i)(1)); put(err,3); new_line;
-      sumerr := sumerr + err;
-    end loop;
+    sumerr := Error_Sum(1,cff,pwr,cfp,psm,1);
     put("error sum :"); put(sumerr,3); new_line;
     if nbr > 1 then
       put("Continue ? (y/n) "); Communications_with_User.Ask_Yes_or_No(ans);
@@ -501,18 +606,7 @@ package body Test_Newton_Puiseux is
       end if;
       Diagonal_Second_Terms(hcf,hct,hdg,lcf,cfp,psm,cA,cf2,pw2,tol,1);
       put_line("Computing error sum ...");
-      sumerr := 0.0;
-      for i in cff'range loop
-        put("x"); put(i,1); put(" :");
-        put(cff(i)(cff(i)'first+2)); put(" t^"); put(pwr(i)(2)); new_line;
-        put("y"); put(i,1); put(" :");
-        put(cf2(i)); put(" t^"); put(pw2(i)); new_line;
-        err := AbsVal(cf2(i) - cff(i)(cff(i)'first+2));
-        put("error :"); put(err,3); sumerr := sumerr + err;
-        put(" t^");
-        err := abs(pw2(i) - pwr(i)(2)); put(err,3); new_line;
-        sumerr := sumerr + err;
-      end loop;
+      sumerr := Error_Sum(2,cff,pwr,cf2,pw2,1);
       put("error sum :"); put(sumerr,3); new_line;
     end if;
     if nbr > 2 then
@@ -522,36 +616,40 @@ package body Test_Newton_Puiseux is
       end if;
       Diagonal_Third_Terms(hcf,hct,hdg,lcf,cfp,cf2,psm,pw2,cA,cf3,pw3,tol,1);
       put_line("Computing error sum ...");
-      sumerr := 0.0;
-      for i in cff'range loop
-        put("x"); put(i,1); put(" :");
-        put(cff(i)(cff(i)'first+3)); put(" t^"); put(pwr(i)(3)); new_line;
-        put("y"); put(i,1); put(" :");
-        put(cf3(i)); put(" t^"); put(pw3(i)); new_line;
-        err := AbsVal(cf3(i) - cff(i)(cff(i)'first+3));
-        put("error :"); put(err,3); sumerr := sumerr + err;
-        put(" t^");
-        err := abs(pw3(i) - pwr(i)(3)); put(err,3); new_line;
-        sumerr := sumerr + err;
-      end loop;
+      sumerr := Error_Sum(3,cff,pwr,cf3,pw3,1);
       put("error sum :"); put(sumerr,3); new_line;
+   end if;
+   if nbr > 3 then
       put("Continue ? (y/n) "); Communications_with_User.Ask_Yes_or_No(ans);
       if ans /= 'y'
        then return;
       end if;
+      Diagonal_Fourth_Terms
+        (hcf,hct,hdg,lcf,cfp,cf2,cf3,psm,pw2,pw3,cA,cf4,pw4,tol,1);
+      put_line("Computing error sum ...");
+      sumerr := Error_Sum(4,cff,pwr,cf4,pw4,1);
+      put("error sum :"); put(sumerr,3); new_line;
       put_line("first order terms :");
       for i in psm'range loop
         put(cff(i)(1)); put(" t^"); put(pwr(i)(1)); new_line;
       end loop;
-      put_line("second order terms :");
-      for i in psm'range loop
-        put(cff(i)(2)); put(" t^"); put(pwr(i)(2)); new_line;
-      end loop;
-      if nbr > 2 then
-        put_line("third order terms :");
+      if nbr > 1 then
+        put_line("second order terms :");
         for i in psm'range loop
-          put(cff(i)(3)); put(" t^"); put(pwr(i)(3)); new_line;
+          put(cff(i)(2)); put(" t^"); put(pwr(i)(2)); new_line;
         end loop;
+        if nbr > 2 then
+          put_line("third order terms :");
+          for i in psm'range loop
+            put(cff(i)(3)); put(" t^"); put(pwr(i)(3)); new_line;
+          end loop;
+          if nbr > 3 then
+            put_line("fourth order terms :");
+            for i in psm'range loop
+              put(cff(i)(4)); put(" t^"); put(pwr(i)(4)); new_line;
+            end loop;
+          end if;
+        end if;
       end if;
     end if;
   end Run_Newton_Step;

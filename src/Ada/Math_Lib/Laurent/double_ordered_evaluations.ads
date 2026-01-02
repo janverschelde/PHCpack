@@ -25,8 +25,7 @@ package Double_Ordered_Evaluations is
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 ycf : out Standard_Complex_Vectors.Vector;
                 ydg : out Standard_Floating_Vectors.Vector;
@@ -87,11 +86,8 @@ package Double_Ordered_Evaluations is
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
-                pw1 : in Standard_Floating_Vectors.Vector;
-                pw2 : in Standard_Floating_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2 : in Standard_Floating_Vectors.Vector;
                 ycf : out Standard_Complex_Vectors.Vector;
                 ydg : out Standard_Floating_Vectors.Vector;
                 vrblvl : in integer32 := 0 );
@@ -149,12 +145,76 @@ package Double_Ordered_Evaluations is
   --   ycf      coefficients of the evaluated series, up to second order;
   --   ydg      corresponding exponents of the evaluated series.
 
+  procedure First_Derivative_Third_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cf0,cf1,cf2,cf3 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2,pw3 : in Standard_Floating_Vectors.Vector;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Evaluates a polynomial at a series truncated at the third order,
+  --   using constants and the first derivatives.
+
+  -- REQUIRED : ycf'range = 1..(3*dim+1)*nbr = ydg'range,
+  --   where nbr is the number of terms in the polynomial, and
+  --   where dim is the number of variables.
+
+  -- ON ENTRY :
+  --   pcf      coefficients of a Laurent polynomial;
+  --   pct      powers of t of the coefficients;
+  --   pdg      supports of a Laurent polynomial;
+  --   cf0      constant coefficients of a power series;
+  --   cf1      coefficients corresponding to pw1;
+  --   cf2      coefficients corresponding to pw2;
+  --   cf3      coefficients corresponding to pw3;
+  --   pw1      leading exponents in the power series;
+  --   pw2      second exponents in the power series;
+  --   pw3      third exponents in the power series;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   ycf      coefficients of the evaluated series, up to second order;
+  --   ydg      corresponding exponents of the evaluated series.
+
+  procedure First_Derivative_Third_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Evaluates a polynomial at a series truncated at the third order,
+  --   using constants and the first derivatives.
+
+  -- REQUIRED : ycf'range = 1..(3*dim+1)*nbr = ydg'range,
+  --   where nbr is the number of terms in the polynomial, and
+  --   where dim is the number of variables.
+
+  -- ON ENTRY :
+  --   pcf      coefficients of a Laurent polynomial;
+  --   pct      powers of t of the coefficients;
+  --   pdg      supports of a Laurent polynomial;
+  --   cff      coefficients of a power series;
+  --   pwr      exponents in the power series.
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   ycf      coefficients of the evaluated series, up to second order;
+  --   ydg      corresponding exponents of the evaluated series.
+
   procedure Second_Derivative_First_Order
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 ycf : out Standard_Complex_Vectors.Vector;
                 ydg : out Standard_Floating_Vectors.Vector;
@@ -217,11 +277,8 @@ package Double_Ordered_Evaluations is
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
-                pw1 : in Standard_Floating_Vectors.Vector;
-                pw2 : in Standard_Floating_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2 : in Standard_Floating_Vectors.Vector;
                 ycf : out Standard_Complex_Vectors.Vector;
                 ydg : out Standard_Floating_Vectors.Vector;
                 vrblvl : in integer32 := 0 );
@@ -266,6 +323,73 @@ package Double_Ordered_Evaluations is
 
   -- REQUIRED : ycf'range = 1..size*nbr = ydg'range,
   --   where size = 1 + 3*dim + 2*dim**2,
+  --   where nbr is the number of terms in the polynomial, and
+  --   where dim is the number of variables.
+
+  -- ON ENTRY :
+  --   pcf      coefficients of a Laurent polynomial;
+  --   pct      powers of t of the coefficients;
+  --   pdg      supports of a Laurent polynomial;
+  --   cff      coefficients of a power series;
+  --   pwr      exponents in the power series.
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   ycf      coefficients of the evaluated series, up to second order;
+  --   ydg      corresponding exponents of the evaluated series.
+
+  procedure Second_Derivative_Third_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cf0,cf1,cf2,cf3 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2,pw3 : in Standard_Floating_Vectors.Vector;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Evaluates a polynomial at a series truncated at the third order,
+  --   using constants, first and second derivatives.
+
+  -- REQUIRED : ycf'range = 1..size*nbr = ydg'range,
+  --   where size = 1 + 9*dim + 9*dim*(dim-1)/2,
+  --   where nbr is the number of terms in the polynomial, and
+  --   where dim is the number of variables.
+
+  -- ON ENTRY :
+  --   pcf      coefficients of a Laurent polynomial;
+  --   pct      powers of t of the coefficients;
+  --   pdg      supports of a Laurent polynomial;
+  --   cf0      constant coefficients of a power series;
+  --   cf1      coefficients corresponding to pw1;
+  --   cf2      coefficients corresponding to pw2;
+  --   cf3      coefficients corresponding to pw3;
+  --   pw1      leading exponents in the power series;
+  --   pw2      second exponents in the power series;
+  --   pw3      third exponents in the power series;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   ycf      coefficients of the evaluated series, up to second order;
+  --   ydg      corresponding exponents of the evaluated series.
+
+  procedure Second_Derivative_Third_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Evaluates a polynomial at a series truncated at the third order,
+  --   using constants, first and second derivatives.
+
+  -- REQUIRED : ycf'range = 1..size*nbr = ydg'range,
+  --   where size = 1 + 9*dim + 9*dim*(dim-1)/2,
   --   where nbr is the number of terms in the polynomial, and
   --   where dim is the number of variables.
 
@@ -317,11 +441,8 @@ package Double_Ordered_Evaluations is
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
-                pw1 : in Standard_Floating_Vectors.Vector;
-                pw2 : in Standard_Floating_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2 : in Standard_Floating_Vectors.Vector;
                 ycf : out Standard_Complex_Vectors.Vector;
                 ydg : out Standard_Floating_Vectors.Vector;
                 vrblvl : in integer32 := 0 );
@@ -383,14 +504,80 @@ package Double_Ordered_Evaluations is
   --   ycf      coefficients of the evaluated series, up to second order;
   --   ydg      corresponding exponents of the evaluated series.
 
+  procedure Third_Derivative_Third_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cf0,cf1,cf2,cf3 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2,pw3 : in Standard_Floating_Vectors.Vector;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Evaluates a polynomial at a series truncated at the second order,
+  --   using constants, first, second, and third derivatives.
+
+  -- REQUIRED : ycf'range = 1..size*nbr = ydg'range,
+  --   where size = 
+  --   where nbr is the number of terms in the polynomial, and
+  --   where dim is the number of variables.
+
+  -- ON ENTRY :
+  --   pcf      coefficients of a Laurent polynomial;
+  --   pct      powers of t of the coefficients;
+  --   pdg      supports of a Laurent polynomial;
+  --   cf0      constant coefficients of a power series;
+  --   cf1      coefficients corresponding to pw1;
+  --   cf2      coefficients corresponding to pw2;
+  --   cf3      coefficients corresponding to pw3;
+  --   pw1      leading exponents in the power series;
+  --   pw2      second exponents in the power series;
+  --   pw3      second exponents in the power series;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   ycf      coefficients of the evaluated series, up to second order;
+  --   ydg      corresponding exponents of the evaluated series.
+
+  procedure Third_Derivative_Third_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Evaluates a polynomial at a series truncated at the third order,
+  --   using constants, first, second, and third derivatives.
+
+  -- REQUIRED : ycf'range = 1..size*nbr = ydg'range,
+  --   where size = 
+  --   where nbr is the number of terms in the polynomial, and
+  --   where dim is the number of variables.
+
+  -- ON ENTRY :
+  --   pcf      coefficients of a Laurent polynomial;
+  --   pct      powers of t of the coefficients;
+  --   pdg      supports of a Laurent polynomial;
+  --   cff      coefficients of a power series;
+  --   pwr      exponents in the power series.
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   ycf      coefficients of the evaluated series, up to second order;
+  --   ydg      corresponding exponents of the evaluated series.
+
 -- INDEXED DERIVATIVES ON ONE LAURENT POLYNOMIAL :
 
   procedure Fixed_Derivative_First_Order
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 difsum : in integer32; idxnxt : in out integer32;
                 ycf : out Standard_Complex_Vectors.Vector;
@@ -421,11 +608,8 @@ package Double_Ordered_Evaluations is
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
-                pw1 : in Standard_Floating_Vectors.Vector;
-                pw2 : in Standard_Floating_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2 : in Standard_Floating_Vectors.Vector;
                 difsum : in integer32; idxnxt : in out integer32;
                 ycf : out Standard_Complex_Vectors.Vector;
                 ydg : out Standard_Floating_Vectors.Vector;
@@ -457,8 +641,7 @@ package Double_Ordered_Evaluations is
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 difmax : in integer32;
                 ycf : out Standard_Complex_Vectors.Vector;
@@ -490,9 +673,7 @@ package Double_Ordered_Evaluations is
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 pw2 : in Standard_Floating_Vectors.Vector;
                 difmax : in integer32;
@@ -529,8 +710,7 @@ package Double_Ordered_Evaluations is
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 cf2 : out Standard_Complex_Vectors.Vector;
                 pw2 : out Standard_Floating_Vectors.Vector;
@@ -587,11 +767,8 @@ package Double_Ordered_Evaluations is
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
-                pw1 : in Standard_Floating_Vectors.Vector;
-                pw2 : in Standard_Floating_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2 : in Standard_Floating_Vectors.Vector;
                 cf3 : out Standard_Complex_Vectors.Vector;
                 pw3 : out Standard_Floating_Vectors.Vector;
                 vrblvl : in integer32 := 0 );
@@ -616,6 +793,39 @@ package Double_Ordered_Evaluations is
   -- ON RETURN :
   --   cf3      coefficients corresponding to the pw3;
   --   pw3      smallest positive powers in the evaluated series.
+
+  procedure First_Derivative_Third_Order
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cf0,cf1,cf2,cf3 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2,pw3 : in Standard_Floating_Vectors.Vector;
+                cf4 : out Standard_Complex_Vectors.Vector;
+                pw4 : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Computes a Taylor series expansion of the Laurent homotopy
+  --   using the constant coefficients of the power series solution,
+  --   truncated after the third order, using first derivatives.
+  --   Computes the smallest positive exponents of this evaluation.
+
+  -- ON ENTRY :
+  --   hcf      coefficients of the polynomials in the homotopy;
+  --   hdg      supports of the Laurent homotopy;
+  --   hct      powers of t in the homotopy for each monomial;
+  --   cf0      constant coefficients of a power series;
+  --   cf1      coefficients corresponding to pw1;
+  --   cf2      coefficients corresponding to pw2;
+  --   cf3      coefficients corresponding to pw3;
+  --   pw1      leading exponents in the power series;
+  --   pw2      second exponents in the power series;
+  --   pw3      third exponents in the power series;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   cf4      coefficients corresponding to the pw4;
+  --   pw4      smallest positive powers in the evaluated series.
 
   procedure First_Derivative_Second_Order
               ( hcf : in Standard_Complex_VecVecs.VecVec;
@@ -649,8 +859,7 @@ package Double_Ordered_Evaluations is
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 cf2 : out Standard_Complex_Vectors.Vector;
                 pw2 : out Standard_Floating_Vectors.Vector;
@@ -707,11 +916,8 @@ package Double_Ordered_Evaluations is
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
-                pw1 : in Standard_Floating_Vectors.Vector;
-                pw2 : in Standard_Floating_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2 : in Standard_Floating_Vectors.Vector;
                 cf3 : out Standard_Complex_Vectors.Vector;
                 pw3 : out Standard_Floating_Vectors.Vector;
                 vrblvl : in integer32 := 0 );
@@ -765,12 +971,44 @@ package Double_Ordered_Evaluations is
   --   psm      smallest positive powers in the evaluated series;
   --   csm      coefficients corresponding to the smallest positive powers.
 
+  procedure Second_Derivative_Third_Order
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cf0,cf1,cf2,cf3 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2,pw3 : in Standard_Floating_Vectors.Vector;
+                cf4 : out Standard_Complex_Vectors.Vector;
+                pw4 : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Computes a Taylor series expansion of the Laurent homotopy
+  --   using the constant coefficients of the power series solution,
+  --   truncated after the third order, using up to 2nd derivatives.
+  --   Computes the smallest positive exponents of this evaluation.
+
+  -- ON ENTRY :
+  --   hcf      coefficients of the polynomials in the homotopy;
+  --   hdg      supports of the Laurent homotopy;
+  --   hct      powers of t in the homotopy for each monomial;
+  --   cf0      constant coefficients of a power series;
+  --   cf1      coefficients corresponding to pw1;
+  --   cf2      coefficients corresponding to pw2;
+  --   cf3      coefficients corresponding to pw3;
+  --   pw1      leading exponents in the power series;
+  --   pw2      second exponents in the power series;
+  --   pw3      third exponents in the power series;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   cf4      coefficients corresponding to pw4;
+  --   pw4      smallest positive powers in the evaluated series.
+
   procedure Third_Derivative_First_Order
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 cf2 : out Standard_Complex_Vectors.Vector;
                 pw2 : out Standard_Floating_Vectors.Vector;
@@ -827,11 +1065,8 @@ package Double_Ordered_Evaluations is
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
-                pw1 : in Standard_Floating_Vectors.Vector;
-                pw2 : in Standard_Floating_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2 : in Standard_Floating_Vectors.Vector;
                 cf3 : out Standard_Complex_Vectors.Vector;
                 pw3 : out Standard_Floating_Vectors.Vector;
                 vrblvl : in integer32 := 0 );
@@ -839,7 +1074,7 @@ package Double_Ordered_Evaluations is
   -- DESCRIPTION :
   --   Computes a Taylor series expansion of the Laurent homotopy
   --   using the constant coefficients of the power series solution,
-  --   truncated after the first order, using up to 3rd derivatives.
+  --   truncated after the 2nd order, using up to 3rd derivatives.
   --   Computes the smallest positive exponents of this evaluation.
 
   -- ON ENTRY :
@@ -857,14 +1092,46 @@ package Double_Ordered_Evaluations is
   --   cf3      coefficients corresponding to pw3;
   --   pw3      smallest positive powers in the evaluated series.
 
+  procedure Third_Derivative_Third_Order
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cf0,cf1,cf2,cf3 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2,pw3 : in Standard_Floating_Vectors.Vector;
+                cf4 : out Standard_Complex_Vectors.Vector;
+                pw4 : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Computes a Taylor series expansion of the Laurent homotopy
+  --   using the constant coefficients of the power series solution,
+  --   truncated after the 3rd order, using up to 3rd derivatives.
+  --   Computes the smallest positive exponents of this evaluation.
+
+  -- ON ENTRY :
+  --   hcf      coefficients of the polynomials in the homotopy;
+  --   hdg      supports of the Laurent homotopy;
+  --   hct      powers of t in the homotopy for each monomial;
+  --   cf0      constant coefficients of a power series;
+  --   cf1      coefficients corresponding to pw1;
+  --   cf2      coefficients corresponding to pw2;
+  --   cf3      coefficients corresponding to pw3;
+  --   pw1      leading exponents in the power series;
+  --   pw2      second exponents in the power series;
+  --   pw3      third exponents in the power series;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   cf4      coefficients corresponding to pw4;
+  --   pw4      smallest positive powers in the evaluated series.
+
 -- INDEXED DERIVATIVES ON A LAURENT HOMOTOPY :
 
   procedure First_Order_Evaluation
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 difmax : in integer32;
                 cf2 : out Standard_Complex_Vectors.Vector;
@@ -895,11 +1162,8 @@ package Double_Ordered_Evaluations is
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
-                pw1 : in Standard_Floating_Vectors.Vector;
-                pw2 : in Standard_Floating_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2 : in Standard_Floating_Vectors.Vector;
                 difmax : in integer32;
                 cf3 : out Standard_Complex_Vectors.Vector;
                 pw3 : out Standard_Floating_Vectors.Vector;

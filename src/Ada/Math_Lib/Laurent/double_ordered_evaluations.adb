@@ -122,6 +122,16 @@ package body Double_Ordered_Evaluations is
              + 32*dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)/120;
         res := res*nbr;
       end if;
+    elsif ord = 3 then
+      if ndf = 1 then -- first derivative third order
+        res := (1+3*dim)*nbr;
+      elsif ndf = 2 then
+        res := (1 + 9*dim + 9*dim*(dim-1)/2)*nbr;
+      elsif ndf = 3 then
+        res := 1 + 9*dim + 9*dim*(dim-1)/2 + 9*dim + 36*dim*(dim-1)/2
+             + 27*dim*(dim-1)*(dim-2)/6;
+        res := res*nbr;
+      end if;
     end if;
     return res;
   end Size_Evaluation;
@@ -132,8 +142,7 @@ package body Double_Ordered_Evaluations is
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 ycf : out Standard_Complex_Vectors.Vector;
                 ydg : out Standard_Floating_Vectors.Vector;
@@ -173,8 +182,7 @@ package body Double_Ordered_Evaluations is
                 ydg : out Standard_Floating_Vectors.Vector;
                 vrblvl : in integer32 := 0 ) is
 
-    lc0 : Standard_Complex_Vectors.Vector(cff'range);
-    lc1 : Standard_Complex_Vectors.Vector(cff'range);
+    lc0,lc1 : Standard_Complex_Vectors.Vector(cff'range);
     lpw : Standard_Floating_Vectors.Vector(pwr'range);
 
   begin
@@ -194,11 +202,8 @@ package body Double_Ordered_Evaluations is
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
-                pw1 : in Standard_Floating_Vectors.Vector;
-                pw2 : in Standard_Floating_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2 : in Standard_Floating_Vectors.Vector;
                 ycf : out Standard_Complex_Vectors.Vector;
                 ydg : out Standard_Floating_Vectors.Vector;
                 vrblvl : in integer32 := 0 ) is
@@ -247,11 +252,8 @@ package body Double_Ordered_Evaluations is
                 ydg : out Standard_Floating_Vectors.Vector;
                 vrblvl : in integer32 := 0 ) is
 
-    lc0 : Standard_Complex_Vectors.Vector(cff'range);
-    lc1 : Standard_Complex_Vectors.Vector(cff'range);
-    lc2 : Standard_Complex_Vectors.Vector(cff'range);
-    pw1 : Standard_Floating_Vectors.Vector(pwr'range);
-    pw2 : Standard_Floating_Vectors.Vector(pwr'range);
+    lc0,lc1,lc2 : Standard_Complex_Vectors.Vector(cff'range);
+    pw1,pw2 : Standard_Floating_Vectors.Vector(pwr'range);
 
   begin
     if vrblvl > 0 then
@@ -269,12 +271,90 @@ package body Double_Ordered_Evaluations is
       (pcf,pct,pdg,lc0,lc1,lc2,pw1,pw2,ycf,ydg,vrblvl);
   end First_Derivative_Second_Order;
 
+  procedure First_Derivative_Third_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cf0,cf1,cf2,cf3 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2,pw3 : in Standard_Floating_Vectors.Vector;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    idx : integer32 := 0;
+    shared : Complex_Number;
+
+    use Double_Leading_Evaluations;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Ordered_Evaluations.");
+      put_line("first_derivative_third_order 0 ...");
+    end if;
+    for i in pcf'range loop -- run over all monomials
+      idx := idx + 1;
+      ydg(idx) := pct(i);     -- first the constant term
+      ycf(idx) := pcf(i)*Leading_Coefficient(pdg(i).all,cf0,0,vrblvl-1);
+      for j in cf0'range loop -- all first order terms
+        idx := idx + 1;
+        ydg(idx) := pct(i) + pw1(j);
+        shared := pcf(i)*Leading_Coefficient(pdg(i).all,cf0,j,vrblvl-1);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf1(j);
+        idx := idx + 1;              -- second order terms
+        ydg(idx) := pct(i) + pw2(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf2(j);
+        idx := idx + 1;              -- third order terms
+        ydg(idx) := pct(i) + pw3(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf3(j);
+      end loop;
+    end loop;
+    if vrblvl > 0 then
+      put("idx : "); put(idx,1); new_line;
+      put("ycf'last : "); put(ycf'last,1); new_line;
+    end if;
+    Double_Real_Powered_Series.Sort(ydg,ycf); 
+    Double_Real_Powered_Series.Normalize(ycf,ydg);
+  end First_Derivative_Third_Order;
+
+  procedure First_Derivative_Third_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    lc0,lc1,lc2,lc3 : Standard_Complex_Vectors.Vector(cff'range);
+    pw1,pw2,pw3 : Standard_Floating_Vectors.Vector(pwr'range);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Ordered_Evaluations.");
+      put_line("first_derivative_third_order 2 ...");
+    end if;
+    for i in lc0'range loop
+      lc0(i) := cff(i)(cff(i)'first);
+      lc1(i) := cff(i)(cff(i)'first+1);
+      lc2(i) := cff(i)(cff(i)'first+2);
+      lc3(i) := cff(i)(cff(i)'first+3);
+      pw1(i) := pwr(i)(pwr(i)'first);
+      pw2(i) := pwr(i)(pwr(i)'first+1);
+      pw3(i) := pwr(i)(pwr(i)'first+2);
+    end loop;
+    First_Derivative_Third_Order
+      (pcf,pct,pdg,lc0,lc1,lc2,lc3,pw1,pw2,pw3,ycf,ydg,vrblvl);
+  end First_Derivative_Third_Order;
+
   procedure Second_Derivative_First_Order
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 ycf : out Standard_Complex_Vectors.Vector;
                 ydg : out Standard_Floating_Vectors.Vector;
@@ -320,8 +400,8 @@ package body Double_Ordered_Evaluations is
       for i in ycf'range loop
         put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
       end loop;
-      put("idx : "); put(idx,1); new_line;
-      put("ycf'last : "); put(ycf'last,1); new_line;
+      put("idx : "); put(idx,1);
+      put(", ycf'last : "); put(ycf'last,1); new_line;
     end if;
     Double_Real_Powered_Series.Sort(ydg,ycf); 
     Double_Real_Powered_Series.Normalize(ycf,ydg);
@@ -337,8 +417,7 @@ package body Double_Ordered_Evaluations is
                 ydg : out Standard_Floating_Vectors.Vector;
                 vrblvl : in integer32 := 0 ) is
 
-    lc0 : Standard_Complex_Vectors.Vector(cff'range);
-    lc1 : Standard_Complex_Vectors.Vector(cff'range);
+    lc0,lc1 : Standard_Complex_Vectors.Vector(cff'range);
     lpw : Standard_Floating_Vectors.Vector(pwr'range);
 
   begin
@@ -358,11 +437,8 @@ package body Double_Ordered_Evaluations is
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
-                pw1 : in Standard_Floating_Vectors.Vector;
-                pw2 : in Standard_Floating_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2 : in Standard_Floating_Vectors.Vector;
                 ycf : out Standard_Complex_Vectors.Vector;
                 ydg : out Standard_Floating_Vectors.Vector;
                 vrblvl : in integer32 := 0 ) is
@@ -431,8 +507,8 @@ package body Double_Ordered_Evaluations is
       end loop;
     end loop;
     if vrblvl > 0 then
-      put("idx : "); put(idx,1); new_line;
-      put("ycf'last : "); put(ycf'last,1); new_line;
+      put("idx : "); put(idx,1);
+      put(", ycf'last : "); put(ycf'last,1); new_line;
     end if;
     Double_Real_Powered_Series.Sort(ydg,ycf); 
     Double_Real_Powered_Series.Normalize(ycf,ydg);
@@ -448,15 +524,8 @@ package body Double_Ordered_Evaluations is
                 ydg : out Standard_Floating_Vectors.Vector;
                 vrblvl : in integer32 := 0 ) is
 
-    lc0 : Standard_Complex_Vectors.Vector(cff'range);
-    lc1 : Standard_Complex_Vectors.Vector(cff'range);
-    lc2 : Standard_Complex_Vectors.Vector(cff'range);
-    pw1 : Standard_Floating_Vectors.Vector(pwr'range);
-    pw2 : Standard_Floating_Vectors.Vector(pwr'range);
-    idx : integer32 := 0;
-    shared : Complex_Number;
-
-    use Double_Leading_Evaluations;
+    lc0,lc1,lc2 : Standard_Complex_Vectors.Vector(cff'range);
+    pw1,pw2 : Standard_Floating_Vectors.Vector(pwr'range);
 
   begin
     if vrblvl > 0 then
@@ -470,73 +539,163 @@ package body Double_Ordered_Evaluations is
       pw1(i) := pwr(i)(pwr(i)'first);
       pw2(i) := pwr(i)(pwr(i)'first+1);
     end loop;
+    Second_Derivative_Second_Order
+      (pcf,pct,pdg,lc0,lc1,lc2,pw1,pw2,ycf,ydg,vrblvl);
+  end Second_Derivative_Second_Order;
+
+  procedure Second_Derivative_Third_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cf0,cf1,cf2,cf3 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2,pw3 : in Standard_Floating_Vectors.Vector;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    idx : integer32 := 0;
+    shared : Complex_Number;
+
+    use Double_Leading_Evaluations;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Ordered_Evaluations.");
+      put_line("second_derivative_third_order 1 ...");
+    end if;
     for i in pcf'range loop -- run over all monomials
       idx := idx + 1;
       ydg(idx) := pct(i);     -- first the constant term
-      ycf(idx) := pcf(i)*Leading_Coefficient(pdg(i).all,lc0,0,vrblvl-1);
-      for j in cff'range loop -- all first order terms
+      ycf(idx) := pcf(i)*Leading_Coefficient(pdg(i).all,cf0,0,vrblvl-1);
+      for j in cf0'range loop -- all first order terms
         idx := idx + 1;
         ydg(idx) := pct(i) + pw1(j);
-        shared := pcf(i)*Leading_Coefficient(pdg(i).all,lc0,j,vrblvl-1);
+        shared := pcf(i)*Leading_Coefficient(pdg(i).all,cf0,j,vrblvl-1);
         ycf(idx) := shared;
-        ycf(idx) := ycf(idx)*lc1(j);
+        ycf(idx) := ycf(idx)*cf1(j);
         idx := idx + 1;
         ydg(idx) := pct(i) + pw2(j); -- second order term
         ycf(idx) := shared;
-        ycf(idx) := ycf(idx)*lc2(j);
+        ycf(idx) := ycf(idx)*cf2(j);
+        idx := idx + 1;
+        ydg(idx) := pct(i) + pw3(j); -- third order term
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf3(j);
       end loop;
-      for j in cff'range loop -- all pure second derivative terms
+      for j in cf0'range loop -- all pure second derivative terms
         idx := idx + 1;
         ydg(idx) := pct(i) + 2.0*pw1(j);
-        shared := pcf(i)*Second_Derivative(pdg(i).all,lc0,j,vrblvl-1);
+        shared := pcf(i)*Second_Derivative(pdg(i).all,cf0,j,vrblvl-1);
         ycf(idx) := shared;
-        ycf(idx) := ycf(idx)*lc1(j)*lc1(j)/create(2.0); -- Taylor series
+        ycf(idx) := ycf(idx)*cf1(j)*cf1(j)/create(2.0); -- Taylor series
         idx := idx + 1;
         ydg(idx) := pct(i) + 2.0*pw2(j);
         ycf(idx) := shared;
-        ycf(idx) := ycf(idx)*lc2(j)*lc2(j)/create(2.0); -- Taylor series
+        ycf(idx) := ycf(idx)*cf2(j)*cf2(j)/create(2.0); -- Taylor series
+        idx := idx + 1;
+        ydg(idx) := pct(i) + 2.0*pw3(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf3(j)*cf3(j)/create(2.0); -- Taylor series
         idx := idx + 1;
         ydg(idx) := pct(i) + pw1(j) + pw2(j);
         ycf(idx) := shared;
-        ycf(idx) := ycf(idx)*lc1(j)*lc2(j); -- double compensates /2
+        ycf(idx) := ycf(idx)*cf1(j)*cf2(j);
+        idx := idx + 1;
+        ydg(idx) := pct(i) + pw1(j) + pw3(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf1(j)*cf3(j);
+        idx := idx + 1;
+        ydg(idx) := pct(i) + pw2(j) + pw3(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf2(j)*cf3(j);
       end loop;
-      for j in cff'range loop -- all mixed second derivative terms
-        for k in j+1..cff'last loop
+      for j in cf0'range loop -- all mixed second derivative terms
+        for k in j+1..cf0'last loop
           idx := idx + 1;
           ydg(idx) := pct(i) + pw1(j) + pw1(k);
           shared
-            := pcf(i)*Second_Mixed_Derivative(pdg(i).all,lc0,j,k,vrblvl-1);
+            := pcf(i)*Second_Mixed_Derivative(pdg(i).all,cf0,j,k,vrblvl-1);
           ycf(idx) := shared;
-          ycf(idx) := ycf(idx)*lc1(j)*lc1(k);
+          ycf(idx) := ycf(idx)*cf1(j)*cf1(k);
           idx := idx + 1;
           ydg(idx) := pct(i) + pw2(j) + pw2(k);
           ycf(idx) := shared;
-          ycf(idx) := ycf(idx)*lc2(j)*lc2(k);
+          ycf(idx) := ycf(idx)*cf2(j)*cf2(k);
+          idx := idx + 1;
+          ydg(idx) := pct(i) + pw3(j) + pw3(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf3(j)*cf3(k);
           idx := idx + 1;
           ydg(idx) := pct(i) + pw1(j) + pw2(k);
           ycf(idx) := shared;
-          ycf(idx) := ycf(idx)*lc1(j)*lc2(k);
+          ycf(idx) := ycf(idx)*cf1(j)*cf2(k);
           idx := idx + 1;
           ydg(idx) := pct(i) + pw2(j) + pw1(k);
           ycf(idx) := shared;
-          ycf(idx) := ycf(idx)*lc1(j)*lc1(k);
+          ycf(idx) := ycf(idx)*cf2(j)*cf1(k);
+          idx := idx + 1;
+          ydg(idx) := pct(i) + pw1(j) + pw3(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(j)*cf3(k);
+          idx := idx + 1;
+          ydg(idx) := pct(i) + pw3(j) + pw1(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf3(j)*cf1(k);
+          idx := idx + 1;
+          ydg(idx) := pct(i) + pw2(j) + pw3(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf2(j)*cf3(k);
+          idx := idx + 1;
+          ydg(idx) := pct(i) + pw3(j) + pw2(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf3(j)*cf2(k);
         end loop;
       end loop;
     end loop;
     if vrblvl > 0 then
-      put("idx : "); put(idx,1); new_line;
-      put("ycf'last : "); put(ycf'last,1); new_line;
+      put("idx : "); put(idx,1);
+      put(", ycf'last : "); put(ycf'last,1); new_line;
     end if;
     Double_Real_Powered_Series.Sort(ydg,ycf); 
     Double_Real_Powered_Series.Normalize(ycf,ydg);
-  end Second_Derivative_Second_Order;
+  end Second_Derivative_Third_Order;
+
+  procedure Second_Derivative_Third_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    lc0,lc1,lc2,lc3 : Standard_Complex_Vectors.Vector(cff'range);
+    pw1,pw2,pw3 : Standard_Floating_Vectors.Vector(pwr'range);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Ordered_Evaluations.");
+      put_line("second_derivative_third_order 1 ...");
+    end if;
+    for i in lc0'range loop
+      lc0(i) := cff(i)(cff(i)'first);
+      lc1(i) := cff(i)(cff(i)'first+1);
+      lc2(i) := cff(i)(cff(i)'first+2);
+      lc3(i) := cff(i)(cff(i)'first+3);
+      pw1(i) := pwr(i)(pwr(i)'first);
+      pw2(i) := pwr(i)(pwr(i)'first+1);
+      pw3(i) := pwr(i)(pwr(i)'first+2);
+    end loop;
+    Second_Derivative_Third_Order
+      (pcf,pct,pdg,lc0,lc1,lc2,lc3,pw1,pw2,pw3,ycf,ydg,vrblvl);
+  end Second_Derivative_Third_Order;
 
   procedure Third_Derivative_First_Order
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 ycf : out Standard_Complex_Vectors.Vector;
                 ydg : out Standard_Floating_Vectors.Vector;
@@ -613,8 +772,8 @@ package body Double_Ordered_Evaluations is
       for i in ycf'range loop
         put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
       end loop;
-      put("idx : "); put(idx,1); new_line;
-      put("ycf'last : "); put(ycf'last,1); new_line;
+      put("idx : "); put(idx,1);
+      put(", ycf'last : "); put(ycf'last,1); new_line;
     end if;
     Double_Real_Powered_Series.Sort(ydg,ycf); 
     Double_Real_Powered_Series.Normalize(ycf,ydg);
@@ -630,8 +789,7 @@ package body Double_Ordered_Evaluations is
                 ydg : out Standard_Floating_Vectors.Vector;
                 vrblvl : in integer32 := 0 ) is
 
-    lc0 : Standard_Complex_Vectors.Vector(cff'range);
-    lc1 : Standard_Complex_Vectors.Vector(cff'range);
+    lc0,lc1 : Standard_Complex_Vectors.Vector(cff'range);
     lpw : Standard_Floating_Vectors.Vector(pwr'range);
 
   begin
@@ -651,11 +809,8 @@ package body Double_Ordered_Evaluations is
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
-                pw1 : in Standard_Floating_Vectors.Vector;
-                pw2 : in Standard_Floating_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2 : in Standard_Floating_Vectors.Vector;
                 ycf : out Standard_Complex_Vectors.Vector;
                 ydg : out Standard_Floating_Vectors.Vector;
                 vrblvl : in integer32 := 0 ) is
@@ -841,8 +996,8 @@ package body Double_Ordered_Evaluations is
       end loop;
     end loop;
     if vrblvl > 0 then
-      put("idx : "); put(idx,1); new_line;
-      put("ycf'last : "); put(ycf'last,1); new_line;
+      put("idx : "); put(idx,1);
+      put(", ycf'last : "); put(ycf'last,1); new_line;
     end if;
     Double_Real_Powered_Series.Sort(ydg,ycf); 
     Double_Real_Powered_Series.Normalize(ycf,ydg);
@@ -858,11 +1013,8 @@ package body Double_Ordered_Evaluations is
                 ydg : out Standard_Floating_Vectors.Vector;
                 vrblvl : in integer32 := 0 ) is
 
-    lc0 : Standard_Complex_Vectors.Vector(cff'range);
-    lc1 : Standard_Complex_Vectors.Vector(cff'range);
-    lc2 : Standard_Complex_Vectors.Vector(cff'range);
-    pw1 : Standard_Floating_Vectors.Vector(pwr'range);
-    pw2 : Standard_Floating_Vectors.Vector(pwr'range);
+    lc0,lc1,lc2 : Standard_Complex_Vectors.Vector(cff'range);
+    pw1,pw2 : Standard_Floating_Vectors.Vector(pwr'range);
 
   begin
     if vrblvl > 0 then
@@ -880,14 +1032,470 @@ package body Double_Ordered_Evaluations is
       (pcf,pct,pdg,lc0,lc1,lc2,pw1,pw2,ycf,ydg,vrblvl);
   end Third_Derivative_Second_Order;
 
+  procedure Third_Derivative_Third_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cf0,cf1,cf2,cf3 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2,pw3 : in Standard_Floating_Vectors.Vector;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    idx : integer32 := 0;
+    shared : Complex_Number;
+
+    use Double_Leading_Evaluations;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Ordered_Evaluations.");
+      put_line("third_derivative_third_order 0 ...");
+    end if;
+    for i in pcf'range loop -- run over all monomials
+      idx := idx + 1;
+      ydg(idx) := pct(i);     -- first the constant term
+      ycf(idx) := pcf(i)*Leading_Coefficient(pdg(i).all,cf0,0,vrblvl-1);
+      for j in cf0'range loop -- all first derivative terms
+        idx := idx + 1;
+        ydg(idx) := pct(i) + pw1(j);
+        shared := pcf(i)*Leading_Coefficient(pdg(i).all,cf0,j,vrblvl-1);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf1(j);
+        idx := idx + 1;
+        ydg(idx) := pct(i) + pw2(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf2(j);
+        idx := idx + 1;
+        ydg(idx) := pct(i) + pw3(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf3(j);
+      end loop;
+      for j in cf0'range loop -- all pure second derivative terms
+        idx := idx + 1;
+        ydg(idx) := pct(i) + 2.0*pw1(j);
+        shared := pcf(i)*Second_Derivative(pdg(i).all,cf0,j,vrblvl-1);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf1(j)*cf1(j)/create(2.0); -- Taylor series
+        idx := idx + 1;
+        ydg(idx) := pct(i) + 2.0*pw2(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf2(j)*cf2(j)/create(2.0); -- Taylor series
+        idx := idx + 1;
+        ydg(idx) := pct(i) + 2.0*pw3(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf3(j)*cf3(j)/create(2.0); -- Taylor series
+        idx := idx + 1;
+        ydg(idx) := pct(i) + pw1(j) + pw2(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf1(j)*cf2(j);
+        idx := idx + 1;
+        ydg(idx) := pct(i) + pw1(j) + pw3(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf1(j)*cf3(j);
+        idx := idx + 1;
+        ydg(idx) := pct(i) + pw2(j) + pw3(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf2(j)*cf3(j);
+      end loop;
+      for j in cf0'range loop -- all mixed second derivative terms
+        for k in j+1..cf0'last loop
+          idx := idx + 1;
+          ydg(idx) := pct(i) + pw1(j) + pw1(k);
+          shared := pcf(i)*Second_Mixed_Derivative
+                             (pdg(i).all,cf0,j,k,vrblvl-1);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(j)*cf1(k); 
+          idx := idx + 1;
+          ydg(idx) := pct(i) + pw2(j) + pw2(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf2(j)*cf2(k);
+          idx := idx + 1;
+          ydg(idx) := pct(i) + pw3(j) + pw3(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf3(j)*cf3(k);
+          idx := idx + 1;
+          ydg(idx) := pct(i) + pw1(j) + pw2(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(j)*cf2(k);
+          idx := idx + 1;
+          ydg(idx) := pct(i) + pw2(j) + pw1(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf2(j)*cf1(k);
+          idx := idx + 1;
+          ydg(idx) := pct(i) + pw1(j) + pw3(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(j)*cf3(k);
+          idx := idx + 1;
+          ydg(idx) := pct(i) + pw3(j) + pw1(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf3(j)*cf1(k);
+          idx := idx + 1;
+          ydg(idx) := pct(i) + pw2(j) + pw3(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf2(j)*cf3(k);
+          idx := idx + 1;
+          ydg(idx) := pct(i) + pw3(j) + pw2(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf3(j)*cf2(k);
+        end loop;
+      end loop;
+      for j in cf0'range loop -- all pure third derivative terms
+        idx := idx + 1;
+        ydg(idx) := pct(i) + 3.0*pw1(j);
+        shared := pcf(i)*Third_Derivative(pdg(i).all,cf0,j,vrblvl-1);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf1(j)*cf1(j)*cf1(j)/create(6.0);
+        idx := idx + 1;
+        ydg(idx) := pct(i) + 3.0*pw2(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf2(j)*cf2(j)*cf2(j)/create(6.0);
+        idx := idx + 1;
+        ydg(idx) := pct(i) + 3.0*pw3(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf3(j)*cf3(j)*cf3(j)/create(6.0);
+        idx := idx + 1;
+        ydg(idx) := pct(i) + 2.0*pw1(j) + pw2(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf1(j)*cf1(j)*cf2(j)/create(2.0);
+        idx := idx + 1;
+        ydg(idx) := pct(i) + pw1(j) + 2.0*pw2(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf1(j)*cf2(j)*cf2(j)/create(2.0);
+        idx := idx + 1;
+        ydg(idx) := pct(i) + 2.0*pw1(j) + pw3(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf1(j)*cf1(j)*cf3(j)/create(2.0);
+        idx := idx + 1;
+        ydg(idx) := pct(i) + pw1(j) + 2.0*pw3(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf1(j)*cf3(j)*cf3(j)/create(2.0);
+        idx := idx + 1;
+        ydg(idx) := pct(i) + 2.0*pw2(j) + pw3(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf2(j)*cf2(j)*cf3(j)/create(2.0);
+        idx := idx + 1;
+        ydg(idx) := pct(i) + pw2(j) + 2.0*pw3(j);
+        ycf(idx) := shared;
+        ycf(idx) := ycf(idx)*cf2(j)*cf3(j)*cf3(j)/create(2.0);
+      end loop;
+      for j in cf0'range loop -- all semi mixed third derivative terms
+        for k in j+1..cf0'last loop
+         -- (2,1) for components (j,k)
+          shared := pcf(i)*Third_Semi_Mixed_Derivative
+                             (pdg(i).all,cf0,j,k,vrblvl-1);
+          idx := idx + 1; -- 2*alpha_j + alpha_k
+          ydg(idx) := pct(i) + 2.0*pw1(j) + pw1(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(j)*cf1(j)*cf1(k)/create(2.0);
+          idx := idx + 1; -- 2*alpha_j + beta_k
+          ydg(idx) := pct(i) + 2.0*pw1(j) + pw2(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(j)*cf1(j)*cf2(k)/create(2.0);
+          idx := idx + 1; -- 2*alpha_j + gamma_k
+          ydg(idx) := pct(i) + 2.0*pw1(j) + pw3(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(j)*cf1(j)*cf3(k)/create(2.0);
+          idx := idx + 1; -- 2*beta_j + alpha_k
+          ydg(idx) := pct(i) + 2.0*pw2(j) + pw1(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf2(j)*cf2(j)*cf1(k)/create(2.0);
+          idx := idx + 1; -- 2*beta_j + beta_k
+          ydg(idx) := pct(i) + 2.0*pw2(j) + pw2(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf2(j)*cf2(j)*cf2(k)/create(2.0);
+          idx := idx + 1; -- 2*beta_j + gamma_k
+          ydg(idx) := pct(i) + 2.0*pw2(j) + pw3(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf2(j)*cf2(j)*cf3(k)/create(2.0);
+          idx := idx + 1; -- 2*gamma_j + alpha_k
+          ydg(idx) := pct(i) + 2.0*pw3(j) + pw1(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf3(j)*cf3(j)*cf1(k)/create(2.0);
+          idx := idx + 1; -- 2*gamma_j + beta_k
+          ydg(idx) := pct(i) + 2.0*pw3(j) + pw2(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf3(j)*cf3(j)*cf2(k)/create(2.0);
+          idx := idx + 1; -- 2*gamma_j + gamma_k
+          ydg(idx) := pct(i) + 2.0*pw3(j) + pw3(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf3(j)*cf3(j)*cf3(k)/create(2.0);
+          idx := idx + 1; -- alpha_j + beta_j + alpha_k
+          ydg(idx) := pct(i) + pw1(j) + pw2(j) + pw1(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(j)*cf2(j)*cf1(k);
+          idx := idx + 1; -- alpha_j + beta_j + beta_k
+          ydg(idx) := pct(i) + pw1(j) + pw2(j) + pw2(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(j)*cf2(j)*cf2(k);
+          idx := idx + 1; -- alpha_j + beta_j + gamma_k
+          ydg(idx) := pct(i) + pw1(j) + pw2(j) + pw3(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(j)*cf2(j)*cf3(k);
+          idx := idx + 1; -- alpha_j + gamma_j + alpha_k
+          ydg(idx) := pct(i) + pw1(j) + pw3(j) + pw1(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(j)*cf3(j)*cf1(k);
+          idx := idx + 1; -- alpha_j + gamma_j + beta_k
+          ydg(idx) := pct(i) + pw1(j) + pw3(j) + pw2(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(j)*cf3(j)*cf2(k);
+          idx := idx + 1; -- alpha_j + gamma_j + gamma_k
+          ydg(idx) := pct(i) + pw1(j) + pw3(j) + pw3(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(j)*cf3(j)*cf3(k);
+          idx := idx + 1; -- beta_j + gamma_j + alpha_k
+          ydg(idx) := pct(i) + pw2(j) + pw3(j) + pw1(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf2(j)*cf3(j)*cf1(k);
+          idx := idx + 1; -- beta_j + gamma_j + beta_k
+          ydg(idx) := pct(i) + pw2(j) + pw3(j) + pw2(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf2(j)*cf3(j)*cf2(k);
+          idx := idx + 1; -- beta_j + gamma_j + gamma_k
+          ydg(idx) := pct(i) + pw2(j) + pw3(j) + pw3(k);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf2(j)*cf3(j)*cf3(k);
+         -- (2,1) for components (k,j) flipping role of j and k
+          shared := pcf(i)*Third_Semi_Mixed_Derivative
+                             (pdg(i).all,cf0,k,j,vrblvl-1);
+          idx := idx + 1; -- 2*alpha_k + alpha_j
+          ydg(idx) := pct(i) + 2.0*pw1(k) + pw1(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(k)*cf1(k)*cf1(j)/create(2.0);
+          idx := idx + 1; -- 2*alpha_k + beta_j
+          ydg(idx) := pct(i) + 2.0*pw1(k) + pw2(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(k)*cf1(k)*cf2(j)/create(2.0);
+          idx := idx + 1; -- 2*alpha_k + gamma_j
+          ydg(idx) := pct(i) + 2.0*pw1(k) + pw3(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(k)*cf1(k)*cf3(j)/create(2.0);
+          idx := idx + 1;  -- 2*beta_k + alpha_j
+          ydg(idx) := pct(i) + 2.0*pw2(k) + pw1(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf2(k)*cf2(k)*cf1(j)/create(2.0);
+          idx := idx + 1;  -- 2*beta_k + beta_j
+          ydg(idx) := pct(i) + 2.0*pw2(k) + pw2(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf2(k)*cf2(k)*cf2(j)/create(2.0);
+          idx := idx + 1;  -- 2*beta_k + gamma_j
+          ydg(idx) := pct(i) + 2.0*pw2(k) + pw3(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf2(k)*cf2(k)*cf3(j)/create(2.0);
+          idx := idx + 1;  -- 2*gamma_k + alpha_j
+          ydg(idx) := pct(i) + 2.0*pw3(k) + pw1(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf3(k)*cf3(k)*cf1(j)/create(2.0);
+          idx := idx + 1;  -- 2*gamma_k + beta_j
+          ydg(idx) := pct(i) + 2.0*pw3(k) + pw2(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf3(k)*cf3(k)*cf2(j)/create(2.0);
+          idx := idx + 1;  -- 2*gamma_k + gamma_j
+          ydg(idx) := pct(i) + 2.0*pw3(k) + pw3(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf3(k)*cf3(k)*cf3(j)/create(2.0);
+          idx := idx + 1;  -- alpha_k + beta_k + alpha_j
+          ydg(idx) := pct(i) + pw1(k) + pw2(k) + pw1(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(k)*cf2(k)*cf1(j);
+          idx := idx + 1;  -- alpha_k + beta_k + beta_j
+          ydg(idx) := pct(i) + pw1(k) + pw2(k) + pw2(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(k)*cf2(k)*cf2(j);
+          idx := idx + 1;  -- alpha_k + beta_k + gamma_j
+          ydg(idx) := pct(i) + pw1(k) + pw2(k) + pw3(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(k)*cf2(k)*cf3(j);
+          idx := idx + 1;  -- alpha_k + gamma_k + alpha_j
+          ydg(idx) := pct(i) + pw1(k) + pw3(k) + pw1(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(k)*cf3(k)*cf1(j);
+          idx := idx + 1;  -- alpha_k + gamma_k + beta_j
+          ydg(idx) := pct(i) + pw1(k) + pw3(k) + pw2(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(k)*cf3(k)*cf2(j);
+          idx := idx + 1;  -- alpha_k + gamma_k + gamma_j
+          ydg(idx) := pct(i) + pw1(k) + pw3(k) + pw3(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf1(k)*cf3(k)*cf3(j);
+          idx := idx + 1;  -- beta_k + gamma_k + alpha_j
+          ydg(idx) := pct(i) + pw2(k) + pw3(k) + pw1(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf2(k)*cf3(k)*cf1(j);
+          idx := idx + 1;  -- beta_k + gamma_k + beta_j
+          ydg(idx) := pct(i) + pw2(k) + pw3(k) + pw2(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf2(k)*cf3(k)*cf2(j);
+          idx := idx + 1;  -- beta_k + gamma_k + gamma_j
+          ydg(idx) := pct(i) + pw2(k) + pw3(k) + pw3(j);
+          ycf(idx) := shared;
+          ycf(idx) := ycf(idx)*cf2(k)*cf3(k)*cf3(j);
+        end loop;
+      end loop;
+      for j in cf0'range loop -- all fully mixed third derivative terms
+        for k in j+1..cf0'last loop
+          for L in k+1..cf0'last loop -- 27 = 3^3 combinations
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw1(j) + pw1(k) + pw1(L);
+            shared := pcf(i)*Third_Fully_Mixed_Derivative
+                               (pdg(i).all,cf0,j,k,L,vrblvl-1);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf1(j)*cf1(k)*cf1(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw1(j) + pw1(k) + pw2(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf1(j)*cf1(k)*cf2(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw1(j) + pw1(k) + pw3(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf1(j)*cf1(k)*cf3(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw1(j) + pw2(k) + pw1(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf1(j)*cf2(k)*cf1(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw1(j) + pw2(k) + pw2(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf1(j)*cf2(k)*cf2(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw1(j) + pw2(k) + pw3(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf1(j)*cf2(k)*cf3(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw1(j) + pw3(k) + pw1(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf1(j)*cf3(k)*cf1(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw1(j) + pw3(k) + pw2(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf1(j)*cf3(k)*cf2(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw1(j) + pw3(k) + pw3(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf1(j)*cf3(k)*cf3(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw2(j) + pw1(k) + pw1(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf2(j)*cf1(k)*cf1(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw2(j) + pw1(k) + pw2(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf2(j)*cf1(k)*cf2(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw2(j) + pw1(k) + pw3(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf2(j)*cf1(k)*cf3(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw2(j) + pw2(k) + pw1(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf2(j)*cf2(k)*cf1(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw2(j) + pw2(k) + pw2(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf2(j)*cf2(k)*cf2(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw2(j) + pw2(k) + pw3(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf2(j)*cf2(k)*cf3(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw2(j) + pw3(k) + pw1(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf2(j)*cf3(k)*cf1(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw2(j) + pw3(k) + pw2(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf2(j)*cf3(k)*cf2(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw2(j) + pw3(k) + pw3(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf2(j)*cf3(k)*cf3(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw3(j) + pw1(k) + pw1(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf3(j)*cf1(k)*cf1(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw3(j) + pw1(k) + pw2(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf3(j)*cf1(k)*cf2(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw3(j) + pw1(k) + pw3(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf3(j)*cf1(k)*cf3(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw3(j) + pw2(k) + pw1(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf3(j)*cf2(k)*cf1(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw3(j) + pw2(k) + pw2(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf3(j)*cf2(k)*cf2(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw3(j) + pw2(k) + pw3(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf3(j)*cf2(k)*cf3(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw3(j) + pw3(k) + pw1(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf3(j)*cf3(k)*cf1(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw3(j) + pw3(k) + pw2(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf3(j)*cf3(k)*cf2(L);
+            idx := idx + 1;
+            ydg(idx) := pct(i) + pw3(j) + pw3(k) + pw3(L);
+            ycf(idx) := shared;
+            ycf(idx) := ycf(idx)*cf3(j)*cf3(k)*cf3(L);
+          end loop;
+        end loop;
+      end loop;
+    end loop;
+    if vrblvl > 0 then
+      put("idx : "); put(idx,1);
+      put(", ycf'last : "); put(ycf'last,1); new_line;
+    end if;
+    Double_Real_Powered_Series.Sort(ydg,ycf); 
+    Double_Real_Powered_Series.Normalize(ycf,ydg);
+  end Third_Derivative_Third_Order;
+
+  procedure Third_Derivative_Third_Order
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec;
+                ycf : out Standard_Complex_Vectors.Vector;
+                ydg : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    lc0,lc1,lc2,lc3 : Standard_Complex_Vectors.Vector(cff'range);
+    pw1,pw2,pw3 : Standard_Floating_Vectors.Vector(pwr'range);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Ordered_Evaluations.");
+      put_line("third_derivative_second_order 1 ...");
+    end if;
+    for i in lc0'range loop
+      lc0(i) := cff(i)(cff(i)'first);
+      lc1(i) := cff(i)(cff(i)'first+1);
+      lc2(i) := cff(i)(cff(i)'first+2);
+      lc3(i) := cff(i)(cff(i)'first+3);
+      pw1(i) := pwr(i)(pwr(i)'first);
+      pw2(i) := pwr(i)(pwr(i)'first+1);
+      pw3(i) := pwr(i)(pwr(i)'first+2);
+    end loop;
+    Third_Derivative_Third_Order
+      (pcf,pct,pdg,lc0,lc1,lc2,lc3,pw1,pw2,pw3,ycf,ydg,vrblvl);
+  end Third_Derivative_Third_Order;
+
 -- INDEXED DERIVATIVES ON ONE POLYNOMIAL :
 
   procedure Fixed_Derivative_First_Order
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 difsum : in integer32; idxnxt : in out integer32;
                 ycf : out Standard_Complex_Vectors.Vector;
@@ -991,11 +1599,8 @@ package body Double_Ordered_Evaluations is
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
-                pw1 : in Standard_Floating_Vectors.Vector;
-                pw2 : in Standard_Floating_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2 : in Standard_Floating_Vectors.Vector;
                 difsum : in integer32; idxnxt : in out integer32;
                 ycf : out Standard_Complex_Vectors.Vector;
                 ydg : out Standard_Floating_Vectors.Vector;
@@ -1155,8 +1760,7 @@ package body Double_Ordered_Evaluations is
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 difmax : in integer32;
                 ycf : out Standard_Complex_Vectors.Vector;
@@ -1197,11 +1801,8 @@ package body Double_Ordered_Evaluations is
               ( pcf : in Standard_Complex_Vectors.Vector;
                 pct : in Standard_Floating_Vectors.Vector;
                 pdg : in Standard_Integer_VecVecs.VecVec;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
-                pw1 : in Standard_Floating_Vectors.Vector;
-                pw2 : in Standard_Floating_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2 : in Standard_Floating_Vectors.Vector;
                 difmax : in integer32;
                 ycf : out Standard_Complex_Vectors.Vector;
                 ydg : out Standard_Floating_Vectors.Vector;
@@ -1243,8 +1844,7 @@ package body Double_Ordered_Evaluations is
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 cf2 : out Standard_Complex_Vectors.Vector;
                 pw2 : out Standard_Floating_Vectors.Vector;
@@ -1326,11 +1926,8 @@ package body Double_Ordered_Evaluations is
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
-                pw1 : in Standard_Floating_Vectors.Vector;
-                pw2 : in Standard_Floating_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2 : in Standard_Floating_Vectors.Vector;
                 cf3 : out Standard_Complex_Vectors.Vector;
                 pw3 : out Standard_Floating_Vectors.Vector;
                 vrblvl : in integer32 := 0 ) is
@@ -1408,12 +2005,53 @@ package body Double_Ordered_Evaluations is
     end loop;
   end First_Derivative_Second_Order;
 
+  procedure First_Derivative_Third_Order
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cf0,cf1,cf2,cf3 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2,pw3 : in Standard_Floating_Vectors.Vector;
+                cf4 : out Standard_Complex_Vectors.Vector;
+                pw4 : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    dim : constant integer32 := hcf'last;
+    nbr,size,idx : integer32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Ordered_Evaluations.");
+      put_line("first_derivative_third_order 2 ...");
+    end if;
+    for i in hcf'range loop
+      nbr := hcf(i)'last;
+      size := Size_Evaluation(dim,1,3,nbr);
+      declare
+        ycf : Standard_Complex_Vectors.Vector(1..size);
+        ydg : Standard_Floating_Vectors.Vector(1..size);
+      begin
+        First_Derivative_Third_Order
+          (hcf(i).all,hct(i).all,hdg(i).all,
+           cf0,cf1,cf2,cf3,pw1,pw2,pw3,ycf,ydg,vrblvl-1);
+        if vrblvl > 0 then
+          put("the first derivative third order evaluation of polynomial ");
+          put(i,1); put_line(" :");
+          for i in ycf'range loop
+            put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+          end loop;
+        end if;
+        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        pw4(i) := ydg(idx);
+        cf4(i) := ycf(idx);
+      end;
+    end loop;
+  end First_Derivative_Third_Order;
+
   procedure Second_Derivative_First_Order
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 cf2 : out Standard_Complex_Vectors.Vector;
                 pw2 : out Standard_Floating_Vectors.Vector;
@@ -1495,11 +2133,8 @@ package body Double_Ordered_Evaluations is
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
-                pw1 : in Standard_Floating_Vectors.Vector;
-                pw2 : in Standard_Floating_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2 : in Standard_Floating_Vectors.Vector;
                 cf3 : out Standard_Complex_Vectors.Vector;
                 pw3 : out Standard_Floating_Vectors.Vector;
                 vrblvl : in integer32 := 0 ) is
@@ -1577,12 +2212,53 @@ package body Double_Ordered_Evaluations is
     end loop;
   end Second_Derivative_Second_Order;
 
+  procedure Second_Derivative_Third_Order
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cf0,cf1,cf2,cf3 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2,pw3 : in Standard_Floating_Vectors.Vector;
+                cf4 : out Standard_Complex_Vectors.Vector;
+                pw4 : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    dim : constant integer32 := hcf'last;
+    nbr,size,idx : integer32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Ordered_Evaluations.");
+      put_line("second_derivative_third_order 2 ...");
+    end if;
+    for i in hcf'range loop
+      nbr := hcf(i)'last;
+      size := Size_Evaluation(dim,2,3,nbr);
+      declare
+        ycf : Standard_Complex_Vectors.Vector(1..size);
+        ydg : Standard_Floating_Vectors.Vector(1..size);
+      begin
+        Second_Derivative_Third_Order
+          (hcf(i).all,hct(i).all,hdg(i).all,
+           cf0,cf1,cf2,cf3,pw1,pw2,pw3,ycf,ydg,vrblvl-1);
+        if vrblvl > 0 then
+          put("the second derivative third order evaluation of polynomial ");
+          put(i,1); put_line(" :");
+          for i in ycf'range loop
+            put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+          end loop;
+        end if;
+        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        pw4(i) := ydg(idx);
+        cf4(i) := ycf(idx);
+      end;
+    end loop;
+  end Second_Derivative_Third_Order;
+
   procedure Third_Derivative_First_Order
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 cf2 : out Standard_Complex_Vectors.Vector;
                 pw2 : out Standard_Floating_Vectors.Vector;
@@ -1664,11 +2340,8 @@ package body Double_Ordered_Evaluations is
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
-                pw1 : in Standard_Floating_Vectors.Vector;
-                pw2 : in Standard_Floating_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2 : in Standard_Floating_Vectors.Vector;
                 cf3 : out Standard_Complex_Vectors.Vector;
                 pw3 : out Standard_Floating_Vectors.Vector;
                 vrblvl : in integer32 := 0 ) is
@@ -1705,14 +2378,55 @@ package body Double_Ordered_Evaluations is
     end loop;
   end Third_Derivative_Second_Order;
 
+  procedure Third_Derivative_Third_Order
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cf0,cf1,cf2,cf3 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2,pw3 : in Standard_Floating_Vectors.Vector;
+                cf4 : out Standard_Complex_Vectors.Vector;
+                pw4 : out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    dim : constant integer32 := hcf'last;
+    nbr,size,idx : integer32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Ordered_Evaluations.");
+      put_line("third_derivative_third_order 2 ...");
+    end if;
+    for i in hcf'range loop
+      nbr := hcf(i)'last;
+      size := Size_Evaluation(dim,3,3,nbr);
+      declare
+        ycf : Standard_Complex_Vectors.Vector(1..size);
+        ydg : Standard_Floating_Vectors.Vector(1..size);
+      begin
+        Third_Derivative_Third_Order
+          (hcf(i).all,hct(i).all,hdg(i).all,
+           cf0,cf1,cf2,cf3,pw1,pw2,pw3,ycf,ydg,vrblvl-1);
+        if vrblvl > 0 then
+          put("the third derivative third order evaluation of polynomial ");
+          put(i,1); put_line(" :");
+          for i in ycf'range loop
+            put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+          end loop;
+        end if;
+        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        pw4(i) := ydg(idx);
+        cf4(i) := ycf(idx);
+      end;
+    end loop;
+  end Third_Derivative_Third_Order;
+
 -- INDEXED DERIVATIVES ON A LAURENT HOMOTOPY :
 
   procedure First_Order_Evaluation
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 difmax : in integer32;
                 cf2 : out Standard_Complex_Vectors.Vector;
@@ -1756,11 +2470,8 @@ package body Double_Ordered_Evaluations is
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
-                pw1 : in Standard_Floating_Vectors.Vector;
-                pw2 : in Standard_Floating_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2 : in Standard_Floating_Vectors.Vector;
                 difmax : in integer32;
                 cf3 : out Standard_Complex_Vectors.Vector;
                 pw3 : out Standard_Floating_Vectors.Vector;

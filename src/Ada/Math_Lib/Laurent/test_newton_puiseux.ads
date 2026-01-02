@@ -144,8 +144,7 @@ package Test_Newton_Puiseux is
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
+                cf0,cf1 : in Standard_Complex_Vectors.Vector;
                 pw1 : in Standard_Floating_Vectors.Vector;
                 cA : in Standard_Complex_Matrices.Matrix;
                 cf2 : out Standard_Complex_Vectors.Vector;
@@ -177,11 +176,8 @@ package Test_Newton_Puiseux is
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;
                 hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
-                cf0 : in Standard_Complex_Vectors.Vector;
-                cf1 : in Standard_Complex_Vectors.Vector;
-                cf2 : in Standard_Complex_Vectors.Vector;
-                pw1 : in Standard_Floating_Vectors.Vector;
-                pw2 : in Standard_Floating_Vectors.Vector;
+                cf0,cf1,cf2 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2 : in Standard_Floating_Vectors.Vector;
                 cA : in Standard_Complex_Matrices.Matrix;
                 cf3 : out Standard_Complex_Vectors.Vector;
                 pw3 : out Standard_Floating_Vectors.Vector;
@@ -209,6 +205,41 @@ package Test_Newton_Puiseux is
   -- ON RETURN :
   --   cf3      coefficients corresponding to the exponents in pw3;
   --   pw3      second exponents of a power series solution.
+
+  procedure Diagonal_Fourth_Terms
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cf0,cf1,cf2,cf3 : in Standard_Complex_Vectors.Vector;
+                pw1,pw2,pw3 : in Standard_Floating_Vectors.Vector;
+                cA : in Standard_Complex_Matrices.Matrix;
+                cf4 : out Standard_Complex_Vectors.Vector;
+                pw4 : out Standard_Floating_Vectors.Vector;
+                tol : in double_float := 1.0E-12;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Computes the third terms of a power series solution,
+  --   starting at the constant, leading, and second terms,
+  --   exploiting the diagonal structure of the Jacobian matrix.
+
+  -- ON ENTRY :
+  --   hdg      supports of the Laurent homotopy;
+  --   hcf      coefficients of the polynomials in the homotopy;
+  --   hct      powers of t in the homotopy for each monomial;
+  --   cf0      constant coefficients of a power series solution;
+  --   cf1      coefficients corresponding to the exponents in pw1;
+  --   cf2      coefficients corresponding to the exponents in pw2;
+  --   cf3      coefficients corresponding to the exponents in pw3;
+  --   pw1      leading exponents of a power series solution;
+  --   pw2      second exponents of a power series solution;
+  --   cA       coefficients of the Jacobian matrix;
+  --   tol      tolerance to decide if a number is zero;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   cf4      coefficients corresponding to the exponents in pw4;
+  --   pw4      second exponents of a power series solution.
 
   procedure Run_Newton_Step
               ( hcf : in Standard_Complex_VecVecs.VecVec;
