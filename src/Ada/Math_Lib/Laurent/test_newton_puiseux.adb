@@ -419,6 +419,38 @@ package body Test_Newton_Puiseux is
         end if;
       end if;
     end if;
+    for difsum in 4..5 loop
+      exit when (sumdif < tol);
+      cf3a := cf3; pw3a := pw3;
+      if vrblvl > 0 then
+        put("computing derivative "); put(integer32(difsum),1);
+        put_line(" second order evaluations ...");
+      end if;
+      Double_Ordered_Evaluations.Second_Order_Evaluation
+        (hcf,hct,hdg,cf0,cf1,cf2,pw1,pw2,integer32(difsum),cf3,pw3,vrblvl-1);
+      for i in cf1'range loop -- Jacobian is diagonal for the test example
+        cf3(i) := -cf3(i)/cA(i,i);
+      end loop;
+      if vrblvl > 0 then
+        put("derivative "); put(integer32(difsum)-1,1);
+        put(" and "); put(integer32(difsum),1); put_line(" evaluations :");
+      end if;
+      sumdif := 0.0;
+      for i in cf1'range loop
+        if vrblvl > 0 then
+          put(cf3a(i)); put(" t^"); put(pw3a(i)); new_line;
+          put(cf3(i)); put(" t^"); put(pw3(i)); new_line;
+        end if;
+        dif := AbsVal(cf3a(i) - cf3(i)) + abs(pw3a(i)-pw3(i));
+        if vrblvl > 0
+         then put("difference :"); put(dif,3); new_line;
+        end if;
+        sumdif := sumdif + dif;
+      end loop;
+      if vrblvl > 0
+       then put("sum of differences :"); put(sumdif,3); new_line;
+      end if;
+    end loop;
   end Diagonal_Third_Terms;
 
   procedure Run_Newton_Step

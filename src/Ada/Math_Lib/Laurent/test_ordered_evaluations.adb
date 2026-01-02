@@ -282,6 +282,47 @@ package body Test_Ordered_Evaluations is
     put("sum of errors :"); put(sumerr,3); new_line;
   end Test_Third_Derivative_Second_Order;
 
+  procedure Test_Second_Order_Evaluation
+              ( pcf : in Standard_Complex_Vectors.Vector;
+                pct : in Standard_Floating_Vectors.Vector;
+                pdg : in Standard_Integer_VecVecs.VecVec;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec;
+                difmax : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the second order evaluation of a polynomial
+  --   represented by (pdg, pcf, pct), evaluated at a series
+  --   with coefficients in cff and powers in pwr,
+  --   using all derivatives up to difmax.
+
+    use Double_Ordered_Evaluations;
+
+    dim : constant integer32 := cff'last;
+    nbr : constant integer32 := pdg'last;
+    size : constant integer32 := Size_Evaluation(dim,difmax,2,nbr);
+    ycf : Standard_Complex_Vectors.Vector(1..size);
+    ydg : Standard_Floating_Vectors.Vector(1..size);
+    cf0,cf1,cf2 : Standard_Complex_Vectors.Vector(1..dim);
+    pw1,pw2 : Standard_Floating_Vectors.Vector(1..dim);
+
+  begin
+    for i in cf0'range loop
+      cf0(i) := cff(i)(cff(i)'first);
+      cf1(i) := cff(i)(cff(i)'first+1);
+      cf2(i) := cff(i)(cff(i)'first+2);
+      pw1(i) := pwr(i)(pwr(i)'first);
+      pw2(i) := pwr(i)(pwr(i)'first+1);
+    end loop;
+    Second_Order_Evaluation
+      (pcf,pct,pdg,cf0,cf1,cf2,pw1,pw2,difmax,ycf,ydg,1);
+    put("derivative "); put(difmax,1);
+    put_line(" second order evaluation :");
+    for i in ycf'range loop
+      put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
+    end loop;
+  end Test_Second_Order_Evaluation;
+
   procedure Generate_Input
               ( dim,nbr,ord : in integer32;
                 hcf : out Standard_Complex_Vectors.Vector;
@@ -367,6 +408,9 @@ package body Test_Ordered_Evaluations is
     Test_Third_Derivative_Second_Order(hcf,hct,hdg,cff,pwr,sumerr3);
     put("error of 2nd derivatives :"); put(sumerr2,3); new_line;
     put("error of 3rd derivatives :"); put(sumerr3,3); new_line;
+    for k in 4..5 loop
+      Test_Second_Order_Evaluation(hcf,hct,hdg,cff,pwr,integer32(k));
+    end loop;
   end Test_Second_Order;
 
   procedure Main is
