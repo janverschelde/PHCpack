@@ -45,6 +45,7 @@ test_ordered_evaluations         : test first order evaluations
 random_laurent_homotopy          : defines a homotopy with series solution
 ts_hunval                        : calls main test on evaluating at series
 laurent_homotopy_derivatives     : evaluates derivatives of Laurent homotopies
-test_newton_puiseux              : develops Newton-Puiseux for real powers
+double_newton_puiseux            : Newton_Puiseux for real powered series
+test_newton_puiseux              : tests Newton-Puiseux for real powers
 ts_hunnew                        : calls main test on Newton-Puiseux
 ------------------------------------------------------------------------------

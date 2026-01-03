@@ -1,3 +1,6 @@
+Sat 3 Jan 2026 : new package double_newton_puiseux, with code taken from
+  test_newton_puiseux.
+
 Fri 2 Jan 2026 : to double_ordered_evaluations, added third order evaluations,
   tested in test_ordered_evaluations.adb and applied in test_newton_puiseux.
   Added general derivative third order to double_ordered_evaluations,
