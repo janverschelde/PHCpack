@@ -1,7 +1,9 @@
 Fri 2 Jan 2026 : to double_ordered_evaluations, added third order evaluations,
   tested in test_ordered_evaluations.adb and applied in test_newton_puiseux.
   Added general derivative third order to double_ordered_evaluations,
-  tested in test_ordered_evaluations.adb.
+  tested in test_ordered_evaluations.adb.  Added 4-th and 5-th derivatives
+  to double_ordered_evaluations.adb, tested in test_ordered_evaluations.adb,
+  and applied in test_newton_puiseux.adb.
 
 Thu 1 Jan 2026 : fixed index error by correcting size computation in 
   double_ordered_evaluations.adb, modified test_ordered_evaluations.adb.

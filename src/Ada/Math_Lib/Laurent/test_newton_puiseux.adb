@@ -529,6 +529,39 @@ package body Test_Newton_Puiseux is
         end if;
       end if;
     end if;
+    for difsum in 4..5 loop
+      exit when (sumdif < tol);
+      cf4a := cf4; pw4a := pw4;
+      if vrblvl > 0 then
+        put("computing derivative "); put(integer32(difsum),1);
+        put_line(" third order evaluations ...");
+      end if;
+      Double_Ordered_Evaluations.Third_Order_Evaluation
+        (hcf,hct,hdg,cf0,cf1,cf2,cf3,pw1,pw2,pw3,integer32(difsum),
+         cf4,pw4,vrblvl-1);
+      for i in cf1'range loop -- Jacobian is diagonal for the test example
+        cf4(i) := -cf4(i)/cA(i,i);
+      end loop;
+      if vrblvl > 0 then
+        put("derivative "); put(integer32(difsum)-1,1);
+        put(" and "); put(integer32(difsum),1); put_line(" evaluations :");
+      end if;
+      sumdif := 0.0;
+      for i in cf1'range loop
+        if vrblvl > 0 then
+          put(cf4a(i)); put(" t^"); put(pw4a(i)); new_line;
+          put(cf4(i)); put(" t^"); put(pw4(i)); new_line;
+        end if;
+        dif := AbsVal(cf4a(i) - cf4(i)) + abs(pw4a(i) - pw4(i));
+        if vrblvl > 0
+         then put("difference :"); put(dif,3); new_line;
+        end if;
+        sumdif := sumdif + dif;
+      end loop;
+      if vrblvl > 0
+       then put("sum of differences :"); put(sumdif,3); new_line;
+      end if;
+    end loop;
   end Diagonal_Fourth_Terms;
 
   function Error_Sum ( idx : in integer32;

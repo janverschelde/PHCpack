@@ -131,6 +131,19 @@ package body Double_Ordered_Evaluations is
         res := 1 + 9*dim + 9*dim*(dim-1)/2 + 10*dim + 36*dim*(dim-1)/2
              + 27*dim*(dim-1)*(dim-2)/6;
         res := res*nbr;
+      elsif ndf = 4 then
+        res := 1 + 9*dim + 9*dim*(dim-1)/2 + 10*dim + 36*dim*(dim-1)/2
+             + 27*dim*(dim-1)*(dim-2)/6 + 15*dim + 96*dim*(dim-1)/2
+             + 162*dim*(dim-1)*(dim-2)/6 + 81*dim*(dim-1)*(dim-2)*(dim-3)/24;
+        res := res*nbr;
+      elsif ndf = 5 then
+        res := 1 + 9*dim + 9*dim*(dim-1)/2 + 10*dim + 36*dim*(dim-1)/2
+             + 27*dim*(dim-1)*(dim-2)/6 + 15*dim + 96*dim*(dim-1)/2
+             + 162*dim*(dim-1)*(dim-2)/6 + 81*dim*(dim-1)*(dim-2)*(dim-3)/24
+             + 21*dim + 210*dim*(dim-1)/2 + 594*dim*(dim-1)*(dim-2)/6
+             + 648*dim*(dim-1)*(dim-2)*(dim-3)/24
+             + 243*dim*(dim-1)*(dim-2)*(dim-3)*(dim-4)/120;
+        res := res*nbr;
       end if;
     end if;
     return res;
