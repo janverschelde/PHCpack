@@ -47,7 +47,9 @@ package body Double_Newton_Puiseux is
         ejm(i,k) := hct(i)(1);
         cjm(i,k) := hcf(i)(1)*Leading_Coefficient(hdg(i)(1).all,zt0,k);
       end loop;
-      put(ycf(i)); put(" t^"); put(ydg(i)); new_line;
+      if vrblvl > 0
+       then put(ycf(i)); put(" t^"); put(ydg(i)); new_line;
+      end if;
       for j in 2..hcf(i)'last loop -- run over all monomials
         if vrblvl > 0 then
           put("at monomial "); put(j,1);
@@ -68,7 +70,9 @@ package body Double_Newton_Puiseux is
             cjm(i,k) := hcf(i)(j)*Leading_Coefficient(hdg(i)(j).all,zt0,k);
           end loop;
         end if;
-        put(ycf(i)); put(" t^"); put(ydg(i)); new_line;
+        if vrblvl > 0
+         then put(ycf(i)); put(" t^"); put(ydg(i)); new_line;
+        end if;
       end loop;
     end loop;
   end Evaluate_and_Differentiate;
@@ -98,7 +102,9 @@ package body Double_Newton_Puiseux is
         end if;
         ydg(i)(j) := hct(i)(j);
         ycf(i)(j) := hcf(i)(j)*Leading_Coefficient(hdg(i)(j).all,zt0);
-        put(ycf(i)(j)); put(" t^"); put(ydg(i)(j)); new_line;
+        if vrblvl > 0
+         then put(ycf(i)(j)); put(" t^"); put(ydg(i)(j)); new_line;
+        end if;
       end loop;
     end loop;
   end Evaluate_All_Monomials;
@@ -208,7 +214,7 @@ package body Double_Newton_Puiseux is
     if vrblvl > 0
      then put_line("-> in Double_Newton_Puiseux.diagonal_leading_terms ...");
     end if;
-    Evaluate_and_Differentiate(hcf,hct,hdg,cf0,ycf,ydg,cA,eA,1);
+    Evaluate_and_Differentiate(hcf,hct,hdg,cf0,ycf,ydg,cA,eA,vrblvl-1);
     if vrblvl > 0 then
       put_line("the function value :");
       for i in ycf'range loop
@@ -222,7 +228,7 @@ package body Double_Newton_Puiseux is
         end loop;
       end loop;
     end if;
-    Leading_Powers_by_Evaluation(hcf,hct,hdg,cf0,pw1,cf1,vrblvl);
+    Leading_Powers_by_Evaluation(hcf,hct,hdg,cf0,pw1,cf1,vrblvl-1);
     for i in cf1'range loop -- Jacobian is diagonal for the test example
       cf1(i) := -cf1(i)/cA(i,i);
     end loop;
