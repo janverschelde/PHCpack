@@ -1,3 +1,6 @@
+Sun 4 Jan 2025 : added a procedure to double_newton_puiseux to run
+  Newton's method on a diagonal system, in a non-interactive manner.
+
 Sat 3 Jan 2026 : new package double_newton_puiseux, with code taken from
   test_newton_puiseux.
 

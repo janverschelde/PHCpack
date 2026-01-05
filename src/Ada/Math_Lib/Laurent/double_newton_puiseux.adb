@@ -608,6 +608,38 @@ package body Double_Newton_Puiseux is
     return res;
   end Error_Sum;
 
+  procedure Diagonal_Newton_Steps
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cf0 : in Standard_Complex_Vectors.Vector;
+                nbr : in integer32;
+                cf1,cf2,cf3,cf4 : out Standard_Complex_Vectors.Vector; 
+                pw1,pw2,pw3,pw4 : out Standard_Floating_Vectors.Vector;
+                tol : in double_float := 1.0E-12;
+                vrblvl : in integer32 := 0 ) is
+
+    cA : Standard_Complex_Matrices.Matrix(hcf'range,hcf'range);
+    eA : Standard_Floating_Matrices.Matrix(hcf'range,hcf'range);
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Double_Newton_Puiseux.four_newton_steps ...");
+    end if;
+    Diagonal_Leading_Terms(hcf,hct,hdg,cf0,cA,eA,cf1,pw1,vrblvl-1);
+    if nbr > 1 then
+      Diagonal_Second_Terms(hcf,hct,hdg,cf0,cf1,pw1,cA,cf2,pw2,tol,vrblvl-1);
+      if nbr > 2 then
+        Diagonal_Third_Terms
+          (hcf,hct,hdg,cf0,cf1,cf2,pw1,pw2,cA,cf3,pw3,tol,vrblvl-1);
+        if nbr > 3 then
+          Diagonal_Fourth_Terms
+            (hcf,hct,hdg,cf0,cf1,cf2,cf3,pw1,pw2,pw3,cA,cf4,pw4,tol,vrblvl-1);
+        end if;
+      end if;
+    end if;
+  end Diagonal_Newton_Steps;
+
   procedure Run_Newton_Step
               ( hcf : in Standard_Complex_VecVecs.VecVec;
                 hct : in Standard_Floating_VecVecs.VecVec;

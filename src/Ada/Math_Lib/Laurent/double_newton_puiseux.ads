@@ -234,13 +234,47 @@ package Double_Newton_Puiseux is
   --   cf3      coefficients corresponding to the exponents in pw3;
   --   pw1      leading exponents of a power series solution;
   --   pw2      second exponents of a power series solution;
+  --   pw3      third exponents of a power series solution;
   --   cA       coefficients of the Jacobian matrix;
   --   tol      tolerance to decide if a number is zero;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   cf4      coefficients corresponding to the exponents in pw4;
-  --   pw4      second exponents of a power series solution.
+  --   pw4      fourth exponents of a power series solution.
+
+  procedure Diagonal_Newton_Steps
+              ( hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                cf0 : in Standard_Complex_Vectors.Vector;
+                nbr : in integer32;
+                cf1,cf2,cf3,cf4 : out Standard_Complex_Vectors.Vector; 
+                pw1,pw2,pw3,pw4 : out Standard_Floating_Vectors.Vector;
+                tol : in double_float := 1.0E-12;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Runs up to four Newton steps on a diagonal system.
+
+  -- ON ENTRY :
+  --   hdg      supports of the Laurent homotopy;
+  --   hcf      coefficients of the polynomials in the homotopy;
+  --   hct      powers of t in the homotopy for each monomial;
+  --   cf0      constant coefficients of a power series solution;
+  --   nbr      number in 1..4 for the Newton steps;
+  --   tol      tolerance to decide if a number is zero;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   cf1      coefficients corresponding to the exponents in pw1;
+  --   cf2      coefficients corresponding to the exponents in pw2;
+  --   cf3      coefficients corresponding to the exponents in pw3;
+  --   cf4      coefficients corresponding to the exponents in pw4;
+  --   pw1      leading exponents of a power series solution;
+  --   pw2      second exponents of a power series solution;
+  --   pw3      third exponents of a power series solution;
+  --   pw4      fourth exponents of a power series solution.
 
   procedure Run_Newton_Step
               ( hcf : in Standard_Complex_VecVecs.VecVec;
