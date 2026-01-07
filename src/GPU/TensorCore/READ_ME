@@ -1,0 +1,13 @@
+Applying Tensor Cores in PHCv2.4.93.
+
+The simpleTensorCoreGemm.cu is a simpification of the dmmaTensorCoreGemm.cu
+of the CUDA samples collections, leaving only the simple_wmma_gemm_kernel,
+replacing the random numbers with an example to motivate higher precision,
+using sequences 2**k, for k from 0 to n.  As n grows larger than 53,
+the sum of 2**k can no longer represented correctly by 64-bit floats.
+
+------------------------------------------------------------------------------
+file name              : short description
+------------------------------------------------------------------------------
+simpleTensorCoreGemm   : simple wgma kernel for matrix multiplication
+------------------------------------------------------------------------------
