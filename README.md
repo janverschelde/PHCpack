@@ -8,6 +8,8 @@ Homotopy continuation methods operate in two stages.  In the first stage, a fami
 (the so-called homotopy) is constructed.  This homotopy contains a polynomial system with known solutions.
 In the second stage, numerical continuation methods are applied to track the solution paths defined by
 the homotopy, starting at the known solutions and leading to the solutions of the given polynomial system.
+Positive dimensional solution sets are computed via a numerical irreducible decomposition.
+The quadratic convergence for isolated singularities can be restored via deflation.
 
 Version 1.0 of PHCpack has been archived by ACM Transactions of Mathematical Software (ACM TOMS) as Algorithm 795.
 PHCpack incorporates MixedVol (Algorithm 846 of ACM TOMS by T. Gao, T.Y. Li, and M. Wu) to compute mixed volumes fast.
@@ -20,12 +22,6 @@ code generated from the CAMPARY software is used.
 CAMPARY is the CudA Multiple Precision ARithmetic librarY,
 by Mioara Joldes, Olivier Marty, Jean-Michel Muller,
 Valentina Popescu and Warwick Tucker.
-
-This material is based upon work supported by the National Science Foundation
-under Grants No. 9804846, 0105739, 0134611, 0410036, 0713018, 1115777,
-1440534, and 1854513.
-Any opinions, findings, and conclusions or recommendations expressed in this material
-are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.
 
 Executable versions of the code for Linux, MacOS X, and Windows are
 available via the assets of the releases (tags).
@@ -66,3 +62,9 @@ julia showVersion.jl
 or navigate to the src/Python/PHCpy/phcpy folder and do
 
 python version.py
+
+This material is based upon work supported by the National Science Foundation
+under Grants No. 9804846, 0105739, 0134611, 0410036, 0713018, 1115777,
+1440534, and 1854513.
+Any opinions, findings, and conclusions or recommendations expressed in this material
+are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.
