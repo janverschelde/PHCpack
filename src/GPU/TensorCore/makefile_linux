@@ -1,5 +1,5 @@
 smTCGemm:
-	nvcc -ccbin=/usr/bin/gcc -O3 -o smTCGemm -arch=sm_89 \
+	nvcc -ccbin=/usr/bin/gcc -O3 -o smTCGemm -arch=sm_80 \
              simpleTensorCoreGemm.cu
 
 clean:
