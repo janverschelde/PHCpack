@@ -2,5 +2,8 @@ smTCGemm:
 	nvcc -ccbin=/usr/bin/gcc -O3 -o smTCGemm -arch=sm_80 \
              simpleTensorCoreGemm.cu
 
+pi64bits:
+	gcc -o pi64bits bits_of_pi.c
+
 clean:
-	/bin/rm -f -r smTCGemm
+	/bin/rm -f -r smTCGemm pi64bits

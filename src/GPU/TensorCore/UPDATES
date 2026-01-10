@@ -1,0 +1,2 @@
+Sat 10 Jan 2026 : added bits_of_pi.c as test on frexp() and ldexp().
+  Updated the makefiles.

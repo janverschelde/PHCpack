@@ -8,5 +8,8 @@ MAKEFILE = makefile_linux
 smTCGemm:
 	make -f $(MAKEFILE) smTCGemm
 
+pi64bits:
+	make -f $(MAKEFILE) pi64bits
+
 clean:
 	make -f $(MAKEFILE) clean
