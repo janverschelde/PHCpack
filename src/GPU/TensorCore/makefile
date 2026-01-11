@@ -11,5 +11,8 @@ smTCGemm:
 pi64bits:
 	make -f $(MAKEFILE) pi64bits
 
+test_split:
+	make -f $(MAKEFILE) test_split
+
 clean:
 	make -f $(MAKEFILE) clean

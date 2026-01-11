@@ -37,6 +37,10 @@ smTCGemm:
 pi64bits:
 	gcc -o pi64bits bits_of_pi.c
 
+test_split:
+	gcc -o test_split splitting_doubles.c
+
 clean:
 	del smTCGemm.exe smTCGemm.lib smTCGemm.exp
 	del pi64bits.exe
+	del test_split.exe

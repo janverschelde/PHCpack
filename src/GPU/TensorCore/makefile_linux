@@ -5,5 +5,8 @@ smTCGemm:
 pi64bits:
 	gcc -o pi64bits bits_of_pi.c
 
+test_split:
+	gcc -o test_split splitting_doubles.c
+
 clean:
-	/bin/rm -f -r smTCGemm pi64bits
+	/bin/rm -f -r smTCGemm pi64bits test_split
