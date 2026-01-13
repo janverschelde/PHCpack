@@ -19,24 +19,25 @@ uint64 last_bits ( int k, uint64 nbr );
 /*
  * Returns the last k bits of the number nbr. */
 
-uint64 quarter_bits
- ( uint64 nbr, uint64 *b0, uint64 *b1, uint64 *b2, uint64 *b3, int vrblvl );
+void quarter_bits
+ ( uint64 nbr, uint64 *b0, uint64 *b1, uint64 *b2, uint64 *b3, int vrblvl=0 );
 /*
  * Splits the 52 bits in the number nbr in four parts,
- * each with 13 bits taken from the parts of nbr. */
+ * each with 13 bits taken from the parts of nbr.
+ * If the verbose level vrblvl > 0, then intermediate results are shown. */
 
-int leading_zeros ( uint64 nbr, int idxpwr, int vrblvl );
+int leading_zeros ( uint64 nbr, int idxpwr, int vrblvl=0 );
 /*
  * Returns the number of leading zeros in the number nbr,
  * relative to 2**idxpwr.
  * If vrblvl > 0, then the progression of the count is shown. */
 
-double first_half ( double x, int vrblvl );
+double first_half ( double x, int vrblvl=0 );
 /*
  * Returns the first 26 bits of x.
  * Assumes that x > 0. */
 
-void half_split ( double x, double *x0, double *x1, int vrblvl );
+void half_split ( double x, double *x0, double *x1, int vrblvl=0 );
 /*
  * Assuming x > 0, splits x into two doubles x0 and x1,
  * selecting the first 26 bits of the fraction of x to go into x0,
@@ -44,21 +45,11 @@ void half_split ( double x, double *x0, double *x1, int vrblvl );
  * If vrblvl > 0, then intermediate results are shown. */
 
 void quarter_split
- ( double x, double *x0, double *x1, double *x2, double *x3, int vrblvl );
+ ( double x, double *x0, double *x1, double *x2, double *x3, int vrblvl=0 );
 /*
  * Assuming x > 0, splits x into four doubles x0 and x1,
  * selecting the 13 bits of the fraction of x to go into x0,
  * then next 13 into x1, the next 13 into x2, and the rest in x3.
  * If vrblvl > 0, then intermediate results are shown. */
-
-int test_half_split ( void );
-/*
- * Generates a random number, splits in two equal sized halves, and then
- * checks if adding the parts gives the original number. */
-
-int test_quarter_split ( void );
-/*
- * Generates a random number, splits in four equal sized halves, and then
- * checks if adding the parts gives the original number. */
 
 #endif

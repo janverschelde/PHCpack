@@ -1,3 +1,6 @@
+Tue 13 Jan 2026 : moved splitting_doubles.c into splitting_doubles.cpp,
+  extracting tests into test_splitting_doubles.cpp, updated makefiles.
+
 Sun 11 Jan 2026 : extended splitting_doubles with quarter split function.
 
 Sat 10 Jan 2026 : added bits_of_pi.c as test on frexp() and ldexp().

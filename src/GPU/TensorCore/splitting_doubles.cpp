@@ -40,9 +40,12 @@ uint64 last_bits ( int k, uint64 nbr )
    return (nbr & mask); // bit masking
 }
 
-uint64 quarter_bits
+void quarter_bits
  ( uint64 nbr, uint64 *b0, uint64 *b1, uint64 *b2, uint64 *b3, int vrblvl )
 {
+   if(vrblvl > 0)
+      printf("-> in splitting_doubles.quarter_bits ...\n");
+
    uint64 mask = 1;
    uint64 pwr = 2;
    uint64 rest = nbr;
@@ -53,8 +56,9 @@ uint64 quarter_bits
       pwr = 2*pwr;
    }
    if(vrblvl > 0)
+   {
       printf(" m : "); write_52bits(52, mask); printf("\n");
-
+   }
    *b3 = (nbr & mask); // last 13 bits
    rest = rest - *b3;
    
@@ -70,8 +74,9 @@ uint64 quarter_bits
       pwr = 2*pwr;
    }
    if(vrblvl > 0)
+   {
       printf(" m : "); write_52bits(52, mask); printf("\n");
-
+   }
    *b2 = (rest & mask); // next 13 bits
    rest = rest - *b2;
 
@@ -85,8 +90,9 @@ uint64 quarter_bits
       pwr = 2*pwr;
    }
    if(vrblvl > 0)
+   {
       printf(" m : "); write_52bits(52, mask); printf("\n");
-
+   }
    *b1 = (rest & mask); // next 13 bits
 
    if(vrblvl > 0)
@@ -109,6 +115,9 @@ uint64 quarter_bits
 
 double first_half ( double x, int vrblvl )
 {
+   if(vrblvl > 0)
+      printf("-> in splitting_doubles.first_half ...\n");
+
    int exponent;
    double fraction = frexp(x, &exponent );
    double shifted = ldexp(fraction, 52);
@@ -131,12 +140,18 @@ double first_half ( double x, int vrblvl )
 
 void half_split ( double x, double *x0, double *x1, int vrblvl )
 {
+   if(vrblvl > 0)
+      printf("-> in splitting_doubles.half_split ...\n");
+
    *x0 = first_half(x, vrblvl);
    *x1 = x - *x0;
 }
 
 int leading_zeros ( uint64 nbr, int idxpwr, int vrblvl )
 {
+   if(vrblvl > 0)
+      printf("-> in splitting_doubles.leading_zeros ...\n");
+
    int result = 0;
    int idx = idxpwr;
    const uint64 two = 2;
@@ -159,6 +174,9 @@ int leading_zeros ( uint64 nbr, int idxpwr, int vrblvl )
 void quarter_split
  ( double x, double *x0, double *x1, double *x2, double *x3, int vrblvl )
 {
+   if(vrblvl > 0)
+      printf("-> in splitting_doubles.quarter_split ...\n");
+
    int exponent;
    double fraction = frexp(x, &exponent);
    double shifted = ldexp(fraction, 52);
@@ -169,7 +187,7 @@ void quarter_split
 
    if(vrblvl > 0) printf("exponent : %d\n", exponent);
 
-   quarter_bits(int64fac,&f0,&f1,&f2,&f3,vrblvl);
+   quarter_bits(int64fac, &f0, &f1, &f2, &f3, vrblvl);
 
    xf0 = (double) f0;
    *x0 = ldexp(xf0, exponent - 52);
@@ -205,65 +223,4 @@ void quarter_split
       printf("#leading zeros in f3 : %d\n", cnt);
    }
    *x3 = x - *x0 - *x1 - *x2;
-}
-
-int test_half_split ( void )
-{
-   double x,x0,x1,s,e;
-
-   srand(time(NULL));
-
-   x = ((double) rand())/RAND_MAX;
-   printf(" x : %.15e\n", x);
-
-   half_split(x,&x0,&x1,1);
-
-   printf("x0 : %.15e\n", x0);
-   printf("x1 : %.15e\n", x1);
-   s = x0 + x1;
-   printf("x0 + x1 : %.15e\n", s);
-   printf("      x : %.15e\n", x);
-   e = abs(x - s);
-   printf("  error : %.3e\n", e);
-
-   return 0;
-}
-
-int test_quarter_split ( void )
-{
-   double x,x0,x1,x2,x3,s,e;
-
-   srand(time(NULL));
-
-   x = ((double) rand())/RAND_MAX;
-   printf(" x : %.15e\n", x);
-
-   quarter_split(x,&x0,&x1,&x2,&x3,1);
-
-   printf("x0 : %.15e\n", x0);
-   printf(" b : "); write_52double(x0);
-   printf("x1 : %.15e\n", x1);
-   printf(" b : "); write_52double(x1);
-   printf("x2 : %.15e\n", x2);
-   printf(" b : "); write_52double(x2);
-   printf("x3 : %.15e\n", x3);
-   printf(" b : "); write_52double(x3);
-
-   printf("                x : %.15e\n", x);
-   e = fabs(x - x0);
-   printf("               x0 : %.15e, error : %.3e\n", x0, e);
-   s = x0 + x1; e = fabs(x - s);
-   printf("          x0 + x1 : %.15e, error : %.3e\n", s, e);
-   s = s + x2; e = fabs(x - s);
-   printf("     x0 + x1 + x2 : %.15e, error : %.3e\n", s, e);
-   s = s + x3; e = fabs(x - s);
-   printf("x0 + x1 + x2 + x3 : %.15e, error : %.3e\n", s, e);
-
-   return 0;
-}
-
-int main ( void )
-{
-   // return test_half_split();
-   return test_quarter_split();
 }

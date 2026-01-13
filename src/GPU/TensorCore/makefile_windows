@@ -38,9 +38,13 @@ pi64bits:
 	gcc -o pi64bits bits_of_pi.c
 
 test_split:
-	gcc -o test_split splitting_doubles.c
+	@-echo "compiling ..."
+	g++ -c splitting_doubles.cpp -o splitting_doubles.o
+	g++ -c test_splitting_doubles.cpp -o test_splitting_doubles.o
+	@-echo "linking ..."
+	g++ -o test_split test_splitting_doubles.o splitting_doubles.o
 
 clean:
 	del smTCGemm.exe smTCGemm.lib smTCGemm.exp
 	del pi64bits.exe
-	del test_split.exe
+	del test_split.exe splitting_doubles.o test_splitting_doubles.o

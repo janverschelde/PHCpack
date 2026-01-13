@@ -12,5 +12,6 @@ file name              : short description
 simpleTensorCoreGemm   : simple wgma kernel for matrix multiplication
 ------------------------------------------------------------------------------
 bits_of_pi             : test on the bits of a double approximation for pi
-splitting_doubles      : halving fractions of doubles
+splitting_doubles      : halving and quartering fractions of doubles
+test_splitting_doubles : tests on halving and quartering doubles
 ------------------------------------------------------------------------------
