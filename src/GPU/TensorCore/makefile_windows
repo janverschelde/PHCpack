@@ -2,6 +2,9 @@
 # of the Microsoft Visual Studio Compiler on Windows 10.
 # The option '-O3' is unknown and replaced by '-O2'.
 
+QDsrc=../../Ada/Math_Lib/QD/C
+MPD=../Norms
+
 # location of the command line Microsoft Visual Studio Compiler
 # CL="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64"
 CL="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.36.32532\bin\Hostx64\x64"
@@ -37,14 +40,51 @@ smTCGemm:
 pi64bits:
 	gcc -o pi64bits bits_of_pi.c
 
-test_split:
-	@-echo "compiling ..."
-	g++ -c splitting_doubles.cpp -o splitting_doubles.o
+splitting_doubles.o:
+	@-echo ">>> compiling splitting doubles ..."
+	g++ -O3 -c splitting_doubles.cpp
+
+test_split: splitting_doubles.o
+	@-echo ">>> compiling test splitting doubles..."
 	g++ -c test_splitting_doubles.cpp -o test_splitting_doubles.o
-	@-echo "linking ..."
+	@-echo ">>> linking ..."
 	g++ -o test_split test_splitting_doubles.o splitting_doubles.o
+
+double_double.o:
+	@-echo ">>> compiling double double ..."
+	g++ -O3 -c -I$(QDsrc) $(QDsrc)/double_double.c
+
+double_double_functions.o:
+	@-echo ">>> compiling double double functions ..."
+	g++ -O3 -c -I$(MPD) $(MPD)/double_double_functions.cpp
+
+random_numbers.o:
+	@-echo ">>> compiling double random numbers"
+	g++ -O3 -c -I$(MPD) $(MPD)/random_numbers.cpp
+
+random2_vectors.o:
+	@-echo ">>> compiling double double random vector generators ..."
+	g++ -O3 -c -I$(MPD) $(MPD)/random2_vectors.cpp
+
+vectored_double_doubles.o:
+	@-echo ">>> compiling vectored double doubles ..."
+	g++ -O3 -c -I$(QDsrc) -I$(MPD) vectored_double_doubles.cpp
+
+test_vdd: double_double.o double_double_functions.o \
+          random_numbers.o random2_vectors.o \
+          splitting_doubles.o vectored_double_doubles.o
+	@-echo ">>> compiling test_vdd ..."
+	g++ -c -I$(QDsrc) -I$(MPD) test_vdd.cpp -o test_vdd.o
+	@-echo ">>> linking ..."
+	g++ -o test_vdd test_vdd.o double_double.o \
+               double_double_functions.o random_numbers.o random2_vectors.o \
+               splitting_doubles.o vectored_double_doubles.o
 
 clean:
 	del smTCGemm.exe smTCGemm.lib smTCGemm.exp
 	del pi64bits.exe
 	del test_split.exe splitting_doubles.o test_splitting_doubles.o
+	del random_numbers.o random2_vectors.o
+	del double_double.o double_double_functions.o
+	del vectored_double_doubles.o test_vdd.o
+	del test_vdd.exe

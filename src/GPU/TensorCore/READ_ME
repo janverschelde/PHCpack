@@ -7,11 +7,13 @@ using sequences 2**k, for k from 0 to n.  As n grows larger than 53,
 the sum of 2**k can no longer represented correctly by 64-bit floats.
 
 ------------------------------------------------------------------------------
-file name              : short description
+file name               : short description
 ------------------------------------------------------------------------------
-simpleTensorCoreGemm   : simple wgma kernel for matrix multiplication
+simpleTensorCoreGemm    : simple wgma kernel for matrix multiplication
 ------------------------------------------------------------------------------
-bits_of_pi             : test on the bits of a double approximation for pi
-splitting_doubles      : halving and quartering fractions of doubles
-test_splitting_doubles : tests on halving and quartering doubles
+bits_of_pi              : test on the bits of a double approximation for pi
+splitting_doubles       : halving and quartering fractions of doubles
+test_splitting_doubles  : tests on halving and quartering doubles
+vectored_double_doubles : defines vectored double double arithmetic
+test_vdd                : tests vectored double double arithmetic
 ------------------------------------------------------------------------------

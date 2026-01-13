@@ -1,5 +1,7 @@
 Tue 13 Jan 2026 : moved splitting_doubles.c into splitting_doubles.cpp,
   extracting tests into test_splitting_doubles.cpp, updated makefiles.
+  New vectored_double_doubles to define vectored double double arithmetic,
+  tested by ts_vdd.cpp; updated the makefile.
 
 Sun 11 Jan 2026 : extended splitting_doubles with quarter split function.
 

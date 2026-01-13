@@ -1,17 +1,59 @@
+gpp=g++
+gcc=gcc
+QDsrc=../../Ada/Math_Lib/QD/C
+MPD=../Norms
+
 smTCGemm:
 	nvcc -ccbin=/usr/bin/gcc -O3 -o smTCGemm -arch=sm_80 \
              simpleTensorCoreGemm.cu
 
 pi64bits:
-	gcc -o pi64bits bits_of_pi.c
+	$(gcc) -o pi64bits bits_of_pi.c
 
-test_split:
-	@-echo "compiling ..."
-	g++ -c splitting_doubles.cpp -o splitting_doubles.o
-	g++ -c test_splitting_doubles.cpp -o test_splitting_doubles.o
-	@-echo "linking ..."
-	g++ -o test_split test_splitting_doubles.o splitting_doubles.o
+splitting_doubles.o:
+	@-echo ">>> compiling splitting doubles ..."
+	$(gpp) -O3 -c splitting_doubles.cpp
+
+test_split: splitting_doubles.o
+	@-echo ">>> compiling test splitting doubles..."
+	$(gpp) -c test_splitting_doubles.cpp -o test_splitting_doubles.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_split test_splitting_doubles.o splitting_doubles.o
+
+double_double.o:
+	@-echo ">>> compiling double double ..."
+	$(gpp) -O3 -c -I$(QDsrc) $(QDsrc)/double_double.c
+
+double_double_functions.o:
+	@-echo ">>> compiling double double functions ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/double_double_functions.cpp
+
+random_numbers.o:
+	@-echo ">>> compiling double random numbers"
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random_numbers.cpp
+
+random2_vectors.o:
+	@-echo ">>> compiling double double random vector generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random2_vectors.cpp
+
+vectored_double_doubles.o:
+	@-echo ">>> compiling vectored double doubles ..."
+	$(gpp) -O3 -c -I$(QDsrc) -I$(MPD) vectored_double_doubles.cpp
+
+test_vdd: double_double.o double_double_functions.o \
+          random_numbers.o random2_vectors.o \
+          splitting_doubles.o vectored_double_doubles.o
+	@-echo ">>> compiling test_vdd ..."
+	$(gpp) -c -I$(QDsrc) -I$(MPD) test_vdd.cpp -o test_vdd.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_vdd test_vdd.o double_double.o \
+               double_double_functions.o random_numbers.o random2_vectors.o \
+               splitting_doubles.o vectored_double_doubles.o
 
 clean:
 	/bin/rm -f -r smTCGemm pi64bits
 	/bin/rm -f -r test_split test_splitting_doubles.o splitting_doubles.o
+	/bin/rm -f -r random_numbers.o random2_vectors.o
+	/bin/rm -f -r double_double.o double_double_functions.o
+	/bin/rm -f -r vectored_double_doubles.o
+	/bin/rm -f -r test_vdd test_vdd.o
