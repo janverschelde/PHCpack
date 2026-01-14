@@ -17,5 +17,8 @@ test_split:
 test_vdd:
 	make -f $(MAKEFILE) test_vdd
 
+test_vqd:
+	make -f $(MAKEFILE) test_vqd
+
 clean:
 	make -f $(MAKEFILE) clean

@@ -24,9 +24,17 @@ double_double.o:
 	@-echo ">>> compiling double double ..."
 	$(gpp) -O3 -c -I$(QDsrc) $(QDsrc)/double_double.c
 
+quad_double.o:
+	@-echo ">>> compiling quad double ..."
+	$(gpp) -O3 -c -I$(QDsrc) $(QDsrc)/quad_double.c
+
 double_double_functions.o:
 	@-echo ">>> compiling double double functions ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/double_double_functions.cpp
+
+quad_double_functions.o:
+	@-echo ">>> compiling quad double functions ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/quad_double_functions.cpp
 
 random_numbers.o:
 	@-echo ">>> compiling double random numbers"
@@ -36,9 +44,17 @@ random2_vectors.o:
 	@-echo ">>> compiling double double random vector generators ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/random2_vectors.cpp
 
+random4_vectors.o:
+	@-echo ">>> compiling quad double random vector generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random4_vectors.cpp
+
 vectored_double_doubles.o:
 	@-echo ">>> compiling vectored double doubles ..."
 	$(gpp) -O3 -c -I$(QDsrc) -I$(MPD) vectored_double_doubles.cpp
+
+vectored_quad_doubles.o:
+	@-echo ">>> compiling vectored quad doubles ..."
+	$(gpp) -O3 -c -I$(QDsrc) -I$(MPD) vectored_quad_doubles.cpp
 
 test_vdd: double_double.o double_double_functions.o \
           random_numbers.o random2_vectors.o \
@@ -50,6 +66,17 @@ test_vdd: double_double.o double_double_functions.o \
                double_double_functions.o random_numbers.o random2_vectors.o \
                splitting_doubles.o vectored_double_doubles.o
 
+test_vqd: double_double.o quad_double.o double_double_functions.o \
+          quad_double_functions.o random_numbers.o random4_vectors.o \
+          splitting_doubles.o vectored_quad_doubles.o
+	@-echo ">>> compiling test_vqd ..."
+	$(gpp) -c -I$(QDsrc) -I$(MPD) test_vqd.cpp -o test_vqd.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_vqd test_vqd.o double_double.o quad_double.o \
+               double_double_functions.o quad_double_functions.o \
+               random_numbers.o random4_vectors.o \
+               splitting_doubles.o vectored_quad_doubles.o
+
 clean:
 	/bin/rm -f -r smTCGemm pi64bits
 	/bin/rm -f -r test_split test_splitting_doubles.o splitting_doubles.o
@@ -57,3 +84,6 @@ clean:
 	/bin/rm -f -r double_double.o double_double_functions.o
 	/bin/rm -f -r vectored_double_doubles.o
 	/bin/rm -f -r test_vdd test_vdd.o
+	/bin/rm -f -r quad_double.o quad_double_functions.o
+	/bin/rm -f -r random4_vectors.o vectored_quad_doubles.o
+	/bin/rm -f -r test_vqd test_vqd.o

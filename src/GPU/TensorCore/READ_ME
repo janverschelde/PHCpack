@@ -16,4 +16,6 @@ splitting_doubles       : halving and quartering fractions of doubles
 test_splitting_doubles  : tests on halving and quartering doubles
 vectored_double_doubles : defines vectored double double arithmetic
 test_vdd                : tests vectored double double arithmetic
+vectored_quad_doubles   : defines vectored quad double arithmetic
+test_vqd                : tests vectored quad double arithmetic
 ------------------------------------------------------------------------------
