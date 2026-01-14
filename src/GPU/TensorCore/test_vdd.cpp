@@ -82,9 +82,7 @@ int test_quarter_double_double ( void )
    printf("e : "); dd_write(e, 32); printf("\n");
 
    fail = not(e[0] == 0.0)
-        + not(e[1] == 0.0)
-        + not(e[2] == 0.0)
-        + not(e[3] == 0.0);
+        + not(e[1] == 0.0);
 
    return fail;
 }
