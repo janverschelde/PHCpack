@@ -1,3 +1,6 @@
+Thu 15 Jan 2026 : started development of random16_vectors,
+  as needed for vectored hexa double arithmetic.
+
 Sun 10 Mar 2024 : fixed output in hexa_double_functions.cpp.
 
 Sat 9 Mar 2024 : new hexa_double_gpufun.h with stubs provided in
