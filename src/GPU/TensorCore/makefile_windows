@@ -58,6 +58,10 @@ quad_double.o:
 	@-echo ">>> compiling quad double ..."
 	g++ -O3 -c -I$(QDsrc) $(QDsrc)/quad_double.c
 
+octo_double.o:
+	@-echo ">>> compiling octo double ..."
+	g++ -O3 -c -I$(QDsrc) $(QDsrc)/octo_double.c
+
 double_double_functions.o:
 	@-echo ">>> compiling double double functions ..."
 	g++ -O3 -c -I$(MPD) $(MPD)/double_double_functions.cpp
@@ -65,6 +69,10 @@ double_double_functions.o:
 quad_double_functions.o:
 	@-echo ">>> compiling quad double functions ..."
 	g++ -O3 -c -I$(MPD) $(MPD)/quad_double_functions.cpp
+
+octo_double_functions.o:
+	@-echo ">>> compiling octo double functions ..."
+	g++ -O3 -c -I$(MPD) $(MPD)/octo_double_functions.cpp
 
 random_numbers.o:
 	@-echo ">>> compiling double random numbers"
@@ -78,6 +86,10 @@ random4_vectors.o:
 	@-echo ">>> compiling quad double random vector generators ..."
 	g++ -O3 -c -I$(MPD) $(MPD)/random4_vectors.cpp
 
+random8_vectors.o:
+	@-echo ">>> compiling octo double random vector generators ..."
+	g++ -O3 -c -I$(MPD) $(MPD)/random8_vectors.cpp
+
 vectored_double_doubles.o:
 	@-echo ">>> compiling vectored double doubles ..."
 	g++ -O3 -c -I$(QDsrc) -I$(MPD) vectored_double_doubles.cpp
@@ -85,6 +97,10 @@ vectored_double_doubles.o:
 vectored_quad_doubles.o:
 	@-echo ">>> compiling vectored quad doubles ..."
 	g++ -O3 -c -I$(QDsrc) -I$(MPD) vectored_quad_doubles.cpp
+
+vectored_octo_doubles.o:
+	@-echo ">>> compiling vectored octo doubles ..."
+	g++ -O3 -c -I$(QDsrc) -I$(MPD) vectored_octo_doubles.cpp
 
 test_vdd: double_double.o double_double_functions.o \
           random_numbers.o random2_vectors.o \
@@ -97,15 +113,28 @@ test_vdd: double_double.o double_double_functions.o \
                splitting_doubles.o vectored_double_doubles.o
 
 test_vqd: double_double.o quad_double.o double_double_functions.o \
-          quad_double_functions.o random_numbers.o random2_vectors.o \
-          random4_vectors.o splitting_doubles.o vectored_quad_doubles.o
+          quad_double_functions.o random_numbers.o random4_vectors.o \
+          splitting_doubles.o vectored_quad_doubles.o
 	@-echo ">>> compiling test_vqd ..."
 	g++ -c -I$(QDsrc) -I$(MPD) test_vqd.cpp -o test_vqd.o
 	@-echo ">>> linking ..."
 	g++ -o test_vqd test_vqd.o double_double.o quad_double.o \
                double_double_functions.o quad_double_functions.o \
-               random_numbers.o random2_vectors.o random4_vectors.o \
+               random_numbers.o random4_vectors.o \
                splitting_doubles.o vectored_quad_doubles.o
+
+test_vod: double_double.o quad_double.o octo_double.o \
+          double_double_functions.o quad_double_functions.o \
+          octo_double_functions.o random_numbers.o random8_vectors.o \
+          splitting_doubles.o vectored_octo_doubles.o
+	@-echo ">>> compiling test_vod ..."
+	g++ -c -I$(QDsrc) -I$(MPD) test_vod.cpp -o test_vod.o
+	@-echo ">>> linking ..."
+	g++ -o test_vod test_vod.o \
+               double_double.o quad_double.o octo_double.o \
+               double_double_functions.o quad_double_functions.o \
+               octo_double_functions.o random_numbers.o random8_vectors.o \
+               splitting_doubles.o vectored_octo_doubles.o
 
 clean:
 	del smTCGemm.exe smTCGemm.lib smTCGemm.exp
@@ -118,3 +147,6 @@ clean:
 	del quad_double.o quad_double_functions.o
 	del random4_vectors.o vectored_quad_doubles.o test_vqd.o
 	del test_vqd.exe
+	del octo_double.o octo_double_functions.o
+	del random8_vectors.o vectored_octo_doubles.o test_vod.o
+	del test_vod.exe

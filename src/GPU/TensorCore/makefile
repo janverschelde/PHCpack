@@ -20,5 +20,8 @@ test_vdd:
 test_vqd:
 	make -f $(MAKEFILE) test_vqd
 
+test_vod:
+	make -f $(MAKEFILE) test_vod
+
 clean:
 	make -f $(MAKEFILE) clean

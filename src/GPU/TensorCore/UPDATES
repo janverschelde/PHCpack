@@ -1,3 +1,6 @@
+Thu 15 Jan 2026 : added new vectored_octo_doubles, tested by ts_vod.cpp,
+  and updated makefiles.
+
 Wed 14 Jan 2026 : fixed error in first fail computation in ts_vdd.cpp.
   Defined the splitting of quad doubles in vectored_quad_doubles,
   tested by test_vqd.cpp.  Updates the makefiles.
