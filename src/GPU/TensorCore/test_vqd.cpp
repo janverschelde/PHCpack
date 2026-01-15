@@ -11,7 +11,14 @@
 int test_quarter_quad_double ( void );
 /*
  * Generates a random positive quad double, quarters the parts,
- * and then checks if their sum equals the original quad double. */
+ * and then checks if their sum equals the original quad double.
+ * Returns 1 if the test failed, returns 0 otherwise. */
+
+int test_vectored_qd_product ( int dim );
+/*
+ * Generates two random vectors of quad doubles of size dim,
+ * and compares their inner producted with the vectored inner product.
+ * Returns 1 if the test failed, returns 0 otherwise. */
 
 int main ( void )
 {
@@ -23,6 +30,15 @@ int main ( void )
       printf("\nTest on quarter quad double failed?!!!\n\n");
    else
       printf("\nTest on quarter quad double succeeded.\n\n");
+
+   printf("Give the dimension : "); scanf("%d", &dim);
+
+   fail = test_vectored_qd_product(dim);
+
+   if(fail == 1)
+      printf("\nTest on vectored quad double product failed?!!!\n\n");
+   else
+      printf("\nTest on vectored quad double product succeeded.\n\n");
 
    return 0;
 }
@@ -90,6 +106,73 @@ int test_quarter_quad_double ( void )
         + not(e[1] == 0.0)
         + not(e[2] == 0.0)
         + not(e[3] == 0.0);
+
+   return fail;
+}
+
+int test_vectored_qd_product ( int dim )
+{
+   int fail = 0;
+
+   double xhihi[dim],xlohi[dim],xhilo[dim],xlolo[dim];
+   double yhihi[dim],ylohi[dim],yhilo[dim],ylolo[dim];
+   double x0[dim],x1[dim],x2[dim],x3[dim],x4[dim],x5[dim],x6[dim],x7[dim];
+   double x8[dim],x9[dim],xA[dim],xB[dim],xC[dim],xD[dim],xE[dim],xF[dim];
+   double y0[dim],y1[dim],y2[dim],y3[dim],y4[dim],y5[dim],y6[dim],y7[dim];
+   double y8[dim],y9[dim],yA[dim],yB[dim],yC[dim],yD[dim],yE[dim],yF[dim];
+   double prd[4],vpd[4],err[4];
+   double s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,sA,sB,sC,sD,sE,sF;
+
+   for(int i=0; i<dim; i++)
+   {
+      random_quad_double(&xhihi[i], &xlohi[i], &xhilo[i], &xlolo[i]);
+      if(xhihi[i] < 0.0) xhihi[i] = -xhihi[i];
+      if(xlohi[i] < 0.0) xlohi[i] = -xlohi[i];
+      if(xhilo[i] < 0.0) xhilo[i] = -xhilo[i];
+      if(xlolo[i] < 0.0) xlolo[i] = -xlolo[i];
+      random_quad_double(&yhihi[i], &ylohi[i], &yhilo[i], &ylolo[i]);
+      if(yhihi[i] < 0.0) yhihi[i] = -yhihi[i];
+      if(ylohi[i] < 0.0) ylohi[i] = -ylohi[i];
+      if(yhilo[i] < 0.0) yhilo[i] = -yhilo[i];
+      if(ylolo[i] < 0.0) ylolo[i] = -ylolo[i];
+   }
+   printf("quad double vector x :\n");
+   qd_write_vector(dim, xhihi, xlohi, xhilo, xlolo);
+   printf("quad double vector y :\n");
+   qd_write_vector(dim, yhihi, ylohi, yhilo, ylolo);
+
+   quad_double_product
+      (dim, xhihi, xlohi, xhilo, xlolo, yhihi, ylohi, yhilo, ylolo,
+       &prd[0], &prd[1], &prd[2], &prd[3]);
+
+   quarter_qd_vector
+      (dim, xhihi, xlohi, xhilo, xlolo,
+       x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, xA, xB, xC, xD, xE, xF);
+   quarter_qd_vector
+      (dim, yhihi, ylohi, yhilo, ylolo,
+       y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, yA, yB, yC, yD, yE, yF);
+
+   vectored_qd_product
+      (dim, x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, xA, xB, xC, xD, xE, xF,
+            y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, yA, yB, yC, yD, yE, yF,
+       &s0, &s1, &s2, &s3, &s4, &s5, &s6, &s7,
+       &s8, &s9, &sA, &sB, &sC, &sD, &sE, &sF);
+
+   to_quad_double
+      (s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, sA, sB, sC, sD, sE, sF,
+       &vpd[0], &vpd[1], &vpd[2], &vpd[3]);
+
+   printf("qd x*y : "); qd_write(prd, 64); printf("\n");
+   printf("vd x*y : "); qd_write(vpd, 64); printf("\n");
+
+   qdf_sub(prd[0], prd[1], prd[2], prd[3], vpd[0], vpd[1], vpd[2], vpd[3],
+           &err[0], &err[1], &err[2], &err[3]);
+
+   if(err[0] < 0.0) qdf_minus(&err[0], &err[1], &err[2], &err[3]);
+
+   printf(" error : "); qd_write(err, 64); printf("\n");
+
+   fail = (abs(err[0]) > 1.0E-58);
 
    return fail;
 }

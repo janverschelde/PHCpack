@@ -1,6 +1,7 @@
 Wed 14 Jan 2026 : fixed error in first fail computation in ts_vdd.cpp.
   Defined the splitting of quad doubles in vectored_quad_doubles,
   tested by test_vqd.cpp.  Updates the makefiles.
+  Extended vectored_quad_doubles and test_vqd with vectored qd product.
 
 Tue 13 Jan 2026 : moved splitting_doubles.c into splitting_doubles.cpp,
   extracting tests into test_splitting_doubles.cpp, updated makefiles.
