@@ -1,3 +1,6 @@
+Fri 16 Jan 2026 : completed vectored_hexa_doubles and test_vhd.cp.
+  Minor edit in vectored_octo_doubles.h.
+
 Thu 15 Jan 2026 : added new vectored_octo_doubles, tested by ts_vod.cpp,
   and updated makefiles.  Started vectored_hexa_doubles development,
   tested by test_vhd.cpp, and updated makefiles.
