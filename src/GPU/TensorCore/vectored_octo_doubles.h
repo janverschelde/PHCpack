@@ -84,6 +84,23 @@ void octo_double_product
  * resulting in
  * (phihihi, plohihi, philohi, plolohi, phihilo, plohilo, philolo, plololo). */
 
+void octo_double_matmatmul
+ ( int nrows, int ncols, int dim,
+   double **Ahihihi, double **Alohihi, double **Ahilohi, double **Alolohi,
+   double **Ahihilo, double **Alohilo, double **Ahilolo, double **Alololo,
+   double **Bhihihi, double **Blohihi, double **Bhilohi, double **Blolohi,
+   double **Bhihilo, double **Blohilo, double **Bhilolo, double **Blololo,
+   double **Chihihi, double **Clohihi, double **Chilohi, double **Clolohi,
+   double **Chihilo, double **Clohilo, double **Chilolo, double **Clololo );
+/*
+ * Given in
+ * (Ahihihi, Alohihi, Ahilohi, Alolohi, Ahihilo, Alohilo, Ahilolo, Alololo)
+ * is an nrows-by-dim matrix A, and given in 
+ * (Bhihihi, Blohihi, Bhilohi, Blolohi, Bhihilo, Blohilo, Bhilolo, Blololo)
+ * is an dim-by-ncols matrix B, returns in
+ * (Chihihi, Clohihi, Chilohi, Clolohi, Chihilo, Clohilo, Chilolo, Clololo)
+ * the matrix matrix multiplication of A with B. */
+
 void vectored_od_product
  ( int dim,
    double *x0, double *x1, double *x2, double *x3,

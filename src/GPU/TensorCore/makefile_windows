@@ -107,6 +107,10 @@ random8_vectors.o:
 	@-echo ">>> compiling octo double random vector generators ..."
 	g++ -O3 -c -I$(MPD) $(MPD)/random8_vectors.cpp
 
+random8_matrices.o:
+	@-echo ">>> compiling octo double random matrix generators ..."
+	g++ -O3 -c -I$(MPD) -I$(MAT) $(MAT)/random8_matrices.cpp
+
 random16_vectors.o:
 	@-echo ">>> compiling hexa double random vector generators ..."
 	g++ -O3 -c -I$(MPD) $(MPD)/random16_vectors.cpp
@@ -152,7 +156,8 @@ test_vqd: double_double.o quad_double.o \
 
 test_vod: double_double.o quad_double.o octo_double.o \
           double_double_functions.o quad_double_functions.o \
-          octo_double_functions.o random_numbers.o random8_vectors.o \
+          octo_double_functions.o \
+          random_numbers.o random8_vectors.o random8_matrices.o \
           splitting_doubles.o vectored_octo_doubles.o
 	@-echo ">>> compiling test_vod ..."
 	g++ -c -I$(QDsrc) -I$(MPD) test_vod.cpp -o test_vod.o
@@ -160,7 +165,8 @@ test_vod: double_double.o quad_double.o octo_double.o \
 	g++ -o test_vod test_vod.o \
                double_double.o quad_double.o octo_double.o \
                double_double_functions.o quad_double_functions.o \
-               octo_double_functions.o random_numbers.o random8_vectors.o \
+               octo_double_functions.o \
+               random_numbers.o random8_vectors.o random8_matrices.o \
                splitting_doubles.o vectored_octo_doubles.o
 
 test_vhd: double_double.o quad_double.o octo_double.o hexa_double.o \
@@ -192,7 +198,8 @@ clean:
 	del vectored_quad_doubles.o test_vqd.o
 	del test_vqd.exe
 	del octo_double.o octo_double_functions.o
-	del random8_vectors.o vectored_octo_doubles.o test_vod.o
+	del random8_vectors.o  random8_matrices.o
+	del vectored_octo_doubles.o test_vod.o
 	del test_vod.exe
 	del hexa_double.o hexa_double_functions.o
 	del random16_vectors.o vectored_hexa_doubles.o test_vhd.o

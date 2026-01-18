@@ -20,7 +20,7 @@ int test_quarter_quad_double ( void );
 int test_vectored_qd_product ( int dim );
 /*
  * Generates two random vectors of quad doubles of size dim,
- * and compares their inner producted with the vectored inner product.
+ * and compares their inner product with the vectored inner product.
  * Returns 1 if the test failed, returns 0 otherwise. */
 
 int test_vectored_qd_matmatmul ( int nrows, int ncols, int nrc ); 

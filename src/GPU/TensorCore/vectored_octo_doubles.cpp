@@ -188,6 +188,44 @@ void octo_double_product
    }
 }
 
+void octo_double_matmatmul
+ ( int nrows, int ncols, int dim,
+   double **Ahihihi, double **Alohihi, double **Ahilohi, double **Alolohi,
+   double **Ahihilo, double **Alohilo, double **Ahilolo, double **Alololo,
+   double **Bhihihi, double **Blohihi, double **Bhilohi, double **Blolohi,
+   double **Bhihilo, double **Blohilo, double **Bhilolo, double **Blololo,
+   double **Chihihi, double **Clohihi, double **Chilohi, double **Clolohi,
+   double **Chihilo, double **Clohilo, double **Chilolo, double **Clololo )
+{
+   double acchihihi,acclohihi,acchilohi,acclolohi;
+   double acchihilo,acclohilo,acchilolo,acclololo;
+
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         Chihihi[i][j] = 0.0; Clohihi[i][j] = 0.0;
+         Chilohi[i][j] = 0.0; Clolohi[i][j] = 0.0;
+         Chihilo[i][j] = 0.0; Clohilo[i][j] = 0.0;
+         Chilolo[i][j] = 0.0; Clololo[i][j] = 0.0;
+
+         for(int k=0; k<dim; k++)
+         {
+            odf_mul(Ahihihi[i][k], Alohihi[i][k], Ahilohi[i][k], Alolohi[i][k],
+                    Ahihilo[i][k], Alohilo[i][k], Ahilolo[i][k], Alololo[i][k],
+                    Bhihihi[k][j], Blohihi[k][j], Bhilohi[k][j], Blolohi[k][j],
+                    Bhihilo[k][j], Blohilo[k][j], Bhilolo[k][j], Blololo[k][j],
+                    &acchihihi, &acclohihi, &acchilohi, &acclolohi,
+                    &acchihilo, &acclohilo, &acchilolo, &acclololo);
+            odf_inc(&Chihihi[i][j], &Clohihi[i][j],
+                    &Chilohi[i][j], &Clolohi[i][j],
+                    &Chihilo[i][j], &Clohilo[i][j],
+                    &Chilolo[i][j], &Clololo[i][j],
+                    acchihihi, acclohihi, acchilohi, acclolohi,
+                    acchihilo, acclohilo, acchilolo, acclololo);
+         }
+      }
+}
+
 void vectored_od_product
  ( int dim,
    double *x0, double *x1, double *x2, double *x3,

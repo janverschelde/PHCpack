@@ -1,44 +1,67 @@
 /* Tests the collection of functions on vectored octo double arithmetic.  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include <iostream>
+#include <iomanip>
+#include <cstdlib>
+#include <ctime>
+#include <cmath>
 #include "octo_double.h"
 #include "random8_vectors.h"
+#include "random8_matrices.h"
 #include "octo_double_functions.h"
 #include "vectored_octo_doubles.h"
 
 int test_quarter_octo_double ( void );
 /*
  * Generates a random positive octo double, quarters the parts,
- * and then checks if their sum equals the original quad double.
+ * and then checks if their sum equals the original octo double.
  * Returns 1 if the test failed, returns 0 otherwise. */
 
 int test_vectored_od_product ( int dim );
 /*
  * Generates two random vectors of octo doubles of size dim,
- * and compares their inner producted with the vectored inner product.
+ * and compares their inner product with the vectored inner product.
  * Returns 1 if the test failed, returns 0 otherwise. */
+
+int test_vectored_od_matmatmul ( int nrows, int ncols, int nrc ); 
+/*
+ * Generates two random quad double matrices of dimension
+ * nrows-by-nrc for A, nrc-by-ncols for B, and then tests
+ * the matrix matrix multiplication of A with B. */
+
+using namespace std;
 
 int main ( void )
 {
-   int fail,dim;
+   int fail;
+
+   srand(time(NULL));
 
    fail = test_quarter_octo_double();
 
    if(fail == 1)
-      printf("\nTest on quarter octo double failed?!!!\n\n");
+      cout << "\nTest on quarter octo double failed?!!!\n\n";
    else
-      printf("\nTest on quarter octo double succeeded.\n\n");
+      cout << "\nTest on quarter octo double succeeded.\n\n";
 
-   printf("Give the dimension : "); scanf("%d", &dim);
+   cout << "Give the dimension : ";
+   int dim; cin >> dim;
 
    fail = test_vectored_od_product(dim);
 
    if(fail == 1)
-      printf("\nTest on vectored octo double product failed?!!!\n\n");
+      cout << "\nTest on vectored octo double product failed?!!!\n\n";
    else
-      printf("\nTest on vectored octo double product succeeded.\n\n");
+      cout << "\nTest on vectored octo double product succeeded.\n\n";
+
+   cout << "Give #rows of the product A*B : ";
+   int m; cin >> m;
+   cout << "Give #columns of the product A*B : ";
+   int n; cin >> n;
+   cout << "Give #columns of A, #rows of B : ";
+   int k; cin >> k;
+
+   fail = test_vectored_od_matmatmul(m, n, k);
 
    return 0;
 }
@@ -59,8 +82,6 @@ int test_quarter_octo_double ( void )
    double y[8];
    double e[8];
 
-   srand(time(NULL));
-
    random_octo_double
       (&x[0], &x[1], &x[2], &x[3], &x[4], &x[5], &x[6], &x[7]);
 
@@ -73,7 +94,9 @@ int test_quarter_octo_double ( void )
    if(x[6] < 0.0) x[6] = -x[6];
    if(x[7] < 0.0) x[7] = -x[7];
 
-   printf("x :\n"); od_write_doubles(x); printf("\n");
+   cout << scientific << setprecision(16);
+
+   cout << "x :" << endl; od_write_doubles(x); cout << endl;
 
    quarter_octo_double
       (x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7],
@@ -86,39 +109,38 @@ int test_quarter_octo_double ( void )
        &xhilolo0, &xhilolo1, &xhilolo2, &xhilolo3,
        &xlololo0, &xlololo1, &xlololo2, &xlololo3);
 
-   printf("xhihihi0 : %.15e\n", xhihihi0);
-   printf("xhihihi1 : %.15e\n", xhihihi1);
-   printf("xhihihi2 : %.15e\n", xhihihi2);
-   printf("xhihihi3 : %.15e\n", xhihihi3);
-   printf("xlohihi0 : %.15e\n", xlohihi0);
-   printf("xlohihi1 : %.15e\n", xlohihi1);
-   printf("xlohihi2 : %.15e\n", xlohihi2);
-   printf("xlohihi3 : %.15e\n", xlohihi3);
-   printf("xhilohi0 : %.15e\n", xhilohi0);
-   printf("xhilohi1 : %.15e\n", xhilohi1);
-   printf("xhilohi2 : %.15e\n", xhilohi2);
-   printf("xhilohi3 : %.15e\n", xhilohi3);
-   printf("xlolohi0 : %.15e\n", xlolohi0);
-   printf("xlolohi1 : %.15e\n", xlolohi1);
-   printf("xlolohi2 : %.15e\n", xlolohi2);
-   printf("xlolohi3 : %.15e\n", xlolohi3);
-
-   printf("xhihilo0 : %.15e\n", xhihilo0);
-   printf("xhihilo1 : %.15e\n", xhihilo1);
-   printf("xhihilo2 : %.15e\n", xhihilo2);
-   printf("xhihilo3 : %.15e\n", xhihilo3);
-   printf("xlohilo0 : %.15e\n", xlohilo0);
-   printf("xlohilo1 : %.15e\n", xlohilo1);
-   printf("xlohilo2 : %.15e\n", xlohilo2);
-   printf("xlohilo3 : %.15e\n", xlohilo3);
-   printf("xhilolo0 : %.15e\n", xhilolo0);
-   printf("xhilolo1 : %.15e\n", xhilolo1);
-   printf("xhilolo2 : %.15e\n", xhilolo2);
-   printf("xhilolo3 : %.15e\n", xhilolo3);
-   printf("xlololo0 : %.15e\n", xlololo0);
-   printf("xlololo1 : %.15e\n", xlololo1);
-   printf("xlololo2 : %.15e\n", xlololo2);
-   printf("xlololo3 : %.15e\n", xlololo3);
+   cout << "xhihihi0 : " << xhihihi0 << endl;
+   cout << "xhihihi1 : " << xhihihi1 << endl;
+   cout << "xhihihi2 : " << xhihihi2 << endl;
+   cout << "xhihihi3 : " << xhihihi3 << endl;
+   cout << "xlohihi0 : " << xlohihi0 << endl;
+   cout << "xlohihi1 : " << xlohihi1 << endl;
+   cout << "xlohihi2 : " << xlohihi2 << endl;
+   cout << "xlohihi3 : " << xlohihi3 << endl;
+   cout << "xhilohi0 : " << xhilohi0 << endl;
+   cout << "xhilohi1 : " << xhilohi1 << endl;
+   cout << "xhilohi2 : " << xhilohi2 << endl;
+   cout << "xhilohi3 : " << xhilohi3 << endl;
+   cout << "xlolohi0 : " << xlolohi0 << endl;
+   cout << "xlolohi1 : " << xlolohi1 << endl;
+   cout << "xlolohi2 : " << xlolohi2 << endl;
+   cout << "xlolohi3 : " << xlolohi3 << endl;
+   cout << "xhihilo0 : " << xhihilo0 << endl;
+   cout << "xhihilo1 : " << xhihilo1 << endl;
+   cout << "xhihilo2 : " << xhihilo2 << endl;
+   cout << "xhihilo3 : " << xhihilo3 << endl;
+   cout << "xlohilo0 : " << xlohilo0 << endl;
+   cout << "xlohilo1 : " << xlohilo1 << endl;
+   cout << "xlohilo2 : " << xlohilo2 << endl;
+   cout << "xlohilo3 : " << xlohilo3 << endl;
+   cout << "xhilolo0 : " << xhilolo0 << endl;
+   cout << "xhilolo1 : " << xhilolo1 << endl;
+   cout << "xhilolo2 : " << xhilolo2 << endl;
+   cout << "xhilolo3 : " << xhilolo3 << endl;
+   cout << "xlololo0 : " << xlololo0 << endl;
+   cout << "xlololo1 : " << xlololo1 << endl;
+   cout << "xlololo2 : " << xlololo2 << endl;
+   cout << "xlololo3 : " << xlololo3 << endl;
 
    to_octo_double
       (xhihihi0, xhihihi1, xhihihi2, xhihihi3,
@@ -131,14 +153,14 @@ int test_quarter_octo_double ( void )
        xlololo0, xlololo1, xlololo2, xlololo3,
        &y[0], &y[1], &y[2], &y[3], &y[4], &y[5], &y[6], &y[7]);
 
-   printf("x :\n"); od_write_doubles(x); printf("\n");
-   printf("y :\n"); od_write_doubles(y); printf("\n");
+   cout << "x :"; cout << endl; od_write_doubles(x); cout << endl;
+   cout << "y :"; cout << endl; od_write_doubles(y); cout << endl;
 
    odf_sub(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7],
            y[0], y[1], y[2], y[3], y[4], y[5], y[6], y[7],
            &e[0], &e[1], &e[2], &e[3], &e[4], &e[5], &e[6], &e[7]);
 
-   printf("e :\n"); od_write_doubles(e); printf("\n");
+   cout << "e :"; cout << endl; od_write_doubles(e); cout << endl;
 
    fail = not(e[0] == 0.0) + not(e[1] == 0.0)
         + not(e[2] == 0.0) + not(e[3] == 0.0)
@@ -200,11 +222,11 @@ int test_vectored_od_product ( int dim )
       if(yhilolo[i] < 0.0) yhilolo[i] = -yhilolo[i];
       if(ylololo[i] < 0.0) ylololo[i] = -ylololo[i];
    }
-   printf("octo double vector x :\n");
+   cout << "octo double vector x :"; cout << endl;
    od_write_vector
       (dim, xhihihi, xlohihi, xhilohi, xlolohi,
             xhihilo, xlohilo, xhilolo, xlololo);
-   printf("octo double vector y :\n");
+   cout << "octo double vector y :"; cout << endl;
    od_write_vector
       (dim, yhihihi, ylohihi, yhilohi, ylolohi,
             yhihilo, ylohilo, yhilolo, ylololo);
@@ -243,8 +265,8 @@ int test_vectored_od_product ( int dim )
        s30, s31, &vpd[0], &vpd[1], &vpd[2], &vpd[3], &vpd[4], &vpd[5],
        &vpd[6], &vpd[7]);
 
-   printf("od x*y :\n"); od_write_doubles(prd); printf("\n");
-   printf("vd x*y :\n"); od_write_doubles(vpd); printf("\n");
+   cout << "od x*y :"; cout << endl; od_write_doubles(prd); cout << endl;
+   cout << "vd x*y :"; cout << endl; od_write_doubles(vpd); cout << endl;
 
    odf_sub(prd[0], prd[1], prd[2], prd[3], prd[4], prd[5], prd[6], prd[7],
            vpd[0], vpd[1], vpd[2], vpd[3], vpd[4], vpd[5], vpd[6], vpd[7],
@@ -255,9 +277,128 @@ int test_vectored_od_product ( int dim )
       odf_minus(&err[0], &err[1], &err[2], &err[3],
                 &err[4], &err[5], &err[6], &err[7]);
 
-   printf(" error :\n"); od_write_doubles(err); printf("\n");
+   cout << " error :"; cout << endl; od_write_doubles(err); cout << endl;
 
    fail = (abs(err[0]) > 1.0E-120);
+
+   return fail;
+}
+
+int test_vectored_od_matmatmul ( int nrows, int ncols, int nrc )
+{
+   int fail = 0;
+
+   double **Chihihi = new double*[nrows];
+   double **Clohihi = new double*[nrows];
+   double **Chilohi = new double*[nrows];
+   double **Clolohi = new double*[nrows];
+   double **Chihilo = new double*[nrows];
+   double **Clohilo = new double*[nrows];
+   double **Chilolo = new double*[nrows];
+   double **Clololo = new double*[nrows];
+
+   for(int i=0; i<nrows; i++)
+   {
+      Chihihi[i] = new double[ncols];
+      Clohihi[i] = new double[ncols];
+      Chilohi[i] = new double[ncols];
+      Clolohi[i] = new double[ncols];
+      Chihilo[i] = new double[ncols];
+      Clohilo[i] = new double[ncols];
+      Chilolo[i] = new double[ncols];
+      Clololo[i] = new double[ncols];
+   }
+   double **Ahihihi = new double*[nrows];
+   double **Alohihi = new double*[nrows];
+   double **Ahilohi = new double*[nrows];
+   double **Alolohi = new double*[nrows];
+   double **Ahihilo = new double*[nrows];
+   double **Alohilo = new double*[nrows];
+   double **Ahilolo = new double*[nrows];
+   double **Alololo = new double*[nrows];
+
+   for(int i=0; i<nrows; i++)
+   {
+      Ahihihi[i] = new double[nrc];
+      Alohihi[i] = new double[nrc];
+      Ahilohi[i] = new double[nrc];
+      Alolohi[i] = new double[nrc];
+      Ahihilo[i] = new double[nrc];
+      Alohilo[i] = new double[nrc];
+      Ahilolo[i] = new double[nrc];
+      Alololo[i] = new double[nrc];
+   }
+   random_dbl8_matrix
+      (nrows, nrc,
+       Ahihihi, Alohihi, Ahilohi, Alolohi,Ahihilo, Alohilo, Ahilolo, Alololo);
+
+   cout << scientific << setprecision(16);
+
+   cout << "A random " << nrows << "-by-" << nrc << " matrix A :" << endl;
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<nrc; j++)
+         cout << "A[" << i << "][" << j << "] : "
+              << Ahihihi[i][j] << "  " << Alohihi[i][j] << endl
+              << "          "
+              << Ahilohi[i][j] << "  " << Alolohi[i][j] << endl
+              << "          "
+              << Ahihilo[i][j] << "  " << Alohilo[i][j] << endl
+              << "          "
+              << Ahilolo[i][j] << "  " << Alololo[i][j] << endl;
+
+   double **Bhihihi = new double*[nrc];
+   double **Blohihi = new double*[nrc];
+   double **Bhilohi = new double*[nrc];
+   double **Blolohi = new double*[nrc];
+   double **Bhihilo = new double*[nrc];
+   double **Blohilo = new double*[nrc];
+   double **Bhilolo = new double*[nrc];
+   double **Blololo = new double*[nrc];
+
+   for(int i=0; i<nrc; i++)
+   {
+      Bhihihi[i] = new double[ncols];
+      Blohihi[i] = new double[ncols];
+      Bhilohi[i] = new double[ncols];
+      Blolohi[i] = new double[ncols];
+      Bhihilo[i] = new double[ncols];
+      Blohilo[i] = new double[ncols];
+      Bhilolo[i] = new double[ncols];
+      Blololo[i] = new double[ncols];
+   }
+   random_dbl8_matrix
+      (nrc, ncols,
+       Bhihihi, Blohihi, Bhilohi, Blolohi, Bhihilo, Blohilo, Bhilolo, Blololo);
+
+   cout << "A random " << nrc << "-by-" << ncols << " matrix B :" << endl;
+   for(int i=0; i<nrc; i++)
+      for(int j=0; j<ncols; j++)
+         cout << "B[" << i << "][" << j << "] : "
+              << Bhihihi[i][j] << "  " << Blohihi[i][j] << endl
+              << "          "
+              << Bhilohi[i][j] << "  " << Blolohi[i][j] << endl
+              << "          "
+              << Bhihilo[i][j] << "  " << Blohilo[i][j] << endl
+              << "          "
+              << Bhilolo[i][j] << "  " << Blololo[i][j] << endl;
+
+   octo_double_matmatmul
+      (nrows, ncols, nrc,
+       Ahihihi, Alohihi, Ahilohi, Alolohi, Ahihilo, Alohilo, Ahilolo, Alololo,
+       Bhihihi, Blohihi, Bhilohi, Blolohi, Bhihilo, Blohilo, Bhilolo, Blololo,
+       Chihihi, Clohihi, Chilohi, Clolohi, Chihilo, Clohilo, Chilolo, Clololo);
+
+   cout << "the product A*B :" << endl;
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+         cout << "C[" << i << "][" << j << "] : "
+              << Chihihi[i][j] << "  " << Clohihi[i][j] << endl
+              << "          "
+              << Chilohi[i][j] << "  " << Clolohi[i][j] << endl
+              << "          "
+              << Chihilo[i][j] << "  " << Clohilo[i][j] << endl
+              << "          "
+              << Chilolo[i][j] << "  " << Clololo[i][j] << endl;
 
    return fail;
 }

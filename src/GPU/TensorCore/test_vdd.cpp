@@ -19,7 +19,7 @@ int test_quarter_double_double ( void );
 int test_vectored_dd_product ( int dim );
 /*
  * Generates two random vectors of double doubles of size dim,
- * and compares their inner producted with the vectored inner product. */
+ * and compares their inner product with the vectored inner product. */
 
 int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc ); 
 /*

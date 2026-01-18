@@ -1,8 +1,10 @@
 /* Tests the collection of functions on vectored hexa double arithmetic.  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include <iostream>
+#include <iomanip>
+#include <cstdlib>
+#include <ctime>
+#include <cmath>
 #include "hexa_double.h"
 #include "random16_vectors.h"
 #include "hexa_double_functions.h"
@@ -20,25 +22,30 @@ int test_vectored_hd_product ( int dim );
  * and compares their inner product with the vectored inner product.
  * Returns 1 if the test failed, returns 0 otherwise. */
 
+using namespace std;
+
 int main ( void )
 {
-   int fail,dim;
+   int fail;
+
+   srand(time(NULL));
 
    fail = test_quarter_hexa_double();
 
    if(fail == 1)
-      printf("\nTest on quarter hexa double failed?!!!\n\n");
+      cout << "\nTest on quarter hexa double failed?!!!\n\n";
    else
-      printf("\nTest on quarter hexa double succeeded.\n\n");
+      cout << "\nTest on quarter hexa double succeeded.\n\n";
 
-   printf("Give the dimension : "); scanf("%d", &dim);
+   cout << "Give the dimension : ";
+   int dim; cin >> dim;
 
    fail = test_vectored_hd_product(dim);
 
    if(fail == 1)
-      printf("\nTest on vectored hexa double product failed?!!!\n\n");
+      cout << "\nTest on vectored hexa double product failed?!!!\n\n";
    else
-      printf("\nTest on vectored hexa double product succeeded.\n\n");
+      cout << "\nTest on vectored hexa double product succeeded.\n\n";
 
    return 0;
 }
@@ -67,8 +74,6 @@ int test_quarter_hexa_double ( void )
    double y[16];
    double e[16];
 
-   srand(time(NULL));
-
    random_hexa_double
       (&x[0], &x[1], &x[2], &x[3], &x[4], &x[5], &x[6], &x[7],
        &x[8], &x[9], &x[10], &x[11], &x[12], &x[13], &x[14], &x[15]);
@@ -90,7 +95,9 @@ int test_quarter_hexa_double ( void )
    if(x[14] < 0.0) x[14] = -x[14];
    if(x[15] < 0.0) x[15] = -x[15];
 
-   printf("x :\n"); hd_write_doubles(x); printf("\n");
+   cout << scientific << setprecision(16);
+
+   cout << "x :"; cout << endl; hd_write_doubles(x); cout << endl;
 
    quarter_hexa_double
       (x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7],
@@ -112,73 +119,70 @@ int test_quarter_hexa_double ( void )
        &xhilololo0, &xhilololo1, &xhilololo2, &xhilololo3,
        &xlolololo0, &xlolololo1, &xlolololo2, &xlolololo3);
 
-   printf("xhihihihi0 : %.15e\n", xhihihihi0);
-   printf("xhihihihi1 : %.15e\n", xhihihihi1);
-   printf("xhihihihi2 : %.15e\n", xhihihihi2);
-   printf("xhihihihi3 : %.15e\n", xhihihihi3);
-   printf("xlohihihi0 : %.15e\n", xlohihihi0);
-   printf("xlohihihi1 : %.15e\n", xlohihihi1);
-   printf("xlohihihi2 : %.15e\n", xlohihihi2);
-   printf("xlohihihi3 : %.15e\n", xlohihihi3);
-   printf("xhilohihi0 : %.15e\n", xhilohihi0);
-   printf("xhilohihi1 : %.15e\n", xhilohihi1);
-   printf("xhilohihi2 : %.15e\n", xhilohihi2);
-   printf("xhilohihi3 : %.15e\n", xhilohihi3);
-   printf("xlolohihi0 : %.15e\n", xlolohihi0);
-   printf("xlolohihi1 : %.15e\n", xlolohihi1);
-   printf("xlolohihi2 : %.15e\n", xlolohihi2);
-   printf("xlolohihi3 : %.15e\n", xlolohihi3);
-
-   printf("xhihilohi0 : %.15e\n", xhihilohi0);
-   printf("xhihilohi1 : %.15e\n", xhihilohi1);
-   printf("xhihilohi2 : %.15e\n", xhihilohi2);
-   printf("xhihilohi3 : %.15e\n", xhihilohi3);
-   printf("xlohilohi0 : %.15e\n", xlohilohi0);
-   printf("xlohilohi1 : %.15e\n", xlohilohi1);
-   printf("xlohilohi2 : %.15e\n", xlohilohi2);
-   printf("xlohilohi3 : %.15e\n", xlohilohi3);
-   printf("xhilolohi0 : %.15e\n", xhilolohi0);
-   printf("xhilolohi1 : %.15e\n", xhilolohi1);
-   printf("xhilolohi2 : %.15e\n", xhilolohi2);
-   printf("xhilolohi3 : %.15e\n", xhilolohi3);
-   printf("xlololohi0 : %.15e\n", xlololohi0);
-   printf("xlololohi1 : %.15e\n", xlololohi1);
-   printf("xlololohi2 : %.15e\n", xlololohi2);
-   printf("xlololohi3 : %.15e\n", xlololohi3);
-
-   printf("xhihihilo0 : %.15e\n", xhihihilo0);
-   printf("xhihihilo1 : %.15e\n", xhihihilo1);
-   printf("xhihihilo2 : %.15e\n", xhihihilo2);
-   printf("xhihihilo3 : %.15e\n", xhihihilo3);
-   printf("xlohihilo0 : %.15e\n", xlohihilo0);
-   printf("xlohihilo1 : %.15e\n", xlohihilo1);
-   printf("xlohihilo2 : %.15e\n", xlohihilo2);
-   printf("xlohihilo3 : %.15e\n", xlohihilo3);
-   printf("xhilohilo0 : %.15e\n", xhilohilo0);
-   printf("xhilohilo1 : %.15e\n", xhilohilo1);
-   printf("xhilohilo2 : %.15e\n", xhilohilo2);
-   printf("xhilohilo3 : %.15e\n", xhilohilo3);
-   printf("xlolohilo0 : %.15e\n", xlolohilo0);
-   printf("xlolohilo1 : %.15e\n", xlolohilo1);
-   printf("xlolohilo2 : %.15e\n", xlolohilo2);
-   printf("xlolohilo3 : %.15e\n", xlolohilo3);
-
-   printf("xhihilolo0 : %.15e\n", xhihilolo0);
-   printf("xhihilolo1 : %.15e\n", xhihilolo1);
-   printf("xhihilolo2 : %.15e\n", xhihilolo2);
-   printf("xhihilolo3 : %.15e\n", xhihilolo3);
-   printf("xlohilolo0 : %.15e\n", xlohilolo0);
-   printf("xlohilolo1 : %.15e\n", xlohilolo1);
-   printf("xlohilolo2 : %.15e\n", xlohilolo2);
-   printf("xlohilolo3 : %.15e\n", xlohilolo3);
-   printf("xhilololo0 : %.15e\n", xhilololo0);
-   printf("xhilololo1 : %.15e\n", xhilololo1);
-   printf("xhilololo2 : %.15e\n", xhilololo2);
-   printf("xhilololo3 : %.15e\n", xhilololo3);
-   printf("xlolololo0 : %.15e\n", xlolololo0);
-   printf("xlolololo1 : %.15e\n", xlolololo1);
-   printf("xlolololo2 : %.15e\n", xlolololo2);
-   printf("xlolololo3 : %.15e\n", xlolololo3);
+   cout << "xhihihihi0 : " << xhihihihi0 << endl;
+   cout << "xhihihihi1 : " << xhihihihi1 << endl;
+   cout << "xhihihihi2 : " << xhihihihi2 << endl;
+   cout << "xhihihihi3 : " << xhihihihi3 << endl;
+   cout << "xlohihihi0 : " << xlohihihi0 << endl;
+   cout << "xlohihihi1 : " << xlohihihi1 << endl;
+   cout << "xlohihihi2 : " << xlohihihi2 << endl;
+   cout << "xlohihihi3 : " << xlohihihi3 << endl;
+   cout << "xhilohihi0 : " << xhilohihi0 << endl;
+   cout << "xhilohihi1 : " << xhilohihi1 << endl;
+   cout << "xhilohihi2 : " << xhilohihi2 << endl;
+   cout << "xhilohihi3 : " << xhilohihi3 << endl;
+   cout << "xlolohihi0 : " << xlolohihi0 << endl;
+   cout << "xlolohihi1 : " << xlolohihi1 << endl;
+   cout << "xlolohihi2 : " << xlolohihi2 << endl;
+   cout << "xlolohihi3 : " << xlolohihi3 << endl;
+   cout << "xhihilohi0 : " << xhihilohi0 << endl;
+   cout << "xhihilohi1 : " << xhihilohi1 << endl;
+   cout << "xhihilohi2 : " << xhihilohi2 << endl;
+   cout << "xhihilohi3 : " << xhihilohi3 << endl;
+   cout << "xlohilohi0 : " << xlohilohi0 << endl;
+   cout << "xlohilohi1 : " << xlohilohi1 << endl;
+   cout << "xlohilohi2 : " << xlohilohi2 << endl;
+   cout << "xlohilohi3 : " << xlohilohi3 << endl;
+   cout << "xhilolohi0 : " << xhilolohi0 << endl;
+   cout << "xhilolohi1 : " << xhilolohi1 << endl;
+   cout << "xhilolohi2 : " << xhilolohi2 << endl;
+   cout << "xhilolohi3 : " << xhilolohi3 << endl;
+   cout << "xlololohi0 : " << xlololohi0 << endl;
+   cout << "xlololohi1 : " << xlololohi1 << endl;
+   cout << "xlololohi2 : " << xlololohi2 << endl;
+   cout << "xlololohi3 : " << xlololohi3 << endl;
+   cout << "xhihihilo0 : " << xhihihilo0 << endl;
+   cout << "xhihihilo1 : " << xhihihilo1 << endl;
+   cout << "xhihihilo2 : " << xhihihilo2 << endl;
+   cout << "xhihihilo3 : " << xhihihilo3 << endl;
+   cout << "xlohihilo0 : " << xlohihilo0 << endl;
+   cout << "xlohihilo1 : " << xlohihilo1 << endl;
+   cout << "xlohihilo2 : " << xlohihilo2 << endl;
+   cout << "xlohihilo3 : " << xlohihilo3 << endl;
+   cout << "xhilohilo0 : " << xhilohilo0 << endl;
+   cout << "xhilohilo1 : " << xhilohilo1 << endl;
+   cout << "xhilohilo2 : " << xhilohilo2 << endl;
+   cout << "xhilohilo3 : " << xhilohilo3 << endl;
+   cout << "xlolohilo0 : " << xlolohilo0 << endl;
+   cout << "xlolohilo1 : " << xlolohilo1 << endl;
+   cout << "xlolohilo2 : " << xlolohilo2 << endl;
+   cout << "xlolohilo3 : " << xlolohilo3 << endl;
+   cout << "xhihilolo0 : " << xhihilolo0 << endl;
+   cout << "xhihilolo1 : " << xhihilolo1 << endl;
+   cout << "xhihilolo2 : " << xhihilolo2 << endl;
+   cout << "xhihilolo3 : " << xhihilolo3 << endl;
+   cout << "xlohilolo0 : " << xlohilolo0 << endl;
+   cout << "xlohilolo1 : " << xlohilolo1 << endl;
+   cout << "xlohilolo2 : " << xlohilolo2 << endl;
+   cout << "xlohilolo3 : " << xlohilolo3 << endl;
+   cout << "xhilololo0 : " << xhilololo0 << endl;
+   cout << "xhilololo1 : " << xhilololo1 << endl;
+   cout << "xhilololo2 : " << xhilololo2 << endl;
+   cout << "xhilololo3 : " << xhilololo3 << endl;
+   cout << "xlolololo0 : " << xlolololo0 << endl;
+   cout << "xlolololo1 : " << xlolololo1 << endl;
+   cout << "xlolololo2 : " << xlolololo2 << endl;
+   cout << "xlolololo3 : " << xlolololo3 << endl;
 
    to_hexa_double
       (xhihihihi0, xhihihihi1, xhihihihi2, xhihihihi3,
@@ -200,8 +204,8 @@ int test_quarter_hexa_double ( void )
        &y[0], &y[1], &y[2], &y[3], &y[4], &y[5], &y[6], &y[7],
        &y[8], &y[9], &y[10], &y[11], &y[12], &y[13], &y[14], &y[15]);
 
-   printf("x :\n"); hd_write_doubles(x); printf("\n");
-   printf("y :\n"); hd_write_doubles(y); printf("\n");
+   cout << "x :"; cout << endl; hd_write_doubles(x); cout << endl;
+   cout << "y :"; cout << endl; hd_write_doubles(y); cout << endl;
 
    hdf_sub(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7],
            x[8], x[9], x[10], x[11], x[12], x[13], x[14], x[15],
@@ -210,7 +214,7 @@ int test_quarter_hexa_double ( void )
            &e[0], &e[1], &e[2], &e[3], &e[4], &e[5], &e[6], &e[7],
            &e[8], &e[9], &e[10], &e[11], &e[12], &e[13], &e[14], &e[15]);
 
-   printf("e :\n"); hd_write_doubles(e); printf("\n");
+   cout << "e :"; cout << endl; hd_write_doubles(e); cout << endl;
 
    fail = not(e[0] == 0.0) + not(e[1] == 0.0)
         + not(e[2] == 0.0) + not(e[3] == 0.0)
@@ -312,13 +316,13 @@ int test_vectored_hd_product ( int dim )
       if(yhilololo[i] < 0.0) yhilololo[i] = -yhilololo[i];
       if(ylolololo[i] < 0.0) ylolololo[i] = -ylolololo[i];
    }
-   printf("hexa double vector x :\n");
+   cout << "hexa double vector x :" << endl;
    hd_write_vector
       (dim, xhihihihi, xlohihihi, xhilohihi, xlolohihi,
             xhihilohi, xlohilohi, xhilolohi, xlololohi,
             xhihihilo, xlohihilo, xhilohilo, xlolohilo,
             xhihilolo, xlohilolo, xhilololo, xlolololo);
-   printf("hexa double vector y :\n");
+   cout << "hexa double vector y :" << endl;
    hd_write_vector
       (dim, yhihihihi, ylohihihi, yhilohihi, ylolohihi,
             yhihilohi, ylohilohi, yhilolohi, ylololohi,
@@ -385,8 +389,8 @@ int test_vectored_hd_product ( int dim )
        &vpd[4], &vpd[5], &vpd[6], &vpd[7], &vpd[8], &vpd[9], &vpd[10],
        &vpd[11], &vpd[12], &vpd[13], &vpd[14], &vpd[15]);
  
-   printf("hd x*y :\n"); hd_write_doubles(prd); printf("\n");
-   printf("vd x*y :\n"); hd_write_doubles(vpd); printf("\n");
+   cout << "hd x*y :" << endl; hd_write_doubles(prd); cout << endl;
+   cout << "vd x*y :" << endl; hd_write_doubles(vpd); cout << endl;
 
    hdf_sub(prd[0], prd[1], prd[2], prd[3], prd[4], prd[5], prd[6], prd[7],
       prd[8], prd[9], prd[10], prd[11], prd[12], prd[13], prd[14], prd[15],
@@ -402,7 +406,7 @@ int test_vectored_hd_product ( int dim )
                 &err[8], &err[9], &err[10], &err[11],
                 &err[12], &err[13], &err[14], &err[15]);
 
-   printf(" error :\n"); hd_write_doubles(err); printf("\n");
+   cout << " error :" << endl; hd_write_doubles(err); cout << endl;
 
    fail = (abs(err[0]) > 1.0E-250);
 
