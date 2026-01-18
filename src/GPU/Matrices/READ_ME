@@ -1,4 +1,4 @@
-Data staging algorithms for matrix factorizations at series in PHCv2.4.87.
+Data staging algorithms for matrix factorizations at series in PHCv2.4.93.
 
 Operations on vectors and matrices of power series are staged for
 acceleration on graphics processing units.
@@ -22,6 +22,7 @@ test_dbl_linearization    : test on linearization in double precision
 random2_matrices          : random matrices of double doubles
 random4_matrices          : random matrices of quad doubles
 random8_matrices          : random matrices of octo doubles
+random16_matrices         : random matrices of hexa doubles
 -----------------------------------------------------------------------------
 dbl_factorizations        : matrix factorizations in double precision
 dbl2_factorizations       : matrix factorizations in double double precision

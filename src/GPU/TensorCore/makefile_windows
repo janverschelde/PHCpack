@@ -115,6 +115,10 @@ random16_vectors.o:
 	@-echo ">>> compiling hexa double random vector generators ..."
 	g++ -O3 -c -I$(MPD) $(MPD)/random16_vectors.cpp
 
+random16_matrices.o:
+	@-echo ">>> compiling hexa double random matrix generators ..."
+	g++ -O3 -c -I$(MPD) -I$(MAT) $(MAT)/random16_matrices.cpp
+
 vectored_double_doubles.o:
 	@-echo ">>> compiling vectored double doubles ..."
 	g++ -O3 -c -I$(QDsrc) -I$(MPD) vectored_double_doubles.cpp
@@ -172,16 +176,16 @@ test_vod: double_double.o quad_double.o octo_double.o \
 test_vhd: double_double.o quad_double.o octo_double.o hexa_double.o \
           double_double_functions.o quad_double_functions.o \
           octo_double_functions.o hexa_double_functions.o \
-          random_numbers.o random16_vectors.o \
+          random_numbers.o random16_vectors.o random16_matrices.o \
           splitting_doubles.o vectored_hexa_doubles.o
 	@-echo ">>> compiling test_vhd ..."
-	g++ -c -I$(QDsrc) -I$(MPD) test_vhd.cpp -o test_vhd.o
+	g++ -c -I$(QDsrc) -I$(MPD) -I$(MAT) test_vhd.cpp -o test_vhd.o
 	@-echo ">>> linking ..."
 	g++ -o test_vhd test_vhd.o \
                double_double.o quad_double.o octo_double.o hexa_double.o \
                double_double_functions.o quad_double_functions.o \
                octo_double_functions.o hexa_double_functions.o \
-               random_numbers.o random16_vectors.o \
+               random_numbers.o random16_vectors.o random16_matrices.o \
                splitting_doubles.o vectored_hexa_doubles.o
 
 clean:
@@ -202,5 +206,6 @@ clean:
 	del vectored_octo_doubles.o test_vod.o
 	del test_vod.exe
 	del hexa_double.o hexa_double_functions.o
-	del random16_vectors.o vectored_hexa_doubles.o test_vhd.o
+	del random16_vectors.o random16_matrices.o
+	del vectored_hexa_doubles.o test_vhd.o
 	del test_vhd.exe

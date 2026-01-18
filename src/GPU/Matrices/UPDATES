@@ -1,3 +1,6 @@
+Sun 18 Jan 2026 : new random16_matrices with one function to generate a
+  random matrix of hexa doubles.
+
 Wed 7 Jun 2023 : new makefile_windows2 for 2022 Community Microsoft Visual
   Studio and NIVDIA CUDA Toolkit 12.1 on new computer.
 

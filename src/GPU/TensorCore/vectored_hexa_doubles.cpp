@@ -284,7 +284,6 @@ void to_hexa_double
              xhihilohi, xlohilohi, xhilolohi, xlololohi,
              xhihihilo, xlohihilo, xhilohilo, xlolohilo,
              xhihilolo, xlohilolo, xhilololo, xlolololo, xlololohi3);
-
    hdf_inc_d(xhihihihi, xlohihihi, xhilohihi, xlolohihi,
              xhihilohi, xlohilohi, xhilolohi, xlololohi,
              xhihihilo, xlohihilo, xhilohilo, xlolohilo,
@@ -486,6 +485,88 @@ void hexa_double_product
               acchihihilo, acclohihilo, acchilohilo, acclolohilo,
               acchihilolo, acclohilolo, acchilololo, acclolololo);
    }
+}
+
+void hexa_double_matmatmul
+ ( int nrows, int ncols, int dim,
+   double **Ahihihihi, double **Alohihihi,
+   double **Ahilohihi, double **Alolohihi,
+   double **Ahihilohi, double **Alohilohi,
+   double **Ahilolohi, double **Alololohi,
+   double **Ahihihilo, double **Alohihilo,
+   double **Ahilohilo, double **Alolohilo,
+   double **Ahihilolo, double **Alohilolo,
+   double **Ahilololo, double **Alolololo,
+   double **Bhihihihi, double **Blohihihi,
+   double **Bhilohihi, double **Blolohihi,
+   double **Bhihilohi, double **Blohilohi,
+   double **Bhilolohi, double **Blololohi,
+   double **Bhihihilo, double **Blohihilo,
+   double **Bhilohilo, double **Blolohilo,
+   double **Bhihilolo, double **Blohilolo,
+   double **Bhilololo, double **Blolololo,
+   double **Chihihihi, double **Clohihihi,
+   double **Chilohihi, double **Clolohihi,
+   double **Chihilohi, double **Clohilohi,
+   double **Chilolohi, double **Clololohi,
+   double **Chihihilo, double **Clohihilo,
+   double **Chilohilo, double **Clolohilo,
+   double **Chihilolo, double **Clohilolo,
+   double **Chilololo, double **Clolololo )
+{
+   double acchihihihi,acclohihihi,acchilohihi,acclolohihi;
+   double acchihilohi,acclohilohi,acchilolohi,acclololohi;
+   double acchihihilo,acclohihilo,acchilohilo,acclolohilo;
+   double acchihilolo,acclohilolo,acchilololo,acclolololo;
+
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         Chihihihi[i][j] = 0.0; Clohihihi[i][j] = 0.0;
+         Chilohihi[i][j] = 0.0; Clolohihi[i][j] = 0.0;
+         Chihilohi[i][j] = 0.0; Clohilohi[i][j] = 0.0;
+         Chilolohi[i][j] = 0.0; Clololohi[i][j] = 0.0;
+         Chihihilo[i][j] = 0.0; Clohihilo[i][j] = 0.0;
+         Chilohilo[i][j] = 0.0; Clolohilo[i][j] = 0.0;
+         Chihilolo[i][j] = 0.0; Clohilolo[i][j] = 0.0;
+         Chilololo[i][j] = 0.0; Clolololo[i][j] = 0.0;
+
+         for(int k=0; k<dim; k++)
+         {
+            hdf_mul(Ahihihihi[i][k], Alohihihi[i][k],
+                    Ahilohihi[i][k], Alolohihi[i][k],
+                    Ahihilohi[i][k], Alohilohi[i][k],
+                    Ahilolohi[i][k], Alololohi[i][k],
+                    Ahihihilo[i][k], Alohihilo[i][k],
+                    Ahilohilo[i][k], Alolohilo[i][k],
+                    Ahihilolo[i][k], Alohilolo[i][k],
+                    Ahilololo[i][k], Alolololo[i][k],
+                    Bhihihihi[k][j], Blohihihi[k][j],
+                    Bhilohihi[k][j], Blolohihi[k][j],
+                    Bhihilohi[k][j], Blohilohi[k][j],
+                    Bhilolohi[k][j], Blololohi[k][j],
+                    Bhihihilo[k][j], Blohihilo[k][j],
+                    Bhilohilo[k][j], Blolohilo[k][j],
+                    Bhihilolo[k][j], Blohilolo[k][j],
+                    Bhilololo[k][j], Blolololo[k][j],
+                    &acchihihihi, &acclohihihi, &acchilohihi, &acclolohihi,
+                    &acchihilohi, &acclohilohi, &acchilolohi, &acclololohi,
+                    &acchihihilo, &acclohihilo, &acchilohilo, &acclolohilo,
+                    &acchihilolo, &acclohilolo, &acchilololo, &acclolololo);
+            hdf_inc(&Chihihihi[i][j], &Clohihihi[i][j],
+                    &Chilohihi[i][j], &Clolohihi[i][j],
+                    &Chihilohi[i][j], &Clohilohi[i][j],
+                    &Chilolohi[i][j], &Clololohi[i][j],
+                    &Chihihilo[i][j], &Clohihilo[i][j],
+                    &Chilohilo[i][j], &Clolohilo[i][j],
+                    &Chihilolo[i][j], &Clohilolo[i][j],
+                    &Chilololo[i][j], &Clolololo[i][j],
+                    acchihihihi, acclohihihi, acchilohihi, acclolohihi,
+                    acchihilohi, acclohilohi, acchilolohi, acclololohi,
+                    acchihihilo, acclohihilo, acchilohilo, acclolohilo,
+                    acchihilolo, acclohilolo, acchilololo, acclolololo);
+         }
+      }
 }
 
 void vectored_hd_product

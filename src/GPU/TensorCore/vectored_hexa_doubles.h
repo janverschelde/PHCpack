@@ -177,6 +177,45 @@ void hexa_double_product
  *  philolohi, plololohi, phihihilo, plohihilo, philohilo, plolohilo,
  *  phihilolo, plohilolo, philololo, plolololo). */
 
+void hexa_double_matmatmul
+ ( int nrows, int ncols, int dim,
+   double **Ahihihihi, double **Alohihihi,
+   double **Ahilohihi, double **Alolohihi,
+   double **Ahihilohi, double **Alohilohi,
+   double **Ahilolohi, double **Alololohi,
+   double **Ahihihilo, double **Alohihilo,
+   double **Ahilohilo, double **Alolohilo,
+   double **Ahihilolo, double **Alohilolo,
+   double **Ahilololo, double **Alolololo,
+   double **Bhihihihi, double **Blohihihi,
+   double **Bhilohihi, double **Blolohihi,
+   double **Bhihilohi, double **Blohilohi,
+   double **Bhilolohi, double **Blololohi,
+   double **Bhihihilo, double **Blohihilo,
+   double **Bhilohilo, double **Blolohilo,
+   double **Bhihilolo, double **Blohilolo,
+   double **Bhilololo, double **Blolololo,
+   double **Chihihihi, double **Clohihihi,
+   double **Chilohihi, double **Clolohihi,
+   double **Chihilohi, double **Clohilohi,
+   double **Chilolohi, double **Clololohi,
+   double **Chihihilo, double **Clohihilo,
+   double **Chilohilo, double **Clolohilo,
+   double **Chihilolo, double **Clohilolo,
+   double **Chilololo, double **Clolololo );
+/*
+ * Given in (Ahihihihi, Alohihihi, Ahilohihi, Alolohihi, Ahihilohi,
+ * Alohilohi, Ahilolohi, Alololohi, Ahihihilo, Alohihilo, Ahilohilo,
+ * Alolohilo, Ahihilolo, Alohilolo, Ahilololo, Alolololo)
+ * is an nrows-by-dim matrix A, and given in (Bhihihihi, Blohihihi,
+ * Bhilohihi, Blolohihi, Bhihilohi, Blohilohi, Bhilolohi, Blololohi,
+ * Bhihihilo, Blohihilo, Bhilohilo, Blolohilo, Bhihilolo, Blohilolo,
+ * Bhilololo, Blolololo) is an dim-by-ncols matrix B, returns in
+ * (Chihihihi, Clohihihi, Chilohihi, Clolohihi, Chihilohi, Clohilohi,
+ * Chilolohi, Clololohi, Chihihilo, Clohihilo, Chilohilo, Clolohilo,
+ * Chihilolo, Clohilolo, Chilololo, Clolololo)
+ * the matrix matrix multiplication of A with B. */
+
 void vectored_hd_product
  ( int dim,
    double *x0, double *x1, double *x2, double *x3,

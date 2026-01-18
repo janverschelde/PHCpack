@@ -25,7 +25,7 @@ int test_vectored_od_product ( int dim );
 
 int test_vectored_od_matmatmul ( int nrows, int ncols, int nrc ); 
 /*
- * Generates two random quad double matrices of dimension
+ * Generates two random octo double matrices of dimension
  * nrows-by-nrc for A, nrc-by-ncols for B, and then tests
  * the matrix matrix multiplication of A with B. */
 

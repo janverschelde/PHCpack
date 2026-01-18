@@ -7,6 +7,7 @@
 #include <cmath>
 #include "hexa_double.h"
 #include "random16_vectors.h"
+#include "random16_matrices.h"
 #include "hexa_double_functions.h"
 #include "vectored_hexa_doubles.h"
 
@@ -21,6 +22,12 @@ int test_vectored_hd_product ( int dim );
  * Generates two random vectors of hexa doubles of size dim,
  * and compares their inner product with the vectored inner product.
  * Returns 1 if the test failed, returns 0 otherwise. */
+
+int test_vectored_hd_matmatmul ( int nrows, int ncols, int nrc ); 
+/*
+ * Generates two random hexa double matrices of dimension
+ * nrows-by-nrc for A, nrc-by-ncols for B, and then tests
+ * the matrix matrix multiplication of A with B. */
 
 using namespace std;
 
@@ -46,6 +53,15 @@ int main ( void )
       cout << "\nTest on vectored hexa double product failed?!!!\n\n";
    else
       cout << "\nTest on vectored hexa double product succeeded.\n\n";
+
+   cout << "Give #rows of the product A*B : ";
+   int m; cin >> m;
+   cout << "Give #columns of the product A*B : ";
+   int n; cin >> n;
+   cout << "Give #columns of A, #rows of B : ";
+   int k; cin >> k;
+
+   fail = test_vectored_hd_matmatmul(m, n, k);
 
    return 0;
 }
@@ -409,6 +425,212 @@ int test_vectored_hd_product ( int dim )
    cout << " error :" << endl; hd_write_doubles(err); cout << endl;
 
    fail = (abs(err[0]) > 1.0E-250);
+
+   return fail;
+}
+
+int test_vectored_hd_matmatmul ( int nrows, int ncols, int nrc )
+{
+   int fail = 0;
+
+   double **Chihihihi = new double*[nrows];
+   double **Clohihihi = new double*[nrows];
+   double **Chilohihi = new double*[nrows];
+   double **Clolohihi = new double*[nrows];
+   double **Chihilohi = new double*[nrows];
+   double **Clohilohi = new double*[nrows];
+   double **Chilolohi = new double*[nrows];
+   double **Clololohi = new double*[nrows];
+   double **Chihihilo = new double*[nrows];
+   double **Clohihilo = new double*[nrows];
+   double **Chilohilo = new double*[nrows];
+   double **Clolohilo = new double*[nrows];
+   double **Chihilolo = new double*[nrows];
+   double **Clohilolo = new double*[nrows];
+   double **Chilololo = new double*[nrows];
+   double **Clolololo = new double*[nrows];
+
+   for(int i=0; i<nrows; i++)
+   {
+      Chihihihi[i] = new double[ncols];
+      Clohihihi[i] = new double[ncols];
+      Chilohihi[i] = new double[ncols];
+      Clolohihi[i] = new double[ncols];
+      Chihilohi[i] = new double[ncols];
+      Clohilohi[i] = new double[ncols];
+      Chilolohi[i] = new double[ncols];
+      Clololohi[i] = new double[ncols];
+      Chihihilo[i] = new double[ncols];
+      Clohihilo[i] = new double[ncols];
+      Chilohilo[i] = new double[ncols];
+      Clolohilo[i] = new double[ncols];
+      Chihilolo[i] = new double[ncols];
+      Clohilolo[i] = new double[ncols];
+      Chilololo[i] = new double[ncols];
+      Clolololo[i] = new double[ncols];
+   }
+   double **Ahihihihi = new double*[nrows];
+   double **Alohihihi = new double*[nrows];
+   double **Ahilohihi = new double*[nrows];
+   double **Alolohihi = new double*[nrows];
+   double **Ahihilohi = new double*[nrows];
+   double **Alohilohi = new double*[nrows];
+   double **Ahilolohi = new double*[nrows];
+   double **Alololohi = new double*[nrows];
+   double **Ahihihilo = new double*[nrows];
+   double **Alohihilo = new double*[nrows];
+   double **Ahilohilo = new double*[nrows];
+   double **Alolohilo = new double*[nrows];
+   double **Ahihilolo = new double*[nrows];
+   double **Alohilolo = new double*[nrows];
+   double **Ahilololo = new double*[nrows];
+   double **Alolololo = new double*[nrows];
+
+   for(int i=0; i<nrows; i++)
+   {
+      Ahihihihi[i] = new double[nrc];
+      Alohihihi[i] = new double[nrc];
+      Ahilohihi[i] = new double[nrc];
+      Alolohihi[i] = new double[nrc];
+      Ahihilohi[i] = new double[nrc];
+      Alohilohi[i] = new double[nrc];
+      Ahilolohi[i] = new double[nrc];
+      Alololohi[i] = new double[nrc];
+      Ahihihilo[i] = new double[nrc];
+      Alohihilo[i] = new double[nrc];
+      Ahilohilo[i] = new double[nrc];
+      Alolohilo[i] = new double[nrc];
+      Ahihilolo[i] = new double[nrc];
+      Alohilolo[i] = new double[nrc];
+      Ahilololo[i] = new double[nrc];
+      Alolololo[i] = new double[nrc];
+   }
+   random_dbl16_matrix
+      (nrows, nrc,
+       Ahihihihi, Alohihihi, Ahilohihi, Alolohihi,
+       Ahihilohi, Alohilohi, Ahilolohi, Alololohi,
+       Ahihihilo, Alohihilo, Ahilohilo, Alolohilo,
+       Ahihilolo, Alohilolo, Ahilololo, Alolololo);
+
+   cout << scientific << setprecision(16);
+
+   cout << "A random " << nrows << "-by-" << nrc << " matrix A :" << endl;
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<nrc; j++)
+         cout << "A[" << i << "][" << j << "] : "
+              << Ahihihihi[i][j] << "  " << Alohihihi[i][j] << endl
+              << "          "
+              << Ahilohihi[i][j] << "  " << Alolohihi[i][j] << endl
+              << "          "
+              << Ahihilohi[i][j] << "  " << Alohilohi[i][j] << endl
+              << "          "
+              << Ahilolohi[i][j] << "  " << Alololohi[i][j] << endl
+              << "          "
+              << Ahihihilo[i][j] << "  " << Alohihilo[i][j] << endl
+              << "          "
+              << Ahilohilo[i][j] << "  " << Alolohilo[i][j] << endl
+              << "          "
+              << Ahihilolo[i][j] << "  " << Alohilolo[i][j] << endl
+              << "          "
+              << Ahilololo[i][j] << "  " << Alolololo[i][j] << endl;
+
+   double **Bhihihihi = new double*[nrc];
+   double **Blohihihi = new double*[nrc];
+   double **Bhilohihi = new double*[nrc];
+   double **Blolohihi = new double*[nrc];
+   double **Bhihilohi = new double*[nrc];
+   double **Blohilohi = new double*[nrc];
+   double **Bhilolohi = new double*[nrc];
+   double **Blololohi = new double*[nrc];
+   double **Bhihihilo = new double*[nrc];
+   double **Blohihilo = new double*[nrc];
+   double **Bhilohilo = new double*[nrc];
+   double **Blolohilo = new double*[nrc];
+   double **Bhihilolo = new double*[nrc];
+   double **Blohilolo = new double*[nrc];
+   double **Bhilololo = new double*[nrc];
+   double **Blolololo = new double*[nrc];
+
+   for(int i=0; i<nrc; i++)
+   {
+      Bhihihihi[i] = new double[ncols];
+      Blohihihi[i] = new double[ncols];
+      Bhilohihi[i] = new double[ncols];
+      Blolohihi[i] = new double[ncols];
+      Bhihilohi[i] = new double[ncols];
+      Blohilohi[i] = new double[ncols];
+      Bhilolohi[i] = new double[ncols];
+      Blololohi[i] = new double[ncols];
+      Bhihihilo[i] = new double[ncols];
+      Blohihilo[i] = new double[ncols];
+      Bhilohilo[i] = new double[ncols];
+      Blolohilo[i] = new double[ncols];
+      Bhihilolo[i] = new double[ncols];
+      Blohilolo[i] = new double[ncols];
+      Bhilololo[i] = new double[ncols];
+      Blolololo[i] = new double[ncols];
+   }
+   random_dbl16_matrix
+      (nrc, ncols,
+       Bhihihihi, Blohihihi, Bhilohihi, Blolohihi,
+       Bhihilohi, Blohilohi, Bhilolohi, Blololohi,
+       Bhihihilo, Blohihilo, Bhilohilo, Blolohilo,
+       Bhihilolo, Blohilolo, Bhilololo, Blolololo);
+
+   cout << "A random " << nrc << "-by-" << ncols << " matrix B :" << endl;
+   for(int i=0; i<nrc; i++)
+      for(int j=0; j<ncols; j++)
+         cout << "B[" << i << "][" << j << "] : "
+              << Bhihihihi[i][j] << "  " << Blohihihi[i][j] << endl
+              << "          "
+              << Bhilohihi[i][j] << "  " << Blolohihi[i][j] << endl
+              << "          "
+              << Bhihilohi[i][j] << "  " << Blohilohi[i][j] << endl
+              << "          "
+              << Bhilolohi[i][j] << "  " << Blololohi[i][j] << endl
+              << "          "
+              << Bhihihilo[i][j] << "  " << Blohihilo[i][j] << endl
+              << "          "
+              << Bhilohilo[i][j] << "  " << Blolohilo[i][j] << endl
+              << "          "
+              << Bhihilolo[i][j] << "  " << Blohilolo[i][j] << endl
+              << "          "
+              << Bhilololo[i][j] << "  " << Blolololo[i][j] << endl;
+
+   hexa_double_matmatmul
+      (nrows, ncols, nrc,
+       Ahihihihi, Alohihihi, Ahilohihi, Alolohihi,
+       Ahihilohi, Alohilohi, Ahilolohi, Alololohi,
+       Ahihihilo, Alohihilo, Ahilohilo, Alolohilo,
+       Ahihilolo, Alohilolo, Ahilololo, Alolololo,
+       Bhihihihi, Blohihihi, Bhilohihi, Blolohihi,
+       Bhihilohi, Blohilohi, Bhilolohi, Blololohi,
+       Bhihihilo, Blohihilo, Bhilohilo, Blolohilo,
+       Bhihilolo, Blohilolo, Bhilololo, Blolololo,
+       Chihihihi, Clohihihi, Chilohihi, Clolohihi,
+       Chihilohi, Clohilohi, Chilolohi, Clololohi,
+       Chihihilo, Clohihilo, Chilohilo, Clolohilo,
+       Chihilolo, Clohilolo, Chilololo, Clolololo);
+
+   cout << "the product A*B :" << endl;
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+         cout << "C[" << i << "][" << j << "] : "
+              << Chihihihi[i][j] << "  " << Clohihihi[i][j] << endl
+              << "          "
+              << Chilohihi[i][j] << "  " << Clolohihi[i][j] << endl
+              << "          "
+              << Chihilohi[i][j] << "  " << Clohilohi[i][j] << endl
+              << "          "
+              << Chilolohi[i][j] << "  " << Clololohi[i][j] << endl
+              << "          "
+              << Chihihilo[i][j] << "  " << Clohihilo[i][j] << endl
+              << "          "
+              << Chilohilo[i][j] << "  " << Clolohilo[i][j] << endl
+              << "          "
+              << Chihilolo[i][j] << "  " << Clohilolo[i][j] << endl
+              << "          "
+              << Chilololo[i][j] << "  " << Clolololo[i][j] << endl;
 
    return fail;
 }
