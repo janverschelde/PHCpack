@@ -51,6 +51,17 @@ void quad_double_product
  * given in (xhihi, xlohi, xhilo, xlolo) and (yhihi, ylohi, yhilo, ylolo),
  * with result in (prdhihi, prdlohi, prdhilo, prdlolo). */
 
+void quad_double_matmatmul
+ ( int nrows, int ncols, int dim,
+   double **Ahihi, double **Alohi, double **Ahilo, double **Alolo,
+   double **Bhihi, double **Blohi, double **Bhilo, double **Blolo,
+   double **Chihi, double **Clohi, double **Chilo, double **Clolo );
+/*
+ * Given in (Ahihi, Alohi, Ahilo, Alolo) is an nrows-by-dim matrix A, and
+ * given in (Bhihi, Blohi, Bhilo, Blolo) is an dim-by-ncols matrix B,
+ * returns in (Chihi, Clohi, Chilo, Clolo) the matrix matrix multiplication
+ * of A with B. */
+
 void vectored_qd_product
  ( int dim,
    double *x0, double *x1, double *x2, double *x3,

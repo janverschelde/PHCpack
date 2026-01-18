@@ -1,3 +1,6 @@
+Sat 17 Jan 2026 : extended vectored_{double,quad}_doubles and test_vdd.cpp,
+  test_vqd.cpp with functions for matrix matrix multiplication.
+
 Fri 16 Jan 2026 : completed vectored_hexa_doubles and test_vhd.cp.
   Minor edit in vectored_octo_doubles.h.
 

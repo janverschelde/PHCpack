@@ -98,6 +98,31 @@ void quad_double_product
    }
 }
 
+void quad_double_matmatmul
+ ( int nrows, int ncols, int dim,
+   double **Ahihi, double **Alohi, double **Ahilo, double **Alolo,
+   double **Bhihi, double **Blohi, double **Bhilo, double **Blolo,
+   double **Chihi, double **Clohi, double **Chilo, double **Clolo )
+{
+   double acchihi,acclohi,acchilo,acclolo;
+
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         Chihi[i][j] = 0.0; Clohi[i][j] = 0.0;
+         Chilo[i][j] = 0.0; Clolo[i][j] = 0.0;
+
+         for(int k=0; k<dim; k++)
+         {
+            qdf_mul(Ahihi[i][k], Alohi[i][k], Ahilo[i][k], Alolo[i][k],
+                    Bhihi[k][j], Blohi[k][j], Bhilo[k][j], Blolo[k][j],
+                    &acchihi, &acclohi, &acchilo, &acclolo);
+            qdf_inc(&Chihi[i][j], &Clohi[i][j], &Chilo[i][j], &Clolo[i][j],
+                    acchihi, acclohi, acchilo, acclolo);
+         }
+      }
+}
+
 void vectored_qd_product
  ( int dim,
    double *x0, double *x1, double *x2, double *x3,

@@ -72,6 +72,27 @@ void double_double_product
    }
 }
 
+void double_double_matmatmul
+ ( int nrows, int ncols, int dim,
+   double **Ahi, double **Alo, double **Bhi, double **Blo,
+   double **Chi, double **Clo )
+{
+   double acchi,acclo;
+
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         Chi[i][j] = 0.0; Clo[i][j] = 0.0;
+
+         for(int k=0; k<dim; k++)
+         {
+            ddf_mul(Ahi[i][k], Alo[i][k], Bhi[k][j], Blo[k][j],
+                    &acchi, &acclo);
+            ddf_inc(&Chi[i][j], &Clo[i][j], acchi, acclo);
+         }
+      }
+}
+
 void vectored_dd_product
  ( int dim,
    double *x0, double *x1, double *x2, double *x3,

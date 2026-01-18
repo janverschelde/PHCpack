@@ -1,10 +1,11 @@
-gpp=g++
-gcc=gcc
+gpp=/usr/bin/g++
+gcc=/usr/bin/gcc
 QDsrc=../../Ada/Math_Lib/QD/C
 MPD=../Norms
+MAT=../Matrices
 
 smTCGemm:
-	nvcc -ccbin=/usr/bin/gcc -O3 -o smTCGemm -arch=sm_80 \
+	nvcc -ccbin=$(gcc) -O3 -o smTCGemm -arch=sm_80 \
              simpleTensorCoreGemm.cu
 
 pi64bits:
@@ -60,9 +61,17 @@ random2_vectors.o:
 	@-echo ">>> compiling double double random vector generators ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/random2_vectors.cpp
 
+random2_matrices.o:
+	@-echo ">>> compiling double double random matrix generators ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(MAT) $(MAT)/random2_matrices.cpp
+
 random4_vectors.o:
 	@-echo ">>> compiling quad double random vector generators ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/random4_vectors.cpp
+
+random4_matrices.o:
+	@-echo ">>> compiling quad double random matrix generators ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(MAT) $(MAT)/random4_matrices.cpp
 
 random8_vectors.o:
 	@-echo ">>> compiling octo double random vector generators ..."
@@ -89,24 +98,26 @@ vectored_hexa_doubles.o:
 	$(gpp) -O3 -c -I$(QDsrc) -I$(MPD) vectored_hexa_doubles.cpp
 
 test_vdd: double_double.o double_double_functions.o \
-          random_numbers.o random2_vectors.o \
+          random_numbers.o random2_vectors.o random2_matrices.o \
           splitting_doubles.o vectored_double_doubles.o
 	@-echo ">>> compiling test_vdd ..."
-	$(gpp) -c -I$(QDsrc) -I$(MPD) test_vdd.cpp -o test_vdd.o
+	$(gpp) -c -I$(QDsrc) -I$(MPD) -I$(MAT) test_vdd.cpp -o test_vdd.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_vdd test_vdd.o double_double.o \
-               double_double_functions.o random_numbers.o random2_vectors.o \
+	$(gpp) -o test_vdd test_vdd.o \
+               double_double.o double_double_functions.o \
+               random_numbers.o random2_vectors.o random2_matrices.o \
                splitting_doubles.o vectored_double_doubles.o
 
-test_vqd: double_double.o quad_double.o double_double_functions.o \
-          quad_double_functions.o random_numbers.o random4_vectors.o \
+test_vqd: double_double.o quad_double.o \
+          double_double_functions.o quad_double_functions.o \
+          random_numbers.o random4_vectors.o random4_matrices.o \
           splitting_doubles.o vectored_quad_doubles.o
 	@-echo ">>> compiling test_vqd ..."
-	$(gpp) -c -I$(QDsrc) -I$(MPD) test_vqd.cpp -o test_vqd.o
+	$(gpp) -c -I$(QDsrc) -I$(MPD) -I$(MAT) test_vqd.cpp -o test_vqd.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_vqd test_vqd.o double_double.o quad_double.o \
                double_double_functions.o quad_double_functions.o \
-               random_numbers.o random4_vectors.o \
+               random_numbers.o random4_vectors.o random4_matrices.o \
                splitting_doubles.o vectored_quad_doubles.o
 
 test_vod: double_double.o quad_double.o octo_double.o \
@@ -140,12 +151,13 @@ test_vhd: double_double.o quad_double.o octo_double.o hexa_double.o \
 clean:
 	/bin/rm -f -r smTCGemm pi64bits
 	/bin/rm -f -r test_split test_splitting_doubles.o splitting_doubles.o
-	/bin/rm -f -r random_numbers.o random2_vectors.o
+	/bin/rm -f -r random_numbers.o random2_vectors.o random2_matrices.o
 	/bin/rm -f -r double_double.o double_double_functions.o
 	/bin/rm -f -r vectored_double_doubles.o
 	/bin/rm -f -r test_vdd test_vdd.o
 	/bin/rm -f -r quad_double.o quad_double_functions.o
-	/bin/rm -f -r random4_vectors.o vectored_quad_doubles.o
+	/bin/rm -f -r random4_vectors.o random4_matrices.o
+	/bin/rm -f -r vectored_quad_doubles.o
 	/bin/rm -f -r test_vqd test_vqd.o
 	/bin/rm -f -r octo_double.o octo_double_functions.o
 	/bin/rm -f -r random8_vectors.o vectored_octo_doubles.o

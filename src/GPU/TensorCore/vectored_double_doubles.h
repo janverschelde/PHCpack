@@ -42,6 +42,15 @@ void double_double_product
  * Makes the product of two double double vectors of size dim,
  * given in (xhi, xlo) and (yhi, ylo), with result in (prdhi, prdlo). */
 
+void double_double_matmatmul
+ ( int nrows, int ncols, int dim,
+   double **Ahi, double **Alo, double **Bhi, double **Blo,
+   double **Chi, double **Clo );
+/*
+ * Given in (Ahi, Alo) is an nrows-by-dim matrix A, and
+ * given in (Bhi, Blo) is an dim-by-ncols matrix B,
+ * returns in (Chi, Clo) the matrix matrix multiplication of A with B. */
+
 void vectored_dd_product
  ( int dim,
    double *x0, double *x1, double *x2, double *x3,

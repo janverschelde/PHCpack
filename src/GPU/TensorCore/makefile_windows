@@ -4,6 +4,7 @@
 
 QDsrc=../../Ada/Math_Lib/QD/C
 MPD=../Norms
+MPD=../Matrices
 
 # location of the command line Microsoft Visual Studio Compiler
 # CL="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.25.28610\bin\Hostx64\x64"
@@ -90,9 +91,17 @@ random2_vectors.o:
 	@-echo ">>> compiling double double random vector generators ..."
 	g++ -O3 -c -I$(MPD) $(MPD)/random2_vectors.cpp
 
+random2_matrices.o:
+	@-echo ">>> compiling double double random matrix generators ..."
+	g++ -O3 -c -I$(MPD) -I$(MAT) $(MAT)/random2_matrices.cpp
+
 random4_vectors.o:
 	@-echo ">>> compiling quad double random vector generators ..."
 	g++ -O3 -c -I$(MPD) $(MPD)/random4_vectors.cpp
+
+random4_matrices.o:
+	@-echo ">>> compiling quad double random matrix generators ..."
+	g++ -O3 -c -I$(MPD) $(MPD)/random4_matrices.cpp
 
 random8_vectors.o:
 	@-echo ">>> compiling octo double random vector generators ..."
@@ -119,24 +128,26 @@ vectored_hexa_doubles.o:
 	g++ -O3 -c -I$(QDsrc) -I$(MPD) vectored_hexa_doubles.cpp
 
 test_vdd: double_double.o double_double_functions.o \
-          random_numbers.o random2_vectors.o \
+          random_numbers.o random2_vectors.o random2_matrices.o \
           splitting_doubles.o vectored_double_doubles.o
 	@-echo ">>> compiling test_vdd ..."
 	g++ -c -I$(QDsrc) -I$(MPD) test_vdd.cpp -o test_vdd.o
 	@-echo ">>> linking ..."
-	g++ -o test_vdd test_vdd.o double_double.o \
-               double_double_functions.o random_numbers.o random2_vectors.o \
+	g++ -o test_vdd test_vdd.o \
+               double_double.o double_double_functions.o \
+               random_numbers.o random2_vectors.o random2_matrices.o \
                splitting_doubles.o vectored_double_doubles.o
 
-test_vqd: double_double.o quad_double.o double_double_functions.o \
-          quad_double_functions.o random_numbers.o random4_vectors.o \
+test_vqd: double_double.o quad_double.o \
+          double_double_functions.o quad_double_functions.o \
+          random_numbers.o random4_vectors.o random4_matrices.o \
           splitting_doubles.o vectored_quad_doubles.o
 	@-echo ">>> compiling test_vqd ..."
 	g++ -c -I$(QDsrc) -I$(MPD) test_vqd.cpp -o test_vqd.o
 	@-echo ">>> linking ..."
 	g++ -o test_vqd test_vqd.o double_double.o quad_double.o \
                double_double_functions.o quad_double_functions.o \
-               random_numbers.o random4_vectors.o \
+               random_numbers.o random4_vectors.o random4_matrices.o \
                splitting_doubles.o vectored_quad_doubles.o
 
 test_vod: double_double.o quad_double.o octo_double.o \
@@ -171,12 +182,13 @@ clean:
 	del smTCGemm.exe smTCGemm.lib smTCGemm.exp
 	del pi64bits.exe
 	del test_split.exe splitting_doubles.o test_splitting_doubles.o
-	del random_numbers.o random2_vectors.o
+	del random_numbers.o random2_vectors.o random2_matrices.o
 	del double_double.o double_double_functions.o
 	del vectored_double_doubles.o test_vdd.o
 	del test_vdd.exe
 	del quad_double.o quad_double_functions.o
-	del random4_vectors.o vectored_quad_doubles.o test_vqd.o
+	del random4_vectors.o random4_matrices.o
+	del vectored_quad_doubles.o test_vqd.o
 	del test_vqd.exe
 	del octo_double.o octo_double_functions.o
 	del random8_vectors.o vectored_octo_doubles.o test_vod.o
