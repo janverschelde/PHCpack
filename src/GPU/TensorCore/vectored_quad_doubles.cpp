@@ -36,6 +36,26 @@ void quarter_qd_vector
    }
 }
 
+void quarter_qd_matrix
+ ( int nrows, int ncols,
+   double **Ahihi, double **Alohi, double **Ahilo, double **Alolo,
+   double **Ahihi0, double **Ahihi1, double **Ahihi2, double **Ahihi3,
+   double **Alohi0, double **Alohi1, double **Alohi2, double **Alohi3,
+   double **Ahilo0, double **Ahilo1, double **Ahilo2, double **Ahilo3,
+   double **Alolo0, double **Alolo1, double **Alolo2, double **Alolo3 )
+{
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         quarter_quad_double
+            (Ahihi[i][j], Alohi[i][j], Ahilo[i][j], Alolo[i][j],
+             &Ahihi0[i][j], &Ahihi1[i][j], &Ahihi2[i][j], &Ahihi3[i][j],
+             &Alohi0[i][j], &Alohi1[i][j], &Alohi2[i][j], &Alohi3[i][j],
+             &Ahilo0[i][j], &Ahilo1[i][j], &Ahilo2[i][j], &Ahilo3[i][j],
+             &Alolo0[i][j], &Alolo1[i][j], &Alolo2[i][j], &Alolo3[i][j]);
+      }
+}
+
 void to_quad_double
  ( double xhihi0, double xhihi1, double xhihi2, double xhihi3,
    double xlohi0, double xlohi1, double xlohi2, double xlohi3,
@@ -63,6 +83,26 @@ void to_quad_double
    qdf_inc_d(xhihi, xlohi, xhilo, xlolo, xlolo1);
    qdf_inc_d(xhihi, xlohi, xhilo, xlolo, xlolo2);
    qdf_inc_d(xhihi, xlohi, xhilo, xlolo, xlolo3);
+}
+
+void to_quad_double_matrix
+ ( int nrows, int ncols,
+   double **Ahihi0, double **Ahihi1, double **Ahihi2, double **Ahihi3,
+   double **Alohi0, double **Alohi1, double **Alohi2, double **Alohi3,
+   double **Ahilo0, double **Ahilo1, double **Ahilo2, double **Ahilo3,
+   double **Alolo0, double **Alolo1, double **Alolo2, double **Alolo3,
+   double **Ahihi, double **Alohi, double **Ahilo, double **Alolo )
+{
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         to_quad_double
+            (Ahihi0[i][j], Ahihi1[i][j], Ahihi2[i][j], Ahihi3[i][j],
+             Alohi0[i][j], Alohi1[i][j], Alohi2[i][j], Alohi3[i][j],
+             Ahilo0[i][j], Ahilo1[i][j], Ahilo2[i][j], Ahilo3[i][j],
+             Alolo0[i][j], Alolo1[i][j], Alolo2[i][j], Alolo3[i][j],
+             &Ahihi[i][j], &Alohi[i][j], &Ahilo[i][j], &Alolo[i][j]);
+      }
 }
 
 void qd_write_vector
@@ -186,4 +226,59 @@ void vectored_qd_product
            + x8[i]*y7[i] + x9[i]*y6[i] + xA[i]*y5[i] + xB[i]*y4[i]
            + xC[i]*y3[i] + xD[i]*y2[i] + xE[i]*y1[i] + xF[i]*y0[i];
    }
+}
+
+void transpose_qd_quarters
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11,
+   double **A12, double **A13, double **A14, double **A15,
+   double **T0, double **T1, double **T2, double **T3,
+   double **T4, double **T5, double **T6, double **T7,
+   double **T8, double **T9, double **T10, double **T11,
+   double **T12, double **T13, double **T14, double **T15 )
+{
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         T0[j][i] = A0[i][j]; T1[j][i] = A1[i][j];
+         T2[j][i] = A2[i][j]; T3[j][i] = A3[i][j];
+         T4[j][i] = A4[i][j]; T5[j][i] = A5[i][j];
+         T6[j][i] = A6[i][j]; T7[j][i] = A7[i][j];
+         T8[j][i] = A8[i][j]; T9[j][i] = A9[i][j];
+         T10[j][i] = A10[i][j]; T11[j][i] = A11[i][j];
+         T12[j][i] = A12[i][j]; T13[j][i] = A13[i][j];
+         T14[j][i] = A14[i][j]; T15[j][i] = A15[i][j];
+      }
+}
+
+void vectored_qd_matmatmul
+ ( int nrows, int ncols, int dim,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11,
+   double **A12, double **A13, double **A14, double **A15,
+   double **B0, double **B1, double **B2, double **B3,
+   double **B4, double **B5, double **B6, double **B7,
+   double **B8, double **B9, double **B10, double **B11,
+   double **B12, double **B13, double **B14, double **B15,
+   double **C0, double **C1, double **C2, double **C3,
+   double **C4, double **C5, double **C6, double **C7,
+   double **C8, double **C9, double **C10, double **C11,
+   double **C12, double **C13, double **C14, double **C15 )
+{
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         vectored_qd_product
+            (dim, A0[i], A1[i], A2[i], A3[i], A4[i], A5[i], A6[i], A7[i],
+             A8[i], A9[i], A10[i], A11[i], A12[i], A13[i], A14[i], A15[i],
+             B0[j], B1[j], B2[j], B3[j], B4[j], B5[j], B6[j], B7[j],
+             B8[j], B9[j], B10[j], B11[j], B12[j], B13[j], B14[j], B15[j],
+             &C0[i][j], &C1[i][j], &C2[i][j], &C3[i][j],
+             &C4[i][j], &C5[i][j], &C6[i][j], &C7[i][j],
+             &C8[i][j], &C9[i][j], &C10[i][j], &C11[i][j],
+             &C12[i][j], &C13[i][j], &C14[i][j], &C15[i][j]);
+      }
 }

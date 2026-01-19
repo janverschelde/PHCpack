@@ -153,7 +153,7 @@ void vectored_dd_product
    }
 }
 
-void transpose_quarters
+void transpose_dd_quarters
  ( int nrows, int ncols,
    double **A0, double **A1, double **A2, double **A3,
    double **A4, double **A5, double **A6, double **A7,

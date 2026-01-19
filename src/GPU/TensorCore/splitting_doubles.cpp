@@ -11,7 +11,7 @@ void write_52bits ( int k, uint64 nbr )
    if(k > 0)
    {
       write_52bits(k-1,nbr/2);
-      printf("%d", nbr%2);
+      printf("%lld", nbr%2);
       if(k % 4 == 0) printf(" ");
    }
 }

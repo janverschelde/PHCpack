@@ -302,7 +302,7 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
       Tlo2[i] = new double[nrc];
       Tlo3[i] = new double[nrc];
    }
-   transpose_quarters
+   transpose_dd_quarters
       (nrc, ncols, Bhi0, Bhi1, Bhi2, Bhi3, Blo0, Blo1, Blo2, Blo3,
                    Thi0, Thi1, Thi2, Thi3, Tlo0, Tlo1, Tlo2, Tlo3);
 
@@ -358,7 +358,7 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
       {
          ddf_sub(Chi[i][j], Clo[i][j], Vhi[i][j], Vlo[i][j],
                  &acc[0], &acc[1]);
-         ddf_inc(&err[0], &err[i], acc[0], acc[1]);
+         ddf_inc(&err[0], &err[1], acc[0], acc[1]);
       }
 
    if(err[0] < 0.0) ddf_minus(&err[0], &err[1]);
