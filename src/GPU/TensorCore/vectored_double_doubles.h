@@ -20,6 +20,14 @@ void quarter_dd_vector
  * quarters the high part xhi and the low part xlo of a double double,
  * resulting in (xhi0, xhi1, xhi2, xhi3) and in (xlo0, xlo1, xlo2, xlo3). */
 
+void quarter_dd_matrix
+ ( int nrows, int ncols, double **Ahi, double **Alo,
+   double **Ahi0, double **Ahi1, double **Ahi2, double **Ahi3,
+   double **Alo0, double **Alo1, double **Alo2, double **Alo3 );
+/*
+ * Given a matrix of nrows rows and ncols columns in (Ahi, Alo),
+ * quarters the matrix into 8 matrices of the low and high parts. */
+
 void to_double_double
  ( double xhi0, double xhi1, double xhi2, double xhi3,
    double xlo0, double xlo1, double xlo2, double xlo3,
@@ -29,6 +37,15 @@ void to_double_double
  * and the quarters of the low part in (xlo0, xlo1, xlo2, xlo3),
  * returns in xhi and xlo the high and low parts of a double double,
  * using double double arithmetic. */
+
+void to_double_double_matrix
+ ( int nrows, int ncols,
+   double **Ahi0, double **Ahi1, double **Ahi2, double **Ahi3,
+   double **Alo0, double **Alo1, double **Alo2, double **Alo3,
+   double **Ahi, double **Alo );
+/*
+ * Given the quarters of an nrows-by-ncols matrix,
+ * returns the high and low parts of the double doubles in the matix. */
 
 void dd_write_vector ( int dim, double *xhi, double *xlo );
 /*
@@ -62,5 +79,30 @@ void vectored_dd_product
 /*
  * Makes the vectored product of x and y, with the sums of the product
  * in s0, s1, etc ... */
+
+void transpose_quarters
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **T0, double **T1, double **T2, double **T3,
+   double **T4, double **T5, double **T6, double **T7 );
+/*
+ * Returns in T0, T1, ... the transpose of A0, A1, ...
+ * where A is nrows-by-ncols, T is ncols-by-nrows */
+
+void vectored_dd_matmatmul
+ ( int nrows, int ncols, int dim,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **B0, double **B1, double **B2, double **B3,
+   double **B4, double **B5, double **B6, double **B7,
+   double **C0, double **C1, double **C2, double **C3,
+   double **C4, double **C5, double **C6, double **C7 );
+/*
+ * Makes the vectored product of the matrix A and B,
+ * given by their quarters in A0, A1, .., B0, B1, ...,
+ * resulting in the quarters in the nrows-by-ncols matrix C.
+ * The number of columns of A and te number of rows in B is dim,
+ * but the matrix B is column major, while A and C are row major. */
 
 #endif

@@ -2,7 +2,8 @@ Sun 18 Jan 2026 : extended vectored_octo_doubles with matrix matrix
   multiplications.  Small edits in test_vdd.cpp, test_vqd.cpp, extended
   test_vod.cpp, edited test_vhd.cpp, updated makefiles.
   Small edit in test_vod.cpp.  Extended vectored_hexa_doubles and
-  test_vhd.cpp; updated makefiles.
+  test_vhd.cpp; updated makefiles.  To vectored_double_doubles, added
+  functions to make a vectored matrix multiplication, tested by test_vdd.
 
 Sat 17 Jan 2026 : extended vectored_{double,quad}_doubles and test_vdd.cpp,
   test_vqd.cpp with functions for matrix matrix multiplication.

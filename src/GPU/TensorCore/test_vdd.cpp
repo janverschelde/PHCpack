@@ -61,6 +61,11 @@ int main ( void )
 
    fail = test_vectored_dd_matmatmul(m, n, k);
 
+   if(fail == 1)
+      cout << "\nTest on vectored double double matmatmul failed?!!!\n\n";
+   else
+      cout << "\nTest on vectored double double matmatmul succeeded.\n\n";
+
    return 0;
 }
 
@@ -102,7 +107,7 @@ int test_quarter_double_double ( void )
 
    ddf_sub(x[0], x[1], y[0], y[1], &e[0], &e[1]);
 
-   cout << "e : "; dd_write(e, 32); cout << endl;
+   cout << "e : "; dd_write(e, 3); cout << endl;
 
    fail = not(e[0] == 0.0)
         + not(e[1] == 0.0);
@@ -154,9 +159,9 @@ int test_vectored_dd_product ( int dim )
 
    if(err[0] < 0.0) ddf_minus(&err[0], &err[1]);
 
-   cout << " error : "; dd_write(err, 32); cout << endl;
+   cout << " error : "; dd_write(err, 3); cout << endl;
 
-   fail = (fabs(err[0]) > 1.0E-28);
+   fail = (abs(err[0]) > 1.0E-28);
 
    return fail;
 }
@@ -183,6 +188,13 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
    }
    random_dbl2_matrix(nrows, nrc, Ahi, Alo);
 
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<nrc; j++)
+      {
+         if(Ahi[i][j] < 0.0) Ahi[i][j] = -Ahi[i][j];
+         if(Alo[i][j] < 0.0) Alo[i][j] = -Alo[i][j];
+      }
+
    cout << scientific << setprecision(16);
 
    cout << "A random " << nrows << "-by-" << nrc << " matrix A :" << endl;
@@ -201,6 +213,13 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
    }
    random_dbl2_matrix(nrc, ncols, Bhi, Blo);
 
+   for(int i=0; i<nrc; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         if(Bhi[i][j] < 0.0) Bhi[i][j] = -Bhi[i][j];
+         if(Blo[i][j] < 0.0) Blo[i][j] = -Blo[i][j];
+      }
+
    cout << "A random " << nrc << "-by-" << ncols << " matrix B :" << endl;
    for(int i=0; i<nrc; i++)
       for(int j=0; j<ncols; j++)
@@ -214,6 +233,139 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
       for(int j=0; j<ncols; j++)
          cout << "C[" << i << "][" << j << "] : "
               << Chi[i][j] << "  " << Clo[i][j] << endl;
+
+   double **Ahi0 = new double*[nrows];
+   double **Ahi1 = new double*[nrows];
+   double **Ahi2 = new double*[nrows];
+   double **Ahi3 = new double*[nrows];
+   double **Alo0 = new double*[nrows];
+   double **Alo1 = new double*[nrows];
+   double **Alo2 = new double*[nrows];
+   double **Alo3 = new double*[nrows];
+
+   for(int i=0; i<nrows; i++)
+   {
+      Ahi0[i] = new double[nrc];
+      Ahi1[i] = new double[nrc];
+      Ahi2[i] = new double[nrc];
+      Ahi3[i] = new double[nrc];
+      Alo0[i] = new double[nrc];
+      Alo1[i] = new double[nrc];
+      Alo2[i] = new double[nrc];
+      Alo3[i] = new double[nrc];
+   }
+   quarter_dd_matrix
+      (nrows, nrc, Ahi, Alo,
+       Ahi0, Ahi1, Ahi2, Ahi3, Alo0, Alo1, Alo2, Alo3);
+
+   double **Bhi0 = new double*[nrc];
+   double **Bhi1 = new double*[nrc];
+   double **Bhi2 = new double*[nrc];
+   double **Bhi3 = new double*[nrc];
+   double **Blo0 = new double*[nrc];
+   double **Blo1 = new double*[nrc];
+   double **Blo2 = new double*[nrc];
+   double **Blo3 = new double*[nrc];
+
+   for(int i=0; i<nrc; i++)
+   {
+      Bhi0[i] = new double[ncols];
+      Bhi1[i] = new double[ncols];
+      Bhi2[i] = new double[ncols];
+      Bhi3[i] = new double[ncols];
+      Blo0[i] = new double[ncols];
+      Blo1[i] = new double[ncols];
+      Blo2[i] = new double[ncols];
+      Blo3[i] = new double[ncols];
+   }
+   quarter_dd_matrix
+      (nrc, ncols, Bhi, Blo,
+       Bhi0, Bhi1, Bhi2, Bhi3, Blo0, Blo1, Blo2, Blo3);
+
+   double **Thi0 = new double*[ncols];
+   double **Thi1 = new double*[ncols];
+   double **Thi2 = new double*[ncols];
+   double **Thi3 = new double*[ncols];
+   double **Tlo0 = new double*[ncols];
+   double **Tlo1 = new double*[ncols];
+   double **Tlo2 = new double*[ncols];
+   double **Tlo3 = new double*[ncols];
+
+   for(int i=0; i<ncols; i++)
+   {
+      Thi0[i] = new double[nrc];
+      Thi1[i] = new double[nrc];
+      Thi2[i] = new double[nrc];
+      Thi3[i] = new double[nrc];
+      Tlo0[i] = new double[nrc];
+      Tlo1[i] = new double[nrc];
+      Tlo2[i] = new double[nrc];
+      Tlo3[i] = new double[nrc];
+   }
+   transpose_quarters
+      (nrc, ncols, Bhi0, Bhi1, Bhi2, Bhi3, Blo0, Blo1, Blo2, Blo3,
+                   Thi0, Thi1, Thi2, Thi3, Tlo0, Tlo1, Tlo2, Tlo3);
+
+   double **Chi0 = new double*[nrows];
+   double **Chi1 = new double*[nrows];
+   double **Chi2 = new double*[nrows];
+   double **Chi3 = new double*[nrows];
+   double **Clo0 = new double*[nrows];
+   double **Clo1 = new double*[nrows];
+   double **Clo2 = new double*[nrows];
+   double **Clo3 = new double*[nrows];
+
+   for(int i=0; i<nrows; i++)
+   {
+      Chi0[i] = new double[ncols];
+      Chi1[i] = new double[ncols];
+      Chi2[i] = new double[ncols];
+      Chi3[i] = new double[ncols];
+      Clo0[i] = new double[ncols];
+      Clo1[i] = new double[ncols];
+      Clo2[i] = new double[ncols];
+      Clo3[i] = new double[ncols];
+   }
+   vectored_dd_matmatmul
+      (nrows, ncols, nrc,
+       Ahi0, Ahi1, Ahi2, Ahi3, Alo0, Alo1, Alo2, Alo3,
+       Thi0, Thi1, Thi2, Thi3, Tlo0, Tlo1, Tlo2, Tlo3,
+       Chi0, Chi1, Chi2, Chi3, Clo0, Clo1, Clo2, Clo3);
+
+   double **Vhi = new double*[nrows];
+   double **Vlo = new double*[nrows];
+
+   for(int i=0; i<nrows; i++)
+   {
+      Vhi[i] = new double[ncols];
+      Vlo[i] = new double[ncols];
+   }
+   to_double_double_matrix
+      (nrows, ncols,
+       Chi0, Chi1, Chi2, Chi3, Clo0, Clo1, Clo2, Clo3, Vhi, Vlo);
+
+   cout << "the vectored product A*B :" << endl;
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+         cout << "V[" << i << "][" << j << "] : "
+              << Vhi[i][j] << "  " << Vlo[i][j] << endl;
+
+   double err[2],acc[2];
+   err[0] = 0.0; err[1] = 0.0;
+
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         ddf_sub(Chi[i][j], Clo[i][j], Vhi[i][j], Vlo[i][j],
+                 &acc[0], &acc[1]);
+         ddf_inc(&err[0], &err[i], acc[0], acc[1]);
+      }
+
+   if(err[0] < 0.0) ddf_minus(&err[0], &err[1]);
+
+   cout << "-> error : "; dd_write(err, 3); cout << endl;
+
+   fail = (abs(err[0]) > 1.0E-28);
 
    return fail;
 }

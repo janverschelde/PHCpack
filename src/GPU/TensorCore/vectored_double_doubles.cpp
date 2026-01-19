@@ -28,6 +28,21 @@ void quarter_dd_vector
    }
 }
 
+void quarter_dd_matrix
+ ( int nrows, int ncols, double **Ahi, double **Alo,
+   double **Ahi0, double **Ahi1, double **Ahi2, double **Ahi3,
+   double **Alo0, double **Alo1, double **Alo2, double **Alo3 )
+{
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         quarter_double_double
+            (Ahi[i][j], Alo[i][j],
+             &Ahi0[i][j], &Ahi1[i][j], &Ahi2[i][j], &Ahi3[i][j],
+             &Alo0[i][j], &Alo1[i][j], &Alo2[i][j], &Alo3[i][j]);
+      }
+}
+
 void to_double_double
  ( double xhi0, double xhi1, double xhi2, double xhi3,
    double xlo0, double xlo1, double xlo2, double xlo3,
@@ -43,6 +58,22 @@ void to_double_double
    ddf_inc_d(xhi, xlo, xlo1);
    ddf_inc_d(xhi, xlo, xlo2);
    ddf_inc_d(xhi, xlo, xlo3);
+}
+
+void to_double_double_matrix
+ ( int nrows, int ncols,
+   double **Ahi0, double **Ahi1, double **Ahi2, double **Ahi3,
+   double **Alo0, double **Alo1, double **Alo2, double **Alo3,
+   double **Ahi, double **Alo )
+{
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         to_double_double
+            (Ahi0[i][j], Ahi1[i][j], Ahi2[i][j], Ahi3[i][j],
+             Alo0[i][j], Alo1[i][j], Alo2[i][j], Alo3[i][j],
+             &Ahi[i][j], &Alo[i][j]);
+      }
 }
 
 void dd_write_vector ( int dim, double *xhi, double *xlo )
@@ -120,4 +151,41 @@ void vectored_dd_product
       *s7 += x0[i]*y7[i] + x1[i]*y6[i] + x2[i]*y5[i] + x3[i]*y4[i]
            + x4[i]*y3[i] + x5[i]*y2[i] + x6[i]*y1[i] + x7[i]*y0[i];
    }
+}
+
+void transpose_quarters
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **T0, double **T1, double **T2, double **T3,
+   double **T4, double **T5, double **T6, double **T7 )
+{
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         T0[j][i] = A0[i][j]; T1[j][i] = A1[i][j];
+         T2[j][i] = A2[i][j]; T3[j][i] = A3[i][j];
+         T4[j][i] = A4[i][j]; T5[j][i] = A5[i][j];
+         T6[j][i] = A6[i][j]; T7[j][i] = A7[i][j];
+      }
+}
+
+void vectored_dd_matmatmul
+ ( int nrows, int ncols, int dim,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **B0, double **B1, double **B2, double **B3,
+   double **B4, double **B5, double **B6, double **B7,
+   double **C0, double **C1, double **C2, double **C3,
+   double **C4, double **C5, double **C6, double **C7 )
+{
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         vectored_dd_product
+            (dim, A0[i], A1[i], A2[i], A3[i], A4[i], A5[i], A6[i], A7[i],
+                  B0[j], B1[j], B2[j], B3[j], B4[j], B5[j], B6[j], B7[j],
+             &C0[i][j], &C1[i][j], &C2[i][j], &C3[i][j],
+             &C4[i][j], &C5[i][j], &C6[i][j], &C7[i][j]);
+      }
 }
