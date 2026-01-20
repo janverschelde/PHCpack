@@ -230,3 +230,25 @@ void dd_stack_quarters
          sA[8*i+7][j] = A7[i][j];
       }
 }
+
+void extract_dd_quarters
+ ( int nrows, int ncols, double **qC,
+   double **D0, double **D1, double **D2, double **D3,
+   double **D4, double **D5, double **D6, double **D7 )
+{
+   for(int i=0; i<8*nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         int k = i % 8;
+         int row = i/8;
+
+         if(k == 0) D0[row][j] = qC[i][j];
+         if(k == 1) D1[row][j] = qC[i][j];
+         if(k == 2) D2[row][j] = qC[i][j];
+         if(k == 3) D3[row][j] = qC[i][j];
+         if(k == 4) D4[row][j] = qC[i][j];
+         if(k == 5) D5[row][j] = qC[i][j];
+         if(k == 6) D6[row][j] = qC[i][j];
+         if(k == 7) D7[row][j] = qC[i][j];
+      }
+}

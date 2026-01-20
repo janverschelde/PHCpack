@@ -402,5 +402,66 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
       for(int j=0; j<ncols; j++)
          cout << "qC[" << i << "][" << j << "] : " << qC[i][j] << endl;
 
+   double **Dhi0 = new double*[nrows];
+   double **Dhi1 = new double*[nrows];
+   double **Dhi2 = new double*[nrows];
+   double **Dhi3 = new double*[nrows];
+   double **Dlo0 = new double*[nrows];
+   double **Dlo1 = new double*[nrows];
+   double **Dlo2 = new double*[nrows];
+   double **Dlo3 = new double*[nrows];
+
+   for(int i=0; i<nrows; i++)
+   {
+      Dhi0[i] = new double[ncols];
+      Dhi1[i] = new double[ncols];
+      Dhi2[i] = new double[ncols];
+      Dhi3[i] = new double[ncols];
+      Dlo0[i] = new double[ncols];
+      Dlo1[i] = new double[ncols];
+      Dlo2[i] = new double[ncols];
+      Dlo3[i] = new double[ncols];
+   }
+   extract_dd_quarters
+      (nrows, ncols, qC, Dhi0, Dhi1, Dhi2, Dhi3, Dlo0, Dlo1, Dlo2, Dlo3);
+
+   double error = 0.0;
+
+   cout << "comparing the extracted quarters ..." << endl;
+
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         cout << "Chi0[" << i << "][" << j << "] : " << Chi0[i][j] << endl
+              << "Dhi0[" << i << "][" << j << "] : " << Dhi0[i][j] << endl;
+         error = error + abs(Chi0[i][j] - Dhi0[i][j]);
+         cout << "Chi1[" << i << "][" << j << "] : " << Chi1[i][j] << endl
+              << "Dhi1[" << i << "][" << j << "] : " << Dhi1[i][j] << endl;
+         error = error + abs(Chi1[i][j] - Dhi1[i][j]);
+         cout << "Chi2[" << i << "][" << j << "] : " << Chi2[i][j] << endl
+              << "Dhi2[" << i << "][" << j << "] : " << Dhi2[i][j] << endl;
+         error = error + abs(Chi2[i][j] - Dhi2[i][j]);
+         cout << "Chi1[" << i << "][" << j << "] : " << Chi3[i][j] << endl
+              << "Dhi1[" << i << "][" << j << "] : " << Dhi3[i][j] << endl;
+         error = error + abs(Chi3[i][j] - Dhi3[i][j]);
+         cout << "Clo0[" << i << "][" << j << "] : " << Clo0[i][j] << endl
+              << "Dlo0[" << i << "][" << j << "] : " << Dlo0[i][j] << endl;
+         error = error + abs(Clo0[i][j] - Dlo0[i][j]);
+         cout << "Clo1[" << i << "][" << j << "] : " << Clo1[i][j] << endl
+              << "Dlo1[" << i << "][" << j << "] : " << Dlo1[i][j] << endl;
+         error = error + abs(Clo1[i][j] - Dlo1[i][j]);
+         cout << "Clo2[" << i << "][" << j << "] : " << Clo2[i][j] << endl
+              << "Dlo2[" << i << "][" << j << "] : " << Dlo2[i][j] << endl;
+         error = error + abs(Clo2[i][j] - Dlo2[i][j]);
+         cout << "Clo1[" << i << "][" << j << "] : " << Clo3[i][j] << endl
+              << "Dlo1[" << i << "][" << j << "] : " << Dlo3[i][j] << endl;
+         error = error + abs(Clo3[i][j] - Dlo3[i][j]);
+      }
+
+   cout << scientific << setprecision(3)
+        << "sum of all errors : " << error << endl; 
+
+   fail = (error > 1.0E-28);
+
    return fail;
 }

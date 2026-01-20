@@ -127,4 +127,12 @@ void dd_stack_quarters
  * is replaced by an 8-by-1 column.
  * Therefore, cA is an 8*nrows-by-ncols matrix. */
 
+void extract_dd_quarters
+ ( int nrows, int ncols, double **qC,
+   double **D0, double **D1, double **D2, double **D3,
+   double **D4, double **D5, double **D6, double **D7 );
+/*
+ * Given is in qC the quartered project as an 8*nrows-by-ncols matrix,
+ * extracts the quarters into the nrows-by-ncols matrices D0, D1, ... */
+
 #endif
