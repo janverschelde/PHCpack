@@ -2,6 +2,9 @@ Mon 19 Jan 2026 : renamed transpose_quarters into transpose_dd_quarters
   in vectored_double_doubles, fixed bug in test_vdd.cpp.
   To vectored_quad_doubles, added the vectored_quad_matmatmul, tested
   by test_vqd.cpp.  Updated splitting_doubles.cpp for compiler warning.
+  New double_matrix_multiplications, applied in test_vdd, with functions
+  added in vectored_double_doubles to compute convolute and stacked
+  quartered matrices.  Updated makefiles.
 
 Sun 18 Jan 2026 : extended vectored_octo_doubles with matrix matrix
   multiplications.  Small edits in test_vdd.cpp, test_vqd.cpp, extended

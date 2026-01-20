@@ -10,6 +10,7 @@
 #include "double_double_functions.h"
 #include "vectored_double_doubles.h"
 #include "random2_matrices.h"
+#include "double_matrix_multiplications.h"
 
 int test_quarter_double_double ( void );
 /*
@@ -366,6 +367,40 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
    cout << "-> error : "; dd_write(err, 3); cout << endl;
 
    fail = (abs(err[0]) > 1.0E-28);
+
+   if(fail == 1) return fail; // no point to continue ...
+
+   double **cA = new double*[8*nrows];
+   for(int i=0; i<8*nrows; i++) cA[i] = new double[8*nrc];
+
+   dd_convolute_quarters
+      (nrows, nrc, Ahi0, Ahi1, Ahi2, Ahi3, Alo0, Alo1, Alo2, Alo3, cA);
+
+   cout << "the convoluted quartered matrix A :" << endl;
+   for(int i=0; i<8*nrows; i++)
+      for(int j=0; j<8*nrc; j++)
+         cout << "cA[" << i << "][" << j << "] : " << cA[i][j] << endl;
+
+   double **sB = new double*[8*nrc];
+   for(int i=0; i<8*nrc; i++) sB[i] = new double[ncols];
+
+   dd_stack_quarters
+      (nrc, ncols, Bhi0, Bhi1, Bhi2, Bhi3, Blo0, Blo1, Blo2, Blo3, sB);
+
+   cout << "the stacked quartered matrix B :" << endl;
+   for(int i=0; i<8*nrc; i++)
+      for(int j=0; j<ncols; j++)
+         cout << "sB[" << i << "][" << j << "] : " << sB[i][j] << endl;
+
+   double **qC = new double*[8*nrows];
+   for(int i=0; i<8*nrows; i++) qC[i] = new double[ncols];
+
+   double_indexed_matrix_multiplication(8*nrows, ncols, 8*nrc, cA, sB, qC);
+
+   cout << "the quartered product C :" << endl;
+   for(int i=0; i<8*nrows; i++)
+      for(int j=0; j<ncols; j++)
+         cout << "qC[" << i << "][" << j << "] : " << qC[i][j] << endl;
 
    return fail;
 }

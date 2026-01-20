@@ -105,16 +105,22 @@ vectored_hexa_doubles.o:
 	@-echo ">>> compiling vectored hexa doubles ..."
 	$(gpp) -O3 -c -I$(QDsrc) -I$(MPD) vectored_hexa_doubles.cpp
 
+double_matrix_multiplications.o:
+	@-echo ">>> compiling double matrix multiplications ..."
+	$(gpp) -O3 -c double_matrix_multiplications.cpp
+
 test_vdd: double_double.o double_double_functions.o \
           random_numbers.o random2_vectors.o random2_matrices.o \
-          splitting_doubles.o vectored_double_doubles.o
+          splitting_doubles.o vectored_double_doubles.o \
+          double_matrix_multiplications.o
 	@-echo ">>> compiling test_vdd ..."
 	$(gpp) -c -I$(QDsrc) -I$(MPD) -I$(MAT) test_vdd.cpp -o test_vdd.o
 	@-echo ">>> linking ..."
 	$(gpp) -o test_vdd test_vdd.o \
                double_double.o double_double_functions.o \
                random_numbers.o random2_vectors.o random2_matrices.o \
-               splitting_doubles.o vectored_double_doubles.o
+               splitting_doubles.o vectored_double_doubles.o \
+               double_matrix_multiplications.o
 
 test_vqd: double_double.o quad_double.o \
           double_double_functions.o quad_double_functions.o \
@@ -163,7 +169,8 @@ clean:
 	/bin/rm -f -r test_split test_splitting_doubles.o splitting_doubles.o
 	/bin/rm -f -r random_numbers.o random2_vectors.o random2_matrices.o
 	/bin/rm -f -r double_double.o double_double_functions.o
-	/bin/rm -f -r vectored_double_doubles.o
+	/bin/rm -f -r vectored_double_doubles.o 
+	/bin/rm -f -r double_matrix_multiplications.o
 	/bin/rm -f -r test_vdd test_vdd.o
 	/bin/rm -f -r quad_double.o quad_double_functions.o
 	/bin/rm -f -r random4_vectors.o random4_matrices.o

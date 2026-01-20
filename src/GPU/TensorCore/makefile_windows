@@ -135,13 +135,18 @@ vectored_hexa_doubles.o:
 	@-echo ">>> compiling vectored hexa doubles ..."
 	g++ -O3 -c -I$(QDsrc) -I$(MPD) vectored_hexa_doubles.cpp
 
+double_matrix_multiplications.o:
+	@-echo ">>> compiling double matrix multiplications ..."
+	g++ -O3 -c double_matrix_multiplications.cpp
+
 test_vdd: double_double.o double_double_functions.o \
           random_numbers.o random2_vectors.o random2_matrices.o \
-          splitting_doubles.o vectored_double_doubles.o
+          splitting_doubles.o vectored_double_doubles.o \
+          double_matrix_multiplications.o
 	@-echo ">>> compiling test_vdd ..."
 	g++ -c -I$(QDsrc) -I$(MPD) -I$(MAT) test_vdd.cpp -o test_vdd.o
 	@-echo ">>> linking ..."
-	g++ -o test_vdd test_vdd.o \
+	g++ -o test_vdd test_vdd.o double_matrix_multiplications.o \
                double_double.o double_double_functions.o \
                random_numbers.o random2_vectors.o random2_matrices.o \
                splitting_doubles.o vectored_double_doubles.o
@@ -196,6 +201,7 @@ clean:
 	del random_numbers.o random2_vectors.o random2_matrices.o
 	del double_double.o double_double_functions.o
 	del vectored_double_doubles.o test_vdd.o
+	del double_matrix_multiplications.o
 	del test_vdd.exe
 	del quad_double.o quad_double_functions.o
 	del random4_vectors.o random4_matrices.o

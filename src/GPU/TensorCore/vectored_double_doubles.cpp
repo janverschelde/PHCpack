@@ -189,3 +189,44 @@ void vectored_dd_matmatmul
              &C4[i][j], &C5[i][j], &C6[i][j], &C7[i][j]);
       }
 }
+
+void dd_convolute_quarters
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7, double **cA )
+{
+   for(int i=0; i<8*nrows; i++)
+      for(int j=0; j<8*ncols; j++) cA[i][j] = 0.0;
+
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         for(int k=0; k<8; k++) cA[8*i+k][8*j+k] = A0[i][j];
+         for(int k=0; k<7; k++) cA[8*i+k+1][8*j+k] = A1[i][j];
+         for(int k=0; k<6; k++) cA[8*i+k+2][8*j+k] = A2[i][j];
+         for(int k=0; k<5; k++) cA[8*i+k+3][8*j+k] = A3[i][j];
+         for(int k=0; k<4; k++) cA[8*i+k+4][8*j+k] = A4[i][j];
+         for(int k=0; k<3; k++) cA[8*i+k+5][8*j+k] = A5[i][j];
+         for(int k=0; k<2; k++) cA[8*i+k+6][8*j+k] = A6[i][j];
+         cA[8*i+7][8*j] = A7[i][j];
+      }
+}
+
+void dd_stack_quarters
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7, double **sA )
+{
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         sA[8*i][j] = A0[i][j];
+         sA[8*i+1][j] = A1[i][j];
+         sA[8*i+2][j] = A2[i][j];
+         sA[8*i+3][j] = A3[i][j];
+         sA[8*i+4][j] = A4[i][j];
+         sA[8*i+5][j] = A5[i][j];
+         sA[8*i+6][j] = A6[i][j];
+         sA[8*i+7][j] = A7[i][j];
+      }
+}

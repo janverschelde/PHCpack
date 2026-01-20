@@ -7,22 +7,23 @@ using sequences 2**k, for k from 0 to n.  As n grows larger than 53,
 the sum of 2**k can no longer represented correctly by 64-bit floats.
 
 Vectored multiple double arithmetic allows the application of tensor cores
-to obtain accurate results.
+to obtain accurate results, for which data staging algorithms are defined.
 
 ------------------------------------------------------------------------------
-file name               : short description
+file name                     : short description
 ------------------------------------------------------------------------------
-simpleTensorCoreGemm    : simple wgma kernel for matrix multiplication
+simpleTensorCoreGemm          : simple wgma kernel for matrix multiplication
 ------------------------------------------------------------------------------
-bits_of_pi              : test on the bits of a double approximation for pi
-splitting_doubles       : halving and quartering fractions of doubles
-test_splitting_doubles  : tests on halving and quartering doubles
-vectored_double_doubles : defines vectored double double arithmetic
-test_vdd                : tests vectored double double arithmetic
-vectored_quad_doubles   : defines vectored quad double arithmetic
-test_vqd                : tests vectored quad double arithmetic
-vectored_octo_doubles   : defines vectored octo double arithmetic
-test_vod                : tests vectored octo double arithmetic
-vectored_hexa_doubles   : defines vectored hexa double arithmetic
-test_vhd                : tests vectored hexa double arithmetic
+bits_of_pi                    : test on the bits of an approximation for pi
+splitting_doubles             : halving and quartering fractions of doubles
+double_matrix_multiplications : matrix matrix multiplications with doubles
+test_splitting_doubles        : tests on halving and quartering doubles
+vectored_double_doubles       : defines vectored double double arithmetic
+test_vdd                      : tests vectored double double arithmetic
+vectored_quad_doubles         : defines vectored quad double arithmetic
+test_vqd                      : tests vectored quad double arithmetic
+vectored_octo_doubles         : defines vectored octo double arithmetic
+test_vod                      : tests vectored octo double arithmetic
+vectored_hexa_doubles         : defines vectored hexa double arithmetic
+test_vhd                      : tests vectored hexa double arithmetic
 ------------------------------------------------------------------------------
