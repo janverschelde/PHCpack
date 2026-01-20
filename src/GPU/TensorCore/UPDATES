@@ -3,6 +3,8 @@ Tue 20 Jan 2026 : extended double_matrix_multiplications with single indexed
   Updated all makefiles.  Extended test_vdd with single indexed mmm.
   Small edit in vectored_quad_doubles.h; to test_vqd, added the
   application of the single indexed matrix matrix multiplication.
+  Another small edit in vectord_quad_doubles.h; extended ts_vod and
+  vectored_octo_doubles with quartered matrix multiplication.
 
 Mon 19 Jan 2026 : renamed transpose_quarters into transpose_dd_quarters
   in vectored_double_doubles, fixed bug in test_vdd.cpp.

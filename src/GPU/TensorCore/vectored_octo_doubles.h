@@ -44,6 +44,23 @@ void quarter_od_vector
  * quarters the parts of an octo double,
  * resulting in 32 vectors of size dim. */
 
+void quarter_od_matrix
+ ( int nrows, int ncols,
+   double **Ahihihi, double **Alohihi, double **Ahilohi, double **Alolohi,
+   double **Ahihilo, double **Alohilo, double **Ahilolo, double **Alololo,
+   double **Ahihihi0, double **Ahihihi1, double **Ahihihi2, double **Ahihihi3,
+   double **Alohihi0, double **Alohihi1, double **Alohihi2, double **Alohihi3,
+   double **Ahilohi0, double **Ahilohi1, double **Ahilohi2, double **Ahilohi3,
+   double **Alolohi0, double **Alolohi1, double **Alolohi2, double **Alolohi3,
+   double **Ahihilo0, double **Ahihilo1, double **Ahihilo2, double **Ahihilo3,
+   double **Alohilo0, double **Alohilo1, double **Alohilo2, double **Alohilo3,
+   double **Ahilolo0, double **Ahilolo1, double **Ahilolo2, double **Ahilolo3,
+   double **Alololo0, double **Alololo1, double **Alololo2, double **Alololo3 );
+/*
+ * Given a matrix of nrows rows and ncols columns in
+ * (Ahihihi, Alohihi, Ahilohi, Alolohi, Ahihilo, Alohilo, Ahilolo, Alololo),
+ * quarters the matrix into 32 matrices of the parts. */
+
 void to_octo_double
  ( double xhihihi0, double xhihihi1, double xhihihi2, double xhihihi3,
    double xlohihi0, double xlohihi1, double xlohihi2, double xlohihi3,
@@ -130,5 +147,60 @@ void vectored_od_product
 /*
  * Makes the vectored product of x and y, with the sums of the product
  * in s0, s1, etc ... */
+
+void transpose_od_quarters
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11,
+   double **A12, double **A13, double **A14, double **A15,
+   double **A16, double **A17, double **A18, double **A19,
+   double **A20, double **A21, double **A22, double **A23,
+   double **A24, double **A25, double **A26, double **A27,
+   double **A28, double **A29, double **A30, double **A31,
+   double **T0, double **T1, double **T2, double **T3,
+   double **T4, double **T5, double **T6, double **T7,
+   double **T8, double **T9, double **T10, double **T11,
+   double **T12, double **T13, double **T14, double **T15,
+   double **T16, double **T17, double **T18, double **T19,
+   double **T20, double **T21, double **T22, double **T23,
+   double **T24, double **T25, double **T26, double **T27,
+   double **T28, double **T29, double **T30, double **T31 );
+/*
+ * Returns in T0, T1, ... the transpose of A0, A1, ...
+ * where A is nrows-by-ncols, T is ncols-by-nrows */
+
+void vectored_od_matmatmul
+ ( int nrows, int ncols, int dim,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11,
+   double **A12, double **A13, double **A14, double **A15,
+   double **A16, double **A17, double **A18, double **A19,
+   double **A20, double **A21, double **A22, double **A23,
+   double **A24, double **A25, double **A26, double **A27,
+   double **A28, double **A29, double **A30, double **A31,
+   double **B0, double **B1, double **B2, double **B3,
+   double **B4, double **B5, double **B6, double **B7,
+   double **B8, double **B9, double **B10, double **B11,
+   double **B12, double **B13, double **B14, double **B15,
+   double **B16, double **B17, double **B18, double **B19,
+   double **B20, double **B21, double **B22, double **B23,
+   double **B24, double **B25, double **B26, double **B27,
+   double **B28, double **B29, double **B30, double **B31,
+   double **C0, double **C1, double **C2, double **C3,
+   double **C4, double **C5, double **C6, double **C7,
+   double **C8, double **C9, double **C10, double **C11,
+   double **C12, double **C13, double **C14, double **C15,
+   double **C16, double **C17, double **C18, double **C19,
+   double **C20, double **C21, double **C22, double **C23,
+   double **C24, double **C25, double **C26, double **C27,
+   double **C28, double **C29, double **C30, double **C31 );
+/*
+ * Makes the vectored product of the matrix A and B,
+ * given by their quarters in A0, A1, .., B0, B1, ...,
+ * resulting in the quarters in the nrows-by-ncols matrix C.
+ * The number of columns of A and the number of rows in B is dim,
+ * but the matrix B is column major, while A and C are row major. */
 
 #endif

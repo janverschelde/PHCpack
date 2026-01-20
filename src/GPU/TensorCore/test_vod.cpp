@@ -400,5 +400,348 @@ int test_vectored_od_matmatmul ( int nrows, int ncols, int nrc )
               << "          "
               << Chilolo[i][j] << "  " << Clololo[i][j] << endl;
 
+   double **Ahihihi0 = new double*[nrows];
+   double **Ahihihi1 = new double*[nrows];
+   double **Ahihihi2 = new double*[nrows];
+   double **Ahihihi3 = new double*[nrows];
+   double **Alohihi0 = new double*[nrows];
+   double **Alohihi1 = new double*[nrows];
+   double **Alohihi2 = new double*[nrows];
+   double **Alohihi3 = new double*[nrows];
+   double **Ahilohi0 = new double*[nrows];
+   double **Ahilohi1 = new double*[nrows];
+   double **Ahilohi2 = new double*[nrows];
+   double **Ahilohi3 = new double*[nrows];
+   double **Alolohi0 = new double*[nrows];
+   double **Alolohi1 = new double*[nrows];
+   double **Alolohi2 = new double*[nrows];
+   double **Alolohi3 = new double*[nrows];
+   double **Ahihilo0 = new double*[nrows];
+   double **Ahihilo1 = new double*[nrows];
+   double **Ahihilo2 = new double*[nrows];
+   double **Ahihilo3 = new double*[nrows];
+   double **Alohilo0 = new double*[nrows];
+   double **Alohilo1 = new double*[nrows];
+   double **Alohilo2 = new double*[nrows];
+   double **Alohilo3 = new double*[nrows];
+   double **Ahilolo0 = new double*[nrows];
+   double **Ahilolo1 = new double*[nrows];
+   double **Ahilolo2 = new double*[nrows];
+   double **Ahilolo3 = new double*[nrows];
+   double **Alololo0 = new double*[nrows];
+   double **Alololo1 = new double*[nrows];
+   double **Alololo2 = new double*[nrows];
+   double **Alololo3 = new double*[nrows];
+
+   for(int i=0; i<nrows; i++)
+   {
+      Ahihihi0[i] = new double[nrc];
+      Ahihihi1[i] = new double[nrc];
+      Ahihihi2[i] = new double[nrc];
+      Ahihihi3[i] = new double[nrc];
+      Alohihi0[i] = new double[nrc];
+      Alohihi1[i] = new double[nrc];
+      Alohihi2[i] = new double[nrc];
+      Alohihi3[i] = new double[nrc];
+      Ahilohi0[i] = new double[nrc];
+      Ahilohi1[i] = new double[nrc];
+      Ahilohi2[i] = new double[nrc];
+      Ahilohi3[i] = new double[nrc];
+      Alolohi0[i] = new double[nrc];
+      Alolohi1[i] = new double[nrc];
+      Alolohi2[i] = new double[nrc];
+      Alolohi3[i] = new double[nrc];
+      Ahihilo0[i] = new double[nrc];
+      Ahihilo1[i] = new double[nrc];
+      Ahihilo2[i] = new double[nrc];
+      Ahihilo3[i] = new double[nrc];
+      Alohilo0[i] = new double[nrc];
+      Alohilo1[i] = new double[nrc];
+      Alohilo2[i] = new double[nrc];
+      Alohilo3[i] = new double[nrc];
+      Ahilolo0[i] = new double[nrc];
+      Ahilolo1[i] = new double[nrc];
+      Ahilolo2[i] = new double[nrc];
+      Ahilolo3[i] = new double[nrc];
+      Alololo0[i] = new double[nrc];
+      Alololo1[i] = new double[nrc];
+      Alololo2[i] = new double[nrc];
+      Alololo3[i] = new double[nrc];
+   }
+   quarter_od_matrix
+      (nrows, nrc,
+       Ahihihi, Alohihi, Ahilohi, Alolohi, Ahihilo, Alohilo, Ahilolo, Alololo,
+       Ahihihi0, Ahihihi1, Ahihihi2, Ahihihi3,
+       Alohihi0, Alohihi1, Alohihi2, Alohihi3,
+       Ahilohi0, Ahilohi1, Ahilohi2, Ahilohi3,
+       Alolohi0, Alolohi1, Alolohi2, Alolohi3,
+       Ahihilo0, Ahihilo1, Ahihilo2, Ahihilo3,
+       Alohilo0, Alohilo1, Alohilo2, Alohilo3,
+       Ahilolo0, Ahilolo1, Ahilolo2, Ahilolo3,
+       Alololo0, Alololo1, Alololo2, Alololo3);
+
+   double **Bhihihi0 = new double*[nrc];
+   double **Bhihihi1 = new double*[nrc];
+   double **Bhihihi2 = new double*[nrc];
+   double **Bhihihi3 = new double*[nrc];
+   double **Blohihi0 = new double*[nrc];
+   double **Blohihi1 = new double*[nrc];
+   double **Blohihi2 = new double*[nrc];
+   double **Blohihi3 = new double*[nrc];
+   double **Bhilohi0 = new double*[nrc];
+   double **Bhilohi1 = new double*[nrc];
+   double **Bhilohi2 = new double*[nrc];
+   double **Bhilohi3 = new double*[nrc];
+   double **Blolohi0 = new double*[nrc];
+   double **Blolohi1 = new double*[nrc];
+   double **Blolohi2 = new double*[nrc];
+   double **Blolohi3 = new double*[nrc];
+   double **Bhihilo0 = new double*[nrc];
+   double **Bhihilo1 = new double*[nrc];
+   double **Bhihilo2 = new double*[nrc];
+   double **Bhihilo3 = new double*[nrc];
+   double **Blohilo0 = new double*[nrc];
+   double **Blohilo1 = new double*[nrc];
+   double **Blohilo2 = new double*[nrc];
+   double **Blohilo3 = new double*[nrc];
+   double **Bhilolo0 = new double*[nrc];
+   double **Bhilolo1 = new double*[nrc];
+   double **Bhilolo2 = new double*[nrc];
+   double **Bhilolo3 = new double*[nrc];
+   double **Blololo0 = new double*[nrc];
+   double **Blololo1 = new double*[nrc];
+   double **Blololo2 = new double*[nrc];
+   double **Blololo3 = new double*[nrc];
+
+   for(int i=0; i<nrc; i++)
+   {
+      Bhihihi0[i] = new double[ncols];
+      Bhihihi1[i] = new double[ncols];
+      Bhihihi2[i] = new double[ncols];
+      Bhihihi3[i] = new double[ncols];
+      Blohihi0[i] = new double[ncols];
+      Blohihi1[i] = new double[ncols];
+      Blohihi2[i] = new double[ncols];
+      Blohihi3[i] = new double[ncols];
+      Bhilohi0[i] = new double[ncols];
+      Bhilohi1[i] = new double[ncols];
+      Bhilohi2[i] = new double[ncols];
+      Bhilohi3[i] = new double[ncols];
+      Blolohi0[i] = new double[ncols];
+      Blolohi1[i] = new double[ncols];
+      Blolohi2[i] = new double[ncols];
+      Blolohi3[i] = new double[ncols];
+      Bhihilo0[i] = new double[ncols];
+      Bhihilo1[i] = new double[ncols];
+      Bhihilo2[i] = new double[ncols];
+      Bhihilo3[i] = new double[ncols];
+      Blohilo0[i] = new double[ncols];
+      Blohilo1[i] = new double[ncols];
+      Blohilo2[i] = new double[ncols];
+      Blohilo3[i] = new double[ncols];
+      Bhilolo0[i] = new double[ncols];
+      Bhilolo1[i] = new double[ncols];
+      Bhilolo2[i] = new double[ncols];
+      Bhilolo3[i] = new double[ncols];
+      Blololo0[i] = new double[ncols];
+      Blololo1[i] = new double[ncols];
+      Blololo2[i] = new double[ncols];
+      Blololo3[i] = new double[ncols];
+   }
+   quarter_od_matrix
+      (nrc, ncols,
+       Bhihihi, Blohihi, Bhilohi, Blolohi,
+       Bhihilo, Blohilo, Bhilolo, Blololo,
+       Bhihihi0, Bhihihi1, Bhihihi2, Bhihihi3,
+       Blohihi0, Blohihi1, Blohihi2, Blohihi3,
+       Bhilohi0, Bhilohi1, Bhilohi2, Bhilohi3,
+       Blolohi0, Blolohi1, Blolohi2, Blolohi3,
+       Bhihilo0, Bhihilo1, Bhihilo2, Bhihilo3,
+       Blohilo0, Blohilo1, Blohilo2, Blohilo3,
+       Bhilolo0, Bhilolo1, Bhilolo2, Bhilolo3,
+       Blololo0, Blololo1, Blololo2, Blololo3);
+
+   double **Thihihi0 = new double*[ncols];
+   double **Thihihi1 = new double*[ncols];
+   double **Thihihi2 = new double*[ncols];
+   double **Thihihi3 = new double*[ncols];
+   double **Tlohihi0 = new double*[ncols];
+   double **Tlohihi1 = new double*[ncols];
+   double **Tlohihi2 = new double*[ncols];
+   double **Tlohihi3 = new double*[ncols];
+   double **Thilohi0 = new double*[ncols];
+   double **Thilohi1 = new double*[ncols];
+   double **Thilohi2 = new double*[ncols];
+   double **Thilohi3 = new double*[ncols];
+   double **Tlolohi0 = new double*[ncols];
+   double **Tlolohi1 = new double*[ncols];
+   double **Tlolohi2 = new double*[ncols];
+   double **Tlolohi3 = new double*[ncols];
+   double **Thihilo0 = new double*[ncols];
+   double **Thihilo1 = new double*[ncols];
+   double **Thihilo2 = new double*[ncols];
+   double **Thihilo3 = new double*[ncols];
+   double **Tlohilo0 = new double*[ncols];
+   double **Tlohilo1 = new double*[ncols];
+   double **Tlohilo2 = new double*[ncols];
+   double **Tlohilo3 = new double*[ncols];
+   double **Thilolo0 = new double*[ncols];
+   double **Thilolo1 = new double*[ncols];
+   double **Thilolo2 = new double*[ncols];
+   double **Thilolo3 = new double*[ncols];
+   double **Tlololo0 = new double*[ncols];
+   double **Tlololo1 = new double*[ncols];
+   double **Tlololo2 = new double*[ncols];
+   double **Tlololo3 = new double*[ncols];
+
+   for(int i=0; i<ncols; i++)
+   {
+      Thihihi0[i] = new double[nrc];
+      Thihihi1[i] = new double[nrc];
+      Thihihi2[i] = new double[nrc];
+      Thihihi3[i] = new double[nrc];
+      Tlohihi0[i] = new double[nrc];
+      Tlohihi1[i] = new double[nrc];
+      Tlohihi2[i] = new double[nrc];
+      Tlohihi3[i] = new double[nrc];
+      Thilohi0[i] = new double[nrc];
+      Thilohi1[i] = new double[nrc];
+      Thilohi2[i] = new double[nrc];
+      Thilohi3[i] = new double[nrc];
+      Tlolohi0[i] = new double[nrc];
+      Tlolohi1[i] = new double[nrc];
+      Tlolohi2[i] = new double[nrc];
+      Tlolohi3[i] = new double[nrc];
+      Thihilo0[i] = new double[nrc];
+      Thihilo1[i] = new double[nrc];
+      Thihilo2[i] = new double[nrc];
+      Thihilo3[i] = new double[nrc];
+      Tlohilo0[i] = new double[nrc];
+      Tlohilo1[i] = new double[nrc];
+      Tlohilo2[i] = new double[nrc];
+      Tlohilo3[i] = new double[nrc];
+      Thilolo0[i] = new double[nrc];
+      Thilolo1[i] = new double[nrc];
+      Thilolo2[i] = new double[nrc];
+      Thilolo3[i] = new double[nrc];
+      Tlololo0[i] = new double[nrc];
+      Tlololo1[i] = new double[nrc];
+      Tlololo2[i] = new double[nrc];
+      Tlololo3[i] = new double[nrc];
+   }
+   transpose_od_quarters
+      (nrc, ncols,
+       Bhihihi0, Bhihihi1, Bhihihi2, Bhihihi3,
+       Blohihi0, Blohihi1, Blohihi2, Blohihi3,
+       Bhilohi0, Bhilohi1, Bhilohi2, Bhilohi3,
+       Blolohi0, Blolohi1, Blolohi2, Blolohi3,
+       Bhihilo0, Bhihilo1, Bhihilo2, Bhihilo3,
+       Blohilo0, Blohilo1, Blohilo2, Blohilo3,
+       Bhilolo0, Bhilolo1, Bhilolo2, Bhilolo3,
+       Blololo0, Blololo1, Blololo2, Blololo3,
+       Thihihi0, Thihihi1, Thihihi2, Thihihi3,
+       Tlohihi0, Tlohihi1, Tlohihi2, Tlohihi3,
+       Thilohi0, Thilohi1, Thilohi2, Thilohi3,
+       Tlolohi0, Tlolohi1, Tlolohi2, Tlolohi3,
+       Thihilo0, Thihilo1, Thihilo2, Thihilo3,
+       Tlohilo0, Tlohilo1, Tlohilo2, Tlohilo3,
+       Thilolo0, Thilolo1, Thilolo2, Thilolo3,
+       Tlololo0, Tlololo1, Tlololo2, Tlololo3);
+
+   double **Chihihi0 = new double*[nrows];
+   double **Chihihi1 = new double*[nrows];
+   double **Chihihi2 = new double*[nrows];
+   double **Chihihi3 = new double*[nrows];
+   double **Clohihi0 = new double*[nrows];
+   double **Clohihi1 = new double*[nrows];
+   double **Clohihi2 = new double*[nrows];
+   double **Clohihi3 = new double*[nrows];
+   double **Chilohi0 = new double*[nrows];
+   double **Chilohi1 = new double*[nrows];
+   double **Chilohi2 = new double*[nrows];
+   double **Chilohi3 = new double*[nrows];
+   double **Clolohi0 = new double*[nrows];
+   double **Clolohi1 = new double*[nrows];
+   double **Clolohi2 = new double*[nrows];
+   double **Clolohi3 = new double*[nrows];
+   double **Chihilo0 = new double*[nrows];
+   double **Chihilo1 = new double*[nrows];
+   double **Chihilo2 = new double*[nrows];
+   double **Chihilo3 = new double*[nrows];
+   double **Clohilo0 = new double*[nrows];
+   double **Clohilo1 = new double*[nrows];
+   double **Clohilo2 = new double*[nrows];
+   double **Clohilo3 = new double*[nrows];
+   double **Chilolo0 = new double*[nrows];
+   double **Chilolo1 = new double*[nrows];
+   double **Chilolo2 = new double*[nrows];
+   double **Chilolo3 = new double*[nrows];
+   double **Clololo0 = new double*[nrows];
+   double **Clololo1 = new double*[nrows];
+   double **Clololo2 = new double*[nrows];
+   double **Clololo3 = new double*[nrows];
+
+   for(int i=0; i<nrows; i++)
+   {
+      Chihihi0[i] = new double[ncols];
+      Chihihi1[i] = new double[ncols];
+      Chihihi2[i] = new double[ncols];
+      Chihihi3[i] = new double[ncols];
+      Clohihi0[i] = new double[ncols];
+      Clohihi1[i] = new double[ncols];
+      Clohihi2[i] = new double[ncols];
+      Clohihi3[i] = new double[ncols];
+      Chilohi0[i] = new double[ncols];
+      Chilohi1[i] = new double[ncols];
+      Chilohi2[i] = new double[ncols];
+      Chilohi3[i] = new double[ncols];
+      Clolohi0[i] = new double[ncols];
+      Clolohi1[i] = new double[ncols];
+      Clolohi2[i] = new double[ncols];
+      Clolohi3[i] = new double[ncols];
+      Chihilo0[i] = new double[ncols];
+      Chihilo1[i] = new double[ncols];
+      Chihilo2[i] = new double[ncols];
+      Chihilo3[i] = new double[ncols];
+      Clohilo0[i] = new double[ncols];
+      Clohilo1[i] = new double[ncols];
+      Clohilo2[i] = new double[ncols];
+      Clohilo3[i] = new double[ncols];
+      Chilolo0[i] = new double[ncols];
+      Chilolo1[i] = new double[ncols];
+      Chilolo2[i] = new double[ncols];
+      Chilolo3[i] = new double[ncols];
+      Clololo0[i] = new double[ncols];
+      Clololo1[i] = new double[ncols];
+      Clololo2[i] = new double[ncols];
+      Clololo3[i] = new double[ncols];
+   }
+   vectored_od_matmatmul
+      (nrows, ncols, nrc,
+       Ahihihi0, Ahihihi1, Ahihihi2, Ahihihi3,
+       Alohihi0, Alohihi1, Alohihi2, Alohihi3,
+       Ahilohi0, Ahilohi1, Ahilohi2, Ahilohi3,
+       Alolohi0, Alolohi1, Alolohi2, Alolohi3,
+       Ahihilo0, Ahihilo1, Ahihilo2, Ahihilo3,
+       Alohilo0, Alohilo1, Alohilo2, Alohilo3,
+       Ahilolo0, Ahilolo1, Ahilolo2, Ahilolo3,
+       Alololo0, Alololo1, Alololo2, Alololo3,
+       Thihihi0, Thihihi1, Thihihi2, Thihihi3,
+       Tlohihi0, Tlohihi1, Tlohihi2, Tlohihi3,
+       Thilohi0, Thilohi1, Thilohi2, Thilohi3,
+       Tlolohi0, Tlolohi1, Tlolohi2, Tlolohi3,
+       Thihilo0, Thihilo1, Thihilo2, Thihilo3,
+       Tlohilo0, Tlohilo1, Tlohilo2, Tlohilo3,
+       Thilolo0, Thilolo1, Thilolo2, Thilolo3,
+       Tlololo0, Tlololo1, Tlololo2, Tlololo3,
+       Chihihi0, Chihihi1, Chihihi2, Chihihi3,
+       Clohihi0, Clohihi1, Clohihi2, Clohihi3,
+       Chilohi0, Chilohi1, Chilohi2, Chilohi3,
+       Clolohi0, Clolohi1, Clolohi2, Clolohi3,
+       Chihilo0, Chihilo1, Chihilo2, Chihilo3,
+       Clohilo0, Clohilo1, Clohilo2, Clohilo3,
+       Chilolo0, Chilolo1, Chilolo2, Chilolo3,
+       Clololo0, Clololo1, Clololo2, Clololo3);
+
    return fail;
 }

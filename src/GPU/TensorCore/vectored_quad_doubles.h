@@ -135,7 +135,7 @@ void vectored_qd_matmatmul
  * Makes the vectored product of the matrix A and B,
  * given by their quarters in A0, A1, .., B0, B1, ...,
  * resulting in the quarters in the nrows-by-ncols matrix C.
- * The number of columns of A and te number of rows in B is dim,
+ * The number of columns of A and the number of rows in B is dim,
  * but the matrix B is column major, while A and C are row major. */
 
 void qd_convolute_quarters
