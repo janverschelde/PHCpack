@@ -6,7 +6,10 @@ Mon 19 Jan 2026 : renamed transpose_quarters into transpose_dd_quarters
   added in vectored_double_doubles to compute convolute and stacked
   quartered matrices.  Updated makefiles.  To vectored_double_doubles,
   added function to extract the quarters out of the quartered product,
-  tested in test_vdd.cpp.
+  tested in test_vdd.cpp.  Edited test_vdd.cpp, vectores_double_doubles.h,
+  extended vectored_quad_doubles and test_vqd.cpp with convolution and
+  stacked matrices and their double indexed matrix multiplication.
+  Updated the makefiles.
 
 Sun 18 Jan 2026 : extended vectored_octo_doubles with matrix matrix
   multiplications.  Small edits in test_vdd.cpp, test_vqd.cpp, extended

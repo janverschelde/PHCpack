@@ -138,4 +138,40 @@ void vectored_qd_matmatmul
  * The number of columns of A and te number of rows in B is dim,
  * but the matrix B is column major, while A and C are row major. */
 
+void qd_convolute_quarters
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11,
+   double **A12, double **A13, double **A14, double **A15, double **cA );
+/*
+ * Given in A0, A1, ... the quarters of the parts of 
+ * an nrows-by-ncols quad double matrix, returns in cA
+ * the convoluted matrix where each element in the original matrix A
+ * is replaced by a 16-by-16 convolution matrix.
+ * Therefore, cA is a 16*nrows-by-16*ncols matrix. */
+
+void qd_stack_quarters
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11,
+   double **A12, double **A13, double **A14, double **A15, double **sA );
+/*
+ * Given in A0, A1, ... the quarters of the parts of 
+ * an nrows-by-ncols quad double matrix, returns in sA
+ * the stacked matrix where each element in the original matrix A
+ * is replaced by a 16-by-1 column.
+ * Therefore, cA is a 16*nrows-by-ncols matrix. */
+
+void extract_qd_quarters
+ ( int nrows, int ncols, double **qC,
+   double **D0, double **D1, double **D2, double **D3,
+   double **D4, double **D5, double **D6, double **D7,
+   double **D8, double **D9, double **D10, double **D11,
+   double **D12, double **D13, double **D14, double **D15 );
+/*
+ * Given is in qC the quartered project as an 8*nrows-by-ncols matrix,
+ * extracts the quarters into the nrows-by-ncols matrices D0, D1, ... */
+
 #endif

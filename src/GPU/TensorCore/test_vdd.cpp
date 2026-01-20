@@ -441,8 +441,8 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
          cout << "Chi2[" << i << "][" << j << "] : " << Chi2[i][j] << endl
               << "Dhi2[" << i << "][" << j << "] : " << Dhi2[i][j] << endl;
          error = error + abs(Chi2[i][j] - Dhi2[i][j]);
-         cout << "Chi1[" << i << "][" << j << "] : " << Chi3[i][j] << endl
-              << "Dhi1[" << i << "][" << j << "] : " << Dhi3[i][j] << endl;
+         cout << "Chi3[" << i << "][" << j << "] : " << Chi3[i][j] << endl
+              << "Dhi3[" << i << "][" << j << "] : " << Dhi3[i][j] << endl;
          error = error + abs(Chi3[i][j] - Dhi3[i][j]);
          cout << "Clo0[" << i << "][" << j << "] : " << Clo0[i][j] << endl
               << "Dlo0[" << i << "][" << j << "] : " << Dlo0[i][j] << endl;
@@ -453,8 +453,8 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
          cout << "Clo2[" << i << "][" << j << "] : " << Clo2[i][j] << endl
               << "Dlo2[" << i << "][" << j << "] : " << Dlo2[i][j] << endl;
          error = error + abs(Clo2[i][j] - Dlo2[i][j]);
-         cout << "Clo1[" << i << "][" << j << "] : " << Clo3[i][j] << endl
-              << "Dlo1[" << i << "][" << j << "] : " << Dlo3[i][j] << endl;
+         cout << "Clo3[" << i << "][" << j << "] : " << Clo3[i][j] << endl
+              << "Dlo3[" << i << "][" << j << "] : " << Dlo3[i][j] << endl;
          error = error + abs(Clo3[i][j] - Dlo3[i][j]);
       }
 

@@ -154,11 +154,13 @@ test_vdd: double_double.o double_double_functions.o \
 test_vqd: double_double.o quad_double.o \
           double_double_functions.o quad_double_functions.o \
           random_numbers.o random4_vectors.o random4_matrices.o \
-          splitting_doubles.o vectored_quad_doubles.o
+          splitting_doubles.o vectored_quad_doubles.o \
+          double_matrix_multiplications.o
 	@-echo ">>> compiling test_vqd ..."
 	g++ -c -I$(QDsrc) -I$(MPD) -I$(MAT) test_vqd.cpp -o test_vqd.o
 	@-echo ">>> linking ..."
-	g++ -o test_vqd test_vqd.o double_double.o quad_double.o \
+	g++ -o test_vqd test_vqd.o double_matrix_multiplications.o \
+               double_double.o quad_double.o \
                double_double_functions.o quad_double_functions.o \
                random_numbers.o random4_vectors.o random4_matrices.o \
                splitting_doubles.o vectored_quad_doubles.o

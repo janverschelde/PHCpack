@@ -111,7 +111,7 @@ void dd_convolute_quarters
    double **A4, double **A5, double **A6, double **A7, double **cA );
 /*
  * Given in A0, A1, ... the quarters of the parts of 
- * an nrows-by-ncols  double double matrix, returns in cA
+ * an nrows-by-ncols double double matrix, returns in cA
  * the convoluted matrix where each element in the original matrix A
  * is replaced by an 8-by-8 convolution matrix.
  * Therefore, cA is an 8*nrows-by-8*ncols matrix. */
@@ -122,7 +122,7 @@ void dd_stack_quarters
    double **A4, double **A5, double **A6, double **A7, double **sA );
 /*
  * Given in A0, A1, ... the quarters of the parts of 
- * an nrows-by-ncols  double double matrix, returns in sA
+ * an nrows-by-ncols double double matrix, returns in sA
  * the stacked matrix where each element in the original matrix A
  * is replaced by an 8-by-1 column.
  * Therefore, cA is an 8*nrows-by-ncols matrix. */

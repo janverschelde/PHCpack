@@ -282,3 +282,96 @@ void vectored_qd_matmatmul
              &C12[i][j], &C13[i][j], &C14[i][j], &C15[i][j]);
       }
 }
+
+void qd_convolute_quarters
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11,
+   double **A12, double **A13, double **A14, double **A15, double **cA )
+{
+   for(int i=0; i<16*nrows; i++)
+      for(int j=0; j<16*ncols; j++) cA[i][j] = 0.0;
+
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         for(int k=0; k<16; k++) cA[16*i+k][16*j+k] = A0[i][j];
+         for(int k=0; k<15; k++) cA[16*i+k+1][16*j+k] = A1[i][j];
+         for(int k=0; k<14; k++) cA[16*i+k+2][16*j+k] = A2[i][j];
+         for(int k=0; k<13; k++) cA[16*i+k+3][16*j+k] = A3[i][j];
+         for(int k=0; k<12; k++) cA[16*i+k+4][16*j+k] = A4[i][j];
+         for(int k=0; k<11; k++) cA[16*i+k+5][16*j+k] = A5[i][j];
+         for(int k=0; k<10; k++) cA[16*i+k+6][16*j+k] = A6[i][j];
+         for(int k=0; k<9; k++) cA[16*i+k+7][16*j+k] = A7[i][j];
+         for(int k=0; k<8; k++) cA[16*i+k+8][16*j+k] = A8[i][j];
+         for(int k=0; k<7; k++) cA[16*i+k+9][16*j+k] = A9[i][j];
+         for(int k=0; k<6; k++) cA[16*i+k+10][16*j+k] = A10[i][j];
+         for(int k=0; k<5; k++) cA[16*i+k+11][16*j+k] = A11[i][j];
+         for(int k=0; k<4; k++) cA[16*i+k+12][16*j+k] = A12[i][j];
+         for(int k=0; k<3; k++) cA[16*i+k+13][16*j+k] = A13[i][j];
+         for(int k=0; k<2; k++) cA[16*i+k+14][16*j+k] = A14[i][j];
+         cA[16*i+15][16*j] = A15[i][j];
+      }
+}
+
+void qd_stack_quarters
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11,
+   double **A12, double **A13, double **A14, double **A15, double **sA )
+{
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         sA[16*i][j] = A0[i][j];
+         sA[16*i+1][j] = A1[i][j];
+         sA[16*i+2][j] = A2[i][j];
+         sA[16*i+3][j] = A3[i][j];
+         sA[16*i+4][j] = A4[i][j];
+         sA[16*i+5][j] = A5[i][j];
+         sA[16*i+6][j] = A6[i][j];
+         sA[16*i+7][j] = A7[i][j];
+         sA[16*i+8][j] = A8[i][j];
+         sA[16*i+9][j] = A9[i][j];
+         sA[16*i+10][j] = A10[i][j];
+         sA[16*i+11][j] = A11[i][j];
+         sA[16*i+12][j] = A12[i][j];
+         sA[16*i+13][j] = A13[i][j];
+         sA[16*i+14][j] = A14[i][j];
+         sA[16*i+15][j] = A15[i][j];
+      }
+}
+
+void extract_qd_quarters
+ ( int nrows, int ncols, double **qC,
+   double **D0, double **D1, double **D2, double **D3,
+   double **D4, double **D5, double **D6, double **D7,
+   double **D8, double **D9, double **D10, double **D11,
+   double **D12, double **D13, double **D14, double **D15 )
+{
+   for(int i=0; i<16*nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         int k = i % 16;
+         int row = i/16;
+
+         if(k == 0) D0[row][j] = qC[i][j];
+         if(k == 1) D1[row][j] = qC[i][j];
+         if(k == 2) D2[row][j] = qC[i][j];
+         if(k == 3) D3[row][j] = qC[i][j];
+         if(k == 4) D4[row][j] = qC[i][j];
+         if(k == 5) D5[row][j] = qC[i][j];
+         if(k == 6) D6[row][j] = qC[i][j];
+         if(k == 7) D7[row][j] = qC[i][j];
+         if(k == 8) D8[row][j] = qC[i][j];
+         if(k == 9) D9[row][j] = qC[i][j];
+         if(k == 10) D10[row][j] = qC[i][j];
+         if(k == 11) D11[row][j] = qC[i][j];
+         if(k == 12) D12[row][j] = qC[i][j];
+         if(k == 13) D13[row][j] = qC[i][j];
+         if(k == 14) D14[row][j] = qC[i][j];
+         if(k == 15) D15[row][j] = qC[i][j];
+      }
+}
