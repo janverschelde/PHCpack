@@ -14,6 +14,9 @@ pi64bits:
 test_split:
 	make -f $(MAKEFILE) test_split
 
+test_mmm:
+	make -f $(MAKEFILE) test_mmm
+
 test_vdd:
 	make -f $(MAKEFILE) test_vdd
 

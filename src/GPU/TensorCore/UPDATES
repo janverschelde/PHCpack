@@ -1,3 +1,7 @@
+Tue 20 Jan 2026 : extended double_matrix_multiplications with single indexed
+  multiplication and conversion functions, tested by test_mmm.
+  Updated all makefiles.
+
 Mon 19 Jan 2026 : renamed transpose_quarters into transpose_dd_quarters
   in vectored_double_doubles, fixed bug in test_vdd.cpp.
   To vectored_quad_doubles, added the vectored_quad_matmatmul, tested

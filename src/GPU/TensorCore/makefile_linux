@@ -2,6 +2,7 @@ gpp=/usr/bin/g++
 gcc=/usr/bin/gcc
 QDsrc=../../Ada/Math_Lib/QD/C
 MPD=../Norms
+CNV=../Convolutions
 MAT=../Matrices
 
 smTCGemm:
@@ -109,6 +110,23 @@ double_matrix_multiplications.o:
 	@-echo ">>> compiling double matrix multiplications ..."
 	$(gpp) -O3 -c double_matrix_multiplications.cpp
 
+random_series.o:
+	@-echo ">>> compiling double random series generators ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) $(CNV)/random_series.cpp
+
+random_matrices.o:
+	@-echo ">>> compiling double random matrix generators ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) $(MAT)/random_matrices.cpp
+
+test_mmm: random_numbers.o random_series.o random_matrices.o \
+          double_matrix_multiplications.o
+	@-echo ">>> compiling test_mmm ..."
+	$(gpp) -c -I$(MAT) test_mmm.cpp -o test_mmm.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_mmm test_mmm.o \
+               random_numbers.o random_series.o random_matrices.o \
+               double_matrix_multiplications.o
+
 test_vdd: double_double.o double_double_functions.o \
           random_numbers.o random2_vectors.o random2_matrices.o \
           splitting_doubles.o vectored_double_doubles.o \
@@ -173,6 +191,7 @@ clean:
 	/bin/rm -f -r double_double.o double_double_functions.o
 	/bin/rm -f -r vectored_double_doubles.o 
 	/bin/rm -f -r double_matrix_multiplications.o
+	/bin/rm -f -r test_mmm test_mmm.o random_series.o random_matrices.o
 	/bin/rm -f -r test_vdd test_vdd.o
 	/bin/rm -f -r quad_double.o quad_double_functions.o
 	/bin/rm -f -r random4_vectors.o random4_matrices.o

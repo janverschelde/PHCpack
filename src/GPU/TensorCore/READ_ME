@@ -16,8 +16,10 @@ simpleTensorCoreGemm          : simple wgma kernel for matrix multiplication
 ------------------------------------------------------------------------------
 bits_of_pi                    : test on the bits of an approximation for pi
 splitting_doubles             : halving and quartering fractions of doubles
-double_matrix_multiplications : matrix matrix multiplications with doubles
 test_splitting_doubles        : tests on halving and quartering doubles
+double_matrix_multiplications : matrix matrix multiplications with doubles
+test_mmm                      : tests double matrix matrix multiplications
+------------------------------------------------------------------------------
 vectored_double_doubles       : defines vectored double double arithmetic
 test_vdd                      : tests vectored double double arithmetic
 vectored_quad_doubles         : defines vectored quad double arithmetic

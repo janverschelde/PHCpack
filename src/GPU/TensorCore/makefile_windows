@@ -4,6 +4,7 @@
 
 QDsrc=../../Ada/Math_Lib/QD/C
 MPD=../Norms
+CNV=../Convolutions
 MAT=../Matrices
 
 # location of the command line Microsoft Visual Studio Compiler
@@ -135,9 +136,26 @@ vectored_hexa_doubles.o:
 	@-echo ">>> compiling vectored hexa doubles ..."
 	g++ -O3 -c -I$(QDsrc) -I$(MPD) vectored_hexa_doubles.cpp
 
+random_series.o:
+	@-echo ">>> compiling double random series generators ..."
+	g++ -O3 -c -I$(MPD) -I$(CNV) $(CNV)/random_series.cpp
+
+random_matrices.o:
+	@-echo ">>> compiling double random matrix generators ..."
+	g++ -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) $(MAT)/random_matrices.cpp
+
 double_matrix_multiplications.o:
 	@-echo ">>> compiling double matrix multiplications ..."
 	g++ -O3 -c double_matrix_multiplications.cpp
+
+test_mmm: random_numbers.o random_series.o random_matrices.o \
+          double_matrix_multiplications.o
+	@-echo ">>> compiling test_mmm ..."
+	g++ -c -I$(MAT) test_mmm.cpp -o test_mmm.o
+	@-echo ">>> linking ..."
+	g++ -o test_mmm test_mmm.o \
+               random_numbers.o random_series.o random_matrices.o \
+               double_matrix_multiplications.o
 
 test_vdd: double_double.o double_double_functions.o \
           random_numbers.o random2_vectors.o random2_matrices.o \
@@ -204,6 +222,7 @@ clean:
 	del double_double.o double_double_functions.o
 	del vectored_double_doubles.o test_vdd.o
 	del double_matrix_multiplications.o
+	del test_mmm.exe test_mmm.o random_series.o random_matrices.o
 	del test_vdd.exe
 	del quad_double.o quad_double_functions.o
 	del random4_vectors.o random4_matrices.o
