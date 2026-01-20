@@ -1,3 +1,5 @@
+Tue 20 Jan 2026 : modified random_numbers.cpp for compiler warning.
+
 Thu 15 Jan 2026 : started development of random16_vectors,
   as needed for vectored hexa double arithmetic.
 

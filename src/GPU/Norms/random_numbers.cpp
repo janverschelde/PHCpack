@@ -5,7 +5,7 @@
 #include <cmath>
 #include "random_numbers.h"
 
-#define M_PI 3.141592653589793
+#define MdblPI 3.14159265358979323846
 
 double random_double ( void )
 {
@@ -20,5 +20,5 @@ double random_angle ( void )
 {
    double r = random_double();
 
-   return (M_PI*r);
+   return (MdblPI*r);
 }
