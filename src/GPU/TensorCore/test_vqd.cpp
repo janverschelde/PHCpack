@@ -655,8 +655,79 @@ int test_vectored_qd_matmatmul ( int nrows, int ncols, int nrc )
    cout << scientific << setprecision(3)
         << "sum of all errors : " << error << endl; 
 
-   fail = (error > 1.0E-28);
+   fail = (error > 1.0E-58);
 
+   if(fail == 1) return fail; // no point to continue ...
+
+   double *cAs = new double[16*nrows*16*nrc]; // single indexed cA
+   double2single_row_major(16*nrows, 16*nrc, cA, cAs);
+
+   cout << scientific << setprecision(16);
+
+   error = 0.0;
+
+   cout << "the single indexed convoluted quartered matrix A :" << endl;
+   for(int i=0, idx=0; i<16*nrows; i++)
+      for(int j=0; j<16*nrc; j++)
+      {
+         cout << " cA[" << i << "][" << j << "] : " << cA[i][j] << endl
+              << "cAs[" << idx << "]    : " << cAs[idx] << endl;
+         error = error + abs(cA[i][j] - cAs[idx++]);
+      }
+
+   cout << scientific << setprecision(3)
+        << "sum of errors : " << error << endl;
+
+   fail = (error > 1.0E-58);
+
+   if(fail == 1) return fail; // no point to continue ...
+
+   double **sBT = new double*[ncols];
+   for(int i=0; i<ncols; i++) sBT[i] = new double[16*nrc];
+   transpose_rows_columns(16*nrc, ncols, sB, sBT);
+
+   cout << scientific << setprecision(16);
+
+   cout << "Transpose of the stacked matrix sB :" << endl;
+   for(int i=0; i<ncols; i++)
+      for(int j=0; j<16*nrc; j++)
+         cout << "sBT[" << i << "][" << j << "] : " << sBT[i][j] << endl;
+
+   cout << "converting into single indexed matrix ..." << endl;
+  
+   double *sBs = new double[16*ncols*nrc];
+   double2single_column_major(16*nrc, ncols, sBT, sBs);
+
+   double *qCs = new double[16*nrows*ncols];
+
+   cout << "running a single indexed matrix matrix multiplication ..." << endl;
+
+   single_indexed_matrix_multiplication
+      (16*nrows, ncols, 16*nrc, cAs, sBs, qCs);
+
+   double **qC2 = new double*[16*nrows];
+   for(int i=0; i<16*nrows; i++) qC2[i] = new double[ncols];
+
+   cout << "converting product to double indexed matrix ..." << endl;
+
+   single2double_row_major(16*nrows, ncols, qCs, qC2);
+
+   cout << scientific << setprecision(16);
+
+   error = 0.0;
+
+   for(int i=0; i<16*nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         cout << " qC[" << i << "][" << j << "] : " << qC[i][j] << endl
+              << "qC2[" << i << "][" << j << "] : " << qC2[i][j] << endl;
+         error = error + abs(qC[i][j] - qC2[i][j]);
+      }
+
+   cout << scientific << setprecision(3)
+        << "sum of all errors : " << error << endl; 
+
+   fail = (error > 1.0E-58);
 
    return fail;
 }

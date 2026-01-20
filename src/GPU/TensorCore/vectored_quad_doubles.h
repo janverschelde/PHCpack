@@ -171,7 +171,7 @@ void extract_qd_quarters
    double **D8, double **D9, double **D10, double **D11,
    double **D12, double **D13, double **D14, double **D15 );
 /*
- * Given is in qC the quartered project as an 8*nrows-by-ncols matrix,
+ * Given is in qC the quartered project as a 16*nrows-by-ncols matrix,
  * extracts the quarters into the nrows-by-ncols matrices D0, D1, ... */
 
 #endif
