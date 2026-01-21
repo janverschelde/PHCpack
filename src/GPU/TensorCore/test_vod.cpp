@@ -10,6 +10,7 @@
 #include "random8_matrices.h"
 #include "octo_double_functions.h"
 #include "vectored_octo_doubles.h"
+#include "double_matrix_multiplications.h"
 
 int test_quarter_octo_double ( void );
 /*
@@ -885,6 +886,342 @@ int test_vectored_od_matmatmul ( int nrows, int ncols, int nrc )
    for(int i=0; i<32*nrc; i++)
       for(int j=0; j<ncols; j++)
          cout << "sB[" << i << "][" << j << "] : " << sB[i][j] << endl;
+
+   double **qC = new double*[32*nrows];
+   for(int i=0; i<32*nrows; i++) qC[i] = new double[ncols];
+
+   double_indexed_matrix_multiplication(32*nrows, ncols, 32*nrc, cA, sB, qC);
+
+   cout << "the quartered product C :" << endl;
+   for(int i=0; i<32*nrows; i++)
+      for(int j=0; j<ncols; j++)
+         cout << "qC[" << i << "][" << j << "] : " << qC[i][j] << endl;
+
+   double **Dhihihi0 = new double*[nrows];
+   double **Dhihihi1 = new double*[nrows];
+   double **Dhihihi2 = new double*[nrows];
+   double **Dhihihi3 = new double*[nrows];
+   double **Dlohihi0 = new double*[nrows];
+   double **Dlohihi1 = new double*[nrows];
+   double **Dlohihi2 = new double*[nrows];
+   double **Dlohihi3 = new double*[nrows];
+   double **Dhilohi0 = new double*[nrows];
+   double **Dhilohi1 = new double*[nrows];
+   double **Dhilohi2 = new double*[nrows];
+   double **Dhilohi3 = new double*[nrows];
+   double **Dlolohi0 = new double*[nrows];
+   double **Dlolohi1 = new double*[nrows];
+   double **Dlolohi2 = new double*[nrows];
+   double **Dlolohi3 = new double*[nrows];
+   double **Dhihilo0 = new double*[nrows];
+   double **Dhihilo1 = new double*[nrows];
+   double **Dhihilo2 = new double*[nrows];
+   double **Dhihilo3 = new double*[nrows];
+   double **Dlohilo0 = new double*[nrows];
+   double **Dlohilo1 = new double*[nrows];
+   double **Dlohilo2 = new double*[nrows];
+   double **Dlohilo3 = new double*[nrows];
+   double **Dhilolo0 = new double*[nrows];
+   double **Dhilolo1 = new double*[nrows];
+   double **Dhilolo2 = new double*[nrows];
+   double **Dhilolo3 = new double*[nrows];
+   double **Dlololo0 = new double*[nrows];
+   double **Dlololo1 = new double*[nrows];
+   double **Dlololo2 = new double*[nrows];
+   double **Dlololo3 = new double*[nrows];
+
+   for(int i=0; i<nrows; i++)
+   {
+      Dhihihi0[i] = new double[ncols];
+      Dhihihi1[i] = new double[ncols];
+      Dhihihi2[i] = new double[ncols];
+      Dhihihi3[i] = new double[ncols];
+      Dlohihi0[i] = new double[ncols];
+      Dlohihi1[i] = new double[ncols];
+      Dlohihi2[i] = new double[ncols];
+      Dlohihi3[i] = new double[ncols];
+      Dhilohi0[i] = new double[ncols];
+      Dhilohi1[i] = new double[ncols];
+      Dhilohi2[i] = new double[ncols];
+      Dhilohi3[i] = new double[ncols];
+      Dlolohi0[i] = new double[ncols];
+      Dlolohi1[i] = new double[ncols];
+      Dlolohi2[i] = new double[ncols];
+      Dlolohi3[i] = new double[ncols];
+      Dhihilo0[i] = new double[ncols];
+      Dhihilo1[i] = new double[ncols];
+      Dhihilo2[i] = new double[ncols];
+      Dhihilo3[i] = new double[ncols];
+      Dlohilo0[i] = new double[ncols];
+      Dlohilo1[i] = new double[ncols];
+      Dlohilo2[i] = new double[ncols];
+      Dlohilo3[i] = new double[ncols];
+      Dhilolo0[i] = new double[ncols];
+      Dhilolo1[i] = new double[ncols];
+      Dhilolo2[i] = new double[ncols];
+      Dhilolo3[i] = new double[ncols];
+      Dlololo0[i] = new double[ncols];
+      Dlololo1[i] = new double[ncols];
+      Dlololo2[i] = new double[ncols];
+      Dlololo3[i] = new double[ncols];
+   }
+   extract_od_quarters
+      (nrows, ncols, qC,
+       Dhihihi0, Dhihihi1, Dhihihi2, Dhihihi3,
+       Dlohihi0, Dlohihi1, Dlohihi2, Dlohihi3,
+       Dhilohi0, Dhilohi1, Dhilohi2, Dhilohi3,
+       Dlolohi0, Dlolohi1, Dlolohi2, Dlolohi3,
+       Dhihilo0, Dhihilo1, Dhihilo2, Dhihilo3,
+       Dlohilo0, Dlohilo1, Dlohilo2, Dlohilo3,
+       Dhilolo0, Dhilolo1, Dhilolo2, Dhilolo3,
+       Dlololo0, Dlololo1, Dlololo2, Dlololo3);
+
+   double error = 0.0;
+
+   cout << "comparing the extracted quarters ..." << endl;
+
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         cout << "Chihihi0[" << i << "][" << j << "] : "
+              << Chihihi0[i][j] << endl
+              << "Dhihihi0[" << i << "][" << j << "] : "
+              << Dhihihi0[i][j] << endl;
+         error = error + abs(Chihihi0[i][j] - Dhihihi0[i][j]);
+         cout << "Chihihi1[" << i << "][" << j << "] : "
+              << Chihihi1[i][j] << endl
+              << "Dhihihi1[" << i << "][" << j << "] : "
+              << Dhihihi1[i][j] << endl;
+         error = error + abs(Chihihi1[i][j] - Dhihihi1[i][j]);
+         cout << "Chihihi2[" << i << "][" << j << "] : "
+              << Chihihi2[i][j] << endl
+              << "Dhihihi2[" << i << "][" << j << "] : "
+              << Dhihihi2[i][j] << endl;
+         error = error + abs(Chihihi2[i][j] - Dhihihi2[i][j]);
+         cout << "Chihihi3[" << i << "][" << j << "] : "
+              << Chihihi3[i][j] << endl
+              << "Dhihihi3[" << i << "][" << j << "] : "
+              << Dhihihi3[i][j] << endl;
+         error = error + abs(Chihihi3[i][j] - Dhihihi3[i][j]);
+         cout << "Clohihi0[" << i << "][" << j << "] : "
+              << Clohihi0[i][j] << endl
+              << "Dlohihi0[" << i << "][" << j << "] : "
+              << Dlohihi0[i][j] << endl;
+         error = error + abs(Clohihi0[i][j] - Dlohihi0[i][j]);
+         cout << "Clohihi1[" << i << "][" << j << "] : "
+              << Clohihi1[i][j] << endl
+              << "Dlohihi1[" << i << "][" << j << "] : "
+              << Dlohihi1[i][j] << endl;
+         error = error + abs(Clohihi1[i][j] - Dlohihi1[i][j]);
+         cout << "Clohihi2[" << i << "][" << j << "] : "
+              << Clohihi2[i][j] << endl
+              << "Dlohihi2[" << i << "][" << j << "] : "
+              << Dlohihi2[i][j] << endl;
+         error = error + abs(Clohihi2[i][j] - Dlohihi2[i][j]);
+         cout << "Clohihi3[" << i << "][" << j << "] : "
+              << Clohihi3[i][j] << endl
+              << "Dlohihi3[" << i << "][" << j << "] : "
+              << Dlohihi3[i][j] << endl;
+         error = error + abs(Clohihi3[i][j] - Dlohihi3[i][j]);
+         cout << "Chilohi0[" << i << "][" << j << "] : "
+              << Chilohi0[i][j] << endl
+              << "Dhilohi0[" << i << "][" << j << "] : "
+              << Dhilohi0[i][j] << endl;
+         error = error + abs(Chilohi0[i][j] - Dhilohi0[i][j]);
+         cout << "Chilohi1[" << i << "][" << j << "] : "
+              << Chilohi1[i][j] << endl
+              << "Dhilohi1[" << i << "][" << j << "] : "
+              << Dhilohi1[i][j] << endl;
+         error = error + abs(Chilohi1[i][j] - Dhilohi1[i][j]);
+         cout << "Chilohi2[" << i << "][" << j << "] : "
+              << Chilohi2[i][j] << endl
+              << "Dhilohi2[" << i << "][" << j << "] : "
+              << Dhilohi2[i][j] << endl;
+         error = error + abs(Chilohi2[i][j] - Dhilohi2[i][j]);
+         cout << "Chilohi1[" << i << "][" << j << "] : "
+              << Chilohi3[i][j] << endl
+              << "Dhilohi1[" << i << "][" << j << "] : "
+              << Dhilohi3[i][j] << endl;
+         error = error + abs(Chilohi3[i][j] - Dhilohi3[i][j]);
+         cout << "Clolohi0[" << i << "][" << j << "] : "
+              << Clolohi0[i][j] << endl
+              << "Dlolohi0[" << i << "][" << j << "] : "
+              << Dlolohi0[i][j] << endl;
+         error = error + abs(Clolohi0[i][j] - Dlolohi0[i][j]);
+         cout << "Clolohi1[" << i << "][" << j << "] : "
+              << Clolohi1[i][j] << endl
+              << "Dlolohi1[" << i << "][" << j << "] : "
+              << Dlolohi1[i][j] << endl;
+         error = error + abs(Clolohi1[i][j] - Dlolohi1[i][j]);
+         cout << "Clolohi2[" << i << "][" << j << "] : "
+              << Clolohi2[i][j] << endl
+              << "Dlolohi2[" << i << "][" << j << "] : "
+              << Dlolohi2[i][j] << endl;
+         error = error + abs(Clolohi2[i][j] - Dlolohi2[i][j]);
+         cout << "Clolohi3[" << i << "][" << j << "] : "
+              << Clolohi3[i][j] << endl
+              << "Dlolohi3[" << i << "][" << j << "] : "
+              << Dlolohi3[i][j] << endl;
+         error = error + abs(Clolohi3[i][j] - Dlolohi3[i][j]);
+
+         cout << "Chihilo0[" << i << "][" << j << "] : "
+              << Chihilo0[i][j] << endl
+              << "Dhihilo0[" << i << "][" << j << "] : "
+              << Dhihilo0[i][j] << endl;
+         error = error + abs(Chihilo0[i][j] - Dhihilo0[i][j]);
+         cout << "Chihilo1[" << i << "][" << j << "] : "
+              << Chihilo1[i][j] << endl
+              << "Dhihilo1[" << i << "][" << j << "] : "
+              << Dhihilo1[i][j] << endl;
+         error = error + abs(Chihilo1[i][j] - Dhihilo1[i][j]);
+         cout << "Chihilo2[" << i << "][" << j << "] : "
+              << Chihilo2[i][j] << endl
+              << "Dhihilo2[" << i << "][" << j << "] : "
+              << Dhihilo2[i][j] << endl;
+         error = error + abs(Chihilo2[i][j] - Dhihilo2[i][j]);
+         cout << "Chihilo3[" << i << "][" << j << "] : "
+              << Chihilo3[i][j] << endl
+              << "Dhihilo3[" << i << "][" << j << "] : "
+              << Dhihilo3[i][j] << endl;
+         error = error + abs(Chihilo3[i][j] - Dhihilo3[i][j]);
+         cout << "Clohilo0[" << i << "][" << j << "] : "
+              << Clohilo0[i][j] << endl
+              << "Dlohilo0[" << i << "][" << j << "] : "
+              << Dlohilo0[i][j] << endl;
+         error = error + abs(Clohilo0[i][j] - Dlohilo0[i][j]);
+         cout << "Clohilo1[" << i << "][" << j << "] : "
+              << Clohilo1[i][j] << endl
+              << "Dlohilo1[" << i << "][" << j << "] : "
+              << Dlohilo1[i][j] << endl;
+         error = error + abs(Clohilo1[i][j] - Dlohilo1[i][j]);
+         cout << "Clohilo2[" << i << "][" << j << "] : "
+              << Clohilo2[i][j] << endl
+              << "Dlohilo2[" << i << "][" << j << "] : "
+              << Dlohilo2[i][j] << endl;
+         error = error + abs(Clohilo2[i][j] - Dlohilo2[i][j]);
+         cout << "Clohilo3[" << i << "][" << j << "] : "
+              << Clohilo3[i][j] << endl
+              << "Dlohilo3[" << i << "][" << j << "] : "
+              << Dlohilo3[i][j] << endl;
+         error = error + abs(Clohilo3[i][j] - Dlohilo3[i][j]);
+         cout << "Chilolo0[" << i << "][" << j << "] : "
+              << Chilolo0[i][j] << endl
+              << "Dhilolo0[" << i << "][" << j << "] : "
+              << Dhilolo0[i][j] << endl;
+         error = error + abs(Chilolo0[i][j] - Dhilolo0[i][j]);
+         cout << "Chilolo1[" << i << "][" << j << "] : "
+              << Chilolo1[i][j] << endl
+              << "Dhilolo1[" << i << "][" << j << "] : "
+              << Dhilolo1[i][j] << endl;
+         error = error + abs(Chilolo1[i][j] - Dhilolo1[i][j]);
+         cout << "Chilolo2[" << i << "][" << j << "] : "
+              << Chilolo2[i][j] << endl
+              << "Dhilolo2[" << i << "][" << j << "] : "
+              << Dhilolo2[i][j] << endl;
+         error = error + abs(Chilolo2[i][j] - Dhilolo2[i][j]);
+         cout << "Chilolo1[" << i << "][" << j << "] : "
+              << Chilolo3[i][j] << endl
+              << "Dhilolo1[" << i << "][" << j << "] : "
+              << Dhilolo3[i][j] << endl;
+         error = error + abs(Chilolo3[i][j] - Dhilolo3[i][j]);
+         cout << "Clololo0[" << i << "][" << j << "] : "
+              << Clololo0[i][j] << endl
+              << "Dlololo0[" << i << "][" << j << "] : "
+              << Dlololo0[i][j] << endl;
+         error = error + abs(Clololo0[i][j] - Dlololo0[i][j]);
+         cout << "Clololo1[" << i << "][" << j << "] : "
+              << Clololo1[i][j] << endl
+              << "Dlololo1[" << i << "][" << j << "] : "
+              << Dlololo1[i][j] << endl;
+         error = error + abs(Clololo1[i][j] - Dlololo1[i][j]);
+         cout << "Clololo2[" << i << "][" << j << "] : "
+              << Clololo2[i][j] << endl
+              << "Dlololo2[" << i << "][" << j << "] : "
+              << Dlololo2[i][j] << endl;
+         error = error + abs(Clololo2[i][j] - Dlololo2[i][j]);
+         cout << "Clololo3[" << i << "][" << j << "] : "
+              << Clololo3[i][j] << endl
+              << "Dlololo3[" << i << "][" << j << "] : "
+              << Dlololo3[i][j] << endl;
+         error = error + abs(Clololo3[i][j] - Dlololo3[i][j]);
+      }
+
+   cout << scientific << setprecision(3)
+        << "sum of all errors : " << error << endl; 
+
+   fail = (error > 1.0E-120);
+
+   if(fail == 1) return fail; // no point to continue ...
+
+   double *cAs = new double[32*nrows*32*nrc]; // single indexed cA
+   double2single_row_major(32*nrows, 32*nrc, cA, cAs);
+
+   cout << scientific << setprecision(16);
+
+   error = 0.0;
+
+   cout << "the single indexed convoluted quartered matrix A :" << endl;
+   for(int i=0, idx=0; i<32*nrows; i++)
+      for(int j=0; j<32*nrc; j++)
+      {
+         cout << " cA[" << i << "][" << j << "] : " << cA[i][j] << endl
+              << "cAs[" << idx << "]    : " << cAs[idx] << endl;
+         error = error + abs(cA[i][j] - cAs[idx++]);
+      }
+
+   cout << scientific << setprecision(3)
+        << "sum of errors : " << error << endl;
+
+   fail = (error > 1.0E-120);
+
+   if(fail == 1) return fail; // no point to continue ...
+
+   double **sBT = new double*[ncols];
+   for(int i=0; i<ncols; i++) sBT[i] = new double[32*nrc];
+   transpose_rows_columns(32*nrc, ncols, sB, sBT);
+
+   cout << scientific << setprecision(16);
+
+   cout << "Transpose of the stacked matrix sB :" << endl;
+   for(int i=0; i<ncols; i++)
+      for(int j=0; j<32*nrc; j++)
+         cout << "sBT[" << i << "][" << j << "] : " << sBT[i][j] << endl;
+
+   cout << "converting into single indexed matrix ..." << endl;
+  
+   double *sBs = new double[32*ncols*nrc];
+   double2single_column_major(32*nrc, ncols, sBT, sBs);
+
+   double *qCs = new double[32*nrows*ncols];
+
+   cout << "running a single indexed matrix matrix multiplication ..." << endl;
+
+   single_indexed_matrix_multiplication
+      (32*nrows, ncols, 32*nrc, cAs, sBs, qCs);
+
+   double **qC2 = new double*[32*nrows];
+   for(int i=0; i<32*nrows; i++) qC2[i] = new double[ncols];
+
+   cout << "converting product to double indexed matrix ..." << endl;
+
+   single2double_row_major(32*nrows, ncols, qCs, qC2);
+
+   cout << scientific << setprecision(16);
+
+   error = 0.0;
+
+   for(int i=0; i<32*nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         cout << " qC[" << i << "][" << j << "] : " << qC[i][j] << endl
+              << "qC2[" << i << "][" << j << "] : " << qC2[i][j] << endl;
+         error = error + abs(qC[i][j] - qC2[i][j]);
+      }
+
+   cout << scientific << setprecision(3)
+        << "sum of all errors : " << error << endl; 
+
+   fail = (error > 1.0E-120);
 
    return fail;
 }

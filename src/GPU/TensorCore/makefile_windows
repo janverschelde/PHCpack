@@ -4,7 +4,7 @@
 
 QDsrc=../../Ada/Math_Lib/QD/C
 MPD=../Norms
-CNV=../Convolutions
+CNV=../Norms
 MAT=../Matrices
 
 # location of the command line Microsoft Visual Studio Compiler
@@ -142,7 +142,7 @@ random_series.o:
 
 random_matrices.o:
 	@-echo ">>> compiling double random matrix generators ..."
-	g++ -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) $(MAT)/random_matrices.cpp
+	g++ -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) $(MAH)/random_matrices.cpp
 
 double_matrix_multiplications.o:
 	@-echo ">>> compiling double matrix multiplications ..."
@@ -151,9 +151,9 @@ double_matrix_multiplications.o:
 test_mmm: random_numbers.o random_series.o random_matrices.o \
           double_matrix_multiplications.o
 	@-echo ">>> compiling test_mmm ..."
-	g++ -c -I$(MAT) test_mmm.cpp -o test_mmm.o
+	$(gpp) -c -I$(MAT) test_mmm.cpp -o test_mmm.o
 	@-echo ">>> linking ..."
-	g++ -o test_mmm test_mmm.o \
+	$(gpp) -o test_mmm test_mmm.o \
                random_numbers.o random_series.o random_matrices.o \
                double_matrix_multiplications.o
 
@@ -185,7 +185,7 @@ test_vqd: double_double.o quad_double.o \
 
 test_vod: double_double.o quad_double.o octo_double.o \
           double_double_functions.o quad_double_functions.o \
-          octo_double_functions.o \
+          octo_double_functions.o double_matrix_multiplications.o \
           random_numbers.o random8_vectors.o random8_matrices.o \
           splitting_doubles.o vectored_octo_doubles.o
 	@-echo ">>> compiling test_vod ..."
@@ -194,7 +194,7 @@ test_vod: double_double.o quad_double.o octo_double.o \
 	g++ -o test_vod test_vod.o \
                double_double.o quad_double.o octo_double.o \
                double_double_functions.o quad_double_functions.o \
-               octo_double_functions.o \
+               octo_double_functions.o double_matrix_multiplications.o \
                random_numbers.o random8_vectors.o random8_matrices.o \
                splitting_doubles.o vectored_octo_doubles.o
 

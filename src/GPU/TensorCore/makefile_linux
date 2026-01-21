@@ -156,7 +156,7 @@ test_vqd: double_double.o quad_double.o \
 
 test_vod: double_double.o quad_double.o octo_double.o \
           double_double_functions.o quad_double_functions.o \
-          octo_double_functions.o \
+          octo_double_functions.o double_matrix_multiplications.o \
           random_numbers.o random8_vectors.o random8_matrices.o \
           splitting_doubles.o vectored_octo_doubles.o
 	@-echo ">>> compiling test_vod ..."
@@ -165,7 +165,7 @@ test_vod: double_double.o quad_double.o octo_double.o \
 	$(gpp) -o test_vod test_vod.o \
                double_double.o quad_double.o octo_double.o \
                double_double_functions.o quad_double_functions.o \
-               octo_double_functions.o \
+               octo_double_functions.o double_matrix_multiplications.o \
                random_numbers.o random8_vectors.o random8_matrices.o \
                splitting_doubles.o vectored_octo_doubles.o
 

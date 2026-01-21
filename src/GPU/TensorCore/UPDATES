@@ -1,3 +1,5 @@
+Wed 21 Jan 2026 : completed test_vod.cpp, updated makefiles.
+
 Tue 20 Jan 2026 : extended double_matrix_multiplications with single indexed
   multiplication and conversion functions, tested by test_mmm.
   Updated all makefiles.  Extended test_vdd with single indexed mmm.
