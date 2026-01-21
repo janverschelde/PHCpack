@@ -77,6 +77,22 @@ void to_octo_double
  * (xhihihi, xlohihi, xhilohi, xlolohi, xhihilo, xlohilo, xhilolo, xlololo) 
  * the parts of an octo double, using octo double arithmetic. */
 
+void to_octo_double_matrix
+ ( int nrows, int ncols,
+   double **Ahihihi0, double **Ahihihi1, double **Ahihihi2, double **Ahihihi3,
+   double **Alohihi0, double **Alohihi1, double **Alohihi2, double **Alohihi3,
+   double **Ahilohi0, double **Ahilohi1, double **Ahilohi2, double **Ahilohi3,
+   double **Alolohi0, double **Alolohi1, double **Alolohi2, double **Alolohi3,
+   double **Ahihilo0, double **Ahihilo1, double **Ahihilo2, double **Ahihilo3,
+   double **Alohilo0, double **Alohilo1, double **Alohilo2, double **Alohilo3,
+   double **Ahilolo0, double **Ahilolo1, double **Ahilolo2, double **Ahilolo3,
+   double **Alololo0, double **Alololo1, double **Alololo2, double **Alololo3,
+   double **Ahihihi, double **Alohihi, double **Ahilohi, double **Alolohi,
+   double **Ahihilo, double **Alohilo, double **Ahilolo, double **Alololo );
+/*
+ * Given the quarters of an nrows-by-ncols matrix,
+ * returns the parts of the octo doubles in the matix. */
+
 void od_write_vector
  ( int dim,
    double *xhihihi, double *xlohihi, double *xhilohi, double *xlolohi,
@@ -202,5 +218,53 @@ void vectored_od_matmatmul
  * resulting in the quarters in the nrows-by-ncols matrix C.
  * The number of columns of A and the number of rows in B is dim,
  * but the matrix B is column major, while A and C are row major. */
+
+void od_convolute_quarters
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11,
+   double **A12, double **A13, double **A14, double **A15,
+   double **A16, double **A17, double **A18, double **A19,
+   double **A20, double **A21, double **A22, double **A23,
+   double **A24, double **A25, double **A26, double **A27,
+   double **A28, double **A29, double **A30, double **A31, double **cA );
+/*
+ * Given in A0, A1, ... the quarters of the parts of 
+ * an nrows-by-ncols octo double matrix, returns in cA
+ * the convoluted matrix where each element in the original matrix A
+ * is replaced by a 32-by-32 convolution matrix.
+ * Therefore, cA is a 32*nrows-by-32*ncols matrix. */
+
+void od_stack_quarters
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11,
+   double **A12, double **A13, double **A14, double **A15,
+   double **A16, double **A17, double **A18, double **A19,
+   double **A20, double **A21, double **A22, double **A23,
+   double **A24, double **A25, double **A26, double **A27,
+   double **A28, double **A29, double **A30, double **A31, double **sA );
+/*
+ * Given in A0, A1, ... the quarters of the parts of 
+ * an nrows-by-ncols octo double matrix, returns in sA
+ * the stacked matrix where each element in the original matrix A
+ * is replaced by a 32-by-1 column.
+ * Therefore, cA is a 32*nrows-by-ncols matrix. */
+
+void extract_od_quarters
+ ( int nrows, int ncols, double **qC,
+   double **D0, double **D1, double **D2, double **D3,
+   double **D4, double **D5, double **D6, double **D7,
+   double **D8, double **D9, double **D10, double **D11,
+   double **D12, double **D13, double **D14, double **D15,
+   double **D16, double **D17, double **D18, double **D19,
+   double **D20, double **D21, double **D22, double **D23,
+   double **D24, double **D25, double **D26, double **D27,
+   double **D28, double **D29, double **D30, double **D31 );
+/*
+ * Given is in qC the quartered product as a 32*nrows-by-ncols matrix,
+ * extracts the quarters into the nrows-by-ncols matrices D0, D1, ... */
 
 #endif

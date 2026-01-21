@@ -63,6 +63,11 @@ int main ( void )
 
    fail = test_vectored_od_matmatmul(m, n, k);
 
+   if(fail == 1)
+      cout << "\nTest on vectored octo double matmatmul failed?!!!\n\n";
+   else
+      cout << "\nTest on vectored octo double matmatmul succeeded.\n\n";
+
    return 0;
 }
 
@@ -331,6 +336,18 @@ int test_vectored_od_matmatmul ( int nrows, int ncols, int nrc )
    random_dbl8_matrix
       (nrows, nrc,
        Ahihihi, Alohihi, Ahilohi, Alolohi,Ahihilo, Alohilo, Ahilolo, Alololo);
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<nrc; j++)
+      {
+         if(Ahihihi[i][j] < 0.0) Ahihihi[i][j] = -Ahihihi[i][j];
+         if(Alohihi[i][j] < 0.0) Alohihi[i][j] = -Alohihi[i][j];
+         if(Ahilohi[i][j] < 0.0) Ahilohi[i][j] = -Ahilohi[i][j];
+         if(Alolohi[i][j] < 0.0) Alolohi[i][j] = -Alolohi[i][j];
+         if(Ahihilo[i][j] < 0.0) Ahihilo[i][j] = -Ahihilo[i][j];
+         if(Alohilo[i][j] < 0.0) Alohilo[i][j] = -Alohilo[i][j];
+         if(Ahilolo[i][j] < 0.0) Ahilolo[i][j] = -Ahilolo[i][j];
+         if(Alololo[i][j] < 0.0) Alololo[i][j] = -Alololo[i][j];
+      }
 
    cout << scientific << setprecision(16);
 
@@ -369,6 +386,19 @@ int test_vectored_od_matmatmul ( int nrows, int ncols, int nrc )
    random_dbl8_matrix
       (nrc, ncols,
        Bhihihi, Blohihi, Bhilohi, Blolohi, Bhihilo, Blohilo, Bhilolo, Blololo);
+
+   for(int i=0; i<nrc; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         if(Bhihihi[i][j] < 0.0) Bhihihi[i][j] = -Bhihihi[i][j];
+         if(Blohihi[i][j] < 0.0) Blohihi[i][j] = -Blohihi[i][j];
+         if(Bhilohi[i][j] < 0.0) Bhilohi[i][j] = -Bhilohi[i][j];
+         if(Blolohi[i][j] < 0.0) Blolohi[i][j] = -Blolohi[i][j];
+         if(Bhihilo[i][j] < 0.0) Bhihilo[i][j] = -Bhihilo[i][j];
+         if(Blohilo[i][j] < 0.0) Blohilo[i][j] = -Blohilo[i][j];
+         if(Bhilolo[i][j] < 0.0) Bhilolo[i][j] = -Bhilolo[i][j];
+         if(Blololo[i][j] < 0.0) Blololo[i][j] = -Blololo[i][j];
+      }
 
    cout << "A random " << nrc << "-by-" << ncols << " matrix B :" << endl;
    for(int i=0; i<nrc; i++)
@@ -742,6 +772,119 @@ int test_vectored_od_matmatmul ( int nrows, int ncols, int nrc )
        Clohilo0, Clohilo1, Clohilo2, Clohilo3,
        Chilolo0, Chilolo1, Chilolo2, Chilolo3,
        Clololo0, Clololo1, Clololo2, Clololo3);
+
+   double **Vhihihi = new double*[nrows];
+   double **Vlohihi = new double*[nrows];
+   double **Vhilohi = new double*[nrows];
+   double **Vlolohi = new double*[nrows];
+   double **Vhihilo = new double*[nrows];
+   double **Vlohilo = new double*[nrows];
+   double **Vhilolo = new double*[nrows];
+   double **Vlololo = new double*[nrows];
+
+   for(int i=0; i<nrows; i++)
+   {
+      Vhihihi[i] = new double[ncols];
+      Vlohihi[i] = new double[ncols];
+      Vhilohi[i] = new double[ncols];
+      Vlolohi[i] = new double[ncols];
+      Vhihilo[i] = new double[ncols];
+      Vlohilo[i] = new double[ncols];
+      Vhilolo[i] = new double[ncols];
+      Vlololo[i] = new double[ncols];
+   }
+   to_octo_double_matrix
+      (nrows, ncols,
+       Chihihi0, Chihihi1, Chihihi2, Chihihi3,
+       Clohihi0, Clohihi1, Clohihi2, Clohihi3,
+       Chilohi0, Chilohi1, Chilohi2, Chilohi3,
+       Clolohi0, Clolohi1, Clolohi2, Clolohi3,
+       Chihilo0, Chihilo1, Chihilo2, Chihilo3,
+       Clohilo0, Clohilo1, Clohilo2, Clohilo3,
+       Chilolo0, Chilolo1, Chilolo2, Chilolo3,
+       Clololo0, Clololo1, Clololo2, Clololo3,
+       Vhihihi, Vlohihi, Vhilohi, Vlolohi,
+       Vhihilo, Vlohilo, Vhilolo, Vlololo);
+
+   cout << "the vectored product A*B :" << endl;
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+         cout << "V[" << i << "][" << j << "] : "
+              << Vhihihi[i][j] << "  " << Vlohihi[i][j] << endl
+              << "          "
+              << Vhilohi[i][j] << "  " << Vlolohi[i][j] << endl
+              << "          "
+              << Vhihilo[i][j] << "  " << Vlohilo[i][j] << endl
+              << "          "
+              << Vhilolo[i][j] << "  " << Vlololo[i][j] << endl;
+
+   double err[8],acc[8];
+   err[0] = 0.0; err[1] = 0.0;
+   err[2] = 0.0; err[3] = 0.0;
+   err[4] = 0.0; err[5] = 0.0;
+   err[6] = 0.0; err[7] = 0.0;
+
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         odf_sub(Chihihi[i][j], Clohihi[i][j], Chilohi[i][j], Clolohi[i][j],
+                 Chihilo[i][j], Clohilo[i][j], Chilolo[i][j], Clololo[i][j],
+                 Vhihihi[i][j], Vlohihi[i][j], Vhilohi[i][j], Vlolohi[i][j],
+                 Vhihilo[i][j], Vlohilo[i][j], Vhilolo[i][j], Vlololo[i][j],
+                 &acc[0], &acc[1], &acc[2], &acc[3],
+                 &acc[4], &acc[5], &acc[6], &acc[7]);
+         odf_inc(&err[0], &err[1], &err[2], &err[3],
+                 &err[4], &err[5], &err[6], &err[7],
+                 acc[0], acc[1], acc[2], acc[3],
+                 acc[4], acc[5], acc[6], acc[7]);
+      }
+
+   if(err[0] < 0.0) odf_minus(&err[0], &err[1], &err[2], &err[3],
+                              &err[4], &err[5], &err[6], &err[7]);
+
+   cout << "-> error : " << endl; od_write_doubles(err); cout << endl;
+
+   fail = (abs(err[0]) > 1.0E-120);
+
+   if(fail == 1) return fail; // no point to continue
+
+   double **cA = new double*[32*nrows];
+   for(int i=0; i<32*nrows; i++) cA[i] = new double[32*nrc];
+
+   od_convolute_quarters
+      (nrows, nrc,
+       Ahihihi0, Ahihihi1, Ahihihi2, Ahihihi3,
+       Alohihi0, Alohihi1, Alohihi2, Alohihi3,
+       Ahilohi0, Ahilohi1, Ahilohi2, Ahilohi3,
+       Alolohi0, Alolohi1, Alolohi2, Alolohi3,
+       Ahihilo0, Ahihilo1, Ahihilo2, Ahihilo3,
+       Alohilo0, Alohilo1, Alohilo2, Alohilo3,
+       Ahilolo0, Ahilolo1, Ahilolo2, Ahilolo3,
+       Alololo0, Alololo1, Alololo2, Alololo3, cA);
+
+   cout << "the convoluted quartered matrix A :" << endl;
+   for(int i=0; i<32*nrows; i++)
+      for(int j=0; j<32*nrc; j++)
+         cout << "cA[" << i << "][" << j << "] : " << cA[i][j] << endl;
+
+   double **sB = new double*[32*nrc];
+   for(int i=0; i<32*nrc; i++) sB[i] = new double[ncols];
+
+   od_stack_quarters
+      (nrc, ncols,
+       Bhihihi0, Bhihihi1, Bhihihi2, Bhihihi3,
+       Blohihi0, Blohihi1, Blohihi2, Blohihi3,
+       Bhilohi0, Bhilohi1, Bhilohi2, Bhilohi3,
+       Blolohi0, Blolohi1, Blolohi2, Blolohi3,
+       Bhihilo0, Bhihilo1, Bhihilo2, Bhihilo3,
+       Blohilo0, Blohilo1, Blohilo2, Blohilo3,
+       Bhilolo0, Bhilolo1, Bhilolo2, Bhilolo3,
+       Blololo0, Blololo1, Blololo2, Blololo3, sB);
+
+   cout << "the stacked quartered matrix B :" << endl;
+   for(int i=0; i<32*nrc; i++)
+      for(int j=0; j<ncols; j++)
+         cout << "sB[" << i << "][" << j << "] : " << sB[i][j] << endl;
 
    return fail;
 }

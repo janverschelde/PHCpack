@@ -179,6 +179,36 @@ void to_octo_double
              xhihilo, xlohilo, xhilolo, xlololo, xlololo3);
 }
 
+void to_octo_double_matrix
+ ( int nrows, int ncols,
+   double **Ahihihi0, double **Ahihihi1, double **Ahihihi2, double **Ahihihi3,
+   double **Alohihi0, double **Alohihi1, double **Alohihi2, double **Alohihi3,
+   double **Ahilohi0, double **Ahilohi1, double **Ahilohi2, double **Ahilohi3,
+   double **Alolohi0, double **Alolohi1, double **Alolohi2, double **Alolohi3,
+   double **Ahihilo0, double **Ahihilo1, double **Ahihilo2, double **Ahihilo3,
+   double **Alohilo0, double **Alohilo1, double **Alohilo2, double **Alohilo3,
+   double **Ahilolo0, double **Ahilolo1, double **Ahilolo2, double **Ahilolo3,
+   double **Alololo0, double **Alololo1, double **Alololo2, double **Alololo3,
+   double **Ahihihi, double **Alohihi, double **Ahilohi, double **Alolohi,
+   double **Ahihilo, double **Alohilo, double **Ahilolo, double **Alololo )
+{
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         to_octo_double
+            (Ahihihi0[i][j], Ahihihi1[i][j], Ahihihi2[i][j], Ahihihi3[i][j],
+             Alohihi0[i][j], Alohihi1[i][j], Alohihi2[i][j], Alohihi3[i][j],
+             Ahilohi0[i][j], Ahilohi1[i][j], Ahilohi2[i][j], Ahilohi3[i][j],
+             Alolohi0[i][j], Alolohi1[i][j], Alolohi2[i][j], Alolohi3[i][j],
+             Ahihilo0[i][j], Ahihilo1[i][j], Ahihilo2[i][j], Ahihilo3[i][j],
+             Alohilo0[i][j], Alohilo1[i][j], Alohilo2[i][j], Alohilo3[i][j],
+             Ahilolo0[i][j], Ahilolo1[i][j], Ahilolo2[i][j], Ahilolo3[i][j],
+             Alololo0[i][j], Alololo1[i][j], Alololo2[i][j], Alololo3[i][j],
+             &Ahihihi[i][j], &Alohihi[i][j], &Ahilohi[i][j], &Alolohi[i][j],
+             &Ahihilo[i][j], &Alohilo[i][j], &Ahilolo[i][j], &Alololo[i][j]);
+      }
+}
+
 void od_write_vector
  ( int dim,
    double *xhihihi, double *xlohihi, double *xhilohi, double *xlolohi,
@@ -537,5 +567,158 @@ void vectored_od_matmatmul
              &C20[i][j], &C21[i][j], &C22[i][j], &C23[i][j],
              &C24[i][j], &C25[i][j], &C26[i][j], &C27[i][j],
              &C28[i][j], &C29[i][j], &C30[i][j], &C31[i][j]);
+      }
+}
+
+void od_convolute_quarters
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11,
+   double **A12, double **A13, double **A14, double **A15,
+   double **A16, double **A17, double **A18, double **A19,
+   double **A20, double **A21, double **A22, double **A23,
+   double **A24, double **A25, double **A26, double **A27,
+   double **A28, double **A29, double **A30, double **A31, double **cA )
+{
+   for(int i=0; i<32*nrows; i++)
+      for(int j=0; j<32*ncols; j++) cA[i][j] = 0.0;
+
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         for(int k=0; k<32; k++) cA[32*i+k][32*j+k] = A0[i][j];
+         for(int k=0; k<31; k++) cA[32*i+k+1][32*j+k] = A1[i][j];
+         for(int k=0; k<30; k++) cA[32*i+k+2][32*j+k] = A2[i][j];
+         for(int k=0; k<29; k++) cA[32*i+k+3][32*j+k] = A3[i][j];
+         for(int k=0; k<28; k++) cA[32*i+k+4][32*j+k] = A4[i][j];
+         for(int k=0; k<27; k++) cA[32*i+k+5][32*j+k] = A5[i][j];
+         for(int k=0; k<26; k++) cA[32*i+k+6][32*j+k] = A6[i][j];
+         for(int k=0; k<25; k++) cA[32*i+k+7][32*j+k] = A7[i][j];
+         for(int k=0; k<24; k++) cA[32*i+k+8][32*j+k] = A8[i][j];
+         for(int k=0; k<23; k++) cA[32*i+k+9][32*j+k] = A9[i][j];
+         for(int k=0; k<22; k++) cA[32*i+k+10][32*j+k] = A10[i][j];
+         for(int k=0; k<21; k++) cA[32*i+k+11][32*j+k] = A11[i][j];
+         for(int k=0; k<20; k++) cA[32*i+k+12][32*j+k] = A12[i][j];
+         for(int k=0; k<19; k++) cA[32*i+k+13][32*j+k] = A13[i][j];
+         for(int k=0; k<18; k++) cA[32*i+k+14][32*j+k] = A14[i][j];
+         for(int k=0; k<17; k++) cA[32*i+k+15][32*j+k] = A15[i][j];
+         for(int k=0; k<16; k++) cA[32*i+k+16][32*j+k] = A16[i][j];
+         for(int k=0; k<15; k++) cA[32*i+k+17][32*j+k] = A17[i][j];
+         for(int k=0; k<14; k++) cA[32*i+k+18][32*j+k] = A18[i][j];
+         for(int k=0; k<13; k++) cA[32*i+k+19][32*j+k] = A19[i][j];
+         for(int k=0; k<12; k++) cA[32*i+k+20][32*j+k] = A20[i][j];
+         for(int k=0; k<11; k++) cA[32*i+k+21][32*j+k] = A21[i][j];
+         for(int k=0; k<10; k++) cA[32*i+k+22][32*j+k] = A22[i][j];
+         for(int k=0; k<9; k++) cA[32*i+k+23][32*j+k] = A23[i][j];
+         for(int k=0; k<8; k++) cA[32*i+k+24][32*j+k] = A24[i][j];
+         for(int k=0; k<7; k++) cA[32*i+k+25][32*j+k] = A25[i][j];
+         for(int k=0; k<6; k++) cA[32*i+k+26][32*j+k] = A26[i][j];
+         for(int k=0; k<5; k++) cA[32*i+k+27][32*j+k] = A27[i][j];
+         for(int k=0; k<4; k++) cA[32*i+k+28][32*j+k] = A28[i][j];
+         for(int k=0; k<3; k++) cA[32*i+k+29][32*j+k] = A29[i][j];
+         for(int k=0; k<2; k++) cA[32*i+k+30][32*j+k] = A30[i][j];
+         cA[32*i+31][32*j] = A31[i][j];
+      }
+}
+
+void od_stack_quarters
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11,
+   double **A12, double **A13, double **A14, double **A15,
+   double **A16, double **A17, double **A18, double **A19,
+   double **A20, double **A21, double **A22, double **A23,
+   double **A24, double **A25, double **A26, double **A27,
+   double **A28, double **A29, double **A30, double **A31, double **sA )
+{
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         sA[32*i][j] = A0[i][j];
+         sA[32*i+1][j] = A1[i][j];
+         sA[32*i+2][j] = A2[i][j];
+         sA[32*i+3][j] = A3[i][j];
+         sA[32*i+4][j] = A4[i][j];
+         sA[32*i+5][j] = A5[i][j];
+         sA[32*i+6][j] = A6[i][j];
+         sA[32*i+7][j] = A7[i][j];
+         sA[32*i+8][j] = A8[i][j];
+         sA[32*i+9][j] = A9[i][j];
+         sA[32*i+10][j] = A10[i][j];
+         sA[32*i+11][j] = A11[i][j];
+         sA[32*i+12][j] = A12[i][j];
+         sA[32*i+13][j] = A13[i][j];
+         sA[32*i+14][j] = A14[i][j];
+         sA[32*i+15][j] = A15[i][j];
+         sA[32*i+16][j] = A16[i][j];
+         sA[32*i+17][j] = A17[i][j];
+         sA[32*i+18][j] = A18[i][j];
+         sA[32*i+19][j] = A19[i][j];
+         sA[32*i+20][j] = A20[i][j];
+         sA[32*i+21][j] = A21[i][j];
+         sA[32*i+22][j] = A22[i][j];
+         sA[32*i+23][j] = A23[i][j];
+         sA[32*i+24][j] = A24[i][j];
+         sA[32*i+25][j] = A25[i][j];
+         sA[32*i+26][j] = A26[i][j];
+         sA[32*i+27][j] = A27[i][j];
+         sA[32*i+28][j] = A28[i][j];
+         sA[32*i+29][j] = A29[i][j];
+         sA[32*i+30][j] = A30[i][j];
+         sA[32*i+31][j] = A31[i][j];
+      }
+}
+
+void extract_od_quarters
+ ( int nrows, int ncols, double **qC,
+   double **D0, double **D1, double **D2, double **D3,
+   double **D4, double **D5, double **D6, double **D7,
+   double **D8, double **D9, double **D10, double **D11,
+   double **D12, double **D13, double **D14, double **D15,
+   double **D16, double **D17, double **D18, double **D19,
+   double **D20, double **D21, double **D22, double **D23,
+   double **D24, double **D25, double **D26, double **D27,
+   double **D28, double **D29, double **D30, double **D31 )
+{
+   for(int i=0; i<32*nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         int k = i % 32;
+         int row = i/32;
+
+         if(k == 0) D0[row][j] = qC[i][j];
+         if(k == 1) D1[row][j] = qC[i][j];
+         if(k == 2) D2[row][j] = qC[i][j];
+         if(k == 3) D3[row][j] = qC[i][j];
+         if(k == 4) D4[row][j] = qC[i][j];
+         if(k == 5) D5[row][j] = qC[i][j];
+         if(k == 6) D6[row][j] = qC[i][j];
+         if(k == 7) D7[row][j] = qC[i][j];
+         if(k == 8) D8[row][j] = qC[i][j];
+         if(k == 9) D9[row][j] = qC[i][j];
+         if(k == 10) D10[row][j] = qC[i][j];
+         if(k == 11) D11[row][j] = qC[i][j];
+         if(k == 12) D12[row][j] = qC[i][j];
+         if(k == 13) D13[row][j] = qC[i][j];
+         if(k == 14) D14[row][j] = qC[i][j];
+         if(k == 15) D15[row][j] = qC[i][j];
+         if(k == 16) D16[row][j] = qC[i][j];
+         if(k == 17) D17[row][j] = qC[i][j];
+         if(k == 18) D18[row][j] = qC[i][j];
+         if(k == 19) D19[row][j] = qC[i][j];
+         if(k == 20) D20[row][j] = qC[i][j];
+         if(k == 21) D21[row][j] = qC[i][j];
+         if(k == 22) D22[row][j] = qC[i][j];
+         if(k == 23) D23[row][j] = qC[i][j];
+         if(k == 24) D24[row][j] = qC[i][j];
+         if(k == 25) D25[row][j] = qC[i][j];
+         if(k == 26) D26[row][j] = qC[i][j];
+         if(k == 27) D27[row][j] = qC[i][j];
+         if(k == 28) D28[row][j] = qC[i][j];
+         if(k == 29) D29[row][j] = qC[i][j];
+         if(k == 30) D30[row][j] = qC[i][j];
+         if(k == 31) D31[row][j] = qC[i][j];
       }
 }
