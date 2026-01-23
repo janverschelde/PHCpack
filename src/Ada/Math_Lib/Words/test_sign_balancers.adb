@@ -1,6 +1,5 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Random_Numbers;
@@ -21,25 +20,10 @@ with Sign_Balancers;                     use Sign_Balancers;
 
 package body Test_Sign_Balancers is
 
-  function One_Last_Bit ( nbr : double_float ) return double_float is
-
-  -- DESCRIPTION :
-  --   Given a double float number nbr, computes the one last bit of
-  --   its fraction, using the exponent of nbr in the returned double.
-  --   Subtracting the returned number from nbr results in a double
-  --   where the fraction is one less than the fraction of nbr.
-
-    exn : constant integer32 := integer32(double_float'exponent(nbr));
-    res : constant double_float := double_float'compose(1.0, exn - 51);
-
-  begin
-    return res;
-  end One_Last_Bit;
-
   procedure Test_One_Last_Bit is
 
     nbr : constant double_float := abs(Standard_Random_Numbers.Random);
-    lst : constant double_float := One_Last_Bit(nbr);
+    lst : constant double_float := Sign_Balancers.One_Last_Bit(nbr);
     nb1 : constant double_float := nbr -lst;
     
   begin
@@ -51,6 +35,66 @@ package body Test_Sign_Balancers is
     put("xf : "); Bits_of_Doubles.write_fraction_bits(nbr);
     put("yf : "); Bits_of_Doubles.write_fraction_bits(nb1);
   end Test_One_Last_Bit;
+
+  procedure Test_Equalize_Signs ( nbr : in double_double ) is
+
+    x : double_double := nbr;
+    xb,err : double_double;
+
+  begin
+    put("x : "); put(x);
+    if Is_Sign_Balanced(x) then
+      put_line(" sign balanced");
+    else
+      put_line(" not sign balanced");
+      put("x hi : "); put(hi_part(x)); new_line;
+      put("x lo : "); put(lo_part(x)); new_line;
+      xb := nbr;
+      Equalize_Signs(x,vrblvl=>1);
+      put("x hi : "); put(hi_part(x)); new_line;
+      put("x lo : "); put(lo_part(x)); new_line;
+      put("org x : "); put(xb); new_line;
+      put("new x : "); put(x); 
+      if Is_Sign_Balanced(x)
+       then put_line(" sign balanced");
+       else put_line(" NOT sign balanced, bug!");
+      end if;
+      err := abs(xb - x);
+      put("error : "); put(err,2); new_line;
+    end if;
+  end Test_Equalize_Signs;
+
+  procedure Test_Equalize_Signs ( nbr : in quad_double ) is
+
+    x : quad_double := nbr;
+    xb,err : quad_double;
+
+  begin
+    put("x : "); put(x);
+    if Is_Sign_Balanced(x) then
+      put_line(" sign balanced");
+    else
+      put_line(" not sign balanced");
+      put("x hihi : "); put(hihi_part(x)); new_line;
+      put("x lohi : "); put(lohi_part(x)); new_line;
+      put("x hilo : "); put(hilo_part(x)); new_line;
+      put("x lolo : "); put(lolo_part(x)); new_line;
+      xb := nbr;
+      Equalize_Signs(x,vrblvl=>1);
+      put("x hihi : "); put(hihi_part(x)); new_line;
+      put("x lohi : "); put(lohi_part(x)); new_line;
+      put("x hilo : "); put(hilo_part(x)); new_line;
+      put("x lolo : "); put(lolo_part(x)); new_line;
+      put("org x : "); put(xb); new_line;
+      put("new x : "); put(x); 
+      if Is_Sign_Balanced(x)
+       then put_line(" sign balanced");
+       else put_line(" NOT sign balanced, bug!");
+      end if;
+      err := abs(xb - x);
+      put("error : "); put(err,2); new_line;
+    end if;
+  end Test_Equalize_Signs;
 
   procedure Test_Sign_Balance ( nbr : in double_double ) is
 
@@ -208,6 +252,30 @@ package body Test_Sign_Balancers is
     end if;
   end Test_Sign_Balance;
 
+  procedure Test_DD_Equalize_Signs is
+
+    rnd : constant DoblDobl_Complex_Numbers.Complex_Number
+        := DoblDobl_Random_Numbers.Random1;
+    x : constant double_double := DoblDobl_Complex_Numbers.REAL_PART(rnd);
+    y : constant double_double := DoblDobl_Complex_Numbers.IMAG_PART(rnd);
+
+  begin
+    Test_Equalize_Signs(x);
+    Test_Equalize_Signs(y);
+  end Test_DD_Equalize_Signs;
+
+  procedure Test_QD_Equalize_Signs is
+
+    rnd : constant QuadDobl_Complex_Numbers.Complex_Number
+        := QuadDobl_Random_Numbers.Random1;
+    x : constant quad_double := QuadDobl_Complex_Numbers.REAL_PART(rnd);
+    y : constant quad_double := QuadDobl_Complex_Numbers.IMAG_PART(rnd);
+
+  begin
+    Test_Equalize_Signs(x);
+    Test_Equalize_Signs(y);
+  end Test_QD_Equalize_Signs;
+
   procedure Test_Sign_DD_Balance is
 
     rnd : constant DoblDobl_Complex_Numbers.Complex_Number
@@ -262,6 +330,16 @@ package body Test_Sign_Balancers is
 
   begin
     Test_One_Last_Bit;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      new_line;
+      Test_DD_Equalize_Signs;
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      new_line;
+      Test_QD_Equalize_Signs;
+    end if;
     put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y' then
       new_line;

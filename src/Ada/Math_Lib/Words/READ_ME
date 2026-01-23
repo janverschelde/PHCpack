@@ -1,4 +1,4 @@
-Multiple word arithmetic for PHCv2.4.91
+Multiple word arithmetic for PHCv2.4.93
 
 This folder was added in version 2.4.91 to experiment with multiple word 
 arithmetic, in preparation for error free inner products on tensor cores.

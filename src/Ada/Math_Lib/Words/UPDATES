@@ -1,3 +1,6 @@
+Fri 23 Jan 2026 : to sign_balancers and test_sign_balancers added procedures
+  to equalize the signs with the one last bit deduction/augmentation.
+
 Thu 22 Jan 2026 : to test_sign_balancers, added the definition of one last
   bit to develop better sign balancers of multiple doubles.
 

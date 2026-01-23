@@ -166,22 +166,183 @@ package body Sign_Balancers is
     end if;
   end Is_Sign_Balanced;
 
+-- EQUALIZE signs via one last bit deduction/augmentation
+
+  function One_Last_Bit ( nbr : double_float ) return double_float is
+
+    exn : constant integer32 := integer32(double_float'exponent(nbr));
+    res : constant double_float := double_float'compose(1.0, exn - 51);
+
+  begin
+    return res;
+  end One_Last_Bit;
+
+  procedure Equalize_Signs ( hi,lo : in out double_float;
+                             vrblvl : in integer32 := 0 ) is
+
+    bit : constant double_float := One_Last_Bit(hi);
+    mhi,mlo : double_float;
+
+  begin
+    if vrblvl > 0 then
+      put_line("-> in Sign_Balancers.equalize_signs 0 ...");
+    end if;
+    if hi < 0.0 then
+      mhi := -hi;
+      mlo := -lo;
+      Equalize_Signs(mhi,mlo,vrblvl);
+      hi := -mhi;
+      lo := -mlo;
+    else
+      if vrblvl > 0 then
+        put("b hi : "); Bits_of_Doubles.write_fraction_bits(hi);
+        put("bit1 : "); Bits_of_Doubles.write_fraction_bits(bit);
+        put("b lo : "); Bits_of_Doubles.write_fraction_bits(lo);
+      end if;
+      hi := hi - bit;
+      lo := lo + bit;
+      if vrblvl > 0 then
+        put("b hi : "); Bits_of_Doubles.write_fraction_bits(hi);
+        put("b lo : "); Bits_of_Doubles.write_fraction_bits(lo);
+      end if;
+    end if;
+  end Equalize_Signs;
+
+  procedure Equalize_Signs ( hihi,lohi,hilo,lolo : in out double_float;
+                             vrblvl : in integer32 := 0 ) is
+
+    bit : double_float;
+    mhihi,mlohi,mhilo,mlolo : double_float;
+    qdinc,qdnewlo : quad_double;
+    ddinc,ddnewlo : double_double;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Sign_Balancers.equalize_signs 1 ...");
+    end if;
+    if hihi < 0.0 then
+      mhihi := -hihi;
+      mlohi := -lohi;
+      mhilo := -hilo;
+      mlolo := -lolo;
+      Equalize_Signs(mhihi,mlohi,mhilo,mlolo,vrblvl);
+      hihi := -mhihi;
+      lohi := -mlohi;
+      hilo := -mhilo;
+      lolo := -mlolo;
+    else
+      if Different_Sign(hihi,lohi) then
+        bit := One_Last_Bit(hihi);
+        if vrblvl > 0 then
+          put("b hihi : "); Bits_of_Doubles.write_fraction_bits(hihi);
+          put("  bit1 : "); Bits_of_Doubles.write_fraction_bits(bit);
+          put("b lohi : "); Bits_of_Doubles.write_fraction_bits(lohi);
+        end if;
+        hihi := hihi - bit;
+       -- lohi := lohi + bit; => leads to a loss of accuracy
+        qdinc := create(bit,0.0,0.0,0.0);
+        qdnewlo := create(lohi,hilo,lolo,0.0) + qdinc;
+        lohi := hihi_part(qdnewlo);
+        hilo := lohi_part(qdnewlo);
+        lolo := hilo_part(qdnewlo);
+        if vrblvl > 0 then
+          put("b hihi : "); Bits_of_Doubles.write_fraction_bits(hihi);
+          put("b lohi : "); Bits_of_Doubles.write_fraction_bits(lolo);
+        end if;
+      end if;
+      if Different_Sign(lohi,hilo) then
+        bit := One_Last_Bit(lohi);
+        if vrblvl > 0 then
+          put("b lohi : "); Bits_of_Doubles.write_fraction_bits(lohi);
+          put("  bit1 : "); Bits_of_Doubles.write_fraction_bits(bit);
+          put("b hilo : "); Bits_of_Doubles.write_fraction_bits(hilo);
+        end if;
+        lohi := lohi - bit;
+       -- hilo := hilo + bit; => leads to a loss of accuracy
+        ddinc := create(bit,0.0);
+        ddnewlo := create(hilo,lolo) + ddinc;
+        hilo := hi_part(ddnewlo);
+        lolo := lo_part(ddnewlo);
+        if vrblvl > 0 then
+          put("b lohi : "); Bits_of_Doubles.write_fraction_bits(lohi);
+          put("b hilo : "); Bits_of_Doubles.write_fraction_bits(hilo);
+        end if;
+      end if;
+      if Different_Sign(hilo,lolo) then
+        bit := One_Last_Bit(hilo);
+        if vrblvl > 0 then
+          put("b hilo : "); Bits_of_Doubles.write_fraction_bits(hilo);
+          put("  bit1 : "); Bits_of_Doubles.write_fraction_bits(bit);
+          put("b lolo : "); Bits_of_Doubles.write_fraction_bits(lolo);
+        end if;
+        hilo := hilo - bit;
+        lolo := lolo + bit;
+        if vrblvl > 0 then
+          put("b hilo : "); Bits_of_Doubles.write_fraction_bits(hilo);
+          put("b lolo : "); Bits_of_Doubles.write_fraction_bits(lolo);
+        end if;
+      end if;
+    end if;
+  end Equalize_Signs;
+
+  procedure Equalize_Signs ( x : in out double_double;
+                             vrblvl : in integer32 := 0 ) is
+
+    hi : double_float := hi_part(x);
+    lo : double_float := lo_part(x);
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Sign_Balancers.equalize_signs 2 ...");
+    end if;
+    if Different_Sign(hi,lo) then
+      Equalize_Signs(hi,lo,vrblvl);
+      x := create(hi,lo);
+    end if;
+  end Equalize_Signs;
+
+  procedure Equalize_Signs ( x : in out quad_double;
+                             vrblvl : in integer32 := 0 ) is
+
+    hihi : double_float := hihi_part(x);
+    lohi : double_float := lohi_part(x);
+    hilo : double_float := hilo_part(x);
+    lolo : double_float := lolo_part(x);
+    p1 : constant boolean := Different_Sign(hihi,lohi);
+    p2 : constant boolean := Different_Sign(lohi,hilo);
+    p3 : constant boolean := Different_Sign(hilo,lolo);
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Sign_Balancers.equalize_signs 3 ...");
+    end if;
+    if p1 or p2 or p3 then
+      Equalize_Signs(hihi,lohi,hilo,lolo,vrblvl);
+      x := create(hihi,lohi,hilo,lolo);
+    end if;
+  end Equalize_Signs;
+
+-- BALANCE via bit redistribution
+
   procedure Sign_Balance ( hi,lo : in out double_float;
-                           verbose : in boolean := true ) is
+                           vrblvl : in integer32 := 0 ) is
 
     mhi,mlo : double_float;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in Sign_Balancers.sign_balance 0 ...");
+    end if;
     if hi < 0.0 then
       mhi := -hi;
       mlo := -lo;
-      Sign_Balance(mhi,mlo,verbose);
+      Sign_Balance(mhi,mlo,vrblvl);
       hi := -mhi;
       lo := -mlo;
     else
       for k in 1..52 loop
         mhi := hi - chop_last_bits(hi,natural32(k));
-        if verbose then
+        if vrblvl > 0 then
           put("b hi : "); write_fraction_bits(hi);
           put("  hi : "); put(hi); new_line;
           put("  lo : "); put(lo); new_line;
@@ -191,7 +352,7 @@ package body Sign_Balancers is
       end loop;
       hi := hi - mhi;
       lo := lo + mhi;
-      if verbose then
+      if vrblvl > 0 then
         put("  hi : "); put(hi); new_line;
         put("  lo : "); put(lo); new_line;
       end if;
@@ -199,19 +360,22 @@ package body Sign_Balancers is
   end Sign_Balance;
 
   procedure Sign_Balance ( hihi,lohi,hilo,lolo : in out double_float;
-                           verbose : in boolean := true ) is
+                           vrblvl : in integer32 := 0 ) is
 
     mhihi,mlohi,mhilo,mlolo : double_float;
     qdinc,qdnewlo : quad_double;
     ddinc,ddnewlo : double_double;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in Sign_Balancers.sign_balance 1 ...");
+    end if;
     if hihi < 0.0 then
       mhihi := -hihi;
       mlohi := -lohi;
       mhilo := -hilo;
       mlolo := -lolo;
-      Sign_Balance(mhihi,mlohi,mhilo,mlolo,verbose);
+      Sign_Balance(mhihi,mlohi,mhilo,mlolo,vrblvl);
       hihi := -mhihi;
       lohi := -mlohi;
       hilo := -mhilo;
@@ -220,7 +384,7 @@ package body Sign_Balancers is
       if Different_Sign(hihi,lohi) then
         for k in 1..52 loop
           mhihi := hihi - chop_last_bits(hihi,natural32(k));
-          if verbose then
+          if vrblvl > 0 then
             put("b hihi : "); write_fraction_bits(hihi);
             put("  hihi : "); put(hihi); new_line;
             put("last bit : "); put(mhihi); new_line;
@@ -234,7 +398,7 @@ package body Sign_Balancers is
         lohi := hihi_part(qdnewlo);
         hilo := lohi_part(qdnewlo);
         lolo := hilo_part(qdnewlo);
-        if verbose then
+        if vrblvl > 0 then
           put("  hihi : "); put(hihi); new_line;
           put("  lohi : "); put(lohi); new_line;
           put("  hilo : "); put(hilo); new_line;
@@ -244,7 +408,7 @@ package body Sign_Balancers is
       if Different_Sign(lohi,hilo) then
         for k in 1..52 loop
           mlohi := lohi - chop_last_bits(lohi,natural32(k));
-          if verbose then
+          if vrblvl > 0 then
             put("b lohi : "); write_fraction_bits(lohi);
             put("  lohi : "); put(lohi); new_line;
             put("last bit : "); put(mlohi); new_line;
@@ -257,7 +421,7 @@ package body Sign_Balancers is
         ddnewlo := create(hilo,lolo) + ddinc;
         hilo := hi_part(ddnewlo);
         lolo := lo_part(ddnewlo);
-        if verbose then
+        if vrblvl > 0 then
           put("  hihi : "); put(hihi); new_line;
           put("  lohi : "); put(lohi); new_line;
           put("  hilo : "); put(hilo); new_line;
@@ -267,7 +431,7 @@ package body Sign_Balancers is
       if Different_Sign(hilo,lolo) then
         for k in 1..52 loop
           mhilo := hilo - chop_last_bits(hilo,natural32(k));
-          if verbose then
+          if vrblvl > 0 then
             put("b hilo : "); write_fraction_bits(hilo);
             put("  hilo : "); put(hilo); new_line;
             put("last bit : "); put(mhilo); new_line;
@@ -276,7 +440,7 @@ package body Sign_Balancers is
         end loop;
         hilo := hilo - mhilo;
         lolo := lolo + mhilo;
-        if verbose then
+        if vrblvl > 0 then
           put("  hihi : "); put(hihi); new_line;
           put("  lohi : "); put(lohi); new_line;
           put("  hilo : "); put(hilo); new_line;
@@ -289,7 +453,7 @@ package body Sign_Balancers is
   procedure Sign_Balance
               ( hihihi,lohihi,hilohi,lolohi : in out double_float;
                 hihilo,lohilo,hilolo,lololo : in out double_float;
-                verbose : in boolean := true ) is
+                vrblvl : in integer32 := 0 ) is
 
     mhihihi,mlohihi,mhilohi,mlolohi : double_float;
     mhihilo,mlohilo,mhilolo,mlololo : double_float;
@@ -297,6 +461,9 @@ package body Sign_Balancers is
     qdinc,qdnewlo : quad_double;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in Sign_Balancers.sign_balance 2 ...");
+    end if;
     if hihihi < 0.0 then
       mhihihi := -hihihi;
       mlohihi := -lohihi;
@@ -307,7 +474,7 @@ package body Sign_Balancers is
       mhilolo := -hilolo;
       mlololo := -lololo;
       Sign_Balance(mhihihi,mlohihi,mhilohi,mlolohi,
-                   mhihilo,mlohilo,mhilolo,mlololo,verbose);
+                   mhihilo,mlohilo,mhilolo,mlololo,vrblvl);
       hihihi := -mhihihi;
       lohihi := -mlohihi;
       hilohi := -mhilohi;
@@ -320,7 +487,7 @@ package body Sign_Balancers is
       if Different_Sign(hihihi,lohihi) then
         for k in 1..52 loop
           mhihihi := hihihi - chop_last_bits(hihihi,natural32(k));
-          if verbose then
+          if vrblvl > 0 then
             put("b hihihi : "); write_fraction_bits(hihihi);
             put("  hihihi : "); put(hihihi); new_line;
             put("last bit : "); put(mhihihi); new_line;
@@ -339,7 +506,7 @@ package body Sign_Balancers is
         lohilo := hihilo_part(odnewlo);
         hilolo := lohilo_part(odnewlo);
         lololo := hilolo_part(odnewlo);
-        if verbose then
+        if vrblvl > 0 then
           put("  hihihi : "); put(hihihi); new_line;
           put("  lohihi : "); put(lohihi); new_line;
           put("  hilohi : "); put(hilohi); new_line;
@@ -353,7 +520,7 @@ package body Sign_Balancers is
       if Different_Sign(lohihi,hilohi) then
         for k in 1..52 loop
           mlohihi := lohihi - chop_last_bits(lohihi,natural32(k));
-          if verbose then
+          if vrblvl > 0 then
             put("b lohihi : "); write_fraction_bits(lohihi);
             put("  lohihi : "); put(lohihi); new_line;
             put("last bit : "); put(mlohihi); new_line;
@@ -371,7 +538,7 @@ package body Sign_Balancers is
         lohilo := lolohi_part(odnewlo);
         hilolo := hihilo_part(odnewlo);
         lololo := lohilo_part(odnewlo);
-        if verbose then
+        if vrblvl > 0 then
           put("  hihihi : "); put(hihihi); new_line;
           put("  lohihi : "); put(lohihi); new_line;
           put("  hilohi : "); put(hilohi); new_line;
@@ -385,7 +552,7 @@ package body Sign_Balancers is
       if Different_Sign(hilohi,lolohi) then
         for k in 1..52 loop
           mhilohi := hilohi - chop_last_bits(hilohi,natural32(k));
-          if verbose then
+          if vrblvl > 0 then
             put("b hilohi : "); write_fraction_bits(hilohi);
             put("  hilohi : "); put(hilohi); new_line;
             put("last bit : "); put(mhilohi); new_line;
@@ -402,7 +569,7 @@ package body Sign_Balancers is
         lohilo := hilohi_part(odnewlo);
         hilolo := lolohi_part(odnewlo);
         lololo := hihilo_part(odnewlo);
-        if verbose then
+        if vrblvl > 0 then
           put("  hihihi : "); put(hihihi); new_line;
           put("  lohihi : "); put(lohihi); new_line;
           put("  hilohi : "); put(hilohi); new_line;
@@ -416,7 +583,7 @@ package body Sign_Balancers is
       if Different_Sign(lolohi,hihilo) then
         for k in 1..52 loop
           mlolohi := lolohi - chop_last_bits(lolohi,natural32(k));
-          if verbose then
+          if vrblvl > 0 then
             put("b lolohi : "); write_fraction_bits(lolohi);
             put("  lolohi : "); put(lolohi); new_line;
             put("last bit : "); put(mlolohi); new_line;
@@ -431,7 +598,7 @@ package body Sign_Balancers is
         lohilo := lohi_part(qdnewlo);
         hilolo := hilo_part(qdnewlo);
         lololo := lolo_part(qdnewlo);
-        if verbose then
+        if vrblvl > 0 then
           put("  hihihi : "); put(hihihi); new_line;
           put("  lohihi : "); put(lohihi); new_line;
           put("  hilohi : "); put(hilohi); new_line;
@@ -442,7 +609,7 @@ package body Sign_Balancers is
           put("  lololo : "); put(lololo); new_line;
         end if;
       end if;
-      Sign_Balance(hihilo,lohilo,hilolo,lololo,verbose);
+      Sign_Balance(hihilo,lohilo,hilolo,lololo,vrblvl);
     end if;
   end Sign_Balance;
 
@@ -451,7 +618,7 @@ package body Sign_Balancers is
                 hihilohi,lohilohi,hilolohi,lololohi : in out double_float;
                 hihihilo,lohihilo,hilohilo,lolohilo : in out double_float;
                 hihilolo,lohilolo,hilololo,lolololo : in out double_float;
-                verbose : in boolean := true ) is
+                vrblvl : in integer32 := 0 ) is
 
     mhihihihi,mlohihihi,mhilohihi,mlolohihi : double_float;
     mhihilohi,mlohilohi,mhilolohi,mlololohi : double_float;
@@ -461,6 +628,9 @@ package body Sign_Balancers is
     odinc,odnewlo : octo_double;
 
   begin
+    if vrblvl > 0
+     then put_line("-> in Sign_Balancers.sign_balance 3 ...");
+    end if;
     if hihihihi < 0.0 then
       mhihihihi := -hihihihi;
       mlohihihi := -lohihihi;
@@ -481,7 +651,7 @@ package body Sign_Balancers is
       Sign_Balance(mhihihihi,mlohihihi,mhilohihi,mlolohihi,
                    mhihilohi,mlohilohi,mhilolohi,mlololohi,
                    mhihihilo,mlohihilo,mhilohilo,mlolohilo,
-                   mhihilolo,mlohilolo,mhilololo,mlolololo,verbose);
+                   mhihilolo,mlohilolo,mhilololo,mlolololo,vrblvl);
       hihihihi := -mhihihihi;
       lohihihi := -mlohihihi;
       hilohihi := -mhilohihi;
@@ -502,7 +672,7 @@ package body Sign_Balancers is
       if Different_Sign(hihihihi,lohihihi) then
         for k in 1..52 loop
           mhihihihi := hihihihi - chop_last_bits(hihihihi,natural32(k));
-          if verbose then
+          if vrblvl > 0 then
             put("b hihihihi : "); write_fraction_bits(hihihihi);
             put("  hihihihi : "); put(hihihihi); new_line;
             put("  last bit : "); put(mhihihihi); new_line;
@@ -532,7 +702,7 @@ package body Sign_Balancers is
         lohilolo := hihilolo_part(hdnewlo);
         hilololo := lohilolo_part(hdnewlo);
         lolololo := hilololo_part(hdnewlo);
-        if verbose then
+        if vrblvl > 0 then
           put("  hihihihi : "); put(hihihihi); new_line;
           put("  lohihihi : "); put(lohihihi); new_line;
           put("  hilohihi : "); put(hilohihi); new_line;
@@ -554,7 +724,7 @@ package body Sign_Balancers is
       if Different_Sign(lohihihi,hilohihi) then
         for k in 1..52 loop
           mlohihihi := lohihihi - chop_last_bits(lohihihi,natural32(k));
-          if verbose then
+          if vrblvl > 0 then
             put("b lohihihi : "); write_fraction_bits(lohihihi);
             put("  lohihihi : "); put(lohihihi); new_line;
             put("  last bit : "); put(mlohihihi); new_line;
@@ -584,7 +754,7 @@ package body Sign_Balancers is
         lohilolo := lolohilo_part(hdnewlo);
         hilololo := hihilolo_part(hdnewlo);
         lolololo := lohilolo_part(hdnewlo);
-        if verbose then
+        if vrblvl > 0 then
           put("  hihihihi : "); put(hihihihi); new_line;
           put("  lohihihi : "); put(lohihihi); new_line;
           put("  hilohihi : "); put(hilohihi); new_line;
@@ -606,7 +776,7 @@ package body Sign_Balancers is
       if Different_Sign(hilohihi,lolohihi) then
         for k in 1..52 loop
           mhilohihi := hilohihi - chop_last_bits(hilohihi,natural32(k));
-          if verbose then
+          if vrblvl > 0 then
             put("b hilohihi : "); write_fraction_bits(hilohihi);
             put("  hilohihi : "); put(lohihihi); new_line;
             put("  last bit : "); put(mlohihihi); new_line;
@@ -635,7 +805,7 @@ package body Sign_Balancers is
         lohilolo := hilohilo_part(hdnewlo);
         hilololo := lolohilo_part(hdnewlo);
         lolololo := hihilolo_part(hdnewlo);
-        if verbose then
+        if vrblvl > 0 then
           put("  hihihihi : "); put(hihihihi); new_line;
           put("  lohihihi : "); put(lohihihi); new_line;
           put("  hilohihi : "); put(hilohihi); new_line;
@@ -657,7 +827,7 @@ package body Sign_Balancers is
       if Different_Sign(lolohihi,hihilohi) then
         for k in 1..52 loop
           mlolohihi := lolohihi - chop_last_bits(lolohihi,natural32(k));
-          if verbose then
+          if vrblvl > 0 then
             put("b lolohihi : "); write_fraction_bits(lolohihi);
             put("  lolohihi : "); put(lolohihi); new_line;
             put("  last bit : "); put(mlolohihi); new_line;
@@ -684,7 +854,7 @@ package body Sign_Balancers is
         lohilolo := lohihilo_part(hdnewlo);
         hilololo := hilohilo_part(hdnewlo);
         lolololo := lolohilo_part(hdnewlo);
-        if verbose then
+        if vrblvl > 0 then
           put("  hihihihi : "); put(hihihihi); new_line;
           put("  lohihihi : "); put(lohihihi); new_line;
           put("  hilohihi : "); put(hilohihi); new_line;
@@ -706,7 +876,7 @@ package body Sign_Balancers is
       if Different_Sign(hihilohi,lohilohi) then
         for k in 1..52 loop
           mhihilohi := hihilohi - chop_last_bits(hihilohi,natural32(k));
-          if verbose then
+          if vrblvl > 0 then
             put("b hihilohi : "); write_fraction_bits(hihilohi);
             put("  hihilohi : "); put(hihilohi); new_line;
             put("  last bit : "); put(mhihilohi); new_line;
@@ -732,7 +902,7 @@ package body Sign_Balancers is
         lohilolo := hihihilo_part(hdnewlo);
         hilololo := lohihilo_part(hdnewlo);
         lolololo := hilohilo_part(hdnewlo);
-        if verbose then
+        if vrblvl > 0 then
           put("  hihihihi : "); put(hihihihi); new_line;
           put("  lohihihi : "); put(lohihihi); new_line;
           put("  hilohihi : "); put(hilohihi); new_line;
@@ -754,7 +924,7 @@ package body Sign_Balancers is
       if Different_Sign(lohilohi,hilolohi) then
         for k in 1..52 loop
           mlohilohi := lohilohi - chop_last_bits(lohilohi,natural32(k));
-          if verbose then
+          if vrblvl > 0 then
             put("b lohilohi : "); write_fraction_bits(lohilohi);
             put("  lohilohi : "); put(lohilohi); new_line;
             put("  last bit : "); put(mlohilohi); new_line;
@@ -779,7 +949,7 @@ package body Sign_Balancers is
         lohilolo := lololohi_part(hdnewlo);
         hilololo := hihihilo_part(hdnewlo);
         lolololo := lohihilo_part(hdnewlo);
-        if verbose then
+        if vrblvl > 0 then
           put("  hihihihi : "); put(hihihihi); new_line;
           put("  lohihihi : "); put(lohihihi); new_line;
           put("  hilohihi : "); put(hilohihi); new_line;
@@ -801,7 +971,7 @@ package body Sign_Balancers is
       if Different_Sign(hilolohi,lololohi) then
         for k in 1..52 loop
           mhilolohi := hilolohi - chop_last_bits(hilolohi,natural32(k));
-          if verbose then
+          if vrblvl > 0 then
             put("b hilolohi : "); write_fraction_bits(hilolohi);
             put("  hilolohi : "); put(hilolohi); new_line;
             put("  last bit : "); put(mhilolohi); new_line;
@@ -825,7 +995,7 @@ package body Sign_Balancers is
         lohilolo := hilolohi_part(hdnewlo);
         hilololo := lololohi_part(hdnewlo);
         lolololo := hihihilo_part(hdnewlo);
-        if verbose then
+        if vrblvl > 0 then
           put("  hihihihi : "); put(hihihihi); new_line;
           put("  lohihihi : "); put(lohihihi); new_line;
           put("  hilohihi : "); put(hilohihi); new_line;
@@ -847,7 +1017,7 @@ package body Sign_Balancers is
       if Different_Sign(lololohi,hihihilo) then
         for k in 1..52 loop
           mlololohi := lololohi - chop_last_bits(lololohi,natural32(k));
-          if verbose then
+          if vrblvl > 0 then
             put("b lololohi : "); write_fraction_bits(lololohi);
             put("  lololohi : "); put(lololohi); new_line;
             put("  last bit : "); put(mlololohi); new_line;
@@ -867,7 +1037,7 @@ package body Sign_Balancers is
         lohilolo := lohilo_part(odnewlo);
         hilololo := hilolo_part(odnewlo);
         lolololo := lololo_part(odnewlo);
-        if verbose then
+        if vrblvl > 0 then
           put("  hihihihi : "); put(hihihihi); new_line;
           put("  lohihihi : "); put(lohihihi); new_line;
           put("  hilohihi : "); put(hilohihi); new_line;
@@ -887,25 +1057,28 @@ package body Sign_Balancers is
         end if;
       end if;
       Sign_Balance(hihihilo,lohihilo,hilohilo,lolohilo,
-                   hihilolo,lohilolo,hilololo,lolololo,verbose);
+                   hihilolo,lohilolo,hilololo,lolololo,vrblvl);
     end if;
   end Sign_Balance;
 
   procedure Sign_Balance ( x : in out double_double;
-                           verbose : in boolean := true ) is
+                           vrblvl : in integer32 := 0 ) is
 
     hi : double_float := hi_part(x);
     lo : double_float := lo_part(x);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in Sign_Balancers.sign_balance 4 ...");
+    end if;
     if Different_Sign(hi,lo) then
-      Sign_Balance(hi,lo,verbose);
+      Sign_Balance(hi,lo,vrblvl);
       x := create(hi,lo);
     end if;
   end Sign_Balance;
 
   procedure Sign_Balance ( x : in out quad_double;
-                           verbose : in boolean := true ) is
+                           vrblvl : in integer32 := 0 ) is
 
     hihi : double_float := hihi_part(x);
     lohi : double_float := lohi_part(x);
@@ -916,14 +1089,17 @@ package body Sign_Balancers is
     p3 : constant boolean := Different_Sign(hilo,lolo);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in Sign_Balancers.sign_balance 5 ...");
+    end if;
     if p1 or p2 or p3 then
-      Sign_Balance(hihi,lohi,hilo,lolo,verbose);
+      Sign_Balance(hihi,lohi,hilo,lolo,vrblvl);
       x := create(hihi,lohi,hilo,lolo);
     end if;
   end Sign_Balance;
 
   procedure Sign_Balance ( x : in out octo_double;
-                           verbose : in boolean := true ) is
+                           vrblvl : in integer32 := 0 ) is
 
     hihihi : double_float := hihihi_part(x);
     lohihi : double_float := lohihi_part(x);
@@ -942,15 +1118,18 @@ package body Sign_Balancers is
     p7 : constant boolean := Different_Sign(lohilo,lololo);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in Sign_Balancers.sign_balance 6 ...");
+    end if;
     if p1 or p2 or p3 or p4 or p5 or p6 or p7 then
       Sign_Balance(hihihi,lohihi,hilohi,lolohi,
-                   hihilo,lohilo,hilolo,lololo,verbose);
+                   hihilo,lohilo,hilolo,lololo,vrblvl);
       x := create(hihihi,lohihi,hilohi,lolohi,hihilo,lohilo,hilolo,lololo);
     end if;
   end Sign_Balance;
 
   procedure Sign_Balance ( x : in out hexa_double;
-                           verbose : in boolean := true ) is
+                           vrblvl : in integer32 := 0 ) is
 
     hihihihi : double_float := hihihihi_part(x);
     lohihihi : double_float := lohihihi_part(x);
@@ -985,12 +1164,15 @@ package body Sign_Balancers is
     pF : constant boolean := Different_Sign(lohilolo,lolololo);
 
   begin
+    if vrblvl > 0
+     then put_line("-> in Sign_Balancers.sign_balance 7 ...");
+    end if;
     if p1 or p2 or p3 or p4 or p5 or p6 or p7 
           or p8 or p9 or pA or pB or pC or pD or pE or pF then
       Sign_Balance(hihihihi,lohihihi,hilohihi,lolohihi,
                    hihilohi,lohilohi,hilolohi,lololohi,
                    hihihilo,lohihilo,hilohilo,lolohilo,
-                   hihilolo,lohilolo,hilololo,lolololo,verbose);
+                   hihilolo,lohilolo,hilololo,lolololo,vrblvl);
       x := create(hihihihi,lohihihi,hilohihi,lolohihi,
                   hihilohi,lohilohi,hilolohi,lololohi,
                   hihihilo,lohihilo,hilohilo,lolohilo,

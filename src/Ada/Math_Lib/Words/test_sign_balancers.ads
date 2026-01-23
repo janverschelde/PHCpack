@@ -15,6 +15,23 @@ package Test_Sign_Balancers is
   --   is one bit with an exponent computed so that subtracting this one
   --   last bit from the double results in a fraction that is one bit less.
 
+  procedure Test_Equalize_Signs ( nbr : in double_double );
+  procedure Test_Equalize_Signs ( nbr : in quad_double );
+
+  -- DESCRIPTION :
+  --   Equalizes the parts of the multiple double nbr
+  --   so they all have the same sign.
+
+  procedure Test_DD_Equalize_Signs;
+
+  -- DESCRIPTION :
+  --   Generates two random double doubles and equalizes their signs.
+
+  procedure Test_QD_Equalize_Signs;
+
+  -- DESCRIPTION :
+  --   Generates two random quad doubles and equalizes their signs.
+
   procedure Test_Sign_Balance ( nbr : in double_double );
   procedure Test_Sign_Balance ( nbr : in quad_double );
   procedure Test_Sign_Balance ( nbr : in octo_double );
