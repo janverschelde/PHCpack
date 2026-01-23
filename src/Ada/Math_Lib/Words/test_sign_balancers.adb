@@ -1,5 +1,9 @@
 with text_io;                            use text_io;
+with Communications_with_User;           use Communications_with_User;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Standard_Random_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Octo_Double_Numbers_io;             use Octo_Double_Numbers_io;
@@ -12,9 +16,41 @@ with DoblDobl_Random_Numbers;
 with QuadDobl_Random_Numbers;
 with OctoDobl_Random_Numbers;
 with HexaDobl_Random_Numbers;
+with Bits_of_Doubles;
 with Sign_Balancers;                     use Sign_Balancers;
 
 package body Test_Sign_Balancers is
+
+  function One_Last_Bit ( nbr : double_float ) return double_float is
+
+  -- DESCRIPTION :
+  --   Given a double float number nbr, computes the one last bit of
+  --   its fraction, using the exponent of nbr in the returned double.
+  --   Subtracting the returned number from nbr results in a double
+  --   where the fraction is one less than the fraction of nbr.
+
+    exn : constant integer32 := integer32(double_float'exponent(nbr));
+    res : constant double_float := double_float'compose(1.0, exn - 51);
+
+  begin
+    return res;
+  end One_Last_Bit;
+
+  procedure Test_One_Last_Bit is
+
+    nbr : constant double_float := abs(Standard_Random_Numbers.Random);
+    lst : constant double_float := One_Last_Bit(nbr);
+    nb1 : constant double_float := nbr -lst;
+    
+  begin
+    put("x : "); put(nbr); new_line;
+    put("one last bit : "); put(lst); new_line;
+    put_line("subtracting one last bit from x ...");
+    put("y : "); put(nb1); new_line;
+    put_line("the fractions before and after the subtraction :");
+    put("xf : "); Bits_of_Doubles.write_fraction_bits(nbr);
+    put("yf : "); Bits_of_Doubles.write_fraction_bits(nb1);
+  end Test_One_Last_Bit;
 
   procedure Test_Sign_Balance ( nbr : in double_double ) is
 
@@ -221,14 +257,22 @@ package body Test_Sign_Balancers is
   end Test_Sign_HD_Balance;
 
   procedure Main is
+
+    ans : character;
+
   begin
-    Test_Sign_DD_Balance;
-    new_line;
-    Test_Sign_QD_Balance;
-    new_line;
-    Test_Sign_OD_Balance;
-    new_line;
-    Test_Sign_HD_Balance;
+    Test_One_Last_Bit;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      new_line;
+      Test_Sign_DD_Balance;
+      new_line;
+      Test_Sign_QD_Balance;
+      new_line;
+      Test_Sign_OD_Balance;
+      new_line;
+      Test_Sign_HD_Balance;
+    end if;
   end Main;
 
 end Test_Sign_Balancers;

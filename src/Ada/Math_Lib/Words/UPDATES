@@ -1,3 +1,6 @@
+Thu 22 Jan 2026 : to test_sign_balancers, added the definition of one last
+  bit to develop better sign balancers of multiple doubles.
+
 Sun 5 Oct 2025 : removed excluded_source_files from words.gpr.
 
 Sat 8 Feb 2025 : added ts_modbal.adb to test the balancing of a sequence

@@ -8,6 +8,13 @@ package Test_Sign_Balancers is
 -- DESCRIPTION :
 --   Tests the procedures to balance multiple double numbers.
 
+  procedure Test_One_Last_Bit;
+
+  -- DESCRIPTION :
+  --   The one last bit of a double float is a number where the fraction
+  --   is one bit with an exponent computed so that subtracting this one
+  --   last bit from the double results in a fraction that is one bit less.
+
   procedure Test_Sign_Balance ( nbr : in double_double );
   procedure Test_Sign_Balance ( nbr : in quad_double );
   procedure Test_Sign_Balance ( nbr : in octo_double );
