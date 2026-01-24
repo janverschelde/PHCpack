@@ -17,6 +17,7 @@ package Test_Sign_Balancers is
 
   procedure Test_Equalize_Signs ( nbr : in double_double );
   procedure Test_Equalize_Signs ( nbr : in quad_double );
+  procedure Test_Equalize_Signs ( nbr : in octo_double );
 
   -- DESCRIPTION :
   --   Equalizes the parts of the multiple double nbr
@@ -31,6 +32,11 @@ package Test_Sign_Balancers is
 
   -- DESCRIPTION :
   --   Generates two random quad doubles and equalizes their signs.
+
+  procedure Test_OD_Equalize_Signs;
+
+  -- DESCRIPTION :
+  --   Generates two random octo doubles and equalizes their signs.
 
   procedure Test_Sign_Balance ( nbr : in double_double );
   procedure Test_Sign_Balance ( nbr : in quad_double );

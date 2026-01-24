@@ -96,6 +96,46 @@ package body Test_Sign_Balancers is
     end if;
   end Test_Equalize_Signs;
 
+  procedure Test_Equalize_Signs ( nbr : in octo_double ) is
+
+    x : octo_double := nbr;
+    xb,err : octo_double;
+
+  begin
+    put("x : "); put(x);
+    if Is_Sign_Balanced(x) then
+      put_line(" sign balanced");
+    else
+      put_line(" not sign balanced");
+      put("x hihihi : "); put(hihihi_part(x)); new_line;
+      put("x lohihi : "); put(lohihi_part(x)); new_line;
+      put("x hilohi : "); put(hilohi_part(x)); new_line;
+      put("x lolohi : "); put(lolohi_part(x)); new_line;
+      put("x hihilo : "); put(hihilo_part(x)); new_line;
+      put("x lohilo : "); put(lohilo_part(x)); new_line;
+      put("x hilolo : "); put(hilolo_part(x)); new_line;
+      put("x lololo : "); put(lololo_part(x)); new_line;
+      xb := nbr;
+      Equalize_Signs(x,vrblvl=>1);
+      put("x hihihi : "); put(hihihi_part(x)); new_line;
+      put("x lohihi : "); put(lohihi_part(x)); new_line;
+      put("x hilohi : "); put(hilohi_part(x)); new_line;
+      put("x lolohi : "); put(lolohi_part(x)); new_line;
+      put("x hihilo : "); put(hihilo_part(x)); new_line;
+      put("x lohilo : "); put(lohilo_part(x)); new_line;
+      put("x hilolo : "); put(hilolo_part(x)); new_line;
+      put("x lololo : "); put(lololo_part(x)); new_line;
+      put("org x : "); put(xb); new_line;
+      put("new x : "); put(x); 
+      if Is_Sign_Balanced(x)
+       then put_line(" sign balanced");
+       else put_line(" NOT sign balanced, bug!");
+      end if;
+      err := abs(xb - x);
+      put("error : "); put(err,2); new_line;
+    end if;
+  end Test_Equalize_Signs;
+
   procedure Test_Sign_Balance ( nbr : in double_double ) is
 
     x : double_double := nbr;
@@ -276,6 +316,18 @@ package body Test_Sign_Balancers is
     Test_Equalize_Signs(y);
   end Test_QD_Equalize_Signs;
 
+  procedure Test_OD_Equalize_Signs is
+
+    rnd : constant OctoDobl_Complex_Numbers.Complex_Number
+        := OctoDobl_Random_Numbers.Random1;
+    x : constant octo_double := OctoDobl_Complex_Numbers.REAL_PART(rnd);
+    y : constant octo_double := OctoDobl_Complex_Numbers.IMAG_PART(rnd);
+
+  begin
+    Test_Equalize_Signs(x);
+    Test_Equalize_Signs(y);
+  end Test_OD_Equalize_Signs;
+
   procedure Test_Sign_DD_Balance is
 
     rnd : constant DoblDobl_Complex_Numbers.Complex_Number
@@ -334,22 +386,50 @@ package body Test_Sign_Balancers is
     if ans = 'y' then
       new_line;
       Test_DD_Equalize_Signs;
+    else
+      return;
     end if;
     put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y' then
       new_line;
       Test_QD_Equalize_Signs;
+    else
+      return;
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      new_line;
+      Test_OD_Equalize_Signs;
+    else
+      return;
     end if;
     put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
     if ans = 'y' then
       new_line;
       Test_Sign_DD_Balance;
+    else
+      return;
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
       new_line;
       Test_Sign_QD_Balance;
+    else
+      return;
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
       new_line;
       Test_Sign_OD_Balance;
+    else
+      return;
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
       new_line;
       Test_Sign_HD_Balance;
+    else
+      return;
     end if;
   end Main;
 

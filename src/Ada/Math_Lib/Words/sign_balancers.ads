@@ -52,6 +52,14 @@ package Sign_Balancers is
   -- DESCRIPTION :
   --   Equalizes the signs of the parts of a quad double.
 
+  procedure Equalize_Signs
+              ( hihihi,lohihi,hilohi,lolohi : in out double_float;
+                hihilo,lohilo,hilolo,lololo : in out double_float;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Equalizes the signs of the parts of an octo double.
+
   procedure Equalize_Signs ( x : in out double_double;
                              vrblvl : in integer32 := 0 );
 
@@ -67,6 +75,12 @@ package Sign_Balancers is
 
   -- DESCRIPTION :
   --   Equalizes the signs of the quad double x.
+
+  procedure Equalize_Signs ( x : in out octo_double;
+                             vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Equalizes the signs of the octo double x.
 
 -- BALANCE via redistribution of bits
 
