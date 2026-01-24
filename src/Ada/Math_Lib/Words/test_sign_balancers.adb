@@ -136,6 +136,62 @@ package body Test_Sign_Balancers is
     end if;
   end Test_Equalize_Signs;
 
+  procedure Test_Equalize_Signs ( nbr : in hexa_double ) is
+
+    x : hexa_double := nbr;
+    xb,err : hexa_double;
+
+  begin
+    put("x : "); put(x);
+    if Is_Sign_Balanced(x) then
+      put_line(" sign balanced");
+    else
+      put_line(" not sign balanced");
+      put("x hihihihi : "); put(hihihihi_part(x)); new_line;
+      put("x lohihihi : "); put(lohihihi_part(x)); new_line;
+      put("x hilohihi : "); put(hilohihi_part(x)); new_line;
+      put("x lolohihi : "); put(lolohihi_part(x)); new_line;
+      put("x hihilohi : "); put(hihilohi_part(x)); new_line;
+      put("x lohilohi : "); put(lohilohi_part(x)); new_line;
+      put("x hilolohi : "); put(hilolohi_part(x)); new_line;
+      put("x lololohi : "); put(lololohi_part(x)); new_line;
+      put("x hihihilo : "); put(hihihilo_part(x)); new_line;
+      put("x lohihilo : "); put(lohihilo_part(x)); new_line;
+      put("x hilohilo : "); put(hilohilo_part(x)); new_line;
+      put("x lolohilo : "); put(lolohilo_part(x)); new_line;
+      put("x hihilolo : "); put(hihilolo_part(x)); new_line;
+      put("x lohilolo : "); put(lohilolo_part(x)); new_line;
+      put("x hilololo : "); put(hilololo_part(x)); new_line;
+      put("x lolololo : "); put(lolololo_part(x)); new_line;
+      xb := nbr;
+      Equalize_Signs(x,vrblvl=>1);
+      put("x hihihihi : "); put(hihihihi_part(x)); new_line;
+      put("x lohihihi : "); put(lohihihi_part(x)); new_line;
+      put("x hilohihi : "); put(hilohihi_part(x)); new_line;
+      put("x lolohihi : "); put(lolohihi_part(x)); new_line;
+      put("x hihilohi : "); put(hihilohi_part(x)); new_line;
+      put("x lohilohi : "); put(lohilohi_part(x)); new_line;
+      put("x hilolohi : "); put(hilolohi_part(x)); new_line;
+      put("x lololohi : "); put(lololohi_part(x)); new_line;
+      put("x hihihilo : "); put(hihihilo_part(x)); new_line;
+      put("x lohihilo : "); put(lohihilo_part(x)); new_line;
+      put("x hilohilo : "); put(hilohilo_part(x)); new_line;
+      put("x lolohilo : "); put(lolohilo_part(x)); new_line;
+      put("x hihilolo : "); put(hihilolo_part(x)); new_line;
+      put("x lohilolo : "); put(lohilolo_part(x)); new_line;
+      put("x hilololo : "); put(hilololo_part(x)); new_line;
+      put("x lolololo : "); put(lolololo_part(x)); new_line;
+      put("org x : "); put(xb); new_line;
+      put("new x : "); put(x); 
+      if Is_Sign_Balanced(x)
+       then put_line(" sign balanced");
+       else put_line(" NOT sign balanced, bug!");
+      end if;
+      err := abs(xb - x);
+      put("error : "); put(err,2); new_line;
+    end if;
+  end Test_Equalize_Signs;
+
   procedure Test_Sign_Balance ( nbr : in double_double ) is
 
     x : double_double := nbr;
@@ -328,6 +384,18 @@ package body Test_Sign_Balancers is
     Test_Equalize_Signs(y);
   end Test_OD_Equalize_Signs;
 
+  procedure Test_HD_Equalize_Signs is
+
+    rnd : constant HexaDobl_Complex_Numbers.Complex_Number
+        := HexaDobl_Random_Numbers.Random1;
+    x : constant hexa_double := HexaDobl_Complex_Numbers.REAL_PART(rnd);
+    y : constant hexa_double := HexaDobl_Complex_Numbers.IMAG_PART(rnd);
+
+  begin
+    Test_Equalize_Signs(x);
+    Test_Equalize_Signs(y);
+  end Test_HD_Equalize_Signs;
+
   procedure Test_Sign_DD_Balance is
 
     rnd : constant DoblDobl_Complex_Numbers.Complex_Number
@@ -400,6 +468,13 @@ package body Test_Sign_Balancers is
     if ans = 'y' then
       new_line;
       Test_OD_Equalize_Signs;
+    else
+      return;
+    end if;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      new_line;
+      Test_HD_Equalize_Signs;
     else
       return;
     end if;

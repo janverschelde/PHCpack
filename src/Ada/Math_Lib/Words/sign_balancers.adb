@@ -298,7 +298,7 @@ package body Sign_Balancers is
 
   begin
     if vrblvl > 0
-     then put_line("-> in Sign_Balancers.equalize_signs_4 ...");
+     then put_line("-> in Sign_Balancers.equalize_signs 2 ...");
     end if;
     if hihihi < 0.0 then
       mhihihi := -hihihi;
@@ -413,6 +413,317 @@ package body Sign_Balancers is
     end if;
   end Equalize_Signs;
 
+  procedure Equalize_Signs
+              ( hihihihi,lohihihi,hilohihi,lolohihi : in out double_float;
+                hihilohi,lohilohi,hilolohi,lololohi : in out double_float;
+                hihihilo,lohihilo,hilohilo,lolohilo : in out double_float;
+                hihilolo,lohilolo,hilololo,lolololo : in out double_float;
+                vrblvl : in integer32 := 0 ) is
+
+    bit : double_float;
+    mhihihihi,mlohihihi,mhilohihi,mlolohihi : double_float;
+    mhihilohi,mlohilohi,mhilolohi,mlololohi : double_float;
+    mhihihilo,mlohihilo,mhilohilo,mlolohilo : double_float;
+    mhihilolo,mlohilolo,mhilololo,mlolololo : double_float;
+    hdinc,hdnewlo : hexa_double;
+    odinc,odnewlo : octo_double;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Sign_Balancers.equalize_signs 3 ...");
+    end if;
+    if hihihihi < 0.0 then
+      mhihihihi := -hihihihi;
+      mlohihihi := -lohihihi;
+      mhilohihi := -hilohihi;
+      mlolohihi := -lolohihi;
+      mhihilohi := -hihilohi;
+      mlohilohi := -lohilohi;
+      mhilolohi := -hilolohi;
+      mlololohi := -lololohi;
+      mhihihilo := -hihihilo;
+      mlohihilo := -lohihilo;
+      mhilohilo := -hilohilo;
+      mlolohilo := -lolohilo;
+      mhihilolo := -hihilolo;
+      mlohilolo := -lohilolo;
+      mhilololo := -hilololo;
+      mlolololo := -lolololo;
+      Equalize_Signs(mhihihihi,mlohihihi,mhilohihi,mlolohihi,
+                     mhihilohi,mlohilohi,mhilolohi,mlololohi,
+                     mhihihilo,mlohihilo,mhilohilo,mlolohilo,
+                     mhihilolo,mlohilolo,mhilololo,mlolololo,vrblvl);
+      hihihihi := -mhihihihi;
+      lohihihi := -mlohihihi;
+      hilohihi := -mhilohihi;
+      lolohihi := -mlolohihi;
+      hihilohi := -mhihilohi;
+      lohilohi := -mlohilohi;
+      hilolohi := -mhilolohi;
+      lololohi := -mlololohi;
+      hihihilo := -mhihihilo;
+      lohihilo := -mlohihilo;
+      hilohilo := -mhilohilo;
+      lolohilo := -mlolohilo;
+      hihilolo := -mhihilolo;
+      lohilolo := -mlohilolo;
+      hilololo := -mhilololo;
+      lolololo := -mlolololo;
+    else
+      if Different_Sign(hihihihi,lohihihi) then
+        bit := One_Last_Bit(hihihihi);
+        if vrblvl > 0 then
+          put("b hihihihi : "); Bits_of_Doubles.write_fraction_bits(hihihihi);
+          put("      bit1 : "); Bits_of_Doubles.write_fraction_bits(bit);
+          put("b lohihihi : "); Bits_of_Doubles.write_fraction_bits(lohihihi);
+        end if;
+        hihihihi := hihihihi - bit;
+       -- lohihihi := lohihihi + bit; => leads to a loss of accuracy
+        hdinc := create(bit,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+                        0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+        hdnewlo := create(lohihihi,hilohihi,lolohihi,hihilohi,
+                          lohilohi,hilolohi,lololohi,hihihilo,
+                          lohihilo,hilohilo,lolohilo,hihilolo,
+                          lohilolo,hilololo,lolololo,0.0) + hdinc;
+        lohihihi := hihihihi_part(hdnewlo);
+        hilohihi := lohihihi_part(hdnewlo);
+        lolohihi := hilohihi_part(hdnewlo);
+        hihilohi := lolohihi_part(hdnewlo);
+        lohilohi := hihilohi_part(hdnewlo);
+        hilolohi := lohilohi_part(hdnewlo);
+        lololohi := hilolohi_part(hdnewlo);
+        hihihilo := lololohi_part(hdnewlo);
+        lohihilo := hihihilo_part(hdnewlo);
+        hilohilo := lohihilo_part(hdnewlo);
+        lolohilo := hilohilo_part(hdnewlo);
+        hihilolo := lolohilo_part(hdnewlo);
+        lohilolo := hihilolo_part(hdnewlo);
+        hilololo := lohilolo_part(hdnewlo);
+        lolololo := hilololo_part(hdnewlo);
+        if vrblvl > 0 then
+          put("b hihihihi : "); Bits_of_Doubles.write_fraction_bits(hihihihi);
+          put("b lohihihi : "); Bits_of_Doubles.write_fraction_bits(lohihihi);
+        end if;
+      end if;
+      if Different_Sign(lohihihi,hilohihi) then
+        bit := One_Last_Bit(lohihihi);
+        if vrblvl > 0 then
+          put("b lohihihi : "); Bits_of_Doubles.write_fraction_bits(lohihihi);
+          put("      bit1 : "); Bits_of_Doubles.write_fraction_bits(bit);
+          put("b hilohihi : "); Bits_of_Doubles.write_fraction_bits(hilohihi);
+        end if;
+        lohihihi := lohihihi - bit;
+       -- hilohihi := hilohihi + bit; => leads to a loss of accuracy
+        hdinc := create(bit,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+                        0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+        hdnewlo := create(hilohihi,lolohihi,hihilohi,lohilohi,
+                          hilolohi,lololohi,hihihilo,lohihilo,
+                          hilohilo,lolohilo,hihilolo,lohilolo,
+                          hilololo,lolololo,0.0,0.0) + hdinc;
+        hilohihi := hihihihi_part(hdnewlo);
+        lolohihi := lohihihi_part(hdnewlo);
+        hihilohi := hilohihi_part(hdnewlo);
+        lohilohi := lolohihi_part(hdnewlo);
+        hilolohi := hihilohi_part(hdnewlo);
+        lololohi := lohilohi_part(hdnewlo);
+        hihihilo := hilolohi_part(hdnewlo);
+        lohihilo := lololohi_part(hdnewlo);
+        hilohilo := hihihilo_part(hdnewlo);
+        lolohilo := lohihilo_part(hdnewlo);
+        hihilolo := hilohilo_part(hdnewlo);
+        lohilolo := lolohilo_part(hdnewlo);
+        hilololo := hihilolo_part(hdnewlo);
+        lolololo := lohilolo_part(hdnewlo);
+        if vrblvl > 0 then
+          put("b lohihihi : "); Bits_of_Doubles.write_fraction_bits(lohihihi);
+          put("b hilohihi : "); Bits_of_Doubles.write_fraction_bits(hilohihi);
+        end if;
+      end if;
+      if Different_Sign(hilohihi,lolohihi) then
+        bit := One_Last_Bit(hilohihi);
+        if vrblvl > 0 then
+          put("b hilohihi : "); Bits_of_Doubles.write_fraction_bits(hilohihi);
+          put("      bit1 : "); Bits_of_Doubles.write_fraction_bits(bit);
+          put("b lolohihi : "); Bits_of_Doubles.write_fraction_bits(lolohihi);
+        end if;
+        hilohihi := hilohihi - bit;
+       -- lolohihi := lolohihi + bit; => leads to a loss of accuracy
+        hdinc := create(bit,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+                        0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+        hdnewlo := create(lolohihi,hihilohi,lohilohi,hilolohi,
+                          lololohi,hihihilo,lohihilo,hilohilo,
+                          lolohilo,hihilolo,lohilolo,hilololo,
+                          lolololo,0.0,0.0,0.0) + hdinc;
+        lolohihi := hihihihi_part(hdnewlo);
+        hihilohi := lohihihi_part(hdnewlo);
+        lohilohi := hilohihi_part(hdnewlo);
+        hilolohi := lolohihi_part(hdnewlo);
+        lololohi := hihilohi_part(hdnewlo);
+        hihihilo := lohilohi_part(hdnewlo);
+        lohihilo := hilolohi_part(hdnewlo);
+        hilohilo := lololohi_part(hdnewlo);
+        lolohilo := hihihilo_part(hdnewlo);
+        hihilolo := lohihilo_part(hdnewlo);
+        lohilolo := hilohilo_part(hdnewlo);
+        hilololo := lolohilo_part(hdnewlo);
+        lolololo := hihilolo_part(hdnewlo);
+        if vrblvl > 0 then
+          put("b hilohihi : "); Bits_of_Doubles.write_fraction_bits(hilohihi);
+          put("b lolohihi : "); Bits_of_Doubles.write_fraction_bits(lolohihi);
+        end if;
+      end if;
+      if Different_Sign(lolohihi,hihilohi) then
+        bit := One_Last_Bit(lolohihi);
+        if vrblvl > 0 then
+          put("b lolohihi : "); Bits_of_Doubles.write_fraction_bits(lolohihi);
+          put("      bit1 : "); Bits_of_Doubles.write_fraction_bits(bit);
+          put("b hihilohi : "); Bits_of_Doubles.write_fraction_bits(hihilohi);
+        end if;
+        lolohihi := lolohihi - bit;
+       -- hihilohi := hihilohi + bit; => leads to a loss of accuracy
+        hdinc := create(bit,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+                        0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+        hdnewlo := create(hihilohi,lohilohi,hilolohi,lololohi,
+                          hihihilo,lohihilo,hilohilo,lolohilo,
+                          hihilolo,lohilolo,hilololo,lolololo,
+                          0.0,0.0,0.0,0.0) + hdinc;
+        hihilohi := hihihihi_part(hdnewlo);
+        lohilohi := lohihihi_part(hdnewlo);
+        hilolohi := hilohihi_part(hdnewlo);
+        lololohi := lolohihi_part(hdnewlo);
+        hihihilo := hihilohi_part(hdnewlo);
+        lohihilo := lohilohi_part(hdnewlo);
+        hilohilo := hilolohi_part(hdnewlo);
+        lolohilo := lololohi_part(hdnewlo);
+        hihilolo := hihihilo_part(hdnewlo);
+        lohilolo := lohihilo_part(hdnewlo);
+        hilololo := hilohilo_part(hdnewlo);
+        lolololo := lolohilo_part(hdnewlo);
+        if vrblvl > 0 then
+          put("b lolohihi : "); Bits_of_Doubles.write_fraction_bits(lolohihi);
+          put("b hihilohi : "); Bits_of_Doubles.write_fraction_bits(hihilohi);
+        end if;
+      end if;
+      if Different_Sign(hihilohi,lohilohi) then
+        bit := One_Last_Bit(hihilohi);
+        if vrblvl > 0 then
+          put("b hihilohi : "); Bits_of_Doubles.write_fraction_bits(hihilohi);
+          put("      bit1 : "); Bits_of_Doubles.write_fraction_bits(bit);
+          put("b lohilohi : "); Bits_of_Doubles.write_fraction_bits(lohilohi);
+        end if;
+        hihilohi := hihilohi - bit;
+       -- lohilohi := lohilohi + bit; => leads to a loss of accuracy
+        hdinc := create(bit,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+                        0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+        hdnewlo := create(lohilohi,hilolohi,lololohi,hihihilo,
+                          lohihilo,hilohilo,lolohilo,hihilolo,
+                          lohilolo,hilololo,lolololo,0.0,
+                          0.0,0.0,0.0,0.0) + hdinc;
+        lohilohi := hihihihi_part(hdnewlo);
+        hilolohi := lohihihi_part(hdnewlo);
+        lololohi := hilohihi_part(hdnewlo);
+        hihihilo := lolohihi_part(hdnewlo);
+        lohihilo := hihilohi_part(hdnewlo);
+        hilohilo := lohilohi_part(hdnewlo);
+        lolohilo := hilolohi_part(hdnewlo);
+        hihilolo := lololohi_part(hdnewlo);
+        lohilolo := hihihilo_part(hdnewlo);
+        hilololo := lohihilo_part(hdnewlo);
+        lolololo := hilohilo_part(hdnewlo);
+        if vrblvl > 0 then
+          put("b hihilohi : "); Bits_of_Doubles.write_fraction_bits(hihilohi);
+          put("b lohilohi : "); Bits_of_Doubles.write_fraction_bits(lohilohi);
+        end if;
+      end if;
+      if Different_Sign(lohilohi,hilolohi) then
+        bit := One_Last_Bit(lohilohi);
+        if vrblvl > 0 then
+          put("b lohilohi : "); Bits_of_Doubles.write_fraction_bits(lohilohi);
+          put("      bit1 : "); Bits_of_Doubles.write_fraction_bits(bit);
+          put("b hilolohi : "); Bits_of_Doubles.write_fraction_bits(hilolohi);
+        end if;
+        lohilohi := lohilohi - bit;
+       -- hilolohi := hilolohi + bit; => leads to a loss of accuracy
+        hdinc := create(bit,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+                        0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+        hdnewlo := create(hilolohi,lololohi,hihihilo,lohihilo,
+                          hilohilo,lolohilo,hihilolo,lohilolo,
+                          hilololo,lolololo,0.0,0.0,
+                          0.0,0.0,0.0,0.0) + hdinc;
+        hilolohi := hihihihi_part(hdnewlo);
+        lololohi := lohihihi_part(hdnewlo);
+        hihihilo := hilohihi_part(hdnewlo);
+        lohihilo := lolohihi_part(hdnewlo);
+        hilohilo := hihilohi_part(hdnewlo);
+        lolohilo := lohilohi_part(hdnewlo);
+        hihilolo := hilolohi_part(hdnewlo);
+        lohilolo := lololohi_part(hdnewlo);
+        hilololo := hihihilo_part(hdnewlo);
+        lolololo := lohihilo_part(hdnewlo);
+        if vrblvl > 0 then
+          put("b lohilohi : "); Bits_of_Doubles.write_fraction_bits(lohilohi);
+          put("b hilolohi : "); Bits_of_Doubles.write_fraction_bits(hilolohi);
+        end if;
+      end if;
+      if Different_Sign(hilolohi,lololohi) then
+        bit := One_Last_Bit(hilolohi);
+        if vrblvl > 0 then
+          put("b hilolohi : "); Bits_of_Doubles.write_fraction_bits(hilolohi);
+          put("      bit1 : "); Bits_of_Doubles.write_fraction_bits(bit);
+          put("b lololohi : "); Bits_of_Doubles.write_fraction_bits(lololohi);
+        end if;
+        hilolohi := hilolohi - bit;
+       -- lololohi := lololohi + bit; => leads to a loss of accuracy
+        hdinc := create(bit,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+                        0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+        hdnewlo := create(lololohi,hihihilo,lohihilo,hilohilo,
+                          lolohilo,hihilolo,lohilolo,hilololo,
+                          lolololo,0.0,0.0,0.0,
+                          0.0,0.0,0.0,0.0) + hdinc;
+        lololohi := hihihihi_part(hdnewlo);
+        hihihilo := lohihihi_part(hdnewlo);
+        lohihilo := hilohihi_part(hdnewlo);
+        hilohilo := lolohihi_part(hdnewlo);
+        lolohilo := hihilohi_part(hdnewlo);
+        hihilolo := lohilohi_part(hdnewlo);
+        lohilolo := hilolohi_part(hdnewlo);
+        hilololo := lololohi_part(hdnewlo);
+        lolololo := hihihilo_part(hdnewlo);
+        if vrblvl > 0 then
+          put("b hilolohi : "); Bits_of_Doubles.write_fraction_bits(hilolohi);
+          put("b lololohi : "); Bits_of_Doubles.write_fraction_bits(lololohi);
+        end if;
+      end if;
+      if Different_Sign(lololohi,hihihilo) then
+        bit := One_Last_Bit(lololohi);
+        if vrblvl > 0 then
+          put("b lololohi : "); Bits_of_Doubles.write_fraction_bits(lololohi);
+          put("      bit1 : "); Bits_of_Doubles.write_fraction_bits(bit);
+          put("b hihihilo : "); Bits_of_Doubles.write_fraction_bits(hihihilo);
+        end if;
+        lololohi := lololohi - bit;
+       -- hihihilo := hihihilo + bit; => leads to a loss of accuracy
+        odinc := create(bit,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+        odnewlo := create(hihihilo,lohihilo,hilohilo,lolohilo,
+                          hihilolo,lohilolo,hilololo,lolololo) + odinc;
+        hihihilo := hihihi_part(odnewlo);
+        lohihilo := lohihi_part(odnewlo);
+        hilohilo := hilohi_part(odnewlo);
+        lolohilo := lolohi_part(odnewlo);
+        hihilolo := hihilo_part(odnewlo);
+        lohilolo := lohilo_part(odnewlo);
+        hilololo := hilolo_part(odnewlo);
+        lolololo := lololo_part(odnewlo);
+        if vrblvl > 0 then
+          put("b lololohi : "); Bits_of_Doubles.write_fraction_bits(lololohi);
+          put("b hihihilo : "); Bits_of_Doubles.write_fraction_bits(hihihilo);
+        end if;
+      end if;
+      Equalize_Signs(hihihilo,lohihilo,hilohilo,lolohilo,
+                     hihilolo,lohilolo,hilololo,lolololo,vrblvl);
+    end if;
+  end Equalize_Signs;
+
   procedure Equalize_Signs ( x : in out double_double;
                              vrblvl : in integer32 := 0 ) is
 
@@ -421,7 +732,7 @@ package body Sign_Balancers is
 
   begin
     if vrblvl > 0
-     then put_line("-> in Sign_Balancers.equalize_signs 2 ...");
+     then put_line("-> in Sign_Balancers.equalize_signs 4 ...");
     end if;
     if Different_Sign(hi,lo) then
       Equalize_Signs(hi,lo,vrblvl);
@@ -442,7 +753,7 @@ package body Sign_Balancers is
 
   begin
     if vrblvl > 0
-     then put_line("-> in Sign_Balancers.equalize_signs 3 ...");
+     then put_line("-> in Sign_Balancers.equalize_signs 5 ...");
     end if;
     if p1 or p2 or p3 then
       Equalize_Signs(hihi,lohi,hilo,lolo,vrblvl);
@@ -471,12 +782,64 @@ package body Sign_Balancers is
 
   begin
     if vrblvl > 0
-     then put_line("-> in Sign_Balancers.equalize_signs 5 ...");
+     then put_line("-> in Sign_Balancers.equalize_signs 6 ...");
     end if;
     if p1 or p2 or p3 or p4 or p5 or p6 or p7 then
       Equalize_Signs(hihihi,lohihi,hilohi,lolohi,
                      hihilo,lohilo,hilolo,lololo,vrblvl);
       x := create(hihihi,lohihi,hilohi,lolohi,hihilo,lohilo,hilolo,lololo);
+    end if;
+  end Equalize_Signs;
+
+  procedure Equalize_Signs ( x : in out hexa_double;
+                             vrblvl : in integer32 := 0 ) is
+
+    hihihihi : double_float := hihihihi_part(x);
+    lohihihi : double_float := lohihihi_part(x);
+    hilohihi : double_float := hilohihi_part(x);
+    lolohihi : double_float := lolohihi_part(x);
+    hihilohi : double_float := hihilohi_part(x);
+    lohilohi : double_float := lohilohi_part(x);
+    hilolohi : double_float := hilolohi_part(x);
+    lololohi : double_float := lololohi_part(x);
+    hihihilo : double_float := hihihilo_part(x);
+    lohihilo : double_float := lohihilo_part(x);
+    hilohilo : double_float := hilohilo_part(x);
+    lolohilo : double_float := lolohilo_part(x);
+    hihilolo : double_float := hihilolo_part(x);
+    lohilolo : double_float := lohilolo_part(x);
+    hilololo : double_float := hilololo_part(x);
+    lolololo : double_float := lolololo_part(x);
+    p1 : constant boolean := Different_Sign(hihihihi,lohihihi);
+    p2 : constant boolean := Different_Sign(lohihihi,hilohihi);
+    p3 : constant boolean := Different_Sign(hilohihi,lohihihi);
+    p4 : constant boolean := Different_Sign(lohihihi,lolohihi);
+    p5 : constant boolean := Different_Sign(lolohihi,hihilohi);
+    p6 : constant boolean := Different_Sign(hihilohi,lohilohi);
+    p7 : constant boolean := Different_Sign(lohilohi,lololohi);
+    p8 : constant boolean := Different_Sign(lololohi,hihihilo);
+    p9 : constant boolean := Different_Sign(hihihilo,lohihilo);
+    pA : constant boolean := Different_Sign(lohihilo,hilohilo);
+    pB : constant boolean := Different_Sign(hilohilo,lohihilo);
+    pC : constant boolean := Different_Sign(lohihilo,lolohilo);
+    pD : constant boolean := Different_Sign(lolohilo,hihilolo);
+    pE : constant boolean := Different_Sign(hihilolo,lohilolo);
+    pF : constant boolean := Different_Sign(lohilolo,lolololo);
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Sign_Balancers.equalize_signs 7 ...");
+    end if;
+    if p1 or p2 or p3 or p4 or p5 or p6 or p7 
+          or p8 or p9 or pA or pB or pC or pD or pE or pF then
+      Equalize_Signs(hihihihi,lohihihi,hilohihi,lolohihi,
+                     hihilohi,lohilohi,hilolohi,lololohi,
+                     hihihilo,lohihilo,hilohilo,lolohilo,
+                     hihilolo,lohilolo,hilololo,lolololo,vrblvl);
+      x := create(hihihihi,lohihihi,hilohihi,lolohihi,
+                  hihilohi,lohilohi,hilolohi,lololohi,
+                  hihihilo,lohihilo,hilohilo,lolohilo,
+                  hihilolo,lohilolo,hilololo,lolololo);
     end if;
   end Equalize_Signs;
 
