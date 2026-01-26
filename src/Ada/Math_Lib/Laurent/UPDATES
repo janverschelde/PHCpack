@@ -1,3 +1,6 @@
+Sun 25 Jan 2025 : extended random_laurent_homotopy and test_newton_puiseux
+  with random Laurent homotopies starting at canonical binomials.
+
 Mon 5 Jan 2025 : improved verbose level usage in double_newton_puiseux.adb
   and tested the non-interactive version in test_newton_puiseux.adb.
 

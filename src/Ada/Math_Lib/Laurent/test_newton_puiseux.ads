@@ -9,7 +9,7 @@ package Test_Newton_Puiseux is
 -- DESCRIPTION :
 --   Tests the Newton-Puiseux algorithm on a random Laurent homotopy.
 
-  procedure Define_Homotopy
+  procedure Define_Product_Homotopy
               ( dim : in integer32;
                 nbm,nbt : in Standard_Integer_Vectors.Vector;
                 cff : out Standard_Complex_VecVecs.VecVec;
@@ -36,11 +36,41 @@ package Test_Newton_Puiseux is
   --   hcf      coefficients of the polynomials in the homotopy;
   --   hct      powers of t in the homotopy for each monomial.
 
-  procedure Test ( dim : in integer32 );
+  procedure Define_Binomial_Homotopy
+              ( dim : in integer32;
+                nbm : in Standard_Integer_Vectors.Vector;
+                hdg : out Standard_Integer_VecVecs.Array_of_VecVecs;
+                hcf : out Standard_Complex_VecVecs.VecVec;
+                hct : out Standard_Floating_VecVecs.VecVec;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Given the dimension, number of monomials and number of terms,
+  --   defines a Laurent homotopy starting at canonical binomials.
+
+  -- ON ENTRY :
+  --   dim      number of equations and variables in the homotopy;
+  --   nbm      nbm(i) equals the number of monomials in the system
+  --            used to augment the canonical binomial system;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   hdg      supports of the Laurent homotopy;
+  --   hcf      coefficients of the polynomials in the homotopy;
+  --   hct      powers of t in the homotopy for each monomial.
+
+  procedure Test_Product_Homotopy ( dim : in integer32 );
 
   -- DESCRIPTION :
   --   Runs a test on a Laurent homotopy of dimension dim,
-  --   on a random system with a random series solution.
+  --   on a random system with a random series solution,
+  --   which occurs as a factor of the homotopy.
+
+  procedure Test_Binomial_Homotopy ( dim : in integer32 );
+
+  -- DESCRIPTION :
+  --   Runs a test on a Laurent homotopy of dimension dim,
+  --   on a canonical binomial system augmented with a random Laurent system.
 
   procedure Main;
 

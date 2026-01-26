@@ -58,7 +58,7 @@ package Random_Laurent_Homotopy is
   --   cff      coefficients of the monomials;
   --   tpw      powers of t in the coefficients of the homotopy.      
 
-  procedure Random_Homotopy_Polynomial
+  procedure Product_Homotopy_Polynomial
               ( pdg : in Standard_Integer_VecVecs.VecVec;
                 pcf : in Standard_Complex_Vectors.Vector;
                 ptp : in Standard_Floating_Vectors.Vector;
@@ -93,7 +93,7 @@ package Random_Laurent_Homotopy is
   --   hcf      coefficients of the homotopy;
   --   htp      leading powers of the series coefficients of the homotopy.
 
-  procedure Random_Homotopy
+  procedure Product_Homotopy
               ( pdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
                 pcf : in Standard_Complex_VecVecs.VecVec;
                 ptp : in Standard_Floating_VecVecs.VecVec;
@@ -107,6 +107,8 @@ package Random_Laurent_Homotopy is
   -- DESCRIPTION :
   --   Given a Laurent polynomial system and a power series,
   --   makes a homotopy that has this power series as a solution.
+  --   The polynomials in the homotopy are the product of a factor
+  --   of the form (x - series)*polynomial.
 
   -- REQUIRED :
   --   All vectors have 1..dim as the same range,
@@ -118,6 +120,57 @@ package Random_Laurent_Homotopy is
   --   ptp      leading powers of the series coefficients of the system;
   --   scf      coefficients of the power series solution;
   --   spw      real powers of the series solution;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   hdg      exponents of the monomials in the homotopy;
+  --   hcf      coefficients of the homotopy;
+  --   htp      leading powers of the series coefficients of the homotopy.
+
+  procedure Canonical_Binomial
+              ( idx,dim : in integer32;
+                bdg : out Standard_Integer_VecVecs.VecVec;
+                bcf : out Standard_Complex_Vectors.Vector;
+                btp : out Standard_Floating_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --    Defines a canonical binomial of the form x(idx) - 1,
+  --    where idx is in the range 1..dim.
+
+  -- REQUIRED : bdg'range = 1..2 = bcf'range = btp'range.
+
+  -- ON ENTRY :
+  --   idx      index of the current variable;
+  --   dim      total number of variables.
+
+  -- ON RETURN :
+  --   bdg      degrees of the monomials;
+  --   bcf      corresponding coefficients of the monomials;
+  --   btp      powers of t are zero.
+
+  procedure Binomial_Homotopy
+              ( pdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                pcf : in Standard_Complex_VecVecs.VecVec;
+                ptp : in Standard_Floating_VecVecs.VecVec;
+                hdg : out Standard_Integer_VecVecs.Array_of_VecVecs;
+                hcf : out Standard_Complex_VecVecs.VecVec;
+                htp : out Standard_Floating_VecVecs.VecVec;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Given a Laurent polynomial system and a power series,
+  --   makes a homotopy that starts at canonical binomials.
+  --   The polynomials in the homotopy are of the form
+  --   of the form (x - 1) + polynomial.
+
+  -- REQUIRED :
+  --   All vectors have 1..dim as the same range,
+  --   where dim is the number of polynomials and the number of variables.
+
+  -- ON ENTRY :
+  --   pdg      exponents of the monomials in the system;
+  --   pcf      coefficients of the system;
+  --   ptp      leading powers of the series coefficients of the system;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
@@ -145,7 +198,7 @@ package Random_Laurent_Homotopy is
   --   in deg, coefficients in cff, and leading powers in tpw,
   --   at the point zpt and parameter tpt.
 
-  procedure Test_Random_Homotopy
+  procedure Test_Product_Homotopy
               ( hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
                 hcf : in Standard_Complex_VecVecs.VecVec;
                 htp : in Standard_Floating_VecVecs.VecVec;

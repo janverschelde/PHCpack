@@ -14,7 +14,7 @@ with Double_Newton_Puiseux;
 
 package body Test_Newton_Puiseux is
 
-  procedure Define_Homotopy
+  procedure Define_Product_Homotopy
               ( dim : in integer32;
                 nbm,nbt : in Standard_Integer_Vectors.Vector;
                 cff : out Standard_Complex_VecVecs.VecVec;
@@ -52,7 +52,7 @@ package body Test_Newton_Puiseux is
         end loop;
       end loop;
     end if;
-    Random_Laurent_Homotopy.Random_Homotopy(pdg,pcf,pct,cff,pwr,hdg,hcf,hct,1);
+    Random_Laurent_Homotopy.Product_Homotopy(pdg,pcf,pct,cff,pwr,hdg,hcf,hct,1);
     Random_Laurent_Homotopy.Scale_Homotopy_Powers(hct);
     if vrblvl > 0 then
       for i in 1..dim loop
@@ -65,8 +65,49 @@ package body Test_Newton_Puiseux is
         end loop;
       end loop;
     end if;
-    Random_Laurent_Homotopy.Test_Random_Homotopy(hdg,hcf,hct,cff,pwr);
-  end Define_Homotopy;
+    Random_Laurent_Homotopy.Test_Product_Homotopy(hdg,hcf,hct,cff,pwr);
+  end Define_Product_Homotopy;
+
+  procedure Define_Binomial_Homotopy
+              ( dim : in integer32;
+                nbm : in Standard_Integer_Vectors.Vector;
+                hdg : out Standard_Integer_VecVecs.Array_of_VecVecs;
+                hcf : out Standard_Complex_VecVecs.VecVec;
+                hct : out Standard_Floating_VecVecs.VecVec;
+                vrblvl : in integer32 := 0 ) is
+
+    pdg : Standard_Integer_VecVecs.Array_of_VecVecs(1..dim);
+    pcf : Standard_Complex_VecVecs.VecVec(1..dim);
+    pct : Standard_Floating_VecVecs.VecVec(1..dim);
+
+  begin
+    Random_Laurent_Homotopy.Random_Laurent_System
+      (dim,dim,-9,9,nbm,pdg,pcf,pct);
+    if vrblvl > 0 then
+      for i in 1..dim loop
+        put("-> coefficients and degrees of polynomial ");
+        put(i,1); put_line(" :");
+        for j in 1..nbm(i) loop
+          put(pcf(i)(j)); 
+          put(" t^"); put(pct(i)(j));
+          put("  "); put(pdg(i)(j)); new_line;
+        end loop;
+      end loop;
+    end if;
+    Random_Laurent_Homotopy.Binomial_Homotopy(pdg,pcf,pct,hdg,hcf,hct,1);
+    Random_Laurent_Homotopy.Scale_Homotopy_Powers(hct);
+    if vrblvl > 0 then
+      for i in 1..dim loop
+        put("-> coefficients and degrees of homotopy ");
+        put(i,1); put_line(" :");
+        for j in hcf(i)'range loop
+          put(hcf(i)(j)); 
+          put(" t^"); put(hct(i)(j));
+          put("  "); put(hdg(i)(j)); new_line;
+        end loop;
+      end loop;
+    end if;
+  end Define_Binomial_Homotopy;
 
   procedure Run_Diagonal_Newton_Steps
               ( hcf : in Standard_Complex_VecVecs.VecVec;
@@ -138,7 +179,7 @@ package body Test_Newton_Puiseux is
     end if;
   end Run_Diagonal_Newton_Steps;
 
-  procedure Test ( dim : in integer32 ) is
+  procedure Test_Product_Homotopy ( dim : in integer32 ) is
 
     nbm : Standard_Integer_Vectors.Vector(1..dim) := (1..dim => 0);
     nbt : Standard_Integer_Vectors.Vector(1..dim) := (1..dim => 0);
@@ -160,7 +201,7 @@ package body Test_Newton_Puiseux is
       put("  Give the number of terms in series "); put(i,1);
       put(" : "); get(nbt(i));
     end loop;
-    Define_Homotopy(dim,nbm,nbt,cff,pwr,hdg,hcf,hct,1);
+    Define_Product_Homotopy(dim,nbm,nbt,cff,pwr,hdg,hcf,hct,1);
     new_line;
     put("Run interactive version ? (y/n) ");
     Communications_with_User.Ask_Yes_or_No(ans);
@@ -169,16 +210,74 @@ package body Test_Newton_Puiseux is
      then Double_Newton_Puiseux.Run_Newton_Step(hcf,hct,hdg,cff,pwr,vrblvl=>4);
      else Run_Diagonal_Newton_Steps(hcf,hct,hdg,cff,pwr);
     end if;
-  end Test;
+  end Test_Product_Homotopy;
+
+  procedure Test_Binomial_Homotopy ( dim : in integer32 ) is
+
+    nbm : Standard_Integer_Vectors.Vector(1..dim) := (1..dim => 0);
+    hdg : Standard_Integer_VecVecs.Array_of_VecVecs(1..dim);
+    hcf : Standard_Complex_VecVecs.VecVec(1..dim);
+    hct : Standard_Floating_VecVecs.VecVec(1..dim);
+    cf0,cf1,cf2,cf3,cf4 : Standard_Complex_Vectors.Vector(1..dim);
+    pw1,pw2,pw3,pw4 : Standard_Floating_Vectors.Vector(1..dim);
+    nbr : integer32 := 0;
+    tol : constant double_float := 1.0e-12;
+
+  begin
+    put_line("Reading the number of monomials for every polynomial ...");
+    for i in 1..dim loop
+      put("  Give the number of monomials in polynomial "); put(i,1);
+      put(" : "); get(nbm(i));
+    end loop;
+    Define_Binomial_Homotopy(dim,nbm,hdg,hcf,hct,1);
+    for i in cf0'range loop
+      cf0(i) := Create(1.0);
+    end loop;
+    new_line;
+   -- put("Give the number of iterations : "); get(nbr);
+   -- if nbr > 4
+   --  then nbr := 4;
+   -- end if;
+    nbr := 4;
+    Double_Newton_Puiseux.Diagonal_Newton_Steps
+      (hcf,hct,hdg,cf0,nbr,cf1,cf2,cf3,cf4,pw1,pw2,pw3,pw4,tol,2);
+    put_line("first terms :");
+    for i in 1..dim loop
+      put(cf1(i)); put("  t^"); put(pw1(i)); new_line;
+    end loop;
+    put_line("second terms :");
+    for i in 1..dim loop
+      put(cf2(i)); put("  t^"); put(pw2(i)); new_line;
+    end loop;
+    put_line("third terms :");
+    for i in 1..dim loop
+      put(cf3(i)); put("  t^"); put(pw3(i)); new_line;
+    end loop;
+    put_line("fouth terms :");
+    for i in 1..dim loop
+      put(cf4(i)); put("  t^"); put(pw4(i)); new_line;
+    end loop;
+  end Test_Binomial_Homotopy;
 
   procedure Main is
 
     dim : integer32 := 0;
+    ans : character;
 
   begin
     new_line;
     put("Give the number of variables : "); get(dim);
-    Test(dim);
+    new_line;
+    put("Test product homotopy ? (y/n) ");
+    Communications_with_User.Ask_Yes_or_No(ans);
+    new_line;
+    if ans = 'y' then
+      put_line("-> testing product homotopy ...");
+      Test_Product_Homotopy(dim);
+    else
+      put_line("-> testing homotopy starting at binomials ...");
+      Test_Binomial_Homotopy(dim);
+    end if;
   end Main;
 
 end Test_Newton_Puiseux;

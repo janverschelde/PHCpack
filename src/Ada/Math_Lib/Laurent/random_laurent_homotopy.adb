@@ -66,7 +66,7 @@ package body Random_Laurent_Homotopy is
     end loop;
   end Random_Laurent_System;
 
-  procedure Random_Homotopy_Polynomial
+  procedure Product_Homotopy_Polynomial
               ( pdg : in Standard_Integer_VecVecs.VecVec;
                 pcf : in Standard_Complex_Vectors.Vector;
                 ptp : in Standard_Floating_Vectors.Vector;
@@ -114,9 +114,9 @@ package body Random_Laurent_Homotopy is
        then put("idx : "); put(idx,1); new_line;
       end if;
     end loop;
-  end Random_Homotopy_Polynomial;
+  end Product_Homotopy_Polynomial;
 
-  procedure Random_Homotopy
+  procedure Product_Homotopy
               ( pdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
                 pcf : in Standard_Complex_VecVecs.VecVec;
                 ptp : in Standard_Floating_VecVecs.VecVec;
@@ -148,14 +148,77 @@ package body Random_Laurent_Homotopy is
         hci : Standard_Complex_Vectors.Vector(1..size);
         hti : Standard_Floating_Vectors.Vector(1..size);
       begin
-        Random_Homotopy_Polynomial
+        Product_Homotopy_Polynomial
           (pdg(i).all,pcf(i).all,ptp(i).all,scf,spw,i,hdi,hci,hti,vrblvl-1);
         hdg(i) := new Standard_Integer_VecVecs.VecVec'(hdi);
         hcf(i) := new Standard_Complex_Vectors.Vector'(hci);
         htp(i) := new Standard_Floating_Vectors.Vector'(hti);
       end;
     end loop;
-  end Random_Homotopy;
+  end Product_Homotopy;
+
+  procedure Canonical_Binomial
+              ( idx,dim : in integer32;
+                bdg : out Standard_Integer_VecVecs.VecVec;
+                bcf : out Standard_Complex_Vectors.Vector;
+                btp : out Standard_Floating_Vectors.Vector ) is
+
+    mon : Standard_Integer_Vectors.Vector(1..dim) := (1..dim => 0);
+
+  begin
+    mon(idx) := 1;
+    bdg(1) := new Standard_Integer_Vectors.Vector'(mon);
+    mon(idx) := 0;
+    bdg(2) := new Standard_Integer_Vectors.Vector'(mon);
+    bcf(1) := create(1.0);
+    bcf(2) := create(-1.0);
+    btp(1) := 0.0;
+    btp(2) := 0.0;
+  end Canonical_Binomial;
+
+  procedure Binomial_Homotopy
+              ( pdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                pcf : in Standard_Complex_VecVecs.VecVec;
+                ptp : in Standard_Floating_VecVecs.VecVec;
+                hdg : out Standard_Integer_VecVecs.Array_of_VecVecs;
+                hcf : out Standard_Complex_VecVecs.VecVec;
+                htp : out Standard_Floating_VecVecs.VecVec;
+                vrblvl : in integer32 := 0 ) is
+
+    bdg : Standard_Integer_VecVecs.VecVec(1..2);
+    bcf : Standard_Complex_Vectors.Vector(1..2);
+    btp : Standard_Floating_Vectors.Vector(1..2);
+    dim : constant integer32 := pdg'last;
+    size : integer32;
+
+  begin
+    for i in pdg'range loop
+      Canonical_Binomial(i,dim,bdg,bcf,btp);
+      size := pdg(i)'last+2;
+      if vrblvl > 0 then
+        put("nbm : "); put(pdg(i)'last,1);
+        put(", polynomial "); put(i,1);
+        put(" has size "); put(size,1); new_line;
+      end if;
+      declare
+        hdi : Standard_Integer_VecVecs.VecVec(1..size);
+        hci : Standard_Complex_Vectors.Vector(1..size);
+        hti : Standard_Floating_Vectors.Vector(1..size);
+      begin
+        hdi(1) := bdg(1); hdi(2) := bdg(2);
+        hci(1) := bcf(1); hci(2) := bcf(2);
+        hti(1) := btp(1); hti(2) := btp(2);
+        for j in pdg(i)'range loop
+          hdi(2+j) := pdg(i)(j);
+          hci(2+j) := pcf(i)(j);
+          hti(2+j) := ptp(i)(j);
+        end loop;
+        hdg(i) := new Standard_Integer_VecVecs.VecVec'(hdi);
+        hcf(i) := new Standard_Complex_Vectors.Vector'(hci);
+        htp(i) := new Standard_Floating_Vectors.Vector'(hti);
+      end;
+    end loop;
+  end Binomial_Homotopy;
 
   procedure Scale_Homotopy_Powers
               ( hct : in out Standard_Floating_Vectors.Vector ) is
@@ -240,7 +303,7 @@ package body Random_Laurent_Homotopy is
     return res;
   end Evaluate_Homotopy;
 
-  procedure Test_Random_Homotopy
+  procedure Test_Product_Homotopy
               ( hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
                 hcf : in Standard_Complex_VecVecs.VecVec;
                 htp : in Standard_Floating_VecVecs.VecVec;
@@ -257,6 +320,6 @@ package body Random_Laurent_Homotopy is
     put("random t : "); put(tpt); new_line;
     put_line("evaluated series :"); put_line(zpt);
     put_line("evaluated homotopy :"); put_line(hpt);
-  end Test_Random_Homotopy;
+  end Test_Product_Homotopy;
 
 end Random_Laurent_Homotopy;
