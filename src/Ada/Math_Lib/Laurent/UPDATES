@@ -1,3 +1,6 @@
+Tue 27 Jan 2026 : updates in test_{leading, ordered}_evaluations.adb for
+  name changes of procedures in random_laurent_homotopy.
+
 Mon 26 Jan 2026 : added evaluation test to test_newton_puiseux.adb.
 
 Sun 25 Jan 2026 : extended random_laurent_homotopy and test_newton_puiseux

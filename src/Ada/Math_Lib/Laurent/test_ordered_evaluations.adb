@@ -602,7 +602,7 @@ package body Test_Ordered_Evaluations is
       put(" t^"); put(pct(i));
       put("  "); put(pdg(i)); new_line;
     end loop;
-    Random_Laurent_Homotopy.Random_Homotopy_Polynomial
+    Random_Laurent_Homotopy.Product_Homotopy_Polynomial
       (pdg,pcf,pct,cff,pwr,1,hdg,hcf,hct);
     Random_Laurent_Homotopy.Scale_Homotopy_Powers(hct);
     put_line("the homotopy polynomial :");

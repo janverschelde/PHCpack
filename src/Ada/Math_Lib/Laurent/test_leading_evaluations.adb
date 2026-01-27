@@ -431,7 +431,7 @@ package body Test_Leading_Evaluations is
         put(cff(i)(j)); put("  t^"); put(pwr(i)(j)); new_line;
       end loop;
     end loop;
-    Random_Laurent_Homotopy.Random_Homotopy(pdg,pcf,pct,cff,pwr,hdg,hcf,hct);
+    Random_Laurent_Homotopy.Product_Homotopy(pdg,pcf,pct,cff,pwr,hdg,hcf,hct);
     for i in 1..dim loop
       put("-> coefficients and degrees of homotopy ");
       put(i,1); put_line(" :");
@@ -441,7 +441,7 @@ package body Test_Leading_Evaluations is
         put("  "); put(hdg(i)(j)); new_line;
       end loop;
     end loop;
-    Random_Laurent_Homotopy.Test_Random_Homotopy(hdg,hcf,hct,cff,pwr);
+    Random_Laurent_Homotopy.Test_Product_Homotopy(hdg,hcf,hct,cff,pwr);
   end Test_Homotopy;
 
   procedure Main is
