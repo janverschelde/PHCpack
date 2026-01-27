@@ -9,7 +9,7 @@ with Standard_Floating_Vectors;
 with Hexa_Double_Numbers;                use Hexa_Double_Numbers;
 with Hexa_Double_Numbers_io;             use Hexa_Double_Numbers_io;
 with Hexa_Double_Vectors;
-with Balanced_Quarter_Doubles;
+with Random_Balanced_Quarters;
 with Vectored_Hexa_Doubles;
 with Multitasking;
 
@@ -64,22 +64,22 @@ package body Test_Vectored_Hexa_Doubles is
   begin
     put("Testing the balanced product on dimension ");
     put(dim,1); put(" and frequency "); put(freq,1); put_line(" ...");
-    Balanced_Quarter_Doubles.Random
+    Random_Balanced_Quarters.Random
       (dim,x00,x01,x02,x03,x04,x05,x06,x07,x08,x09,x10,x11,x12,x13,x14,x15,
            x16,x17,x18,x19,x20,x21,x22,x23,x24,x25,x26,x27,x28,x29,x30,x31,
            x32,x33,x34,x35,x36,x37,x38,x39,x40,x41,x42,x43,x44,x45,x46,x47,
            x48,x49,x50,x51,x52,x53,x54,x55,x56,x57,x58,x59,x60,x61,x62,x63);
-    Balanced_Quarter_Doubles.Random
+    Random_Balanced_Quarters.Random
       (dim,y00,y01,y02,y03,y04,y05,y06,y07,y08,y09,y10,y11,y12,y13,y14,y15,
            y16,y17,y18,y19,y20,y21,y22,y23,y24,y25,y26,y27,y28,y29,y30,y31,
            y32,y33,y34,y35,y36,y37,y38,y39,y40,y41,y42,y43,y44,y45,y46,y47,
            y48,y49,y50,y51,y52,y53,y54,y55,y56,y57,y58,y59,y60,y61,y62,y63);
-    x := Balanced_Quarter_Doubles.Make_Hexa_Doubles
+    x := Random_Balanced_Quarters.Make_Hexa_Doubles
            (x00,x01,x02,x03,x04,x05,x06,x07,x08,x09,x10,x11,x12,x13,x14,x15,
             x16,x17,x18,x19,x20,x21,x22,x23,x24,x25,x26,x27,x28,x29,x30,x31,
             x32,x33,x34,x35,x36,x37,x38,x39,x40,x41,x42,x43,x44,x45,x46,x47,
             x48,x49,x50,x51,x52,x53,x54,x55,x56,x57,x58,x59,x60,x61,x62,x63);
-    y := Balanced_Quarter_Doubles.Make_Hexa_Doubles
+    y := Random_Balanced_Quarters.Make_Hexa_Doubles
            (y00,y01,y02,y03,y04,y05,y06,y07,y08,y09,y10,y11,y12,y13,y14,y15,
             y16,y17,y18,y19,y20,y21,y22,y23,y24,y25,y26,y27,y28,y29,y30,y31,
             y32,y33,y34,y35,y36,y37,y38,y39,y40,y41,y42,y43,y44,y45,y46,y47,
@@ -185,12 +185,12 @@ package body Test_Vectored_Hexa_Doubles is
    -- Test_Balanced_Product(dim,freq);
     put("Running the balanced product on dimension ");
     put(dim,1); put(" and frequency "); put(freq,1); put_line(" ...");
-    Balanced_Quarter_Doubles.Random
+    Random_Balanced_Quarters.Random
       (dim,x00,x01,x02,x03,x04,x05,x06,x07,x08,x09,x10,x11,x12,x13,x14,x15,
            x16,x17,x18,x19,x20,x21,x22,x23,x24,x25,x26,x27,x28,x29,x30,x31,
            x32,x33,x34,x35,x36,x37,x38,x39,x40,x41,x42,x43,x44,x45,x46,x47,
            x48,x49,x50,x51,x52,x53,x54,x55,x56,x57,x58,x59,x60,x61,x62,x63);
-    Balanced_Quarter_Doubles.Random
+    Random_Balanced_Quarters.Random
       (dim,y00,y01,y02,y03,y04,y05,y06,y07,y08,y09,y10,y11,y12,y13,y14,y15,
            y16,y17,y18,y19,y20,y21,y22,y23,y24,y25,y26,y27,y28,y29,y30,y31,
            y32,y33,y34,y35,y36,y37,y38,y39,y40,y41,y42,y43,y44,y45,y46,y47,
@@ -304,12 +304,12 @@ package body Test_Vectored_Hexa_Doubles is
     put("Running the balanced product on dimension ");
     put(dim,1); put(" and frequency "); put(freq,1); put_line(",");
     put("with "); put(nt,1); put_line(" threads ...");
-    Balanced_Quarter_Doubles.Random
+    Random_Balanced_Quarters.Random
       (dim,x00,x01,x02,x03,x04,x05,x06,x07,x08,x09,x10,x11,x12,x13,x14,x15,
            x16,x17,x18,x19,x20,x21,x22,x23,x24,x25,x26,x27,x28,x29,x30,x31,
            x32,x33,x34,x35,x36,x37,x38,x39,x40,x41,x42,x43,x44,x45,x46,x47,
            x48,x49,x50,x51,x52,x53,x54,x55,x56,x57,x58,x59,x60,x61,x62,x63);
-    Balanced_Quarter_Doubles.Random
+    Random_Balanced_Quarters.Random
       (dim,y00,y01,y02,y03,y04,y05,y06,y07,y08,y09,y10,y11,y12,y13,y14,y15,
            y16,y17,y18,y19,y20,y21,y22,y23,y24,y25,y26,y27,y28,y29,y30,y31,
            y32,y33,y34,y35,y36,y37,y38,y39,y40,y41,y42,y43,y44,y45,y46,y47,

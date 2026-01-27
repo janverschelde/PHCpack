@@ -10,13 +10,15 @@ with Quad_Double_Vectors;
 with Octo_Double_Vectors;
 with Hexa_Double_Vectors;
 
-package Balanced_Quarter_Doubles is
+package Random_Balanced_Quarters is
 
 -- DESCRIPTION :
 --   A double is quarter balanced is its quarters are sign balanced
 --   (that is: all doubles have the same sign as the leading quarter)
 --   and the binary exponents of the quarters are e+0, e-13, e-26, e-39,
 --   where e is the exponent of the first quarter.
+--   Generating random 13 bits where the leading bit equals one
+--   for each quarter with the proper exponent yields balanced quarters.
 
   function Thirteen_Random_Bits return integer64;
 
@@ -41,14 +43,6 @@ package Balanced_Quarter_Doubles is
   --   their freedom numbers and deviations are shown.
   --   If the deviances are larger than the freedom number
   --   of any quarter, then the quarters are not balanced.
-
-  procedure Split ( x : in double_float;
-                    x0,x1,x2,x3,x4 : out double_float;
-                    verbose : in boolean := true );
-
-  -- DESCRIPTION :
-  --   Splits x into balanced quarters x0, x1, x2, x3, with a tail x4.
-  --   If verbose, then the steps are documented.
 
   procedure Random ( x0,x1,x2,x3 : out double_float );
 
@@ -246,4 +240,4 @@ package Balanced_Quarter_Doubles is
   -- DESCRIPTION :
   --   Returns a vector of range 1..dim of random balanced quarters.
 
-end Balanced_Quarter_Doubles;
+end Random_Balanced_Quarters;

@@ -1,6 +1,6 @@
-with Test_Balanced_Quarter_Doubles;
+with Test_Random_Balanced_Quarters;
 
 procedure ts_qtrbal is
 begin
-  Test_Balanced_Quarter_Doubles.Main;
+  Test_Random_Balanced_Quarters.Main;
 end ts_qtrbal;

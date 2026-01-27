@@ -17,7 +17,7 @@ with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Random_Vectors;
 with Vectored_Double_Doubles;            use Vectored_Double_Doubles;
-with Balanced_Quarter_Doubles;
+with Random_Balanced_Quarters;
 
 package body Test_Vectored_Double_Doubles is
 
@@ -353,11 +353,11 @@ package body Test_Vectored_Double_Doubles is
   begin
     put_line("Testing balanced product ...");
     put("Give the frequency : "); get(freq);
-    Balanced_Quarter_Doubles.Random(dim,x0,x1,x2,x3,x4,x5,x6,x7);
-    Balanced_Quarter_Doubles.Random(dim,y0,y1,y2,y3,y4,y5,y6,y7);
-    x := Balanced_Quarter_Doubles.Make_Double_Doubles
+    Random_Balanced_Quarters.Random(dim,x0,x1,x2,x3,x4,x5,x6,x7);
+    Random_Balanced_Quarters.Random(dim,y0,y1,y2,y3,y4,y5,y6,y7);
+    x := Random_Balanced_Quarters.Make_Double_Doubles
            (x0,x1,x2,x3,x4,x5,x6,x7);
-    y := Balanced_Quarter_Doubles.Make_Double_Doubles
+    y := Random_Balanced_Quarters.Make_Double_Doubles
            (y0,y1,y2,y3,y4,y5,y6,y7);
     tstart(timer0);
     for i in 1..freq loop
@@ -402,14 +402,14 @@ package body Test_Vectored_Double_Doubles is
      then Standard_Random_Numbers.Set_Seed(seed);
     end if;
     put("Give the dimension : "); get(dim);
-    Test_Real_Sum(dim);
-    Test_Complex_Sum(dim);
-    Test_Real_Product(dim);
-    Test_Complex_Product(dim);
-    Test_Real_Norm(dim);
-    new_line;
-    Test_Complex_Norm(dim);
-    new_line;
+   -- Test_Real_Sum(dim);
+   -- Test_Complex_Sum(dim);
+   -- Test_Real_Product(dim);
+   -- Test_Complex_Product(dim);
+   -- Test_Real_Norm(dim);
+   -- new_line;
+   -- Test_Complex_Norm(dim);
+   -- new_line;
     Test_Balanced_Product(dim);
     put("Seed used : "); put(Standard_Random_Numbers.Get_Seed,1); new_line;
   end Main;

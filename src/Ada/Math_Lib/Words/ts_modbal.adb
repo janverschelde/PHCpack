@@ -6,7 +6,7 @@ with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Floating_Vectors;
 with Standard_Random_Vectors;
 with Bits_of_Doubles;                    use Bits_of_Doubles;
-with Balanced_Quarter_Doubles;
+with Random_Balanced_Quarters;
 
 procedure ts_modbal is
 
@@ -104,7 +104,7 @@ procedure ts_modbal is
 
   begin
     Bits_of_Doubles.Split(mct,m0,m1,m2,m3);
-    mbal := Balanced_Quarter_Doubles.Is_Balanced(0,m0,m1,m2,m3);
+    mbal := Random_Balanced_Quarters.Is_Balanced(0,m0,m1,m2,m3);
     if mbal
      then put(mct); put_line(" is balanced");
      else put(mct); put_line(" is NOT balanced!");
@@ -118,13 +118,13 @@ procedure ts_modbal is
     end loop;
     for i in 1..dim loop
        Bits_of_Doubles.Split(x(i),x0,x1,x2,x3);
-       xbal := Balanced_Quarter_Doubles.Is_Balanced(0,x0,x1,x2,x3);
+       xbal := Random_Balanced_Quarters.Is_Balanced(0,x0,x1,x2,x3);
        Bits_of_Doubles.Split(xplus(i),x0,x1,x2,x3);
        x0 := m0 + x0;
        x1 := m1 + x1;
        x2 := m2 + x2;
        x3 := m3 + x3;
-       xpbal := Balanced_Quarter_Doubles.Is_Balanced(0,x0,x1,x2,x3);
+       xpbal := Random_Balanced_Quarters.Is_Balanced(0,x0,x1,x2,x3);
        Bits_of_Doubles.Split(xmin(i),x0,x1,x2,x3);
        x0 := x0 - m0;
        if x0 < 0.0
@@ -142,7 +142,7 @@ procedure ts_modbal is
        if x3 < 0.0
         then x3 := -x3;
        end if;
-       xmbal := Balanced_Quarter_Doubles.Is_Balanced(0,x0,x1,x2,x3);
+       xmbal := Random_Balanced_Quarters.Is_Balanced(0,x0,x1,x2,x3);
        put("x balanced : ");
        if xbal
         then put("true"); xcnt := xcnt + 1;

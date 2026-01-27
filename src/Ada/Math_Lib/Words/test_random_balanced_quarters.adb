@@ -1,6 +1,5 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
@@ -15,9 +14,9 @@ with Octo_Double_Numbers_io;             use Octo_Double_Numbers_io;
 with Hexa_Double_Numbers;                use Hexa_Double_Numbers;
 with Hexa_Double_Numbers_io;             use Hexa_Double_Numbers_io;
 with Bits_of_Doubles;
-with Balanced_Quarter_Doubles;
+with Random_Balanced_Quarters;
 
-package body Test_Balanced_Quarter_Doubles is
+package body Test_Random_Balanced_Quarters is
 
   procedure Test_Thirteen_Bits is
 
@@ -25,7 +24,7 @@ package body Test_Balanced_Quarter_Doubles is
 
   begin
     put_line("Making thirteen random bits ...");
-    nbr := Balanced_Quarter_Doubles.Thirteen_Random_Bits;
+    nbr := Random_Balanced_Quarters.Thirteen_Random_Bits;
     put("n : "); put(nbr,1); new_line;
     put("b : "); put(nbr,1,b=>2); new_line;
   end Test_Thirteen_Bits;
@@ -67,7 +66,7 @@ package body Test_Balanced_Quarter_Doubles is
 
   begin
     put_line("Making a random balanced quarter double ...");
-    Balanced_Quarter_Doubles.Random(x0,x1,x2,x3);
+    Random_Balanced_Quarters.Random(x0,x1,x2,x3);
     Write_Quarters(x0,x1,x2,x3);
   end Test_Random_Quarters;
 
@@ -81,7 +80,7 @@ package body Test_Balanced_Quarter_Doubles is
 
   begin
     put_line("Making vectors of random balanced quarter doubles ...");
-    Balanced_Quarter_Doubles.Random(dim,x0,x1,x2,x3);
+    Random_Balanced_Quarters.Random(dim,x0,x1,x2,x3);
     for i in 1..dim loop
       Write_Quarters(x0(i),x1(i),x2(i),x3(i));
     end loop;
@@ -89,7 +88,7 @@ package body Test_Balanced_Quarter_Doubles is
 
   procedure Test_Double_Wrapper is
 
-    x : constant double_float := Balanced_Quarter_Doubles.Random;
+    x : constant double_float := Random_Balanced_Quarters.Random;
     x0,x1,x2,x3 : double_float;
 
   begin
@@ -100,7 +99,7 @@ package body Test_Balanced_Quarter_Doubles is
 
   procedure Test_Double_Double_Wrapper is
 
-    x : constant double_double := Balanced_Quarter_Doubles.Random;
+    x : constant double_double := Random_Balanced_Quarters.Random;
     x0,x1,x2,x3,x4,x5,x6,x7 : double_float;
 
   begin
@@ -113,7 +112,7 @@ package body Test_Balanced_Quarter_Doubles is
 
   procedure Test_Quad_Double_Wrapper is
 
-    x : constant quad_double := Balanced_Quarter_Doubles.Random;
+    x : constant quad_double := Random_Balanced_Quarters.Random;
     x0,x1,x2,x3,x4,x5,x6,x7 : double_float;
     x8,x9,xA,xB,xC,xD,xE,xF : double_float;
 
@@ -131,7 +130,7 @@ package body Test_Balanced_Quarter_Doubles is
 
   procedure Test_Octo_Double_Wrapper is
 
-    x : constant octo_double := Balanced_Quarter_Doubles.Random;
+    x : constant octo_double := Random_Balanced_Quarters.Random;
     x00,x01,x02,x03,x04,x05,x06,x07 : double_float;
     x08,x09,x10,x11,x12,x13,x14,x15 : double_float;
     x16,x17,x18,x19,x20,x21,x22,x23 : double_float;
@@ -159,7 +158,7 @@ package body Test_Balanced_Quarter_Doubles is
 
   procedure Test_Hexa_Double_Wrapper is
 
-    x : constant hexa_double := Balanced_Quarter_Doubles.Random;
+    x : constant hexa_double := Random_Balanced_Quarters.Random;
     x00,x01,x02,x03,x04,x05,x06,x07 : double_float;
     x08,x09,x10,x11,x12,x13,x14,x15 : double_float;
     x16,x17,x18,x19,x20,x21,x22,x23 : double_float;
@@ -208,7 +207,7 @@ package body Test_Balanced_Quarter_Doubles is
   procedure Test_Balanced_Split is
 
     x : constant double_float := Standard_Random_Numbers.Random;
-    x0,x1,x2,x3,b0,b1,b2,b3,b4 : double_float;
+    x0,x1,x2,x3 : double_float;
     isbal : boolean;
 
   begin
@@ -216,25 +215,15 @@ package body Test_Balanced_Quarter_Doubles is
     put("b : "); Bits_of_Doubles.write_52bits_expo(x); new_line;
     Bits_of_Doubles.Split(x,x0,x1,x2,x3);
     Write_Quarters(x0,x1,x2,x3);
-    isbal := Balanced_Quarter_Doubles.Is_Balanced(0,x0,x1,x2,x3);
-    if isbal then
-      put_line("balanced");
-    else
-      put_line("Computing a balanced split ...");
-      Balanced_Quarter_Doubles.Split(x,b0,b1,b2,b3,b4);
-      isbal := Balanced_Quarter_Doubles.Is_Balanced(0,b0,b1,b2,b3);
+    isbal := Random_Balanced_Quarters.Is_Balanced(0,x0,x1,x2,x3);
+    if not isbal
+     then put_line("unbalanced");
+     else put_line("balanced");
     end if;
   end Test_Balanced_Split;
 
   procedure Main is
-
-    seed : natural32 := 0;
-
   begin
-    put("Give the seed (0 for none) : "); get(seed);
-    if seed /= 0
-     then Standard_Random_Numbers.Set_Seed(seed);
-    end if;
     Test_Thirteen_Bits;
     Test_Random_Quarters;
     Test_Random_Vectors;
@@ -256,7 +245,6 @@ package body Test_Balanced_Quarter_Doubles is
     new_line;
     put_line("Testing the balanced split ...");
     Test_Balanced_Split;
-    put("Seed used : "); put(Standard_Random_Numbers.Get_Seed,1); new_line;
   end Main;
 
-end Test_Balanced_Quarter_Doubles;
+end Test_Random_Balanced_Quarters;

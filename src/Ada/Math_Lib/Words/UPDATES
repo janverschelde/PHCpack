@@ -1,5 +1,9 @@
 Tue 27 Jan 2026 : updated vectored_{double,quad,octo}_doubles.adb for
   changes in the verbose parameter of the sign balancers.
+  Renamed balanced_quarter_doubles and test_balanced_quarter_doubles into
+  random_balanced_quarters and test_random_balanced_quarters respectively.
+  Updated ts_modbal.adb, updated test_vectored_doubles.adb, and also
+  test_vectored{double, quad, octo, hexa}_doubles.adb.
 
 Fri 23 Jan 2026 : to sign_balancers and test_sign_balancers added procedures
   to equalize the signs with the one last bit deduction/augmentation.

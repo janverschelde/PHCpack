@@ -7,7 +7,7 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Random_Numbers;
 with Standard_Floating_Vectors;
-with Balanced_Quarter_Doubles;
+with Random_Balanced_Quarters;
 with Vectored_Doubles;
 
 package body Test_Vectored_Doubles is
@@ -25,10 +25,10 @@ package body Test_Vectored_Doubles is
   begin
     put_line("Testing the balanced product ...");
     put("Give the frequency : "); get(freq);
-    Balanced_Quarter_Doubles.Random(dim,x0,x1,x2,x3);
-    Balanced_Quarter_Doubles.Random(dim,y0,y1,y2,y3);
-    x := Balanced_Quarter_Doubles.Make_Doubles(x0,x1,x2,x3);
-    y := Balanced_Quarter_Doubles.Make_Doubles(y0,y1,y2,y3);
+    Random_Balanced_Quarters.Random(dim,x0,x1,x2,x3);
+    Random_Balanced_Quarters.Random(dim,y0,y1,y2,y3);
+    x := Random_Balanced_Quarters.Make_Doubles(x0,x1,x2,x3);
+    y := Random_Balanced_Quarters.Make_Doubles(y0,y1,y2,y3);
     tstart(timer0);
     for i in 1..freq loop
       dprd0 := 0.0;

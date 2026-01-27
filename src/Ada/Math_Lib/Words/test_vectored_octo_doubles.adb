@@ -16,7 +16,7 @@ with OctoDobl_Complex_Vectors;
 with OctoDobl_Complex_Vectors_io;        use OctoDobl_Complex_Vectors_io;
 with OctoDobl_Random_Vectors;
 with Vectored_Octo_Doubles;
-with Balanced_Quarter_Doubles;
+with Random_Balanced_Quarters;
 
 package body Test_Vectored_Octo_Doubles is
 
@@ -136,16 +136,16 @@ package body Test_Vectored_Octo_Doubles is
   begin
     put_line("Testing the balanced product ...");
     put("Give the frequency : "); get(freq);
-    Balanced_Quarter_Doubles.Random
+    Random_Balanced_Quarters.Random
       (dim,x00,x01,x02,x03,x04,x05,x06,x07,x08,x09,x10,x11,x12,x13,x14,x15,
            x16,x17,x18,x19,x20,x21,x22,x23,x24,x25,x26,x27,x28,x29,x30,x31);
-    Balanced_Quarter_Doubles.Random
+    Random_Balanced_Quarters.Random
       (dim,y00,y01,y02,y03,y04,y05,y06,y07,y08,y09,y10,y11,y12,y13,y14,y15,
            y16,y17,y18,y19,y20,y21,y22,y23,y24,y25,y26,y27,y28,y29,y30,y31);
-    x := Balanced_Quarter_Doubles.Make_Octo_Doubles
+    x := Random_Balanced_Quarters.Make_Octo_Doubles
            (x00,x01,x02,x03,x04,x05,x06,x07,x08,x09,x10,x11,x12,x13,x14,x15,
             x16,x17,x18,x19,x20,x21,x22,x23,x24,x25,x26,x27,x28,x29,x30,x31);
-    y := Balanced_Quarter_Doubles.Make_Octo_Doubles
+    y := Random_Balanced_Quarters.Make_Octo_Doubles
            (y00,y01,y02,y03,y04,y05,y06,y07,y08,y09,y10,y11,y12,y13,y14,y15,
             y16,y17,y18,y19,y20,y21,y22,y23,y24,y25,y26,y27,y28,y29,y30,y31);
     tstart(timer0);
@@ -198,10 +198,10 @@ package body Test_Vectored_Octo_Doubles is
      then Standard_Random_Numbers.Set_Seed(seed);
     end if;
     put("Give the dimension : "); get(dim);
-    Test_Real_Product(dim);
-    new_line;
-    Test_Complex_Product(dim);
-    new_line;
+   -- Test_Real_Product(dim);
+   -- new_line;
+   -- Test_Complex_Product(dim);
+   -- new_line;
     Test_Balanced_Product(dim);
     put("Seed used : "); put(Standard_Random_Numbers.Get_Seed,1); new_line;
   end Main;

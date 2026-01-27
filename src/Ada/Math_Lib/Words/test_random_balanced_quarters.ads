@@ -1,6 +1,6 @@
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 
-package Test_Balanced_Quarter_Doubles is
+package Test_Random_Balanced_Quarters is
 
 -- DESCRIPTION :
 --   Test the operations on balanced quarter doubles.
@@ -65,4 +65,4 @@ package Test_Balanced_Quarter_Doubles is
   -- DESCRIPTION :
   --   Runs all tests.
 
-end Test_Balanced_Quarter_Doubles;
+end Test_Random_Balanced_Quarters;

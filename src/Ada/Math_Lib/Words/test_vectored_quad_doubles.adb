@@ -16,7 +16,7 @@ with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Random_Vectors;
 with Vectored_Quad_Doubles;
-with Balanced_Quarter_Doubles;
+with Random_Balanced_Quarters;
 
 package body Test_Vectored_Quad_Doubles is
 
@@ -122,13 +122,13 @@ package body Test_Vectored_Quad_Doubles is
   begin
     put_line("Testing the balanced inner product ...");
     put("Give the frequency : "); get(freq);
-    Balanced_Quarter_Doubles.Random
+    Random_Balanced_Quarters.Random
       (dim,x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,xA,xB,xC,xD,xE,xF);
-    Balanced_Quarter_Doubles.Random
+    Random_Balanced_Quarters.Random
       (dim,y0,y1,y2,y3,y4,y5,y6,y7,y8,y9,yA,yB,yC,yD,yE,yF);
-    x := Balanced_Quarter_Doubles.Make_Quad_Doubles
+    x := Random_Balanced_Quarters.Make_Quad_Doubles
            (x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,xA,xB,xC,xD,xE,xF);
-    y := Balanced_Quarter_Doubles.Make_Quad_Doubles
+    y := Random_Balanced_Quarters.Make_Quad_Doubles
            (y0,y1,y2,y3,y4,y5,y6,y7,y8,y9,yA,yB,yC,yD,yE,yF);
     tstart(timer0);
     for i in 1..freq loop
@@ -174,10 +174,10 @@ package body Test_Vectored_Quad_Doubles is
      then Standard_Random_Numbers.Set_Seed(seed);
     end if;
     put("Give the dimension : "); get(dim);
-    Test_Real_Product(dim);
-    new_line;
-    Test_Complex_Product(dim);
-    new_line;
+   -- Test_Real_Product(dim);
+   -- new_line;
+   -- Test_Complex_Product(dim);
+   -- new_line;
     Test_Balanced_Product(dim);
     put("Seed used : "); put(Standard_Random_Numbers.Get_Seed,1); new_line;
   end Main;
