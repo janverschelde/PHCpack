@@ -287,12 +287,11 @@ package body Test_Bits_of_Doubles is
     end loop;
   end Test_Mask_Bits;
 
-  procedure Test_Bit_Split ( x : in double_float ) is
+  procedure Test_Bit_Split ( x,x0,x1,x2,x3 : in double_float ) is
 
-    x0,x1,x2,x3,s1,s2,s3,err : double_float;
+    s1,s2,s3,err : double_float;
   
   begin
-    Split(x,x0,x1,x2,x3);
     s1 := x1 + x0;
     s2 := x2 + s1;
     s3 := x3 + s2;
@@ -322,6 +321,15 @@ package body Test_Bits_of_Doubles is
      then put_line("The sum of the four parts and x are bit equal, okay.");
      else put_line("The sum of the four parts and x are NOT bit equal, bug!");
     end if;
+  end Test_Bit_Split;
+
+  procedure Test_Bit_Split ( x : in double_float ) is
+
+    x0,x1,x2,x3 : double_float;
+
+  begin
+    Split(x,x0,x1,x2,x3);
+    Test_Bit_Split(x,x0,x1,x2,x3);
   end Test_Bit_Split;
 
   procedure to_Double_Double ( s : in string; x : out double_double;

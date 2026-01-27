@@ -58,6 +58,12 @@ package Test_Bits_of_Doubles is
   -- DESCRIPTION :
   --   Runs the two above test procedures.
 
+  procedure Test_Bit_Split ( x,x0,x1,x2,x3 : in double_float );
+
+  -- DESCRIPTION :
+  --   Given the quarters x0, x1, x2, x3 of x,
+  --   tests the sums of the split, compared to x.
+
   procedure Test_Bit_Split ( x : in double_float );
 
   -- DESCRIPTION :
