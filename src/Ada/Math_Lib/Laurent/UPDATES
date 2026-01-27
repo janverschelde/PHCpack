@@ -1,10 +1,12 @@
-Sun 25 Jan 2025 : extended random_laurent_homotopy and test_newton_puiseux
+Mon 26 Jan 2026 : added evaluation test to test_newton_puiseux.adb.
+
+Sun 25 Jan 2026 : extended random_laurent_homotopy and test_newton_puiseux
   with random Laurent homotopies starting at canonical binomials.
 
-Mon 5 Jan 2025 : improved verbose level usage in double_newton_puiseux.adb
+Mon 5 Jan 2026 : improved verbose level usage in double_newton_puiseux.adb
   and tested the non-interactive version in test_newton_puiseux.adb.
 
-Sun 4 Jan 2025 : added a procedure to double_newton_puiseux to run
+Sun 4 Jan 2026 : added a procedure to double_newton_puiseux to run
   Newton's method on a diagonal system, in a non-interactive manner.
 
 Sat 3 Jan 2026 : new package double_newton_puiseux, with code taken from

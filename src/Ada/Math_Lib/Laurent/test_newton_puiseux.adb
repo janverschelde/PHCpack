@@ -8,6 +8,7 @@ with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
+with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Double_Real_Powered_Series;
 with Random_Laurent_Homotopy;
 with Double_Newton_Puiseux;
@@ -212,6 +213,56 @@ package body Test_Newton_Puiseux is
     end if;
   end Test_Product_Homotopy;
 
+  procedure Make_Series
+              ( c0,c1,c2,c3,c4 : in Standard_Complex_Vectors.Vector;
+                p1,p2,p3,p4 : in Standard_Floating_Vectors.Vector;
+                cff : out Standard_Complex_VecVecs.VecVec;
+                pwr : out Standard_Floating_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Given the coefficients and powers of a series,
+  --   the row representation of the series is returned.
+
+  begin
+    for i in cff'range loop -- make the i-th component of the series
+      declare
+        cfi : Standard_Complex_Vectors.Vector(0..4);
+        pwi : Standard_Floating_Vectors.Vector(1..4);
+      begin
+        cfi(0) := c0(i);
+        cfi(1) := c1(i); cfi(2) := c2(i);
+        cfi(3) := c3(i); cfi(4) := c4(i);
+        cff(i) := new Standard_Complex_Vectors.Vector'(cfi);
+        pwi(1) := p1(i); pwi(2) := p2(i);
+        pwi(3) := p3(i); pwi(4) := p4(i);
+        pwr(i) := new Standard_Floating_Vectors.Vector'(pwi);
+      end;
+    end loop;
+  end Make_Series;
+  
+  procedure Evaluate_Series
+              ( hdg : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                hcf : in Standard_Complex_VecVecs.VecVec;
+                hct : in Standard_Floating_VecVecs.VecVec;
+                cff : in Standard_Complex_VecVecs.VecVec;
+                pwr : in Standard_Floating_VecVecs.VecVec;
+                tpt : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Evaluates the series at tpt and the uses the point
+  --   to evaluate the homotopy in (hdg, hcf, hct);
+
+    zpt : constant Standard_Complex_Vectors.Vector(cff'range)
+        := Double_Real_Powered_Series.Evaluate_Series(cff,pwr,tpt);
+    hpt : constant Standard_Complex_Vectors.Vector(hcf'range)
+        := Random_Laurent_Homotopy.Evaluate_Homotopy(hdg,hcf,hct,zpt,tpt);
+
+  begin
+    put("t value : "); put(tpt); new_line;
+    put_line("evaluated series :"); put_line(zpt);
+    put_line("evaluated homotopy :"); put_line(hpt);
+  end Evaluate_Series;
+
   procedure Test_Binomial_Homotopy ( dim : in integer32 ) is
 
     nbm : Standard_Integer_Vectors.Vector(1..dim) := (1..dim => 0);
@@ -220,6 +271,8 @@ package body Test_Newton_Puiseux is
     hct : Standard_Floating_VecVecs.VecVec(1..dim);
     cf0,cf1,cf2,cf3,cf4 : Standard_Complex_Vectors.Vector(1..dim);
     pw1,pw2,pw3,pw4 : Standard_Floating_Vectors.Vector(1..dim);
+    cff : Standard_Complex_VecVecs.VecVec(1..dim);
+    pwr : Standard_Floating_VecVecs.VecVec(1..dim);
     nbr : integer32 := 0;
     tol : constant double_float := 1.0e-12;
 
@@ -257,6 +310,12 @@ package body Test_Newton_Puiseux is
     for i in 1..dim loop
       put(cf4(i)); put("  t^"); put(pw4(i)); new_line;
     end loop;
+    Make_Series(cf0,cf1,cf2,cf3,cf4,pw1,pw2,pw3,pw4,cff,pwr);
+    new_line;
+    put_line("evaluating the homotopy ...");
+    Evaluate_Series(hdg,hcf,hct,cff,pwr,0.01);
+    Evaluate_Series(hdg,hcf,hct,cff,pwr,0.001);
+    Evaluate_Series(hdg,hcf,hct,cff,pwr,0.0001);
   end Test_Binomial_Homotopy;
 
   procedure Main is
