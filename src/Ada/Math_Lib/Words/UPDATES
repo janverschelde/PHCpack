@@ -1,3 +1,6 @@
+Tue 27 Jan 2026 : updated vectored_{double,quad,octo}_doubles.adb for
+  changes in the verbose parameter of the sign balancers.
+
 Fri 23 Jan 2026 : to sign_balancers and test_sign_balancers added procedures
   to equalize the signs with the one last bit deduction/augmentation.
   Extended sign_balancers and test_sign_balancers to equalize signs of

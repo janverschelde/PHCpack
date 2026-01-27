@@ -18,8 +18,11 @@ package body Vectored_Octo_Doubles is
   begin
     for i in x'range loop
       res(i) := x(i);
-      if not Is_Sign_Balanced(res(i))
-       then Sign_Balance(res(i),verbose);
+      if not Is_Sign_Balanced(res(i)) then
+        if verbose
+         then Sign_Balance(res(i),vrblvl=>1);
+         else Sign_Balance(res(i),vrblvl=>0);
+        end if;
       end if;
     end loop;
     return res;

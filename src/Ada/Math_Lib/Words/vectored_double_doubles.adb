@@ -949,11 +949,11 @@ package body Vectored_Double_Doubles is
     for i in x'range loop
       xb(i) := x(i);
       if not Is_Sign_Balanced(xb(i))
-       then Sign_Balance(xb(i),verbose=>false);
+       then Sign_Balance(xb(i),vrblvl=>0);
       end if;
       yb(i) := y(i);
       if not Is_Sign_Balanced(yb(i))
-       then Sign_Balance(yb(i),verbose=>false);
+       then Sign_Balance(yb(i),vrblvl=>0);
       end if;
     end loop;
     Signed_Quarter(xb,yb,xs0,xs1,xs2,xs3,xs4,xs5,xs6,xs7,
