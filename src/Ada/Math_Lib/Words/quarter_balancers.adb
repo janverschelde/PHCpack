@@ -24,9 +24,11 @@ package body Quarter_Balancers is
       put("difference of exponents : "); put(dxy,1);
     end if;
     res := not (dxy > 13);
-    if res
-     then put_line(" balanced");
-     else put_line(" unbalanced");
+    if vrblvl > 0 then
+      if res
+       then put_line(" balanced");
+       else put_line(" unbalanced");
+      end if;
     end if;
     return res;
   end Is_Quarter_Balanced;

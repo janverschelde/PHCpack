@@ -12,7 +12,7 @@ package Quarter_Balancers is
 
   -- DESCRIPTION :
   --   Returns true if the difference in exponents between
-  --   two consecutive quarters x and y, is 13, or less.
+  --   two consecutive quarters x and y is 13, or less.
   --   If vrblvl > 0, then the exponents are written.
 
   procedure Quarter_Balance
