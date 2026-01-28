@@ -1,3 +1,6 @@
+Wed 28 Jan 2026 : to splitting_doubles added function to test if the quarters
+  are balanced, tested in test_splitting_doubles.cpp.
+
 Wed 21 Jan 2026 : completed test_vod.cpp, updated makefiles.
 
 Tue 20 Jan 2026 : extended double_matrix_multiplications with single indexed

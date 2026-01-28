@@ -52,4 +52,10 @@ void quarter_split
  * then next 13 into x1, the next 13 into x2, and the rest in x3.
  * If vrblvl > 0, then intermediate results are shown. */
 
+bool is_quarter_balanced ( double x, double y, int vrblvl=0 );
+/*
+ * Returns true if the difference in exponents between two consecutive
+ * quarters x and y is 13, or less.
+ * If vrblvl > 0, then the exponents are written. */
+
 #endif

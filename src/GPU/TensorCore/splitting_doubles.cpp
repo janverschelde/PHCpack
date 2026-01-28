@@ -1,18 +1,20 @@
 /* Collection of functions to split doubles. */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <math.h>
+#include <iostream>
+#include <iomanip>
+#include <cstdlib>
+#include <cmath>
 #include "splitting_doubles.h"
+
+using namespace std;
 
 void write_52bits ( int k, uint64 nbr )
 {
    if(k > 0)
    {
       write_52bits(k-1,nbr/2);
-      printf("%lld", nbr%2);
-      if(k % 4 == 0) printf(" ");
+      cout << nbr % 2;
+      if(k % 4 == 0) cout << " ";
    }
 }
 
@@ -24,7 +26,7 @@ void write_52double ( double nbr )
    uint64 int64fac = (uint64) shifted;
 
    write_52bits(52, int64fac);
-   printf(" %d\n", exponent);
+   cout << " " << exponent << endl;
 }
 
 uint64 last_bits ( int k, uint64 nbr )
@@ -44,7 +46,7 @@ void quarter_bits
  ( uint64 nbr, uint64 *b0, uint64 *b1, uint64 *b2, uint64 *b3, int vrblvl )
 {
    if(vrblvl > 0)
-      printf("-> in splitting_doubles.quarter_bits ...\n");
+      cout << "-> in splitting_doubles.quarter_bits ..." << endl;
 
    uint64 mask = 1;
    uint64 pwr = 2;
@@ -57,16 +59,16 @@ void quarter_bits
    }
    if(vrblvl > 0)
    {
-      printf(" m : "); write_52bits(52, mask); printf("\n");
+      cout << " m : "; write_52bits(52, mask); cout << endl;
    }
    *b3 = (nbr & mask); // last 13 bits
    rest = rest - *b3;
    
    if(vrblvl > 0)
    {
-      printf(" h : %llx\n", nbr);
-      printf(" b : "); write_52bits(52, nbr); printf("\n");
-      printf("b3 : "); write_52bits(52, *b3); printf("\n");
+      cout << hex << " h : " << nbr << endl; cout << dec;
+      cout << " b : "; write_52bits(52, nbr); cout << endl;
+      cout << "b3 : "; write_52bits(52, *b3); cout << endl;
    }
    for(int i=0; i<13; i++)
    {
@@ -75,14 +77,14 @@ void quarter_bits
    }
    if(vrblvl > 0)
    {
-      printf(" m : "); write_52bits(52, mask); printf("\n");
+      cout << " m : "; write_52bits(52, mask); cout << endl;
    }
    *b2 = (rest & mask); // next 13 bits
    rest = rest - *b2;
 
    if(vrblvl > 0)
    {
-      printf("b2 : "); write_52bits(52,*b2); printf("\n");
+      cout << "b2 : "; write_52bits(52,*b2); cout << endl;
    }
    for(int i=0; i<13; i++)
    {
@@ -91,32 +93,32 @@ void quarter_bits
    }
    if(vrblvl > 0)
    {
-      printf(" m : "); write_52bits(52, mask); printf("\n");
+      cout << " m : "; write_52bits(52, mask); cout << endl;
    }
    *b1 = (rest & mask); // next 13 bits
 
    if(vrblvl > 0)
    {
-      printf("b1 : "); write_52bits(52,*b1); printf("\n");
+      cout << "b1 : "; write_52bits(52,*b1); cout << endl;
    }
    *b0 = nbr - *b1 - *b2 - *b3;
 
    if(vrblvl > 0)
    {
-      printf("b0 : "); write_52bits(52, *b0); printf("\n");
+      cout << "b0 : "; write_52bits(52, *b0); cout << endl;
       rest = nbr - *b0 - *b1 - *b2 - *b3;
-      printf(" r : "); write_52bits(52, rest);
+      cout << " r : "; write_52bits(52, rest);
       if(rest == 0)
-         printf(" OKAY\n");
+         cout << " OKAY" << endl;
       else
-         printf(" BUG!\n");
+         cout << " BUG!" << endl;
    }
 }
 
 double first_half ( double x, int vrblvl )
 {
    if(vrblvl > 0)
-      printf("-> in splitting_doubles.first_half ...\n");
+      cout << "-> in splitting_doubles.first_half ..." << endl;
 
    int exponent;
    double fraction = frexp(x, &exponent );
@@ -128,12 +130,12 @@ double first_half ( double x, int vrblvl )
 
    if(vrblvl > 0)
    {
-      printf("exponent : %d\n", exponent);
-      printf("fraction : %lld\n", int64fac);
-      printf(" h : %llx\n", int64fac);
-      printf(" b : "); write_52bits(52, int64fac); printf("\n");
-      printf("b0 : "); write_52bits(52, first_part); printf("\n");
-      printf("b1 : "); write_52bits(52, second_part); printf("\n");
+      cout << "exponent : " << exponent << endl;
+      cout << "fraction : " << int64fac << endl;
+      cout << hex << " h : " << int64fac << endl; cout << dec;
+      cout << " b : "; write_52bits(52, int64fac); cout << endl;
+      cout << "b0 : "; write_52bits(52, first_part); cout << endl;
+      cout << "b1 : "; write_52bits(52, second_part); cout << endl;
    }
    return result;
 }
@@ -141,7 +143,7 @@ double first_half ( double x, int vrblvl )
 void half_split ( double x, double *x0, double *x1, int vrblvl )
 {
    if(vrblvl > 0)
-      printf("-> in splitting_doubles.half_split ...\n");
+      cout << "-> in splitting_doubles.half_split ..." << endl;
 
    *x0 = first_half(x, vrblvl);
    *x1 = x - *x0;
@@ -150,7 +152,7 @@ void half_split ( double x, double *x0, double *x1, int vrblvl )
 int leading_zeros ( uint64 nbr, int idxpwr, int vrblvl )
 {
    if(vrblvl > 0)
-      printf("-> in splitting_doubles.leading_zeros ...\n");
+      cout << "-> in splitting_doubles.leading_zeros ..." << endl;
 
    int result = 0;
    int idx = idxpwr;
@@ -158,14 +160,14 @@ int leading_zeros ( uint64 nbr, int idxpwr, int vrblvl )
    uint64 threshold = two << idx; // 2**idx
 
    if(vrblvl > 0)
-       printf("threshold : %lld, nbr : %lld\n", threshold, nbr);
+      cout << "threshold : " << threshold << ", nbr : " << nbr << endl;
 
    while(nbr < threshold)
    {
       result = result + 1;
       threshold = threshold/2;
       if(vrblvl > 0)
-         printf("threshold : %lld, cnt : %d\n", threshold, result);
+         cout << "threshold : " << threshold << ", cnt : " << result << endl;
    }
    
    return result;
@@ -175,7 +177,7 @@ void quarter_split
  ( double x, double *x0, double *x1, double *x2, double *x3, int vrblvl )
 {
    if(vrblvl > 0)
-      printf("-> in splitting_doubles.quarter_split ...\n");
+      cout << "-> in splitting_doubles.quarter_split ..." << endl;
 
    int exponent;
    double fraction = frexp(x, &exponent);
@@ -185,7 +187,7 @@ void quarter_split
    double xf0,xf1,xf2,xf3;
    int cnt;
 
-   if(vrblvl > 0) printf("exponent : %d\n", exponent);
+   if(vrblvl > 0) cout << "exponent : " << exponent << endl;
 
    quarter_bits(int64fac, &f0, &f1, &f2, &f3, vrblvl);
 
@@ -193,7 +195,7 @@ void quarter_split
    *x0 = ldexp(xf0, exponent - 52);
 
    cnt = (f1 == 0) ? 0 : leading_zeros(f1, 37, vrblvl);
-   if(vrblvl > 0) printf("#leading zeros in f1 : %d\n", cnt);
+   if(vrblvl > 0) cout << "#leading zeros in f1 : " << cnt << endl;
    xf1 = (double) f1;
    // *x1 = ldexp(xf1, exponent - 52 - cnt); // does not work ...
    if(cnt == 0)
@@ -206,7 +208,7 @@ void quarter_split
       for(int i=0; i<cnt; i++) *x1 = *x1/2.0;
    }
    cnt = (f2 == 0) ? 0 : leading_zeros(f2, 24, vrblvl);
-   if(vrblvl > 0) printf("#leading zeros in f2 : %d\n", cnt);
+   if(vrblvl > 0) cout << "#leading zeros in f2 : " << cnt << endl;
    xf2 = (double) f2;
    if(cnt == 0)
       *x2 = ldexp(xf2, exponent - 52);
@@ -220,7 +222,34 @@ void quarter_split
    if(vrblvl > 0) // just for testing purposes
    {
       cnt = (f3 == 0) ? 0 : leading_zeros(f3, 11, vrblvl);
-      printf("#leading zeros in f3 : %d\n", cnt);
+      cout << "#leading zeros in f3 : " << cnt << endl;
    }
    *x3 = x - *x0 - *x1 - *x2;
+}
+
+bool is_quarter_balanced ( double x, double y, int vrblvl )
+{
+   if(vrblvl > 0)
+      cout << "-> in splitting_doubles.is_quarter_balanced ..." << endl;
+
+   int xe,ye;
+   double xf = frexp(x, &xe);
+   double yf = frexp(y, &ye);
+   int dxy = xe - ye;
+
+   if(vrblvl > 0)
+   {
+      cout << "x : " << x << " has exponent " << xe << endl;
+      cout << "y : " << y << " has exponent " << ye << endl;
+      cout << "difference of exponents : " << dxy;
+   }
+   bool result = not (dxy > 13);
+   if(vrblvl > 0)
+   {
+      if(result)
+         cout << " balanced" << endl;
+      else
+         cout << " unbalanced" << endl;
+   }
+   return result;
 }
