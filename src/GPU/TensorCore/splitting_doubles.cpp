@@ -292,3 +292,31 @@ void balance_quarters
    if(not is_quarter_balanced(*x2, *x3, vrblvl-1))
       quarter_balance(x2, x3, vrblvl-1);
 }
+
+void make_exponent_zero ( double *x, double *pow2fac, int vrblvl )
+{
+   if(vrblvl > 0)
+      cout << "-> in splitting_doubles.make_exponent_zero ..." << endl;
+
+   int exponent;
+   double fraction = frexp(*x, &exponent );
+
+   cout << scientific << setprecision(16);
+
+   if(vrblvl > 0)
+      cout << "x : " << *x << " has exponent " << exponent << endl;
+   
+   if(exponent == 0)
+      *pow2fac = 1.0;
+   else
+   {
+      *pow2fac = ldexp(1.0, -exponent);
+      *x = (*x)*(*pow2fac);
+   }
+   if(vrblvl > 0)
+   {
+      cout << "factor : " << *pow2fac << endl;
+      fraction = frexp(*x, &exponent);
+      cout << "x : " << *x << " has exponent " << exponent << endl;
+   }
+}

@@ -1,45 +1,147 @@
 /* Collection of functions for vectored double double arithmetic. */
 
-#include <stdio.h>
+#include <iostream>
 #include "double_double.h"
 #include "double_double_functions.h"
 #include "splitting_doubles.h"
 
+using namespace std;
+
+bool is_dd_quarter_balanced
+ ( double xhi0, double xhi1, double xhi2, double xhi3,
+   double xlo0, double xlo1, double xlo2, double xlo3, int vrblvl=0 )
+{
+   if(vrblvl > 0)
+      cout << "-> in vectored_double_doubles.is_dd_quarter_balanced ..."
+           << endl;
+
+   bool b01 = is_quarter_balanced(xhi0, xhi1, vrblvl-1);
+   bool b12 = is_quarter_balanced(xhi1, xhi2, vrblvl-1);
+   bool b23 = is_quarter_balanced(xhi2, xhi3, vrblvl-1);
+   bool b34 = is_quarter_balanced(xhi3, xlo0, vrblvl-1);
+   bool b45 = is_quarter_balanced(xlo0, xlo1, vrblvl-1);
+   bool b56 = is_quarter_balanced(xlo1, xlo2, vrblvl-1);
+   bool b67 = is_quarter_balanced(xlo2, xlo3, vrblvl-1);
+
+   bool result = b01 and b12 and b23 and b34 and b45 and b56 and b67;
+   if(vrblvl > 0)
+   {
+      if(result)
+         cout << "All eight quarters of the double double are balanced."
+              << endl;
+      else
+         cout << "Not all eight quarters of the double double are balanced."
+              << endl;
+   }
+   return result;
+}
+
+void dd_balance_quarters
+ ( double *xhi0, double *xhi1, double *xhi2, double *xhi3,
+   double *xlo0, double *xlo1, double *xlo2, double *xlo3, int vrblvl=0 )
+{
+   if(vrblvl > 0)
+      cout << "-> in vectored_double_doubles.dd_balance_quarters ..." << endl;
+
+   if(not is_quarter_balanced(*xhi0, *xhi1, vrblvl-1))
+      quarter_balance(xhi0, xhi1, vrblvl-1);
+   if(not is_quarter_balanced(*xhi1, *xhi2, vrblvl-1))
+      quarter_balance(xhi1, xhi2, vrblvl-1);
+   if(not is_quarter_balanced(*xhi2, *xhi3, vrblvl-1))
+      quarter_balance(xhi2, xhi3, vrblvl-1);
+   if(not is_quarter_balanced(*xhi3, *xlo0, vrblvl-1))
+      quarter_balance(xhi3, xlo0, vrblvl-1);
+   if(not is_quarter_balanced(*xlo0, *xlo1, vrblvl-1))
+      quarter_balance(xlo0, xlo1, vrblvl-1);
+   if(not is_quarter_balanced(*xlo1, *xlo2, vrblvl-1))
+      quarter_balance(xlo1, xlo2, vrblvl-1);
+   if(not is_quarter_balanced(*xlo2, *xlo3, vrblvl-1))
+      quarter_balance(xlo2, xlo3, vrblvl-1);
+}
+
+void make_dd_exponent_zero ( double *xhi, double *xlo, int vrblvl )
+{
+   if(vrblvl > 0)
+      cout << "-> in vectored_double_doubles.make_dd_exponent_zero ..."
+           << endl;
+
+   double factor;
+
+   make_exponent_zero(xhi, &factor, vrblvl-1);
+   *xlo = (*xlo)*factor;
+}
+
 void quarter_double_double
  ( double xhi, double xlo,
    double *xhi0, double *xhi1, double *xhi2, double *xhi3,
-   double *xlo0, double *xlo1, double *xlo2, double *xlo3 )
+   double *xlo0, double *xlo1, double *xlo2, double *xlo3, int vrblvl )
 {
-   quarter_split(xhi, xhi0, xhi1, xhi2, xhi3);
-   quarter_split(xlo, xlo0, xlo1, xlo2, xlo3);
+   if(vrblvl > 0)
+      cout << "-> in vectored_double_doubles.quarter_double_double ..."
+           << endl;
+
+   quarter_split(xhi, xhi0, xhi1, xhi2, xhi3, vrblvl-1);
+   quarter_split(xlo, xlo0, xlo1, xlo2, xlo3, vrblvl-1);
+
+   dd_balance_quarters
+      (xhi0, xhi1, xhi2, xhi3, xlo0, xlo1, xlo2, xlo3, vrblvl-1);
 }
 
 void quarter_dd_vector
  ( int dim, double *xhi, double *xlo,
    double *xhi0, double *xhi1, double *xhi2, double *xhi3,
-   double *xlo0, double *xlo1, double *xlo2, double *xlo3 )
+   double *xlo0, double *xlo1, double *xlo2, double *xlo3, int vrblvl )
 {
+   if(vrblvl > 0)
+      cout << "-> in vectored_double_doubles.quarter_dd_vector ..."
+           << endl;
+
    for(int i=0; i<dim; i++)
    {
       quarter_double_double
          (xhi[i], xlo[i],
           &xhi0[i], &xhi1[i], &xhi2[i], &xhi3[i],
-          &xlo0[i], &xlo1[i], &xlo2[i], &xlo3[i]);
+          &xlo0[i], &xlo1[i], &xlo2[i], &xlo3[i], vrblvl-1);
+   }
+   if(vrblvl > 0)
+   {
+      bool check = true;
+      bool fail = false;
+
+      for(int i=0; i<dim; i++)
+      {
+         check = is_dd_quarter_balanced
+                    (xhi0[i], xhi1[i], xhi2[i], xhi3[i],
+                     xlo0[i], xlo1[i], xlo2[i], xlo3[i], vrblvl-1);
+         if(not check)
+         {
+            cout << i << "-th quarters are not balanced!" << endl;
+            fail = true;
+         }
+      }
+      if(fail)
+         cout << "Not all quarters in the vector are balanced." << endl;
+      else
+         cout << "All quarters in the vector are balanced." << endl;
    }
 }
 
 void quarter_dd_matrix
  ( int nrows, int ncols, double **Ahi, double **Alo,
    double **Ahi0, double **Ahi1, double **Ahi2, double **Ahi3,
-   double **Alo0, double **Alo1, double **Alo2, double **Alo3 )
+   double **Alo0, double **Alo1, double **Alo2, double **Alo3, int vrblvl )
 {
+   if(vrblvl > 0)
+      cout << "-> in vectored_double_doubles.quarter_dd_matrix ..."
+           << endl;
+
    for(int i=0; i<nrows; i++)
       for(int j=0; j<ncols; j++)
       {
          quarter_double_double
             (Ahi[i][j], Alo[i][j],
              &Ahi0[i][j], &Ahi1[i][j], &Ahi2[i][j], &Ahi3[i][j],
-             &Alo0[i][j], &Alo1[i][j], &Alo2[i][j], &Alo3[i][j]);
+             &Alo0[i][j], &Alo1[i][j], &Alo2[i][j], &Alo3[i][j], vrblvl-1);
       }
 }
 
@@ -48,6 +150,7 @@ void to_double_double
    double xlo0, double xlo1, double xlo2, double xlo3,
    double *xhi, double *xlo )
 {
+/*
    *xhi = xhi0;
    *xlo = 0.0;
 
@@ -58,6 +161,18 @@ void to_double_double
    ddf_inc_d(xhi, xlo, xlo1);
    ddf_inc_d(xhi, xlo, xlo2);
    ddf_inc_d(xhi, xlo, xlo3);
+*/
+   double z0,z1,z2,z3,e1,e2,e3,e4;
+
+   z0 = ddf_two_sum(xhi0, xhi1, &e1);
+   z1 = ddf_two_sum(xhi2, xhi3, &e2);
+   z2 = ddf_two_sum(xlo0, xlo1, &e3);
+   z3 = ddf_two_sum(xlo2, xlo3, &e4);
+
+   *xhi = z3; *xlo = e4;
+   ddf_inc(xhi, xlo, z2, e3);
+   ddf_inc(xhi, xlo, z1, e2);
+   ddf_inc(xhi, xlo, z0, e1);
 }
 
 void to_double_double_matrix
@@ -83,7 +198,7 @@ void dd_write_vector ( int dim, double *xhi, double *xlo )
    for(int i=0; i<dim; i++)
    {
       x[0] = xhi[i]; x[1] = xlo[i];
-      dd_write(x, 32); printf("\n");
+      dd_write(x, 32); cout << endl;
    }
 }
 

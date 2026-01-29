@@ -1,3 +1,7 @@
+Thu 29 Jan 2026 : to splitting_doubles added function to make exponent zero
+  of a double, tested in test_splitting_doubles.cpp and applied in 
+  vectored_double_doubles, with extra tests in test_vdd.cpp.
+
 Wed 28 Jan 2026 : to splitting_doubles added function to test if the quarters
   are balanced, tested in test_splitting_doubles.cpp.  Added functions to
   balance quarters to splitting_doubles, updated test_splitting_doubles.cpp.

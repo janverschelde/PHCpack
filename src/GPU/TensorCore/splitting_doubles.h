@@ -63,4 +63,8 @@ void quarter_balance ( double *x, double *y, int vrblvl=0 );
  * Makes x and y balanced by reduction of one bit of x and
  * addition of one bit to y, asumming both x and y are positive. */
 
+void make_exponent_zero ( double *x, double *pow2fac, int vrblvl=0 );
+/*
+ * Multiplies x with a factor pow2fac to make its exponent zero. */
+
 #endif

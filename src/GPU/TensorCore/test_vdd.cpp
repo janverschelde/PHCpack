@@ -32,11 +32,13 @@ using namespace std;
 
 int main ( void )
 {
-   int fail;
+   cout << "Give the seed for the random numbers (0 by default) : ";
+   int seed; cin >> seed;
 
-   srand(time(NULL));
+   if(seed == 0) seed = time(NULL);
+   srand(seed);
 
-   fail = test_quarter_double_double();
+   int fail = test_quarter_double_double();
 
    if(fail == 1)
       cout << "\nTest on quarter double double failed?!!!\n\n";
@@ -67,6 +69,8 @@ int main ( void )
    else
       cout << "\nTest on vectored double double matmatmul succeeded.\n\n";
 
+   cout << "Seed used : " << seed << endl;
+
    return 0;
 }
 
@@ -85,12 +89,14 @@ int test_quarter_double_double ( void )
    if(x[0] < 0.0) x[0] = -x[0]; // both high and low part
    if(x[1] < 0.0) x[1] = -x[1]; // must be positive
 
+   make_dd_exponent_zero(&x[0], &x[1], 2);
+
    cout << scientific << setprecision(16);
 
    cout << "x : "; dd_write(x, 32); cout << endl;
 
    quarter_double_double
-      (x[0], x[1], &xhi0, &xhi1, &xhi2, &xhi3, &xlo0, &xlo1, &xlo2, &xlo3);
+      (x[0], x[1], &xhi0, &xhi1, &xhi2, &xhi3, &xlo0, &xlo1, &xlo2, &xlo3, 2);
 
    cout << "xhi0 : " << xhi0 << endl;
    cout << "xhi1 : " << xhi1 << endl;
@@ -100,6 +106,12 @@ int test_quarter_double_double ( void )
    cout << "xlo1 : " << xlo1 << endl;
    cout << "xlo2 : " << xlo2 << endl;
    cout << "xlo3 : " << xlo3 << endl;
+
+   if(is_dd_quarter_balanced
+        (xhi0, xhi1, xhi2, xhi3, xlo0, xlo1, xlo2, xlo3, 2))
+      cout << "The quarters are balanced." << endl;
+   else
+      cout << "The quarters are NOT balanced!?" << endl;
 
    to_double_double
       (xhi0, xhi1, xhi2, xhi3, xlo0, xlo1, xlo2, xlo3, &y[0], &y[1]);
@@ -131,9 +143,11 @@ int test_vectored_dd_product ( int dim )
       random_double_double(&xhi[i], &xlo[i]);
       if(xhi[i] < 0.0) xhi[i] = -xhi[i];
       if(xlo[i] < 0.0) xlo[i] = -xlo[i];
+      make_dd_exponent_zero(&xhi[i], &xlo[i]);
       random_double_double(&yhi[i], &ylo[i]);
       if(yhi[i] < 0.0) yhi[i] = -yhi[i];
       if(ylo[i] < 0.0) ylo[i] = -ylo[i];
+      make_dd_exponent_zero(&yhi[i], &ylo[i]);
    }
    cout << scientific << setprecision(16);
 
@@ -144,8 +158,8 @@ int test_vectored_dd_product ( int dim )
 
    double_double_product(dim, xhi, xlo, yhi, ylo, &prd[0], &prd[1]);
 
-   quarter_dd_vector(dim, xhi, xlo, x0, x1, x2, x3, x4, x5, x6, x7);
-   quarter_dd_vector(dim, yhi, ylo, y0, y1, y2, y3, y4, y5, y6, y7);
+   quarter_dd_vector(dim, xhi, xlo, x0, x1, x2, x3, x4, x5, x6, x7, 1);
+   quarter_dd_vector(dim, yhi, ylo, y0, y1, y2, y3, y4, y5, y6, y7, 1);
 
    vectored_dd_product
       (dim, x0, x1, x2, x3, x4, x5, x6, x7, y0, y1, y2, y3, y4, y5, y6, y7,

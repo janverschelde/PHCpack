@@ -155,6 +155,9 @@ int test_quarter_balancer ( void )
    cout << scientific << setprecision(16);
    cout << " x : " << x << endl;
 
+   double factor;
+   make_exponent_zero(&x, &factor, 1);
+
    quarter_split(x, &x0, &x1, &x2, &x3, 0);
 
    bool b01 = is_quarter_balanced(x0, x1, 1);

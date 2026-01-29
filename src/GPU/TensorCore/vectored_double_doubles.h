@@ -3,18 +3,39 @@
 #ifndef __VECTORED_DOUBLE_DOUBLES_H__
 #define __VECTORED_DOUBLE_DOUBLES_H__
 
+bool is_dd_quarter_balanced
+ ( double xhi0, double xhi1, double xhi2, double xhi3,
+   double xlo0, double xlo1, double xlo2, double xlo3, int vrblvl=0 );
+/*
+ * Given the eight quarters of a double double,
+ * returns true if they balanced, false otherwise.
+ * If vrblvl > 0, then extra output is written. */
+
+void dd_balance_quarters
+ ( double *xhi0, double *xhi1, double *xhi2, double *xhi3,
+   double *xlo0, double *xlo1, double *xlo2, double *xlo3, int vrblvl=0 );
+/*
+ * If unbalanced, balances the eight quarters of a double double.
+ * If vrblvl > 0, then extra output is written. */
+
+void make_dd_exponent_zero ( double *xhi, double *xlo, int vrblvl=0 );
+/*
+ * Multiplies the double double so that the leading double has
+ * exponent zero.  Writes extra output if vrblvl > 0. */
+
 void quarter_double_double
  ( double xhi, double xlo,
    double *xhi0, double *xhi1, double *xhi2, double *xhi3,
-   double *xlo0, double *xlo1, double *xlo2, double *xlo3 );
+   double *xlo0, double *xlo1, double *xlo2, double *xlo3, int vrblvl=0 );
 /*
  * Quarters the high part xhi and the low part xlo of a double double,
- * resulting in (xhi0, xhi1, xhi2, xhi3) and in (xlo0, xlo1, xlo2, xlo3). */
+ * resulting in (xhi0, xhi1, xhi2, xhi3) and in (xlo0, xlo1, xlo2, xlo3).
+ * The quarters are balanced. */
 
 void quarter_dd_vector
  ( int dim, double *xhi, double *xlo,
    double *xhi0, double *xhi1, double *xhi2, double *xhi3,
-   double *xlo0, double *xlo1, double *xlo2, double *xlo3 );
+   double *xlo0, double *xlo1, double *xlo2, double *xlo3, int vrblvl=0 );
 /*
  * Given a vector of size dim in xhi and xlo,
  * quarters the high part xhi and the low part xlo of a double double,
@@ -23,7 +44,7 @@ void quarter_dd_vector
 void quarter_dd_matrix
  ( int nrows, int ncols, double **Ahi, double **Alo,
    double **Ahi0, double **Ahi1, double **Ahi2, double **Ahi3,
-   double **Alo0, double **Alo1, double **Alo2, double **Alo3 );
+   double **Alo0, double **Alo1, double **Alo2, double **Alo3, int vrblvl=0 );
 /*
  * Given a matrix of nrows rows and ncols columns in (Ahi, Alo),
  * quarters the matrix into 8 matrices of the low and high parts. */
