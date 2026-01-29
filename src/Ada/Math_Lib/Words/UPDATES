@@ -1,4 +1,5 @@
-Wed 28 Jan 2026 : small edits in quarter_balancers.
+Thu 29 Jan 2026 : in first test in test_quarter_balancers.adb, the test on
+  the balancing of the next doubles must be redone after balancing.
 
 Tue 27 Jan 2026 : updated vectored_{double,quad,octo}_doubles.adb for
   changes in the verbose parameter of the sign balancers.

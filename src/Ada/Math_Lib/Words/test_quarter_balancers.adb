@@ -55,6 +55,8 @@ package body Test_Quarter_Balancers is
         if not b01
          then put_line("x0 and x1 are not balanced!  Bug?!");
         end if;
+       -- must recompute if x1 and x2 are balanced
+        b12 := Quarter_Balancers.Is_Quarter_Balanced(x1,x2,1);
       end if;
       if not b12 then
         put_line("-> balancing x1 and x2 ...");
@@ -63,6 +65,8 @@ package body Test_Quarter_Balancers is
         if not b12
          then put_line("x1 and x2 are not balanced!  Bug?!");
         end if;
+       -- must recompute if x2 and x3 are balanced
+        b23 := Quarter_Balancers.Is_Quarter_Balanced(x2,x3,1);
       end if;
       if not b23 then
         put_line("-> balancing x2 and x3 ...");
