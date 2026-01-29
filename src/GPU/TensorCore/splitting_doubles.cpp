@@ -253,3 +253,42 @@ bool is_quarter_balanced ( double x, double y, int vrblvl )
    }
    return result;
 }
+
+void quarter_balance ( double *x, double *y, int vrblvl )
+{
+   if(vrblvl > 0)
+      cout << "-> in splitting_doubles.quarter_balance ..." << endl;
+
+   int exn;
+   double xf = frexp(*x, &exn);
+   double bit = ldexp(1.0, exn - 13);
+
+   if(vrblvl > 0)
+   {
+      cout << "b x : "; write_52double(*x);
+      cout << "bit : "; write_52double(bit);
+      cout << "b y : "; write_52double(*y);
+   }
+   *x = *x - bit;
+   *y = *y + bit;
+
+   if(vrblvl > 0)
+   {
+      cout << "b x : "; write_52double(*x);
+      cout << "b y : "; write_52double(*y);
+   }
+}
+
+void balance_quarters
+ ( double *x0, double *x1, double *x2, double *x3, int vrblvl )
+{
+   if(vrblvl > 0)
+      cout << "-> in splitting_doubles.balance_quarters ..." << endl;
+
+   if(not is_quarter_balanced(*x0, *x1, vrblvl-1))
+      quarter_balance(x0, x1, vrblvl-1);
+   if(not is_quarter_balanced(*x1, *x2, vrblvl-1))
+      quarter_balance(x1, x2, vrblvl-1);
+   if(not is_quarter_balanced(*x2, *x3, vrblvl-1))
+      quarter_balance(x2, x3, vrblvl-1);
+}

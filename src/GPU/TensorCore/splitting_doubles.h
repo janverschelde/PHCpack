@@ -58,4 +58,9 @@ bool is_quarter_balanced ( double x, double y, int vrblvl=0 );
  * quarters x and y is 13, or less.
  * If vrblvl > 0, then the exponents are written. */
 
+void quarter_balance ( double *x, double *y, int vrblvl=0 );
+/*
+ * Makes x and y balanced by reduction of one bit of x and
+ * addition of one bit to y, asumming both x and y are positive. */
+
 #endif
