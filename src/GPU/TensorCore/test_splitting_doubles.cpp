@@ -169,8 +169,16 @@ int test_quarter_balancer ( void )
    else
       cout << "The quarters are not balanced." << endl;
 
-   if(not b01) quarter_balance(&x0, &x1, 1); 
-   if(not b12) quarter_balance(&x1, &x2, 1); 
+   if(not b01) 
+   {
+      quarter_balance(&x0, &x1, 1); 
+      b12 = is_quarter_balanced(x1, x2, 1); // must recompute b12
+   }
+   if(not b12)
+   {
+      quarter_balance(&x1, &x2, 1); 
+      b23 = is_quarter_balanced(x2, x3, 1); // must recompute b23
+   }
    if(not b23) quarter_balance(&x2, &x3, 1); 
 
    int fail = test_quarter_sums(x, x0, x1, x2, x3);

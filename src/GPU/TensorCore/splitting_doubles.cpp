@@ -261,7 +261,8 @@ void quarter_balance ( double *x, double *y, int vrblvl )
 
    int exn;
    double xf = frexp(*x, &exn);
-   double bit = ldexp(1.0, exn - 13);
+   const double one = 1.0;
+   double bit = ldexp(one, exn - 14);
 
    if(vrblvl > 0)
    {
