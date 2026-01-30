@@ -1,6 +1,8 @@
 /* Collection of functions for vectored double double arithmetic. */
 
 #include <iostream>
+#include <iomanip>
+#include <cmath>
 #include "double_double.h"
 #include "double_double_functions.h"
 #include "splitting_doubles.h"
@@ -81,8 +83,21 @@ void quarter_double_double
            << endl;
 
    quarter_split(xhi, xhi0, xhi1, xhi2, xhi3, vrblvl-1);
+   if(vrblvl > 0)
+   {
+      if(*xhi0 == 0.0) cout << "xhi0 is zero!" << endl;
+      if(*xhi1 == 0.0) cout << "xhi1 is zero!" << endl;
+      if(*xhi2 == 0.0) cout << "xhi2 is zero!" << endl;
+      if(*xhi3 == 0.0) cout << "xhi3 is zero!" << endl;
+   }
    quarter_split(xlo, xlo0, xlo1, xlo2, xlo3, vrblvl-1);
-
+   if(vrblvl > 0)
+   {
+      if(*xlo0 == 0.0) cout << "xlo0 is zero!" << endl;
+      if(*xlo1 == 0.0) cout << "xlo1 is zero!" << endl;
+      if(*xlo2 == 0.0) cout << "xlo2 is zero!" << endl;
+      if(*xlo3 == 0.0) cout << "xlo3 is zero!" << endl;
+   }
    dd_balance_quarters
       (xhi0, xhi1, xhi2, xhi3, xlo0, xlo1, xlo2, xlo3, vrblvl-1);
 }
@@ -254,6 +269,8 @@ void vectored_dd_product
 {
    *s0 = 0.0; *s1 = 0.0; *s2 = 0.0; *s3 = 0.0;
    *s4 = 0.0; *s5 = 0.0; *s6 = 0.0; *s7 = 0.0;
+
+   cout << scientific << setprecision(16);
 
    for(int i=0; i<dim; i++)
    {

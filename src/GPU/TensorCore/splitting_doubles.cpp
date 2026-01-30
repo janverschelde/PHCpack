@@ -259,6 +259,9 @@ void quarter_balance ( double *x, double *y, int vrblvl )
    if(vrblvl > 0)
       cout << "-> in splitting_doubles.quarter_balance ..." << endl;
 
+   if(*x == 0.0) return;
+   if(*y == 0.0) return;
+
    int exn;
    double xf = frexp(*x, &exn);
    const double one = 1.0;
