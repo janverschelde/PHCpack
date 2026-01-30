@@ -8,6 +8,7 @@
 #include "double_double.h"
 #include "random2_vectors.h"
 #include "double_double_functions.h"
+#include "splitting_doubles.h"
 #include "vectored_double_doubles.h"
 #include "random2_matrices.h"
 #include "double_matrix_multiplications.h"
@@ -122,6 +123,15 @@ int test_quarter_double_double ( void )
 
    cout << "e : "; dd_write(e, 3); cout << endl;
 
+   cout << "xhi0 : "; write_52double(xhi0);
+   cout << "xhi1 : "; write_52double(xhi1);
+   cout << "xhi2 : "; write_52double(xhi2);
+   cout << "xhi3 : "; write_52double(xhi3);
+   cout << "xlo0 : "; write_52double(xlo0);
+   cout << "xlo1 : "; write_52double(xlo1);
+   cout << "xlo2 : "; write_52double(xlo2);
+   cout << "xlo3 : "; write_52double(xlo3);
+
    fail = not(e[0] == 0.0)
         + not(e[1] == 0.0);
 
@@ -164,6 +174,15 @@ int test_vectored_dd_product ( int dim )
    vectored_dd_product
       (dim, x0, x1, x2, x3, x4, x5, x6, x7, y0, y1, y2, y3, y4, y5, y6, y7,
        &s0, &s1, &s2, &s3, &s4, &s5, &s6, &s7);
+
+   cout << "s0 : "; write_52double(s0);
+   cout << "s1 : "; write_52double(s1);
+   cout << "s2 : "; write_52double(s2);
+   cout << "s3 : "; write_52double(s3);
+   cout << "s4 : "; write_52double(s4);
+   cout << "s5 : "; write_52double(s5);
+   cout << "s6 : "; write_52double(s6);
+   cout << "s7 : "; write_52double(s7);
 
    to_double_double(s0, s1, s2, s3, s4, s5, s6, s7, &vpd[0], &vpd[1]);
 

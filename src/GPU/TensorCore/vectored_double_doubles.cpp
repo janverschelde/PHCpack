@@ -117,6 +117,10 @@ void quarter_dd_vector
          {
             cout << i << "-th quarters are not balanced!" << endl;
             fail = true;
+            // redo the test for the output
+            check = is_dd_quarter_balanced
+                      (xhi0[i], xhi1[i], xhi2[i], xhi3[i],
+                       xlo0[i], xlo1[i], xlo2[i], xlo3[i], 2);
          }
       }
       if(fail)
@@ -249,7 +253,7 @@ void vectored_dd_product
    double *s4, double *s5, double *s6, double *s7 )
 {
    *s0 = 0.0; *s1 = 0.0; *s2 = 0.0; *s3 = 0.0;
-   *s4 = 0.0; *s5 = 0.0; *s7 = 0.0; *s7 = 0.0;
+   *s4 = 0.0; *s5 = 0.0; *s6 = 0.0; *s7 = 0.0;
 
    for(int i=0; i<dim; i++)
    {
