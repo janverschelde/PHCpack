@@ -1,3 +1,5 @@
+Fri 30 Jan 2026 : in quarter balancers, added test on zero inputs.
+
 Thu 29 Jan 2026 : in first test in test_quarter_balancers.adb, the test on
   the balancing of the next doubles must be redone after balancing.
 

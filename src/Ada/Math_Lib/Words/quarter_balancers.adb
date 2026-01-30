@@ -43,6 +43,18 @@ package body Quarter_Balancers is
     if vrblvl > 0
      then put_line("-> in Test_Quarter_Balancers.quarter_balance 0 ...");
     end if;
+    if x = 0.0 then
+      if vrblvl > 0
+       then put_line("x is zero, no point to balance.");
+      end if;
+      return;
+    end if;
+    if y = 0.0 then
+      if vrblvl > 0
+       then put_line("y is zero, no point to balance.");
+      end if;
+      return;
+    end if;
     if vrblvl > 0 then
       put("b x : "); Bits_of_Doubles.write_52bits_expo(x); new_line;
       put("bit : "); Bits_of_Doubles.write_52bits_expo(bit); new_line;
