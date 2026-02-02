@@ -48,7 +48,8 @@ package body Random_Laurent_Homotopy is
                 nbm : in Standard_Integer_Vectors.Vector;
                 deg : out Standard_Integer_VecVecs.Array_of_VecVecs;
                 cff : out Standard_Complex_VecVecs.VecVec;
-                tpw : out Standard_Floating_VecVecs.VecVec ) is
+                tpw : out Standard_Floating_VecVecs.VecVec;
+                intpow : in boolean := false ) is
   begin
     for i in 1..nbp loop
       declare
@@ -56,11 +57,21 @@ package body Random_Laurent_Homotopy is
             := Random_Polynomial_Support(nbm(i),dim,low,upp);
         cfi : constant Standard_Complex_Vectors.Vector(1..nbm(i))
             := Standard_Random_Vectors.Random_Vector(1,nbm(i));
-        cti : constant Standard_Floating_Vectors.Vector(1..nbm(i))
+        cti : Standard_Floating_Vectors.Vector(1..nbm(i))
             := Double_Real_Powered_Series.Random_Leading_Powers(nbm(i));
+        pwt : integer32;
       begin
         deg(i) := new Standard_Integer_VecVecs.VecVec'(dpi);
         cff(i) := new Standard_Complex_Vectors.Vector'(cfi);
+        if intpow then
+          for k in cti'range loop
+            pwt := integer32(cti(k));
+            if pwt = 0
+             then pwt := 1;
+            end if;
+            cti(k) := double_float(pwt); 
+          end loop;
+        end if;
         tpw(i) := new Standard_Floating_Vectors.Vector'(cti);
       end;
     end loop;

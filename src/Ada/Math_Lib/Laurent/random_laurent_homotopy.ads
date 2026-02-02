@@ -37,7 +37,8 @@ package Random_Laurent_Homotopy is
                 nbm : in Standard_Integer_Vectors.Vector;
                 deg : out Standard_Integer_VecVecs.Array_of_VecVecs;
                 cff : out Standard_Complex_VecVecs.VecVec;
-                tpw : out Standard_Floating_VecVecs.VecVec );
+                tpw : out Standard_Floating_VecVecs.VecVec;
+                intpow : in boolean := false );
 
   -- DESCRIPTION :
   --   Generates a random Laurent polynomial system,
@@ -51,7 +52,8 @@ package Random_Laurent_Homotopy is
   --   dim      number of variables in the polynomials;
   --   low      lower bound for the exponents in the monomials;
   --   upp      upper bound for the exponents in the monomials,
-  --   nbm      nbm(i) equals the number of monomials in the i-th polynomial.
+  --   nbm      nbm(i) equals the number of monomials in the i-th polynomial;
+  --   intpow   if true, then converts the real powers of t to integers.
 
   -- ON RETURN :
   --   deg      supports of the monomials in the system;

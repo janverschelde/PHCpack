@@ -42,6 +42,7 @@ package Test_Newton_Puiseux is
                 hdg : out Standard_Integer_VecVecs.Array_of_VecVecs;
                 hcf : out Standard_Complex_VecVecs.VecVec;
                 hct : out Standard_Floating_VecVecs.VecVec;
+                intpow : in boolean := false;
                 vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
@@ -52,6 +53,7 @@ package Test_Newton_Puiseux is
   --   dim      number of equations and variables in the homotopy;
   --   nbm      nbm(i) equals the number of monomials in the system
   --            used to augment the canonical binomial system;
+  --   intpow   if true, then converts the real powers of t to integers;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :

@@ -1,3 +1,6 @@
+Sun 1 Feb 2026 : updated random_laurent_homotopy and test_newton_puiseux
+  to allow to test for integer values for the powers of the parameter t.
+
 Tue 27 Jan 2026 : updates in test_{leading, ordered}_evaluations.adb for
   name changes of procedures in random_laurent_homotopy.
 

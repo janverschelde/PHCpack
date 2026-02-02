@@ -75,6 +75,7 @@ package body Test_Newton_Puiseux is
                 hdg : out Standard_Integer_VecVecs.Array_of_VecVecs;
                 hcf : out Standard_Complex_VecVecs.VecVec;
                 hct : out Standard_Floating_VecVecs.VecVec;
+                intpow : in boolean := false;
                 vrblvl : in integer32 := 0 ) is
 
     pdg : Standard_Integer_VecVecs.Array_of_VecVecs(1..dim);
@@ -83,7 +84,7 @@ package body Test_Newton_Puiseux is
 
   begin
     Random_Laurent_Homotopy.Random_Laurent_System
-      (dim,dim,-9,9,nbm,pdg,pcf,pct);
+      (dim,dim,-9,9,nbm,pdg,pcf,pct,intpow);
     if vrblvl > 0 then
       for i in 1..dim loop
         put("-> coefficients and degrees of polynomial ");
@@ -275,6 +276,7 @@ package body Test_Newton_Puiseux is
     pwr : Standard_Floating_VecVecs.VecVec(1..dim);
     nbr : integer32 := 0;
     tol : constant double_float := 1.0e-12;
+    ans : character;
 
   begin
     put_line("Reading the number of monomials for every polynomial ...");
@@ -282,7 +284,13 @@ package body Test_Newton_Puiseux is
       put("  Give the number of monomials in polynomial "); put(i,1);
       put(" : "); get(nbm(i));
     end loop;
-    Define_Binomial_Homotopy(dim,nbm,hdg,hcf,hct,1);
+    new_line;
+    put("Integer values as powers of t ? (y/n) ");
+    Communications_with_User.Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Define_Binomial_Homotopy(dim,nbm,hdg,hcf,hct,true,1);
+     else Define_Binomial_Homotopy(dim,nbm,hdg,hcf,hct,vrblvl=>1);
+    end if;
     for i in cf0'range loop
       cf0(i) := Create(1.0);
     end loop;
