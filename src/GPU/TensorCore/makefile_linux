@@ -1,13 +1,39 @@
 gpp=/usr/bin/g++
 gcc=/usr/bin/gcc
+CUDA=/usr/local/cuda/include
+CUDALIB=/usr/local/cuda/lib64
 QDsrc=../../Ada/Math_Lib/QD/C
 MPD=../Norms
 CNV=../Convolutions
 MAT=../Matrices
 
+# tested on two different NVIDIA GPUs
+
+# the architecture flag for Ampere A100
+smflag=sm_80
+# the architecture flag for RTX 4080
+# smflag=sm_89
+
 smTCGemm:
-	nvcc -ccbin=$(gcc) -O3 -o smTCGemm -arch=sm_80 \
+	nvcc -ccbin=$(gcc) -O3 -o smTCGemm -arch=$(smflag) \
              simpleTensorCoreGemm.cu
+
+smDMMA_host.o:
+	@-echo ">>> compiling smDMMA_host ..."
+	$(gpp) -I$(CUDA) -O3 -c smDMMA_host.cpp
+
+smDMMA_kernels.o:
+	@-echo ">>> compiling smDMMA_kernels ..."
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c smDMMA_kernels.cu
+
+test_smDMMA.o:
+	@-echo ">>> compiling test_smDMMA ..."
+	$(gpp) -I$(CUDA) -O3 -c test_smDMMA.cpp
+
+test_smDMMA: smDMMA_host.o smDMMA_kernels.o test_smDMMA.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_smDMMA smDMMA_host.o smDMMA_kernels.o test_smDMMA.o \
+               -lcudart -L$(CUDALIB)
 
 pi64bits:
 	$(gcc) -o pi64bits bits_of_pi.c
@@ -186,6 +212,8 @@ test_vhd: double_double.o quad_double.o octo_double.o hexa_double.o \
 
 clean:
 	/bin/rm -f -r smTCGemm pi64bits
+	/bin/rm -f -r smDMMA_host.o smDMMA_kernels.o
+	/bin/rm -f -r test_smDMMA.o test_smDMMA
 	/bin/rm -f -r test_split test_splitting_doubles.o splitting_doubles.o
 	/bin/rm -f -r random_numbers.o random2_vectors.o random2_matrices.o
 	/bin/rm -f -r double_double.o double_double_functions.o

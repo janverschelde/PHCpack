@@ -1,3 +1,7 @@
+Mon 2 Feb 2026 : distributed the code of simpleTensorCoreGemm.cu into
+  test_smDMMA.cpp, smDMMA_dims.h, smDMMA_host and smDMMA_kernels for
+  further development with multiple doubles.  Updated makefiles.
+
 Fri 30 Jan 2026 : added test on zero quarters in splitting_doubles.cpp,
   in the balancing function; updated vectored_double_doubles.cpp.
 

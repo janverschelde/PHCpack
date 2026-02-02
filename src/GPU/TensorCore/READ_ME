@@ -13,6 +13,10 @@ to obtain accurate results, for which data staging algorithms are defined.
 file name                     : short description
 ------------------------------------------------------------------------------
 simpleTensorCoreGemm          : simple wgma kernel for matrix multiplication
+smDMMA_dims                   : defines the dimensions of the multiplication
+smDMMA_host                   : code on the host for the multiplication
+smDMMA_kernels                : code on the device for the multiplication
+test_smDMMA                   : main test program for the simple kernel
 ------------------------------------------------------------------------------
 bits_of_pi                    : test on the bits of an approximation for pi
 splitting_doubles             : halving and quartering fractions of doubles

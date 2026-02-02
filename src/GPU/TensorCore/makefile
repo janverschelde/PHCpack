@@ -8,6 +8,9 @@ MAKEFILE = makefile_linux
 smTCGemm:
 	make -f $(MAKEFILE) smTCGemm
 
+test_smDMMA:
+	make -f $(MAKEFILE) test_smDMMA
+
 pi64bits:
 	make -f $(MAKEFILE) pi64bits
 
