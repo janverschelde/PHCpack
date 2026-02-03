@@ -36,8 +36,35 @@ CUDASDK="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1"
 # CUDALIB="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.2\lib\x64"
 CUDALIB="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1\lib\x64"
 
+# tested on two different NVIDIA GPUs
+
+# the architecture flag for Ampere A100
+# smflag=sm_80
+# the architecture flag for RTX 4080
+smflag=sm_89
+
 smTCGemm:
-	nvcc -ccbin=$(CL) -O2 -o smTCGemm -arch=sm_89 simpleTensorCoreGemm.cu
+	nvcc -ccbin=$(CL) -O2 -o smTCGemm -arch=$(smflag) simpleTensorCoreGemm.cu
+
+smDMMA_host.obj:
+	@-echo ">>> compiling smDMMA_host ..."
+	$(CL)\cl /c smDMMA_host.cpp -I$(winkitucrt) -I$(includepath) -O2 \
+                 /Fo: smDMMA_host.obj
+
+smDMMA_kernels.obj:
+	@-echo ">>> compiling smDMMA_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 smDMMA_kernels.cu \
+             -o smDMMA_kernels.obj
+
+test_smDMMA.obj:
+	@-echo ">>> compiling test_smDMMA ..."
+	$(CL)\cl /c -O2 test_smDMMA.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include /Fo: test_smDMMA.obj /EHsc
+
+test_smDMMA: smDMMA_host.obj smDMMA_kernels.obj test_smDMMA.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_smDMMA.exe \
+             smDMMA_host.obj smDMMA_kernels.obj test_smDMMA.obj
 
 pi64bits:
 	gcc -o pi64bits bits_of_pi.c
@@ -216,6 +243,8 @@ test_vhd: double_double.o quad_double.o octo_double.o hexa_double.o \
 clean:
 	del *~
 	del smTCGemm.exe smTCGemm.lib smTCGemm.exp
+	del smDMMA_host.obj smDMMA_kernels.obj test_smDMMA.obj
+	del test_smDMMA.exe test_smDMMA.lib test_smDMMA.exp
 	del pi64bits.exe
 	del test_split.exe splitting_doubles.o test_splitting_doubles.o
 	del random_numbers.o random2_vectors.o random2_matrices.o

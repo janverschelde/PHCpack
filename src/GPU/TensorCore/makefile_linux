@@ -20,7 +20,7 @@ smTCGemm:
 
 smDMMA_host.o:
 	@-echo ">>> compiling smDMMA_host ..."
-	$(gpp) -I$(CUDA) -O3 -c smDMMA_host.cpp
+	$(gpp) -O3 -c smDMMA_host.cpp
 
 smDMMA_kernels.o:
 	@-echo ">>> compiling smDMMA_kernels ..."
