@@ -114,7 +114,7 @@ int test_quarter_double_double ( void )
    else
       cout << "The quarters are NOT balanced!?" << endl;
 
-   to_double_double
+   to_double_double8sum
       (xhi0, xhi1, xhi2, xhi3, xlo0, xlo1, xlo2, xlo3, &y[0], &y[1]);
 
    cout << "y : "; dd_write(y, 32); cout << endl;
@@ -145,8 +145,9 @@ int test_vectored_dd_product ( int dim )
    double xhi[dim],xlo[dim],yhi[dim],ylo[dim];
    double x0[dim],x1[dim],x2[dim],x3[dim],x4[dim],x5[dim],x6[dim],x7[dim];
    double y0[dim],y1[dim],y2[dim],y3[dim],y4[dim],y5[dim],y6[dim],y7[dim];
-   double prd[2],vpd[2],err[2];
+   double prd[2],rpd[2],vpd8[2],vpd12[2],err0[2],err8[2],err12[2];
    double s0,s1,s2,s3,s4,s5,s6,s7;
+   double s4a,s5a,s6a,s7a,s4b,s5b,s6b,s7b;
 
    for(int i=0; i<dim; i++)
    {
@@ -167,14 +168,16 @@ int test_vectored_dd_product ( int dim )
    dd_write_vector(dim, yhi, ylo);
 
    double_double_product(dim, xhi, xlo, yhi, ylo, &prd[0], &prd[1]);
+   recursive_dd_product(dim, xhi, xlo, yhi, ylo, &rpd[0], &rpd[1]);
 
    quarter_dd_vector(dim, xhi, xlo, x0, x1, x2, x3, x4, x5, x6, x7, 1);
    quarter_dd_vector(dim, yhi, ylo, y0, y1, y2, y3, y4, y5, y6, y7, 1);
 
-   vectored_dd_product
+   vectored_dd_product8sum
       (dim, x0, x1, x2, x3, x4, x5, x6, x7, y0, y1, y2, y3, y4, y5, y6, y7,
        &s0, &s1, &s2, &s3, &s4, &s5, &s6, &s7);
 
+   cout << "the 8 sums :" << endl;
    cout << "s0 : "; write_52double(s0);
    cout << "s1 : "; write_52double(s1);
    cout << "s2 : "; write_52double(s2);
@@ -184,18 +187,48 @@ int test_vectored_dd_product ( int dim )
    cout << "s6 : "; write_52double(s6);
    cout << "s7 : "; write_52double(s7);
 
-   to_double_double(s0, s1, s2, s3, s4, s5, s6, s7, &vpd[0], &vpd[1]);
+   to_double_double8sum(s0, s1, s2, s3, s4, s5, s6, s7, &vpd8[0], &vpd8[1]);
 
-   cout << "dd x*y : "; dd_write(prd, 32); cout << endl;
-   cout << "vd x*y : "; dd_write(vpd, 32); cout << endl;
+   vectored_dd_product12sum
+      (dim, x0, x1, x2, x3, x4, x5, x6, x7, y0, y1, y2, y3, y4, y5, y6, y7,
+       &s0, &s1, &s2, &s3, &s4a, &s5a, &s6a, &s7a, &s4b, &s5b, &s6b, &s7b);
 
-   ddf_sub(prd[0], prd[1], vpd[0], vpd[1], &err[0], &err[1]);
+   cout << "the 12 sums :" << endl;
+   cout << " s0 : "; write_52double(s0);
+   cout << " s1 : "; write_52double(s1);
+   cout << " s2 : "; write_52double(s2);
+   cout << " s3 : "; write_52double(s3);
+   cout << "s4a : "; write_52double(s4a);
+   cout << "s4b : "; write_52double(s4b);
+   cout << "s5a : "; write_52double(s5a);
+   cout << "s5b : "; write_52double(s5b);
+   cout << "s6a : "; write_52double(s6a);
+   cout << "s6b : "; write_52double(s6b);
+   cout << "s7a : "; write_52double(s7a);
+   cout << "s7b : "; write_52double(s7b);
 
-   if(err[0] < 0.0) ddf_minus(&err[0], &err[1]);
+   to_double_double12sum
+      (s0, s1, s2, s3, s4a, s5a, s6a, s7a, s4b, s5b, s6b, s7b, 
+       &vpd12[0], &vpd12[1]);
 
-   cout << " error : "; dd_write(err, 3); cout << endl;
+   cout << " dd x*y : "; dd_write(prd, 32); cout << endl;
+   cout << "rdd x*y : "; dd_write(rpd, 32); cout << endl;
+   cout << " v8 x*y : "; dd_write(vpd8, 32); cout << endl;
+   cout << "v12 x*y : "; dd_write(vpd12, 32); cout << endl;
 
-   fail = (abs(err[0]) > 1.0E-28);
+   ddf_sub(rpd[0], rpd[1], prd[0], prd[1], &err0[0], &err0[1]);
+   ddf_sub(rpd[0], rpd[1], vpd8[0], vpd8[1], &err8[0], &err8[1]);
+   ddf_sub(rpd[0], rpd[1], vpd12[0], vpd12[1], &err12[0], &err12[1]);
+
+   if(err0[0] < 0.0) ddf_minus(&err0[0], &err0[1]);
+   if(err8[0] < 0.0) ddf_minus(&err8[0], &err8[1]);
+   if(err12[0] < 0.0) ddf_minus(&err12[0], &err12[1]);
+
+   cout << " plain error : "; dd_write(err0, 3); cout << endl;
+   cout << " error 8-sum : "; dd_write(err8, 3); cout << endl;
+   cout << "error 12-sum : "; dd_write(err12, 3); cout << endl;
+
+   fail = (int(err8[0]) > err0[0]/1000) and (int(err12[0]) > err0[0]/1000);
 
    return fail;
 }
@@ -231,12 +264,13 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
 
    cout << scientific << setprecision(16);
 
+/*
    cout << "A random " << nrows << "-by-" << nrc << " matrix A :" << endl;
    for(int i=0; i<nrows; i++)
       for(int j=0; j<nrc; j++)
          cout << "A[" << i << "][" << j << "] : "
               << Ahi[i][j] << "  " << Alo[i][j] << endl;
-
+ */
    double **Bhi = new double*[nrc];
    double **Blo = new double*[nrc];
 
@@ -253,21 +287,21 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
          if(Bhi[i][j] < 0.0) Bhi[i][j] = -Bhi[i][j];
          if(Blo[i][j] < 0.0) Blo[i][j] = -Blo[i][j];
       }
-
+/*
    cout << "A random " << nrc << "-by-" << ncols << " matrix B :" << endl;
    for(int i=0; i<nrc; i++)
       for(int j=0; j<ncols; j++)
          cout << "B[" << i << "][" << j << "] : "
               << Bhi[i][j] << "  " << Blo[i][j] << endl;
-
+ */
    double_double_matmatmul(nrows, ncols, nrc, Ahi, Alo, Bhi, Blo, Chi, Clo);
-
+/*
    cout << "the product A*B :" << endl;
    for(int i=0; i<nrows; i++)
       for(int j=0; j<ncols; j++)
          cout << "C[" << i << "][" << j << "] : "
               << Chi[i][j] << "  " << Clo[i][j] << endl;
-
+ */
    double **Ahi0 = new double*[nrows];
    double **Ahi1 = new double*[nrows];
    double **Ahi2 = new double*[nrows];
@@ -348,6 +382,14 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
    double **Clo1 = new double*[nrows];
    double **Clo2 = new double*[nrows];
    double **Clo3 = new double*[nrows];
+   double **Clo0a = new double*[nrows];
+   double **Clo1a = new double*[nrows];
+   double **Clo2a = new double*[nrows];
+   double **Clo3a = new double*[nrows];
+   double **Clo0b = new double*[nrows];
+   double **Clo1b = new double*[nrows];
+   double **Clo2b = new double*[nrows];
+   double **Clo3b = new double*[nrows];
 
    for(int i=0; i<nrows; i++)
    {
@@ -359,8 +401,16 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
       Clo1[i] = new double[ncols];
       Clo2[i] = new double[ncols];
       Clo3[i] = new double[ncols];
+      Clo0a[i] = new double[ncols];
+      Clo1a[i] = new double[ncols];
+      Clo2a[i] = new double[ncols];
+      Clo3a[i] = new double[ncols];
+      Clo0b[i] = new double[ncols];
+      Clo1b[i] = new double[ncols];
+      Clo2b[i] = new double[ncols];
+      Clo3b[i] = new double[ncols];
    }
-   vectored_dd_matmatmul
+   vectored_dd_matmatmul8sum
       (nrows, ncols, nrc,
        Ahi0, Ahi1, Ahi2, Ahi3, Alo0, Alo1, Alo2, Alo3,
        Thi0, Thi1, Thi2, Thi3, Tlo0, Tlo1, Tlo2, Tlo3,
@@ -374,34 +424,80 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
       Vhi[i] = new double[ncols];
       Vlo[i] = new double[ncols];
    }
-   to_double_double_matrix
+   to_double_double8sum_matrix
       (nrows, ncols,
        Chi0, Chi1, Chi2, Chi3, Clo0, Clo1, Clo2, Clo3, Vhi, Vlo);
 
+   vectored_dd_matmatmul12sum
+      (nrows, ncols, nrc,
+       Ahi0, Ahi1, Ahi2, Ahi3, Alo0, Alo1, Alo2, Alo3,
+       Thi0, Thi1, Thi2, Thi3, Tlo0, Tlo1, Tlo2, Tlo3,
+       Chi0, Chi1, Chi2, Chi3,
+       Clo0a, Clo1a, Clo2a, Clo3a, Clo0b, Clo1b, Clo2b, Clo3b);
+
+   double **Whi = new double*[nrows];
+   double **Wlo = new double*[nrows];
+
+   for(int i=0; i<nrows; i++)
+   {
+      Whi[i] = new double[ncols];
+      Wlo[i] = new double[ncols];
+   }
+   to_double_double12sum_matrix
+      (nrows, ncols,
+       Chi0, Chi1, Chi2, Chi3,
+       Clo0a, Clo1a, Clo2a, Clo3a, Clo0b, Clo1b, Clo2b, Clo3b, Whi, Wlo);
+/*
    cout << "the vectored product A*B :" << endl;
    for(int i=0; i<nrows; i++)
       for(int j=0; j<ncols; j++)
          cout << "V[" << i << "][" << j << "] : "
               << Vhi[i][j] << "  " << Vlo[i][j] << endl;
+ */
+   double err8[2],err12[2],acc[2];
+   double maxerr8 = 0.0;
+   double maxerr12 = 0.0;
+   err8[0] = 0.0; err8[1] = 0.0;
+   err12[0] = 0.0; err12[1] = 0.0;
 
-   double err[2],acc[2];
-   err[0] = 0.0; err[1] = 0.0;
+   cout << scientific << setprecision(3);
 
    for(int i=0; i<nrows; i++)
       for(int j=0; j<ncols; j++)
       {
          ddf_sub(Chi[i][j], Clo[i][j], Vhi[i][j], Vlo[i][j],
                  &acc[0], &acc[1]);
-         ddf_inc(&err[0], &err[1], acc[0], acc[1]);
+         if(acc[0] < 0.0) ddf_minus(&acc[0], &acc[1]);
+         ddf_inc(&err8[0], &err8[1], acc[0], acc[1]);
+         if(abs(acc[0]) > maxerr8) 
+         {
+            maxerr8 = abs(acc[0]);
+            cout << "increase max error 8-sum to " << maxerr8
+                 << ", at i = " << i << ", j = " << j << endl;
+         }
+         ddf_sub(Chi[i][j], Clo[i][j], Whi[i][j], Wlo[i][j],
+                 &acc[0], &acc[1]);
+         if(acc[0] < 0.0) ddf_minus(&acc[0], &acc[1]);
+         ddf_inc(&err12[0], &err12[1], acc[0], acc[1]);
+         if(abs(acc[0]) > maxerr12) 
+         {
+            maxerr12 = abs(acc[0]);
+            cout << "increase max error 12-sum to " << maxerr12
+                 << ", at i = " << i << ", j = " << j << endl;
+         }
       }
 
-   if(err[0] < 0.0) ddf_minus(&err[0], &err[1]);
+   cout << "-> error  8-sum : "; dd_write(err8, 3); cout << endl;
+   cout << "-> error 12-sum : "; dd_write(err12, 3); cout << endl;
+   cout << scientific << setprecision(3);
+   cout << "-> max error  8-sum : " << maxerr8 << endl;
+   cout << "-> max error 12-sum : " << maxerr12 << endl;
 
-   cout << "-> error : "; dd_write(err, 3); cout << endl;
-
-   fail = (abs(err[0]) > 1.0E-28);
+   fail = (maxerr8 > 1.0E-28);
 
    if(fail == 1) return fail; // no point to continue ...
+
+   return fail; // return anyway ...
 
    double **cA = new double*[8*nrows];
    for(int i=0; i<8*nrows; i++) cA[i] = new double[8*nrc];

@@ -49,7 +49,7 @@ void quarter_dd_matrix
  * Given a matrix of nrows rows and ncols columns in (Ahi, Alo),
  * quarters the matrix into 8 matrices of the low and high parts. */
 
-void to_double_double
+void to_double_double8sum
  ( double xhi0, double xhi1, double xhi2, double xhi3,
    double xlo0, double xlo1, double xlo2, double xlo3,
    double *xhi, double *xlo );
@@ -59,14 +59,36 @@ void to_double_double
  * returns in xhi and xlo the high and low parts of a double double,
  * using double double arithmetic. */
 
-void to_double_double_matrix
+void to_double_double12sum
+ ( double xhi0, double xhi1, double xhi2, double xhi3,
+   double xlo0a, double xlo1a, double xlo2a, double xlo3a,
+   double xlo0b, double xlo1b, double xlo2b, double xlo3b,
+   double *xhi, double *xlo );
+/*
+ * Similar to to_double_double_8sum, but the quarters of the low part are
+ * in (xlo0a, xlo1a, xlo2a, xl03a) and (xlo0b, xlo1b, xlo2b, xlo3b).
+ * All quarters are added in double double arithmetic to make (xhi, xlo). */
+
+void to_double_double8sum_matrix
  ( int nrows, int ncols,
    double **Ahi0, double **Ahi1, double **Ahi2, double **Ahi3,
    double **Alo0, double **Alo1, double **Alo2, double **Alo3,
    double **Ahi, double **Alo );
 /*
  * Given the quarters of an nrows-by-ncols matrix,
- * returns the high and low parts of the double doubles in the matix. */
+ * returns the high and low parts of the double doubles in the matrix. */
+
+void to_double_double12sum_matrix
+ ( int nrows, int ncols,
+   double **Ahi0, double **Ahi1, double **Ahi2, double **Ahi3,
+   double **Alo0a, double **Alo1a, double **Alo2a, double **Alo3a,
+   double **Alo0b, double **Alo1b, double **Alo2b, double **Alo3b,
+   double **Ahi, double **Alo );
+/*
+ * Given the quarters of an nrows-by-ncols matrix,
+ * returns the high and low parts of the double doubles in the matrix.
+ * Similar to the 8-sum version, the quarters of the low parts are
+ * given in separate arrays. */
 
 void dd_write_vector ( int dim, double *xhi, double *xlo );
 /*
@@ -80,6 +102,12 @@ void double_double_product
  * Makes the product of two double double vectors of size dim,
  * given in (xhi, xlo) and (yhi, ylo), with result in (prdhi, prdlo). */
 
+void recursive_dd_product
+ ( int dim, double *xhi, double *xlo, double *yhi, double *ylo,
+   double *prdhi, double *prdlo );
+/*
+ * Uses recursive summatiom for better accuracy. */
+
 void double_double_matmatmul
  ( int nrows, int ncols, int dim,
    double **Ahi, double **Alo, double **Bhi, double **Blo,
@@ -89,7 +117,7 @@ void double_double_matmatmul
  * given in (Bhi, Blo) is an dim-by-ncols matrix B,
  * returns in (Chi, Clo) the matrix matrix multiplication of A with B. */
 
-void vectored_dd_product
+void vectored_dd_product8sum
  ( int dim,
    double *x0, double *x1, double *x2, double *x3,
    double *x4, double *x5, double *x6, double *x7,
@@ -101,6 +129,21 @@ void vectored_dd_product
  * Makes the vectored product of x and y, with the sums of the product
  * in s0, s1, etc ... */
 
+void vectored_dd_product12sum
+ ( int dim,
+   double *x0, double *x1, double *x2, double *x3,
+   double *x4, double *x5, double *x6, double *x7,
+   double *y0, double *y1, double *y2, double *y3,
+   double *y4, double *y5, double *y6, double *y7,
+   double *s0, double *s1, double *s2, double *s3,
+   double *s4a, double *s5a, double *s6a, double *s7a,
+   double *s4b, double *s5b, double *s6b, double *s7b );
+/*
+ * Similar to vectored_dd_product8sum, but the last eight doubles
+ * of vectored_dd_product8sum are computed in two sums each,
+ * that is the s4 of vectored_dd_product8sum is s4a + s4b
+ * of this vectored_dd_product12sum, as is also s5, s6, s7. */
+
 void transpose_dd_quarters
  ( int nrows, int ncols,
    double **A0, double **A1, double **A2, double **A3,
@@ -111,7 +154,7 @@ void transpose_dd_quarters
  * Returns in T0, T1, ... the transpose of A0, A1, ...
  * where A is nrows-by-ncols, T is ncols-by-nrows */
 
-void vectored_dd_matmatmul
+void vectored_dd_matmatmul8sum
  ( int nrows, int ncols, int dim,
    double **A0, double **A1, double **A2, double **A3,
    double **A4, double **A5, double **A6, double **A7,
@@ -125,6 +168,19 @@ void vectored_dd_matmatmul
  * resulting in the quarters in the nrows-by-ncols matrix C.
  * The number of columns of A and te number of rows in B is dim,
  * but the matrix B is column major, while A and C are row major. */
+
+void vectored_dd_matmatmul12sum
+ ( int nrows, int ncols, int dim,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **B0, double **B1, double **B2, double **B3,
+   double **B4, double **B5, double **B6, double **B7,
+   double **C0, double **C1, double **C2, double **C3,
+   double **C4a, double **C5a, double **C6a, double **C7a,
+   double **C4b, double **C5b, double **C6b, double **C7b );
+/*
+ * Similar to the 8-sum vectored double double matrix product,
+ * except that the quarters for the low parts are summed in two halves. */
 
 void dd_convolute_quarters
  ( int nrows, int ncols,
