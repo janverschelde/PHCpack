@@ -254,34 +254,25 @@ package body Bits_of_Doubles is
     e : constant integer32 := integer32(double_float'exponent(x));
     s : constant double_float := double_float'compose(f, 52);
     m : constant integer64 := integer64(double_float'truncation(s));
-    thebits,xp0,xp1,xp2,xp3 : Standard_Natural_Vectors.Vector(0..51);
+    thebits,xp0,xp1,xp2 : Standard_Natural_Vectors.Vector(0..51);
     part : constant integer32 := 52/4;
     valbits : integer64;
     idx,cnt : integer32;
   
   begin
     expand_52bits(thebits,m);
-   -- put("the bits : "); write_52bits(thebits); new_line;
     for i in 0..(part-1) loop
-      xp0(i) := thebits(i);
-      xp1(i) := 0; xp2(i) := 0; xp3(i) := 0;
+      xp0(i) := thebits(i); xp1(i) := 0; xp2(i) := 0;
     end loop;
     for i in part..(2*part-1) loop
-      xp1(i) := thebits(i);
-      xp0(i) := 0; xp2(i) := 0; xp3(i) := 0;
+      xp1(i) := thebits(i); xp0(i) := 0; xp2(i) := 0;
     end loop;
     for i in 2*part..(3*part-1) loop
-      xp2(i) := thebits(i);
-      xp0(i) := 0; xp1(i) := 0; xp3(i) := 0;
+      xp2(i) := thebits(i); xp0(i) := 0; xp1(i) := 0;
     end loop;
     for i in 3*part..51 loop
-      xp3(i) := thebits(i);
       xp0(i) := 0; xp1(i) := 0; xp2(i) := 0;
     end loop;
-   -- put("1st part : "); write_52bits(xp0); new_line;
-   -- put("2nd part : "); write_52bits(xp1); new_line;
-   -- put("3rd part : "); write_52bits(xp2); new_line;
-   -- put("4th part : "); write_52bits(xp3); new_line;
     valbits := value_52bits(xp0);
     x0 := double_float'compose(double_float(valbits),e);
     if x < 0.0
@@ -313,20 +304,151 @@ package body Bits_of_Doubles is
     if x < 0.0
      then x2 := -x2;
     end if;
+    x3 := x - (x0 + x1 + x2);
+  end Split;
+
+  procedure Split ( x : in double_float;
+                    x0,x1,x2,x3,x4,x5,x6,x7 : out double_float ) is
+
+    f : constant double_float := double_float'fraction(x);
+    e : constant integer32 := integer32(double_float'exponent(x));
+    s : constant double_float := double_float'compose(f, 52);
+    m : constant integer64 := integer64(double_float'truncation(s));
+    thebits : Standard_Natural_Vectors.Vector(0..51);
+    xp0,xp1,xp2,xp3,xp4,xp5,xp6 : Standard_Natural_Vectors.Vector(0..51);
+    firstpart : constant integer32 := 7;
+    secondpart : constant integer32 := 6;
+    valbits : integer64;
+    idx,cnt : integer32;
+  
+  begin
+    expand_52bits(thebits,m);
+    for i in 0..(firstpart-1) loop
+      xp0(i) := thebits(i);
+      xp1(i) := 0; xp2(i) := 0; xp3(i) := 0;
+      xp4(i) := 0; xp5(i) := 0; xp6(i) := 0;
+    end loop;
+    for i in firstpart..(2*firstpart-1) loop
+      xp1(i) := thebits(i);
+      xp0(i) := 0; xp2(i) := 0; xp3(i) := 0;
+      xp4(i) := 0; xp5(i) := 0; xp6(i) := 0;
+    end loop;
+    for i in 2*firstpart..(3*firstpart-1) loop
+      xp2(i) := thebits(i);
+      xp0(i) := 0; xp1(i) := 0; xp3(i) := 0;
+      xp4(i) := 0; xp5(i) := 0; xp6(i) := 0;
+    end loop;
+    for i in 3*firstpart..(4*firstpart-1) loop
+      xp3(i) := thebits(i);
+      xp0(i) := 0; xp1(i) := 0; xp2(i) := 0;
+      xp4(i) := 0; xp5(i) := 0; xp6(i) := 0;
+    end loop;
+    for i in 4*firstpart..(4*firstpart+secondpart-1) loop
+      xp4(i) := thebits(i);
+      xp0(i) := 0; xp1(i) := 0; xp2(i) := 0;
+      xp3(i) := 0; xp5(i) := 0; xp6(i) := 0;
+    end loop;
+    for i in (4*firstpart+secondpart)..(4*firstpart+2*secondpart-1) loop
+      xp5(i) := thebits(i);
+      xp0(i) := 0; xp1(i) := 0; xp2(i) := 0;
+      xp3(i) := 0; xp4(i) := 0; xp6(i) := 0;
+    end loop;
+    for i in (4*firstpart+2*secondpart)..(4*firstpart+3*secondpart-1) loop
+      xp6(i) := thebits(i);
+      xp0(i) := 0; xp1(i) := 0; xp2(i) := 0;
+      xp3(i) := 0; xp4(i) := 0; xp5(i) := 0;
+    end loop;
+    for i in (4*firstpart+3*secondpart)..51 loop
+      xp0(i) := 0; xp1(i) := 0; xp2(i) := 0;
+      xp3(i) := 0; xp4(i) := 0; xp5(i) := 0; xp6(i) := 0;
+    end loop;
+    valbits := value_52bits(xp0);
+    x0 := double_float'compose(double_float(valbits),e);
+    if x < 0.0
+     then x0 := -x0;
+    end if;
+    valbits := value_52bits(xp1);
+    cnt := 0;
+    if valbits /= 0 then
+      idx := firstpart;
+      while xp1(idx) = 0 loop
+        idx := idx + 1;
+        cnt := cnt + 1;
+      end loop;
+    end if;
+    x1 := double_float'compose(double_float(valbits),e - firstpart - cnt);
+    if x < 0.0
+     then x1 := -x1;
+    end if;
+    valbits := value_52bits(xp2);
+    cnt := 0;
+    if valbits /= 0 then
+      idx := 2*firstpart;
+      while xp2(idx) = 0 loop
+        idx := idx + 1;
+        cnt := cnt + 1;
+      end loop;
+    end if;
+    x2 := double_float'compose(double_float(valbits),e - 2*firstpart - cnt);
+    if x < 0.0
+     then x2 := -x2;
+    end if;
     valbits := value_52bits(xp3);
     cnt := 0;
     if valbits /= 0 then
-      idx := 3*part;
+      idx := 3*firstpart;
       while xp3(idx) = 0 loop
         idx := idx + 1;
         cnt := cnt + 1;
       end loop;
     end if;
-   -- x3 := double_float'compose(double_float(valbits),e - 3*part - cnt);
-   -- if x < 0.0
-   --  then x3 := -x3;
-   -- end if;
-    x3 := x - (x0 + x1 + x2);
+    x3 := double_float'compose(double_float(valbits),e - 3*firstpart - cnt);
+    if x < 0.0
+     then x3 := -x3;
+    end if;
+    valbits := value_52bits(xp4);
+    cnt := 0;
+    if valbits /= 0 then
+      idx := 3*firstpart + secondpart;
+      while xp4(idx) = 0 loop
+        idx := idx + 1;
+        cnt := cnt + 1;
+      end loop;
+    end if;
+    x4 := double_float'compose(double_float(valbits),
+                               e - 3*firstpart - secondpart - cnt);
+    if x < 0.0
+     then x4 := -x4;
+    end if;
+    valbits := value_52bits(xp5);
+    cnt := 0;
+    if valbits /= 0 then
+      idx := 3*firstpart + 2*secondpart;
+      while xp5(idx) = 0 loop
+        idx := idx + 1;
+        cnt := cnt + 1;
+      end loop;
+    end if;
+    x5 := double_float'compose(double_float(valbits),
+                               e - 3*firstpart - 2*secondpart - cnt);
+    if x < 0.0
+     then x5 := -x5;
+    end if;
+    valbits := value_52bits(xp6);
+    cnt := 0;
+    if valbits /= 0 then
+      idx := 3*firstpart + 3*secondpart;
+      while xp6(idx) = 0 loop
+        idx := idx + 1;
+        cnt := cnt + 1;
+      end loop;
+    end if;
+    x6 := double_float'compose(double_float(valbits),
+                               e - 3*firstpart - 3*secondpart - cnt);
+    if x < 0.0
+     then x6 := -x6;
+    end if;
+    x7 := x - (x0 + x1 + x2 + x3 + x4 + x5 + x6);
   end Split;
 
   function Last_Zero_Count ( x : integer64 ) return natural32 is

@@ -64,10 +64,23 @@ package Test_Bits_of_Doubles is
   --   Given the quarters x0, x1, x2, x3 of x,
   --   tests the sums of the split, compared to x.
 
+  procedure Test_Octo_Bit_Split
+              ( x,x0,x1,x2,x3,x4,x5,x6,x7 : in double_float );
+
+  -- DESCRIPTION :
+  --   Given the eight parts x0, x1, ..., x7 of x,
+  --   tests the sums of the split, compared to x.
+
   procedure Test_Bit_Split ( x : in double_float );
 
   -- DESCRIPTION :
   --   Splits the fraction of x in four equal parts,
+  --   using the bit representation of the fraction.
+
+  procedure Test_Octo_Bit_Split ( x : in double_float );
+
+  -- DESCRIPTION :
+  --   Splits the fraction of x into eight parts,
   --   using the bit representation of the fraction.
 
   procedure to_Double_Double ( s : in string; x : out double_double;
@@ -120,6 +133,11 @@ package Test_Bits_of_Doubles is
   --   Generates two vectors of dimension dim,
   --   convolutes the quarters and counts the free bits at the end
   --   of the convoluted product.
+
+  procedure Test_Octo_Split;
+
+  -- DESCRIPTION :
+  --   Tests the split in eight parts.
 
   procedure Main;
 

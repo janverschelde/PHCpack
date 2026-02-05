@@ -170,6 +170,14 @@ package Bits_of_Doubles is
   --   On return: Bit_Equal(x,x0+x1+x2+x3) is true
   --   and x - (x0 + x1 + x2 + x3) is exactly zero.
 
+  procedure Split ( x : in double_float;
+                    x0,x1,x2,x3,x4,x5,x6,x7 : out double_float );
+
+  -- DESCRIPTION :
+  --   Splits the 52 bits in the fraction of x in eight parts,
+  --   the first four x0, x1, x2, x3 have each 7 bits of x in their fraction,
+  --   the next four x4, x5, x6, x7 have each 8 bits of x in their fraction.
+
   function Last_Zero_Count ( x : integer64 ) return natural32;
 
   -- DESCRIPTION :

@@ -1,3 +1,6 @@
+Thu 5 Feb 2026 : to bits_of_doubles, added split of doubles in eight parts,
+  tested by new procedures in test_bits_of_doubles.
+
 Fri 30 Jan 2026 : in quarter balancers, added test on zero inputs.
 
 Thu 29 Jan 2026 : in first test in test_quarter_balancers.adb, the test on

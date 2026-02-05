@@ -323,6 +323,67 @@ package body Test_Bits_of_Doubles is
     end if;
   end Test_Bit_Split;
 
+  procedure Test_Octo_Bit_Split
+              ( x,x0,x1,x2,x3,x4,x5,x6,x7 : in double_float ) is
+
+    s1,s2,s3,s4,s5,s6,s7,err : double_float;
+  
+  begin
+    s1 := x1 + x0;
+    s2 := x2 + s1;
+    s3 := x3 + s2;
+    s4 := x4 + s3;
+    s5 := x5 + s4;
+    s6 := x6 + s5;
+    s7 := x7 + s6;
+    err := abs(x-x0);
+    put("                      x : "); put(x); new_line;
+    put("                     x0 : "); put(x0);
+    put("  error : "); put(err,2); new_line;
+    err := abs(x-s1);
+    put("                      x : "); put(x); new_line;
+    put("                  x0+x1 : "); put(s1);
+    put("  error : "); put(err,2); new_line;
+    err := abs(x-s2);
+    put("                      x : "); put(x); new_line;
+    put("               x0+x1+x2 : "); put(s2);
+    put("  error : "); put(err,2); new_line;
+    err := abs(x-s3);
+    put("                      x : "); put(x); new_line;
+    put("            x1+x1+x2+x3 : "); put(s3);
+    put("  error : "); put(err,2); new_line;
+    err := abs(x-s4);
+    put("                      x : "); put(x); new_line;
+    put("         x1+x1+x2+x3+x4 : "); put(s4);
+    put("  error : "); put(err,2); new_line;
+    err := abs(x-s5);
+    put("                      x : "); put(x); new_line;
+    put("      x1+x1+x2+x3+x4+x5 : "); put(s5);
+    put("  error : "); put(err,2); new_line;
+    err := abs(x-s6);
+    put("                      x : "); put(x); new_line;
+    put("   x1+x1+x2+x3+x4+x5+x6 : "); put(s6);
+    put("  error : "); put(err,2); new_line;
+    err := abs(x-s7);
+    put("                      x : "); put(x); new_line;
+    put("x1+x1+x2+x3+x4+x5+x6+x7 : "); put(s7);
+    put("  error : "); put(err,2); new_line;
+    put(" b0 : "); write_52bits_expo(x0); new_line;
+    put(" b1 : "); write_52bits_expo(x1); new_line;
+    put(" b2 : "); write_52bits_expo(x2); new_line;
+    put(" b3 : "); write_52bits_expo(x3); new_line;
+    put(" b4 : "); write_52bits_expo(x4); new_line;
+    put(" b5 : "); write_52bits_expo(x5); new_line;
+    put(" b6 : "); write_52bits_expo(x6); new_line;
+    put(" b7 : "); write_52bits_expo(x7); new_line;
+    put("x : "); write_52bits_expo(x); new_line;
+    put("b : "); write_52bits_expo(s7); new_line;
+    if Bit_Equal(x,s7)
+     then put_line("The sum of the eight parts and x are bit equal, okay.");
+     else put_line("The sum of the eight parts and x are NOT bit equal, bug!");
+    end if;
+  end Test_Octo_Bit_Split;
+
   procedure Test_Bit_Split ( x : in double_float ) is
 
     x0,x1,x2,x3 : double_float;
@@ -331,6 +392,15 @@ package body Test_Bits_of_Doubles is
     Split(x,x0,x1,x2,x3);
     Test_Bit_Split(x,x0,x1,x2,x3);
   end Test_Bit_Split;
+
+  procedure Test_Octo_Bit_Split ( x : in double_float ) is
+
+    x0,x1,x2,x3,x4,x5,x6,x7 : double_float;
+
+  begin
+    Split(x,x0,x1,x2,x3,x4,x5,x6,x7);
+    Test_Octo_Bit_Split(x,x0,x1,x2,x3,x4,x5,x6,x7);
+  end Test_Octo_Bit_Split;
 
   procedure to_Double_Double ( s : in string; x : out double_double;
                                verbose : in boolean := true ) is
@@ -595,6 +665,16 @@ package body Test_Bits_of_Doubles is
     put(" "); put(yemax3-yemin3,1); new_line;
   end Test_Free_Convolution_Bits;
 
+  procedure Test_Octo_Split is
+
+    x : constant double_float := 3.141592653589793;
+    y : constant double_float := Standard_Random_Numbers.Random;
+
+  begin
+    Test_Octo_Bit_Split(x);
+    Test_Octo_Bit_Split(y);
+  end Test_Octo_Split;
+
   procedure Main is
 
     dim : integer32 := 0;
@@ -617,6 +697,10 @@ package body Test_Bits_of_Doubles is
     for i in 1..10 loop
       Test_Free_Convolution_Bits(dim);
     end loop;
+    new_line;
+    put_line("*** testing split in eight parts ***");
+    new_line;
+    Test_Octo_Split;
   end Main;
 
 end Test_Bits_of_Doubles;
