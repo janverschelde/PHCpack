@@ -20,12 +20,24 @@ int test_quarter_sums
 
 int test_quarter_split ( void );
 /*
- * Generates a random number, splits in four equal sized halves, and then
+ * Generates a random number, splits in four equal sized parts, and then
+ * checks if adding the parts gives the original number. */
+
+int test_octo_sums
+ ( double x, double x0, double x1, double x2, double x3,
+   double x4, double x5, double x6, double x7 );
+/*
+ * Tests whether the sums of the parts x0, x1, ..., x7
+ * add up to be equal to x.  Returns 0 if okay, 1 if not. */
+
+int test_octo_split ( void );
+/*
+ * Generates a random number, splits in eight parts, and then
  * checks if adding the parts gives the original number. */
 
 int test_quarter_balancer ( void );
 /*
- * Generates a random number, splits in four equal sized halves, and then
+ * Generates a random number, splits in four equal sized parts, and then
  * checks if the quarters are balanced. */
 
 using namespace std;
@@ -45,6 +57,12 @@ int main ( void )
       cout << "\nTest on quarter split failed?!!!\n\n";
    else
       cout << "\nTest on quarter split succeeded.\n\n";
+
+   fail = test_octo_split();
+   if(fail == 1)
+      cout << "\nTest on octo split failed?!!!\n\n";
+   else
+      cout << "\nTest on octo split succeeded.\n\n";
 
    fail = test_quarter_balancer();
    if(fail == 1)
@@ -118,6 +136,67 @@ int test_quarter_sums
    return not(e == 0.0);
 }
 
+int test_octo_sums
+ ( double x, double x0, double x1, double x2, double x3,
+   double x4, double x5, double x6, double x7 )
+{
+   double s,e;
+
+   cout << scientific << setprecision(16);
+
+   cout << "x0 : " << x0 << endl;
+   cout << " b : "; write_52double(x0);
+   cout << "x1 : " << x1 << endl;
+   cout << " b : "; write_52double(x1);
+   cout << "x2 : " << x2 << endl;
+   cout << " b : "; write_52double(x2);
+   cout << "x3 : " << x3 << endl;
+   cout << " b : "; write_52double(x3);
+   cout << "x4 : " << x4 << endl;
+   cout << " b : "; write_52double(x4);
+   cout << "x5 : " << x5 << endl;
+   cout << " b : "; write_52double(x5);
+   cout << "x6 : " << x6 << endl;
+   cout << " b : "; write_52double(x6);
+   cout << "x7 : " << x7 << endl;
+   cout << " b : "; write_52double(x7);
+
+   cout << "                      x : " << x << endl;
+   e = fabs(x - x0);
+   cout << "                     x0 : " << x0;
+   cout << ", error : " << scientific << setprecision(3) << e << endl;
+   s = x0 + x1; e = fabs(x - s);
+   cout << scientific << setprecision(16);
+   cout << "                  x0+x1 : " << s;
+   cout << ", error : " << scientific << setprecision(3) << e << endl;
+   s = s + x2; e = fabs(x - s);
+   cout << scientific << setprecision(16);
+   cout << "               x0+x1+x2 : " << s;
+   cout << ", error : " << scientific << setprecision(3) << e << endl;
+   s = s + x3; e = fabs(x - s);
+   cout << scientific << setprecision(16);
+   cout << "            x0+x1+x2+x3 : " << s;
+   cout << ", error : " << scientific << setprecision(3) << e << endl;
+   s = s + x4; e = fabs(x - s);
+   cout << scientific << setprecision(16);
+   cout << "         x0+x1+x2+x3+x4 : " << s;
+   cout << ", error : " << scientific << setprecision(3) << e << endl;
+   s = s + x5; e = fabs(x - s);
+   cout << scientific << setprecision(16);
+   cout << "      x0+x1+x2+x3+x4+x5 : " << s;
+   cout << ", error : " << scientific << setprecision(3) << e << endl;
+   s = s + x6; e = fabs(x - s);
+   cout << scientific << setprecision(16);
+   cout << "   x0+x1+x2+x3+x4+x5+x6 : " << s;
+   cout << ", error : " << scientific << setprecision(3) << e << endl;
+   s = s + x7; e = fabs(x - s);
+   cout << scientific << setprecision(16);
+   cout << "x0+x1+x2+x3+x4+x5+x6+x7 : " << s;
+   cout << ", error : " << scientific << setprecision(3) << e << endl;
+
+   return not(e == 0.0);
+}
+
 int test_quarter_split ( void )
 {
    double x,x0,x1,x2,x3;
@@ -135,6 +214,29 @@ int test_quarter_split ( void )
    quarter_split(x, &x0, &x1, &x2, &x3, 1);
 
    int fail = test_quarter_sums(x, x0, x1, x2, x3);
+
+   cout << endl << "seed used : " << seed << endl;
+
+   return fail;
+}
+
+int test_octo_split ( void )
+{
+   double x,x0,x1,x2,x3,x4,x5,x6,x7;
+
+   cout << "Give seed (0 for default) : ";
+   int seed; cin >> seed;
+
+   if(seed == 0) seed = time(NULL);
+   srand(seed);
+
+   x = ((double) rand())/RAND_MAX;
+   cout << scientific << setprecision(16);
+   cout << " x : " << x << endl;
+
+   octo_split(x, &x0, &x1, &x2, &x3, &x4, &x5, &x6, &x7, 1);
+
+   int fail = test_octo_sums(x, x0, x1, x2, x3, x4, x5, x6, x7);
 
    cout << endl << "seed used : " << seed << endl;
 

@@ -1,4 +1,5 @@
 Thu 5 Feb 2026 : added 12-sum to vectored_double_doubles, tested by test_vdd.
+  Extended splitting_doubles and test_splitting_doubles with an octo split.
 
 Mon 2 Feb 2026 : distributed the code of simpleTensorCoreGemm.cu into
   test_smDMMA.cpp, smDMMA_dims.h, smDMMA_host and smDMMA_kernels for
