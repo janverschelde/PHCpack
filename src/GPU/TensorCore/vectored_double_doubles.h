@@ -68,6 +68,16 @@ void quarter_dd_matrix
  * Given a matrix of nrows rows and ncols columns in (Ahi, Alo),
  * quarters the matrix into 8 matrices of the low and high parts. */
 
+void split_dd_matrix
+ ( int nrows, int ncols, double **Ahi, double **Alo,
+   double **Ahi0, double **Ahi1, double **Ahi2, double **Ahi3,
+   double **Alo0, double **Alo1, double **Alo2, double **Alo3,
+   double **Alo4, double **Alo5, double **Alo6, double **Alo7, int vrblvl=0 );
+/*
+ * Given a matrix of nrows rows and ncols columns in (Ahi, Alo),
+ * quarters the high parts of the matrix and octo splits the low parts
+ * into 12 matrices of the splitted parts. */
+
 void to_double_double8sum
  ( double xhi0, double xhi1, double xhi2, double xhi3,
    double xlo0, double xlo1, double xlo2, double xlo3,
@@ -187,7 +197,19 @@ void transpose_dd_quarters
    double **T0, double **T1, double **T2, double **T3,
    double **T4, double **T5, double **T6, double **T7 );
 /*
- * Returns in T0, T1, ... the transpose of A0, A1, ...
+ * Returns in T0, T1, .., T7 the transpose of A0, A1, .., A7,
+ * where A is nrows-by-ncols, T is ncols-by-nrows */
+
+void transpose_dd_splits
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11,
+   double **T0, double **T1, double **T2, double **T3,
+   double **T4, double **T5, double **T6, double **T7,
+   double **T8, double **T9, double **T10, double **T11 );
+/*
+ * Returns in T0, T1, .., T11 the transpose of A0, A1, .., A11,
  * where A is nrows-by-ncols, T is ncols-by-nrows */
 
 void vectored_dd_matmatmul8sum

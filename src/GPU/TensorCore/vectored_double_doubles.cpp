@@ -201,8 +201,7 @@ void quarter_dd_matrix
    double **Alo0, double **Alo1, double **Alo2, double **Alo3, int vrblvl )
 {
    if(vrblvl > 0)
-      cout << "-> in vectored_double_doubles.quarter_dd_matrix ..."
-           << endl;
+      cout << "-> in vectored_double_doubles.quarter_dd_matrix ..." << endl;
 
    for(int i=0; i<nrows; i++)
       for(int j=0; j<ncols; j++)
@@ -211,6 +210,26 @@ void quarter_dd_matrix
             (Ahi[i][j], Alo[i][j],
              &Ahi0[i][j], &Ahi1[i][j], &Ahi2[i][j], &Ahi3[i][j],
              &Alo0[i][j], &Alo1[i][j], &Alo2[i][j], &Alo3[i][j], vrblvl-1);
+      }
+}
+
+void split_dd_matrix
+ ( int nrows, int ncols, double **Ahi, double **Alo,
+   double **Ahi0, double **Ahi1, double **Ahi2, double **Ahi3,
+   double **Alo0, double **Alo1, double **Alo2, double **Alo3,
+   double **Alo4, double **Alo5, double **Alo6, double **Alo7, int vrblvl )
+{
+   if(vrblvl > 0)
+      cout << "-> in vectored_double_doubles.split_dd_matrix ..." << endl;
+
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         split_double_double
+            (Ahi[i][j], Alo[i][j],
+             &Ahi0[i][j], &Ahi1[i][j], &Ahi2[i][j], &Ahi3[i][j],
+             &Alo0[i][j], &Alo1[i][j], &Alo2[i][j], &Alo3[i][j],
+             &Alo4[i][j], &Alo5[i][j], &Alo6[i][j], &Alo7[i][j], vrblvl-1);
       }
 }
 
@@ -531,6 +550,27 @@ void transpose_dd_quarters
          T2[j][i] = A2[i][j]; T3[j][i] = A3[i][j];
          T4[j][i] = A4[i][j]; T5[j][i] = A5[i][j];
          T6[j][i] = A6[i][j]; T7[j][i] = A7[i][j];
+      }
+}
+
+void transpose_dd_splits
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11,
+   double **T0, double **T1, double **T2, double **T3,
+   double **T4, double **T5, double **T6, double **T7,
+   double **T8, double **T9, double **T10, double **T11 )
+{
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         T0[j][i] = A0[i][j]; T1[j][i] = A1[i][j];
+         T2[j][i] = A2[i][j]; T3[j][i] = A3[i][j];
+         T4[j][i] = A4[i][j]; T5[j][i] = A5[i][j];
+         T6[j][i] = A6[i][j]; T7[j][i] = A7[i][j];
+         T8[j][i] = A8[i][j]; T9[j][i] = A9[i][j];
+         T10[j][i] = A10[i][j]; T11[j][i] = A11[i][j];
       }
 }
 

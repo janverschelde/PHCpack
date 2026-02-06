@@ -1,3 +1,6 @@
+Fri 6 Feb 2026 : added functions to vectored_double_doubles to prepare for
+  the vectored matrix multiplications using the octo splits.
+
 Thu 5 Feb 2026 : added 12-sum to vectored_double_doubles, tested by test_vdd.
   Extended splitting_doubles and test_splitting_doubles with an octo split.
   Applied the new 12-split to vectored_double_doubles, updated test_vdd.
