@@ -32,6 +32,15 @@ void quarter_double_double
  * resulting in (xhi0, xhi1, xhi2, xhi3) and in (xlo0, xlo1, xlo2, xlo3).
  * The quarters are balanced. */
 
+void split_double_double
+ ( double xhi, double xlo,
+   double *xhi0, double *xhi1, double *xhi2, double *xhi3,
+   double *xlo0, double *xlo1, double *xlo2, double *xlo3,
+   double *xlo4, double *xlo5, double *xlo6, double *xlo7, int vrblvl=0 );
+/*
+ * Quarters the high part xhi and octo splits the low part xlo,
+ * resulting in (xhi0, xhi1, xhi2, xhi3) and in (xlo0, xlo1, .., xlo4). */
+
 void quarter_dd_vector
  ( int dim, double *xhi, double *xlo,
    double *xhi0, double *xhi1, double *xhi2, double *xhi3,
@@ -40,6 +49,16 @@ void quarter_dd_vector
  * Given a vector of size dim in xhi and xlo,
  * quarters the high part xhi and the low part xlo of a double double,
  * resulting in (xhi0, xhi1, xhi2, xhi3) and in (xlo0, xlo1, xlo2, xlo3). */
+
+void split_dd_vector
+ ( int dim, double *xhi, double *xlo,
+   double *xhi0, double *xhi1, double *xhi2, double *xhi3,
+   double *xlo0, double *xlo1, double *xlo2, double *xlo3,
+   double *xlo4, double *xlo5, double *xlo6, double *xlo7, int vrblvl=0 );
+/*
+ * Given a vector of size dim in xhi and xlo,
+ * quarters the high part xhi and splits the low part xlo of a double double,
+ * resulting in (xhi0, xhi1, xhi2, xhi3) and in (xlo0, xlo1, .., xlo7). */
 
 void quarter_dd_matrix
  ( int nrows, int ncols, double **Ahi, double **Alo,
@@ -127,7 +146,7 @@ void vectored_dd_product8sum
    double *s4, double *s5, double *s6, double *s7 );
 /*
  * Makes the vectored product of x and y, with the sums of the product
- * in s0, s1, etc ... */
+ * returned in s0, s1, .., s7. */
 
 void vectored_dd_product12sum
  ( int dim,
@@ -143,6 +162,23 @@ void vectored_dd_product12sum
  * of vectored_dd_product8sum are computed in two sums each,
  * that is the s4 of vectored_dd_product8sum is s4a + s4b
  * of this vectored_dd_product12sum, as is also s5, s6, s7. */
+
+void vectored_dd_product
+ ( int dim,
+   double *x0, double *x1, double *x2, double *x3,
+   double *x4, double *x5, double *x6, double *x7,
+   double *x8, double *x9, double *x10, double *x11,
+   double *y0, double *y1, double *y2, double *y3,
+   double *y4, double *y5, double *y6, double *y7,
+   double *y8, double *y9, double *y10, double *y11,
+   double *s0, double *s1, double *s2, double *s3,
+   double *s4, double *s5, double *s6, double *s7,
+   double *s8, double *s9, double *s10, double *s11 );
+/*
+ * Makes the vectored product of x and y,
+ * given by the quarters of their high parts
+ * and the eight doubles of their low parts,
+ * returning the sums of the product in s0, s1, .., s11 */
 
 void transpose_dd_quarters
  ( int nrows, int ncols,
@@ -181,6 +217,24 @@ void vectored_dd_matmatmul12sum
 /*
  * Similar to the 8-sum vectored double double matrix product,
  * except that the quarters for the low parts are summed in two halves. */
+
+void vectored_dd_matmatmul
+ ( int nrows, int ncols, int dim,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11,
+   double **B0, double **B1, double **B2, double **B3,
+   double **B4, double **B5, double **B6, double **B7,
+   double **B8, double **B9, double **B10, double **B11,
+   double **C0, double **C1, double **C2, double **C3,
+   double **C4, double **C5, double **C6, double **C7,
+   double **C8, double **C9, double **C10, double **C11 );
+/*
+ * Makes the vectored product of the matrix A and B,
+ * given by their parts in A0, A1, .., B0, B1, ...,
+ * resulting in the 12 parts in the nrows-by-ncols matrix C.
+ * The number of columns of A and te number of rows in B is dim,
+ * but the matrix B is column major, while A and C are row major. */
 
 void dd_convolute_quarters
  ( int nrows, int ncols,

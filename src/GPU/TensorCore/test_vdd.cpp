@@ -144,9 +144,12 @@ int test_vectored_dd_product ( int dim )
 
    double xhi[dim],xlo[dim],yhi[dim],ylo[dim];
    double x0[dim],x1[dim],x2[dim],x3[dim],x4[dim],x5[dim],x6[dim],x7[dim];
+   double x8[dim],x9[dim],x10[dim],x11[dim];
    double y0[dim],y1[dim],y2[dim],y3[dim],y4[dim],y5[dim],y6[dim],y7[dim];
-   double prd[2],rpd[2],vpd8[2],vpd12[2],err0[2],err8[2],err12[2];
-   double s0,s1,s2,s3,s4,s5,s6,s7;
+   double y8[dim],y9[dim],y10[dim],y11[dim];
+   double prd[2],rpd[2],vpd8[2],vpd12[2],vpd12split[2];
+   double err0[2],err8sum[2],err12sum[2],err12split[2];
+   double s0,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11;
    double s4a,s5a,s6a,s7a,s4b,s5b,s6b,s7b;
 
    for(int i=0; i<dim; i++)
@@ -211,24 +214,59 @@ int test_vectored_dd_product ( int dim )
       (s0, s1, s2, s3, s4a, s5a, s6a, s7a, s4b, s5b, s6b, s7b, 
        &vpd12[0], &vpd12[1]);
 
+   split_dd_vector
+      (dim, xhi, xlo, x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, 1);
+   split_dd_vector
+      (dim, yhi, ylo, y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, 1);
+
+   vectored_dd_product
+      (dim, x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11,
+            y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11,
+       &s0, &s1, &s2, &s3, &s4, &s5, &s6, &s7, &s8, &s9, &s10, &s11);
+
+   cout << "the 12 sums of the 12-split :" << endl;
+   cout << " s0 : "; write_52double(s0);
+   cout << " s1 : "; write_52double(s1);
+   cout << " s2 : "; write_52double(s2);
+   cout << " s3 : "; write_52double(s3);
+   cout << " s4 : "; write_52double(s4);
+   cout << " s5 : "; write_52double(s5);
+   cout << " s6 : "; write_52double(s6);
+   cout << " s7 : "; write_52double(s7);
+   cout << " s8 : "; write_52double(s8);
+   cout << " s9 : "; write_52double(s9);
+   cout << "s10 : "; write_52double(s10);
+   cout << "s11 : "; write_52double(s11);
+
+   to_double_double12sum
+      (s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, 
+       &vpd12split[0], &vpd12split[1]);
+
    cout << " dd x*y : "; dd_write(prd, 32); cout << endl;
    cout << "rdd x*y : "; dd_write(rpd, 32); cout << endl;
    cout << " v8 x*y : "; dd_write(vpd8, 32); cout << endl;
    cout << "v12 x*y : "; dd_write(vpd12, 32); cout << endl;
+   cout << "p12 x*y : "; dd_write(vpd12split, 32); cout << endl;
 
    ddf_sub(rpd[0], rpd[1], prd[0], prd[1], &err0[0], &err0[1]);
-   ddf_sub(rpd[0], rpd[1], vpd8[0], vpd8[1], &err8[0], &err8[1]);
-   ddf_sub(rpd[0], rpd[1], vpd12[0], vpd12[1], &err12[0], &err12[1]);
+   ddf_sub(rpd[0], rpd[1], vpd8[0], vpd8[1], &err8sum[0], &err8sum[1]);
+   ddf_sub(rpd[0], rpd[1], vpd12[0], vpd12[1], &err12sum[0], &err12sum[1]);
+   ddf_sub(rpd[0], rpd[1], vpd12split[0], vpd12split[1],
+           &err12split[0], &err12split[1]);
 
    if(err0[0] < 0.0) ddf_minus(&err0[0], &err0[1]);
-   if(err8[0] < 0.0) ddf_minus(&err8[0], &err8[1]);
-   if(err12[0] < 0.0) ddf_minus(&err12[0], &err12[1]);
+   if(err8sum[0] < 0.0) ddf_minus(&err8sum[0], &err8sum[1]);
+   if(err12sum[0] < 0.0) ddf_minus(&err12sum[0], &err12sum[1]);
+   if(err12split[0] < 0.0) ddf_minus(&err12split[0], &err12split[1]);
 
-   cout << " plain error : "; dd_write(err0, 3); cout << endl;
-   cout << " error 8-sum : "; dd_write(err8, 3); cout << endl;
-   cout << "error 12-sum : "; dd_write(err12, 3); cout << endl;
+   cout << "   plain error : "; dd_write(err0, 3); cout << endl;
+   cout << "   error 8-sum : "; dd_write(err8sum, 3); cout << endl;
+   cout << "  error 12-sum : "; dd_write(err12sum, 3); cout << endl;
+   cout << "error 12-split : "; dd_write(err12split, 3); cout << endl;
 
-   fail = (int(err8[0]) > err0[0]/1000) and (int(err12[0]) > err0[0]/1000);
+   fail = (int(err8sum[0]) > err0[0]/1000) and
+          (int(err12sum[0]) > err0[0]/1000) and
+          (int(err12split[0]) > err0[0]/1000);
 
    return fail;
 }

@@ -102,14 +102,45 @@ void quarter_double_double
       (xhi0, xhi1, xhi2, xhi3, xlo0, xlo1, xlo2, xlo3, vrblvl-1);
 }
 
+void split_double_double
+ ( double xhi, double xlo,
+   double *xhi0, double *xhi1, double *xhi2, double *xhi3,
+   double *xlo0, double *xlo1, double *xlo2, double *xlo3,
+   double *xlo4, double *xlo5, double *xlo6, double *xlo7, int vrblvl )
+{
+   if(vrblvl > 0)
+      cout << "-> in vectored_double_doubles.split_double_double ..."
+           << endl;
+
+   quarter_split(xhi, xhi0, xhi1, xhi2, xhi3, vrblvl-1);
+   if(vrblvl > 0)
+   {
+      if(*xhi0 == 0.0) cout << "xhi0 is zero!" << endl;
+      if(*xhi1 == 0.0) cout << "xhi1 is zero!" << endl;
+      if(*xhi2 == 0.0) cout << "xhi2 is zero!" << endl;
+      if(*xhi3 == 0.0) cout << "xhi3 is zero!" << endl;
+   }
+   octo_split(xlo, xlo0, xlo1, xlo2, xlo3, xlo4, xlo5, xlo6, xlo7, vrblvl-1);
+   if(vrblvl > 0)
+   {
+      if(*xlo0 == 0.0) cout << "xlo0 is zero!" << endl;
+      if(*xlo1 == 0.0) cout << "xlo1 is zero!" << endl;
+      if(*xlo2 == 0.0) cout << "xlo2 is zero!" << endl;
+      if(*xlo3 == 0.0) cout << "xlo3 is zero!" << endl;
+      if(*xlo4 == 0.0) cout << "xlo4 is zero!" << endl;
+      if(*xlo5 == 0.0) cout << "xlo5 is zero!" << endl;
+      if(*xlo6 == 0.0) cout << "xlo6 is zero!" << endl;
+      if(*xlo7 == 0.0) cout << "xlo7 is zero!" << endl;
+   }
+}
+
 void quarter_dd_vector
  ( int dim, double *xhi, double *xlo,
    double *xhi0, double *xhi1, double *xhi2, double *xhi3,
    double *xlo0, double *xlo1, double *xlo2, double *xlo3, int vrblvl )
 {
    if(vrblvl > 0)
-      cout << "-> in vectored_double_doubles.quarter_dd_vector ..."
-           << endl;
+      cout << "-> in vectored_double_doubles.quarter_dd_vector ..." << endl;
 
    for(int i=0; i<dim; i++)
    {
@@ -142,6 +173,25 @@ void quarter_dd_vector
          cout << "Not all quarters in the vector are balanced." << endl;
       else
          cout << "All quarters in the vector are balanced." << endl;
+   }
+}
+
+void split_dd_vector
+ ( int dim, double *xhi, double *xlo,
+   double *xhi0, double *xhi1, double *xhi2, double *xhi3,
+   double *xlo0, double *xlo1, double *xlo2, double *xlo3,
+   double *xlo4, double *xlo5, double *xlo6, double *xlo7, int vrblvl )
+{
+   if(vrblvl > 0)
+      cout << "-> in vectored_double_doubles.split_dd_vector ..." << endl;
+
+   for(int i=0; i<dim; i++)
+   {
+      split_double_double
+         (xhi[i], xlo[i],
+          &xhi0[i], &xhi1[i], &xhi2[i], &xhi3[i],
+          &xlo0[i], &xlo1[i], &xlo2[i], &xlo3[i],
+          &xlo4[i], &xlo5[i], &xlo6[i], &xlo7[i], vrblvl-1);
    }
 }
 
@@ -422,6 +472,51 @@ void vectored_dd_product12sum
    }
 }
 
+void vectored_dd_product
+ ( int dim,
+   double *x0, double *x1, double *x2, double *x3,
+   double *x4, double *x5, double *x6, double *x7,
+   double *x8, double *x9, double *x10, double *x11,
+   double *y0, double *y1, double *y2, double *y3,
+   double *y4, double *y5, double *y6, double *y7,
+   double *y8, double *y9, double *y10, double *y11,
+   double *s0, double *s1, double *s2, double *s3,
+   double *s4, double *s5, double *s6, double *s7,
+   double *s8, double *s9, double *s10, double *s11 )
+{
+   *s0 = 0.0; *s1 = 0.0; *s2 = 0.0; *s3 = 0.0;
+   *s4 = 0.0; *s5 = 0.0; *s6 = 0.0; *s7 = 0.0;
+   *s8 = 0.0; *s9 = 0.0; *s10 = 0.0; *s11 = 0.0;
+
+   for(int i=0; i<dim; i++)
+   {
+      *s0 += x0[i]*y0[i];
+      *s1 += x0[i]*y1[i] + x1[i]*y0[i];
+      *s2 += x0[i]*y2[i] + x1[i]*y1[i] + x2[i]*y0[i];
+      *s3 += x0[i]*y3[i] + x1[i]*y2[i] + x2[i]*y1[i] + x3[i]*y0[i];
+      *s4 += x0[i]*y4[i] + x1[i]*y3[i] + x2[i]*y2[i] + x3[i]*y1[i]
+           + x4[i]*y0[i];
+      *s5 += x0[i]*y5[i] + x1[i]*y4[i] + x2[i]*y3[i] + x3[i]*y2[i]
+           + x4[i]*y1[i] + x5[i]*y0[i];
+      *s6 += x0[i]*y6[i] + x1[i]*y5[i] + x2[i]*y4[i] + x3[i]*y3[i]
+           + x4[i]*y2[i] + x5[i]*y1[i] + x6[i]*y0[i];
+      *s7 += x0[i]*y7[i] + x1[i]*y6[i] + x2[i]*y5[i] + x3[i]*y4[i]
+           + x4[i]*y3[i] + x5[i]*y2[i] + x6[i]*y1[i] + x7[i]*y0[i];
+      *s8 += x0[i]*y8[i] + x1[i]*y7[i] + x2[i]*y6[i] + x3[i]*y5[i]
+           + x4[i]*y4[i] + x5[i]*y3[i] + x6[i]*y2[i] + x7[i]*y1[i]
+           + x8[i]*y0[i];
+      *s9 += x0[i]*y9[i] + x1[i]*y8[i] + x2[i]*y7[i] + x3[i]*y6[i]
+           + x4[i]*y5[i] + x5[i]*y4[i] + x6[i]*y3[i] + x7[i]*y2[i]
+           + x8[i]*y1[i] + x9[i]*y0[i];
+      *s10 += x0[i]*y10[i] + x1[i]*y9[i] + x2[i]*y8[i] + x3[i]*y7[i]
+            + x4[i]*y6[i] + x5[i]*y5[i] + x6[i]*y4[i] + x7[i]*y3[i]
+            + x8[i]*y2[i] + x9[i]*y1[i] + x10[i]*y0[i];
+      *s11 += x0[i]*y11[i] + x1[i]*y10[i] + x2[i]*y9[i] + x3[i]*y8[i]
+            + x4[i]*y7[i] + x5[i]*y6[i] + x6[i]*y5[i] + x7[i]*y4[i]
+            + x8[i]*y3[i] + x9[i]*y2[i] + x10[i]*y1[i] + x11[i]*y0[i];
+   }
+}
+
 void transpose_dd_quarters
  ( int nrows, int ncols,
    double **A0, double **A1, double **A2, double **A3,
@@ -478,6 +573,32 @@ void vectored_dd_matmatmul12sum
              &C0[i][j], &C1[i][j], &C2[i][j], &C3[i][j],
              &C4a[i][j], &C5a[i][j], &C6a[i][j], &C7a[i][j],
              &C4b[i][j], &C5b[i][j], &C6b[i][j], &C7b[i][j]);
+      }
+}
+
+void vectored_dd_matmatmul
+ ( int nrows, int ncols, int dim,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11,
+   double **B0, double **B1, double **B2, double **B3,
+   double **B4, double **B5, double **B6, double **B7,
+   double **B8, double **B9, double **B10, double **B11,
+   double **C0, double **C1, double **C2, double **C3,
+   double **C4, double **C5, double **C6, double **C7,
+   double **C8, double **C9, double **C10, double **C11 )
+{
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         vectored_dd_product
+            (dim, A0[i], A1[i], A2[i], A3[i], A4[i], A5[i], A6[i], A7[i],
+                  A8[i], A9[i], A10[i], A11[i],
+                  B0[j], B1[j], B2[j], B3[j], B4[j], B5[j], B6[j], B7[j],
+                  B8[j], B9[j], B10[j], B11[j],
+             &C0[i][j], &C1[i][j], &C2[i][j], &C3[i][j],
+             &C4[i][j], &C5[i][j], &C6[i][j], &C7[i][j],
+             &C8[i][j], &C9[i][j], &C10[i][j], &C11[i][j]);
       }
 }
 
