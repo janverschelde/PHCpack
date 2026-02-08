@@ -1,5 +1,7 @@
 Sat 7 Feb 2026 : new real_powered_series_io and test_real_powered_series,
   for i/o of real powered series, called by ts_realpows, updated laurent.gpr.
+  Extended real_powered_series_io with procedures to parse input,
+  tested by test_real_powered_series.adb.
 
 Sun 1 Feb 2026 : updated random_laurent_homotopy and test_newton_puiseux
   to allow to test for integer values for the powers of the parameter t.
