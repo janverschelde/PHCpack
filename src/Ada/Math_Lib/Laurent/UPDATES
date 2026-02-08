@@ -1,3 +1,8 @@
+Sun 8 Feb 2026 : defined output of laurent homotopy polynomials with real
+  powered series in the new real_powered_homotopy_io, with tests in the new
+  test_real_powered_homotopy; modified test_real_powered_series, and
+  updated laurent.gpr for the new test procedure ts_rpowhom.
+
 Sat 7 Feb 2026 : new real_powered_series_io and test_real_powered_series,
   for i/o of real powered series, called by ts_realpows, updated laurent.gpr.
   Extended real_powered_series_io with procedures to parse input,

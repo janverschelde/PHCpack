@@ -5,8 +5,6 @@ with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
-with Standard_Floating_Vectors;
-with Standard_Complex_Vectors;
 with Standard_Random_Vectors;
 with Double_Real_Powered_Series;
 with Real_Powered_Series_IO;
@@ -32,11 +30,6 @@ package body Test_Real_Powered_Series is
               ( size : in integer32;
                 cff : out Standard_Complex_Vectors.Vector;
                 pwt : out Standard_Floating_Vectors.Vector ) is
-
-  -- DESCRIPTION :
-  --   Generates a random series with positive powers of the
-  --   given size and sorts the powers.
-
   begin
     cff := Standard_Random_Vectors.Random_Vector(0,size);
     pwt := Standard_Random_Vectors.Random_Vector(1,size);
