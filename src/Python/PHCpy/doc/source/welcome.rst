@@ -243,6 +243,14 @@ references
    **Polynomial Homotopy Continuation on GPUs.**
    *ACM Communications in Computer Algebra*, 49(4):130-133, 2015.
 
+#. J. Verschelde and K. Viswanathan, K.: 
+   **Extrapolating solution paths of polynomial
+   homotopies towards singularities with PHCpack and phcpy.**
+   In the *Proceedings of ICMS 2024*, edited by K. Buzzard,
+   A. Dickenstein, B. Eick, A. Leykin, and Y. Ren.
+   Volume 14749 of *Lecture Notes in Computer Science*,
+   pages 366--374.  Springer-Verlag, 2024.
+
 acknowledgments
 ===============
 
