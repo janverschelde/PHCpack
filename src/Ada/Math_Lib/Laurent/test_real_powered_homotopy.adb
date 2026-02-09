@@ -94,6 +94,33 @@ package body Test_Real_Powered_Homotopy is
       new_line;
       put_line("The string representation of the polynomial :");
       put_line(s);
+      new_line;
+      put_line("Parsing the string for the data ...");
+      declare
+        m : constant integer32
+          := Real_Powered_Homotopy_IO.number_of_terms(s,2);
+      begin
+        put("number of terms in string representation : ");
+        put(m,1);
+        if m /= nbr then
+          put(" /= "); put(nbr,1); put_line(", bug!");
+        else
+          put_line(", okay.");
+          declare
+            q2 : Standard_Complex_Laurentials.Poly;
+            c2 : Standard_Complex_VecVecs.VecVec(1..nbr);
+            p2 : Standard_Floating_VecVecs.VecVec(1..nbr);
+          begin
+            Real_Powered_Homotopy_IO.parse_string(s,nvr,q2,c2,p2,vrblvl=>2);
+            for i in cff'range loop
+              put("parsed series "); put(i,1); put_line(" :");
+              Real_Powered_Series_IO.put_line(c2(i).all,p2(i).all);
+            end loop;
+            put_line("parsed Laurent polynomial :");
+            Standard_Complex_Laurentials_io.put(q2); new_line;
+          end;
+        end if;
+      end;
     end;
   end Test_String_Polynomial;
 

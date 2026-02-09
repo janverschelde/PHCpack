@@ -1,8 +1,10 @@
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Characters_and_Numbers;
 with Standard_Complex_Laurentials_io;
 with Symbol_Table;
 with Standard_Complex_Poly_Strings;
+with Standard_Complex_Laur_Strings;
 with Real_Powered_Series_IO;
 
 package body Real_Powered_Homotopy_IO is
@@ -216,5 +218,187 @@ package body Real_Powered_Homotopy_IO is
     Write_Terms(q);
     put_line(file,";");
   end put_line;
+
+-- PARSE INPUT :
+
+  function number_of_terms
+             ( s : string; vrblvl : integer32 := 0 ) return integer32 is
+
+    cnt : integer32 := 0;
+    res : integer32 := 0;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Real_Powered_Homotopy_IO.parse_string ...");
+    end if;
+    for i in s'range loop
+      if s(i) = '(' then
+        cnt := cnt + 1;
+      elsif s(i) = ')' then
+        cnt := cnt - 1;
+        if cnt = 0
+         then res := res + 1;
+        end if;
+        if cnt < 0 then
+          if vrblvl > 0
+           then put_line("Bracket count mismatch.  Error, returning -1 ...");
+          end if;
+          return -1;
+        end if;
+      end if;
+    end loop;
+    return res;
+  end number_of_terms;
+
+  procedure parse_series
+              ( s : in string;
+                c : out Standard_Complex_VecVecs.VecVec;
+                p : out Standard_Floating_VecVecs.VecVec;
+                t : in character := 't'; vrblvl : in integer32 := 0 ) is
+
+    cnt : integer32 := 0;
+    i1,i2 : integer := 0;
+    idx : integer32 := 0;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Real_Powered_Homotopy_IO.parse_series ...");
+    end if;
+    for i in s'range loop
+      if s(i) = '(' then
+        cnt := cnt + 1;
+        if cnt = 1
+         then i1 := integer(i) +1;
+        end if;
+      elsif s(i) = ')' then
+        cnt := cnt - 1;
+        if cnt = 0 then
+          i2 := integer(i) - 1;
+          if vrblvl > 0 then
+            idx := idx + 1;
+            if vrblvl > 0 then
+              put("parsing " & s(i1..i2));
+              put(", assigning as series "); put(idx,1); new_line;
+            end if;
+            Real_Powered_Series_IO.parse_string
+              (s(i1..i2),c(idx),p(idx),t,vrblvl-1);
+          end if;
+        end if;
+      end if;
+    end loop;
+  end parse_series;
+
+  function extract_polynomial_string
+             ( s : in string; m : in integer32;
+               vrblvl : in integer32 := 0 ) return string is
+
+    cnt : integer32 := 0;
+    idx : integer := s'first;
+
+    function extract ( k : integer32; accu : string ) return string is
+
+    -- DESCRIPTION :
+    --   Recursive removal of the series coefficients,
+    --   where k runs over all terms.
+    --   The accumulator accu is returned when k > m.
+
+      newterm : boolean;
+      startidx,endidx : integer;
+
+    begin
+      if k > m then
+        return accu & '1' & s(idx..s'last);
+      else
+        newterm := false;
+        startidx := idx;
+        loop
+          if s(idx) = '(' then
+            cnt := cnt + 1;
+            if cnt = 1
+             then endidx := idx - 1; -- do not include '('
+            end if;
+          elsif s(idx) = ')' then
+            cnt := cnt - 1;
+            if cnt = 0
+             then newterm := true;
+            end if;
+          end if;
+          idx := idx + 1; -- skip the last ')'
+          exit when newterm;
+        end loop;
+        if k = 1 then
+          declare
+            new_accu : constant string := accu & s(startidx..endidx);
+          begin
+            return extract(k+1,new_accu);
+          end;
+        else
+          declare
+            new_accu : constant string := accu & '1' & s(startidx..endidx);
+          begin
+            return extract(k+1,new_accu);
+          end;
+        end if;
+      end if;
+    end extract;
+
+  begin
+    if vrblvl > 0 then
+      put_line("-> in Real_Powered_Homotopy_IO.extract_polynomial_string ...");
+    end if;
+    return extract(1,"");
+  end extract_polynomial_string;
+
+  procedure parse_string
+              ( s : in string; n : in integer32;
+                q : out Standard_Complex_Laurentials.Poly;
+                c : out Standard_Complex_VecVecs.VecVec;
+                p : out Standard_Floating_VecVecs.VecVec;
+                t : in character := 't'; vrblvl : in integer32 := 0 ) is
+
+    m : integer32;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Real_Powered_Homotopy_IO.parse_string ...");
+    end if;
+    m := number_of_terms(s,vrblvl-1);
+    if vrblvl > 0
+     then put("number of terms : "); put(m,1); new_line;
+    end if;
+    parse_series(s,c,p,t,vrblvl);
+    declare
+      sq : constant string
+         := extract_polynomial_string(s,m,vrblvl) & ';';
+    begin
+      if vrblvl > 0 then
+        put_line("sq : " & sq);
+      end if;
+      q := Standard_Complex_Laur_Strings.parse(natural32(n),sq);
+    end;
+  end parse_string;
+
+  procedure get ( n : in integer32;
+                  q : out Standard_Complex_Laurentials.Poly;
+                  c : out Standard_Complex_VecVecs.VecVec;
+                  p : out Standard_Floating_VecVecs.VecVec;
+                  t : in character := 't'; vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in Real_Powered_Homotopy_IO.get 0 ...");
+    end if;
+    get(standard_input,n,q,c,p,t,vrblvl);
+  end get;
+
+  procedure get ( file : in file_type; n : in integer32;
+                  q : out Standard_Complex_Laurentials.Poly;
+                  c : out Standard_Complex_VecVecs.VecVec;
+                  p : out Standard_Floating_VecVecs.VecVec;
+                  t : in character := 't'; vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in Real_Powered_Homotopy_IO.get 1 ...");
+    end if;
+  end get;
 
 end Real_Powered_Homotopy_IO;
