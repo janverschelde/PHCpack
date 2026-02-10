@@ -353,6 +353,7 @@ void random_dd_matmatmul
       {
          if(Ahi[i][j] < 0.0) Ahi[i][j] = -Ahi[i][j];
          if(Alo[i][j] < 0.0) Alo[i][j] = -Alo[i][j];
+         make_dd_exponent_zero(&Ahi[i][j], &Alo[i][j]);
       }
 
    if(vrblvl > 0)
@@ -377,6 +378,7 @@ void random_dd_matmatmul
       {
          if(Bhi[i][j] < 0.0) Bhi[i][j] = -Bhi[i][j];
          if(Blo[i][j] < 0.0) Blo[i][j] = -Blo[i][j];
+         make_dd_exponent_zero(&Bhi[i][j], &Blo[i][j]);
       }
 
    if(vrblvl > 0)
