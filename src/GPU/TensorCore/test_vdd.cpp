@@ -23,6 +23,50 @@ int test_vectored_dd_product ( int dim );
  * Generates two random vectors of double doubles of size dim,
  * and compares their inner product with the vectored inner product. */
 
+void random_dd_matmatmul
+ ( int nrows, int ncols, int nrc,
+   double **Ahi, double **Alo, double **Bhi, double **Blo,
+   double **Chi, double **Clo, int vrblvl=0 );
+/*
+ * Allocates and generates two random double double matrices of dimension
+ * nrows-by-nrc for A, returned in (Ahi, Alo), and nrc-by-ncols for B,
+ * returned in (Bho, Blo) and then returns in (Chi, Clo) the product C.
+ * If vrblvl > 0, all matrices are written. */
+
+int test_quartered_matmatmul
+ ( int nrows, int ncols, int nrc,
+   double **Ahi, double **Alo, double **Bhi, double **Blo,
+   double **Chi, double **Clo,
+   double **Ahi0, double **Ahi1, double **Ahi2, double **Ahi3,
+   double **Alo0, double **Alo1, double **Alo2, double **Alo3,
+   double **Bhi0, double **Bhi1, double **Bhi2, double **Bhi3,
+   double **Blo0, double **Blo1, double **Blo2, double **Blo3,
+   double **Chi0, double **Chi1, double **Chi2, double **Chi3,
+   double **Clo0, double **Clo1, double **Clo2, double **Clo3, int vrblvl=0 );
+/*
+ * Given nrows-by-nrc double double matrix A in (Ahi, Alo),
+ * and an nrc-by-nrows double double matrix B in (Bhi, Blo),
+ * with their product in C, computes their quarters and tests
+ * the matrix matrix multiplication.
+ * If vrblvl > 0, matrices are written. */
+
+int test_rewrite_quartered_product
+ ( int nrows, int ncols, int nrc,
+   double **Ahi0, double **Ahi1, double **Ahi2, double **Ahi3,
+   double **Alo0, double **Alo1, double **Alo2, double **Alo3,
+   double **Bhi0, double **Bhi1, double **Bhi2, double **Bhi3,
+   double **Blo0, double **Blo1, double **Blo2, double **Blo3,
+   double **Chi0, double **Chi1, double **Chi2, double **Chi3,
+   double **Clo0, double **Clo1, double **Clo2, double **Clo3,
+   double **Chi, double **Clo, int vrblvl=0 );
+/*
+ * Given are the quarters of an nrows-by-nrc matrix A
+ * and an nrc-by-ncols matrix B, with their product in C.
+ * Tests the rewriting of the product of the quarters
+ * as one single matrix matrix product, comparing to
+ * the double double result in C.
+ * If vrblvl > 0, then the matrices are written. */
+
 int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc ); 
 /*
  * Generates two random double double matrices of dimension
@@ -271,23 +315,17 @@ int test_vectored_dd_product ( int dim )
    return fail;
 }
 
-int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
+void random_dd_matmatmul
+ ( int nrows, int ncols, int nrc,
+   double **Ahi, double **Alo, double **Bhi, double **Blo,
+   double **Chi, double **Clo, int vrblvl )
 {
    int fail = 0;
-
-   double **Chi = new double*[nrows];
-   double **Clo = new double*[nrows];
 
    for(int i=0; i<nrows; i++)
    {
       Chi[i] = new double[ncols];
       Clo[i] = new double[ncols];
-   }
-   double **Ahi = new double*[nrows];
-   double **Alo = new double*[nrows];
-
-   for(int i=0; i<nrows; i++)
-   {
       Ahi[i] = new double[nrc];
       Alo[i] = new double[nrc];
    }
@@ -300,18 +338,16 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
          if(Alo[i][j] < 0.0) Alo[i][j] = -Alo[i][j];
       }
 
-   cout << scientific << setprecision(16);
+   if(vrblvl > 0)
+   {
+      cout << scientific << setprecision(16);
 
-/*
-   cout << "A random " << nrows << "-by-" << nrc << " matrix A :" << endl;
-   for(int i=0; i<nrows; i++)
-      for(int j=0; j<nrc; j++)
-         cout << "A[" << i << "][" << j << "] : "
+      cout << "A random " << nrows << "-by-" << nrc << " matrix A :" << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<nrc; j++)
+            cout << "A[" << i << "][" << j << "] : "
               << Ahi[i][j] << "  " << Alo[i][j] << endl;
- */
-   double **Bhi = new double*[nrc];
-   double **Blo = new double*[nrc];
-
+   }
    for(int i=0; i<nrc; i++)
    {
       Bhi[i] = new double[ncols];
@@ -325,21 +361,40 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
          if(Bhi[i][j] < 0.0) Bhi[i][j] = -Bhi[i][j];
          if(Blo[i][j] < 0.0) Blo[i][j] = -Blo[i][j];
       }
-/*
-   cout << "A random " << nrc << "-by-" << ncols << " matrix B :" << endl;
-   for(int i=0; i<nrc; i++)
-      for(int j=0; j<ncols; j++)
-         cout << "B[" << i << "][" << j << "] : "
-              << Bhi[i][j] << "  " << Blo[i][j] << endl;
- */
+
+   if(vrblvl > 0)
+   {
+      cout << "A random " << nrc << "-by-" << ncols << " matrix B :" << endl;
+      for(int i=0; i<nrc; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "B[" << i << "][" << j << "] : "
+                 << Bhi[i][j] << "  " << Blo[i][j] << endl;
+   }
    double_double_matmatmul(nrows, ncols, nrc, Ahi, Alo, Bhi, Blo, Chi, Clo);
-/*
-   cout << "the product A*B :" << endl;
-   for(int i=0; i<nrows; i++)
-      for(int j=0; j<ncols; j++)
-         cout << "C[" << i << "][" << j << "] : "
-              << Chi[i][j] << "  " << Clo[i][j] << endl;
- */
+
+   if(vrblvl > 0)
+   {
+      cout << "the product A*B :" << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "C[" << i << "][" << j << "] : "
+                 << Chi[i][j] << "  " << Clo[i][j] << endl;
+   }
+}
+
+int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
+{
+   int fail = 0;
+
+   double **Ahi = new double*[nrows];
+   double **Alo = new double*[nrows];
+   double **Bhi = new double*[nrc];
+   double **Blo = new double*[nrc];
+   double **Chi = new double*[nrows];
+   double **Clo = new double*[nrows];
+
+   random_dd_matmatmul(nrows, ncols, nrc, Ahi, Alo, Bhi, Blo, Chi, Clo);
+
    double **Ahi0 = new double*[nrows];
    double **Ahi1 = new double*[nrows];
    double **Ahi2 = new double*[nrows];
@@ -349,6 +404,52 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
    double **Alo2 = new double*[nrows];
    double **Alo3 = new double*[nrows];
 
+   double **Bhi0 = new double*[nrc];
+   double **Bhi1 = new double*[nrc];
+   double **Bhi2 = new double*[nrc];
+   double **Bhi3 = new double*[nrc];
+   double **Blo0 = new double*[nrc];
+   double **Blo1 = new double*[nrc];
+   double **Blo2 = new double*[nrc];
+   double **Blo3 = new double*[nrc];
+
+   double **Chi0 = new double*[nrows];
+   double **Chi1 = new double*[nrows];
+   double **Chi2 = new double*[nrows];
+   double **Chi3 = new double*[nrows];
+   double **Clo0 = new double*[nrows];
+   double **Clo1 = new double*[nrows];
+   double **Clo2 = new double*[nrows];
+   double **Clo3 = new double*[nrows];
+
+   fail = test_quartered_matmatmul
+             (nrows, ncols, nrc, Ahi, Alo, Bhi, Blo, Chi, Clo,
+              Ahi0, Ahi1, Ahi2, Ahi3, Alo0, Alo1, Alo2, Alo3,
+              Bhi0, Bhi1, Bhi2, Bhi3, Blo0, Blo1, Blo2, Blo3,
+              Chi0, Chi1, Chi2, Chi3, Clo0, Clo1, Clo2, Clo3);
+
+   if(fail > 0) return fail; // no point to continue
+
+   fail = test_rewrite_quartered_product
+             (nrows, ncols, nrc, 
+              Ahi0, Ahi1, Ahi2, Ahi3, Alo0, Alo1, Alo2, Alo3,
+              Bhi0, Bhi1, Bhi2, Bhi3, Blo0, Blo1, Blo2, Blo3,
+              Chi0, Chi1, Chi2, Chi3, Clo0, Clo1, Clo2, Clo3, Chi, Clo);
+
+   return fail;
+}
+
+int test_quartered_matmatmul
+ ( int nrows, int ncols, int nrc,
+   double **Ahi, double **Alo, double **Bhi, double **Blo,
+   double **Chi, double **Clo,
+   double **Ahi0, double **Ahi1, double **Ahi2, double **Ahi3,
+   double **Alo0, double **Alo1, double **Alo2, double **Alo3,
+   double **Bhi0, double **Bhi1, double **Bhi2, double **Bhi3,
+   double **Blo0, double **Blo1, double **Blo2, double **Blo3,
+   double **Chi0, double **Chi1, double **Chi2, double **Chi3,
+   double **Clo0, double **Clo1, double **Clo2, double **Clo3, int vrblvl )
+{
    for(int i=0; i<nrows; i++)
    {
       Ahi0[i] = new double[nrc];
@@ -363,15 +464,6 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
    quarter_dd_matrix
       (nrows, nrc, Ahi, Alo,
        Ahi0, Ahi1, Ahi2, Ahi3, Alo0, Alo1, Alo2, Alo3);
-
-   double **Bhi0 = new double*[nrc];
-   double **Bhi1 = new double*[nrc];
-   double **Bhi2 = new double*[nrc];
-   double **Bhi3 = new double*[nrc];
-   double **Blo0 = new double*[nrc];
-   double **Blo1 = new double*[nrc];
-   double **Blo2 = new double*[nrc];
-   double **Blo3 = new double*[nrc];
 
    for(int i=0; i<nrc; i++)
    {
@@ -412,14 +504,6 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
       (nrc, ncols, Bhi0, Bhi1, Bhi2, Bhi3, Blo0, Blo1, Blo2, Blo3,
                    Thi0, Thi1, Thi2, Thi3, Tlo0, Tlo1, Tlo2, Tlo3);
 
-   double **Chi0 = new double*[nrows];
-   double **Chi1 = new double*[nrows];
-   double **Chi2 = new double*[nrows];
-   double **Chi3 = new double*[nrows];
-   double **Clo0 = new double*[nrows];
-   double **Clo1 = new double*[nrows];
-   double **Clo2 = new double*[nrows];
-   double **Clo3 = new double*[nrows];
    double **Clo0a = new double*[nrows];
    double **Clo1a = new double*[nrows];
    double **Clo2a = new double*[nrows];
@@ -485,13 +569,15 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
       (nrows, ncols,
        Chi0, Chi1, Chi2, Chi3,
        Clo0a, Clo1a, Clo2a, Clo3a, Clo0b, Clo1b, Clo2b, Clo3b, Whi, Wlo);
-/*
-   cout << "the vectored product A*B :" << endl;
-   for(int i=0; i<nrows; i++)
-      for(int j=0; j<ncols; j++)
-         cout << "V[" << i << "][" << j << "] : "
-              << Vhi[i][j] << "  " << Vlo[i][j] << endl;
- */
+
+   if(vrblvl > 0)
+   {
+      cout << "the vectored product A*B :" << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "V[" << i << "][" << j << "] : "
+                 << Vhi[i][j] << "  " << Vlo[i][j] << endl;
+   }
    double err8[2],err12[2],acc[2];
    double maxerr8 = 0.0;
    double maxerr12 = 0.0;
@@ -531,44 +617,59 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
    cout << "-> max error  8-sum : " << maxerr8 << endl;
    cout << "-> max error 12-sum : " << maxerr12 << endl;
 
-   fail = (maxerr8 > 1.0E-28);
+   int fail = int(maxerr8 > 1.0E-28);
 
-   if(fail == 1) return fail; // no point to continue ...
+   return fail;
+}
 
-   return fail; // return anyway ...
-
+int test_rewrite_quartered_product
+ ( int nrows, int ncols, int nrc,
+   double **Ahi0, double **Ahi1, double **Ahi2, double **Ahi3,
+   double **Alo0, double **Alo1, double **Alo2, double **Alo3,
+   double **Bhi0, double **Bhi1, double **Bhi2, double **Bhi3,
+   double **Blo0, double **Blo1, double **Blo2, double **Blo3,
+   double **Chi0, double **Chi1, double **Chi2, double **Chi3,
+   double **Clo0, double **Clo1, double **Clo2, double **Clo3,
+   double **Chi, double **Clo, int vrblvl )
+{
    double **cA = new double*[8*nrows];
    for(int i=0; i<8*nrows; i++) cA[i] = new double[8*nrc];
 
    dd_convolute_quarters
       (nrows, nrc, Ahi0, Ahi1, Ahi2, Ahi3, Alo0, Alo1, Alo2, Alo3, cA);
 
-   cout << "the convoluted quartered matrix A :" << endl;
-   for(int i=0; i<8*nrows; i++)
-      for(int j=0; j<8*nrc; j++)
-         cout << "cA[" << i << "][" << j << "] : " << cA[i][j] << endl;
-
+   if(vrblvl > 0)
+   {
+      cout << "the convoluted quartered matrix A :" << endl;
+      for(int i=0; i<8*nrows; i++)
+         for(int j=0; j<8*nrc; j++)
+            cout << "cA[" << i << "][" << j << "] : " << cA[i][j] << endl;
+   }
    double **sB = new double*[8*nrc];
    for(int i=0; i<8*nrc; i++) sB[i] = new double[ncols];
 
    dd_stack_quarters
       (nrc, ncols, Bhi0, Bhi1, Bhi2, Bhi3, Blo0, Blo1, Blo2, Blo3, sB);
 
-   cout << "the stacked quartered matrix B :" << endl;
-   for(int i=0; i<8*nrc; i++)
-      for(int j=0; j<ncols; j++)
-         cout << "sB[" << i << "][" << j << "] : " << sB[i][j] << endl;
-
+   if(vrblvl > 0)
+   {
+      cout << "the stacked quartered matrix B :" << endl;
+      for(int i=0; i<8*nrc; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "sB[" << i << "][" << j << "] : " << sB[i][j] << endl;
+   }
    double **qC = new double*[8*nrows];
    for(int i=0; i<8*nrows; i++) qC[i] = new double[ncols];
 
    double_indexed_matrix_multiplication(8*nrows, ncols, 8*nrc, cA, sB, qC);
 
-   cout << "the quartered product C :" << endl;
-   for(int i=0; i<8*nrows; i++)
-      for(int j=0; j<ncols; j++)
-         cout << "qC[" << i << "][" << j << "] : " << qC[i][j] << endl;
-
+   if(vrblvl > 0)
+   {
+      cout << "the quartered product C :" << endl;
+      for(int i=0; i<8*nrows; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "qC[" << i << "][" << j << "] : " << qC[i][j] << endl;
+   }
    double **Dhi0 = new double*[nrows];
    double **Dhi1 = new double*[nrows];
    double **Dhi2 = new double*[nrows];
@@ -599,43 +700,67 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
    for(int i=0; i<nrows; i++)
       for(int j=0; j<ncols; j++)
       {
-         cout << "Chi0[" << i << "][" << j << "] : " << Chi0[i][j] << endl
-              << "Dhi0[" << i << "][" << j << "] : " << Dhi0[i][j] << endl;
+         if(vrblvl > 0)
+         {
+            cout << "Chi0[" << i << "][" << j << "] : " << Chi0[i][j] << endl
+                 << "Dhi0[" << i << "][" << j << "] : " << Dhi0[i][j] << endl;
+         }
          error = error + abs(Chi0[i][j] - Dhi0[i][j]);
-         cout << "Chi1[" << i << "][" << j << "] : " << Chi1[i][j] << endl
-              << "Dhi1[" << i << "][" << j << "] : " << Dhi1[i][j] << endl;
+         if(vrblvl > 0)
+         {
+            cout << "Chi1[" << i << "][" << j << "] : " << Chi1[i][j] << endl
+                 << "Dhi1[" << i << "][" << j << "] : " << Dhi1[i][j] << endl;
+         }
          error = error + abs(Chi1[i][j] - Dhi1[i][j]);
-         cout << "Chi2[" << i << "][" << j << "] : " << Chi2[i][j] << endl
-              << "Dhi2[" << i << "][" << j << "] : " << Dhi2[i][j] << endl;
+         if(vrblvl > 0)
+         {
+            cout << "Chi2[" << i << "][" << j << "] : " << Chi2[i][j] << endl
+                 << "Dhi2[" << i << "][" << j << "] : " << Dhi2[i][j] << endl;
+         }
          error = error + abs(Chi2[i][j] - Dhi2[i][j]);
-         cout << "Chi3[" << i << "][" << j << "] : " << Chi3[i][j] << endl
-              << "Dhi3[" << i << "][" << j << "] : " << Dhi3[i][j] << endl;
+         if(vrblvl > 0)
+         {
+            cout << "Chi3[" << i << "][" << j << "] : " << Chi3[i][j] << endl
+                 << "Dhi3[" << i << "][" << j << "] : " << Dhi3[i][j] << endl;
+         }
          error = error + abs(Chi3[i][j] - Dhi3[i][j]);
-         cout << "Clo0[" << i << "][" << j << "] : " << Clo0[i][j] << endl
-              << "Dlo0[" << i << "][" << j << "] : " << Dlo0[i][j] << endl;
+         if(vrblvl > 0)
+         {
+            cout << "Clo0[" << i << "][" << j << "] : " << Clo0[i][j] << endl
+                 << "Dlo0[" << i << "][" << j << "] : " << Dlo0[i][j] << endl;
+         }
          error = error + abs(Clo0[i][j] - Dlo0[i][j]);
-         cout << "Clo1[" << i << "][" << j << "] : " << Clo1[i][j] << endl
-              << "Dlo1[" << i << "][" << j << "] : " << Dlo1[i][j] << endl;
+         if(vrblvl > 0)
+         {
+            cout << "Clo1[" << i << "][" << j << "] : " << Clo1[i][j] << endl
+                 << "Dlo1[" << i << "][" << j << "] : " << Dlo1[i][j] << endl;
+         }
          error = error + abs(Clo1[i][j] - Dlo1[i][j]);
-         cout << "Clo2[" << i << "][" << j << "] : " << Clo2[i][j] << endl
-              << "Dlo2[" << i << "][" << j << "] : " << Dlo2[i][j] << endl;
+         if(vrblvl > 0)
+         {
+            cout << "Clo2[" << i << "][" << j << "] : " << Clo2[i][j] << endl
+                 << "Dlo2[" << i << "][" << j << "] : " << Dlo2[i][j] << endl;
+         }
          error = error + abs(Clo2[i][j] - Dlo2[i][j]);
-         cout << "Clo3[" << i << "][" << j << "] : " << Clo3[i][j] << endl
-              << "Dlo3[" << i << "][" << j << "] : " << Dlo3[i][j] << endl;
+         if(vrblvl > 0)
+         {
+            cout << "Clo3[" << i << "][" << j << "] : " << Clo3[i][j] << endl
+                 << "Dlo3[" << i << "][" << j << "] : " << Dlo3[i][j] << endl;
+         }
          error = error + abs(Clo3[i][j] - Dlo3[i][j]);
       }
 
    cout << scientific << setprecision(3)
         << "sum of all errors : " << error << endl; 
 
-   fail = (error > 1.0E-28);
+   int fail = (error > 1.0E-28);
 
    if(fail == 1) return fail; // no point to continue ...
 
    double *cAs = new double[8*nrows*8*nrc]; // single indexed cA
    double2single_row_major(8*nrows, 8*nrc, cA, cAs);
 
-   cout << scientific << setprecision(16);
+   if(vrblvl > 0) cout << scientific << setprecision(16);
 
    error = 0.0;
 
@@ -643,8 +768,11 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
    for(int i=0, idx=0; i<8*nrows; i++)
       for(int j=0; j<8*nrc; j++)
       {
-         cout << " cA[" << i << "][" << j << "] : " << cA[i][j] << endl
-              << "cAs[" << idx << "]    : " << cAs[idx] << endl;
+         if(vrblvl > 0)
+         {
+            cout << " cA[" << i << "][" << j << "] : " << cA[i][j] << endl
+                 << "cAs[" << idx << "]    : " << cAs[idx] << endl;
+         }
          error = error + abs(cA[i][j] - cAs[idx++]);
       }
 
@@ -659,13 +787,15 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
    for(int i=0; i<ncols; i++) sBT[i] = new double[8*nrc];
    transpose_rows_columns(8*nrc, ncols, sB, sBT);
 
-   cout << scientific << setprecision(16);
+   if(vrblvl > 0)
+   {
+      cout << scientific << setprecision(16);
 
-   cout << "Transpose of the stacked matrix sB :" << endl;
-   for(int i=0; i<ncols; i++)
-      for(int j=0; j<8*nrc; j++)
-         cout << "sBT[" << i << "][" << j << "] : " << sBT[i][j] << endl;
-
+      cout << "Transpose of the stacked matrix sB :" << endl;
+      for(int i=0; i<ncols; i++)
+         for(int j=0; j<8*nrc; j++)
+            cout << "sBT[" << i << "][" << j << "] : " << sBT[i][j] << endl;
+   }
    cout << "converting into single indexed matrix ..." << endl;
   
    double *sBs = new double[8*ncols*nrc];
@@ -684,15 +814,18 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
 
    single2double_row_major(8*nrows, ncols, qCs, qC2);
 
-   cout << scientific << setprecision(16);
+   if(vrblvl > 0) cout << scientific << setprecision(16);
 
    error = 0.0;
 
    for(int i=0; i<8*nrows; i++)
       for(int j=0; j<ncols; j++)
       {
-         cout << " qC[" << i << "][" << j << "] : " << qC[i][j] << endl
-              << "qC2[" << i << "][" << j << "] : " << qC2[i][j] << endl;
+         if(vrblvl > 0)
+         {
+            cout << " qC[" << i << "][" << j << "] : " << qC[i][j] << endl
+                 << "qC2[" << i << "][" << j << "] : " << qC2[i][j] << endl;
+         }
          error = error + abs(qC[i][j] - qC2[i][j]);
       }
 

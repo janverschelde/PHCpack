@@ -1,3 +1,5 @@
+Tue 10 Feb 2026 : cleaned test_vdd.cpp, introducing extra test functions.
+
 Fri 6 Feb 2026 : added functions to vectored_double_doubles to prepare for
   the vectored matrix multiplications using the octo splits.
 
