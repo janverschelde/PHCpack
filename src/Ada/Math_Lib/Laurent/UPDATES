@@ -1,5 +1,6 @@
 Mon 9 Feb 2026 : extended real_powered_homotopy_io with input operations,
-  added tests to test_real_powered_homotopy.adb.
+  added tests to test_real_powered_homotopy.adb.  Extended 
+  test_real_powered_homotopy.adb; fixed bug in real_powered_homotopy_io.adb.
 
 Sun 8 Feb 2026 : defined output of laurent homotopy polynomials with real
   powered series in the new real_powered_homotopy_io, with tests in the new

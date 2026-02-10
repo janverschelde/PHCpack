@@ -39,6 +39,7 @@ package body Test_Real_Powered_Homotopy is
     cff : Standard_Complex_VecVecs.VecVec(1..nbr);
     pwt : Standard_Floating_VecVecs.VecVec(1..nbr);
     ans : character;
+    file : file_type;
   
   begin
     new_line;
@@ -58,6 +59,14 @@ package body Test_Real_Powered_Homotopy is
      then Real_Powered_Homotopy_IO.put_line(q,cff,pwt);
      else Real_Powered_Homotopy_IO.put(q,cff,pwt);
     end if;
+    new_line;
+    put_line("Reading file name for output ...");
+    Communications_with_User.Read_Name_and_Create_File(file);
+    if ans = 'y'
+     then Real_Powered_Homotopy_IO.put_line(file,q,cff,pwt);
+     else Real_Powered_Homotopy_IO.put(file,q,cff,pwt);
+    end if;
+    Close(file);
   end Test_Random_Polynomial;
 
   procedure Test_String_Polynomial ( nbr,nvr,size : in integer32 ) is

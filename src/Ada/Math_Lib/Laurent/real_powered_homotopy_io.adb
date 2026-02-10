@@ -274,15 +274,13 @@ package body Real_Powered_Homotopy_IO is
         cnt := cnt - 1;
         if cnt = 0 then
           i2 := integer(i) - 1;
+          idx := idx + 1;
           if vrblvl > 0 then
-            idx := idx + 1;
-            if vrblvl > 0 then
-              put("parsing " & s(i1..i2));
-              put(", assigning as series "); put(idx,1); new_line;
-            end if;
-            Real_Powered_Series_IO.parse_string
-              (s(i1..i2),c(idx),p(idx),t,vrblvl-1);
+            put("parsing " & s(i1..i2));
+            put(", assigning as series "); put(idx,1); new_line;
           end if;
+          Real_Powered_Series_IO.parse_string
+            (s(i1..i2),c(idx),p(idx),t,vrblvl-1);
         end if;
       end if;
     end loop;
@@ -395,9 +393,23 @@ package body Real_Powered_Homotopy_IO is
                   c : out Standard_Complex_VecVecs.VecVec;
                   p : out Standard_Floating_VecVecs.VecVec;
                   t : in character := 't'; vrblvl : in integer32 := 0 ) is
+
+    ch : character;
+    idx : integer32 := 0;
+
   begin
     if vrblvl > 0
      then put_line("-> in Real_Powered_Homotopy_IO.get 1 ...");
+    end if;
+    loop
+      get(file,ch);
+      exit when end_of_file(file) or ch = '(';
+    end loop;
+    if not end_of_file(file) then
+      idx := idx + 1;
+      if vrblvl > 0 then
+        put("reading series "); put(idx,1); put_line(" ...");
+      end if;
     end if;
   end get;
 
