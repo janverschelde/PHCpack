@@ -664,6 +664,33 @@ void dd_convolute_quarters
       }
 }
 
+void dd_convolute_12splits
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11, double **cA )
+{
+   for(int i=0; i<12*nrows; i++)
+      for(int j=0; j<12*ncols; j++) cA[i][j] = 0.0;
+
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         for(int k=0; k<12; k++) cA[12*i+k][12*j+k] = A0[i][j];
+         for(int k=0; k<11; k++) cA[12*i+k+1][12*j+k] = A1[i][j];
+         for(int k=0; k<10; k++) cA[12*i+k+2][12*j+k] = A2[i][j];
+         for(int k=0; k<9; k++) cA[12*i+k+3][12*j+k] = A3[i][j];
+         for(int k=0; k<8; k++) cA[12*i+k+4][12*j+k] = A4[i][j];
+         for(int k=0; k<7; k++) cA[12*i+k+5][12*j+k] = A5[i][j];
+         for(int k=0; k<6; k++) cA[12*i+k+6][12*j+k] = A6[i][j];
+         for(int k=0; k<5; k++) cA[12*i+k+7][12*j+k] = A7[i][j];
+         for(int k=0; k<4; k++) cA[12*i+k+8][12*j+k] = A8[i][j];
+         for(int k=0; k<3; k++) cA[12*i+k+9][12*j+k] = A9[i][j];
+         for(int k=0; k<2; k++) cA[12*i+k+10][12*j+k] = A10[i][j];
+         cA[12*i+11][12*j] = A11[i][j];
+      }
+}
+
 void dd_stack_quarters
  ( int nrows, int ncols,
    double **A0, double **A1, double **A2, double **A3,
@@ -680,6 +707,30 @@ void dd_stack_quarters
          sA[8*i+5][j] = A5[i][j];
          sA[8*i+6][j] = A6[i][j];
          sA[8*i+7][j] = A7[i][j];
+      }
+}
+
+void dd_stack_12splits
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11, double **sA )
+{
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         sA[12*i][j] = A0[i][j];
+         sA[12*i+1][j] = A1[i][j];
+         sA[12*i+2][j] = A2[i][j];
+         sA[12*i+3][j] = A3[i][j];
+         sA[12*i+4][j] = A4[i][j];
+         sA[12*i+5][j] = A5[i][j];
+         sA[12*i+6][j] = A6[i][j];
+         sA[12*i+7][j] = A7[i][j];
+         sA[12*i+8][j] = A8[i][j];
+         sA[12*i+9][j] = A9[i][j];
+         sA[12*i+10][j] = A10[i][j];
+         sA[12*i+11][j] = A11[i][j];
       }
 }
 
@@ -702,5 +753,32 @@ void extract_dd_quarters
          if(k == 5) D5[row][j] = qC[i][j];
          if(k == 6) D6[row][j] = qC[i][j];
          if(k == 7) D7[row][j] = qC[i][j];
+      }
+}
+
+void extract_dd_12splits
+ ( int nrows, int ncols, double **qC,
+   double **D0, double **D1, double **D2, double **D3,
+   double **D4, double **D5, double **D6, double **D7,
+   double **D8, double **D9, double **D10, double **D11 )
+{
+   for(int i=0; i<12*nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         int k = i % 12;
+         int row = i/12;
+
+         if(k == 0) D0[row][j] = qC[i][j];
+         if(k == 1) D1[row][j] = qC[i][j];
+         if(k == 2) D2[row][j] = qC[i][j];
+         if(k == 3) D3[row][j] = qC[i][j];
+         if(k == 4) D4[row][j] = qC[i][j];
+         if(k == 5) D5[row][j] = qC[i][j];
+         if(k == 6) D6[row][j] = qC[i][j];
+         if(k == 7) D7[row][j] = qC[i][j];
+         if(k == 8) D8[row][j] = qC[i][j];
+         if(k == 9) D9[row][j] = qC[i][j];
+         if(k == 10) D10[row][j] = qC[i][j];
+         if(k == 11) D11[row][j] = qC[i][j];
       }
 }

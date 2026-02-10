@@ -84,6 +84,26 @@ int test_rewrite_quartered_product
  * the double double result in C.
  * If vrblvl > 0, then the matrices are written. */
 
+int test_rewrite_12splitted_product
+ ( int nrows, int ncols, int nrc,
+   double **Ahi0, double **Ahi1, double **Ahi2, double **Ahi3,
+   double **Alo0, double **Alo1, double **Alo2, double **Alo3,
+   double **Alo4, double **Alo5, double **Alo6, double **Alo7,
+   double **Bhi0, double **Bhi1, double **Bhi2, double **Bhi3,
+   double **Blo0, double **Blo1, double **Blo2, double **Blo3,
+   double **Blo4, double **Blo5, double **Blo6, double **Blo7,
+   double **Chi0, double **Chi1, double **Chi2, double **Chi3,
+   double **Clo0, double **Clo1, double **Clo2, double **Clo3,
+   double **Clo4, double **Clo5, double **Clo6, double **Clo7,
+   double **Chi, double **Clo, int vrblvl=0 );
+/*
+ * Given are the 12-splits of an nrows-by-nrc matrix A
+ * and an nrc-by-ncols matrix B, with their product in C.
+ * Tests the rewriting of the product of the quarters
+ * as one single matrix matrix product, comparing to
+ * the double double result in C.
+ * If vrblvl > 0, then the matrices are written. */
+
 int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc ); 
 /*
  * Generates two random double double matrices of dimension
@@ -468,15 +488,23 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
               Blo0, Blo1, Blo2, Blo3, Blo4, Blo5, Blo6, Blo7,
               Chi0, Chi1, Chi2, Chi3,
               Clo0, Clo1, Clo2, Clo3, Clo4, Clo5, Clo6, Clo7);
-/*
-   if(fail > 0) return fail; // no point to continue
 
+   if(fail > 0) return fail; // no point to continue
+/*
    fail = test_rewrite_quartered_product
              (nrows, ncols, nrc, 
               Ahi0, Ahi1, Ahi2, Ahi3, Alo0, Alo1, Alo2, Alo3,
               Bhi0, Bhi1, Bhi2, Bhi3, Blo0, Blo1, Blo2, Blo3,
               Chi0, Chi1, Chi2, Chi3, Clo0, Clo1, Clo2, Clo3, Chi, Clo);
  */
+   fail = test_rewrite_12splitted_product(nrows, ncols, nrc,
+             Ahi0, Ahi1, Ahi2, Ahi3,
+             Alo0, Alo1, Alo2, Alo3, Alo4, Alo5, Alo6, Alo7,
+             Bhi0, Bhi1, Bhi2, Bhi3,
+             Blo0, Blo1, Blo2, Blo3, Blo4, Blo5, Blo6, Blo7,
+             Chi0, Chi1, Chi2, Chi3,
+             Clo0, Clo1, Clo2, Clo3, Clo4, Clo5, Clo6, Clo7, Chi, Clo);
+
    return fail;
 }
 
@@ -948,7 +976,7 @@ int test_rewrite_quartered_product
    cout << scientific << setprecision(3)
         << "sum of all errors : " << error << endl; 
 
-   int fail = (error > 1.0E-28);
+   int fail = int(error > 1.0E-28);
 
    if(fail == 1) return fail; // no point to continue ...
 
@@ -974,7 +1002,7 @@ int test_rewrite_quartered_product
    cout << scientific << setprecision(3)
         << "sum of errors : " << error << endl;
 
-   fail = (error > 1.0E-28);
+   fail = int(error > 1.0E-28);
 
    if(fail == 1) return fail; // no point to continue ...
 
@@ -1027,7 +1055,261 @@ int test_rewrite_quartered_product
    cout << scientific << setprecision(3)
         << "sum of all errors : " << error << endl; 
 
-   fail = (error > 1.0E-28);
+   fail = int(error > 1.0E-28);
+
+   return fail;
+}
+
+int test_rewrite_12splitted_product
+ ( int nrows, int ncols, int nrc,
+   double **Ahi0, double **Ahi1, double **Ahi2, double **Ahi3,
+   double **Alo0, double **Alo1, double **Alo2, double **Alo3,
+   double **Alo4, double **Alo5, double **Alo6, double **Alo7,
+   double **Bhi0, double **Bhi1, double **Bhi2, double **Bhi3,
+   double **Blo0, double **Blo1, double **Blo2, double **Blo3,
+   double **Blo4, double **Blo5, double **Blo6, double **Blo7,
+   double **Chi0, double **Chi1, double **Chi2, double **Chi3,
+   double **Clo0, double **Clo1, double **Clo2, double **Clo3,
+   double **Clo4, double **Clo5, double **Clo6, double **Clo7,
+   double **Chi, double **Clo, int vrblvl )
+{
+   double **cA = new double*[12*nrows];
+   for(int i=0; i<12*nrows; i++) cA[i] = new double[12*nrc];
+
+   dd_convolute_12splits
+      (nrows, nrc, Ahi0, Ahi1, Ahi2, Ahi3,
+       Alo0, Alo1, Alo2, Alo3, Alo4, Alo5, Alo6, Alo7, cA);
+
+   if(vrblvl > 0)
+   {
+      cout << "the convoluted 12-splitted matrix A :" << endl;
+      for(int i=0; i<12*nrows; i++)
+         for(int j=0; j<12*nrc; j++)
+            cout << "cA[" << i << "][" << j << "] : " << cA[i][j] << endl;
+   }
+   double **sB = new double*[12*nrc];
+   for(int i=0; i<12*nrc; i++) sB[i] = new double[ncols];
+
+   dd_stack_12splits
+      (nrc, ncols, Bhi0, Bhi1, Bhi2, Bhi3,
+       Blo0, Blo1, Blo2, Blo3, Blo4, Blo5, Blo6, Blo7, sB);
+
+   if(vrblvl > 0)
+   {
+      cout << "the stacked quartered matrix B :" << endl;
+      for(int i=0; i<12*nrc; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "sB[" << i << "][" << j << "] : " << sB[i][j] << endl;
+   }
+
+   double **qC = new double*[12*nrows];
+   for(int i=0; i<12*nrows; i++) qC[i] = new double[ncols];
+
+   double_indexed_matrix_multiplication(12*nrows, ncols, 12*nrc, cA, sB, qC);
+
+   if(vrblvl > 0)
+   {
+      cout << "the quartered product C :" << endl;
+      for(int i=0; i<12*nrows; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "qC[" << i << "][" << j << "] : " << qC[i][j] << endl;
+   }
+   double **Dhi0 = new double*[nrows];
+   double **Dhi1 = new double*[nrows];
+   double **Dhi2 = new double*[nrows];
+   double **Dhi3 = new double*[nrows];
+   double **Dlo0 = new double*[nrows];
+   double **Dlo1 = new double*[nrows];
+   double **Dlo2 = new double*[nrows];
+   double **Dlo3 = new double*[nrows];
+   double **Dlo4 = new double*[nrows];
+   double **Dlo5 = new double*[nrows];
+   double **Dlo6 = new double*[nrows];
+   double **Dlo7 = new double*[nrows];
+
+   for(int i=0; i<nrows; i++)
+   {
+      Dhi0[i] = new double[ncols];
+      Dhi1[i] = new double[ncols];
+      Dhi2[i] = new double[ncols];
+      Dhi3[i] = new double[ncols];
+      Dlo0[i] = new double[ncols];
+      Dlo1[i] = new double[ncols];
+      Dlo2[i] = new double[ncols];
+      Dlo3[i] = new double[ncols];
+      Dlo4[i] = new double[ncols];
+      Dlo5[i] = new double[ncols];
+      Dlo6[i] = new double[ncols];
+      Dlo7[i] = new double[ncols];
+   }
+   extract_dd_12splits
+      (nrows, ncols, qC, Dhi0, Dhi1, Dhi2, Dhi3,
+       Dlo0, Dlo1, Dlo2, Dlo3, Dlo4, Dlo5, Dlo6, Dlo7);
+
+   double error = 0.0;
+
+   cout << "comparing the extracted 12-splits ..." << endl;
+
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         if(vrblvl > 0)
+         {
+            cout << "Chi0[" << i << "][" << j << "] : " << Chi0[i][j] << endl
+                 << "Dhi0[" << i << "][" << j << "] : " << Dhi0[i][j] << endl;
+         }
+         error = error + abs(Chi0[i][j] - Dhi0[i][j]);
+         if(vrblvl > 0)
+         {
+            cout << "Chi1[" << i << "][" << j << "] : " << Chi1[i][j] << endl
+                 << "Dhi1[" << i << "][" << j << "] : " << Dhi1[i][j] << endl;
+         }
+         error = error + abs(Chi1[i][j] - Dhi1[i][j]);
+         if(vrblvl > 0)
+         {
+            cout << "Chi2[" << i << "][" << j << "] : " << Chi2[i][j] << endl
+                 << "Dhi2[" << i << "][" << j << "] : " << Dhi2[i][j] << endl;
+         }
+         error = error + abs(Chi2[i][j] - Dhi2[i][j]);
+         if(vrblvl > 0)
+         {
+            cout << "Chi3[" << i << "][" << j << "] : " << Chi3[i][j] << endl
+                 << "Dhi3[" << i << "][" << j << "] : " << Dhi3[i][j] << endl;
+         }
+         error = error + abs(Chi3[i][j] - Dhi3[i][j]);
+         if(vrblvl > 0)
+         {
+            cout << "Clo0[" << i << "][" << j << "] : " << Clo0[i][j] << endl
+                 << "Dlo0[" << i << "][" << j << "] : " << Dlo0[i][j] << endl;
+         }
+         error = error + abs(Clo0[i][j] - Dlo0[i][j]);
+         if(vrblvl > 0)
+         {
+            cout << "Clo1[" << i << "][" << j << "] : " << Clo1[i][j] << endl
+                 << "Dlo1[" << i << "][" << j << "] : " << Dlo1[i][j] << endl;
+         }
+         error = error + abs(Clo1[i][j] - Dlo1[i][j]);
+         if(vrblvl > 0)
+         {
+            cout << "Clo2[" << i << "][" << j << "] : " << Clo2[i][j] << endl
+                 << "Dlo2[" << i << "][" << j << "] : " << Dlo2[i][j] << endl;
+         }
+         error = error + abs(Clo2[i][j] - Dlo2[i][j]);
+         if(vrblvl > 0)
+         {
+            cout << "Clo3[" << i << "][" << j << "] : " << Clo3[i][j] << endl
+                 << "Dlo3[" << i << "][" << j << "] : " << Dlo3[i][j] << endl;
+         }
+         error = error + abs(Clo3[i][j] - Dlo3[i][j]);
+         if(vrblvl > 0)
+         {
+            cout << "Clo4[" << i << "][" << j << "] : " << Clo4[i][j] << endl
+                 << "Dlo4[" << i << "][" << j << "] : " << Dlo4[i][j] << endl;
+         }
+         error = error + abs(Clo4[i][j] - Dlo4[i][j]);
+         if(vrblvl > 0)
+         {
+            cout << "Clo5[" << i << "][" << j << "] : " << Clo5[i][j] << endl
+                 << "Dlo5[" << i << "][" << j << "] : " << Dlo5[i][j] << endl;
+         }
+         error = error + abs(Clo5[i][j] - Dlo5[i][j]);
+         if(vrblvl > 0)
+         {
+            cout << "Clo6[" << i << "][" << j << "] : " << Clo6[i][j] << endl
+                 << "Dlo6[" << i << "][" << j << "] : " << Dlo6[i][j] << endl;
+         }
+         error = error + abs(Clo6[i][j] - Dlo6[i][j]);
+         if(vrblvl > 0)
+         {
+            cout << "Clo7[" << i << "][" << j << "] : " << Clo7[i][j] << endl
+                 << "Dlo7[" << i << "][" << j << "] : " << Dlo7[i][j] << endl;
+         }
+         error = error + abs(Clo7[i][j] - Dlo7[i][j]);
+      }
+
+   cout << scientific << setprecision(3)
+        << "sum of all errors : " << error << endl; 
+
+   int fail = int(error > 1.0E-28);
+
+   if(fail > 0) return fail; // no point to continue ...
+
+   double *cAs = new double[12*nrows*12*nrc]; // single indexed cA
+   double2single_row_major(12*nrows, 12*nrc, cA, cAs);
+
+   if(vrblvl > 0) cout << scientific << setprecision(16);
+
+   error = 0.0;
+
+   cout << "the single indexed convoluted quartered matrix A :" << endl;
+   for(int i=0, idx=0; i<12*nrows; i++)
+      for(int j=0; j<12*nrc; j++)
+      {
+         if(vrblvl > 0)
+         {
+            cout << " cA[" << i << "][" << j << "] : " << cA[i][j] << endl
+                 << "cAs[" << idx << "]    : " << cAs[idx] << endl;
+         }
+         error = error + abs(cA[i][j] - cAs[idx++]);
+      }
+
+   cout << scientific << setprecision(3)
+        << "sum of errors : " << error << endl;
+
+   fail = int(error > 1.0E-28);
+
+   if(fail > 0) return fail; // no point to continue ...
+
+   double **sBT = new double*[ncols];
+   for(int i=0; i<ncols; i++) sBT[i] = new double[12*nrc];
+   transpose_rows_columns(12*nrc, ncols, sB, sBT);
+
+   if(vrblvl > 0)
+   {
+      cout << scientific << setprecision(16);
+
+      cout << "Transpose of the stacked matrix sB :" << endl;
+      for(int i=0; i<ncols; i++)
+         for(int j=0; j<12*nrc; j++)
+            cout << "sBT[" << i << "][" << j << "] : " << sBT[i][j] << endl;
+   }
+   cout << "converting into single indexed matrix ..." << endl;
+  
+   double *sBs = new double[12*ncols*nrc];
+   double2single_column_major(12*nrc, ncols, sBT, sBs);
+
+   double *qCs = new double[12*nrows*ncols];
+
+   cout << "running a single indexed matrix matrix multiplication ..." << endl;
+
+   single_indexed_matrix_multiplication(12*nrows, ncols, 12*nrc, cAs, sBs, qCs);
+
+   double **qC2 = new double*[12*nrows];
+   for(int i=0; i<12*nrows; i++) qC2[i] = new double[ncols];
+
+   cout << "converting product to double indexed matrix ..." << endl;
+
+   single2double_row_major(12*nrows, ncols, qCs, qC2);
+
+   if(vrblvl > 0) cout << scientific << setprecision(16);
+
+   error = 0.0;
+
+   for(int i=0; i<12*nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         if(vrblvl > 0)
+         {
+            cout << " qC[" << i << "][" << j << "] : " << qC[i][j] << endl
+                 << "qC2[" << i << "][" << j << "] : " << qC2[i][j] << endl;
+         }
+         error = error + abs(qC[i][j] - qC2[i][j]);
+      }
+
+   cout << scientific << setprecision(3)
+        << "sum of all errors : " << error << endl; 
+
+   fail = int(error > 1.0E-28);
 
    return fail;
 }

@@ -2,6 +2,8 @@ Tue 10 Feb 2026 : cleaned test_vdd.cpp, introducing extra test functions.
   Added test on 12-split matrix multiplication to test_vdd.cpp.
   In test_vdd.cpp, adjusted the random numbers in the test matrices so that
   the exponent of the high double was zero, yielding more accurate results.
+  Extended vectored_double_doubles with the rewrite of the product of the
+  12-splits as one single matrix multiplication, tested by test_vdd.
 
 Fri 6 Feb 2026 : added functions to vectored_double_doubles to prepare for
   the vectored matrix multiplications using the octo splits.

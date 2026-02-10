@@ -263,22 +263,46 @@ void dd_convolute_quarters
    double **A0, double **A1, double **A2, double **A3,
    double **A4, double **A5, double **A6, double **A7, double **cA );
 /*
- * Given in A0, A1, ... the quarters of the parts of 
+ * Given in A0, A1, ..., A7, the quarters of the parts of 
  * an nrows-by-ncols double double matrix, returns in cA
  * the convoluted matrix where each element in the original matrix A
  * is replaced by an 8-by-8 convolution matrix.
  * Therefore, cA is an 8*nrows-by-8*ncols matrix. */
+
+void dd_convolute_12splits
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11, double **cA );
+/*
+ * Given in A0, A1, ..., A11, the parts of a 12-splitted
+ * nrows-by-ncols double double matrix, returns in cA
+ * the convoluted matrix where each element in the original matrix A
+ * is replaced by an 12-by-12 convolution matrix.
+ * Therefore, cA is an 12*nrows-by-12*ncols matrix. */
 
 void dd_stack_quarters
  ( int nrows, int ncols,
    double **A0, double **A1, double **A2, double **A3,
    double **A4, double **A5, double **A6, double **A7, double **sA );
 /*
- * Given in A0, A1, ... the quarters of the parts of 
+ * Given in A0, A1, ..., A7, the quarters of the parts of 
  * an nrows-by-ncols double double matrix, returns in sA
  * the stacked matrix where each element in the original matrix A
  * is replaced by an 8-by-1 column.
  * Therefore, cA is an 8*nrows-by-ncols matrix. */
+
+void dd_stack_12splits
+ ( int nrows, int ncols,
+   double **A0, double **A1, double **A2, double **A3,
+   double **A4, double **A5, double **A6, double **A7,
+   double **A8, double **A9, double **A10, double **A11, double **sA );
+/*
+ * Given in A0, A1, ..., A11, the parts of a 12-splitted
+ * nrows-by-ncols double double matrix, returns in sA
+ * the stacked matrix where each element in the original matrix A
+ * is replaced by an 12-by-1 column.
+ * Therefore, cA is an 12*nrows-by-ncols matrix. */
 
 void extract_dd_quarters
  ( int nrows, int ncols, double **qC,
@@ -286,6 +310,15 @@ void extract_dd_quarters
    double **D4, double **D5, double **D6, double **D7 );
 /*
  * Given is in qC the quartered project as an 8*nrows-by-ncols matrix,
- * extracts the quarters into the nrows-by-ncols matrices D0, D1, ... */
+ * extracts the quarters into the nrows-by-ncols matrices D0, D1, ..., D7. */
+
+void extract_dd_12splits
+ ( int nrows, int ncols, double **qC,
+   double **D0, double **D1, double **D2, double **D3,
+   double **D4, double **D5, double **D6, double **D7,
+   double **D8, double **D9, double **D10, double **D11 );
+/*
+ * Given is in qC the quartered project as an 12*nrows-by-ncols matrix,
+ * extracts the parts into the nrows-by-ncols matrices D0, D1, ..., D11. */
 
 #endif
