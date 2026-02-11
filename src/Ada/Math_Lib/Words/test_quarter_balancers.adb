@@ -106,10 +106,31 @@ package body Test_Quarter_Balancers is
     put("seed used : "); put(seed,1); new_line;
   end Test_Quarter_Balance;
 
+  procedure Test_Octo_Balance is
+
+    x,x0,x1,x2,x3,x4,x5,x6,x7 : double_float;
+    seed : natural32 := 0;
+
+  begin
+    new_line;
+    put("Give seed for random numbers (0 is default) : ");
+    get(seed);
+    if seed /= 0
+     then Standard_Random_Numbers.set_seed(seed);
+    end if;
+    x := abs(Standard_Random_Numbers.Random);
+    new_line;
+    put("x : "); put(x); new_line;
+    Bits_of_Doubles.Split(x,x0,x1,x2,x3,x4,x5,x6,x7);
+    Quarter_Balancers.Octo_Balance(x0,x1,x2,x3,x4,x5,x6,x7,2);
+    Test_Bits_of_Doubles.Test_Octo_Bit_Split(x,x0,x1,x2,x3,x4,x5,x6,x7);
+  end Test_Octo_Balance;
+
   procedure Main is
   begin
     Test_Random_Double;
     Test_Quarter_Balance;
+    Test_Octo_Balance;
   end Main;
 
 end Test_Quarter_Balancers;

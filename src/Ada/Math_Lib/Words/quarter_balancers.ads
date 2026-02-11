@@ -7,6 +7,15 @@ package Quarter_Balancers is
 --   Provides a test to check if two quarters are balanced
 --   and a procedure to balance two quarters.
 
+  function Is_Balanced
+             ( x,y : double_float; threshold : integer32 := 13;
+               vrblvl : integer32 := 0 ) return boolean;
+
+  -- DESCRIPTION :
+  --   Returns true if the difference in exponents between two
+  --   consecutive quarters x and y is equal to the threshold, or less.
+  --   If vrblvl > 0, then the exponents are written.
+
   function Is_Quarter_Balanced
              ( x,y : double_float; vrblvl : integer32 := 0 ) return boolean;
 
@@ -14,6 +23,15 @@ package Quarter_Balancers is
   --   Returns true if the difference in exponents between
   --   two consecutive quarters x and y is 13, or less.
   --   If vrblvl > 0, then the exponents are written.
+
+  procedure Balance ( x,y : in out double_float;
+                      threshold : in integer32 := 13;
+                      vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Makes x and y balanced by reduction of one bit of x
+  --   and addition of one bit to y, with respect to the threshold.
+  --   Assumes both x and y are positive.
 
   procedure Quarter_Balance
               ( x,y : in out double_float; vrblvl : in integer32 := 0 );
@@ -29,6 +47,14 @@ package Quarter_Balancers is
 
   -- DESCRIPTION :
   --   Checks if the consecutive quarters x0, x1, x2, x3 are balanced
+  --   and for any pair that is not balanced, makes the pair balanced.
+
+  procedure Octo_Balance
+              ( x0,x1,x2,x3,x4,x5,x6,x7 : in out double_float;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Checks if the consecutive parts x0, x1, .., x7 are balanced
   --   and for any pair that is not balanced, makes the pair balanced.
 
 end Quarter_Balancers;

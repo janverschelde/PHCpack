@@ -1,3 +1,7 @@
+Wed 11 Feb 2026 : extended quarter_balancers with more general procedures,
+  taking an extra threshold parameter to balance octo splits.
+  Added a test in test_quarter_balancers.
+
 Thu 5 Feb 2026 : to bits_of_doubles, added split of doubles in eight parts,
   tested by new procedures in test_bits_of_doubles.
 
