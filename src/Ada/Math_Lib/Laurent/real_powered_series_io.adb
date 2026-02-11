@@ -244,7 +244,7 @@ package body Real_Powered_Series_IO is
                   t : in character := 't'; vrblvl : in integer32 := 0 ) is
 
     cff : Standard_Complex_Vectors.Vector(0..size)
-        := (1..size => Standard_Complex_Numbers.Create(0.0));
+        := (0..size => Standard_Complex_Numbers.Create(0.0));
     pwt : Standard_Floating_Vectors.Vector(1..size) := (1..size => 0.0);
 
   begin

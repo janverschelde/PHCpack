@@ -119,12 +119,12 @@ package Real_Powered_Homotopy_IO is
   --   c        coefficients of the power series;
   --   p        powers of the series.
 
-  procedure get ( n : in integer32;
+  procedure get ( n,size : in integer32;
                   q : out Standard_Complex_Laurentials.Poly;
                   c : out Standard_Complex_VecVecs.VecVec;
                   p : out Standard_Floating_VecVecs.VecVec;
                   t : in character := 't'; vrblvl : in integer32 := 0 );
-  procedure get ( file : in file_type; n : in integer32;
+  procedure get ( file : in file_type; n,size : in integer32;
                   q : out Standard_Complex_Laurentials.Poly;
                   c : out Standard_Complex_VecVecs.VecVec;
                   p : out Standard_Floating_VecVecs.VecVec;
@@ -137,6 +137,7 @@ package Real_Powered_Homotopy_IO is
   -- ON ENTRY :
   --   file     must be opened for input;
   --   n        number of variables in the string representations;
+  --   size     is (an upper bound on) the size of series coefficients;
   --   t        symbol used in the series;
   --   vrblvl   is the verbose level.
 

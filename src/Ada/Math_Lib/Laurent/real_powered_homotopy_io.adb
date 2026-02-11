@@ -376,7 +376,7 @@ package body Real_Powered_Homotopy_IO is
     end;
   end parse_string;
 
-  procedure get ( n : in integer32;
+  procedure get ( n,size : in integer32;
                   q : out Standard_Complex_Laurentials.Poly;
                   c : out Standard_Complex_VecVecs.VecVec;
                   p : out Standard_Floating_VecVecs.VecVec;
@@ -385,10 +385,10 @@ package body Real_Powered_Homotopy_IO is
     if vrblvl > 0
      then put_line("-> in Real_Powered_Homotopy_IO.get 0 ...");
     end if;
-    get(standard_input,n,q,c,p,t,vrblvl);
+    get(standard_input,n,size,q,c,p,t,vrblvl);
   end get;
 
-  procedure get ( file : in file_type; n : in integer32;
+  procedure get ( file : in file_type; n,size : in integer32;
                   q : out Standard_Complex_Laurentials.Poly;
                   c : out Standard_Complex_VecVecs.VecVec;
                   p : out Standard_Floating_VecVecs.VecVec;
@@ -401,16 +401,19 @@ package body Real_Powered_Homotopy_IO is
     if vrblvl > 0
      then put_line("-> in Real_Powered_Homotopy_IO.get 1 ...");
     end if;
-    loop
-      get(file,ch);
-      exit when end_of_file(file) or ch = '(';
-    end loop;
-    if not end_of_file(file) then
+    while not end_of_file(file) loop
+      loop
+        get(file,ch);
+        exit when end_of_file(file) or ch = '(';
+      end loop;
+      exit when end_of_file(file);
       idx := idx + 1;
       if vrblvl > 0 then
         put("reading series "); put(idx,1); put_line(" ...");
       end if;
-    end if;
+      Real_Powered_Series_IO.get(file,size,c(idx),p(idx),t,vrblvl-1);
+     -- the current character read is ')' the closing of the series
+    end loop;
   end get;
 
 end Real_Powered_Homotopy_IO;

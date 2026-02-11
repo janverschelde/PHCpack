@@ -1,4 +1,5 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
+with String_Splitters;
 with Communications_with_User;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
@@ -40,6 +41,7 @@ package body Test_Real_Powered_Homotopy is
     pwt : Standard_Floating_VecVecs.VecVec(1..nbr);
     ans : character;
     file : file_type;
+    name : String_Splitters.Link_to_String;
   
   begin
     new_line;
@@ -61,12 +63,27 @@ package body Test_Real_Powered_Homotopy is
     end if;
     new_line;
     put_line("Reading file name for output ...");
-    Communications_with_User.Read_Name_and_Create_File(file);
+    Communications_with_User.Read_Name_and_Create_File(file,name);
     if ans = 'y'
      then Real_Powered_Homotopy_IO.put_line(file,q,cff,pwt);
      else Real_Powered_Homotopy_IO.put(file,q,cff,pwt);
     end if;
     Close(file);
+    new_line;
+    put_line("Closed file.  Reopening again for reading ...");
+    new_line;
+    Communications_with_User.Open_Input_File(file,name.all);
+    declare
+      q2 : Standard_Complex_Laurentials.Poly;
+      c2 : Standard_Complex_VecVecs.VecVec(1..nbr);
+      p2 : Standard_Floating_VecVecs.VecVec(1..nbr);
+    begin
+      Real_Powered_Homotopy_IO.get(file,nvr,size,q2,c2,p2,vrblvl=>2);
+      for i in 1..nbr loop
+        put("-> power series "); put(i,1); put_line(" :");
+        Real_Powered_Series_IO.put_line(cff(i).all,pwt(i).all);
+      end loop;
+    end;
   end Test_Random_Polynomial;
 
   procedure Test_String_Polynomial ( nbr,nvr,size : in integer32 ) is
