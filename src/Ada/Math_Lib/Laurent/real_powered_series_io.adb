@@ -177,7 +177,7 @@ package body Real_Powered_Series_IO is
                   t : in character := 't'; vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0
-     then put_line("-> in Real_Powered_Series_IO.get ...");
+     then put_line("-> in Real_Powered_Series_IO.get 0 ...");
     end if;
     get(standard_input,c,p,t);
   end get;
@@ -192,7 +192,7 @@ package body Real_Powered_Series_IO is
 
   begin
     if vrblvl > 0
-     then put_line("-> in Real_Powered_Series_IO.get ...");
+     then put_line("-> in Real_Powered_Series_IO.get 1 ...");
     end if;
     while not end_of_file(file) loop -- find opening bracket
       get(file,ch);
@@ -225,6 +225,35 @@ package body Real_Powered_Series_IO is
       end loop;
       Standard_Parse_Numbers.Parse(file,ch,p(k));
     end loop;
+  end get;
+
+  procedure get ( size : in integer32;
+                  c : out Standard_Complex_Vectors.Link_to_Vector;
+                  p : out Standard_Floating_Vectors.Link_to_Vector;
+                  t : in character := 't'; vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in Real_Powered_Series_IO.get 2 ...");
+    end if;
+    get(standard_input,size,c,p,t,vrblvl);
+  end get;
+
+  procedure get ( file : in file_type; size : in integer32;
+                  c : out Standard_Complex_Vectors.Link_to_Vector;
+                  p : out Standard_Floating_Vectors.Link_to_Vector;
+                  t : in character := 't'; vrblvl : in integer32 := 0 ) is
+
+    cff : Standard_Complex_Vectors.Vector(0..size)
+        := (1..size => Standard_Complex_Numbers.Create(0.0));
+    pwt : Standard_Floating_Vectors.Vector(1..size) := (1..size => 0.0);
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Real_Powered_Series_IO.get 2 ...");
+    end if;
+    get(file,cff,pwt,t,vrblvl);
+    c := new Standard_Complex_Vectors.Vector'(cff);
+    p := new Standard_Floating_Vectors.Vector'(pwt);
   end get;
 
 end Real_Powered_Series_IO;

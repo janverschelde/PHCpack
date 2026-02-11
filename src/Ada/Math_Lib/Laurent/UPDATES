@@ -1,3 +1,5 @@
+Wed 11 Feb 2026 : to real_powered_series_io, added two wrapper procedures.
+
 Mon 9 Feb 2026 : extended real_powered_homotopy_io with input operations,
   added tests to test_real_powered_homotopy.adb.  Extended 
   test_real_powered_homotopy.adb; fixed bug in real_powered_homotopy_io.adb.

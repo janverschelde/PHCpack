@@ -81,4 +81,18 @@ package Real_Powered_Series_IO is
   --   as the size of c and p, of a series with symbol t.
   --   The verbose level is given in vrblvl.
 
+  procedure get ( size : in integer32;
+                  c : out Standard_Complex_Vectors.Link_to_Vector;
+                  p : out Standard_Floating_Vectors.Link_to_Vector;
+                  t : in character := 't'; vrblvl : in integer32 := 0 );
+  procedure get ( file : in file_type; size : in integer32;
+                  c : out Standard_Complex_Vectors.Link_to_Vector;
+                  p : out Standard_Floating_Vectors.Link_to_Vector;
+                  t : in character := 't'; vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Allocates space in c and p for a series of the given size,
+  --   which is then read from standard input or from file.
+  --   The verbose level is given in vrblvl.
+
 end Real_Powered_Series_IO;
