@@ -486,10 +486,11 @@ void octo_split
    *x7 = x - *x0 - *x1 - *x2 - *x3 - *x4 - *x5 - *x6;
 }
 
-bool is_quarter_balanced ( double x, double y, int vrblvl )
+bool is_balanced ( double x, double y, int threshold, int vrblvl )
 {
    if(vrblvl > 0)
-      cout << "-> in splitting_doubles.is_quarter_balanced ..." << endl;
+      cout << "-> in splitting_doubles.is_balanced, threshold : "
+           << threshold << endl;
 
    int xe,ye;
    double xf = frexp(x, &xe);
@@ -502,7 +503,7 @@ bool is_quarter_balanced ( double x, double y, int vrblvl )
       cout << "y : " << y << " has exponent " << ye << endl;
       cout << "difference of exponents : " << dxy;
    }
-   bool result = not (dxy > 13);
+   bool result = not (dxy > threshold);
    if(vrblvl > 0)
    {
       if(result)
@@ -513,10 +514,19 @@ bool is_quarter_balanced ( double x, double y, int vrblvl )
    return result;
 }
 
-void quarter_balance ( double *x, double *y, int vrblvl )
+bool is_quarter_balanced ( double x, double y, int vrblvl )
 {
    if(vrblvl > 0)
-      cout << "-> in splitting_doubles.quarter_balance ..." << endl;
+      cout << "-> in splitting_doubles.is_quarter_balanced ..." << endl;
+
+   return is_balanced(x, y, 13, vrblvl);
+}
+
+void balance ( double *x, double *y, int threshold, int vrblvl )
+{
+   if(vrblvl > 0)
+      cout << "-> in splitting_doubles.balance, threshold : "
+           << threshold << endl;
 
    if(*x == 0.0) return;
    if(*y == 0.0) return;
@@ -524,7 +534,7 @@ void quarter_balance ( double *x, double *y, int vrblvl )
    int exn;
    double xf = frexp(*x, &exn);
    const double one = 1.0;
-   double bit = ldexp(one, exn - 14);
+   double bit = ldexp(one, exn - threshold);
 
    if(vrblvl > 0)
    {
@@ -542,6 +552,17 @@ void quarter_balance ( double *x, double *y, int vrblvl )
    }
 }
 
+void quarter_balance ( double *x, double *y, int vrblvl )
+{
+   if(vrblvl > 0)
+      cout << "-> in splitting_doubles.quarter_balance ..." << endl;
+
+   if(*x == 0.0) return;
+   if(*y == 0.0) return;
+
+   balance(x,y,14,vrblvl);
+}
+
 void balance_quarters
  ( double *x0, double *x1, double *x2, double *x3, int vrblvl )
 {
@@ -554,6 +575,22 @@ void balance_quarters
       quarter_balance(x1, x2, vrblvl-1);
    if(not is_quarter_balanced(*x2, *x3, vrblvl-1))
       quarter_balance(x2, x3, vrblvl-1);
+}
+
+void octo_balance
+ ( double *x0, double *x1, double *x2, double *x3, 
+   double *x4, double *x5, double *x6, double *x7, int vrblvl )
+{
+   if(vrblvl > 0)
+      cout << "-> in splitting_doubles.octo_balance ..." << endl;
+
+   if(not is_balanced(*x0, *x1, 7, vrblvl-1)) balance(x0, x1, 8, vrblvl-1);
+   if(not is_balanced(*x1, *x2, 7, vrblvl-1)) balance(x1, x2, 8, vrblvl-1);
+   if(not is_balanced(*x2, *x3, 7, vrblvl-1)) balance(x2, x3, 8, vrblvl-1);
+   if(not is_balanced(*x3, *x4, 7, vrblvl-1)) balance(x3, x4, 8, vrblvl-1);
+   if(not is_balanced(*x4, *x5, 6, vrblvl-1)) balance(x4, x5, 7, vrblvl-1);
+   if(not is_balanced(*x5, *x6, 6, vrblvl-1)) balance(x5, x6, 7, vrblvl-1);
+   if(not is_balanced(*x6, *x7, 6, vrblvl-1)) balance(x6, x7, 7, vrblvl-1);
 }
 
 void make_exponent_zero ( double *x, double *pow2fac, int vrblvl )

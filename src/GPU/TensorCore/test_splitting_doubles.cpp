@@ -37,8 +37,13 @@ int test_octo_split ( void );
 
 int test_quarter_balancer ( void );
 /*
- * Generates a random number, splits in four equal sized parts, and then
- * checks if the quarters are balanced. */
+ * Generates a random number, splits in four equal sized parts,
+ * and then balances the quarters. */
+
+int test_octo_balancer ( void );
+/*
+ * Generates a random number, splits in eight parts,
+ * and then balances the parts. */
 
 using namespace std;
 
@@ -69,6 +74,12 @@ int main ( void )
       cout << "\nTest on quarter balancer failed?!!!\n\n";
    else
       cout << "\nTest on quarter balancer succeeded.\n\n";
+
+   fail = test_octo_balancer();
+   if(fail == 1)
+      cout << "\nTest on octo balancer failed?!!!\n\n";
+   else
+      cout << "\nTest on octo balancer succeeded.\n\n";
 
    return fail;
 }
@@ -261,7 +272,7 @@ int test_quarter_balancer ( void )
    make_exponent_zero(&x, &factor, 1);
 
    quarter_split(x, &x0, &x1, &x2, &x3, 0);
-
+/*
    bool b01 = is_quarter_balanced(x0, x1, 1);
    bool b12 = is_quarter_balanced(x1, x2, 1);
    bool b23 = is_quarter_balanced(x2, x3, 1);
@@ -282,8 +293,38 @@ int test_quarter_balancer ( void )
       b23 = is_quarter_balanced(x2, x3, 1); // must recompute b23
    }
    if(not b23) quarter_balance(&x2, &x3, 1); 
+ */
+   balance_quarters(&x0, &x1, &x2, &x3, 2);
 
    int fail = test_quarter_sums(x, x0, x1, x2, x3);
+
+   cout << endl << "seed used : " << seed << endl;
+
+   return fail;
+}
+
+int test_octo_balancer ( void )
+{
+   double x,x0,x1,x2,x3,x4,x5,x6,x7;
+
+   cout << "Give seed (0 for default) : ";
+   int seed; cin >> seed;
+
+   if(seed == 0) seed = time(NULL);
+   srand(seed);
+
+   x = ((double) rand())/RAND_MAX;
+   cout << scientific << setprecision(16);
+   cout << " x : " << x << endl;
+
+   double factor;
+   make_exponent_zero(&x, &factor, 1);
+
+   octo_split(x, &x0, &x1, &x2, &x3, &x4, &x5, &x6, &x7, 0);
+
+   octo_balance(&x0, &x1, &x2, &x3, &x4, &x5, &x6, &x7, 2);
+
+   int fail = test_octo_sums(x, x0, x1, x2, x3, x4, x5, x6, x7);
 
    cout << endl << "seed used : " << seed << endl;
 

@@ -1,3 +1,6 @@
+Thu 12 Feb 2026 : extended splitting_doubles, test_splitting_doubles,
+  and vectored_double_doubles with balancers for 12-splits.
+
 Tue 10 Feb 2026 : cleaned test_vdd.cpp, introducing extra test functions.
   Added test on 12-split matrix multiplication to test_vdd.cpp.
   In test_vdd.cpp, adjusted the random numbers in the test matrices so that

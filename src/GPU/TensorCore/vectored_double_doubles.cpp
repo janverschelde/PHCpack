@@ -11,7 +11,7 @@ using namespace std;
 
 bool is_dd_quarter_balanced
  ( double xhi0, double xhi1, double xhi2, double xhi3,
-   double xlo0, double xlo1, double xlo2, double xlo3, int vrblvl=0 )
+   double xlo0, double xlo1, double xlo2, double xlo3, int vrblvl )
 {
    if(vrblvl > 0)
       cout << "-> in vectored_double_doubles.is_dd_quarter_balanced ..."
@@ -38,9 +38,44 @@ bool is_dd_quarter_balanced
    return result;
 }
 
+bool is_dd_12split_balanced
+ ( double xhi0, double xhi1, double xhi2, double xhi3,
+   double xlo0, double xlo1, double xlo2, double xlo3,
+   double xlo4, double xlo5, double xlo6, double xlo7, int vrblvl )
+{
+   if(vrblvl > 0)
+      cout << "-> in vectored_double_doubles.is_dd_12split_balanced ..."
+           << endl;
+
+   bool b01 = is_balanced(xhi0, xhi1, 13, vrblvl-1);
+   bool b12 = is_balanced(xhi1, xhi2, 13, vrblvl-1);
+   bool b23 = is_balanced(xhi2, xhi3, 13, vrblvl-1);
+   bool b34 = is_balanced(xhi3, xlo0, 13, vrblvl-1);
+   bool b45 = is_balanced(xlo0, xlo1, 7, vrblvl-1);
+   bool b56 = is_balanced(xlo1, xlo2, 7, vrblvl-1);
+   bool b67 = is_balanced(xlo2, xlo3, 7, vrblvl-1);
+   bool b78 = is_balanced(xlo3, xlo4, 7, vrblvl-1);
+   bool b89 = is_balanced(xlo4, xlo5, 6, vrblvl-1);
+   bool b9A = is_balanced(xlo5, xlo6, 6, vrblvl-1);
+   bool bAB = is_balanced(xlo6, xlo7, 6, vrblvl-1);
+
+   bool result = b01 and b12 and b23 and b34 and b45 and b56 and b67
+                     and b78 and b89 and b9A and bAB;
+   if(vrblvl > 0)
+   {
+      if(result)
+         cout << "All 12 parts of the double double are balanced."
+              << endl;
+      else
+         cout << "Not all 12 parts of the double double are balanced."
+              << endl;
+   }
+   return result;
+}
+
 void dd_balance_quarters
  ( double *xhi0, double *xhi1, double *xhi2, double *xhi3,
-   double *xlo0, double *xlo1, double *xlo2, double *xlo3, int vrblvl=0 )
+   double *xlo0, double *xlo1, double *xlo2, double *xlo3, int vrblvl )
 {
    if(vrblvl > 0)
       cout << "-> in vectored_double_doubles.dd_balance_quarters ..." << endl;
@@ -59,6 +94,38 @@ void dd_balance_quarters
       quarter_balance(xlo1, xlo2, vrblvl-1);
    if(not is_quarter_balanced(*xlo2, *xlo3, vrblvl-1))
       quarter_balance(xlo2, xlo3, vrblvl-1);
+}
+
+void dd_12split_balance
+ ( double *xhi0, double *xhi1, double *xhi2, double *xhi3,
+   double *xlo0, double *xlo1, double *xlo2, double *xlo3,
+   double *xlo4, double *xlo5, double *xlo6, double *xlo7, int vrblvl )
+{
+   if(vrblvl > 0)
+      cout << "-> in vectored_double_doubles.dd_12split_balance ..." << endl;
+
+   if(not is_balanced(*xhi0, *xhi1, 13, vrblvl-1))
+      balance(xhi0, xhi1, 14, vrblvl-1);
+   if(not is_balanced(*xhi1, *xhi2, 13, vrblvl-1))
+      balance(xhi1, xhi2, 14, vrblvl-1);
+   if(not is_balanced(*xhi2, *xhi3, 13, vrblvl-1))
+      balance(xhi2, xhi3, 14, vrblvl-1);
+   if(not is_balanced(*xhi3, *xlo0, 13, vrblvl-1))
+      balance(xhi3, xlo0, 14, vrblvl-1);
+   if(not is_balanced(*xlo0, *xlo1, 7, vrblvl-1))
+      balance(xlo0, xlo1, 8, vrblvl-1);
+   if(not is_balanced(*xlo1, *xlo2, 7, vrblvl-1))
+      balance(xlo1, xlo2, 8, vrblvl-1);
+   if(not is_balanced(*xlo2, *xlo3, 7, vrblvl-1))
+      balance(xlo2, xlo3, 8, vrblvl-1);
+   if(not is_balanced(*xlo3, *xlo4, 7, vrblvl-1))
+      balance(xlo3, xlo4, 8, vrblvl-1);
+   if(not is_balanced(*xlo4, *xlo5, 6, vrblvl-1))
+      balance(xlo4, xlo5, 7, vrblvl-1);
+   if(not is_balanced(*xlo5, *xlo6, 6, vrblvl-1))
+      balance(xlo5, xlo6, 7, vrblvl-1);
+   if(not is_balanced(*xlo6, *xlo7, 6, vrblvl-1))
+      balance(xlo6, xlo7, 7, vrblvl-1);
 }
 
 void make_dd_exponent_zero ( double *xhi, double *xlo, int vrblvl )
@@ -132,6 +199,9 @@ void split_double_double
       if(*xlo6 == 0.0) cout << "xlo6 is zero!" << endl;
       if(*xlo7 == 0.0) cout << "xlo7 is zero!" << endl;
    }
+   dd_12split_balance
+      (xhi0, xhi1, xhi2, xhi3,
+       xlo0, xlo1, xlo2, xlo3, xlo4, xlo5, xlo6, xlo7, vrblvl-1);
 }
 
 void quarter_dd_vector

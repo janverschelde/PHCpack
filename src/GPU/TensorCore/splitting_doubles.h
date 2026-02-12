@@ -70,16 +70,41 @@ void octo_split
  * and then into x4, x5, x6, x7, 6 bits each.
  * If vrblvl > 0, then intermediate results are shown. */
 
+bool is_balanced ( double x, double y, int threshold=13, int vrblvl=0 );
+/*
+ * Returns true if the difference in exponents between two consecutive
+ * quarters x and y equals the threshold, or is less.
+ * If vrblvl > 0, then the exponents are written. */
+
 bool is_quarter_balanced ( double x, double y, int vrblvl=0 );
 /*
  * Returns true if the difference in exponents between two consecutive
  * quarters x and y is 13, or less.
  * If vrblvl > 0, then the exponents are written. */
 
+void balance ( double *x, double *y, int threshold=14, int vrblvl=0 );
+/*
+ * Makes x and y balanced by reduction of one bit of x and
+ * addition of one bit to y, asumming both x and y are positive,
+ * using the threshold exponent. */
+
 void quarter_balance ( double *x, double *y, int vrblvl=0 );
 /*
  * Makes x and y balanced by reduction of one bit of x and
  * addition of one bit to y, asumming both x and y are positive. */
+
+void balance_quarters
+ ( double *x0, double *x1, double *x2, double *x3, int vrblvl=0 );
+/*
+ * Balances the four quarters x0, x1, x2, x3 of a double.
+ * If vrblvl > 0, output is written. */
+
+void octo_balance
+ ( double *x0, double *x1, double *x2, double *x3, 
+   double *x4, double *x5, double *x6, double *x7, int vrblvl=0 );
+/*
+ * Balances the eight parts x0, x1, .., x7 of a double.
+ * If vrblvl > 0, output is written. */
 
 void make_exponent_zero ( double *x, double *pow2fac, int vrblvl=0 );
 /*

@@ -11,11 +11,28 @@ bool is_dd_quarter_balanced
  * returns true if they balanced, false otherwise.
  * If vrblvl > 0, then extra output is written. */
 
+bool is_dd_12split_balanced
+ ( double xhi0, double xhi1, double xhi2, double xhi3,
+   double xlo0, double xlo1, double xlo2, double xlo3,
+   double xlo4, double xlo5, double xlo6, double xlo7, int vrblvl=0 );
+/*
+ * Given the 12 parts of a double double,
+ * returns true if they balanced, false otherwise.
+ * If vrblvl > 0, then extra output is written. */
+
 void dd_balance_quarters
  ( double *xhi0, double *xhi1, double *xhi2, double *xhi3,
    double *xlo0, double *xlo1, double *xlo2, double *xlo3, int vrblvl=0 );
 /*
  * If unbalanced, balances the eight quarters of a double double.
+ * If vrblvl > 0, then extra output is written. */
+
+void dd_12split_balance
+ ( double *xhi0, double *xhi1, double *xhi2, double *xhi3,
+   double *xlo0, double *xlo1, double *xlo2, double *xlo3,
+   double *xlo4, double *xlo5, double *xlo6, double *xlo7, int vrblvl=0 );
+/*
+ * If unbalanced, balances the 12 parts of a double double.
  * If vrblvl > 0, then extra output is written. */
 
 void make_dd_exponent_zero ( double *xhi, double *xlo, int vrblvl=0 );
