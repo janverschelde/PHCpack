@@ -163,6 +163,25 @@ void double_double_matmatmul
  * given in (Bhi, Blo) is an dim-by-ncols matrix B,
  * returns in (Chi, Clo) the matrix matrix multiplication of A with B. */
 
+void transpose_dd_matrix
+ ( int nrows, int ncols,
+   double **Ahi, double **Alo, double **Thi, double **Tlo );
+/*
+ * Given an nrows-by-ncols double double matrix A (Ahi, Alo),
+ * returns an ncols-by-nrols double double matrix T (Thi, Tlo),
+ * which is the transpose of A. */
+
+void recursive_dd_matmatmul
+ ( int nrows, int ncols, int dim,
+   double **Ahi, double **Alo, double **Bhi, double **Blo,
+   double **Chi, double **Clo );
+/*
+ * Given in (Ahi, Alo) is a row major nrows-by-dim matrix A, and
+ * given in (Bhi, Blo) is a column major dim-by-ncols matrix B,
+ * returns in (Chi, Clo) the matrix matrix multiplication of A with B,
+ * using the recursive summation of the inner product,
+ * for better accuracy, for which B must be column major. */
+
 void vectored_dd_product8sum
  ( int dim,
    double *x0, double *x1, double *x2, double *x3,

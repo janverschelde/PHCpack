@@ -26,11 +26,13 @@ int test_vectored_dd_product ( int dim );
 void random_dd_matmatmul
  ( int nrows, int ncols, int nrc,
    double **Ahi, double **Alo, double **Bhi, double **Blo,
-   double **Chi, double **Clo, int vrblvl=0 );
+   double **Chi, double **Clo, double **Rhi, double **Rlo, int vrblvl=0 );
 /*
  * Allocates and generates two random double double matrices of dimension
  * nrows-by-nrc for A, returned in (Ahi, Alo), and nrc-by-ncols for B,
  * returned in (Bho, Blo) and then returns in (Chi, Clo) the product C.
+ * The product R in (Rhi, Rlo) is computed with recursive inner products
+ * for better accuracy in larger dimensions.
  * If vrblvl > 0, all matrices are written. */
 
 int test_quartered_matmatmul
@@ -355,7 +357,7 @@ int test_vectored_dd_product ( int dim )
 void random_dd_matmatmul
  ( int nrows, int ncols, int nrc,
    double **Ahi, double **Alo, double **Bhi, double **Blo,
-   double **Chi, double **Clo, int vrblvl )
+   double **Chi, double **Clo, double **Rhi, double **Rlo, int vrblvl )
 {
    int fail = 0;
 
@@ -363,6 +365,8 @@ void random_dd_matmatmul
    {
       Chi[i] = new double[ncols];
       Clo[i] = new double[ncols];
+      Rhi[i] = new double[ncols];
+      Rlo[i] = new double[ncols];
       Ahi[i] = new double[nrc];
       Alo[i] = new double[nrc];
    }
@@ -409,6 +413,7 @@ void random_dd_matmatmul
             cout << "B[" << i << "][" << j << "] : "
                  << Bhi[i][j] << "  " << Blo[i][j] << endl;
    }
+   cout << "computing double double matrix product plainly ..." << endl;
    double_double_matmatmul(nrows, ncols, nrc, Ahi, Alo, Bhi, Blo, Chi, Clo);
 
    if(vrblvl > 0)
@@ -419,6 +424,43 @@ void random_dd_matmatmul
             cout << "C[" << i << "][" << j << "] : "
                  << Chi[i][j] << "  " << Clo[i][j] << endl;
    }
+   double **Thi = new double*[ncols];
+   double **Tlo = new double*[ncols];
+   for(int i=0; i<ncols; i++)
+   {
+      Thi[i] = new double[nrc];
+      Tlo[i] = new double[nrc];
+   }
+   transpose_dd_matrix(nrc, ncols, Bhi, Blo, Thi, Tlo);
+   cout << "computing innner products recursively ..." << endl;
+   recursive_dd_matmatmul(nrows, ncols, nrc, Ahi, Alo, Thi, Tlo, Rhi, Rlo);
+
+   if(vrblvl > 0)
+   {
+      cout << "the product A*B, computed recursively :" << endl;
+      for(int i=0; i<nrows; i++)
+         for(int j=0; j<ncols; j++)
+            cout << "R[" << i << "][" << j << "] : "
+                 << Rhi[i][j] << "  " << Rlo[i][j] << endl;
+   }
+   double maxerr = 0.0;
+   double err[2],acc[2];
+   err[0] = 0.0; err[1] = 0.0;
+
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         ddf_sub(Chi[i][j], Clo[i][j], Rhi[i][j], Rlo[i][j],
+                 &acc[0], &acc[1]);
+         if(acc[0] < 0.0) ddf_minus(&acc[0], &acc[1]);
+         ddf_inc(&err[0], &err[1], acc[0], acc[1]);
+         if(abs(acc[0]) > maxerr) maxerr = abs(acc[0]);
+      }
+
+   cout << "Differences between plain and recursive computations :" << endl;
+   cout << "-> error sum : "; dd_write(err, 3); cout << endl;
+   cout << scientific << setprecision(3);
+   cout << "-> max error : " << maxerr << endl;
 }
 
 int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
@@ -431,8 +473,11 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
    double **Blo = new double*[nrc];
    double **Chi = new double*[nrows];
    double **Clo = new double*[nrows];
+   double **Rhi = new double*[nrows];
+   double **Rlo = new double*[nrows];
 
-   random_dd_matmatmul(nrows, ncols, nrc, Ahi, Alo, Bhi, Blo, Chi, Clo);
+   random_dd_matmatmul
+      (nrows, ncols, nrc, Ahi, Alo, Bhi, Blo, Chi, Clo, Rhi, Rlo);
 
    double **Ahi0 = new double*[nrows];
    double **Ahi1 = new double*[nrows];
@@ -462,7 +507,7 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
    double **Clo3 = new double*[nrows];
 /*
    fail = test_quartered_matmatmul
-             (nrows, ncols, nrc, Ahi, Alo, Bhi, Blo, Chi, Clo,
+             (nrows, ncols, nrc, Ahi, Alo, Bhi, Blo, Rhi, Rlo,
               Ahi0, Ahi1, Ahi2, Ahi3, Alo0, Alo1, Alo2, Alo3,
               Bhi0, Bhi1, Bhi2, Bhi3, Blo0, Blo1, Blo2, Blo3,
               Chi0, Chi1, Chi2, Chi3, Clo0, Clo1, Clo2, Clo3);
@@ -481,7 +526,7 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
    double **Clo7 = new double*[nrows];
 
    fail = test_12split_matmatmul
-             (nrows, ncols, nrc, Ahi, Alo, Bhi, Blo, Chi, Clo,
+             (nrows, ncols, nrc, Ahi, Alo, Bhi, Blo, Rhi, Rlo,
               Ahi0, Ahi1, Ahi2, Ahi3, 
               Alo0, Alo1, Alo2, Alo3, Alo4, Alo5, Alo6, Alo7,
               Bhi0, Bhi1, Bhi2, Bhi3,
@@ -503,7 +548,7 @@ int test_vectored_dd_matmatmul ( int nrows, int ncols, int nrc )
              Bhi0, Bhi1, Bhi2, Bhi3,
              Blo0, Blo1, Blo2, Blo3, Blo4, Blo5, Blo6, Blo7,
              Chi0, Chi1, Chi2, Chi3,
-             Clo0, Clo1, Clo2, Clo3, Clo4, Clo5, Clo6, Clo7, Chi, Clo);
+             Clo0, Clo1, Clo2, Clo3, Clo4, Clo5, Clo6, Clo7, Rhi, Rlo);
 
    return fail;
 }
@@ -642,6 +687,7 @@ int test_quartered_matmatmul
    if(vrblvl > 0)
    {
       cout << "the vectored product A*B :" << endl;
+      cout << scientific << setprecision(16);
       for(int i=0; i<nrows; i++)
          for(int j=0; j<ncols; j++)
             cout << "V[" << i << "][" << j << "] : "
@@ -815,6 +861,7 @@ int test_12split_matmatmul
    if(vrblvl > 0)
    {
       cout << "the vectored product A*B :" << endl;
+      cout << scientific << setprecision(16);
       for(int i=0; i<nrows; i++)
          for(int j=0; j<ncols; j++)
             cout << "V[" << i << "][" << j << "] : "
@@ -836,6 +883,7 @@ int test_12split_matmatmul
          if(abs(acc[0]) > maxerr) maxerr = abs(acc[0]);
       }
 
+   cout << "Errors from vectored matrix matrix multiplication :" << endl;
    cout << "-> error sum : "; dd_write(err, 3); cout << endl;
    cout << scientific << setprecision(3);
    cout << "-> max error : " << maxerr << endl;
@@ -864,6 +912,7 @@ int test_rewrite_quartered_product
    if(vrblvl > 0)
    {
       cout << "the convoluted quartered matrix A :" << endl;
+      cout << scientific << setprecision(16);
       for(int i=0; i<8*nrows; i++)
          for(int j=0; j<8*nrc; j++)
             cout << "cA[" << i << "][" << j << "] : " << cA[i][j] << endl;
@@ -1083,6 +1132,7 @@ int test_rewrite_12splitted_product
    if(vrblvl > 0)
    {
       cout << "the convoluted 12-splitted matrix A :" << endl;
+      cout << scientific << setprecision(16);
       for(int i=0; i<12*nrows; i++)
          for(int j=0; j<12*nrc; j++)
             cout << "cA[" << i << "][" << j << "] : " << cA[i][j] << endl;

@@ -501,6 +501,31 @@ void double_double_matmatmul
       }
 }
 
+void transpose_dd_matrix
+ ( int nrows, int ncols,
+   double **Ahi, double **Alo, double **Thi, double **Tlo )
+{
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+      {
+         Thi[j][i] = Ahi[i][j];
+         Tlo[j][i] = Alo[i][j];
+      }
+}
+
+void recursive_dd_matmatmul
+ ( int nrows, int ncols, int dim,
+   double **Ahi, double **Alo, double **Bhi, double **Blo,
+   double **Chi, double **Clo )
+{
+   double acchi,acclo;
+
+   for(int i=0; i<nrows; i++)
+      for(int j=0; j<ncols; j++)
+         recursive_dd_product
+            (dim, Ahi[i], Alo[i], Bhi[j], Blo[j], &Chi[i][j], &Clo[i][j]);
+}
+
 void vectored_dd_product8sum
  ( int dim,
    double *x0, double *x1, double *x2, double *x3,
