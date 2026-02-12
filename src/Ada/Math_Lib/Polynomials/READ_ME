@@ -1,4 +1,4 @@
-Multivariate polynomials and polynomial systems over rings in PHCv2.4.90
+Multivariate polynomials and polynomial systems over rings in PHCv2.4.93
 
 New in release 2 is the availability of multiprecision numbers.
 The data structures are entirely redefined using Ada 95 concepts.
@@ -48,6 +48,7 @@ standard_complex_polynomials_io   : input/output of complex polynomials
 standard_random_polynomials       : generate sparse and dense polynomials
 standard_complex_poly_strings     : string representations of polynomials
 standard_complex_laurentials      : Laurent polynomials with standard complex
+standard_complex_laur_readers     : input procedures for Laurent polynomials
 standard_complex_laurentials_io   : i/o for Laurent polynomials
 standard_random_laurentials       : random Laurent polynomials
 standard_complex_laur_strings     : string representations of Laurentials

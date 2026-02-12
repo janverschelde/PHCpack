@@ -1,3 +1,6 @@
+Wed 11 Feb 2026 : factored out standard_complex_laur_readers of the
+  package body standard_complex_laurentials_io.adb.
+
 Sun 3 Mar 2024 : extended the tests in test_parse_polynomials.
   Fixed the sizes of the multiprecision numbers
   in {pent,octo,deca,hexa}dobl_complex_{poly,laur}_strings.adb.
