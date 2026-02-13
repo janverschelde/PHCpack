@@ -9,6 +9,7 @@ with Standard_Random_Vectors;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Double_Real_Powered_Series;
+with Test_Real_Powered_Series;
 
 package body Random_Laurent_Homotopy is
 
@@ -73,6 +74,43 @@ package body Random_Laurent_Homotopy is
           end loop;
         end if;
         tpw(i) := new Standard_Floating_Vectors.Vector'(cti);
+      end;
+    end loop;
+  end Random_Laurent_System;
+
+  procedure Random_Laurent_System
+              ( nbp,dim,low,upp,size : in integer32;
+                nbm : in Standard_Integer_Vectors.Vector;
+                deg : out Standard_Integer_VecVecs.Array_of_VecVecs;
+                cff : out Standard_Complex_VecVecs.Array_of_VecVecs;
+                tpw : out Standard_Floating_VecVecs.Array_of_VecVecs;
+                intpow : in boolean := false ) is
+  begin
+    for i in 1..nbp loop
+      declare
+        dpi : constant Standard_Integer_VecVecs.VecVec(1..nbm(i))
+            := Random_Polynomial_Support(nbm(i),dim,low,upp);
+        cfi : Standard_Complex_VecVecs.VecVec(1..nbm(i));
+        pwi : Standard_Floating_VecVecs.VecVec(1..nbm(i));
+      begin
+        deg(i) := new Standard_Integer_VecVecs.VecVec'(dpi);
+        for j in 1..nbm(i) loop
+          declare
+            jcf : Standard_Complex_Vectors.Vector(0..size);
+            jpw : Standard_Floating_Vectors.Vector(1..size);
+          begin
+            Test_Real_Powered_Series.Random_Series(size,jcf,jpw);
+            if intpow then
+              for k in jpw'range loop
+                jpw(k) := Standard_Floating_Numbers.create(k);
+              end loop;
+            end if;
+            cfi(j) := new Standard_Complex_Vectors.Vector'(jcf);
+            pwi(j) := new Standard_Floating_Vectors.Vector'(jpw);
+          end;
+        end loop;
+        cff(i) := new Standard_Complex_VecVecs.VecVec'(cfi);
+        tpw(i) := new Standard_Floating_VecVecs.VecVec'(pwi);
       end;
     end loop;
   end Random_Laurent_System;

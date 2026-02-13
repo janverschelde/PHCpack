@@ -3,6 +3,7 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_VecVecs;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Laurentials;
+with Standard_Complex_Laur_Systems;
 
 package Real_Powered_Homotopy_IO is
 
@@ -64,6 +65,72 @@ package Real_Powered_Homotopy_IO is
   --   Writes the Laurent homotopy polynomial with real powered series
   --   to standard output or to file, using the symbol t,
   --   in new line format, with a new line for every term.
+
+-- WRITE SYSTEMS :
+
+  procedure put ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                  c : in Standard_Complex_VecVecs.Array_of_VecVecs;
+                  p : in Standard_Floating_VecVecs.Array_of_VecVecs;
+                  t : in character := 't'; vrblvl : in integer32 := 0 );
+  procedure put ( file : in file_type;
+                  q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                  c : in Standard_Complex_VecVecs.Array_of_VecVecs;
+                  p : in Standard_Floating_VecVecs.Array_of_VecVecs;
+                  t : in character := 't'; vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Writes the Laurent homotopy system with real powered series
+  --   coefficients to standard output or to file, using the symbol t.
+
+  procedure put_line ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                       c : in Standard_Complex_VecVecs.Array_of_VecVecs;
+                       p : in Standard_Floating_VecVecs.Array_of_VecVecs;
+                       t : in character := 't'; vrblvl : in integer32 := 0 );
+  procedure put_line ( file : in file_type;
+                       q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                       c : in Standard_Complex_VecVecs.Array_of_VecVecs;
+                       p : in Standard_Floating_VecVecs.Array_of_VecVecs;
+                       t : in character := 't'; vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Writes the Laurent homotopy system with real powered series
+  --   coefficients to standard output or to file, using the symbol t,
+  --   in new line format, with a new line for every term.
+
+  procedure put ( npol,nvar,size : in integer32;
+                  q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                  c : in Standard_Complex_VecVecs.Array_of_VecVecs;
+                  p : in Standard_Floating_VecVecs.Array_of_VecVecs;
+                  t : in character := 't'; vrblvl : in integer32 := 0 );
+  procedure put ( file : in file_type; npol,nvar,size : in integer32;
+                  q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                  c : in Standard_Complex_VecVecs.Array_of_VecVecs;
+                  p : in Standard_Floating_VecVecs.Array_of_VecVecs;
+                  t : in character := 't'; vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Writes the Laurent homotopy system with real powered series
+  --   coefficients to standard output or to file, using the symbol t.
+  --   The first line of the output is the number of polynomials (npol),
+  --   the number of variables (nvar) and the size of each series.
+
+  procedure put_line ( npol,nvar,size : in integer32;
+                       q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                       c : in Standard_Complex_VecVecs.Array_of_VecVecs;
+                       p : in Standard_Floating_VecVecs.Array_of_VecVecs;
+                       t : in character := 't'; vrblvl : in integer32 := 0 );
+  procedure put_line ( file : in file_type; npol,nvar,size : in integer32;
+                       q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                       c : in Standard_Complex_VecVecs.Array_of_VecVecs;
+                       p : in Standard_Floating_VecVecs.Array_of_VecVecs;
+                       t : in character := 't'; vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Writes the Laurent homotopy system with real powered series
+  --   coefficients to standard output or to file, using the symbol t,
+  --   in new line format, with a new line for every term.
+  --   The first line of the output is the number of polynomials (npol),
+  --   the number of variables (nvar) and the size of each series.
 
 -- PARSE INPUT :
 
@@ -136,13 +203,68 @@ package Real_Powered_Homotopy_IO is
 
   -- ON ENTRY :
   --   file     must be opened for input;
-  --   n        number of variables in the string representations;
+  --   n        number of variables in the polynomials;
   --   size     is (an upper bound on) the size of series coefficients;
   --   t        symbol used in the series;
   --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   q        a Laurent polynomial;
+  --   c        coefficients of the power series;
+  --   p        powers of the series.
+
+-- READING SYSTEMS :
+
+  procedure get ( npol,nvar : out integer32;
+                  q : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                  c : out Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
+                  p : out Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
+                  t : in character := 't'; vrblvl : in integer32 := 0 );
+  procedure get ( file : in file_type; npol,nvar : out integer32;
+                  q : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                  c : out Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
+                  p : out Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
+                  t : in character := 't'; vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Reads a real powered Laurent homotopy from standard input
+  --   or from file, after the first line with the number of
+  --   polynomials and the number of variables has been read.
+
+  -- ON ENTRY :
+  --   file     must be opened for input;
+  --   t        symbol used in the series;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   npol     number of polynomials in the homotopy;
+  --   nvar     number of variables in the polynomials;
+  --   q        a Laurent polynomial homotopy;
+  --   c        coefficients of the power series;
+  --   p        powers of the series.
+
+  procedure get ( q : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                  c : out Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
+                  p : out Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
+                  t : in character := 't'; vrblvl : in integer32 := 0 );
+  procedure get ( file : in file_type;
+                  q : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                  c : out Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
+                  p : out Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
+                  t : in character := 't'; vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Reads a real powered Laurent homotopy from standard input
+  --   or from file, starting by reading the number of polynomials
+  --   and the number of variables.
+
+  -- ON ENTRY :
+  --   file     must be opened for input;
+  --   t        symbol used in the series;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   q        a Laurent polynomial homotopy;
   --   c        coefficients of the power series;
   --   p        powers of the series.
 

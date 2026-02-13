@@ -1,3 +1,8 @@
+Fri 13 Feb 2026 : extended random_laurent_homotopy with a procedure to
+  generate coefficients of any fixed size, added input/output procedures
+  for systems in real_powered_homotopy_io, tested by an extra procedure
+  in test_real_powered_homotopy.
+
 Thu 12 Feb 2026 : extended real_powered_homotopy_io.adb with reading of the
   monomial factors, tested by test_real_powered_homotopy.adb.
 

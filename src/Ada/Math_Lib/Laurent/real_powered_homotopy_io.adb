@@ -1,3 +1,4 @@
+with String_Splitters;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
 with Standard_Complex_Numbers;
@@ -222,6 +223,112 @@ package body Real_Powered_Homotopy_IO is
     put_line(file,";");
   end put_line;
 
+-- WRITE SYSTEMS :
+
+  procedure put ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                  c : in Standard_Complex_VecVecs.Array_of_VecVecs;
+                  p : in Standard_Floating_VecVecs.Array_of_VecVecs;
+                  t : in character := 't'; vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in Real_Powered_Homotopy_IO.put 2 ...");
+    end if;
+    put(standard_output,q,c,p,t,vrblvl);
+  end put;
+
+  procedure put ( file : in file_type;
+                  q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                  c : in Standard_Complex_VecVecs.Array_of_VecVecs;
+                  p : in Standard_Floating_VecVecs.Array_of_VecVecs;
+                  t : in character := 't'; vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in Real_Powered_Homotopy_IO.put 3 ...");
+    end if;
+    for i in q'range loop
+      put(file,q(i),c(i).all,p(i).all,t,vrblvl-1);
+    end loop;
+  end put;
+
+  procedure put_line ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                       c : in Standard_Complex_VecVecs.Array_of_VecVecs;
+                       p : in Standard_Floating_VecVecs.Array_of_VecVecs;
+                       t : in character := 't'; vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in Real_Powered_Homotopy_IO.put_line 2 ...");
+    end if;
+    put_line(standard_output,q,c,p,t,vrblvl);
+  end put_line;
+
+  procedure put_line ( file : in file_type;
+                       q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                       c : in Standard_Complex_VecVecs.Array_of_VecVecs;
+                       p : in Standard_Floating_VecVecs.Array_of_VecVecs;
+                       t : in character := 't'; vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in Real_Powered_Homotopy_IO.put_line 3 ...");
+    end if;
+    for i in q'range loop
+      put_line(file,q(i),c(i).all,p(i).all,t,vrblvl-1);
+    end loop;
+  end put_line;
+
+  procedure put ( npol,nvar,size : in integer32;
+                  q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                  c : in Standard_Complex_VecVecs.Array_of_VecVecs;
+                  p : in Standard_Floating_VecVecs.Array_of_VecVecs;
+                  t : in character := 't'; vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in Real_Powered_Homotopy_IO.put 4 ...");
+    end if;
+    put(standard_output,npol,nvar,size,q,c,p,t,vrblvl);
+  end put;
+
+  procedure put ( file : in file_type; npol,nvar,size : in integer32;
+                  q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                  c : in Standard_Complex_VecVecs.Array_of_VecVecs;
+                  p : in Standard_Floating_VecVecs.Array_of_VecVecs;
+                  t : in character := 't'; vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in Real_Powered_Homotopy_IO.put 5 ...");
+    end if;
+    put(npol,1); put(" ");
+    put(nvar,1); put(" ");
+    put(size,1); new_line;
+    put_line(file,q,c,p,t,vrblvl);
+  end put;
+
+  procedure put_line ( npol,nvar,size : in integer32;
+                       q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                       c : in Standard_Complex_VecVecs.Array_of_VecVecs;
+                       p : in Standard_Floating_VecVecs.Array_of_VecVecs;
+                       t : in character := 't'; vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in Real_Powered_Homotopy_IO.put_line 4 ...");
+    end if;
+    put_line(standard_output,npol,nvar,size,q,c,p,t,vrblvl);
+  end put_line;
+
+  procedure put_line ( file : in file_type; npol,nvar,size : in integer32;
+                       q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                       c : in Standard_Complex_VecVecs.Array_of_VecVecs;
+                       p : in Standard_Floating_VecVecs.Array_of_VecVecs;
+                       t : in character := 't'; vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in Real_Powered_Homotopy_IO.put_line 5 ...");
+    end if;
+    put(file,npol,1); put(file," ");
+    put(file,nvar,1); put(file," ");
+    put(file,size,1); new_line(file);
+    put_line(file,q,c,p,t,vrblvl);
+  end put_line;
+
 -- PARSE INPUT :
 
   function number_of_terms
@@ -440,6 +547,93 @@ package body Real_Powered_Homotopy_IO is
         Standard_Complex_Laurentials.Clear(trm);
       end;
     end loop;
+  end get;
+
+-- READING SYSTEMS :
+
+  procedure get ( npol,nvar : out integer32;
+                  q : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                  c : out Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
+                  p : out Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
+                  t : in character := 't'; vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0
+     then put_line("-> in Real_Powered_Homotopy_IO.get 2 ...");
+    end if;
+    get(standard_input,npol,nvar,q,c,p,t,vrblvl);
+  end get;
+
+  procedure get ( file : in file_type; npol,nvar : out integer32;
+                  q : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                  c : out Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
+                  p : out Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
+                  t : in character := 't'; vrblvl : in integer32 := 0 ) is
+
+    n,m : natural;
+    sys : String_Splitters.Link_to_Array_of_Strings;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Real_Powered_Homotopy_IO.get 3 ...");
+    end if;
+    String_Splitters.get(file,n,m,sys);
+    if vrblvl > 0 then
+      put("Read "); put(integer32(n),1); put(" strings, ");
+      put(integer32(m),1); put_line(" .. as number of variables ...");
+      npol := integer32(n);
+      nvar := integer32(m);
+    end if;
+    if Symbol_Table.Empty
+     then Symbol_Table.Init(natural32(nvar));
+    end if;
+    declare
+      sq : Standard_Complex_Laur_Systems.Laur_Sys(1..npol);
+      cf : Standard_Complex_VecVecs.Array_of_VecVecs(1..npol);
+      pw : Standard_Floating_VecVecs.Array_of_VecVecs(1..npol);
+    begin
+      for i in 1..npol loop
+        declare
+          nbt : constant integer32
+              := number_of_terms(sys(integer(i)).all,vrblvl-1);
+          cfi : Standard_Complex_VecVecs.VecVec(1..nbt);
+          pwi : Standard_Floating_VecVecs.VecVec(1..nbt);
+        begin
+          parse_string(sys(integer(i)).all,nvar,sq(i),cfi,pwi,t,vrblvl-1);
+          cf(i) := new Standard_Complex_VecVecs.VecVec'(cfi);
+          pw(i) := new Standard_Floating_VecVecs.VecVec'(pwi);
+        end;
+      end loop;
+      q := new Standard_Complex_Laur_Systems.Laur_Sys'(sq);
+      c := new Standard_Complex_VecVecs.Array_of_VecVecs'(cf);
+      p := new Standard_Floating_VecVecs.Array_of_VecVecs'(pw);
+    end;
+  end get;
+
+  procedure get ( q : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                  c : out Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
+                  p : out Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
+                  t : in character := 't'; vrblvl : in integer32 := 0 ) is
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Real_Powered_Homotopy_IO.get 4 ...");
+    end if;
+    get(standard_input,q,c,p,t,vrblvl); -- not so useful ...
+  end get;
+
+  procedure get ( file : in file_type;
+                  q : out Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                  c : out Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
+                  p : out Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
+                  t : in character := 't'; vrblvl : in integer32 := 0 ) is
+
+    npol,nvar : integer32 := 0;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Real_Powered_Homotopy_IO.get 5 ...");
+    end if;
+    get(file,npol,nvar,q,c,p,t,vrblvl);
   end get;
 
 end Real_Powered_Homotopy_IO;

@@ -60,6 +60,35 @@ package Random_Laurent_Homotopy is
   --   cff      coefficients of the monomials;
   --   tpw      powers of t in the coefficients of the homotopy.      
 
+  procedure Random_Laurent_System
+              ( nbp,dim,low,upp,size : in integer32;
+                nbm : in Standard_Integer_Vectors.Vector;
+                deg : out Standard_Integer_VecVecs.Array_of_VecVecs;
+                cff : out Standard_Complex_VecVecs.Array_of_VecVecs;
+                tpw : out Standard_Floating_VecVecs.Array_of_VecVecs;
+                intpow : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Generates a random Laurent polynomial system,
+  --   where the coefficients are real powered series of the given size.
+
+  -- REQUIRED :
+  --   nbm'range = deg'range = cff'range = ctp'range = 1..nbp.
+
+  -- ON ENTRY :
+  --   nbp      number of polynomials in the system;
+  --   dim      number of variables in the polynomials;
+  --   low      lower bound for the exponents in the monomials;
+  --   upp      upper bound for the exponents in the monomials,
+  --   nbm      nbm(i) equals the number of monomials in the i-th polynomial;
+  --   size     size of the power series;
+  --   intpow   if true, then converts the real powers of t to integers.
+
+  -- ON RETURN :
+  --   deg      supports of the monomials in the system;
+  --   cff      coefficients of the monomials;
+  --   tpw      powers of t in the coefficients of the homotopy.      
+
   procedure Product_Homotopy_Polynomial
               ( pdg : in Standard_Integer_VecVecs.VecVec;
                 pcf : in Standard_Complex_Vectors.Vector;
