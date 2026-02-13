@@ -42,6 +42,7 @@ package body Test_Real_Powered_Homotopy is
     ans : character;
     file : file_type;
     name : String_Splitters.Link_to_String;
+    nsyms : integer32;
   
   begin
     new_line;
@@ -73,6 +74,11 @@ package body Test_Real_Powered_Homotopy is
     put_line("Closed file.  Reopening again for reading ...");
     new_line;
     Communications_with_User.Open_Input_File(file,name.all);
+    nsyms := integer32(Symbol_Table.number);
+    put("Number of symbols : "); put(nsyms,1); new_line;
+    if nsyms = 0 
+     then Symbol_Table.Init(natural32(nvr));
+    end if;
     declare
       q2 : Standard_Complex_Laurentials.Poly;
       c2 : Standard_Complex_VecVecs.VecVec(1..nbr);
@@ -83,6 +89,14 @@ package body Test_Real_Powered_Homotopy is
         put("-> power series "); put(i,1); put_line(" :");
         Real_Powered_Series_IO.put_line(cff(i).all,pwt(i).all);
       end loop;
+      put_line("Laurent polynomial read from file :");
+      Standard_Complex_Laurentials_io.put(q2); new_line;
+      new_line;
+      put_line("-> the real powered Laurent homotopy polynomial :");
+      if ans = 'y'
+       then Real_Powered_Homotopy_IO.put_line(q,cff,pwt);
+       else Real_Powered_Homotopy_IO.put(q,cff,pwt);
+      end if;
     end;
   end Test_Random_Polynomial;
 

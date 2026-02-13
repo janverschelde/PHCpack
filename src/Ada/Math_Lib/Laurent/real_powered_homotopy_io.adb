@@ -1,10 +1,13 @@
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
+with Standard_Complex_Numbers;
 with Characters_and_Numbers;
-with Standard_Complex_Laurentials_io;
+with Standard_Integer_Vectors;
 with Symbol_Table;
 with Standard_Complex_Poly_Strings;
+with Standard_Complex_Laur_Readers;
 with Standard_Complex_Laur_Strings;
+with Standard_Complex_Laurentials_IO;
 with Real_Powered_Series_IO;
 
 package body Real_Powered_Homotopy_IO is
@@ -413,6 +416,29 @@ package body Real_Powered_Homotopy_IO is
       end if;
       Real_Powered_Series_IO.get(file,size,c(idx),p(idx),t,vrblvl-1);
      -- the current character read is ')' the closing of the series
+      ch := ' ';
+      declare
+        cnt : integer32 := 0;
+        trm : Standard_Complex_Laurentials.Term;
+        pol : Standard_Complex_Laurentials.Poly;
+      begin
+        trm.cf := Standard_Complex_Numbers.create(1.0);
+        trm.dg := new Standard_Integer_Vectors.Vector'(1..n => 0);
+        while not end_of_file(file) loop
+          get(file,ch);
+          exit when end_of_file(file) or ch = '*';
+        end loop;
+        exit when end_of_file(file);
+        get(file,ch); -- skip '*'
+        Standard_Complex_Laur_Readers.Read_Factor
+          (file,cnt,ch,natural32(n),trm.dg,pol);
+        if vrblvl > 0 then
+          put("trm : "); Standard_Complex_Laurentials_IO.put(trm); new_line;
+         -- put("pol : "); Standard_Complex_Laurentials_IO.put(pol); new_line;
+        end if;
+        Standard_Complex_Laurentials.Add(q,trm);
+        Standard_Complex_Laurentials.Clear(trm);
+      end;
     end loop;
   end get;
 
