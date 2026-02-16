@@ -1,3 +1,8 @@
+Mon 16 Feb 2026 : modified real_powered_homotopy_io.adb to handle constant
+  terms well.  Bug fixed in real_powered_homotopy_io.adb for zero vrblvl.
+  New package main_real_powered_series, called by ts_rpownew.
+  Updated laurent.gpr.
+
 Fri 13 Feb 2026 : extended random_laurent_homotopy with a procedure to
   generate coefficients of any fixed size, added input/output procedures
   for systems in real_powered_homotopy_io, tested by an extra procedure

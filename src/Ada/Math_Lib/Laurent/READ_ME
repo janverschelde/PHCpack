@@ -59,3 +59,6 @@ double_newton_puiseux            : Newton_Puiseux for real powered series
 test_newton_puiseux              : tests Newton-Puiseux for real powers
 ts_hunnew                        : calls main test on Newton-Puiseux
 ------------------------------------------------------------------------------
+main_real_powered_series         : main procedure for phc -u
+ts_rpownew                       : calls main of main_real_powered_series
+------------------------------------------------------------------------------

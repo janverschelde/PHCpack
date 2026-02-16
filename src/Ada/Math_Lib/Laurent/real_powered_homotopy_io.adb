@@ -150,6 +150,8 @@ package body Real_Powered_Homotopy_IO is
     -- DESCRIPTION :
     --   Writes the term trm, and continues if continue is set to true.
 
+      zerodeg : boolean := true;
+
     begin
       if idx = 0
        then put(file,"(");
@@ -157,8 +159,18 @@ package body Real_Powered_Homotopy_IO is
       end if;
       idx := idx + 1;
       Real_Powered_Series_io.put(file,c(idx).all,p(idx).all,t);
-      put(file,")*");
-      Standard_Complex_Laurentials_IO.put(file,trm.dg,std => true, pow => '^');
+      for i in trm.dg'range loop
+        if trm.dg(i) /= 0
+         then zerodeg := false; exit;
+        end if;
+      end loop;
+      if zerodeg then
+        put(file,")");
+      else
+        put(file,")*");
+        Standard_Complex_Laurentials_IO.put
+          (file,trm.dg,std => true, pow => '^');
+      end if;
       continue := true;
     end Write_Term;
 
@@ -200,6 +212,8 @@ package body Real_Powered_Homotopy_IO is
     -- DESCRIPTION :
     --   Writes the term trm, and continues if continue is set to true.
 
+      zerodeg : boolean := true;
+
     begin
       if idx = 0
        then put(file,"(");
@@ -207,8 +221,18 @@ package body Real_Powered_Homotopy_IO is
       end if;
       idx := idx + 1;
       Real_Powered_Series_io.put_line(file,c(idx).all,p(idx).all,t);
-      put(file,")*");
-      Standard_Complex_Laurentials_IO.put(file,trm.dg,std => true, pow => '^');
+      for i in trm.dg'range loop
+        if trm.dg(i) /= 0
+         then zerodeg := false; exit;
+        end if;
+      end loop;
+      if zerodeg then
+        put(file,")");
+      else
+        put(file,")*");
+        Standard_Complex_Laurentials_IO.put
+          (file,trm.dg,std => true, pow => '^');
+      end if;
       continue := true;
     end Write_Term;
 
@@ -580,9 +604,9 @@ package body Real_Powered_Homotopy_IO is
     if vrblvl > 0 then
       put("Read "); put(integer32(n),1); put(" strings, ");
       put(integer32(m),1); put_line(" .. as number of variables ...");
-      npol := integer32(n);
-      nvar := integer32(m);
     end if;
+    npol := integer32(n);
+    nvar := integer32(m);
     if Symbol_Table.Empty
      then Symbol_Table.Init(natural32(nvar));
     end if;
