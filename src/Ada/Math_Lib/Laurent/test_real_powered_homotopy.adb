@@ -2,14 +2,19 @@ with Ada.Text_IO;                       use Ada.Text_IO;
 with String_Splitters;
 with Communications_with_User;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Standard_Complex_Numbers;
 with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
+with Standard_Complex_Numbers;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
+with Standard_Complex_Vectors_IO;       use Standard_Complex_Vectors_IO;
 with Standard_Complex_VecVecs;
+with Standard_Complex_Matrices;
+with Standard_Complex_Matrices_IO;      use Standard_Complex_Matrices_IO;
+with Standard_Numerical_Rank;
 with Symbol_Table;
 with Standard_Complex_Laurentials;
 with Standard_Complex_Laurentials_io;
@@ -18,6 +23,7 @@ with Standard_Complex_Laur_Systems;
 with Real_Powered_Series_IO;
 with Random_Laurent_Homotopy;
 with Test_Real_Powered_Series;
+with Real_Powered_Homotopy;
 with Real_Powered_Homotopy_io;
 
 package body Test_Real_Powered_Homotopy is
@@ -169,10 +175,52 @@ package body Test_Real_Powered_Homotopy is
     end;
   end Test_String_Polynomial;
 
+  procedure Random_System
+             ( dim,low,upp,size : in integer32;
+               mbn : in Standard_Integer_Vectors.Vector;
+               intpow : in boolean;
+               eqs : out Standard_Complex_Laur_Systems.Laur_Sys;
+               cff : out Standard_Complex_VecVecs.Array_of_VecVecs;
+               pwt : out Standard_Floating_VecVecs.Array_of_VecVecs ) is
+
+  -- DESCRIPTION :
+  --   Generates a random Laurent system of dimension dim.
+
+  -- ON ENTRY :
+  --   dim     number of equations and variables;
+  --   low     lower bound on the exponents of the monomials;
+  --   upp     upper bound on the exponents of the monomials;
+  --   size    size of the power series coefficients;
+  --   mbn     mbn(i) equals the number of monomials in polynomial i;
+  --   intpow  flag for integer powers of the power series.
+
+  -- ON RETURN :
+  --   eqs     random Laurent polynomials;
+  --   cff     coefficients of each power series;
+  --   pwt     powers of the each power series.
+
+    deg : Standard_Integer_VecVecs.Array_of_VecVecs(1..dim);
+
+  begin
+    Random_Laurent_Homotopy.Random_Laurent_System
+      (dim,dim,low,upp,size,mbn,deg,cff,pwt,intpow);
+    for i in deg'range loop
+      eqs(i) := Standard_Complex_Laurentials.Null_Poly;
+      for j in deg(i)'range loop
+        declare
+          trm : Standard_Complex_Laurentials.Term;
+        begin
+          trm.cf := Standard_Complex_Numbers.Create(1.0);
+          trm.dg := Standard_Complex_Laurentials.Degrees(deg(i)(j));
+          Standard_Complex_Laurentials.Add(eqs(i),trm);
+        end;
+      end loop;
+    end loop;
+  end Random_System;
+
   procedure Test_Random_System ( dim,nbr,size : in integer32 ) is
 
     q : Standard_Complex_Laur_Systems.Laur_Sys(1..dim);
-    d : Standard_Integer_VecVecs.Array_of_VecVecs(1..dim);
     c : Standard_Complex_VecVecs.Array_of_VecVecs(1..dim);
     p : Standard_Floating_VecVecs.Array_of_VecVecs(1..dim);
     m : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => nbr);
@@ -182,24 +230,10 @@ package body Test_Real_Powered_Homotopy is
     name : String_Splitters.Link_to_String;
 
   begin
-    new_line;
     put("Integer powers of the series ? (y/n) ");
     Communications_with_User.Ask_Yes_or_No(ans);
     integer_powers := (ans = 'y');
-    Random_Laurent_Homotopy.Random_Laurent_System
-      (dim,dim,-9,9,size,m,d,c,p,integer_powers);
-    for i in d'range loop
-      q(i) := Standard_Complex_Laurentials.Null_Poly;
-      for j in d(i)'range loop
-        declare
-          trm : Standard_Complex_Laurentials.Term;
-        begin
-          trm.cf := Standard_Complex_Numbers.Create(1.0);
-          trm.dg := Standard_Complex_Laurentials.Degrees(d(i)(j));
-          Standard_Complex_Laurentials.Add(q(i),trm);
-        end;
-      end loop;
-    end loop;
+    Random_System(dim,-9,9,size,m,integer_powers,q,c,p);
     new_line;
     put("new line format ? (y/n) ");
     Communications_with_User.Ask_Yes_or_No(ans);
@@ -231,29 +265,63 @@ package body Test_Real_Powered_Homotopy is
     end;
   end Test_Random_System;
 
+  procedure Test_Regularity ( dim,nbr,size : in integer32 ) is
+
+    q : Standard_Complex_Laur_Systems.Laur_Sys(1..dim);
+    c : Standard_Complex_VecVecs.Array_of_VecVecs(1..dim);
+    p : Standard_Floating_VecVecs.Array_of_VecVecs(1..dim);
+    m : constant Standard_Integer_Vectors.Vector(1..dim) := (1..dim => nbr);
+    ans : character;
+    integer_powers : boolean;
+    A : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    b : Standard_Complex_Vectors.Vector(1..dim);
+    tol : constant double_float := 1.0E-14;
+    rnk : integer32;
+
+  begin
+    put("Integer powers of the series ? (y/n) ");
+    Communications_with_User.Ask_Yes_or_No(ans);
+    integer_powers := (ans = 'y');
+    Random_System(dim,0,1,size,m,integer_powers,q,c,p);
+    new_line;
+    Real_Powered_Homotopy_IO.put_line(dim,dim,size,q,c,p);
+    Real_Powered_Homotopy.Get_Constant_Coefficients(q,c,A,b,1);
+    put_line("The coefficient matrix :"); put(A);
+    put_line("The right hand side vector :"); put_line(b);
+    rnk := integer32(Standard_Numerical_Rank.Numerical_Rank(A,tol));
+    put("-> the numerical rank : "); put(rnk,1); new_line;
+    if rnk = dim
+     then put_line("The initial solution is regular.");
+     else put_line("The initial solution is singular.");
+    end if;
+  end Test_Regularity;
+
   procedure Main is
 
     nbr,nvr,size : integer32 := 0;
     ans : character;
 
   begin
+    new_line;
     put("Give the number of variables : "); get(nvr);
     put("Give the number of monomials : "); get(nbr);
     put("Give the size of each series : "); get(size);
     new_line;
-    put("Test output to string ? (y/n) ");
-    Communications_with_User.Ask_Yes_or_No(ans);
-    if ans = 'y' then
-      Test_String_Polynomial(nbr,nvr,size);
-    else
-      new_line;
-      put("Test output of system ? (y/n) ");
-      Communications_with_User.Ask_Yes_or_No(ans);
-      if ans = 'y'
-       then Test_Random_System(nvr,nbr,size);
-       else Test_Random_Polynomial(nbr,nvr,size);
-      end if;
-    end if;
+    put_line("MENU for testing real powered homotopies :");
+    put_line("  1. test string output/input");
+    put_line("  2. test output/input of one Laurent polynomial");
+    put_line("  3. test output/input of a Laurent system");
+    put_line("  4. test regularity of a random system");
+    put("Type 1, 2, 3, or 4 to select a test : ");
+    Communications_with_User.Ask_Alternative(ans,"1234");
+    new_line;
+    case ans is
+      when '1' => Test_String_Polynomial(nbr,nvr,size);
+      when '2' => Test_Random_Polynomial(nbr,nvr,size);
+      when '3' => Test_Random_System(nvr,nbr,size);
+      when '4' => Test_Regularity(nvr,nbr,size);
+      when others => null;
+    end case;
   end Main;
 
 end Test_Real_Powered_Homotopy;

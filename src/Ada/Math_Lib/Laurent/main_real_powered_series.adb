@@ -4,55 +4,11 @@ with Communications_with_User;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
 with Standard_Complex_VecVecs;
+with Standard_Complex_Laur_Systems;
+with Real_Powered_Homotopy;
 with Real_Powered_Homotopy_IO;
 
 package body Main_Real_Powered_Series is
-
-  function Is_Linear ( p : Standard_Complex_Laurentials.Poly )
-                     return boolean is
-
-    res : boolean := true;
-
-    procedure Is_Term_Linear ( t : in Standard_Complex_Laurentials.Term;
-                               continue : out boolean ) is
-   
-      sumdeg : integer32 := 0;
-
-    begin
-      for i in t.dg'range loop
-        if t.dg(i) < 0 then
-          res := false;
-        elsif t.dg(i) /= 0 and t.dg(i) /= 1 then
-          res := false;
-        else
-          sumdeg := sumdeg + t.dg(i);
-          if sumdeg > 1
-           then res := false;
-          end if;
-        end if;
-        exit when (not res);
-      end loop;
-      continue := res;
-    end Is_Term_Linear;
-
-    procedure Are_Terms_Linear is
-      new Standard_Complex_Laurentials.Visiting_Iterator(Is_Term_Linear);
-   
-  begin
-    Are_Terms_Linear(p);
-    return res;
-  end Is_Linear;
-
-  function Is_Linear ( p : Standard_Complex_Laur_Systems.Laur_Sys )
-                     return boolean is
-  begin
-    for i in p'range loop
-      if not Is_Linear(p(i))
-       then return false;
-      end if;
-    end loop;
-    return true;
-  end Is_Linear;
 
   procedure main ( vrblvl : in integer32 := 0 ) is
 
@@ -92,7 +48,7 @@ package body Main_Real_Powered_Series is
         (outfile,dim,dim,size,lq.all,lc.all,lp.all);
       new_line;
       new_line(outfile);
-      if Is_Linear(lq.all) then
+      if Real_Powered_Homotopy.Is_Linear(lq.all) then
         put_line("The system is linear.");
         put_line(outfile,"The system is linear.");
       else
