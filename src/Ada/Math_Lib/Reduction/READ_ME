@@ -1,4 +1,4 @@
-Numerical Linear Algebra in PHCv2.4.86
+Numerical Linear Algebra in PHCv2.4.93
 
 This "Reduction" directory implements "row reduction" on linear systems
 of floating-point number of various precisions: double, double double,
@@ -194,6 +194,11 @@ ts_hdsvd                           : main test on hexa double SVD
 ts_mpsvd                           : main test on multiprecision SVD
 ts_svd                             : main test on the SVD
 ts_perfdsvd                        : develop better performing SVD
+-------------------------------------------------------------------------------
+standard_numerical_rank            : numerical rank by SVD for doubles
+dobldobl_numerical_rank            : numerical rank by SVD for double doubles
+quaddobl_numerical_rank            : numerical rank by SVD for quad doubles
+multprec_numerical_rank            : numerical rank by SVD for multprecision
 -------------------------------------------------------------------------------
 standard_floating_eigenvalues      : eigenvalues of floating-point matrices
 double_double_eigenvalues          : eigenvalues in double double precision

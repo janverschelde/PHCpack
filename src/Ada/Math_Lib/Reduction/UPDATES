@@ -1,4 +1,7 @@
-Fri 10 December : added hexa_double_vector_norms, ts_hdnorm.adb,
+Tue 16 Feb 2026 : moved all *numerical_rank* packages from the folder
+  ../../Deformations/Newton into this folder.
+
+Fri 10 Dec 2021 : added hexa_double_vector_norms, ts_hdnorm.adb,
   new test_hexadobl_vector_norms, hexa_double_linear_solvers.ads,
   hexadobl_complex_linear_solvers, test_hexadobl_linear_solvers, ts_hdlu.adb.
   Extended test_lu_decompositions and reduction.gpr.

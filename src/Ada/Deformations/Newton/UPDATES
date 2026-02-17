@@ -1,3 +1,6 @@
+Tue 16 Feb 2026 : moved all *numerical_rank* packages to the
+  ../../Math_Lib/Reduction folder.
+
 Sun 5 Oct 2025 : removed excluded_source_files from newton.gpr.
 
 Tue 13 Feb 2024 : to {dobldobl,quaddobl}_root_refiners, added verbose level.
