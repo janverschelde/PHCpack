@@ -1,4 +1,5 @@
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with QuadDobl_Complex_Vectors;          use QuadDobl_Complex_Vectors;
@@ -10,16 +11,20 @@ package QuadDobl_Numerical_Rank is
 --   The singular value decomposition gives the numerical rank of a matrix,
 --   using quad double complex arithmetic.
 
-  function Numerical_Rank ( S : Vector; tol : double_float ) return natural32;
+  function Numerical_Rank
+             ( S : Vector; tol : double_float;
+               vrblvl : integer32 := 0 ) return natural32;
 
   -- DESCRIPTION :
   --   Returns the numerical rank of a matrix, based on its
   --   singular values in S, with respect to the tolerance tol.
+  --   The verbose level is given as the value of vrblvl.
 
   procedure Numerical_Rank
               ( A : in out Matrix; tol : in double_float;
                 S : out Vector; U,V : out Matrix;
-                rco : out quad_double; rank : out natural32 );
+                rco : out quad_double; rank : out natural32;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Returns numerical rank, estimate for the inverse condition number,
@@ -27,7 +32,8 @@ package QuadDobl_Numerical_Rank is
 
   -- ON ENTRY:
   --   A        matrix for which numerical rank is desired;
-  --   tol      tolerance to decide the numerical rank.
+  --   tol      tolerance to decide the numerical rank;
+  --   vrblvl   is the verbose level.
   
   -- ON RETURN :
   --   A        modified version of the matrix;
@@ -38,9 +44,12 @@ package QuadDobl_Numerical_Rank is
   --   rco      estimate for inverse condition number;
   --   rank     numerical rank of the matrix.
 
-  function Numerical_Rank ( A : Matrix; tol : double_float ) return natural32;
+  function Numerical_Rank
+             ( A : Matrix; tol : double_float;
+               vrblvl : integer32 := 0 ) return natural32;
 
   -- DESCRIPTION :
   --   Computes the SVD of A and returns the numerical rank.
+  --   The verbose level is given as the value of vrblvl.
 
 end QuadDobl_Numerical_Rank;
