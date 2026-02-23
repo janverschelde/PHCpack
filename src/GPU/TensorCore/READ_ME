@@ -33,3 +33,5 @@ test_vod                      : tests vectored octo double arithmetic
 vectored_hexa_doubles         : defines vectored hexa double arithmetic
 test_vhd                      : tests vectored hexa double arithmetic
 ------------------------------------------------------------------------------
+test_dd_setup                 : tests setup for double double multiplication
+------------------------------------------------------------------------------

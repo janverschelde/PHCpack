@@ -14,26 +14,51 @@ smflag=sm_80
 # the architecture flag for RTX 4080
 # smflag=sm_89
 
+# code needed from the multiple double library MPD :
+
+random_numbers.o:
+	@-echo ">>> compiling double random numbers"
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random_numbers.cpp
+
+random2_vectors.o:
+	@-echo ">>> compiling double double random vector generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random2_vectors.cpp
+
+random2_matrices.o:
+	@-echo ">>> compiling double double random matrix generators ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(MAT) $(MAT)/random2_matrices.cpp
+
+random4_vectors.o:
+	@-echo ">>> compiling quad double random vector generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random4_vectors.cpp
+
+random4_matrices.o:
+	@-echo ">>> compiling quad double random matrix generators ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(MAT) $(MAT)/random4_matrices.cpp
+
+random8_vectors.o:
+	@-echo ">>> compiling octo double random vector generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random8_vectors.cpp
+
+random8_matrices.o:
+	@-echo ">>> compiling octo double random matrix generators ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(MAT) $(MAT)/random8_matrices.cpp
+
+random16_vectors.o:
+	@-echo ">>> compiling hexa double random vector generators ..."
+	$(gpp) -O3 -c -I$(MPD) $(MPD)/random16_vectors.cpp
+
+random16_matrices.o:
+	@-echo ">>> compiling hexa double random matrix generators ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(MAT) $(MAT)/random16_matrices.cpp
+
+# simple tensor core matrix multiplication :
+
 smTCGemm:
 	nvcc -ccbin=$(gcc) -O3 -o smTCGemm -arch=$(smflag) \
              simpleTensorCoreGemm.cu
 
-smDMMA_host.o:
-	@-echo ">>> compiling smDMMA_host ..."
-	$(gpp) -O3 -c smDMMA_host.cpp
-
-smDMMA_kernels.o:
-	@-echo ">>> compiling smDMMA_kernels ..."
-	nvcc -ccbin=$(gcc) -arch=$(smflag) -c smDMMA_kernels.cu
-
-test_smDMMA.o:
-	@-echo ">>> compiling test_smDMMA ..."
-	$(gpp) -I$(CUDA) -O3 -c test_smDMMA.cpp
-
-test_smDMMA: smDMMA_host.o smDMMA_kernels.o test_smDMMA.o
-	@-echo ">>> linking ..."
-	$(gpp) -o test_smDMMA smDMMA_host.o smDMMA_kernels.o test_smDMMA.o \
-               -lcudart -L$(CUDALIB)
+# code to prepare for vectored multiple double arithmetic :
 
 pi64bits:
 	$(gcc) -o pi64bits bits_of_pi.c
@@ -79,42 +104,6 @@ octo_double_functions.o:
 hexa_double_functions.o:
 	@-echo ">>> compiling hexa double functions ..."
 	$(gpp) -O3 -c -I$(MPD) $(MPD)/hexa_double_functions.cpp
-
-random_numbers.o:
-	@-echo ">>> compiling double random numbers"
-	$(gpp) -O3 -c -I$(MPD) $(MPD)/random_numbers.cpp
-
-random2_vectors.o:
-	@-echo ">>> compiling double double random vector generators ..."
-	$(gpp) -O3 -c -I$(MPD) $(MPD)/random2_vectors.cpp
-
-random2_matrices.o:
-	@-echo ">>> compiling double double random matrix generators ..."
-	$(gpp) -O3 -c -I$(MPD) -I$(MAT) $(MAT)/random2_matrices.cpp
-
-random4_vectors.o:
-	@-echo ">>> compiling quad double random vector generators ..."
-	$(gpp) -O3 -c -I$(MPD) $(MPD)/random4_vectors.cpp
-
-random4_matrices.o:
-	@-echo ">>> compiling quad double random matrix generators ..."
-	$(gpp) -O3 -c -I$(MPD) -I$(MAT) $(MAT)/random4_matrices.cpp
-
-random8_vectors.o:
-	@-echo ">>> compiling octo double random vector generators ..."
-	$(gpp) -O3 -c -I$(MPD) $(MPD)/random8_vectors.cpp
-
-random8_matrices.o:
-	@-echo ">>> compiling octo double random matrix generators ..."
-	$(gpp) -O3 -c -I$(MPD) -I$(MAT) $(MAT)/random8_matrices.cpp
-
-random16_vectors.o:
-	@-echo ">>> compiling hexa double random vector generators ..."
-	$(gpp) -O3 -c -I$(MPD) $(MPD)/random16_vectors.cpp
-
-random16_matrices.o:
-	@-echo ">>> compiling hexa double random matrix generators ..."
-	$(gpp) -O3 -c -I$(MPD) -I$(MAT) $(MAT)/random16_matrices.cpp
 
 vectored_double_doubles.o:
 	@-echo ">>> compiling vectored double doubles ..."
@@ -210,6 +199,41 @@ test_vhd: double_double.o quad_double.o octo_double.o hexa_double.o \
                random_numbers.o random16_vectors.o random16_matrices.o \
                splitting_doubles.o vectored_hexa_doubles.o
 
+# applying tensor cores ...
+
+smDMMA_host.o:
+	@-echo ">>> compiling smDMMA_host ..."
+	$(gpp) -I$(MAT) -O3 -c smDMMA_host.cpp -o smDMMA_host.o
+
+smDMMA_kernels.o:
+	@-echo ">>> compiling smDMMA_kernels ..."
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -c smDMMA_kernels.cu
+
+test_dd_setup.o:
+	@-echo ">>> compiling test_dd_setup ..."
+	$(gpp) -O3 -c test_dd_setup.cpp -o test_dd_setup.o
+
+test_dd_setup: smDMMA_host.o test_dd_setup.o \
+        double_matrix_multiplications.o \
+        random_numbers.o random2_vectors.o random2_matrices.o \
+        double_double.o double_double_functions.o \
+        splitting_doubles.o vectored_double_doubles.o 
+	@-echo ">>> linking ..."
+	$(gpp) -o test_dds test_dd_setup.o smDMMA_host.o \
+                  double_matrix_multiplications.o \
+                  random_numbers.o random2_vectors.o random2_matrices.o \
+                  double_double.o double_double_functions.o \
+                  splitting_doubles.o vectored_double_doubles.o
+
+test_smDMMA.o:
+	@-echo ">>> compiling test_smDMMA ..."
+	$(gpp) -I$(CUDA) -O3 -c test_smDMMA.cpp
+
+test_smDMMA: smDMMA_host.o smDMMA_kernels.o test_smDMMA.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_smDMMA smDMMA_host.o smDMMA_kernels.o test_smDMMA.o \
+               -lcudart -L$(CUDALIB)
+
 clean:
 	/bin/rm -f -r smTCGemm pi64bits
 	/bin/rm -f -r smDMMA_host.o smDMMA_kernels.o
@@ -233,3 +257,4 @@ clean:
 	/bin/rm -f -r random16_vectors.o random16_matrices.o
 	/bin/rm -f -r vectored_hexa_doubles.o
 	/bin/rm -f -r test_vhd test_vhd.o
+	/bin/rm -f -r test_dds test_dd_setup.o

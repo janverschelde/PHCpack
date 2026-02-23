@@ -43,28 +43,10 @@ CUDALIB="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1\lib\x64"
 # the architecture flag for RTX 4080
 smflag=sm_89
 
+# simple tensor core matrix multiplication :
+
 smTCGemm:
 	nvcc -ccbin=$(CL) -O2 -o smTCGemm -arch=$(smflag) simpleTensorCoreGemm.cu
-
-smDMMA_host.obj:
-	@-echo ">>> compiling smDMMA_host ..."
-	$(CL)\cl /c smDMMA_host.cpp -I$(winkitucrt) -I$(includepath) -O2 \
-                 /Fo: smDMMA_host.obj
-
-smDMMA_kernels.obj:
-	@-echo ">>> compiling smDMMA_kernels ..."
-	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 smDMMA_kernels.cu \
-             -o smDMMA_kernels.obj
-
-test_smDMMA.obj:
-	@-echo ">>> compiling test_smDMMA ..."
-	$(CL)\cl /c -O2 test_smDMMA.cpp -I$(winkitucrt) -I$(includepath) \
-                 /I$(CUDASDK)/include /Fo: test_smDMMA.obj /EHsc
-
-test_smDMMA: smDMMA_host.obj smDMMA_kernels.obj test_smDMMA.obj
-	@-echo ">>> linking ..."
-	nvcc -ccbin=$(CL) -o test_smDMMA.exe \
-             smDMMA_host.obj smDMMA_kernels.obj test_smDMMA.obj
 
 pi64bits:
 	gcc -o pi64bits bits_of_pi.c
@@ -72,6 +54,12 @@ pi64bits:
 splitting_doubles.o:
 	@-echo ">>> compiling splitting doubles ..."
 	g++ -O3 -c splitting_doubles.cpp
+
+splitting_doubles.obj:
+	@-echo ">>> compiling splitting doubles ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
+                      splitting_doubles.cpp \
+                 /Fo: splitting_doubles.obj /EHsc
 
 test_split: splitting_doubles.o
 	@-echo ">>> compiling test splitting doubles..."
@@ -82,6 +70,12 @@ test_split: splitting_doubles.o
 double_double.o:
 	@-echo ">>> compiling double double ..."
 	g++ -O3 -c -I$(QDsrc) $(QDsrc)/double_double.c
+
+double_double.obj:
+	@-echo ">>> compiling double double ..."
+	$(CL)\cl /c -I$(QDsrc) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(QDsrc)/double_double.cpp \
+                 /Fo: double_double.obj /EHsc
 
 quad_double.o:
 	@-echo ">>> compiling quad double ..."
@@ -99,6 +93,12 @@ double_double_functions.o:
 	@-echo ">>> compiling double double functions ..."
 	g++ -O3 -c -I$(MPD) $(MPD)/double_double_functions.cpp
 
+double_double_functions.obj:
+	@-echo ">>> compiling double double functions ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/double_double_functions.cpp \
+                 /Fo: double_double_functions.obj /EHsc
+
 quad_double_functions.o:
 	@-echo ">>> compiling quad double functions ..."
 	g++ -O3 -c -I$(MPD) $(MPD)/quad_double_functions.cpp
@@ -115,13 +115,31 @@ random_numbers.o:
 	@-echo ">>> compiling double random numbers"
 	g++ -O3 -c -I$(MPD) $(MPD)/random_numbers.cpp
 
+random_numbers.obj:
+	@-echo ">>> compiling random number generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random_numbers.cpp \
+                 /Fo: random_numbers.obj /EHsc
+
 random2_vectors.o:
 	@-echo ">>> compiling double double random vector generators ..."
 	g++ -O3 -c -I$(MPD) $(MPD)/random2_vectors.cpp
 
+random2_vectors.obj:
+	@-echo ">>> compiling double double random vector generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      $(MPD)/random2_vectors.cpp \
+                 /Fo: random2_vectors.obj /EHsc
+
 random2_matrices.o:
 	@-echo ">>> compiling double double random matrix generators ..."
 	g++ -O3 -c -I$(MPD) -I$(MAT) $(MAT)/random2_matrices.cpp
+
+random2_matrices.obj:
+	@-echo ">>> compiling double double random matrix generators ..."
+	$(CL)\cl /c -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+               $(MAT)/random2_matrices.cpp \
+                 /Fo: random2_matrices.obj /EHsc
 
 random4_vectors.o:
 	@-echo ">>> compiling quad double random vector generators ..."
@@ -151,6 +169,12 @@ vectored_double_doubles.o:
 	@-echo ">>> compiling vectored double doubles ..."
 	g++ -O3 -c -I$(QDsrc) -I$(MPD) vectored_double_doubles.cpp
 
+vectored_double_doubles.obj:
+	@-echo ">>> compiling vectored double doubles ..."
+	$(CL)\cl /c -I$(QDsrc) -I$(MPD) -I$(winkitucrt) -I$(includepath) -O2 \
+                      vectored_double_doubles.cpp \
+                 /Fo: vectored_double_doubles.obj /EHsc
+
 vectored_quad_doubles.o:
 	@-echo ">>> compiling vectored quad doubles ..."
 	g++ -O3 -c -I$(QDsrc) -I$(MPD) vectored_quad_doubles.cpp
@@ -174,6 +198,12 @@ random_matrices.o:
 double_matrix_multiplications.o:
 	@-echo ">>> compiling double matrix multiplications ..."
 	g++ -O3 -c double_matrix_multiplications.cpp
+
+double_matrix_multiplications.obj:
+	@-echo ">>> compiling double matrix multiplications ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
+                    double_matrix_multiplications.cpp \
+                 /Fo: double_matrix_multiplications.obj /EHsc
 
 test_mmm: random_numbers.o random_series.o random_matrices.o \
           double_matrix_multiplications.o
@@ -240,6 +270,44 @@ test_vhd: double_double.o quad_double.o octo_double.o hexa_double.o \
                random_numbers.o random16_vectors.o random16_matrices.o \
                splitting_doubles.o vectored_hexa_doubles.o
 
+smDMMA_host.obj:
+	@-echo ">>> compiling smDMMA_host ..."
+	$(CL)\cl /c smDMMA_host.cpp \
+                 -I$(winkitucrt) -I$(includepath) -I$(MAT) -O2 \
+                 /Fo: smDMMA_host.obj
+
+smDMMA_kernels.obj:
+	@-echo ">>> compiling smDMMA_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -c -O3 smDMMA_kernels.cu \
+             -o smDMMA_kernels.obj
+
+test_dd_setup.obj:
+	@-echo ">>> compiling test_dd_setup ..."
+	$(CL)\cl /c -O2 test_dd_setup.cpp -I$(winkitucrt) -I$(includepath) \
+                 /Fo: test_dd_setup.obj /EHsc
+
+test_dd_setup: smDMMA_host.obj test_dd_setup.obj \
+        double_matrix_multiplications.obj \
+        double_double.obj double_double_functions.obj \
+        random_numbers.obj random2_vectors.obj random2_matrices.obj \
+        splitting_doubles.obj vectored_double_doubles.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_dd_setup.exe test_dd_setup.obj \
+                 smDMMA_host.obj double_matrix_multiplications.obj \
+                 double_double.obj double_double_functions.obj \
+                 random_numbers.obj random2_vectors.obj random2_matrices.obj \
+                 splitting_doubles.obj vectored_double_doubles.obj
+
+test_smDMMA.obj:
+	@-echo ">>> compiling test_smDMMA ..."
+	$(CL)\cl /c -O2 test_smDMMA.cpp -I$(winkitucrt) -I$(includepath) \
+                 /I$(CUDASDK)/include /Fo: test_smDMMA.obj /EHsc
+
+test_smDMMA: smDMMA_host.obj smDMMA_kernels.obj test_smDMMA.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_smDMMA.exe \
+             smDMMA_host.obj smDMMA_kernels.obj test_smDMMA.obj
+
 clean:
 	del *~
 	del smTCGemm.exe smTCGemm.lib smTCGemm.exp
@@ -247,10 +315,15 @@ clean:
 	del test_smDMMA.exe test_smDMMA.lib test_smDMMA.exp
 	del pi64bits.exe
 	del test_split.exe splitting_doubles.o test_splitting_doubles.o
+	del splitting_doubles.obj
 	del random_numbers.o random2_vectors.o random2_matrices.o
+	del random_numbers.obj random2_vectors.obj random2_matrices.obj
 	del double_double.o double_double_functions.o
+	del double_double.obj double_double_functions.obj
 	del vectored_double_doubles.o test_vdd.o
+	del vectored_double_doubles.obj
 	del double_matrix_multiplications.o
+	del double_matrix_multiplications.obj
 	del test_mmm.exe test_mmm.o random_series.o random_matrices.o
 	del test_vdd.exe
 	del quad_double.o quad_double_functions.o
@@ -265,3 +338,5 @@ clean:
 	del random16_vectors.o random16_matrices.o
 	del vectored_hexa_doubles.o test_vhd.o
 	del test_vhd.exe
+	del test_dd_setup.obj test_dd_setup.exe
+	del test_dd_setup.lib test_dd_setup.exp

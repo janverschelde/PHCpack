@@ -503,7 +503,7 @@ bool is_balanced ( double x, double y, int threshold, int vrblvl )
       cout << "y : " << y << " has exponent " << ye << endl;
       cout << "difference of exponents : " << dxy;
    }
-   bool result = not (dxy > threshold);
+   bool result = !(dxy > threshold);
    if(vrblvl > 0)
    {
       if(result)
@@ -569,11 +569,11 @@ void balance_quarters
    if(vrblvl > 0)
       cout << "-> in splitting_doubles.balance_quarters ..." << endl;
 
-   if(not is_quarter_balanced(*x0, *x1, vrblvl-1))
+   if(!is_quarter_balanced(*x0, *x1, vrblvl-1))
       quarter_balance(x0, x1, vrblvl-1);
-   if(not is_quarter_balanced(*x1, *x2, vrblvl-1))
+   if(!is_quarter_balanced(*x1, *x2, vrblvl-1))
       quarter_balance(x1, x2, vrblvl-1);
-   if(not is_quarter_balanced(*x2, *x3, vrblvl-1))
+   if(!is_quarter_balanced(*x2, *x3, vrblvl-1))
       quarter_balance(x2, x3, vrblvl-1);
 }
 
@@ -584,13 +584,13 @@ void octo_balance
    if(vrblvl > 0)
       cout << "-> in splitting_doubles.octo_balance ..." << endl;
 
-   if(not is_balanced(*x0, *x1, 7, vrblvl-1)) balance(x0, x1, 8, vrblvl-1);
-   if(not is_balanced(*x1, *x2, 7, vrblvl-1)) balance(x1, x2, 8, vrblvl-1);
-   if(not is_balanced(*x2, *x3, 7, vrblvl-1)) balance(x2, x3, 8, vrblvl-1);
-   if(not is_balanced(*x3, *x4, 7, vrblvl-1)) balance(x3, x4, 8, vrblvl-1);
-   if(not is_balanced(*x4, *x5, 6, vrblvl-1)) balance(x4, x5, 7, vrblvl-1);
-   if(not is_balanced(*x5, *x6, 6, vrblvl-1)) balance(x5, x6, 7, vrblvl-1);
-   if(not is_balanced(*x6, *x7, 6, vrblvl-1)) balance(x6, x7, 7, vrblvl-1);
+   if(!is_balanced(*x0, *x1, 7, vrblvl-1)) balance(x0, x1, 8, vrblvl-1);
+   if(!is_balanced(*x1, *x2, 7, vrblvl-1)) balance(x1, x2, 8, vrblvl-1);
+   if(!is_balanced(*x2, *x3, 7, vrblvl-1)) balance(x2, x3, 8, vrblvl-1);
+   if(!is_balanced(*x3, *x4, 7, vrblvl-1)) balance(x3, x4, 8, vrblvl-1);
+   if(!is_balanced(*x4, *x5, 6, vrblvl-1)) balance(x4, x5, 7, vrblvl-1);
+   if(!is_balanced(*x5, *x6, 6, vrblvl-1)) balance(x5, x6, 7, vrblvl-1);
+   if(!is_balanced(*x6, *x7, 6, vrblvl-1)) balance(x6, x7, 7, vrblvl-1);
 }
 
 void make_exponent_zero ( double *x, double *pow2fac, int vrblvl )

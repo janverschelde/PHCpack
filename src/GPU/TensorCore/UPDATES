@@ -1,3 +1,9 @@
+Mon 23 Feb 2026 : extended smDMMA_host with the setup for the staged
+  double double matrix multiplication, new test_dd_setup.cpp,
+  updated the makefiles.  Adjusted splitting_doubles.cpp and
+  vectored_double_doubles.cpp for "not" and "and" operators,
+  replaced by "!" and "&&" for windows compiler.
+
 Thu 12 Feb 2026 : extended splitting_doubles, test_splitting_doubles,
   and vectored_double_doubles with balancers for 12-splits.
   Added recursive inner products to the matrix matrix multiplication

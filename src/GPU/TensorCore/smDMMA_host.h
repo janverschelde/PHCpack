@@ -14,6 +14,27 @@ void init_host_matrices ( double *a, double *b, double *c, int nbrange );
  *     column major with K_GLOBAL rows and N_GLOBAL columns,
  *   c is the zero matrix, M_GLOBAL rows, N_GLOBAL columns. */
 
+void random_double_double_matrices
+ ( double *A, double *B, double *C,
+   int numArows, int numAcols, int numBrows, int numBcols,
+   int numCrows, int numCcols, int vrblvl=0 );
+/*
+ * Defines single indexed matrices which represent rewritten
+ * double double matrices.
+ *
+ * ON ENTRY :
+ *   A        memory allocated for numArows rows and numAcols columns;
+ *   B        memory allocated for numBrows rows and numBcols columns;
+ *   C        memory allocated for numCrows rows and numCcols columns;
+ *   vrblvl   is the verbose level.
+ *
+ * ON RETURN :
+ *   A        rewritten (numArows/12)-by-(numAcols/12) matrix,
+ *            padded with some zero rows and columns;
+ *   B        rewritten (numBrows/12)-by-numBcols matrix,
+ *            padded with some zero rows;
+ *   C        initialized all numCrows x numCcols to zero. */
+
 void matMultiplyOnHost
  ( double *A, double *B, double *C, float alpha, float beta,
    int numARows, int numAColumns, int numBRows, int numBColumns,

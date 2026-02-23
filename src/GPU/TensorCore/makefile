@@ -23,6 +23,9 @@ test_mmm:
 test_vdd:
 	make -f $(MAKEFILE) test_vdd
 
+test_dd_setup:
+	make -f $(MAKEFILE) test_dd_setup
+
 test_vqd:
 	make -f $(MAKEFILE) test_vqd
 
