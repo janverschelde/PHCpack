@@ -17,13 +17,15 @@ using namespace std;
 int main ( int argc, char **argv )
 {
    int compare_host = 0;
-   int number_range = 40;
+   // int number_range = 40;
 
    if(argc > 1) 
    {
       compare_host = 1;
-      number_range = atoi(argv[1]);
-      cout << "number range : " << number_range << endl;
+      // number_range = atoi(argv[1]);
+      // cout << "number range : " << number_range << endl;
+      cout << endl << "Verifying correctness, this may take some time ..."
+           << endl << endl;
    }
    cout << "Initializing ..." << endl;
 
@@ -80,7 +82,9 @@ int main ( int argc, char **argv )
    assert(((unsigned long long)D) % 128 == 0);
 
    cout << "Initializing matrices on host ..." << endl;
-   init_host_matrices(A_h, B_h, C_h, number_range);
+   // init_host_matrices(A_h, B_h, C_h, number_range);
+   random_double_double_matrices
+      (A_h,B_h,C_h,M_GLOBAL,K_GLOBAL,K_GLOBAL,N_GLOBAL,M_GLOBAL,N_GLOBAL,1);
 
    cout << "Preparing data for GPU ..." << endl;
 
@@ -113,18 +117,20 @@ int main ( int argc, char **argv )
 
    if(compare_host > 0)
    {
-      cout << "Verifying correctness of the computations ..." << endl;
+      cout << "Verifying correctness of the computations :" << endl;
 
       memcpy(result_host, C_h, sizeof(double) * M_GLOBAL * N_GLOBAL);
 
-      cout << "Computing matrix matrix multiplication on host ..." << endl;
+      cout << "-> computing matrix matrix multiplication on host ..." << endl;
       matMultiplyOnHost(A_h,B_h,result_host,alpha,beta,M_GLOBAL,K_GLOBAL,
                         K_GLOBAL,N_GLOBAL,M_GLOBAL,N_GLOBAL);
 
       cout << scientific << setprecision(16);
+      cout << "-> number at position " << N_GLOBAL-1 << " is" << endl;
       cout << "  host : " << result_host[N_GLOBAL-1] << endl;
       cout << "device : " << result_hD[N_GLOBAL-1] << endl;
 
+      cout << "-> computing number of matches ..." << endl;
       size_t number_of_matches = 0;
       for(int i=0; i<N_GLOBAL*M_GLOBAL; i++)
       {

@@ -1,3 +1,6 @@
+Tue 24 Feb 2026 : modified test_smDMMA.cpp to work for random double double
+  matrices, updated makefiles, small edit in smDMMA_kernels.cu.
+
 Mon 23 Feb 2026 : extended smDMMA_host with the setup for the staged
   double double matrix multiplication, new test_dd_setup.cpp,
   updated the makefiles.  Adjusted splitting_doubles.cpp and

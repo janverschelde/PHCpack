@@ -88,7 +88,8 @@ __host__ void GPU_DMMA
    gridDim.x = (M_GLOBAL + (M*blockDim.x/32-1))/(M*blockDim.x/32);
    gridDim.y = (N_GLOBAL + N*blockDim.y-1)/(N*blockDim.y);
 
-   cout << "Computing ... using simple_wmma_gemm kernel ..." << endl;
+   cout << "Computing ... using simple_wmma_gemm kernel ... ";
    simple_wmma_gemm<<<gridDim, blockDim>>>
       (A, B, C, D, M_GLOBAL, N_GLOBAL, K_GLOBAL, alpha, beta);
+   cout << "done." << endl;
 }

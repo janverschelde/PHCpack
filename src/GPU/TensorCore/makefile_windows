@@ -274,7 +274,7 @@ smDMMA_host.obj:
 	@-echo ">>> compiling smDMMA_host ..."
 	$(CL)\cl /c smDMMA_host.cpp \
                  -I$(winkitucrt) -I$(includepath) -I$(MAT) -O2 \
-                 /Fo: smDMMA_host.obj
+                 /Fo: smDMMA_host.obj /EHsc
 
 smDMMA_kernels.obj:
 	@-echo ">>> compiling smDMMA_kernels ..."
@@ -303,10 +303,18 @@ test_smDMMA.obj:
 	$(CL)\cl /c -O2 test_smDMMA.cpp -I$(winkitucrt) -I$(includepath) \
                  /I$(CUDASDK)/include /Fo: test_smDMMA.obj /EHsc
 
-test_smDMMA: smDMMA_host.obj smDMMA_kernels.obj test_smDMMA.obj
+test_smDMMA: smDMMA_host.obj smDMMA_kernels.obj test_smDMMA.obj \
+        double_matrix_multiplications.obj \
+        double_double.obj double_double_functions.obj \
+        random_numbers.obj random2_vectors.obj random2_matrices.obj \
+        splitting_doubles.obj vectored_double_doubles.obj
 	@-echo ">>> linking ..."
 	nvcc -ccbin=$(CL) -o test_smDMMA.exe \
-             smDMMA_host.obj smDMMA_kernels.obj test_smDMMA.obj
+             smDMMA_host.obj smDMMA_kernels.obj test_smDMMA.obj \
+             double_matrix_multiplications.obj \
+             double_double.obj double_double_functions.obj \
+             random_numbers.obj random2_vectors.obj random2_matrices.obj \
+             splitting_doubles.obj vectored_double_doubles.obj
 
 clean:
 	del *~

@@ -229,9 +229,17 @@ test_smDMMA.o:
 	@-echo ">>> compiling test_smDMMA ..."
 	$(gpp) -I$(CUDA) -O3 -c test_smDMMA.cpp
 
-test_smDMMA: smDMMA_host.o smDMMA_kernels.o test_smDMMA.o
+test_smDMMA: smDMMA_host.o smDMMA_kernels.o test_smDMMA.o \
+        double_matrix_multiplications.o \
+        random_numbers.o random2_vectors.o random2_matrices.o \
+        double_double.o double_double_functions.o \
+        splitting_doubles.o vectored_double_doubles.o 
 	@-echo ">>> linking ..."
 	$(gpp) -o test_smDMMA smDMMA_host.o smDMMA_kernels.o test_smDMMA.o \
+                  double_matrix_multiplications.o \
+                  random_numbers.o random2_vectors.o random2_matrices.o \
+                  double_double.o double_double_functions.o \
+                  splitting_doubles.o vectored_double_doubles.o \
                -lcudart -L$(CUDALIB)
 
 clean:
