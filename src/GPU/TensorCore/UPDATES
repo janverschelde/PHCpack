@@ -1,3 +1,6 @@
+Wed 25 Feb 2026 : to smDMMA_kernels, added kernel which relies on shared
+  memory, tested in test_smDMMA.cpp.  Added definitions to smDMMA_dims.h.
+
 Tue 24 Feb 2026 : modified test_smDMMA.cpp to work for random double double
   matrices, updated makefiles, small edit in smDMMA_kernels.cu.
 

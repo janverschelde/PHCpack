@@ -105,7 +105,7 @@ int main ( int argc, char **argv )
    cudaEventCreate(&stop);
    cudaEventRecord(start);
 
-   GPU_DMMA(A, B, C, D, alpha, beta);
+   GPU_DMMA(A, B, C, D, alpha, beta, deviceProp);
 
    if(compare_host > 0)
    {

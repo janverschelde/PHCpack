@@ -15,8 +15,16 @@ __global__ void simple_wmma_gemm
    It is designed for demonstration purposes only to show the CUDA WMMA API 
    use without relying on availability of the shared memory.  */
 
+__global__ void compute_dgemm
+ ( const double *A, const double *B, const double *C, double *D,
+   double alpha, double beta );
+/*
+ * Performant kernel with same specifications as the simple kernel,
+ * relies on shared memory. */
+
 __host__ void GPU_DMMA
- ( double *A, double *B, double *C, double *D, double alpha, double beta );
+ ( double *A, double *B, double *C, double *D, double alpha, double beta,
+   cudaDeviceProp deviceProp, int kerneltype=1 );
 /*
  * Launches the kernels to multiply the matrices in A and B. */
 
