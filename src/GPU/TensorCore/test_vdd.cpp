@@ -12,6 +12,7 @@
 #include "vectored_double_doubles.h"
 #include "random2_matrices.h"
 #include "double_matrix_multiplications.h"
+#include "ddmm_host.h"
 
 int test_quarter_double_double ( void );
 /*

@@ -20,6 +20,9 @@ test_split:
 test_mmm:
 	make -f $(MAKEFILE) test_mmm
 
+test_ddmm:
+	make -f $(MAKEFILE) test_ddmm
+
 test_vdd:
 	make -f $(MAKEFILE) test_vdd
 

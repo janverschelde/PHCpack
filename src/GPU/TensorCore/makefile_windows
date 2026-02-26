@@ -208,23 +208,48 @@ double_matrix_multiplications.obj:
 test_mmm: random_numbers.o random_series.o random_matrices.o \
           double_matrix_multiplications.o
 	@-echo ">>> compiling test_mmm ..."
-	$(gpp) -c -I$(MAT) test_mmm.cpp -o test_mmm.o
+	g++ -c -I$(MAT) test_mmm.cpp -o test_mmm.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_mmm test_mmm.o \
+	g++ -o test_mmm test_mmm.o \
                random_numbers.o random_series.o random_matrices.o \
                double_matrix_multiplications.o
+
+ddmm_host.o:
+	@-echo ">>> compiling ddmm_host ..."
+	g++ -c -O3 -I$(MPD) -I$(CNV) -I$(MAT) ddmm_host.cpp \
+               -o ddmm_host.o
+
+ddmm_host.obj:
+	@-echo ">>> compiling ddmm_host ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
+                    -I$(MPD) -I$(CNV) -I$(MAT) ddmm_host.cpp \
+                 /Fo: ddmm_host.obj /EHsc
+
+test_ddmm.obj:
+	@-echo ">>> compiling test_ddmm ..."
+	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
+                    -I$(MPD) -I$(CNV) -I$(MAT) test_ddmm.cpp \
+                 /Fo: test_ddmm.obj /EHsc
+
+test_ddmm: double_double.obj double_double_functions.obj \
+           random_numbers.obj random2_vectors.obj random2_matrices.obj \
+           ddmm_host.obj test_ddmm.obj
+	@-echo ">>> linking ..."
+	nvcc -ccbin=$(CL) -o test_ddmm test_ddmm.obj ddmm_host.obj \
+               double_double.obj double_double_functions.obj \
+               random_numbers.obj random2_vectors.obj random2_matrices.obj
 
 test_vdd: double_double.o double_double_functions.o \
           random_numbers.o random2_vectors.o random2_matrices.o \
           splitting_doubles.o vectored_double_doubles.o \
-          double_matrix_multiplications.o
+          double_matrix_multiplications.o ddmm_host.o 
 	@-echo ">>> compiling test_vdd ..."
 	g++ -c -I$(QDsrc) -I$(MPD) -I$(MAT) test_vdd.cpp -o test_vdd.o
 	@-echo ">>> linking ..."
 	g++ -o test_vdd test_vdd.o double_matrix_multiplications.o \
                double_double.o double_double_functions.o \
                random_numbers.o random2_vectors.o random2_matrices.o \
-               splitting_doubles.o vectored_double_doubles.o
+               splitting_doubles.o vectored_double_doubles.o ddmm_host.o
 
 test_vqd: double_double.o quad_double.o \
           double_double_functions.o quad_double_functions.o \

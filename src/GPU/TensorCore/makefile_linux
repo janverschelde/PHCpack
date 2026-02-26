@@ -142,10 +142,24 @@ test_mmm: random_numbers.o random_series.o random_matrices.o \
                random_numbers.o random_series.o random_matrices.o \
                double_matrix_multiplications.o
 
+ddmm_host.o:
+	@-echo ">>> compiling ddmm_host ..."
+	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) ddmm_host.cpp
+
+test_ddmm: double_double.o double_double_functions.o \
+           random_numbers.o random2_vectors.o random2_matrices.o \
+           ddmm_host.o
+	@-echo ">>> compiling test_ddmm ..."
+	$(gpp) -c test_ddmm.cpp -o test_ddmm.o
+	@-echo ">>> linking ..."
+	$(gpp) -o test_ddmm test_ddmm.o ddmm_host.o \
+               double_double.o double_double_functions.o \
+               random_numbers.o random2_vectors.o random2_matrices.o
+
 test_vdd: double_double.o double_double_functions.o \
           random_numbers.o random2_vectors.o random2_matrices.o \
           splitting_doubles.o vectored_double_doubles.o \
-          double_matrix_multiplications.o
+          double_matrix_multiplications.o ddmm_host.o
 	@-echo ">>> compiling test_vdd ..."
 	$(gpp) -c -I$(QDsrc) -I$(MPD) -I$(MAT) test_vdd.cpp -o test_vdd.o
 	@-echo ">>> linking ..."
@@ -153,7 +167,7 @@ test_vdd: double_double.o double_double_functions.o \
                double_double.o double_double_functions.o \
                random_numbers.o random2_vectors.o random2_matrices.o \
                splitting_doubles.o vectored_double_doubles.o \
-               double_matrix_multiplications.o
+               double_matrix_multiplications.o ddmm_host.o
 
 test_vqd: double_double.o quad_double.o \
           double_double_functions.o quad_double_functions.o \
@@ -252,6 +266,7 @@ clean:
 	/bin/rm -f -r vectored_double_doubles.o 
 	/bin/rm -f -r double_matrix_multiplications.o
 	/bin/rm -f -r test_mmm test_mmm.o random_series.o random_matrices.o
+	/bin/rm -f -r test_ddmm test_ddmm.o ddmm_host.o
 	/bin/rm -f -r test_vdd test_vdd.o
 	/bin/rm -f -r quad_double.o quad_double_functions.o
 	/bin/rm -f -r random4_vectors.o random4_matrices.o

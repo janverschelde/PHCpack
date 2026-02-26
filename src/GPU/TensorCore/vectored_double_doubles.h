@@ -154,23 +154,6 @@ void recursive_dd_product
 /*
  * Uses recursive summatiom for better accuracy. */
 
-void double_double_matmatmul
- ( int nrows, int ncols, int dim,
-   double **Ahi, double **Alo, double **Bhi, double **Blo,
-   double **Chi, double **Clo );
-/*
- * Given in (Ahi, Alo) is an nrows-by-dim matrix A, and
- * given in (Bhi, Blo) is an dim-by-ncols matrix B,
- * returns in (Chi, Clo) the matrix matrix multiplication of A with B. */
-
-void transpose_dd_matrix
- ( int nrows, int ncols,
-   double **Ahi, double **Alo, double **Thi, double **Tlo );
-/*
- * Given an nrows-by-ncols double double matrix A (Ahi, Alo),
- * returns an ncols-by-nrols double double matrix T (Thi, Tlo),
- * which is the transpose of A. */
-
 void recursive_dd_matmatmul
  ( int nrows, int ncols, int dim,
    double **Ahi, double **Alo, double **Bhi, double **Blo,
