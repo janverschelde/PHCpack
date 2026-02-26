@@ -7,8 +7,10 @@ MPD=../Norms
 CNV=../Convolutions
 MAT=../Matrices
 
-# tested on two different NVIDIA GPUs
+# tested on different NVIDIA GPUs
 
+# the architecture flag for Volta V100
+# smflag=sm_70
 # the architecture flag for Ampere A100
 smflag=sm_80
 # the architecture flag for RTX 4080
@@ -146,15 +148,20 @@ ddmm_host.o:
 	@-echo ">>> compiling ddmm_host ..."
 	$(gpp) -O3 -c -I$(MPD) -I$(CNV) -I$(MAT) ddmm_host.cpp
 
+ddmm_kernels.o:
+	@-echo ">>> compiling ddmm_kernels ..."
+	nvcc -ccbin=$(gcc) -arch=$(smflag) -I$(MPD) -O3 -c ddmm_kernels.cu
+
 test_ddmm: double_double.o double_double_functions.o \
            random_numbers.o random2_vectors.o random2_matrices.o \
-           ddmm_host.o
+           ddmm_host.o ddmm_kernels.o
 	@-echo ">>> compiling test_ddmm ..."
-	$(gpp) -c test_ddmm.cpp -o test_ddmm.o
+	$(gpp) -c -I$(CUDA) test_ddmm.cpp -o test_ddmm.o
 	@-echo ">>> linking ..."
-	$(gpp) -o test_ddmm test_ddmm.o ddmm_host.o \
-               double_double.o double_double_functions.o \
-               random_numbers.o random2_vectors.o random2_matrices.o
+	$(gpp) -o test_ddmm test_ddmm.o ddmm_host.o ddmm_kernels.o \
+                  double_double.o double_double_functions.o \
+                  random_numbers.o random2_vectors.o random2_matrices.o \
+               -lcudart -L$(CUDALIB)
 
 test_vdd: double_double.o double_double_functions.o \
           random_numbers.o random2_vectors.o random2_matrices.o \
@@ -266,7 +273,7 @@ clean:
 	/bin/rm -f -r vectored_double_doubles.o 
 	/bin/rm -f -r double_matrix_multiplications.o
 	/bin/rm -f -r test_mmm test_mmm.o random_series.o random_matrices.o
-	/bin/rm -f -r test_ddmm test_ddmm.o ddmm_host.o
+	/bin/rm -f -r test_ddmm test_ddmm.o ddmm_host.o ddmm_kernels.o
 	/bin/rm -f -r test_vdd test_vdd.o
 	/bin/rm -f -r quad_double.o quad_double_functions.o
 	/bin/rm -f -r random4_vectors.o random4_matrices.o

@@ -225,17 +225,23 @@ ddmm_host.obj:
                     -I$(MPD) -I$(CNV) -I$(MAT) ddmm_host.cpp \
                  /Fo: ddmm_host.obj /EHsc
 
+ddmm_kernels.obj:
+	@-echo ">>> compiling ddmm_kernels ..."
+	nvcc -ccbin=$(CL) -arch=$(smflag) -I$(MPD) -c -O3 ddmm_kernels.cu \
+             -o ddmm_kernels.obj
+
 test_ddmm.obj:
 	@-echo ">>> compiling test_ddmm ..."
 	$(CL)\cl /c -I$(winkitucrt) -I$(includepath) -O2 \
                     -I$(MPD) -I$(CNV) -I$(MAT) test_ddmm.cpp \
-                 /Fo: test_ddmm.obj /EHsc
+                 /I$(CUDASDK)/include /Fo: test_ddmm.obj /EHsc
 
 test_ddmm: double_double.obj double_double_functions.obj \
            random_numbers.obj random2_vectors.obj random2_matrices.obj \
-           ddmm_host.obj test_ddmm.obj
+           ddmm_host.obj ddmm_kernels.obj test_ddmm.obj
 	@-echo ">>> linking ..."
-	nvcc -ccbin=$(CL) -o test_ddmm test_ddmm.obj ddmm_host.obj \
+	nvcc -ccbin=$(CL) -o test_ddmm test_ddmm.obj \
+               ddmm_host.obj ddmm_kernels.obj \
                double_double.obj double_double_functions.obj \
                random_numbers.obj random2_vectors.obj random2_matrices.obj
 
@@ -373,3 +379,6 @@ clean:
 	del test_vhd.exe
 	del test_dd_setup.obj test_dd_setup.exe
 	del test_dd_setup.lib test_dd_setup.exp
+	del ddmm_host.obj ddmm_kernels.obj
+	del test_ddmm.obj test_ddmm.exe
+	del test_ddmm.lib test_ddmm.exp

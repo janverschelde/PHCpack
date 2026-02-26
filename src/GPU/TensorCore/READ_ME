@@ -24,7 +24,8 @@ test_splitting_doubles        : tests on halving and quartering doubles
 double_matrix_multiplications : matrix matrix multiplications with doubles
 test_mmm                      : tests double matrix matrix multiplications
 ------------------------------------------------------------------------------
-ddmm_host                     : double double matrix multiplications
+ddmm_host                     : CPU double double matrix multiplications
+ddmm_kernels                  : GPU double double matrix multiplications
 test_ddmm                     : tests double double matrix multiplications
 ------------------------------------------------------------------------------
 vectored_double_doubles       : defines vectored double double arithmetic

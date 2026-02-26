@@ -1,7 +1,8 @@
 Thu 26 Feb 2026 : moved double_double_matmatmul from vectored_double_doubles
   into the new ddmm_host, tested by test_ddmm.  Updated makefiles.
   Also moved the transpose_dd_matrix function into ddmm_host.
-  Updated test_vdd.cpp.
+  Updated test_vdd.cpp.  Defined ddmm_kernels, called in test_ddmm,
+  updated makefiles.
 
 Wed 25 Feb 2026 : to smDMMA_kernels, added kernel which relies on shared
   memory, tested in test_smDMMA.cpp.  Added definitions to smDMMA_dims.h.
