@@ -21,6 +21,7 @@ with use_series;
 with use_padcon;
 with use_multip;  -- multiplicity structure
 with use_witsols;
+with use_outdata; -- interface to DEMiCs
 with Job_Containers;
 with Job_Handlers;
 with Multprec_PolySys_Interface;
@@ -445,17 +446,17 @@ function use_c2phc4c ( job : integer32;
       when 832 => return use_syscon(26,a,b,c,vrblvl-1); -- dd Laurent by name
       when 833 => return use_syscon(27,a,b,c,vrblvl-1); -- qd Laurent by name
      -- extract DEMiCs output data
-     -- when 834 => return use_outdata(0,a,b,c); -- allocate memory for lifting
-     -- when 835 => return use_outdata(1,a,b,c); -- assign a lifting value
-     -- when 836 => return use_outdata(2,a,b,c); -- retrieve a lifting value
-     -- when 837 => return use_outdata(3,a,b,c); -- clear lifting values
-     -- when 838 => return use_outdata(4,a,b,c); -- append cell indices
-     -- when 839 => return use_outdata(5,a,b,c); -- retrieve cell indices
-     -- when 840 => return use_outdata(6,a,b,c); -- clear cell indices
-     -- when 841 => return use_outdata(7,a,b,c); -- store mixed volume
-     -- when 842 => return use_outdata(8,a,b,c); -- retrieve mixed volume
-     -- when 843 => return use_outdata(9,a,b,c); -- call DEMiCs for mixed volume
-     -- when 844 => return use_outdata(10,a,b,c); -- stable mv by DEMiCs
+      when 834 => return use_outdata(0,a,b,c); -- allocate memory for lifting
+      when 835 => return use_outdata(1,a,b,c); -- assign a lifting value
+      when 836 => return use_outdata(2,a,b,c); -- retrieve a lifting value
+      when 837 => return use_outdata(3,a,b,c); -- clear lifting values
+      when 838 => return use_outdata(4,a,b,c); -- append cell indices
+      when 839 => return use_outdata(5,a,b,c); -- retrieve cell indices
+      when 840 => return use_outdata(6,a,b,c); -- clear cell indices
+      when 841 => return use_outdata(7,a,b,c); -- store mixed volume
+      when 842 => return use_outdata(8,a,b,c); -- retrieve mixed volume
+      when 843 => return use_outdata(9,a,b,c); -- call DEMiCs for mixed volume
+      when 844 => return use_outdata(10,a,b,c); -- stable mv by DEMiCs
      -- numerical irreducible decomposition
       when 845..859 => return use_witsols(job-845,a,b,c,vrblvl-1); -- solvers
      -- for the irreducible factor string, use job 993

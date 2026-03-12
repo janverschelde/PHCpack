@@ -1,3 +1,7 @@
+Thu 12 Mar 2026 : copied use_outdata, list_of_strings.ads, and 
+  demics_output_data from Ada/Root_Counts/DEMiCs/Source into this folder,
+  adjusted use_c2phc4c.adb.
+
 Wed 8 Oct 2025 : added state.gpr to build use_c2phc.
 
 Sat 4 Oct 2025 : updated use_c2phc.adb for the removal of use_outdata,

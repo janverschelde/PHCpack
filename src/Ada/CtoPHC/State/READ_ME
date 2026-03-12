@@ -1,4 +1,4 @@
-Calling PHCpack from C as a state machine in PHCv2.4.91
+Calling PHCpack from C as a state machine in PHCv2.4.93
 
 This directory was created in release 2.3 as subdirectory to CtoPHC.
 The idea for using PHCpack as a state machine originated from the need
@@ -99,6 +99,10 @@ cells_interface                  : interface to the cells containers
 ts_celcon                        : tests the cells container
 use_celcon                       : Ada gateway to the cells container
 ts_use_celcon.c                  : C routine to test the cells container
+------------------------------------------------------------------------------
+lists_of_strings                 : instantiation of lists with strings
+demics_output_data               : stores output data of DEMiCs
+use_outdata                      : exports operations of demics_output_data
 ------------------------------------------------------------------------------
 monomial_maps_container          : monomial maps as solution to binomials
 monomial_maps_interface          : interface function to monomial maps
