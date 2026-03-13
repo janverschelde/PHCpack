@@ -1,4 +1,4 @@
-Structures defines wrappers to systems and solutions in PHCv2.4.85.
+Structures defines wrappers to systems and solutions in PHCv2.4.93.
 
 The packages in this folder wrap the data structures to represent
 polynomial systems, systems of Laurent polynomials, and solution lists.
@@ -25,18 +25,21 @@ standard_laursys_container       : management of Laurent systems
 dobldobl_laursys_container       : for Laurent systems with dobldobl coeffs
 quaddobl_laursys_container       : for Laurent systems with quaddobl coeffs
 multprec_laursys_container       : for Laurent systems with multprec coeffs
-ts_syscon                        : tests the systems container
+test_systems_containers          : test operations on systems containers
+ts_syscon                        : calls the main test on systems containers
 ------------------------------------------------------------------------------
 standard_systems_pool            : pool of systems and associated structures
 dobldobl_systems_pool            : pool of dobldobl complex systems
 quaddobl_systems_pool            : pool of quaddobl complex systems
-ts_syspool                       : test on the systems pool
+test_systems_pools               : test operations on the systems pools
+ts_syspool                       : calls the main test on systems pools
 ------------------------------------------------------------------------------
 standard_solutions_container     : management of solution lists
 dobldobl_solutions_container     : solutions with double doubles
 quaddobl_solutions_container     : solutions with quad doubles
 multprec_solutions_container     : multiprecision solutions
-ts_solcon                        : tests the solutions container
+test_solutions_containers        : test operations on solutions containers
+ts_solcon                        : calls the main test on solutions containers
 ------------------------------------------------------------------------------
 solutions_pool                   : pool of solution lists
 ts_solpool                       : test on the solutions pool

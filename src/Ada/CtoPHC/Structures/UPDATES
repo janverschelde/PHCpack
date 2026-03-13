@@ -1,0 +1,4 @@
+Fri 13 Mar 2026 : added new package test_systems_containers, with code taken
+  from ts_syscon.adb; updated structures.gpr, because no C code in this folder.
+  Added new package test_solutions_containers with code from ts_solcon.
+  Added new package test_systems_pools with code from ts_syspool. 
