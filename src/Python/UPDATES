@@ -1,3 +1,7 @@
+Sat 14 Mar 2026 : extended get_site_location in the __init__.py to search
+  through all site-packages for the folder where phcpy is installed.
+  Added exception handler in get_site_location of the __init__.py.
+
 Tue 7 Oct 2025 : to families in phcpy, added cyclic_reformulated(n)
   to define the cyclic n-roots problem as a Laurent system.
   To prepare for version 1.1.5, adjusted __init__.py, setup.py,

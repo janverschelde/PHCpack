@@ -97,6 +97,7 @@ def cite():
 
 from os import getcwd, chdir
 from site import getsitepackages
+from os import listdir
 
 def get_site_location(vrblvl=0):
     """
@@ -110,9 +111,21 @@ def get_site_location(vrblvl=0):
         print('sites :', sites)
     bools = ['site-packages' in x for x in sites]
     if len(bools) > 0:
-        if True in bools:
-            idx = bools.index(True)
-            return sites[idx]
+        for (idx, flag) in enumerate(bools):
+            if flag:
+                try:
+                    files = listdir(sites[idx])
+                    if 'phcpy' in files:
+                        if vrblvl > 0:
+                            print('found phcpy in', sites[idx])
+                        return sites[idx]
+                    else:
+                        if vrblvl > 0:
+                            print('no phcpy in', sites[idx], end='')
+                            print(', continue searching ...')
+                except:
+                    if vrblvl > 0:
+                        print('no files in', sites[idx])
     if vrblvl > 0:
         print('no site-packages, look for dist-packages ...')
     bools = ['dist-packages' in x for x in sites]
