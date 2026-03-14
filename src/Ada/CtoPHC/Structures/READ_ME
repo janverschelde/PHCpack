@@ -44,3 +44,7 @@ ts_solcon                        : calls the main test on solutions containers
 solutions_pool                   : pool of solution lists
 ts_solpool                       : test on the solutions pool
 ------------------------------------------------------------------------------
+double_vecvecs_container         : container of vectors of double vectors
+test_double_vecvecs_container    : tests double vecvecs container
+ts_dvvcon                        : calls main test on dbl vecvecs container
+------------------------------------------------------------------------------

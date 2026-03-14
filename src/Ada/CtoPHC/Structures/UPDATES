@@ -1,3 +1,7 @@
+Sat 14 Mar 2026 : new double_vecvecs_container, test_double_vecvecs_container,
+  and ts_dvvcon for containers of arrays of vectors of floating-point vectors.
+  Updated structures.gpr.
+
 Fri 13 Mar 2026 : added new package test_systems_containers, with code taken
   from ts_syscon.adb; updated structures.gpr, because no C code in this folder.
   Added new package test_solutions_containers with code from ts_solcon.
