@@ -47,4 +47,7 @@ ts_solpool                       : test on the solutions pool
 double_vecvecs_container         : container of vectors of double vectors
 test_double_vecvecs_container    : tests double vecvecs container
 ts_dvvcon                        : calls main test on dbl vecvecs container
+dcmplx_vecvecs_container         : container of vectors of complex vectors
+test_dcmplx_vecvecs_container    : tests complex vecvecs container
+ts_cvvcon                        : calls main test on cmplx vecvecs container
 ------------------------------------------------------------------------------

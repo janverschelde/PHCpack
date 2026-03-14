@@ -38,7 +38,8 @@ project structures is
         "ts_syspool.adb",      -- tests systems pool
         "ts_solcon.adb",       -- tests solutions containers
         "ts_solpool.adb",      -- tests pool of solution lists
-        "ts_dvvcon.adb"        -- tests double vector of vectors container
+        "ts_dvvcon.adb",       -- tests double vectors of vectors container
+        "ts_cvvcon.adb"        -- tests dcmplx vectors of vectors container
     );
 
     package Compiler is
