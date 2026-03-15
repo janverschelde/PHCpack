@@ -144,7 +144,6 @@ ts_c2phc.c                       : C routine calls the Ada gateway to PHCpack
 job_containers                   : jobs to move data from/into containers
 job_handlers                     : functions to handle jobs in use_c2phc4c
 symbol_table_interface           : interface to manipulating symbol table
-use_c2phc4c                      : exports PHCpack functionality to C
 use_c2phc                        : includes use_c2phc4c and DEMiCs interface
 ts_use_c2phc.c                   : C test on the interactive operations
 -----------------------------------------------------------------------------
@@ -152,5 +151,10 @@ irreducible_components_interface : numerical irreducible decomposition
 use_witsols                      : gateway to blackbox solver
 -----------------------------------------------------------------------------
 double_vecvecs_interface         : double vectors of vectors
+dcmplx_vecvecs_interface         : complx vectors of vectors
 ts_use_dvvcon                    : tests interface to double vecvecs
+ts_use_cvvcon                    : tests interface to complex vecvecs
+use_avvcon                       : gateway for arrays of vectors of vectors
+-----------------------------------------------------------------------------
+use_c2phc4c                      : exports PHCpack functionality to C
 -----------------------------------------------------------------------------

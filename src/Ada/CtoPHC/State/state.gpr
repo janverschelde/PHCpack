@@ -68,6 +68,7 @@ project state is
     for Main use
     (
         "ts_use_dvvcon.adb",   -- tests double vectors of vectors container
+        "ts_use_cvvcon.adb",   -- tests complex vectors of vectors container
         "use_phc.adb"
     );
 

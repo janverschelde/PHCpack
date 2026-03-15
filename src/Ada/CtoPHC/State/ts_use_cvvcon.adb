@@ -3,17 +3,18 @@ with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Standard_Floating_Vectors;
-with Standard_Floating_Vectors_IO;      use Standard_Floating_Vectors_IO;
+with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Standard_Complex_Vectors;
+with Standard_Complex_Vectors_IO;       use Standard_Complex_Vectors_IO;
 with Standard_Random_Vectors;
 with C_Integer_Arrays;                  use C_Integer_Arrays;
 with C_Double_Arrays;                   use C_Double_Arrays;
-with Double_VecVecs_Interface;          use Double_VecVecs_Interface;
+with DCMPLX_VecVecs_Interface;          use DCMPLX_VecVecs_Interface;
 
-procedure ts_use_dvvcon is
+procedure ts_use_cvvcon is
 
 -- DESCRIPTION :
---   Tests the interface to the arrays of vectors of floating-point vectors.
+--   Tests the interface to the arrays of vectors of complex vectors.
 
   function Get_Dimension ( vrb : integer32 ) return integer32 is
 
@@ -26,9 +27,9 @@ procedure ts_use_dvvcon is
     r,dim : integer32;
 
   begin
-    r := Double_VecVecs_Get_Dimension(a,vrb);
+    r := DCMPLX_VecVecs_Get_Dimension(a,vrb);
     if r /= 0 then
-      put("Double_VecVecs_Get_Dimension returned ");
+      put("DCMPLX_VecVecs_Get_Dimension returned ");
       put(r,1); new_line;
     end if;
     dim := integer32(ar(0));
@@ -49,9 +50,9 @@ procedure ts_use_dvvcon is
 
   begin
     ar(0) := Interfaces.C.int(idx);
-    r := Double_VecVecs_Get_Size(a,b,vrb);
+    r := DCMPLX_VecVecs_Get_Size(a,b,vrb);
     if r /= 0 then
-      put("Double_VecVecs_Get_Size returned ");
+      put("DCMPLX_VecVecs_Get_Size returned ");
       put(r,1); new_line;
     end if;
     size := integer32(br(0));
@@ -79,9 +80,9 @@ procedure ts_use_dvvcon is
         put("Give the size of array "); put(i,1); put(" : "); get(m);
         br(Interfaces.C.size_t(i-1)) := Interfaces.C.int(m);
       end loop;
-      r := Double_VecVecs_Initialize(a,b,vrb);
+      r := DCMPLX_VecVecs_Initialize(a,b,vrb);
       if r /= 0
-       then put("Double_VecVecs_Initialize returned "); put(r,1); new_line;
+       then put("DCMPLX_VecVecs_Initialize returned "); put(r,1); new_line;
       end if;
     end;
     put_line("-> retrieving the stored dimensions ...");
@@ -99,16 +100,18 @@ procedure ts_use_dvvcon is
 
   procedure Add_Random_Vectors ( dim,vrb : in integer32 ) is
 
-    data : Standard_Floating_Vectors.Vector(1..dim);
+    data : Standard_Complex_Vectors.Vector(1..dim);
     anbr : constant integer32 := Get_Dimension(vrb);
     size : integer32;
     ar : C_Integer_Array(0..Interfaces.C.size_t(1));
     br : C_Integer_Array(0..Interfaces.C.size_t(2));
-    cr : C_Double_Array(0..Interfaces.C.size_t(dim-1));
+    cr : C_Double_Array(0..Interfaces.C.size_t(2*dim));
     a : constant C_IntArrs.Pointer := ar(0)'unchecked_access;
     b : constant C_IntArrs.Pointer := br(0)'unchecked_access;
     c : constant C_DblArrs.Pointer := cr(0)'unchecked_access;
     r : integer32;
+    idx : Interfaces.C.size_t;
+    use Interfaces.C;
 
   begin
     put("adding "); put(anbr,1); put_line(" arrays ...");
@@ -121,12 +124,14 @@ procedure ts_use_dvvcon is
         ar(0) := Interfaces.C.int(dim);
         br(0) := Interfaces.C.int(i);
         br(1) := Interfaces.C.int(j);
-        for k in cr'range loop
-          cr(k) := Interfaces.C.double(data(integer32(k)+1));
+        idx := 0;
+        for k in 1..dim loop
+          cr(idx) := Interfaces.C.double(REAL_PART(data(k))); idx := idx+1;
+          cr(idx) := Interfaces.C.double(IMAG_PART(data(k))); idx := idx+1;
         end loop;
-        r := Double_VecVecs_Set(a,b,c,vrb);
+        r := DCMPLX_VecVecs_Set(a,b,c,vrb);
         if r /= 0
-         then put("Double_VecVecs_Set returned "); put(r,1); new_line;
+         then put("DCMPLX_VecVecs_Set returned "); put(r,1); new_line;
         end if;
       end loop;
     end loop;
@@ -134,16 +139,20 @@ procedure ts_use_dvvcon is
 
   procedure Get_Vectors ( dim,vrb : in integer32 ) is
 
-    data : Standard_Floating_Vectors.Vector(1..dim);
+    data : Standard_Complex_Vectors.Vector(1..dim);
     anbr : constant integer32 := Get_Dimension(vrb);
     size : integer32;
     ar : C_Integer_Array(0..Interfaces.C.size_t(1));
     br : C_Integer_Array(0..Interfaces.C.size_t(2));
-    cr : C_Double_Array(0..Interfaces.C.size_t(dim-1));
+    cr : C_Double_Array(0..Interfaces.C.size_t(2*dim-1))
+       := (0..Interfaces.C.size_t(2*dim-1) => Interfaces.C.double(0.0));
     a : constant C_IntArrs.Pointer := ar(0)'unchecked_access;
     b : constant C_IntArrs.Pointer := br(0)'unchecked_access;
     c : constant C_DblArrs.Pointer := cr(0)'unchecked_access;
     r : integer32;
+    idx : Interfaces.C.size_t;
+
+    use Interfaces.C;
 
   begin
     for i in 1..anbr loop
@@ -154,12 +163,14 @@ procedure ts_use_dvvcon is
         ar(0) := Interfaces.C.int(dim);
         br(0) := Interfaces.C.int(i);
         br(1) := Interfaces.C.int(j);
-        r := Double_VecVecs_Get(a,b,c,vrb);
+        r := DCMPLX_VecVecs_Get(a,b,c,vrb);
         if r /= 0
-         then put("Double_VecVecs_Get returned "); put(r,1); new_line;
+         then put("DCMPLX_VecVecs_Get returned "); put(r,1); new_line;
         end if;
-        for k in cr'range loop
-          data(integer32(k)+1) := double_float(cr(k));
+        idx := 0;
+        for k in 1..dim loop
+          data(k) := Create(double_float(cr(idx)),double_float(cr(idx+1)));
+          idx := idx + 2;
         end loop;
         put("vector "); put(j,1); put(" from array "); put(i,1);
         put_line(" :");
@@ -181,7 +192,7 @@ procedure ts_use_dvvcon is
     new_line;
     put_line("Retrieving the vectors ...");
     Get_Vectors(dim,10);
-    r := Double_VecVecs_Clear;
+    r := DCMPLX_VecVecs_Clear;
     if r /= 0
      then put("Double_VecVecs_Clear returned "); put(r,1); new_line;
     end if;
@@ -189,4 +200,4 @@ procedure ts_use_dvvcon is
 
 begin 
   Main;
-end ts_use_dvvcon;
+end ts_use_cvvcon;

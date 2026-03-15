@@ -33,6 +33,7 @@ with Newton_Interface;
 with Deflation_Interface;
 with Path_Trackers_Interface;
 with Witness_Interface;
+with use_avvcon;
 
 function use_c2phc4c ( job : integer32;
                        a : C_intarrs.Pointer;
@@ -525,6 +526,8 @@ function use_c2phc4c ( job : integer32;
       when 924 => return use_track(72,a,b,c,vrblvl-1);
       when 925 => return use_track(73,a,b,c,vrblvl-1);
       when 926 => return use_track(74,a,b,c,vrblvl-1);
+     -- arrays of vectors of vectors containers
+      when 930 => return use_avvcon(0,a,b,c,vrblvl-1);  
      -- get string representation of irreducible factors
       when 993 => return use_witsols(15,a,b,c,vrblvl-1);
      -- get number of available CPUs
