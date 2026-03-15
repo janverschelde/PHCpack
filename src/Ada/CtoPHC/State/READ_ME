@@ -151,3 +151,6 @@ ts_use_c2phc.c                   : C test on the interactive operations
 irreducible_components_interface : numerical irreducible decomposition
 use_witsols                      : gateway to blackbox solver
 -----------------------------------------------------------------------------
+double_vecvecs_interface         : double vectors of vectors
+ts_use_dvvcon                    : tests interface to double vecvecs
+-----------------------------------------------------------------------------
