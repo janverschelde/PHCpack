@@ -2,19 +2,23 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 
 package Test_DCMPLX_VecVecs_Container is
 
-  procedure Prompt_Dimensions;
+-- DESCRIPTION :
+--   In the test procedures below, the verbose level is given by vrb.
+
+  procedure Prompt_Dimensions ( vrb : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Prompts for the number of arrays and for the number
   --   of vectors in each array.
 
-  procedure Add_Random_Vectors ( dim : in integer32 );
+  procedure Add_Random_Vectors
+              ( dim : in integer32; vrb : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   After the dimensions are set,
   --   fills up the container with random vectors of a fixed size dim.
 
-  procedure Get_Vectors;
+  procedure Get_Vectors ( vrb : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Shows the vectors stored in the container.

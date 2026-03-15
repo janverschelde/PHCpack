@@ -1,3 +1,6 @@
+Sun 15 Mar 2026 : added verbose level to all operations in {double, dcmplx}_
+  vecvecs_container, updated test_{double, dcmplx}_vecvecs_container.
+
 Sat 14 Mar 2026 : new double_vecvecs_container, test_double_vecvecs_container,
   and ts_dvvcon for containers of arrays of vectors of floating-point vectors.
   Updated structures.gpr.  Copied to store vectors of complex vectors:

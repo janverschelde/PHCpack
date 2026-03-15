@@ -8,14 +8,16 @@ with Double_VecVecs_Container;
 
 package body Test_Double_VecVecs_Container is
 
-  procedure Prompt_Dimensions is
+  procedure Prompt_Dimensions ( vrb : in integer32 := 0 ) is
 
     dim : integer32 := 0;
+    sz : integer32;
 
   begin
     put("Give the dimension : "); get(dim);
-    Double_VecVecs_Container.Initialize(dim);
-    put("-> the size : "); put(Double_VecVecs_Container.size,1); new_line;
+    Double_VecVecs_Container.Initialize(dim,vrb);
+    sz := Double_VecVecs_Container.size(vrblvl=>vrb);
+    put("-> the size : "); put(sz,1); new_line;
     declare
       sizes : Standard_Integer_Vectors.Vector(1..dim) := (1..dim => 0);
     begin
@@ -23,37 +25,38 @@ package body Test_Double_VecVecs_Container is
         put("Give size of array "); put(i,1); put(" : ");
         get(sizes(i));
       end loop;
-      Double_VecVecs_Container.Initialize(sizes);
+      Double_VecVecs_Container.Initialize(sizes,vrb);
     end;
     for i in 1..dim loop
-      put("-> size of array "); put(i,1); put(" : ");
-      put(Double_VecVecs_Container.size(i),1); new_line;
+      sz := Double_VecVecs_Container.size(i,vrb);
+      put("-> size of array "); put(i,1); put(" : "); put(sz,1); new_line;
     end loop;  
   end Prompt_Dimensions;
 
-  procedure Add_Random_Vectors ( dim : in integer32 ) is
+  procedure Add_Random_Vectors
+              ( dim : in integer32; vrb : in integer32 := 0 ) is
 
     data : Standard_Floating_Vectors.Vector(1..dim);
 
   begin
-    for i in 1..Double_VecVecs_Container.size loop
-      for j in 1..Double_VecVecs_Container.size(i) loop
+    for i in 1..Double_VecVecs_Container.size(vrblvl=>vrb) loop
+      for j in 1..Double_VecVecs_Container.size(i,vrblvl=>vrb) loop
         data := Standard_Random_Vectors.Random_Vector(1,dim);
         put("-> adding "); put(j,1); put(" to component "); put(i,1); 
         put_line(" : "); put_line(data);
-        Double_VecVecs_Container.Store_Copy(i,j,data);
+        Double_VecVecs_Container.Store_Copy(i,j,data,vrb);
       end loop;
     end loop;
   end Add_Random_Vectors;
 
-  procedure Get_Vectors is
+  procedure Get_Vectors ( vrb : in integer32 := 0 )is
 
     data : Standard_Floating_Vectors.Link_to_Vector;
 
   begin
-    for i in 1..Double_VecVecs_Container.size loop
-      for j in 1..Double_VecVecs_Container.size(i) loop
-        data := Double_VecVecs_Container.Get(i,j);
+    for i in 1..Double_VecVecs_Container.size(vrblvl=>vrb) loop
+      for j in 1..Double_VecVecs_Container.size(i,vrblvl=>vrb) loop
+        data := Double_VecVecs_Container.Get(i,j,vrb);
         put("-> vector "); put(j,1); put(" of component "); put(i,1); 
         put_line(" : "); put_line(data);
       end loop;
@@ -63,19 +66,20 @@ package body Test_Double_VecVecs_Container is
   procedure Main is
 
     size : integer32 := 0;
+    vrblvl : constant integer32 := 1;
 
   begin
     new_line;
     put_line("Testing the double vectors of vectors container ...");
     new_line;
-    Prompt_Dimensions;
+    Prompt_Dimensions(vrblvl);
     new_line;
     put("Give the size of the vectors : "); get(size);
-    Add_Random_Vectors(size);
+    Add_Random_Vectors(size,vrblvl);
     new_line;
     put_line("Retrieving the vectors ...");
-    Get_Vectors;
-    Double_VecVecs_Container.Clear;
+    Get_Vectors(vrblvl);
+    Double_VecVecs_Container.Clear(vrblvl);
   end Main;
 
 end Test_Double_VecVecs_Container;
