@@ -13,18 +13,96 @@ def initialize_series_coefficients(dims, vrblvl=0):
         print('in initialize_series_coefficients, dims :', dims)
     phc = get_phcfun(vrblvl-1)
     alen = pointer(c_int32(len(dims)))
-    bpar = (c_int32 * len(dims))()
+    bval = (c_int32 * len(dims))()
     for (idx, dim) in enumerate(dims):
-        bpar[idx] = dim
-    bdim = pointer(bpar)
+        bval[idx] = dim
+    bdim = pointer(bval)
     ccc = pointer(c_double(0.0))
     vrb = c_int32(vrblvl)
     if vrblvl > 0:
         print('-> initialize_series_coefficients calls phc', end='')
-    retval = phc(930, alen, bdim, ccc, vrb)
+    retval1 = phc(930, alen, bdim, ccc, vrb)
     if vrblvl > 0:
-        print(', return value :', retval)
-    return retval
+        print(', return value :', retval1)
+    if vrblvl > 0:
+        print('-> initialize_series_coefficients calls phc', end='')
+    retval2 = phc(931, alen, bdim, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval2)
+    return retval1 + retval2
+
+def set_series_term(adx, vdx, pwr, cff, vrblvl=0):
+    """
+    Sets the powers and coefficients of one term, at the position adx
+    in the array and vector with index vdx in the array.
+    The powers in pwr are doubles, whereas cff contains complex numbers.
+    """
+    if vrblvl > 0:
+        print('in set_series_term, adx :', adx, ', vdx :', vdx)
+        print('pwr : ', pwr)
+        print('cff : ', cff)
+    phc = get_phcfun(vrblvl-1)
+    alen = pointer(c_int32(len(pwr)))
+    bval = (c_int32 * 2)()
+    bval[0] = adx
+    bval[1] = vdx
+    bdim = pointer(bval)
+    cval = (c_double * len(pwr))()
+    for (idx, val) in enumerate(pwr):
+        cval[idx] = val
+    ccc = pointer(cval)
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> set_series_term calls phc', end='')
+    retval1 = phc(932, alen, bdim, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval1)
+    cval = (c_double * len(pwr))()
+    for (idx, val) in enumerate(cff):
+        cval[2*idx] = val.real
+        cval[2*idx+1] = val.imag
+    ccc = pointer(cval)
+    vrb = c_int32(vrblvl)
+    if vrblvl > 0:
+        print('-> set_series_term calls phc', end='')
+    retval2 = phc(933, alen, bdim, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval2)
+    return retval1 + retval2
+
+def get_series_term(adx, vdx, vrblvl=0):
+    """
+    Gets the powers and coefficients of one term, at the position adx
+    in the array and vector with index vdx in the array.
+    """
+    if vrblvl > 0:
+        print('in set_series_term, adx :', adx, ', vdx :', vdx)
+        print('pwr : ', pwr)
+        print('cff : ', cff)
+
+def clear_series_terms(vrblvl=0):
+    """
+    Deallocates the space occupied by the real powers
+    and the complex coefficients.
+    """
+    if vrblvl > 0:
+        print('in clear_series_terms ...')
+    phc = get_phcfun(vrblvl-1)
+    aaa = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> clear_series_terms calls phc', end='')
+    retval1 = phc(936, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval1)
+    if vrblvl > 0:
+        print('-> clear_series_terms calls phc', end='')
+    retval2 = phc(937, aaa, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval2)
+    return retval1 + retval2
 
 def test_initialization(vrblvl=0):
     """

@@ -1,5 +1,5 @@
 Sun 15 Mar 2026 : new module laurent.py with initialize function.
-  Updated __init__.py.
+  Updated __init__.py.  Extended laurent.py with more functions.
 
 Sat 14 Mar 2026 : extended get_site_location in the __init__.py to search
   through all site-packages for the folder where phcpy is installed.
