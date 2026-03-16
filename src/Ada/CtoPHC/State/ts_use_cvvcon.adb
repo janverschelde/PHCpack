@@ -36,10 +36,10 @@ procedure ts_use_cvvcon is
     return dim;
   end Get_Dimension;
 
-  function Get_Size ( idx,vrb : integer32 ) return integer32 is
+  function Get_Size_Array ( idx,vrb : integer32 ) return integer32 is
 
   -- DESCRIPTION :
-  --   Returns the size of the vector of array with index idx.
+  --   Returns the size of the array with index idx.
   --   The verbose level is given in vrb.
 
     ar : C_Integer_Array(0..Interfaces.C.size_t(1));
@@ -50,14 +50,39 @@ procedure ts_use_cvvcon is
 
   begin
     ar(0) := Interfaces.C.int(idx);
-    r := DCMPLX_VecVecs_Get_Size(a,b,vrb);
+    r := DCMPLX_VecVecs_Get_Size_Array(a,b,vrb);
     if r /= 0 then
       put("DCMPLX_VecVecs_Get_Size returned ");
       put(r,1); new_line;
     end if;
     size := integer32(br(0));
     return size;
-  end Get_Size;
+  end Get_Size_Array;
+
+  function Get_Size_Vector ( idx1,idx2,vrb : integer32 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the size of the vector with index idx2 in
+  --   the array with index idx1.
+  --   The verbose level is given in vrb.
+
+    ar : C_Integer_Array(0..Interfaces.C.size_t(2));
+    br : C_Integer_Array(0..Interfaces.C.size_t(1));
+    a : constant C_IntArrs.Pointer := ar(0)'unchecked_access;
+    b : constant C_IntArrs.Pointer := br(0)'unchecked_access;
+    r,size : integer32;
+
+  begin
+    ar(0) := Interfaces.C.int(idx1);
+    ar(1) := Interfaces.C.int(idx2);
+    r := DCMPLX_VecVecs_Get_Size_Vector(a,b,vrb);
+    if r /= 0 then
+      put("DCMPLX_VecVecs_Get_Size returned ");
+      put(r,1); new_line;
+    end if;
+    size := integer32(br(0));
+    return size;
+  end Get_Size_Vector;
 
   procedure Prompt_Dimensions ( vrb : in integer32 ) is
 
@@ -92,7 +117,7 @@ procedure ts_use_cvvcon is
     begin
       put("  dim : "); put(dim,1); new_line;
       for i in 1..dim loop
-        size := Get_Size(i,vrb);
+        size := Get_Size_Array(i,vrb);
         put("  size : "); put(size,1); new_line;
       end loop;
     end;
@@ -116,7 +141,7 @@ procedure ts_use_cvvcon is
   begin
     put("adding "); put(anbr,1); put_line(" arrays ...");
     for i in 1..anbr loop
-      size := Get_Size(i,vrb);
+      size := Get_Size_Array(i,vrb);
       for j in 1..size loop
         data := Standard_Random_Vectors.Random_Vector(1,dim);
         put("-> adding "); put(j,1); put(" to array "); put(i,1); 
@@ -149,14 +174,14 @@ procedure ts_use_cvvcon is
     a : constant C_IntArrs.Pointer := ar(0)'unchecked_access;
     b : constant C_IntArrs.Pointer := br(0)'unchecked_access;
     c : constant C_DblArrs.Pointer := cr(0)'unchecked_access;
-    r : integer32;
+    r,sz : integer32;
     idx : Interfaces.C.size_t;
 
     use Interfaces.C;
 
   begin
     for i in 1..anbr loop
-      size := Get_Size(i,vrb);
+      size := Get_Size_Array(i,vrb);
       for j in 1..size loop
         put("-> getting "); put(j,1); put(" from array "); put(i,1); 
         put_line(" ...");
@@ -175,6 +200,10 @@ procedure ts_use_cvvcon is
         put("vector "); put(j,1); put(" from array "); put(i,1);
         put_line(" :");
         put_line(data);
+        sz := Get_Size_Vector(i,j,vrb);
+        put("vector "); put(j,1); put(" from array "); put(i,1);
+        put(" has size : "); put(sz,1); 
+        put(", data'last : "); put(data'last,1); new_line;
       end loop;
     end loop;
   end Get_Vectors;

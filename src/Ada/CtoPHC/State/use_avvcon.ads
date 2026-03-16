@@ -24,11 +24,23 @@ function use_avvcon ( job : integer32;
 --   job    =   3 : sets the j-th vector of the i-th array to the a[0]
 --                  complex numbers in c given on input,
 --                  where i is given by b[0] and j is given by b[1];
---   job    =   4 : gets the j-th vector of the i-th array to the a[0]
+--   job    =   4 : returns in a[0] the number of double vecvecs arrays;
+--   job    =   5 : returns in a[0] the number of complex vecvecs arrays;
+--   job    =   6 : given in a[0] the index of a double vecvecs array,
+--                  returns in b[0] the size of that array;
+--   job    =   7 : given in a[0] the index of a complex vecvecs array,
+--                  returns in b[0] the size of that array;
+--   job    =   8 : given in a[0] the index of a double vecvecs array,
+--                  and in a[1] the index of a vector,
+--                  returns in b[0] the size of that vector;
+--   job    =   9 : given in a[0] the index of a complex vecvecs array,
+--                  and in a[1] the index of a vector,
+--                  returns in b[0] the size of that vector.
+--   job    =  10 : gets the j-th vector of the i-th array to the a[0]
 --                  real numbers in c returned as output,
 --                  where i is given by b[0] and j is given by b[1];
---   job    =   5 : gets the j-th vector of the i-th array to the a[0]
+--   job    =  11 : gets the j-th vector of the i-th array to the a[0]
 --                  complex numbers in c returned as output,
 --                  where i is given by b[0] and j is given by b[1];
---   job    =   6 : clears the arrays of vectors of real vectors;
---   job    =   7 : clears the arrays of vectors of complex vectors.
+--   job    =  12 : clears the arrays of vectors of real vectors;
+--   job    =  13 : clears the arrays of vectors of complex vectors.

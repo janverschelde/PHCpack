@@ -31,7 +31,7 @@ package Double_VecVecs_Interface is
   --   Returns in a[0] the number of arrays in the container.
   --   The verbose level is given by vrblvl.
 
-  function Double_VecVecs_Get_Size
+  function Double_VecVecs_Get_Size_Array
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32;
@@ -39,6 +39,16 @@ package Double_VecVecs_Interface is
   -- DESCRIPTION :
   --   Returns in b[0] the number of vectors in the k-th array,
   --   where k is given by a[0].
+  --   The verbose level is given by vrblvl.
+
+  function Double_VecVecs_Get_Size_Vector
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns in b[0] the size of the i-th vector in the k-th array,
+  --   where k is given by a[0] and i by a[1].
   --   The verbose level is given by vrblvl.
 
   function Double_VecVecs_Set

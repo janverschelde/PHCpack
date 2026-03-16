@@ -79,7 +79,7 @@ package body DCMPLX_VecVecs_Interface is
       return -1;
   end DCMPLX_VecVecs_Get_Dimension;
 
-  function DCMPLX_VecVecs_Get_Size
+  function DCMPLX_VecVecs_Get_Size_Array
              ( a : C_intarrs.Pointer;
                b : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
@@ -88,7 +88,7 @@ package body DCMPLX_VecVecs_Interface is
 
   begin
     if vrblvl > 0
-     then put_line("-> in dcmplx_vecvecs_interface.Get_Size ...");
+     then put_line("-> in dcmplx_vecvecs_interface.Get_Size_Array ...");
     end if;
     declare
       v_a : constant C_Integer_Array
@@ -109,10 +109,48 @@ package body DCMPLX_VecVecs_Interface is
     when others =>
       if vrblvl > 0 then
         put("Exception raised in dcmplx_vecvecs_interface.");
-        put_line("Get_Size.");
+        put_line("Get_Size_Array.");
       end if;
       return -1;
-  end DCMPLX_VecVecs_Get_Size;
+  end DCMPLX_VecVecs_Get_Size_Array;
+
+  function DCMPLX_VecVecs_Get_Size_Vector
+             ( a : C_intarrs.Pointer;
+               b : C_intarrs.Pointer;
+               vrblvl : integer32 := 0 ) return integer32 is
+
+    size : integer32;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in dcmplx_vecvecs_interface.Get_Size_Vector ...");
+    end if;
+    declare
+      v_a : constant C_Integer_Array
+          := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+      idx1 : constant integer32 := integer32(v_a(v_a'first));
+      use Interfaces.C;
+      idx2 : constant integer32 := integer32(v_a(v_a'first+1));
+    begin
+      if vrblvl > 0 then
+        put("  k idx : "); put(idx1,1);
+        put(", i idx : "); put(idx2,1); new_line;
+      end if;
+      size := DCMPLX_VecVecs_Container.Size(idx1,idx2,vrblvl=>vrblvl-1);
+    end;
+    if vrblvl > 0
+     then put("  size : "); put(size,1); new_line;
+    end if;
+    Assign(size,b);
+    return 0;
+  exception
+    when others =>
+      if vrblvl > 0 then
+        put("Exception raised in dcmplx_vecvecs_interface.");
+        put_line("Get_Size_Vector.");
+      end if;
+      return -1;
+  end DCMPLX_VecVecs_Get_Size_Vector;
 
   function DCMPLX_VecVecs_Set
              ( a : C_intarrs.Pointer;
