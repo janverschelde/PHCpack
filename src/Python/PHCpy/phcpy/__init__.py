@@ -165,7 +165,7 @@ phc = set_phcfun()
 from phcpy import version, dimension, polynomials, solutions
 from phcpy import solver, volumes, examples, families
 from phcpy import scaling, starters, homotopies, trackers
-from phcpy import tropisms, sweepers
+from phcpy import tropisms, sweepers, laurent
 from phcpy import series, curves, deflation, schubert
 from phcpy import sets, cascades, diagonal, factor
 from phcpy import decomposition, binomials
