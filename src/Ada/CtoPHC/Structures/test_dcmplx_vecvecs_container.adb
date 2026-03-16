@@ -53,6 +53,7 @@ package body Test_DCMPLX_VecVecs_Container is
   procedure Get_Vectors ( vrb : in integer32 := 0 ) is
 
     data : Standard_Complex_Vectors.Link_to_Vector;
+    size : integer32;
 
   begin
     for i in 1..DCMPLX_VecVecs_Container.size(vrblvl=>vrb) loop
@@ -60,6 +61,10 @@ package body Test_DCMPLX_VecVecs_Container is
         data := DCMPLX_VecVecs_Container.Get(i,j,vrb);
         put("-> vector "); put(j,1); put(" of component "); put(i,1); 
         put_line(" : "); put_line(data);
+        size := DCMPLX_VecVecs_Container.size(i,j,vrb);
+        put("-> vector "); put(j,1); put(" of component "); put(i,1); 
+        put(" has size : "); put(size,1);
+        put(", data'last : "); put(data'last,1); new_line;
       end loop;
     end loop;
   end Get_Vectors;

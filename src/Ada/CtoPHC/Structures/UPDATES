@@ -1,3 +1,6 @@
+Mon 16 Mar 2026 : to *vecvecs_container* added function to get the size
+  of each stored vector, updated test_*_vecvecs_container.adb.
+
 Sun 15 Mar 2026 : added verbose level to all operations in {double, dcmplx}_
   vecvecs_container, updated test_{double, dcmplx}_vecvecs_container.
 

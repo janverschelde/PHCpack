@@ -129,6 +129,33 @@ package body DCMPLX_VecVecs_Container is
     end if;
   end Size;
 
+  function Size ( k,i : integer32;
+                  vrblvl : integer32 := 0 ) return integer32 is
+
+    use Standard_Complex_VecVecs;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in dcmplx_vecvecs_container.Size 2 ...");
+    end if;
+    if data = null then
+      return 0;
+    else
+      if k < 1 or k > data'last then
+        return 0;
+      else
+        declare
+          vk : constant Link_to_VecVec := data(k);
+        begin
+          if i < vk'first or i > vk'last
+           then return 0;
+           else return vk(i)'last;
+          end if;
+        end;
+      end if;
+    end if;
+  end Size;
+
   function Get ( vrblvl : integer32 := 0 )
                return Standard_Complex_VecVecs.Link_to_Array_of_VecVecs is
   begin

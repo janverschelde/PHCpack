@@ -84,6 +84,15 @@ package Double_VecVecs_Container is
 
   -- REQUIRED : k in range 1..n, where n equals Size.
 
+  function Size ( k,i : integer32;
+                  vrblvl : integer32 := 0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the size of the i-th vector of the k-th vector of vectors.
+
+  -- REQUIRED : k in range 1..n, where n equals Size,
+  --   and i is in the range of Size(k).
+
   function Get ( vrblvl : in integer32 := 0 )
                return Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
 
