@@ -1,6 +1,7 @@
 Sun 15 Mar 2026 : updated double_vecvecs_interface and ts_use_dvvcon,
   new dcmplx_vecvecs_interface and ts_use_cvvcon.  Updated state.gpr,
   initiated use_avvcon, applied in use_c2phc4c.adb.
+  Extended use_avvcon, adding extra jobs to use_c2phc4.adb.
 
 Sat 14 Mar 2026 : new double_vecvecs_interface, tested by ts_use_dvvcon.
   Updated state.gpr.

@@ -12,4 +12,23 @@ function use_avvcon ( job : integer32;
 --   Provides a gateway to the container for arrays of vectors of vectors.
 
 -- ON ENTRY :
---   job    =   0 : read polynomial system and put in container;
+--   job    =   0 : initialize the arrays of vectors of real vectors
+--                  with the dimension in a[0] and the number of vectors
+--                  in b[k] for the k-th array;
+--   job    =   1 : initialize the arrays of vectors of complex vectors
+--                  with the dimension in a[0] and the number of vectors
+--                  in b[k] for the k-th array;
+--   job    =   2 : sets the j-th vector of the i-th array to the a[0]
+--                  real numbers in c given on input,
+--                  where i is given by b[0] and j is given by b[1];
+--   job    =   3 : sets the j-th vector of the i-th array to the a[0]
+--                  complex numbers in c given on input,
+--                  where i is given by b[0] and j is given by b[1];
+--   job    =   4 : gets the j-th vector of the i-th array to the a[0]
+--                  real numbers in c returned as output,
+--                  where i is given by b[0] and j is given by b[1];
+--   job    =   5 : gets the j-th vector of the i-th array to the a[0]
+--                  complex numbers in c returned as output,
+--                  where i is given by b[0] and j is given by b[1];
+--   job    =   6 : clears the arrays of vectors of real vectors;
+--   job    =   7 : clears the arrays of vectors of complex vectors.
