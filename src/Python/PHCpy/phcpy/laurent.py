@@ -70,6 +70,97 @@ def set_series_term(adx, vdx, pwr, cff, vrblvl=0):
         print(', return value :', retval2)
     return retval1 + retval2
 
+def power_dimension(vrblvl=0):
+    """
+    Returns the number of arrays of power vectors.
+    """
+    if vrblvl > 0:
+        print('in power_dimension ...')
+    phc = get_phcfun(vrblvl-1)
+    dim = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> power_dimension calls phc', end='')
+    retval = phc(934, dim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return dim[0]
+
+def coefficient_dimension(vrblvl=0):
+    """
+    Returns the number of arrays of coefficient vectors.
+    """
+    if vrblvl > 0:
+        print('in coefficient_dimension ...')
+    phc = get_phcfun(vrblvl-1)
+    if vrblvl > 0:
+        print('in power_dimension ...')
+    phc = get_phcfun(vrblvl-1)
+    dim = pointer(c_int32(0))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> coefficient_dimension calls phc', end='')
+    retval = phc(935, dim, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return dim[0]
+
+def size_power_array(adx, vrblvl=0):
+    """
+    Returns the size of the power array with index adx.
+    """
+    if vrblvl > 0:
+        print('in size_power_array, adx :', adx, '...')
+    phc = get_phcfun(vrblvl-1)
+    aidx = pointer(c_int32(adx))
+    size = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> size_power_array calls phc', end='')
+    retval = phc(936, aidx, size, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return size[0]
+
+def size_coefficient_array(adx, vrblvl=0):
+    """
+    Returns the size of the coefficient array with index adx.
+    """
+    if vrblvl > 0:
+        print('in size_coefficient_array, adx :', adx, '...')
+    phc = get_phcfun(vrblvl-1)
+    aidx = pointer(c_int32(adx))
+    size = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> size_coefficient_array calls phc', end='')
+    retval = phc(937, aidx, size, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return size[0]
+
+def size_power_vector(adx, vdx, vrblvl=0):
+    """
+    Returns the size of the power vector at position vdx in array adx.
+    """
+    if vrblvl > 0:
+        print('in size_power_vector, adx :', adx, ', vdx :', vdx, '...')
+    phc = get_phcfun(vrblvl-1)
+
+def size_coefficient_vector(adx, vdx, vrblvl=0):
+    """
+    Returns the size of the coefficient vector at position vdx in array adx.
+    """
+    if vrblvl > 0:
+        print('in size_coefficient_vector, adx :', adx, ', vdx :', vdx, '...')
+    phc = get_phcfun(vrblvl-1)
+
 def get_series_term(adx, vdx, vrblvl=0):
     """
     Gets the powers and coefficients of one term, at the position adx
@@ -94,12 +185,12 @@ def clear_series_terms(vrblvl=0):
     vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> clear_series_terms calls phc', end='')
-    retval1 = phc(936, aaa, bbb, ccc, vrb)
+    retval1 = phc(942, aaa, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval1)
     if vrblvl > 0:
         print('-> clear_series_terms calls phc', end='')
-    retval2 = phc(937, aaa, bbb, ccc, vrb)
+    retval2 = phc(943, aaa, bbb, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval2)
     return retval1 + retval2
@@ -113,6 +204,22 @@ def test_initialization(vrblvl=0):
     dims = [3, 2, 4]
     fail = initialize_series_coefficients(dims, vrblvl)
     return fail
+
+def test_dimensions(vrblvl=0):
+    """
+    Tests retrieving the dimensions.
+    """
+    if vrblvl > 0:
+        print("in test_dimensions ...")
+    powdim = power_dimension(vrblvl)
+    print('the power dimension :', powdim)
+    cffdim = coefficient_dimension(vrblvl)
+    print('the coefficient dimension :', cffdim)
+    powsizes = [size_power_array(i+1,vrblvl) for i in range(powdim)]
+    print('size power arrays :', powsizes)
+    cffsizes = [size_power_array(i+1,vrblvl) for i in range(cffdim)]
+    print('size coefficient arrays :', cffsizes)
+    return 0
 
 def test_laurent(vrblvl=0):
     """
@@ -135,6 +242,7 @@ def main():
     """
     lvl = 3
     fail = test_laurent(lvl)
+    fail = fail + test_dimensions(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:
