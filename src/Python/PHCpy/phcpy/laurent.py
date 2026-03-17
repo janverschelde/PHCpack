@@ -1,5 +1,8 @@
 """
 Exports working with real powered Laurent homotopies.
+The terms of the Laurent polynomials are managed by the polynomials module.
+This module manages the arrays of real powered series with complex 
+coefficients which correspond to the terms in the Laurent polynomials.
 """
 from ctypes import c_int32, c_double, pointer
 from phcpy.version import get_phcfun
@@ -57,7 +60,8 @@ def set_series_term(adx, vdx, pwr, cff, vrblvl=0):
     retval1 = phc(932, alen, bdim, ccc, vrb)
     if vrblvl > 0:
         print(', return value :', retval1)
-    cval = (c_double * len(pwr))()
+    szcff = 2*len(pwr)
+    cval = (c_double * szcff)()
     for (idx, val) in enumerate(cff):
         cval[2*idx] = val.real
         cval[2*idx+1] = val.imag
@@ -152,6 +156,19 @@ def size_power_vector(adx, vdx, vrblvl=0):
     if vrblvl > 0:
         print('in size_power_vector, adx :', adx, ', vdx :', vdx, '...')
     phc = get_phcfun(vrblvl-1)
+    aval = (c_int32 * 2)()
+    aval[0] = adx
+    aval[1] = vdx
+    idxs = pointer(aval)
+    size = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> size_power_vector calls phc', end='')
+    retval = phc(938, idxs, size, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return size[0]
 
 def size_coefficient_vector(adx, vdx, vrblvl=0):
     """
@@ -160,6 +177,19 @@ def size_coefficient_vector(adx, vdx, vrblvl=0):
     if vrblvl > 0:
         print('in size_coefficient_vector, adx :', adx, ', vdx :', vdx, '...')
     phc = get_phcfun(vrblvl-1)
+    aval = (c_int32 * 2)()
+    aval[0] = adx
+    aval[1] = vdx
+    idxs = pointer(aval)
+    size = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> size_power_vector calls phc', end='')
+    retval = phc(939, idxs, size, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return size[0]
 
 def get_series_term(adx, vdx, vrblvl=0):
     """
@@ -167,9 +197,47 @@ def get_series_term(adx, vdx, vrblvl=0):
     in the array and vector with index vdx in the array.
     """
     if vrblvl > 0:
-        print('in set_series_term, adx :', adx, ', vdx :', vdx)
-        print('pwr : ', pwr)
-        print('cff : ', cff)
+        print('in get_series_term, adx :', adx, ', vdx :', vdx, '...')
+    phc = get_phcfun(vrblvl-1)
+    powsize = size_power_vector(adx, vdx, vrblvl-1)
+    size = pointer(c_int32(powsize))
+    bval = (c_int32 * 2)()
+    bval[0] = adx
+    bval[1] = vdx
+    idxs = pointer(bval)
+    cval = (c_double * powsize)()
+    powers = pointer(cval)
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> get_series_term calls phc', end='')
+    retval = phc(940, size, idxs, powers, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    vals = powers[0:powsize]
+    pwrs = []
+    for idx in range(powsize):
+        pwrs.append(float(vals[0][idx]))
+    cffsize = size_coefficient_vector(adx, vdx, vrblvl-1)
+    size = pointer(c_int32(cffsize))
+    bval = (c_int32 * 2)()
+    bval[0] = adx
+    bval[1] = vdx
+    idxs = pointer(bval)
+    cffsize = 2*cffsize
+    cval = (c_double * cffsize)()
+    coefficients = pointer(cval)
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> get_series_term calls phc', end='')
+    retval = phc(941, size, idxs, coefficients, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    vals = coefficients[0:cffsize]
+    cffs = []
+    for idx in range(cffsize//2):
+        cff = complex(float(vals[0][2*idx]), float(vals[0][2*idx+1]))
+        cffs.append(cff)
+    return (pwrs, cffs)
 
 def clear_series_terms(vrblvl=0):
     """
@@ -221,7 +289,120 @@ def test_dimensions(vrblvl=0):
     print('size coefficient arrays :', cffsizes)
     return 0
 
-def test_laurent(vrblvl=0):
+def random_real_powers(deg, vrblvl=0):
+    """
+    Returns a list of range 0..deg,
+    of increasing real powers, starting at zero.
+    The second exponent is larger than one,
+    and all other powers form an increasing sequence.
+    """
+    if vrblvl > 0:
+        print("in random_real_powers ...")
+    from random import random
+    result = [0.0, 1.0 + random()]
+    for idx in range(deg-1):
+        inc = random()
+        lst = result[-1]
+        result.append(lst + inc)
+    return result
+
+def random_complex_coefficients(deg, vrblvl=0):
+    """
+    Returns a list of range 0..deg,
+    of random complex numbers on the unit circle.
+    """
+    if vrblvl > 0:
+        print("in random_complex_coefficients ...")
+    from math import pi, sin, cos
+    from random import random
+    result = []
+    for idx in range(deg+1):
+        angle = 2*pi*random()
+        nbr = complex(sin(angle), cos(angle))
+        result.append(nbr)
+    return result
+
+def random_real_powered_series(deg, vrblvl=0):
+    """
+    Returns a tuple of two random vectors
+    to represent a real powered series with complex coefficients, 
+    truncated at degree deg.
+    The first tuple item is the vector of real exponents,
+    the second tuple item are the complex coefficients.
+    """
+    if vrblvl > 0:
+        print("in random_real_powered_series ...")
+    return (random_real_powers(deg, vrblvl-1),
+            random_complex_coefficients(deg, vrblvl-1))
+
+def test_additions(deg, vrblvl=0):
+    """
+    Fills up initialized arrays with random real powered series
+    truncated at degree deg.
+    """
+    if vrblvl > 0:
+        print("in test_additions ...")
+    powdim = power_dimension(vrblvl-1)
+    powsizes = [size_power_array(i+1,vrblvl-1) for i in range(powdim)]
+    print('size power arrays :', powsizes)
+    fail = 0
+    for (adx, dim) in enumerate(powsizes):
+        for vdx in range(dim):
+            if vrblvl > 0:
+                print('adding series', vdx+1, 'to array', adx+1, '...')
+            (pwr, cff) = random_real_powered_series(deg, vrblvl-1)
+            fail = fail + set_series_term(adx+1, vdx+1, pwr, cff, vrblvl)
+    return fail
+
+def test_vector_dimensions(vrblvl=0):
+    """
+    Tests retrieving the dimensions of all vectors
+    added to the initialized arrays of vectors.
+    """
+    if vrblvl > 0:
+        print("in test_vector_dimensions ...")
+    powdim = power_dimension(vrblvl-1)
+    cffdim = coefficient_dimension(vrblvl-1)
+    powsizes = [size_power_array(i+1,vrblvl-1) for i in range(powdim)]
+    if vrblvl > 0:
+        print('size power arrays :', powsizes)
+    cffsizes = [size_power_array(i+1,vrblvl-1) for i in range(cffdim)]
+    if vrblvl > 0:
+        print('size coefficient arrays :', cffsizes)
+    fail = 0
+    for (adx, dim) in enumerate(powsizes):
+        for vdx in range(dim):
+            size = size_power_vector(adx+1, vdx+1, vrblvl)
+            if vrblvl > 0:
+                print('power vector', vdx+1, 'of array', adx+1, end=' ')
+                print('has size', size)
+            size = size_coefficient_vector(adx+1, vdx+1, vrblvl)
+            if vrblvl > 0:
+                print('coefficient vector', vdx+1, end=' ')
+                print('of array', adx+1, 'has size', size)
+    return fail
+
+def test_retrievals(vrblvl=0):
+    """
+    Retrieves all vectors stored in the arrays.
+    """
+    if vrblvl > 0:
+        print("in test_retrievals ...")
+    powdim = power_dimension(vrblvl-1)
+    powsizes = [size_power_array(i+1,vrblvl-1) for i in range(powdim)]
+    print('size power arrays :', powsizes)
+    fail = 0
+    for (adx, dim) in enumerate(powsizes):
+        for vdx in range(dim):
+            if vrblvl > 0:
+                print('getting series', vdx+1, 'to array', adx+1, '...')
+            (pwr, cff) = get_series_term(adx+1, vdx+1, vrblvl)
+            if vrblvl > 0:
+                print('powers :', pwr)
+                print('coefficients :', cff)
+    return fail
+
+def test_laurent(deg, vrblvl=0):
     """
     Tests operations in this module.
     The verbose level is defined by vrblvl.
@@ -229,6 +410,10 @@ def test_laurent(vrblvl=0):
     if vrblvl > 0:
         print("in test_laurent ...")
     fail = test_initialization(vrblvl)
+    fail = fail + test_dimensions(vrblvl)
+    fail = fail + test_additions(deg, vrblvl)
+    fail = fail + test_vector_dimensions(vrblvl)
+    fail = fail + test_retrievals(vrblvl)
     if vrblvl > 0:
         if fail == 0:
             print('=> All tests on the laurent module passed.')
@@ -241,8 +426,8 @@ def main():
     Runs tests on the laurent module.
     """
     lvl = 3
+    deg = 2
     fail = test_laurent(lvl)
-    fail = fail + test_dimensions(lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:
