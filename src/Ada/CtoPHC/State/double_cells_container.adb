@@ -50,7 +50,7 @@ with DoblDobl_Stable_Homotopies;
 with QuadDobl_Stable_Homotopies;
 with PHCpack_Operations;
 
-package body Cells_Container is
+package body Double_Cells_Container is
 
 -- DATA STRUCTURES :
 
@@ -186,7 +186,7 @@ package body Cells_Container is
 
   procedure Generate_Random_Standard_Coefficient_System is
 
-    n : constant natural32 := Cells_Container.Dimension-1;
+    n : constant natural32 := Double_Cells_Container.Dimension-1;
     q : constant Standard_Complex_Poly_Systems.Poly_Sys(1..integer32(n))
       := Random_Coefficient_Systems.Create(n,mix.all,lifsup.all);
 
@@ -196,7 +196,7 @@ package body Cells_Container is
 
   procedure Generate_Random_DoblDobl_Coefficient_System is
 
-    n : constant natural32 := Cells_Container.Dimension-1;
+    n : constant natural32 := Double_Cells_Container.Dimension-1;
     q : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(n))
       := Random_Coefficient_Systems.Create(n,mix.all,lifsup.all);
 
@@ -206,7 +206,7 @@ package body Cells_Container is
 
   procedure Generate_Random_QuadDobl_Coefficient_System is
 
-    n : constant natural32 := Cells_Container.Dimension-1;
+    n : constant natural32 := Double_Cells_Container.Dimension-1;
     q : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(n))
       := Random_Coefficient_Systems.Create(n,mix.all,lifsup.all);
 
@@ -252,7 +252,7 @@ package body Cells_Container is
 
     q : Standard_Complex_Poly_Systems.Link_to_Poly_Sys renames st_rndcffsys;
     use Standard_Complex_Vectors,Standard_Complex_VecVecs;
-    len : constant integer32 := integer32(Cells_Container.Length);
+    len : constant integer32 := integer32(Double_Cells_Container.Length);
 
   begin
     if st_lq /= null
@@ -317,7 +317,7 @@ package body Cells_Container is
 
     q : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys renames dd_rndcffsys;
     use DoblDobl_Complex_Vectors,DoblDobl_Complex_VecVecs;
-    len : constant integer32 := integer32(Cells_Container.Length);
+    len : constant integer32 := integer32(Double_Cells_Container.Length);
 
   begin
     if dd_lq /= null
@@ -382,7 +382,7 @@ package body Cells_Container is
 
     q : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys renames qd_rndcffsys;
     use QuadDobl_Complex_Vectors,QuadDobl_Complex_VecVecs;
-    len : constant integer32 := integer32(Cells_Container.Length);
+    len : constant integer32 := integer32(Double_Cells_Container.Length);
 
   begin
     if qd_lq /= null
@@ -773,7 +773,7 @@ package body Cells_Container is
         Append(mic.pts(i),last(i),lpt);
       end loop;
     end loop;
-    Cells_Container.Append(mic);
+    Double_Cells_Container.Append(mic);
   end Append_Mixed_Cell;
 
   procedure Solve_Standard_Start_System
@@ -1280,4 +1280,4 @@ package body Cells_Container is
     Clear_QuadDobl_Data;
   end Clear;
 
-end Cells_Container;
+end Double_Cells_Container;

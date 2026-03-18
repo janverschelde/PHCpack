@@ -11,11 +11,11 @@ with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Floating_Mixed_Subdivisions;       use Floating_Mixed_Subdivisions;
 
-package Cells_Container is
+package Double_Cells_Container is
 
 -- DESCRIPTION :
 --   This package provides a container for mixed-cell configurations,
---   designed for the interface with C.
+--   induced by a floating-point lifting, for the interface with C.
 
 -- CREATORS :
 
@@ -461,4 +461,4 @@ package Cells_Container is
   -- DESCRIPTION :
   --   Clears all data stored in the container.
 
-end Cells_Container;
+end Double_Cells_Container;

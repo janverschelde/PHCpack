@@ -93,10 +93,10 @@ ts_use_c2fac                     : C testing operations in use_c2fac
 member_interface                 : interface functions for membership test
 use_c2mbt                        : homotopy membership test jobs for in C
 ------------------------------------------------------------------------------
-cells_container                  : manages mixed-cell configurations
+double_cells_container           : double lifting mixed-cell configurations
 integer_cells_container          : integer lifting valued cells container
-cells_interface                  : interface to the cells containers
 ts_celcon                        : tests the cells container
+cells_interface                  : interface to the cells containers
 use_celcon                       : Ada gateway to the cells container
 ts_use_celcon.c                  : C routine to test the cells container
 ------------------------------------------------------------------------------

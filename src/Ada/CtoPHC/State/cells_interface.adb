@@ -43,7 +43,7 @@ with QuadDobl_LaurSys_Container;
 with Standard_Solutions_Container;
 with DoblDobl_Solutions_Container;
 with QuadDobl_Solutions_Container;
-with Cells_Container;
+with Double_Cells_Container;
 with Integer_Cells_Container;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 
@@ -117,7 +117,7 @@ package body Cells_Interface is
     close(file);
     r := mix'last;
     lif := new Array_of_Lists'(Lifted_Supports(r,sub));
-    Cells_Container.Initialize(mix,lif,sub);
+    Double_Cells_Container.Initialize(mix,lif,sub);
     return 0;
   exception
     when others => 
@@ -133,7 +133,7 @@ package body Cells_Interface is
 
     use Floating_mixed_Subdivisions;
 
-    mcc : Mixed_Subdivision := Cells_Container.Retrieve;
+    mcc : Mixed_Subdivision := Double_Cells_Container.Retrieve;
     mix : Standard_Integer_Vectors.Link_to_Vector;
     n,mv : natural32;
 
@@ -142,8 +142,8 @@ package body Cells_Interface is
       put_line("-> in cells_interface.Cells_Write_Floating_Mixed_Cells ...");
     end if;
     if not Is_Null(mcc) then
-      n := Cells_Container.Dimension;
-      mix := Cells_Container.Type_of_Mixture;
+      n := Double_Cells_Container.Dimension;
+      mix := Double_Cells_Container.Type_of_Mixture;
       put(standard_output,n-1,mix.all,mcc,mv);
       put("The mixed volume is "); put(mv,1); put_line(".");
     end if;
@@ -165,7 +165,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_Number_of_Floating_Mixed_Cells ...");
     end if;
-    Assign(integer32(Cells_Container.Length),a);
+    Assign(integer32(Double_Cells_Container.Length),a);
     return 0;
   exception
     when others => 
@@ -184,7 +184,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_Dimension_of_Floating_Mixed_Cells ...");
     end if;
-    Assign(integer32(Cells_Container.Dimension),a);
+    Assign(integer32(Double_Cells_Container.Dimension),a);
     return 0;
   exception
     when others => 
@@ -208,7 +208,7 @@ package body Cells_Interface is
     if vrblvl > 0
      then put_line("-> in cells_interface.Cells_Floating_Mixture ...");
     end if;
-    mix := Cells_Container.Type_of_Mixture;
+    mix := Double_Cells_Container.Type_of_Mixture;
     if mix /= null
      then r := mix'last; Assign(mix.all,b);
      else r := 0;
@@ -239,7 +239,7 @@ package body Cells_Interface is
     if vrblvl > 0
      then put_line("-> in cells_interface.Cells_Floating_Supports_Size ...");
     end if;
-    lif := Cells_Container.Lifted_Supports;
+    lif := Double_Cells_Container.Lifted_Supports;
     if lif /= null then
       r := lif'last;
       declare
@@ -284,7 +284,7 @@ package body Cells_Interface is
     if vrblvl > 0 then
       put_line("-> in cells_interface.Cells_Get_Floating_Support_Point ...");
     end if;
-    lif := Cells_Container.Lifted_Supports;
+    lif := Double_Cells_Container.Lifted_Supports;
    -- put("retrieving point "); put(k_b,1);
    -- put(" from list "); put(k_a,1); put_line(" ...");
     if lif /= null then
@@ -320,7 +320,7 @@ package body Cells_Interface is
     if vrblvl > 0
      then put_line("-> in cells_interface.Cells_Floating_Normal ...");
     end if;
-    Cells_Container.Retrieve(k,mic,fail);
+    Double_Cells_Container.Retrieve(k,mic,fail);
     if fail
      then return 87;
      else Assign(mic.nor.all,c); return 0;
@@ -351,7 +351,7 @@ package body Cells_Interface is
     if vrblvl > 0
      then put_line("-> in cells_interface.Cells_Floating_Cells_Size ...");
     end if;
-    Cells_Container.Retrieve(k,mic,fail);
+    Double_Cells_Container.Retrieve(k,mic,fail);
     if not fail then
       declare
         nl : Standard_Integer_Vectors.Vector(mic.pts'range);
@@ -396,7 +396,7 @@ package body Cells_Interface is
     if vrblvl > 0 then
       put_line("-> in cells_interface.Cells_Get_Floating_Cell_Point ...");
     end if;
-    Cells_Container.Retrieve(k,mic,fail);
+    Double_Cells_Container.Retrieve(k,mic,fail);
     if not fail then
       lpt := Select_Point(mic.pts(i),j);
       if lpt /= null 
@@ -423,18 +423,18 @@ package body Cells_Interface is
     v : constant C_Integer_Array := C_intarrs.Value(a);
     k : constant natural32 := natural32(v(v'first));
     mix : constant Standard_Integer_Vectors.Link_to_Vector
-        := Cells_Container.Type_of_Mixture;
+        := Double_Cells_Container.Type_of_Mixture;
     mic : Mixed_Cell;
     fail : boolean;
     mv : natural32;
-    n : constant integer32 := integer32(Cells_Container.Dimension)-1;
+    n : constant integer32 := integer32(Double_Cells_Container.Dimension)-1;
     use Standard_Integer_Vectors;
 
   begin
     if vrblvl > 0
      then put_line("-> in cells_interface.Cells_Floating_Mixed_Volume ...");
     end if;
-    Cells_Container.Retrieve(k,mic,fail);
+    Double_Cells_Container.Retrieve(k,mic,fail);
     if fail or mix = null then
       if vrblvl > 0 then
         if fail
@@ -476,7 +476,7 @@ package body Cells_Interface is
     for i in 0..r-1 loop
       mix(i+1) := integer32(mbv(Interfaces.C.size_t(i)));
     end loop;
-    Cells_Container.Initialize(mix);
+    Double_Cells_Container.Initialize(mix);
     return 0;
   exception
     when others => 
@@ -505,7 +505,7 @@ package body Cells_Interface is
       put_line("-> in cells_interface.Cells_Add_Floating_Support_Point ...");
     end if;
     Assign(natural32(n),c,x);
-    fail := Cells_Container.Append_to_Support(k,x);
+    fail := Double_Cells_Container.Append_to_Support(k,x);
     if fail
      then return 92;
      else return 0;
@@ -553,7 +553,7 @@ package body Cells_Interface is
    -- put("the number of points in each support :"); put(cnt); new_line;
    -- put("the labels of points in each support :"); put(lab); new_line;
     Assign(natural32(n),c,x);
-    Cells_Container.Append_Mixed_Cell(cnt,lab,x);
+    Double_Cells_Container.Append_Mixed_Cell(cnt,lab,x);
     return 0;
   exception
     when others => 
@@ -580,7 +580,7 @@ package body Cells_Interface is
     if vrblvl > 0 then
       put_line("-> in cells_interface.Cells_Get_Floating_Mixed_Cell ...");
     end if;
-    Cells_Container.Retrieve_Mixed_Cell(k,fail,cnt,lab,normal);
+    Double_Cells_Container.Retrieve_Mixed_Cell(k,fail,cnt,lab,normal);
     if fail then
       return 1;
     else
@@ -620,7 +620,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_Make_Standard_Coefficient_System ...");
     end if;
-    Cells_Container.Generate_Random_Standard_Coefficient_System;
+    Double_Cells_Container.Generate_Random_Standard_Coefficient_System;
     return 0;
   exception
     when others => 
@@ -638,7 +638,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_Make_DoblDobl_Coefficient_System ...");
     end if;
-    Cells_Container.Generate_Random_DoblDobl_Coefficient_System;
+    Double_Cells_Container.Generate_Random_DoblDobl_Coefficient_System;
     return 0;
   exception
     when others => 
@@ -656,7 +656,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_Make_QuadDobl_Coefficient_System ...");
     end if;
-    Cells_Container.Generate_Random_QuadDobl_Coefficient_System;
+    Double_Cells_Container.Generate_Random_QuadDobl_Coefficient_System;
     return 0;
   exception
     when others => 
@@ -680,7 +680,7 @@ package body Cells_Interface is
     new_line;
     put_line("Reading a random coefficient polynomial system ...");
     get(q);
-    Cells_Container.Initialize_Random_Standard_Coefficient_System(q.all);
+    Double_Cells_Container.Initialize_Random_Standard_Coefficient_System(q.all);
     return 0;
   exception
     when others => 
@@ -704,7 +704,7 @@ package body Cells_Interface is
     new_line;
     put_line("Reading a random coefficient polynomial system ...");
     get(q);
-    Cells_Container.Initialize_Random_DoblDobl_Coefficient_System(q.all);
+    Double_Cells_Container.Initialize_Random_DoblDobl_Coefficient_System(q.all);
     return 0;
   exception
     when others => 
@@ -728,7 +728,7 @@ package body Cells_Interface is
     new_line;
     put_line("Reading a random coefficient polynomial system ...");
     get(q);
-    Cells_Container.Initialize_Random_QuadDobl_Coefficient_System(q.all);
+    Double_Cells_Container.Initialize_Random_QuadDobl_Coefficient_System(q.all);
     return 0;
   exception
     when others => 
@@ -743,7 +743,7 @@ package body Cells_Interface is
              ( vrblvl : integer32 := 0 ) return integer32 is
 
     q : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
-      := Cells_Container.Retrieve_Random_Standard_Coefficient_System;
+      := Double_Cells_Container.Retrieve_Random_Standard_Coefficient_System;
 
   begin
     if vrblvl > 0 then
@@ -773,7 +773,7 @@ package body Cells_Interface is
              ( vrblvl : integer32 := 0 ) return integer32 is
 
     q : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
-      := Cells_Container.Retrieve_Random_DoblDobl_Coefficient_System;
+      := Double_Cells_Container.Retrieve_Random_DoblDobl_Coefficient_System;
 
   begin
     if vrblvl > 0 then
@@ -803,7 +803,7 @@ package body Cells_Interface is
              ( vrblvl : integer32 := 0 ) return integer32 is
 
     q : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
-      := Cells_Container.Retrieve_Random_QuadDobl_Coefficient_System;
+      := Double_Cells_Container.Retrieve_Random_QuadDobl_Coefficient_System;
 
   begin
     if vrblvl > 0 then
@@ -833,7 +833,7 @@ package body Cells_Interface is
              ( vrblvl : integer32 := 0 ) return integer32 is
 
     q : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
-      := Cells_Container.Retrieve_Random_Standard_Coefficient_System;
+      := Double_Cells_Container.Retrieve_Random_Standard_Coefficient_System;
 
   begin
     if vrblvl > 0 then
@@ -855,7 +855,7 @@ package body Cells_Interface is
              ( vrblvl : integer32 := 0 ) return integer32 is
 
     q : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
-      := Cells_Container.Retrieve_Random_DoblDobl_Coefficient_System;
+      := Double_Cells_Container.Retrieve_Random_DoblDobl_Coefficient_System;
 
   begin
     if vrblvl > 0 then
@@ -877,7 +877,7 @@ package body Cells_Interface is
              ( vrblvl : integer32 := 0 ) return integer32 is
 
     q : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
-      := Cells_Container.Retrieve_Random_QuadDobl_Coefficient_System;
+      := Double_Cells_Container.Retrieve_Random_QuadDobl_Coefficient_System;
 
   begin
     if vrblvl > 0 then
@@ -906,7 +906,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_Standard_System_from_Container ...");
     end if;
-    Cells_Container.Initialize_Random_Standard_Coefficient_System(q.all);
+    Double_Cells_Container.Initialize_Random_Standard_Coefficient_System(q.all);
     return 0;
   exception
     when others => 
@@ -928,7 +928,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_DoblDobl_System_from_Container ...");
     end if;
-    Cells_Container.Initialize_Random_DoblDobl_Coefficient_System(q.all);
+    Double_Cells_Container.Initialize_Random_DoblDobl_Coefficient_System(q.all);
     return 0;
   exception
     when others => 
@@ -950,7 +950,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_QuadDobl_System_from_Container ...");
     end if;
-    Cells_Container.Initialize_Random_QuadDobl_Coefficient_System(q.all);
+    Double_Cells_Container.Initialize_Random_QuadDobl_Coefficient_System(q.all);
     return 0;
   exception
     when others => 
@@ -968,7 +968,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_Standard_Polyhedral_Homotopy ...");
     end if;
-    Cells_Container.Standard_Polyhedral_Homotopy;
+    Double_Cells_Container.Standard_Polyhedral_Homotopy;
     return 0;
   exception
     when others => 
@@ -986,7 +986,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_DoblDobl_Polyhedral_Homotopy ...");
     end if;
-    Cells_Container.DoblDobl_Polyhedral_Homotopy;
+    Double_Cells_Container.DoblDobl_Polyhedral_Homotopy;
     return 0;
   exception
     when others => 
@@ -1004,7 +1004,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_QuadDobl_Polyhedral_Homotopy ...");
     end if;
-    Cells_Container.QuadDobl_Polyhedral_Homotopy;
+    Double_Cells_Container.QuadDobl_Polyhedral_Homotopy;
     return 0;
   exception
     when others => 
@@ -1030,7 +1030,7 @@ package body Cells_Interface is
       put_line("Cells_Standard_Start_Solve ...");
     end if;
    -- put("Entering Job22 with k = "); put(k,1); put_line(" ...");
-    Cells_Container.Solve_Standard_Start_System(k,mv);
+    Double_Cells_Container.Solve_Standard_Start_System(k,mv);
     Assign(integer32(mv),b);
    -- put("... leaving Job22 with mv = "); put(mv,1); put_line(".");
     return 0;
@@ -1058,7 +1058,7 @@ package body Cells_Interface is
       put_line("Cells_DoblDobl_Start_Solve ...");
     end if;
    -- put("Entering Job22 with k = "); put(k,1); put_line(" ...");
-    Cells_Container.Solve_DoblDobl_Start_System(k,mv);
+    Double_Cells_Container.Solve_DoblDobl_Start_System(k,mv);
     Assign(integer32(mv),b);
    -- put("... leaving Job22 with mv = "); put(mv,1); put_line(".");
     return 0;
@@ -1086,7 +1086,7 @@ package body Cells_Interface is
       put_line("Cells_QuadDobl_Start_Solve ...");
     end if;
    -- put("Entering Job22 with k = "); put(k,1); put_line(" ...");
-    Cells_Container.Solve_QuadDobl_Start_System(k,mv);
+    Double_Cells_Container.Solve_QuadDobl_Start_System(k,mv);
     Assign(integer32(mv),b);
    -- put("... leaving Job22 with mv = "); put(mv,1); put_line(".");
     return 0;
@@ -1116,7 +1116,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_Standard_Track_One_Path ...");
     end if;
-    Cells_Container.Track_Standard_Solution_Path(k,i,otp);
+    Double_Cells_Container.Track_Standard_Solution_Path(k,i,otp);
     return 0;
   exception
     when others => 
@@ -1144,7 +1144,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_DoblDobl_Track_One_Path ...");
     end if;
-    Cells_Container.Track_DoblDobl_Solution_Path(k,i,otp);
+    Double_Cells_Container.Track_DoblDobl_Solution_Path(k,i,otp);
     return 0;
   exception
     when others => 
@@ -1172,7 +1172,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_QuadDobl_Track_One_Path ...");
     end if;
-    Cells_Container.Track_QuadDobl_Solution_Path(k,i,otp);
+    Double_Cells_Container.Track_QuadDobl_Solution_Path(k,i,otp);
     return 0;
   exception
     when others => 
@@ -1201,7 +1201,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_Standard_TarSol_into_Container ...");
     end if;
-    ls := Cells_Container.Retrieve_Standard_Target_Solution(k,i);
+    ls := Double_Cells_Container.Retrieve_Standard_Target_Solution(k,i);
     if ls /= null
      then Standard_Solutions_Container.Append(ls.all);
     end if;
@@ -1233,7 +1233,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_DoblDobl_TarSol_into_Container ...");
     end if;
-    ls := Cells_Container.Retrieve_DoblDobl_Target_Solution(k,i);
+    ls := Double_Cells_Container.Retrieve_DoblDobl_Target_Solution(k,i);
     if ls /= null
      then DoblDobl_Solutions_Container.Append(ls.all);
     end if;
@@ -1265,7 +1265,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_QuadDobl_TarSol_into_Container ...");
     end if;
-    ls := Cells_Container.Retrieve_QuadDobl_Target_Solution(k,i);
+    ls := Double_Cells_Container.Retrieve_QuadDobl_Target_Solution(k,i);
     if ls /= null
      then QuadDobl_Solutions_Container.Append(ls.all);
     end if;
@@ -1295,7 +1295,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_Standard_StaSol_into_Container ...");
     end if;
-    ls := Cells_Container.Retrieve_Standard_Start_Solution(k,i);
+    ls := Double_Cells_Container.Retrieve_Standard_Start_Solution(k,i);
     Standard_Solutions_Container.Append(ls.all);
     return 0;
   exception
@@ -1323,7 +1323,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_DoblDobl_StaSol_into_Container ...");
     end if;
-    ls := Cells_Container.Retrieve_DoblDobl_Start_Solution(k,i);
+    ls := Double_Cells_Container.Retrieve_DoblDobl_Start_Solution(k,i);
     DoblDobl_Solutions_Container.Append(ls.all);
     return 0;
   exception
@@ -1351,7 +1351,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_QuadDobl_StaSol_into_Container ...");
     end if;
-    ls := Cells_Container.Retrieve_QuadDobl_Start_Solution(k,i);
+    ls := Double_Cells_Container.Retrieve_QuadDobl_Start_Solution(k,i);
     QuadDobl_Solutions_Container.Append(ls.all);
     return 0;
   exception
@@ -1368,9 +1368,9 @@ package body Cells_Interface is
 
     use Floating_mixed_Subdivisions;
 
-    mixsub : constant Mixed_Subdivision := Cells_Container.Retrieve;
+    mixsub : constant Mixed_Subdivision := Double_Cells_Container.Retrieve;
     mix : constant Standard_Integer_Vectors.Link_to_Vector
-        := Cells_Container.Type_of_Mixture;
+        := Double_Cells_Container.Type_of_Mixture;
     lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
        := Standard_PolySys_Container.Retrieve;
     lq : constant Standard_Complex_Laur_Systems.Link_to_Laur_Sys
@@ -1436,9 +1436,9 @@ package body Cells_Interface is
 
     use Floating_mixed_Subdivisions;
 
-    mixsub : constant Mixed_Subdivision := Cells_Container.Retrieve;
+    mixsub : constant Mixed_Subdivision := Double_Cells_Container.Retrieve;
     mix : constant Standard_Integer_Vectors.Link_to_Vector
-        := Cells_Container.Type_of_Mixture;
+        := Double_Cells_Container.Type_of_Mixture;
     lp : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
        := DoblDobl_PolySys_Container.Retrieve;
     lq : constant DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys
@@ -1504,9 +1504,9 @@ package body Cells_Interface is
 
     use Floating_mixed_Subdivisions;
 
-    mixsub : constant Mixed_Subdivision := Cells_Container.Retrieve;
+    mixsub : constant Mixed_Subdivision := Double_Cells_Container.Retrieve;
     mix : constant Standard_Integer_Vectors.Link_to_Vector
-        := Cells_Container.Type_of_Mixture;
+        := Double_Cells_Container.Type_of_Mixture;
     lp : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
        := QuadDobl_PolySys_Container.Retrieve;
     lq : constant QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys
@@ -1571,7 +1571,7 @@ package body Cells_Interface is
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
 
-    mv : constant natural32 := Cells_Container.Mixed_Volume;
+    mv : constant natural32 := Double_Cells_Container.Mixed_Volume;
 
   begin
     if vrblvl > 0
@@ -1600,7 +1600,7 @@ package body Cells_Interface is
       put("-> in cells_interface.");
       put_line("Cells_Set_Floating_Number_of_Supports ...");
     end if;
-    Cells_Container.Initialize_Supports(nbr);
+    Double_Cells_Container.Initialize_Supports(nbr);
     return 0;
   exception
     when others => 
@@ -2225,7 +2225,7 @@ package body Cells_Interface is
     if vrblvl > 0
      then put_line("-> in cells_interface.Cells_Is_Stable ...");
     end if;
-    if Cells_Container.Is_Stable
+    if Double_Cells_Container.Is_Stable
      then Assign(1,a);
      else Assign(0,a);
     end if;
@@ -2243,7 +2243,8 @@ package body Cells_Interface is
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
 
-    nbr : constant natural32 := Cells_Container.Number_of_Original_Cells;
+    nbr : constant natural32
+        := Double_Cells_Container.Number_of_Original_Cells;
 
   begin
     if vrblvl > 0 then
@@ -2264,7 +2265,8 @@ package body Cells_Interface is
              ( a : C_intarrs.Pointer;
                vrblvl : integer32 := 0 ) return integer32 is
 
-    nbr : constant natural32 := Cells_Container.Number_of_Stable_Cells;
+    nbr : constant natural32
+        := Double_Cells_Container.Number_of_Stable_Cells;
 
   begin
     if vrblvl > 0 then
@@ -2294,7 +2296,7 @@ package body Cells_Interface is
     if vrblvl > 0
      then put_line("-> in cells_interface.Cells_Standard_Stable_Solve ...");
     end if;
-    Cells_Container.Solve_Stable_Standard_Start_System(k,mv);
+    Double_Cells_Container.Solve_Stable_Standard_Start_System(k,mv);
     Assign(integer32(mv),b);
     return 0;
   exception
@@ -2319,7 +2321,7 @@ package body Cells_Interface is
     if vrblvl > 0
      then put_line("-> in cells_interface.Cells_DoblDobl_Stable_Solve ...");
     end if;
-    Cells_Container.Solve_Stable_DoblDobl_Start_System(k,mv);
+    Double_Cells_Container.Solve_Stable_DoblDobl_Start_System(k,mv);
     Assign(integer32(mv),b);
     return 0;
   exception
@@ -2344,7 +2346,7 @@ package body Cells_Interface is
     if vrblvl > 0
      then put_line("-> in cells_interface.Cells_QuadDobl_Stable_Solve ...");
     end if;
-    Cells_Container.Solve_Stable_QuadDobl_Start_System(k,mv);
+    Double_Cells_Container.Solve_Stable_QuadDobl_Start_System(k,mv);
     Assign(integer32(mv),b);
     return 0;
   exception
@@ -2362,7 +2364,7 @@ package body Cells_Interface is
     if vrblvl > 0
      then put_line("-> in cells_interface.Cells_Floating_Clear ...");
     end if;
-    Cells_Container.Clear;
+    Double_Cells_Container.Clear;
     return 0;
   exception
     when others => 

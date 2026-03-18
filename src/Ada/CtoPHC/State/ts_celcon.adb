@@ -22,7 +22,7 @@ with Integer_Mixed_Subdivisions;
 with Integer_Mixed_Subdivisions_io;      use Integer_Mixed_Subdivisions_io;
 with Mixed_Volume_Computation;
 with Main_Lifting_Functions;
-with Cells_Container;
+with Double_Cells_Container;
 with Integer_Cells_Container;
 
 procedure ts_celcon is
@@ -92,7 +92,7 @@ procedure ts_celcon is
 
   -- ON INPUT :
   --   k        index to desired cell, must be >= 0;
-  --   len      len = Cells_Container.Length;
+  --   len      len = Integer_Cells_Container.Length;
   --   n        dimension of the lifted supports;
   --   mix      type of mixture needed for volume computation.
 
@@ -131,7 +131,7 @@ procedure ts_celcon is
 
   -- ON INPUT :
   --   k        index to desired cell, must be >= 0;
-  --   len      len = Cells_Container.Length;
+  --   len      len = Double_Cells_Container.Length;
   --   n        dimension of the lifted supports;
   --   mix      type of mixture needed for volume computation.
 
@@ -144,7 +144,7 @@ procedure ts_celcon is
     normal : Standard_Floating_Vectors.Link_to_Vector;
 
   begin
-    Cells_Container.Retrieve(k,mic,fail);
+    Double_Cells_Container.Retrieve(k,mic,fail);
     if fail then
       put("Retrieval of cell "); put(k,1); put(" failed, is ");
       put(k,1); put(" > "); put(len,1); put_line(" ?");
@@ -152,7 +152,7 @@ procedure ts_celcon is
       put("Retrieval of cell "); put(k,1); put_line(" succeeded.");
       put(n-1,mix.all,mic,mv);
       put(" mixed volume of the cell : "); put(mv,1); new_line;
-      Cells_Container.Retrieve_Mixed_Cell(k,fail,cnt,lab,normal);
+      Double_Cells_Container.Retrieve_Mixed_Cell(k,fail,cnt,lab,normal);
       put("Number of points in each support of the cell :");
       put(cnt); new_line;
       put("Labels of the points : "); put(lab); new_line;
@@ -224,11 +224,11 @@ procedure ts_celcon is
     new_line;
     put_line("Testing the retrieval of cells...");
     new_line;
-    len := Cells_Container.Length;
+    len := Double_Cells_Container.Length;
     put("Number of cells in the container : "); put(len,1); new_line;
-    n := Cells_Container.Dimension;
+    n := Double_Cells_Container.Dimension;
     put("Dimension of the points in the cells : "); put(n,1); new_line;
-    mix := Cells_Container.Type_of_Mixture;
+    mix := Double_Cells_Container.Type_of_Mixture;
     if mix = null then
       put_line("No type of mixture returned, no retrieving.");
     else
@@ -236,7 +236,7 @@ procedure ts_celcon is
       put("Do you want to see the lifted supports ? (y/n) ");
       Ask_Yes_or_No(ans);
       if ans = 'y' then
-        lif := Cells_Container.Lifted_Supports;
+        lif := Double_Cells_Container.Lifted_Supports;
         if lif /= null
          then put_line("The lifted supports :"); put(lif.all);
          else put_line("The lifted supports are empty...");
@@ -275,7 +275,7 @@ procedure ts_celcon is
     get(file,n,m,mix,mcc);
     r := mix'last;
     lif := new Array_of_Lists'(Lifted_Supports(r,mcc));
-    Cells_Container.Initialize(mix,lif,mcc);
+    Double_Cells_Container.Initialize(mix,lif,mcc);
   end Floating_Read_and_Initialize;
 
   procedure Integer_Read_and_Initialize is
@@ -329,8 +329,8 @@ procedure ts_celcon is
     get(file,n,m,mix,mcc);
     r := mix'last;
     lif := new Array_of_Lists'(Lifted_Supports(r,mcc));
-    Cells_Container.Initialize(mix);
-    Cells_Container.Initialize(lif);
+    Double_Cells_Container.Initialize(mix);
+    Double_Cells_Container.Initialize(lif);
     len := Length_Of(mcc);
     loop
       put("Give number of cell to add to container (0 to exit) : ");
@@ -340,7 +340,7 @@ procedure ts_celcon is
         put(k,1); put(" > "); put(len,1); put_line(", the number of cells");
         put_line("Please try again...");
       else
-        Cells_Container.Append(Get_Cell(mcc,k));
+        Double_Cells_Container.Append(Get_Cell(mcc,k));
       end if;
     end loop;
   end Floating_Read_and_Construct;
@@ -492,7 +492,7 @@ procedure ts_celcon is
      else Floating_Read_and_Construct;
     end if;
     Floating_Test_Retrievals;
-    Cells_Container.Clear;
+    Double_Cells_Container.Clear;
   end Floating_Test;
 
   procedure Main is

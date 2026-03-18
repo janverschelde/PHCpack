@@ -52,7 +52,7 @@ with DoblDobl_Solutions_Container;
 with QuadDobl_PolySys_Container;
 with QuadDobl_LaurSys_Container;
 with QuadDobl_Solutions_Container;
-with Cells_Container;
+with Double_Cells_Container;
 with Number_of_Cores;
 with PHCpack_Operations;
 
@@ -995,7 +995,7 @@ package body Job_Handlers is
       end;
     end if;
     Assign(integer32(mv),a);
-    Cells_Container.Initialize(mix,lifsup,mixsub);
+    Double_Cells_Container.Initialize(mix,lifsup,mixsub);
     return 0;
   exception
     when others =>
@@ -1029,7 +1029,7 @@ package body Job_Handlers is
        orgcnt,stbcnt);
     Assign(integer32(mv),a);
     Assign(integer32(smv),b);
-    Cells_Container.Initialize(stlb,mix,lifsup,mixsub,orgmcc,stbmcc);
+    Double_Cells_Container.Initialize(stlb,mix,lifsup,mixsub,orgmcc,stbmcc);
     return 0;
   exception
     when others =>

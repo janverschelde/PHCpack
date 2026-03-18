@@ -13,7 +13,7 @@ with Standard_PolySys_Container;
 with Standard_LaurSys_Container;
 with Assignments_in_Ada_and_C;
 with C_to_Ada_Arrays;
-with Cells_Container;
+with Double_Cells_Container;
 with DEMiCs_Output_Data;
 with Drivers_for_DEMiCs_Algorithm;
 
@@ -202,7 +202,7 @@ function use_outdata ( job : integer32;
       BlackBox_DEMiCs_Algorithm(lq.all,mix,lifsup,mixsub,mv);
     end if;
     Assignments_in_Ada_and_C.Assign(integer32(mv),a);
-    Cells_Container.Initialize(mix,lifsup,mixsub);
+    Double_Cells_Container.Initialize(mix,lifsup,mixsub);
     return 0;
   end Mixed_Volume_by_DEMiCs;
 
@@ -228,7 +228,7 @@ function use_outdata ( job : integer32;
     DEMiCs_Output_Data.Clear_Allocated_Cells;
     if lp /= null then
       BlackBox_DEMiCs_Algorithm(lp.all,mix,lifsup,mixsub,mv,smv,tmv);
-      Cells_Container.Initialize(mix,lifsup,mixsub);
+      Double_Cells_Container.Initialize(mix,lifsup,mixsub);
     end if;
     Assignments_in_Ada_and_C.Assign(integer32(mv),a);
     Assignments_in_Ada_and_C.Assign(integer32(smv),b);

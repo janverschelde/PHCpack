@@ -1,3 +1,7 @@
+Wed 18 Mar 2026 : renamed *cells_container* into double_cells_container*
+  and updated ts_celcon.adb.  Updated cells_interface.adb, use_outdata.adb,
+  and job_handlers.adb.
+
 Mon 16 Mar 2026 : to *vecvecs_interface* added function to return the
   size of each vector, tested by ts_use_*vvcon and with added jobs in
   use_avvcon, updated the range of jobs in use_c2phc4c.adb.
