@@ -10,14 +10,14 @@ setup(
     author_email = 'janv@uic.edu' ,
     description = 'a package for Polynomial Homotopy Continuation' ,
     url = 'https://github.com/janverschelde/PHCpack' ,
-    version = '1.1.5' ,
+    version = '1.1.6' ,
     packages = ['phcpy'] ,
     py_modules = ['phcpy/version', 'phcpy/dimension', \
         'phcpy/polynomials', 'phcpy/solutions', 'phcpy/volumes', \
         'phcpy/solver', 'phcpy/examples', 'phcpy/families', \
         'phcpy/scaling', 'phcpy/starters', 'phcpy/homotopies', \
         'phcpy/trackers', 'phcpy/tropisms', 'phcpy/sweepers', \
-        'phcpy/series', 'phcpy/curves', \
+        'phcpy/series', 'phcpy/curves', 'phcpy/laurent' \
         'phcpy/deflation', 'phcpy/schubert', 'phcpy/sets', \
         'phcpy/cascades', 'phcpy/diagonal', 'phcpy/factor', \
         'phcpy/decomposition' , 'phcpy/binomials' ],

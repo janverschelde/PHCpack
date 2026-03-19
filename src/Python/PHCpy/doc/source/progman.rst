@@ -183,6 +183,12 @@ functions in the module curves
 .. automodule:: curves
    :members:
 
+functions in the module laurent
+------------------------------
+
+.. automodule:: laurent
+   :members:
+
 functions in the module deflation
 ---------------------------------
 

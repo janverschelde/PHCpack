@@ -55,6 +55,8 @@ series
     defined by polynomial homotopies.
 curves
     exports apriori step size control path trackers.
+laurent
+    real powered series and Laurent homotopies
 deflation
     restores quadratic convergence at an isolated singular solution.
 schubert
@@ -171,4 +173,4 @@ from phcpy import sets, cascades, diagonal, factor
 from phcpy import decomposition, binomials
 
 # The version number is defined as a data attribute.
-__version__ = '1.1.5'
+__version__ = '1.1.6'
