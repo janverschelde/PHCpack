@@ -9,6 +9,8 @@ the sum of 2**k can no longer represented correctly by 64-bit floats.
 Vectored multiple double arithmetic allows the application of tensor cores
 to obtain accurate results, for which data staging algorithms are defined.
 
+The code benefitted from collaboration with Howard Chen.
+
 ------------------------------------------------------------------------------
 file name                     : short description
 ------------------------------------------------------------------------------

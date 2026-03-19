@@ -1,4 +1,4 @@
-Ada source code of Polynomial Homotopy Continuation version 2.4.92
+Ada source code of Polynomial Homotopy Continuation version 2.4.93
 
 The same hierarchical structure as in the original version is preserved,
 with the addition of numerical Schubert calculus in release 2,
@@ -39,6 +39,7 @@ An alire workspace is provided in version 2.4.88.
 In version 2.4.91, DEMiCs was translated into Ada, to remove the
 dependency on C++ code.  Multiple word arithmetic is introduced
 to prepare for multiple double arithmetic on tensor cores.
+The Laurent folder was extended in 2.4.93 with real powered series.
 
 The Ada sources are organized in a tree of directories:
 

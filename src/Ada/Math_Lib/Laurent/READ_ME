@@ -5,6 +5,7 @@ expansions of regular solutions of polynomial systems.
 Laurent series allow for negative exponents and are arithmetically closed.
 
 In version 2.4.92, code for series with real powers was added.
+Development of the code benefitted from collaboration with Katie Kruzan.
 
 Run "gprbuild laurent.gpr" to make all test programs.
 

@@ -1,4 +1,4 @@
-The public distribution for PHCpack version 2.4.92 contains
+The public distribution for PHCpack version 2.4.93 contains
 
   Ada        Ada sources
   bin        binary versions of phc
@@ -6,8 +6,8 @@ The public distribution for PHCpack version 2.4.92 contains
   cgi        scripts for the web interface, developed by Xiangcheng Yu
   doc        documentation in restructured text for Sphinx
   Feedback   realization of feedback laws, with Yusong Wang
-  GPU        code for NVIDIA Graphics Processing Units
-             developed in collaboration with Genady Yoffe and Xiangcheng Yu
+  GPU        code for NVIDIA Graphics Processing Units developed in
+             collaboration with Genady Yoffe, Xiangcheng Yu, Howard Chen
   Julia      interface code for Julia based on libPHCpack
   lib        location of the shared object file libPHCpack
   Macaulay2  simple Macaulay2 interface to Littlewood-Richardson homotopies
@@ -32,6 +32,7 @@ For each release, a single one line description gives a title to the release.
 While 2.4 could be viewed as another major release, marking it as 2.4.00
 simply continues the process of frequent releases.
 
+release 2.4.93 on 2026-03-20 : real powered series; tensor core code
 release 2.4.92 on 2025-11-07 : improved monitoring of pipelining in phc -m -t
 release 2.4.91 on 2025-10-15 : translated C++ code of DEMiCs into Ada
 release 2.4.90 on 2024-03-20 : new manual folder, small bug fixes
