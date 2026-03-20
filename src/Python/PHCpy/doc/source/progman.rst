@@ -184,7 +184,7 @@ functions in the module curves
    :members:
 
 functions in the module laurent
-------------------------------
+-------------------------------
 
 .. automodule:: laurent
    :members:
