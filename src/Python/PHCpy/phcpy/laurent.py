@@ -191,6 +191,50 @@ def size_coefficient_vector(adx, vdx, vrblvl=0):
         print(', return value :', retval)
     return size[0]
 
+def to_rps_string(pwrs, cffs, tsb='t', vrblvl=0):
+    """
+    Given in pwrs the real powers of t and in cffs the corresponding
+    list of complex coefficiens, returns the string representation
+    of the real powered series.
+    """
+    if vrblvl > 0:
+        print('in to_rps_string, pwrs =', pwrs, ', cffs =', cffs, '...')
+    res = ''
+    for (pwr, cff) in zip(pwrs, cffs):
+        if pwr == 0.0:
+            trm = str(cff)
+        else:
+            trm = str(cff) + '*' + tsb + '**' + str(pwr)
+        if res == '':
+            res = trm
+        else:
+            res = res + ' + ' + trm
+    return res
+
+def from_rps_string(strrep, tsb='t', vrblvl=0):
+    """
+    Given in strrep the string representation of a real powered series,
+    returns the tuple of two lists, powers and coefficients.
+    """
+    if vrblvl > 0:
+        print('in from_rps_string, strrep =', strrep, '...')
+    splitsym = '*' + tsb + '**'
+    data = strrep.split(splitsym)
+    if vrblvl > 0:
+        print('data :', data)
+    if len(data) == 0:
+        return ([0.0], [eval(data[0])])
+    else:
+        cff0 = data[0].split(' + ')
+        cffs = [eval(cff0[0]), eval(cff0[1])]
+        pwrs = [0.0]
+        for item in data[1:-1]:
+            cff = item.split(' + ')
+            pwrs.append(eval(cff[0]))
+            cffs.append(eval(cff[1]))
+        pwrs.append(eval(data[-1]))
+        return (pwrs, cffs)
+
 def get_series_term(adx, vdx, vrblvl=0):
     """
     Gets the powers and coefficients of one term, at the position adx
@@ -402,6 +446,29 @@ def test_retrievals(vrblvl=0):
                 print('coefficients :', cff)
     return fail
 
+def test_string_representations(vrblvl=0):
+    """
+    Retrieves all vectors stored in the arrays
+    and writes the string representations of the series.
+    """
+    if vrblvl > 0:
+        print("in test_retrievals ...")
+    powdim = power_dimension(vrblvl-1)
+    powsizes = [size_power_array(i+1,vrblvl-1) for i in range(powdim)]
+    print('size power arrays :', powsizes)
+    fail = 0
+    for (adx, dim) in enumerate(powsizes):
+        for vdx in range(dim):
+            if vrblvl > 0:
+                print('getting series', vdx+1, 'to array', adx+1, '...')
+            (pwr, cff) = get_series_term(adx+1, vdx+1, vrblvl)
+            strrep = to_rps_string(pwr, cff, vrblvl=vrblvl)
+            print('strrep :', strrep)
+            (pwrs, cffs) = from_rps_string(strrep, vrblvl=vrblvl)
+            print('powers :', pwrs)
+            print('coefficients :', cffs)
+    return fail
+
 def test_laurent(deg, vrblvl=0):
     """
     Tests operations in this module.
@@ -414,6 +481,7 @@ def test_laurent(deg, vrblvl=0):
     fail = fail + test_additions(deg, vrblvl)
     fail = fail + test_vector_dimensions(vrblvl)
     fail = fail + test_retrievals(vrblvl)
+    fail = fail + test_string_representations(vrblvl)
     if vrblvl > 0:
         if fail == 0:
             print('=> All tests on the laurent module passed.')
