@@ -384,6 +384,81 @@ def random_real_powered_series(deg, vrblvl=0):
     return (random_real_powers(deg, vrblvl-1),
             random_complex_coefficients(deg, vrblvl-1))
 
+def random_real_powered_polynomial(nvr, nbt, deg, lowexp=-9, uppexp=9, \
+    vrblvl=0):
+    """
+    Returns the string representation of a Laurent polynomial in nvr
+    variables with nbt monomials, with exponents in [lowexp, uppexp],
+    with coefficients real powered series truncated at degree deg.
+    """
+    if vrblvl > 0:
+        print('in random_real_powered_polynomial, nvr :', nvr, end=', ')
+        print('nbt :', nbt, ', lowexp :', lowexp, end=', ')
+        print('uppexp :', uppexp)
+    pol = ''
+    for tix in range(nbt):
+        (pwr, cff) = random_real_powered_series(deg, vrblvl-1)
+        strrep = to_rps_string(pwr, cff, vrblvl=vrblvl-1)
+        if vrblvl > 0:
+            print('strrep :', strrep)
+        mon = random_monomial(nvr, lowexp, uppexp, vrblvl-1)
+        idx = mon.find(')')
+        trm = '(' + strrep + ')' + mon[idx+1:]
+        if pol == '':
+            pol = trm
+        else:
+            pol = pol + ' + ' + trm
+    return pol   
+
+def parse_real_powered_polynomial(pol, vsb='x', vrblvl=0):
+    """
+    Given the string representation of a real powered polynomial in pol,
+    returns a tuple of two lists: the list of string representations of
+    the coefficients and the list of monomials.
+    The variables are expected to be x1, x2, etc, or whatever the
+    symbol of the variable in vsb is.
+    """
+    if vrblvl > 0:
+        print('in parse_real_powered_polynomial, pol :', pol)
+    cffs, mons = [], []
+    idx = pol.find(vsb)
+    c0 = pol[1:idx-2]
+    cffs = [c0]
+    if vrblvl > 0:
+        print('the first coefficient :\n', c0)
+    rest = pol[idx:]
+    idx = rest.find('+')
+    m0 = rest[:idx].strip()
+    mons = [m0]
+    if vrblvl > 0:
+        print('the first monomial :\n', m0)
+    rest = rest[idx+1:]
+    while(rest != ''):
+        if vrblvl > 0:
+            print('the rest :\n', rest)
+        idx0 = rest.find('(')
+        rest = rest[idx0+1:]
+        idx1 = rest.find(vsb)
+        c1 = rest[:idx1-2]
+        cffs.append(c1)
+        if vrblvl > 0:
+            print('the next coefficient :\n', c1)
+        rest = rest[idx1:]
+        idx = rest.find('+')
+        if idx != -1:
+            m1 = rest[:idx].strip()
+            mons.append(m1)
+            if vrblvl > 0:
+                print('the next monomial :\n', m1)
+            rest = rest[idx+1:]
+        else:
+            m1 = rest.strip()
+            mons.append(m1)
+            if vrblvl > 0:
+                print('the last monomial :\n', m1)
+            rest = ''
+    return (cffs, mons)
+
 def random_real_powered_system(nbq, nvr, nbt, deg, lowexp=-9, uppexp=9, \
     vrblvl=0):
     """
@@ -398,21 +473,28 @@ def random_real_powered_system(nbq, nvr, nbt, deg, lowexp=-9, uppexp=9, \
         print('uppexp :', uppexp)
     res = []
     for qix in range(nbq):
-        pol = ''
-        for tix in range(nbt[qix]):
-            (pwr, cff) = random_real_powered_series(deg, vrblvl-1)
-            strrep = to_rps_string(pwr, cff, vrblvl=vrblvl-1)
-            if vrblvl > 0:
-                print('strrep :', strrep)
-            mon = random_monomial(nvr, lowexp, uppexp, vrblvl-1)
-            idx = mon.find(')')
-            trm = '(' + strrep + ')' + mon[idx+1:]
-            if pol == '':
-                pol = trm
-            else:
-                pol = pol + ' + ' + trm
+        pol = random_real_powered_polynomial\
+                  (nvr, nbt[qix], deg, lowexp, uppexp, vrblvl-1)
         res.append(pol)
     return res 
+
+def parse_real_powered_system(pols, vsb='x', vrblvl=0):
+    """
+    Given the string representations of a real powered system in pols,
+    returns a tuple of two lists of lists: 
+    (1) string representations of the coefficients; and
+    (2) the list of monomial lists for each polynomial.
+    The variables are expected to be x1, x2, etc, or whatever the
+    symbol of the variable in vsb is.
+    """
+    if vrblvl > 0:
+        print('in parse_real_powered_system, pols :', pols)
+    cffs, mons = [], []
+    for pol in pols:
+        (cff, mon) = parse_real_powered_polynomial(pol, vsb, vrblvl-1)
+        cffs.append(cff)
+        mons.append(mon)
+    return (cffs, mons)
 
 def test_additions(deg, vrblvl=0):
     """
@@ -517,6 +599,34 @@ def test_random_system(deg, vrblvl=0):
         print('polynomial', idx+1, ':', pol)
     return 0
 
+def test_parse_polynomial(deg, vrblvl=0):
+    """
+    Generates a random real powered polynomial where the coefficient
+    series are truncated at degree deg and then extracts the series
+    coefficients and the monomials.
+    """
+    pol = random_real_powered_polynomial(3, 3, deg, vrblvl=vrblvl-1)
+    print('a random polynomial :\n', pol)
+    (cffs, mons) = parse_real_powered_polynomial(pol, vrblvl=vrblvl)
+    print('the coefficients :\n', cffs)
+    print('the monomials :\n', mons)
+    return 0
+
+def test_parse_system(deg, vrblvl=0):
+    """
+    Generates a random real powered system where the coefficient
+    series are truncated at degree deg and then extracts the series
+    coefficients and the monomials.
+    """
+    pols = random_real_powered_system(3, 3, [2, 2, 2], deg, vrblvl=vrblvl-1)
+    print('a random system :\n', pols)
+    (cffs, mons) = parse_real_powered_system(pols, vrblvl=vrblvl)
+    for (idx, pol) in enumerate(pols):
+        print('polynomial', idx+1, ':\n', pol)
+        print('has coefficients :\n', cffs[idx])
+        print('and monomials :\n', mons[idx])
+    return 0
+
 def test_laurent(deg, vrblvl=0):
     """
     Tests operations in this module.
@@ -531,6 +641,8 @@ def test_laurent(deg, vrblvl=0):
     fail = fail + test_retrievals(vrblvl)
     fail = fail + test_string_representations(vrblvl)
     fail = fail + test_random_system(deg, vrblvl)
+    fail = fail + test_parse_polynomial(deg, vrblvl)
+    fail = fail + test_parse_system(deg, vrblvl)
     if vrblvl > 0:
         if fail == 0:
             print('=> All tests on the laurent module passed.')
@@ -544,7 +656,7 @@ def main():
     """
     lvl = 3
     deg = 2
-    fail = test_laurent(lvl)
+    fail = test_laurent(deg, lvl)
     if fail == 0:
         print('=> All tests passed.')
     else:

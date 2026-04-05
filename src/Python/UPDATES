@@ -1,3 +1,6 @@
+Sun 5 Apr 2026 : adding parsing of Laurent polynomials with real powered
+  series coefficients.
+
 Sat 4 Apr 2026 : added the definition of random polynomials to solver.py.
   Extended laurent.py with a function to generate a random Laurent system,
   where the coefficients are real powered series.
