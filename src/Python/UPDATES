@@ -1,3 +1,7 @@
+Sat 4 Apr 2026 : added the definition of random polynomials to solver.py.
+  Extended laurent.py with a function to generate a random Laurent system,
+  where the coefficients are real powered series.
+
 Thu 2 Apr 2026 : to laurent.py, added string representation functions.
 
 Thu 19 Mar 2026 : in doc/source, updated conf.py and progman.py for the

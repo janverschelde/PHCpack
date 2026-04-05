@@ -6,6 +6,7 @@ coefficients which correspond to the terms in the Laurent polynomials.
 """
 from ctypes import c_int32, c_double, pointer
 from phcpy.version import get_phcfun
+from phcpy.solver import random_monomial
 
 def initialize_series_coefficients(dims, vrblvl=0):
     """
@@ -195,16 +196,19 @@ def to_rps_string(pwrs, cffs, tsb='t', vrblvl=0):
     """
     Given in pwrs the real powers of t and in cffs the corresponding
     list of complex coefficiens, returns the string representation
-    of the real powered series.
+    of the real powered series.  
+    The 'j' in the string of a complex number is replaced by '*i'.
     """
     if vrblvl > 0:
         print('in to_rps_string, pwrs =', pwrs, ', cffs =', cffs, '...')
     res = ''
     for (pwr, cff) in zip(pwrs, cffs):
+        jtrm = str(cff)
+        itrm = jtrm.replace('j', '*i')
         if pwr == 0.0:
-            trm = str(cff)
+            trm = itrm
         else:
-            trm = str(cff) + '*' + tsb + '**' + str(pwr)
+            trm = itrm + '*' + tsb + '**' + str(pwr)
         if res == '':
             res = trm
         else:
@@ -219,7 +223,8 @@ def from_rps_string(strrep, tsb='t', vrblvl=0):
     if vrblvl > 0:
         print('in from_rps_string, strrep =', strrep, '...')
     splitsym = '*' + tsb + '**'
-    data = strrep.split(splitsym)
+    jstrrep = strrep.replace('*i', 'j')
+    data = jstrrep.split(splitsym)
     if vrblvl > 0:
         print('data :', data)
     if len(data) == 0:
@@ -379,6 +384,36 @@ def random_real_powered_series(deg, vrblvl=0):
     return (random_real_powers(deg, vrblvl-1),
             random_complex_coefficients(deg, vrblvl-1))
 
+def random_real_powered_system(nbq, nvr, nbt, deg, lowexp=-9, uppexp=9, \
+    vrblvl=0):
+    """
+    Returns a list of string representations of a Laurent system
+    of nbq polynomials in nvr variables, where the k-th polynomial
+    has nbt[k] monomials, with coefficients as power series truncated
+    at degree deg, and exponents in [lowexp,uppexp].
+    """
+    if vrblvl > 0:
+        print('in random_real_powered_system, nbq :', nbq, end=', ')
+        print('nvr :', nvr, 'nbt :', nbt, ', lowexp :', lowexp, end=', ')
+        print('uppexp :', uppexp)
+    res = []
+    for qix in range(nbq):
+        pol = ''
+        for tix in range(nbt[qix]):
+            (pwr, cff) = random_real_powered_series(deg, vrblvl-1)
+            strrep = to_rps_string(pwr, cff, vrblvl=vrblvl-1)
+            if vrblvl > 0:
+                print('strrep :', strrep)
+            mon = random_monomial(nvr, lowexp, uppexp, vrblvl-1)
+            idx = mon.find(')')
+            trm = '(' + strrep + ')' + mon[idx+1:]
+            if pol == '':
+                pol = trm
+            else:
+                pol = pol + ' + ' + trm
+        res.append(pol)
+    return res 
+
 def test_additions(deg, vrblvl=0):
     """
     Fills up initialized arrays with random real powered series
@@ -469,6 +504,19 @@ def test_string_representations(vrblvl=0):
             print('coefficients :', cffs)
     return fail
 
+def test_random_system(deg, vrblvl=0):
+    """
+    Generates a random real powered system,
+    where the coefficients are series truncated at degree deg.
+    """
+    if vrblvl > 0:
+        print('in test_random_system ...')
+    pols = random_real_powered_system(3, 2, [1, 2, 3], 2) 
+    print('a random real powered system :')
+    for (idx, pol) in enumerate(pols):
+        print('polynomial', idx+1, ':', pol)
+    return 0
+
 def test_laurent(deg, vrblvl=0):
     """
     Tests operations in this module.
@@ -482,6 +530,7 @@ def test_laurent(deg, vrblvl=0):
     fail = fail + test_vector_dimensions(vrblvl)
     fail = fail + test_retrievals(vrblvl)
     fail = fail + test_string_representations(vrblvl)
+    fail = fail + test_random_system(deg, vrblvl)
     if vrblvl > 0:
         if fail == 0:
             print('=> All tests on the laurent module passed.')
