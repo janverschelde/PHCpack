@@ -1,3 +1,6 @@
+Mon 6 Apr 2026 : new package double_puiseux_interface, called in use_avvcon,
+  extended with two jobs, extended use_c2phc4c.adb.
+
 Wed 18 Mar 2026 : renamed *cells_container* into double_cells_container*
   and updated ts_celcon.adb.  Updated cells_interface.adb, use_outdata.adb,
   and job_handlers.adb.

@@ -527,7 +527,7 @@ function use_c2phc4c ( job : integer32;
       when 925 => return use_track(73,a,b,c,vrblvl-1);
       when 926 => return use_track(74,a,b,c,vrblvl-1);
      -- arrays of vectors of vectors containers
-      when 930..943 => return use_avvcon(job-930,a,b,c,vrblvl-1);  
+      when 930..945 => return use_avvcon(job-930,a,b,c,vrblvl-1);  
      -- get string representation of irreducible factors
       when 993 => return use_witsols(15,a,b,c,vrblvl-1);
      -- get number of available CPUs

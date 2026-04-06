@@ -43,4 +43,10 @@ function use_avvcon ( job : integer32;
 --                  complex numbers in c returned as output,
 --                  where i is given by b[0] and j is given by b[1];
 --   job    =  12 : clears the arrays of vectors of real vectors;
---   job    =  13 : clears the arrays of vectors of complex vectors.
+--   job    =  13 : clears the arrays of vectors of complex vectors;
+--   job    =  14 : given a linear system of real powered series,
+--                  computes the first a[0] terms of its solution,
+--                  returning the coefficients of the solution in c;
+--   job    =  15 : given any Laurent system of real powered series,
+--                  runs a[0] steps with Newton's method,
+--                  returning the coefficients of the solution in c.
