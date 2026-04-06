@@ -7,6 +7,9 @@ coefficients which correspond to the terms in the Laurent polynomials.
 from ctypes import c_int32, c_double, pointer
 from phcpy.version import get_phcfun
 from phcpy.solver import random_monomial
+from phcpy.polynomials import clear_double_laurent_system
+from phcpy.polynomials import set_double_laurent_system
+from phcpy.polynomials import get_double_laurent_system
 
 def initialize_series_coefficients(dims, vrblvl=0):
     """
@@ -287,6 +290,48 @@ def get_series_term(adx, vdx, vrblvl=0):
         cff = complex(float(vals[0][2*idx]), float(vals[0][2*idx+1]))
         cffs.append(cff)
     return (pwrs, cffs)
+
+def solve_linear_system(nbr, vrblvl=0):
+    """
+    Computes the first nbr terms of the solution series of
+    a linear system defined by real powered series set in
+    the vectors of vectors containers and by a corresponding
+    system of Laurent polynomials, in double precision.
+    """
+    if vrblvl > 0:
+        print('in solve_linear_system, nbr :', nbr)
+    phc = get_phcfun(vrblvl-1)
+    anbr = pointer(c_int32(nbr))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> solve_linear_system calls phc', end='')
+    retval = phc(944, anbr, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
+
+def run_newton_steps(nbr, vrblvl=0):
+    """
+    Runs nbr steps of Newton's method to compute the solution series
+    real powered Laurent homotopy, defined by the vectors of vectors
+    containers and by a corresponding system of Laurent polynomials,
+    in double precision.
+    """
+    if vrblvl > 0:
+        print('in run_newton_steps, nbr :', nbr)
+    phc = get_phcfun(vrblvl-1)
+    anbr = pointer(c_int32(nbr))
+    bbb = pointer(c_int32(0))
+    ccc = pointer(c_double(0.0))
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> run_newton_steps calls phc', end='')
+    retval = phc(945, anbr, bbb, ccc, vrb)
+    if vrblvl > 0:
+        print(', return value :', retval)
+    return retval
 
 def clear_series_terms(vrblvl=0):
     """
@@ -627,6 +672,126 @@ def test_parse_system(deg, vrblvl=0):
         print('and monomials :\n', mons[idx])
     return 0
 
+def linear_laurent_system(dim, vrblvl=0):
+    """
+    Sets the linear Laurent system of dimension dim.
+    """
+    if vrblvl > 0:
+        print('in linear_laurent_system, dim :', dim, '...')
+    clear_double_laurent_system(vrblvl-1)
+    variables = ['x' + str(k) for k in range(1, dim+1)]
+    poly = ' + '.join(variables) + ' + 1;'
+    pols = [poly for _ in range(dim)]
+    if vrblvl > 0:
+        print('the polynomials :')
+        for pol in pols:
+            print(pol)
+    set_double_laurent_system(dim, pols, vrblvl-1)
+    if vrblvl > 0:
+        gpol = get_double_laurent_system(vrblvl-1)
+        print('the stored polynomials :')
+        for pol in gpol:
+            print(pol)
+
+def random_linear_matrix(dim, deg, vrblvl=0):
+    """
+    Generates a dim-by-dim matrix of random real powered series,
+    returned as a list of rows, where each element on the row
+    is a tuple of two lists: the powers and coefficients,
+    truncated at the term of index deg.
+    """
+    if vrblvl > 0:
+        print('in random_linear_matrix, dim :', dim, ', deg :', deg, '...')
+    res = []
+    for idx in range(dim):
+        row = [random_real_powered_series(deg, vrblvl-1) for _ in range(dim)]
+        res.append(row)
+    return res
+
+def random_series_vector(dim, deg, vrblvl=0):
+    """
+    Generates a vector of size dim with powers and coefficients
+    of a series truncated at term at index deg.
+    """
+    if vrblvl > 0:
+        print('in random_linear_matrix, dim :', dim, ', deg :', deg, '...')
+    res = [random_real_powered_series(deg, vrblvl-1) for _ in range(dim)]
+    return res
+
+def series_product(mat, vec, vrblvl=0):
+    """
+    Given in mat a square matrix of real powered series
+    and in vec a real powered series vector of compatible dimension,
+    all series given as tuples of powers and coefficients,
+    returns the vector of real powered series which is the product
+    of the matrix with the vector.
+    """
+    if vrblvl > 0:
+        print('in series_product ...')
+    res = []
+    dim = len(mat)
+    for rowidx in range(dim):
+        respwr = []
+        rescff = []
+        for colidx in range(dim):
+            (apwr, acff) = mat[rowidx][colidx]
+            (vpwr, vcff) = vec[colidx]
+            for adx in range(len(apwr)):
+                for vdx in range(len(vpwr)):
+                    respwr.append(apwr[adx] + vpwr[vdx])
+                    rescff.append(acff[adx] * vcf[vdx])
+        res.append((respwr, rescff))
+    return res
+
+def random_linear_system(dim, deg, vrblvl=0):
+    """
+    Makes a random linear system of dimension dim,
+    of real powered series truncated at index deg,
+    and sets the coefficients and the Laurent system.
+    """
+    if vrblvl > 0:
+        print('in random_linear_system, dim :', dim, '...')
+    linear_laurent_system(dim, vrblvl)
+    mat = random_linear_matrix(dim, deg, vrblvl)
+    if vrblvl > 0:
+        print('the matrix :')
+        for (idx, row) in enumerate(mat):
+            print('series at row', idx+1, ':')
+            for (pwr, cff) in row:
+                print('powers :', pwr)
+                print('coefficients :', cff)
+    clear_series_terms(vrblvl-1)
+    dims = [dim+1 for _ in range(dim)]
+    initialize_series_coefficients(dims, vrblvl-1)
+    fail = 0
+    for (adx, row) in enumerate(mat):
+        vdx = 0
+        for (pwr, cff) in row:
+            fail = fail + set_series_term(adx+1, vdx+1, pwr, cff, vrblvl-1)
+            vdx = vdx + 1
+    sol = random_series_vector(dim, deg, vrblvl)
+    rhs = series_product(mat, sol, vrblvl)
+
+def test_linear_solver(dim, deg, vrblvl=0):
+    """
+    Tests the linear solver on a generated system of dimension dim,
+    with real powered series truncated at index deg.
+    """
+    if vrblvl > 0:
+        print('in test_linear_system, dim :', dim, '...')
+    random_linear_system(dim, deg, vrblvl)
+    res = solve_linear_system(3, vrblvl)
+    return res
+
+def test_newton_steps(vrblvl=0):
+    """
+    Tests newton's method.
+    """
+    if vrblvl > 0:
+        print("in test_newton_steps ...")
+    res = run_newton_steps(3, vrblvl)
+    return res
+
 def test_laurent(deg, vrblvl=0):
     """
     Tests operations in this module.
@@ -643,6 +808,8 @@ def test_laurent(deg, vrblvl=0):
     fail = fail + test_random_system(deg, vrblvl)
     fail = fail + test_parse_polynomial(deg, vrblvl)
     fail = fail + test_parse_system(deg, vrblvl)
+    fail = fail + test_linear_solver(deg, deg, vrblvl)
+    fail = fail + test_newton_steps(vrblvl)
     if vrblvl > 0:
         if fail == 0:
             print('=> All tests on the laurent module passed.')
