@@ -739,7 +739,7 @@ def series_product(mat, vec, vrblvl=0):
             for adx in range(len(apwr)):
                 for vdx in range(len(vpwr)):
                     respwr.append(apwr[adx] + vpwr[vdx])
-                    rescff.append(acff[adx] * vcf[vdx])
+                    rescff.append(acff[adx] * vcff[vdx])
         res.append((respwr, rescff))
     return res
 
