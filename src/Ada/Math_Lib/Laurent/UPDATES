@@ -1,3 +1,6 @@
+Thu 9 Apr 2026 : adjusted real_powered_series_io.adb so series with the
+  constant term missing are written correctly.
+
 Tue 17 Feb 2026 : Moved is_linear test from main_real_powered_series to 
   the new package real_powered_homotopy, to test_real_powered_homotopy
   added regularity test .

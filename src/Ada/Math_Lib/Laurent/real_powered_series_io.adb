@@ -43,14 +43,23 @@ package body Real_Powered_Series_IO is
                        p : Standard_Floating_Vectors.Vector;
                        t : character := 't';
                        vrblvl : integer32 := 0 ) return string is
-
-    cst : constant string := Strings_and_Numbers.Convert(c(0));
-
   begin
     if vrblvl > 0
      then put_line("-> in Real_Powered_Series_IO.to_string ...");
     end if;
-    return append_term(1,cst,c,p,t,vrblvl-1);
+    if c'first = 0 then
+      declare
+        cst : constant string := Strings_and_Numbers.Convert(c(0));
+      begin
+        return append_term(1,cst,c,p,t,vrblvl-1);
+      end;
+    else
+      declare
+        cst : constant string := "";
+      begin
+        return append_term(1,cst,c,p,t,vrblvl-1);
+      end;
+    end if;
   end to_string;
 
   procedure put ( c : in Standard_Complex_Vectors.Vector;
@@ -68,13 +77,22 @@ package body Real_Powered_Series_IO is
     cnt : natural32 := 0;
 
   begin
-    Standard_Write_Numbers.Write_Number(file,c(0),cnt);
+    if c'first = 0
+     then Standard_Write_Numbers.Write_Number(file,c(0),cnt);
+    end if;
     for i in p'range loop
-      put(file," + ");
+      if i > p'first then
+        put(file," + ");
+      elsif c'first = 0 then
+        put(file," + ");
+      end if;
       Standard_Write_Numbers.Write_Coefficient(file,c(i),cnt);
       put(file,t);
       put(file,"**");
-      put(file,p(i),1,14,3);
+      if p(i) = 0.0
+       then put(file,"0.0");
+       else put(file,p(i),1,14,3);
+      end if;
     end loop;
   end put;
 
@@ -93,13 +111,22 @@ package body Real_Powered_Series_IO is
     cnt : natural32 := 0;
   
   begin
-    Standard_Write_Numbers.Write_Number(file,c(0),cnt); new_line(file);
+    if c'first = 0 then
+      Standard_Write_Numbers.Write_Number(file,c(0),cnt); new_line(file);
+    end if;
     for i in p'range loop
-      put(file," + ");
+      if i > p'first then
+        put(file," + ");
+      elsif c'first = 0 then
+        put(file," + ");
+      end if;
       Standard_Write_Numbers.Write_Coefficient(file,c(i),cnt);
       put(file,t);
       put(file,"**");
-      put(file,p(i),1,14,3); new_line(file);
+      if p(i) = 0.0
+       then put_line(file,"0.0");
+       else put(file,p(i),1,14,3); new_line(file);
+      end if;
     end loop;
   end put_line;
 
