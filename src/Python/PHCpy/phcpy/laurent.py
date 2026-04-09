@@ -718,6 +718,42 @@ def random_series_vector(dim, deg, vrblvl=0):
     res = [random_real_powered_series(deg, vrblvl-1) for _ in range(dim)]
     return res
 
+def sort_series_powers(pwr, cff, vrblvl=0):
+    """
+    Given in pwr the unsorted exponents of a series
+    and in cff the corresponding coefficients.
+    Sorts the exponents in pwr, swapping the coefficients in cff.
+    The sorting happens in place, the function modifies pwr and cff,
+    returning nothing.
+    """
+    if vrblvl > 0:
+        print('in sort_series_powers ...')
+    for idx1 in range(len(pwr)):
+        minidx = idx1
+        for idx2 in range(idx1+1,len(pwr)):
+            if pwr[idx2] < pwr[minidx]:
+                minidx = idx2
+        if not(minidx == idx1):
+            pwr[minidx], pwr[idx1] = pwr[idx1], pwr[minidx]
+            cff[minidx], cff[idx1] = cff[idx1], cff[minidx]
+
+def normalize_series_powers(pwr, cff, vrblvl=0):
+    """
+    Given in pwr are sorted exponents of power series,
+    with corresponding coefficients in cff.
+    For equal powers, the corresponding coefficients need
+    to be added and the lists need be shortened.
+    """
+    if vrblvl > 0:
+        print('in normalize_series_powers ...')
+    for idx in range(len(pwr)):
+        if idx == len(pwr)-1:
+            break
+        if pwr[idx] == pwr[idx+1]:
+            cff[idx] = cff[idx] + cff[idx+1]
+            del cff[idx+1]
+            del pwr[idx+1]
+
 def series_product(mat, vec, vrblvl=0):
     """
     Given in mat a square matrix of real powered series
@@ -741,6 +777,23 @@ def series_product(mat, vec, vrblvl=0):
                     respwr.append(apwr[adx] + vpwr[vdx])
                     rescff.append(acff[adx] * vcff[vdx])
         res.append((respwr, rescff))
+    for (pwr, cff) in res:
+        if vrblvl > 0:
+            print('-> before the sort ...')
+            print('powers :', pwr)
+            print('coeffs :', cff)
+        sort_series_powers(pwr, cff, vrblvl-1)
+        if vrblvl > 0:
+            print('-> after sorting ...')
+            print('powers :', pwr)
+            print('coeffs :', cff)
+        normalize_series_powers(pwr, cff, vrblvl-1)
+        if vrblvl > 0:
+            print('-> after normalizing ...')
+            print('powers :', pwr)
+            print('coeffs :', cff)
+            print('len(pwr) =', len(pwr), '==', len(cff), end=' = ')
+            print('len(cff) ?', len(pwr)==len(cff))
     return res
 
 def random_linear_system(dim, deg, vrblvl=0):
@@ -771,6 +824,10 @@ def random_linear_system(dim, deg, vrblvl=0):
             vdx = vdx + 1
     sol = random_series_vector(dim, deg, vrblvl)
     rhs = series_product(mat, sol, vrblvl)
+    for adx in range(len(mat)): 
+        (pwr, cff) = rhs[adx]
+        fail = fail + set_series_term(adx+1, dim+1, pwr, cff, vrblvl-1)
+    return fail
 
 def test_linear_solver(dim, deg, vrblvl=0):
     """
@@ -779,7 +836,9 @@ def test_linear_solver(dim, deg, vrblvl=0):
     """
     if vrblvl > 0:
         print('in test_linear_system, dim :', dim, '...')
-    random_linear_system(dim, deg, vrblvl)
+    fail = random_linear_system(dim, deg, vrblvl)
+    if fail != 0:
+        print(fail, 'failures occurred in defining the linear system!')
     res = solve_linear_system(3, vrblvl)
     return res
 
