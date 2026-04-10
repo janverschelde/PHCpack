@@ -68,11 +68,12 @@ def real_random_trinomials(sys, vrblvl=0):
         result.append(rpol)
     return result
 
-def random_monomial(dim, lowexp=-9, uppexp=9, vrblvl=0):
+def random_monomial(dim, xsb='x', lowexp=-9, uppexp=9, vrblvl=0):
     """
     Returns the string representation of a random monomial with exponents
     in [lowexp, uppexp] in dim many variables.
     The coefficient is a random complex number of modulus one.
+    Every variable starts with xsb.
     """
     if vrblvl > 0:
         print('in random_monomial, dim :', dim, end=', ')
@@ -80,28 +81,30 @@ def random_monomial(dim, lowexp=-9, uppexp=9, vrblvl=0):
     exps = [randint(lowexp, uppexp) for _ in range(dim)]
     angle = uniform(0, 2*pi)
     cff = f'({cos(angle):.14f}{sin(angle):+.14f}*i)'
-    pwrs = [f'*x{idx+1}^{pwr}' for (idx, pwr) in enumerate(exps)]
+    pwrs = [f'*{xsb}{idx+1}^{pwr}' for (idx, pwr) in enumerate(exps)]
     mon = cff + ''.join(pwrs)
     if vrblvl > 0:
         print('returning', mon)
     return mon
 
-def random_polynomial(dim, nbr=5, lowexp=-9, uppexp=9, vrblvl=0):
+def random_polynomial(dim, xsb='x', nbr=5, lowexp=-9, uppexp=9, vrblvl=0):
     """
     Returns the string representation of a random polynomial in dim
     many variables and nbr terms with exponents in [lowexp, uppexp].
     The coefficients are random complex numbers of modulus one.
+    Every variable starts with xsb.
     """
     if vrblvl > 0:
         print('in random_polynomial, dim :', dim, ', nbr :', nbr, end=', ')
         print('lowexp :', lowexp, ', uppexp :', uppexp)
-    mns = [random_monomial(dim, lowexp, uppexp, vrblvl-1) for _ in range(nbr)]
+    mns = [random_monomial(dim, xsb, lowexp, uppexp, vrblvl-1) \
+           for _ in range(nbr)]
     if vrblvl > 0:
         print('random monomials :', mns)
     res = ' + '.join(mns)
     return res + ';'
 
-def random_polynomials(nbq, nvr, nbt, lowexp=-9, uppexp=9, vrblvl=0):
+def random_polynomials(nbq, nvr, nbt, xsb='x', lowexp=-9, uppexp=9, vrblvl=0):
     """
     Returns a list of nbq string representation of random polynomials
     in nvr variables, where the k-th polynomial has nbt[k] monomials,
@@ -110,13 +113,14 @@ def random_polynomials(nbq, nvr, nbt, lowexp=-9, uppexp=9, vrblvl=0):
     Example: r = random_polynomials(3, 4, [2, 4, 3])
     returns in r a list of 3 strings, representing polynomials
     in 4 variables, respectively of 2, 4, and 3 monomials.
+    Every variable starts with xsb.
     """
     if vrblvl > 0:
         print('in random_polynomial, nbq :', nbq, ', nvr :', nvr, end=', ')
         print('nbt :', nbt, ', lowexp :', lowexp, ', uppexp :', uppexp)
     res = []
     for idx in range(nbq):
-        pol = random_polynomial(nvr, nbt[idx], lowexp, uppexp, vrblvl-1)
+        pol = random_polynomial(nvr, xsb, nbt[idx], lowexp, uppexp, vrblvl-1)
         res.append(pol)
     return res
 

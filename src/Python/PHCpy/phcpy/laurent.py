@@ -429,12 +429,13 @@ def random_real_powered_series(deg, vrblvl=0):
     return (random_real_powers(deg, vrblvl-1),
             random_complex_coefficients(deg, vrblvl-1))
 
-def random_real_powered_polynomial(nvr, nbt, deg, lowexp=-9, uppexp=9, \
-    vrblvl=0):
+def random_real_powered_polynomial\
+    (nvr, nbt, deg, xsb='x', lowexp=-9, uppexp=9, vrblvl=0):
     """
     Returns the string representation of a Laurent polynomial in nvr
     variables with nbt monomials, with exponents in [lowexp, uppexp],
     with coefficients real powered series truncated at degree deg.
+    Every variable name starts with xsb.
     """
     if vrblvl > 0:
         print('in random_real_powered_polynomial, nvr :', nvr, end=', ')
@@ -446,7 +447,7 @@ def random_real_powered_polynomial(nvr, nbt, deg, lowexp=-9, uppexp=9, \
         strrep = to_rps_string(pwr, cff, vrblvl=vrblvl-1)
         if vrblvl > 0:
             print('strrep :', strrep)
-        mon = random_monomial(nvr, lowexp, uppexp, vrblvl-1)
+        mon = random_monomial(nvr, xsb, lowexp, uppexp, vrblvl-1)
         idx = mon.find(')')
         trm = '(' + strrep + ')' + mon[idx+1:]
         if pol == '':
@@ -504,8 +505,8 @@ def parse_real_powered_polynomial(pol, vsb='x', vrblvl=0):
             rest = ''
     return (cffs, mons)
 
-def random_real_powered_system(nbq, nvr, nbt, deg, lowexp=-9, uppexp=9, \
-    vrblvl=0):
+def random_real_powered_system\
+    (nbq, nvr, nbt, deg, xsb='x', lowexp=-9, uppexp=9, vrblvl=0):
     """
     Returns a list of string representations of a Laurent system
     of nbq polynomials in nvr variables, where the k-th polynomial
@@ -514,12 +515,13 @@ def random_real_powered_system(nbq, nvr, nbt, deg, lowexp=-9, uppexp=9, \
     """
     if vrblvl > 0:
         print('in random_real_powered_system, nbq :', nbq, end=', ')
-        print('nvr :', nvr, 'nbt :', nbt, ', lowexp :', lowexp, end=', ')
+        print('nvr :', nvr, 'nbt :', nbt, ', deg :', deg, end=', ')
+        print('xsb :', xsb, ', lowexp :', lowexp, end=', ')
         print('uppexp :', uppexp)
     res = []
     for qix in range(nbq):
         pol = random_real_powered_polynomial\
-                  (nvr, nbt[qix], deg, lowexp, uppexp, vrblvl-1)
+                  (nvr, nbt[qix], deg, xsb, lowexp, uppexp, vrblvl-1)
         res.append(pol)
     return res 
 
@@ -829,24 +831,91 @@ def random_linear_system(dim, deg, vrblvl=0):
         fail = fail + set_series_term(adx+1, dim+1, pwr, cff, vrblvl-1)
     return fail
 
-def random_binomial_homotopy(dim, nbt, deg, vrblvl=0):
+def degree_monomial(mon, xsb='x', vrblvl=0):
+    """
+    Given the string representation of a monomial using xsb plus index
+    as variable name, returns the degree of the monomials.
+    """
+    if vrblvl > 0:
+        print('in degree_monomials, mon :', mon)
+    if not xsb in mon:
+        return 0                   # the monomial is a constant
+    elif not '*' in mon:
+        if not '^' in mon:
+            return 1               # only one variable without exponent
+        else:
+            L = mon.split('^')
+            return int(L[1])       # only one exponent
+    else:
+        factors = mon.split('*')   # we have at least two factors
+        result = 0
+        for factor in factors:     # add exponents of the factors
+            L = factor.split('^')
+            result = result + int(L[1])
+        return result
+
+def sort_monomial_series(mons, cffs, xsb='x', vrblvl=0):
+    """
+    Sorts the monomials in mons according to decreasing degrees,
+    swapping also the corresponding coefficients in cffs.
+    """
+    if vrblvl > 0:
+        print('in sort_monomial_series ...')
+        print('before the sort :')
+        print('monomials :', mons)
+        print('coefficients :', cffs)
+    for idx1 in range(len(mons)):
+        maxidx = idx1
+        maxdeg = degree_monomial(mons[idx1], xsb)
+        for idx2 in range(idx1+1, len(mons)):
+            mondeg = degree_monomial(mons[idx2], xsb)
+            if mondeg > maxdeg:
+                maxidx, maxdeg = idx2, mondeg
+        if not(maxidx == idx1):
+            mons[maxidx], mons[idx1] = mons[idx1], mons[maxidx]
+            cffs[maxidx], cffs[idx1] = cffs[idx1], cffs[maxidx]
+    if vrblvl > 0:
+        print('after the sort :')
+        print('monomials :', mons)
+        print('coefficients :', cffs)
+
+def random_binomial_homotopy(dim, nbt, deg, sol, xsb='x', vrblvl=0):
     """
     Makes a random Laurent homotopy of dimension dim,
     with number of terms in the polynomials given in the list nbt,
     which is a list of length dim, with series truncated at the
-    terms with index deg.  Returns the coefficients and the monomials.
+    terms with index deg.  The solution is given in sol.
+    Returns the coefficients and the monomials.
     """
     if vrblvl > 0:
         print('in random_binomial_homotopy ...')
-    pols = random_real_powered_system(dim, dim, nbt, deg, vrblvl=vrblvl-1)
+    ssol = []
+    for ksol in sol:
+        (pwr, cff) = ksol
+        flippedsign = [-nbr for nbr in cff]
+        ssol.append(to_rps_string(pwr, flippedsign))
+    if vrblvl > 0:
+        print('the solution series strings :', ssol)
+    pols = random_real_powered_system(dim, dim, nbt, deg, xsb, vrblvl=vrblvl-1)
     if vrblvl > 0:
         print('a random system :\n', pols)
     (cffs, mons) = parse_real_powered_system(pols, vrblvl=vrblvl)
+    for idx in range(len(pols)):
+        mons[idx].append(xsb + str(idx+1))
+        cffs[idx].append('(1.0+0.0*i) + (0.0+0.0*i)*t**1.0')
+        mons[idx].append('1')
+        if vrblvl > 0:
+            print('appending', ssol[idx])
+        cffs[idx].append(ssol[idx])
+    for idx in range(len(pols)):
+        sort_monomial_series(mons[idx], cffs[idx], xsb, vrblvl)
     if vrblvl > 0:
         for (idx, pol) in enumerate(pols):
             print('polynomial', idx+1, ':\n', pol)
             print('has coefficients :\n', cffs[idx])
             print('and monomials :\n', mons[idx])
+            degmon = [degree_monomial(mon, xsb, vrblvl) for mon in mons[idx]]
+            print('monomial degrees :', degmon)
     return (cffs, mons)
 
 def store_laurent_homotopy(cffs, mons, vrblvl=0):
@@ -870,7 +939,8 @@ def store_laurent_homotopy(cffs, mons, vrblvl=0):
             if vrblvl > 0:
                 print('powers :', serpwrs)
                 print('coeffs :', sercffs)
-            fail = fail + set_series_term(adx+1, vdx+1, serpwrs, sercffs, vrblvl)
+            fail = fail \
+                 + set_series_term(adx+1, vdx+1, serpwrs, sercffs, vrblvl)
     clear_double_laurent_system(vrblvl-1)
     pols = []
     for monomials in mons:
@@ -907,7 +977,12 @@ def test_newton_steps(vrblvl=0):
     """
     if vrblvl > 0:
         print("in test_newton_steps ...")
-    (cffs, mons) = random_binomial_homotopy(3, [2, 2, 2], 3, vrblvl)
+    dim, deg = 3, 3
+    sol = random_series_vector(dim, deg, vrblvl-1)
+    if vrblvl > 0:
+        print('the solution series :', sol)
+    nbt = [2 for _ in range(dim)]
+    (cffs, mons) = random_binomial_homotopy(dim, nbt, deg, sol, vrblvl=vrblvl)
     fail = store_laurent_homotopy(cffs, mons, vrblvl)
     if fail != 0:
         print(fail, 'failures occurred in storing Laurent homotopy!')
