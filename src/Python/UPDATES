@@ -1,5 +1,6 @@
 Thu 9 Apr 2026 : extended laurent.py with the definition of the constant
   terms of a random linear system, computed via products of series.
+  Extended laurent.py with the definition of a random Laurent homotopy.
 
 Mon 6 Apr 2026 : extended laurent.py with setup of a linear system,
   and extra tests.

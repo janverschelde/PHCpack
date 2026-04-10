@@ -829,6 +829,65 @@ def random_linear_system(dim, deg, vrblvl=0):
         fail = fail + set_series_term(adx+1, dim+1, pwr, cff, vrblvl-1)
     return fail
 
+def random_binomial_homotopy(dim, nbt, deg, vrblvl=0):
+    """
+    Makes a random Laurent homotopy of dimension dim,
+    with number of terms in the polynomials given in the list nbt,
+    which is a list of length dim, with series truncated at the
+    terms with index deg.  Returns the coefficients and the monomials.
+    """
+    if vrblvl > 0:
+        print('in random_binomial_homotopy ...')
+    pols = random_real_powered_system(dim, dim, nbt, deg, vrblvl=vrblvl-1)
+    if vrblvl > 0:
+        print('a random system :\n', pols)
+    (cffs, mons) = parse_real_powered_system(pols, vrblvl=vrblvl)
+    if vrblvl > 0:
+        for (idx, pol) in enumerate(pols):
+            print('polynomial', idx+1, ':\n', pol)
+            print('has coefficients :\n', cffs[idx])
+            print('and monomials :\n', mons[idx])
+    return (cffs, mons)
+
+def store_laurent_homotopy(cffs, mons, vrblvl=0):
+    """
+    Stores the coefficients and the monomials given as string representations
+    of a Laurent homotopy.
+    """
+    if vrblvl > 0:
+        print('in store_binomial_homotopy ...')
+    clear_series_terms(vrblvl-1)
+    dims = [len(cff) for cff in cffs]
+    if vrblvl > 0:
+        print('the dimensions :', dims)
+    initialize_series_coefficients(dims, vrblvl-1)
+    fail = 0
+    for (adx, polcff) in enumerate(cffs):
+        if vrblvl > 0:
+            print('parsing coefficients of polynomial ', adx+1, '...')
+        for (vdx, coefficient) in enumerate(polcff):
+            (serpwrs, sercffs) = from_rps_string(coefficient, vrblvl=vrblvl)
+            if vrblvl > 0:
+                print('powers :', serpwrs)
+                print('coeffs :', sercffs)
+            fail = fail + set_series_term(adx+1, vdx+1, serpwrs, sercffs, vrblvl)
+    clear_double_laurent_system(vrblvl-1)
+    pols = []
+    for monomials in mons:
+        poly = ' + '.join(monomials) + ';'
+        pols.append(poly)
+    if vrblvl > 0:
+        print('the polynomials :')
+        for pol in pols:
+            print(pol)
+    set_double_laurent_system(len(pols), pols, vrblvl-1)
+    if vrblvl > 0:
+        gpol = get_double_laurent_system(vrblvl-1)
+        print('the stored polynomials :')
+        for pol in gpol:
+            print(pol)
+    return fail
+
 def test_linear_solver(dim, deg, vrblvl=0):
     """
     Tests the linear solver on a generated system of dimension dim,
@@ -848,6 +907,10 @@ def test_newton_steps(vrblvl=0):
     """
     if vrblvl > 0:
         print("in test_newton_steps ...")
+    (cffs, mons) = random_binomial_homotopy(3, [2, 2, 2], 3, vrblvl)
+    fail = store_laurent_homotopy(cffs, mons, vrblvl)
+    if fail != 0:
+        print(fail, 'failures occurred in storing Laurent homotopy!')
     res = run_newton_steps(3, vrblvl)
     return res
 

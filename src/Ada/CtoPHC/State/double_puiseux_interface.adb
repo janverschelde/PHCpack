@@ -82,8 +82,9 @@ package body Double_Puiseux_Interface is
           := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
       nbr : constant integer32 := integer32(v_a(v_a'first));
     begin
-      if vrblvl > 0
-       then put("  nbr : "); put(nbr,1); put_line(" ...");
+      if vrblvl > 0 then
+        put("  nbr : "); put(nbr,1); put_line(" ...");
+        Show_Data(vrblvl);
       end if;
     end;
     return 0;
