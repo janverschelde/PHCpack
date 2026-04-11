@@ -1,3 +1,6 @@
+Sat 11 Apr 2026 : to double_puiseux_interface.adb added procedure for the
+  indexing of the series coefficients.
+
 Thu 9 Apr 2026 : added Show_Data procedure to double_puiseux_interface.adb.
   Called Show_Data in double_puiseux_interface.adb also when running newton.
 
