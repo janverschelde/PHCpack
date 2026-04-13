@@ -430,12 +430,13 @@ def random_real_powered_series(deg, vrblvl=0):
             random_complex_coefficients(deg, vrblvl-1))
 
 def random_real_powered_polynomial\
-    (nvr, nbt, deg, xsb='x', lowexp=-9, uppexp=9, vrblvl=0):
+    (nvr, nbt, deg, zerocst=False, xsb='x', lowexp=-9, uppexp=9, vrblvl=0):
     """
     Returns the string representation of a Laurent polynomial in nvr
     variables with nbt monomials, with exponents in [lowexp, uppexp],
     with coefficients real powered series truncated at degree deg.
-    Every variable name starts with xsb.
+    Every variable name starts with xsb.  If zerocst is True,
+    then the constant coefficient of all series coefficients is zero.
     """
     if vrblvl > 0:
         print('in random_real_powered_polynomial, nvr :', nvr, end=', ')
@@ -444,6 +445,8 @@ def random_real_powered_polynomial\
     pol = ''
     for tix in range(nbt):
         (pwr, cff) = random_real_powered_series(deg, vrblvl-1)
+        if zerocst:
+            cff[0] = complex(0.0, 0.0)
         strrep = to_rps_string(pwr, cff, vrblvl=vrblvl-1)
         if vrblvl > 0:
             print('strrep :', strrep)
@@ -506,7 +509,8 @@ def parse_real_powered_polynomial(pol, vsb='x', vrblvl=0):
     return (cffs, mons)
 
 def random_real_powered_system\
-    (nbq, nvr, nbt, deg, xsb='x', lowexp=-9, uppexp=9, vrblvl=0):
+    (nbq, nvr, nbt, deg, \
+    zerocst=False, xsb='x', lowexp=-9, uppexp=9, vrblvl=0):
     """
     Returns a list of string representations of a Laurent system
     of nbq polynomials in nvr variables, where the k-th polynomial
@@ -516,12 +520,12 @@ def random_real_powered_system\
     if vrblvl > 0:
         print('in random_real_powered_system, nbq :', nbq, end=', ')
         print('nvr :', nvr, 'nbt :', nbt, ', deg :', deg, end=', ')
-        print('xsb :', xsb, ', lowexp :', lowexp, end=', ')
-        print('uppexp :', uppexp)
+        print('zerocst :', zerocst, 'xsb :', xsb, end=', ')
+        print('lowexp :', lowexp, ', uppexp :', uppexp)
     res = []
     for qix in range(nbq):
         pol = random_real_powered_polynomial\
-                  (nvr, nbt[qix], deg, xsb, lowexp, uppexp, vrblvl-1)
+                  (nvr, nbt[qix], deg, zerocst, xsb, lowexp, uppexp, vrblvl-1)
         res.append(pol)
     return res 
 
@@ -896,7 +900,8 @@ def random_binomial_homotopy(dim, nbt, deg, sol, xsb='x', vrblvl=0):
         ssol.append(to_rps_string(pwr, flippedsign))
     if vrblvl > 0:
         print('the solution series strings :', ssol)
-    pols = random_real_powered_system(dim, dim, nbt, deg, xsb, vrblvl=vrblvl-1)
+    pols = random_real_powered_system\
+              (dim, dim, nbt, deg, True, xsb, vrblvl=vrblvl-1)
     if vrblvl > 0:
         print('a random system :\n', pols)
     (cffs, mons) = parse_real_powered_system(pols, vrblvl=vrblvl)
@@ -977,7 +982,7 @@ def test_newton_steps(vrblvl=0):
     """
     if vrblvl > 0:
         print("in test_newton_steps ...")
-    dim, deg = 3, 3
+    dim, deg = 2, 2
     sol = random_series_vector(dim, deg, vrblvl-1)
     if vrblvl > 0:
         print('the solution series :', sol)
