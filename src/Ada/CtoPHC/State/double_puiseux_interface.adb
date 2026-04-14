@@ -1,14 +1,21 @@
 with Interfaces.C;
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_IO;      use Standard_Floating_Numbers_IO;
+with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Standard_Complex_Numbers_IO;       use Standard_Complex_Numbers_IO;
+with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Integer_VecVecs_IO;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
+with Standard_Complex_Vectors_IO;       use Standard_Complex_Vectors_IO;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
+with Double_Newton_Puiseux;
 with Standard_LaurSys_Container;
 with Double_VecVecs_Container;
 with DCMPLX_VecVecs_Container;
@@ -145,6 +152,205 @@ package body Double_Puiseux_Interface is
       return -1;
   end Linear_Solver;
 
+  function Extract_Constant_Coefficients
+             ( cffs : Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
+               vrblvl : integer32 := 0 )
+             return Standard_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   In a binomial Laurent homotopy, in diagonal test format,
+  --   the constant coefficients of the solution series are exposed
+  --   in the constant coefficients of the homotopy, given by cffs.
+  --   Returns the constants of the solution series.
+
+  -- REQUIRED :
+  --   The coefficients have been properly indexed at zero.
+
+    res : Standard_Complex_Vectors.Vector(cffs'range);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in double_puiseux_interface.");
+      put_line("Extract_Constant_Coefficients ...");
+    end if;
+    for i in cffs'range loop
+      declare
+        moncff : constant Standard_Complex_VecVecs.Link_to_VecVec := cffs(i);
+        cst : Complex_Number;
+        done : boolean := false;
+      begin
+        for j in moncff'range loop
+          cst := moncff(j)(0);
+         -- constant should not be zero and not be equal to one
+          if REAL_PART(cst) /= 0.0 or IMAG_PART(cst) /= 0.0 then
+            if REAL_PART(cst) /= 1.0 and IMAG_PART(cst) /= 0.0
+             then res(i) := -cst; done := true;
+            end if;
+          end if;
+          exit when done;
+        end loop;
+      end;
+    end loop;
+    return res;
+  end Extract_Constant_Coefficients;
+
+  function Extract_Leading_Coefficients
+             ( cffs : Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
+               vrblvl : integer32 := 0 )
+             return Standard_Complex_VecVecs.VecVec is
+
+  -- DESCRIPTION :
+  --   Given properly indexed coefficients of a Laurent homotopy,
+  --   extracts the coefficients at index 1.
+  --   Although this is not correct when the monomial is a variable,
+  --   it gets fixed when normalizing the binomial homotopy.
+
+    res : Standard_Complex_VecVecs.VecVec(cffs'range);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in double_puiseux_interface.");
+      put_line("Extract_Leading_Coefficients ...");
+    end if;
+    for i in cffs'range loop
+      declare
+        moncff : constant Standard_Complex_VecVecs.Link_to_VecVec := cffs(i);
+        rescff : Standard_Complex_Vectors.Vector(moncff'range);
+      begin
+        for j in moncff'range loop
+          rescff(j) := moncff(j)(1);
+        end loop;
+        res(i) := new Standard_Complex_Vectors.Vector'(rescff);
+      end;
+    end loop;
+    return res;
+  end Extract_Leading_Coefficients;
+
+  function Extract_Leading_Powers
+             ( pwrs : Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
+               vrblvl : integer32 := 0 )
+             return Standard_Floating_VecVecs.VecVec is
+
+  -- DESCRIPTION :
+  --   Given properly indexed powers of a Laurent homotopy,
+  --   extracts the powers at index 1.
+  --   Although this is not correct when the monomial is a variable,
+  --   it gets fixed when normalizing the binomial homotopy.
+
+    res : Standard_Floating_VecVecs.VecVec(pwrs'range);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in double_puiseux_interface.");
+      put_line("Extract_Leading_Powers ...");
+    end if;
+    for i in pwrs'range loop
+      declare
+        monpwr : constant Standard_Floating_VecVecs.Link_to_VecVec := pwrs(i);
+        respwr : Standard_Floating_Vectors.Vector(monpwr'range);
+      begin
+        for j in monpwr'range loop
+          respwr(j) := monpwr(j)(1);
+        end loop;
+        res(i) := new Standard_Floating_Vectors.Vector'(respwr);
+      end;
+    end loop;
+    return res;
+  end Extract_Leading_Powers;
+
+  function Is_Variable ( deg : Standard_Integer_Vectors.Link_to_Vector;
+                         var : integer32 ) return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if the degrees in deg correspond to the variable
+  --   with index given in var.
+
+  begin
+    if deg(var) /= 1 then
+      return false;
+    else
+      for i in deg'first..var-1 loop
+        if deg(i) /= 0
+         then return false;
+        end if;
+      end loop;
+      for i in var+1..deg'last loop
+        if deg(i) /= 0
+         then return false;
+        end if;
+      end loop;
+      return true;
+    end if;
+  end Is_Variable;
+
+  procedure Normalize_Binomial_Homotopy 
+              ( hdg : in out Standard_Integer_VecVecs.Array_of_VecVecs;
+                hcf : in out Standard_Complex_VecVecs.VecVec;
+                hct : in out Standard_Floating_VecVecs.VecVec;
+                vrblvl : in integer32 := 0 ) is
+
+  -- DESCRIPTION :
+  --   In a binomial homotopy, the first term is a variable,
+  --   with index equal to the index of the polynomial,
+  --   and the second term is the constant term, the solution series.
+
+  begin
+    if vrblvl > 0 then
+      put("-> in double_puiseux_interface.");
+      put_line("Normalize_Binomial_Homotopy ...");
+      put_line("before normalizing ...");
+      for i in hdg'range loop
+        put("support of polynomial "); put(i,1); put_line(" :");
+        Standard_Integer_VecVecs_IO.put(hdg(i));
+      end loop;
+      for i in hcf'range loop
+        put("leading terms of polynomial "); put(i,1); put_line(" :");
+        for j in hcf(i)'range loop
+          put(hcf(i)(j)); put(" t^"); put(hct(i)(j)); new_line;
+        end loop;
+      end loop;
+    end if;
+    for i in hdg'range loop
+      declare
+        idg : constant Standard_Integer_VecVecs.Link_to_VecVec := hdg(i);
+        sup : Standard_Integer_Vectors.Link_to_Vector;
+        idx : integer32 := 0;
+      begin
+        for j in idg'range loop
+          sup := idg(j);
+          if Is_Variable(sup,i)
+           then idx := j;
+          end if;
+          exit when idx > 0;
+        end loop;
+        if idx /= idg'first then -- swapping is needed
+          idg(idx) := idg(idg'first);
+          idg(idg'first) := sup; 
+          hcf(i)(idx) := hcf(i)(hcf(i)'first);
+          hcf(i)(hcf(i)'first) := Create(1.0); -- fixed coefficient
+          hct(i)(idx) := hct(i)(hct(i)'first);
+          hct(i)(hct(i)'first) := 0.0; -- fixed power
+        else -- fixing must happen regardless of swapping
+          hcf(i)(hcf(i)'first) := Create(1.0); -- fixed coefficient
+          hct(i)(hct(i)'first) := 0.0; -- fixed power
+        end if;
+      end;
+    end loop;
+    if vrblvl > 0 then
+      put_line("after normalizing ...");
+      for i in hdg'range loop
+        put("support of polynomial "); put(i,1); put_line(" :");
+        Standard_Integer_VecVecs_IO.put(hdg(i));
+      end loop;
+      for i in hcf'range loop
+        put("leading terms of polynomial "); put(i,1); put_line(" :");
+        for j in hcf(i)'range loop
+          put(hcf(i)(j)); put(" t^"); put(hct(i)(j)); new_line;
+        end loop;
+      end loop;
+    end if;
+  end Normalize_Binomial_Homotopy;
+
   procedure Run_Newton_Steps
               ( nbr : in integer32; vrblvl : in integer32 := 0 ) is
 
@@ -153,6 +359,7 @@ package body Double_Puiseux_Interface is
   --   and then runs as many Newton steps as the value of nbr.
 
     p : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+    tol : constant double_float := 1.0E-12;
 
   begin
     if vrblvl > 0
@@ -161,13 +368,46 @@ package body Double_Puiseux_Interface is
     p := Standard_LaurSys_Container.Retrieve;
     declare
       hdg : Standard_Integer_VecVecs.Array_of_VecVecs(p'range)
-          := Real_Powered_Homotopy.Supports(p.all);
+          := Real_Powered_Homotopy.Supports(p.all,vrblvl-1);
+      hcf : Standard_Complex_VecVecs.VecVec(p'range)
+          := Extract_Leading_Coefficients(coeffs,vrblvl-1);
+      hct : Standard_Floating_VecVecs.VecVec(p'range)
+          := Extract_Leading_Powers(powers,vrblvl-1);
+      zc0 : constant Standard_Complex_Vectors.Vector(p'range)
+          := Extract_Constant_Coefficients(coeffs,vrblvl-1);
+      zc1,zc2,zc3,zc4 : Standard_Complex_Vectors.Vector(p'range);
+      pw1,pw2,pw3,pw4 : Standard_Floating_Vectors.Vector(p'range);
     begin
+      Normalize_Binomial_Homotopy(hdg,hcf,hct,vrblvl);
       if vrblvl > 0 then
-        for i in hdg'range loop
-          put("support of polynomial "); put(i,1); put_line(" :");
-          Standard_Integer_VecVecs_IO.put(hdg(i));
+        put_line("The constants of the solution series :");
+        put_line(zc0);
+      end if;
+      Double_Newton_Puiseux.Diagonal_Newton_Steps
+        (hcf,hct,hdg,zc0,nbr,zc1,zc2,zc3,zc4,pw1,pw2,pw3,pw4,tol,vrblvl+1);
+      if vrblvl > 0 then
+        put_line("first terms of solution series :");
+        for j in zc1'range loop
+          put(zc1(j)); put(" t^"); put(pw1(j)); new_line;
         end loop;
+        if nbr >= 2 then
+          put_line("second terms of solution :");
+          for j in zc2'range loop
+            put(zc2(j)); put(" t^"); put(pw2(j)); new_line;
+          end loop;
+          if nbr >= 3 then
+            put_line("third terms of solution :");
+            for j in zc3'range loop
+              put(zc3(j)); put(" t^"); put(pw3(j)); new_line;
+            end loop;
+            if nbr >= 4 then
+              put_line("fourth terms of solution :");
+              for j in zc4'range loop
+                put(zc4(j)); put(" t^"); put(pw4(j)); new_line;
+              end loop;
+            end if;        
+          end if;
+        end if;
       end if;
     end; 
   end Run_Newton_Steps;
