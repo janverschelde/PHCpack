@@ -1,5 +1,6 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Complex_Numbers;
+with Standard_Integer_Vectors;
 
 package body Real_Powered_Homotopy is
 
@@ -127,11 +128,66 @@ package body Real_Powered_Homotopy is
                 vrblvl : in integer32 := 0 ) is
   begin
     if vrblvl > 0 then
-      put_line("-> in Real_Powered_Homotopy.get_constant_coefficients ...");
+      put_line("-> in real_powered_homotopy.Get_Constant_Coefficients ...");
     end if;
     for i in q'range loop
       Get_Constant_Row(q(i),c(i),i,A,b(i),vrblvl-1);
     end loop;
   end Get_Constant_Coefficients;
+
+  function Support ( q : Standard_Complex_Laurentials.Poly;
+                     vrblvl : integer32 := 0 )
+                   return Standard_Integer_VecVecs.VecVec is
+
+    nbr : constant integer32
+        := integer32(Standard_Complex_Laurentials.Number_of_Terms(q));
+    res : Standard_Integer_VecVecs.VecVec(1..nbr);
+    idx : integer32 := 0;
+
+    procedure Visit ( trm : in Standard_Complex_Laurentials.Term;
+                      continue : out boolean ) is
+
+      sup : Standard_Integer_Vectors.Vector(trm.dg'range);
+
+    begin
+      for i in trm.dg'range loop
+        sup(i) := trm.dg(i);
+      end loop;
+      idx := idx + 1;
+      res(idx) := new Standard_Integer_Vectors.Vector'(sup);
+      continue := true;
+    end Visit;
+
+    procedure Visit_Terms is 
+      new Standard_Complex_Laurentials.Visiting_Iterator(Visit);
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in real_powered_homotopy.Support ... ");
+    end if;
+    Visit_Terms(q);
+    return res;
+  end Support;
+
+  function Supports ( q : Standard_Complex_Laur_Systems.Laur_Sys;
+                      vrblvl : integer32 := 0 )
+                    return Standard_Integer_VecVecs.Array_of_VecVecs is
+
+    res : Standard_Integer_VecVecs.Array_of_VecVecs(q'range);
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in real_powered_homotopy.Supports ... ");
+    end if;
+    for i in q'range loop
+      declare
+        sup : constant Standard_Integer_VecVecs.VecVec
+            := Support(q(i),vrblvl-1);
+      begin
+        res(i) := new Standard_Integer_VecVecs.VecVec'(sup);
+      end;
+    end loop;
+    return res;
+  end Supports;
 
 end Real_Powered_Homotopy;

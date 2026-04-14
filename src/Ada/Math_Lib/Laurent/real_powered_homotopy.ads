@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Integer_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Matrices;
@@ -34,5 +35,19 @@ package Real_Powered_Homotopy is
   --   coefficients in c, returns the linear system (A, b) defined
   --   by the constant coefficients of the real powered homotopy.
   --   The verbose level is given in vrblvl.
+
+  function Support ( q : Standard_Complex_Laurentials.Poly;
+                     vrblvl : integer32 := 0 )
+                   return Standard_Integer_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Returns the support of the polynomial q.
+
+  function Supports ( q : Standard_Complex_Laur_Systems.Laur_Sys;
+                      vrblvl : integer32 := 0 )
+                    return Standard_Integer_VecVecs.Array_of_VecVecs;
+
+  -- DESCRIPTION :
+  --   Returns the supports of the Laurent system q.
 
 end Real_Powered_Homotopy;

@@ -1,3 +1,6 @@
+Mon 13 Apr 2026 : extended double_puiseux_interface.adb with extraction
+  of the supports of a Laurent polynomial homotopy.
+
 Sat 11 Apr 2026 : to double_puiseux_interface.adb added procedure for the
   indexing of the series coefficients.
 

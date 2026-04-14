@@ -1,3 +1,6 @@
+Mon 13 Apr 2026 : extended real_powered_homotopy with functions to return
+  the supports of Laurent polynomials and Laurent polynomial systems.
+
 Thu 9 Apr 2026 : adjusted real_powered_series_io.adb so series with the
   constant term missing are written correctly.
 

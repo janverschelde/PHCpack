@@ -1,6 +1,8 @@
 with Interfaces.C;
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
+with Standard_Integer_VecVecs;
+with Standard_Integer_VecVecs_IO;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
@@ -10,6 +12,7 @@ with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with Standard_LaurSys_Container;
 with Double_VecVecs_Container;
 with DCMPLX_VecVecs_Container;
+with Real_Powered_Homotopy;
 with Real_Powered_Homotopy_IO;
 
 package body Double_Puiseux_Interface is
@@ -142,6 +145,33 @@ package body Double_Puiseux_Interface is
       return -1;
   end Linear_Solver;
 
+  procedure Run_Newton_Steps
+              ( nbr : in integer32; vrblvl : in integer32 := 0 ) is
+
+  -- DESCRIPTION :
+  --   Extracts the real powered Laurent homotopy data
+  --   and then runs as many Newton steps as the value of nbr.
+
+    p : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in double_puiseux_interface.Run_Newton_Steps ...");
+    end if;
+    p := Standard_LaurSys_Container.Retrieve;
+    declare
+      hdg : Standard_Integer_VecVecs.Array_of_VecVecs(p'range)
+          := Real_Powered_Homotopy.Supports(p.all);
+    begin
+      if vrblvl > 0 then
+        for i in hdg'range loop
+          put("support of polynomial "); put(i,1); put_line(" :");
+          Standard_Integer_VecVecs_IO.put(hdg(i));
+        end loop;
+      end if;
+    end; 
+  end Run_Newton_Steps;
+
   function Newton_Steps
              ( a : C_intarrs.Pointer;
                c : C_dblarrs.Pointer;
@@ -159,6 +189,7 @@ package body Double_Puiseux_Interface is
         put("  nbr : "); put(nbr,1); put_line(" ...");
        -- Show_Data(vrblvl);
         Indexing_Series(vrblvl);
+        Run_Newton_Steps(nbr,vrblvl);
       end if;
     end;
     return 0;
