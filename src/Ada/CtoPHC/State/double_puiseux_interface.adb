@@ -520,10 +520,10 @@ package body Double_Puiseux_Interface is
     begin
       if vrblvl > 0 then
         put("  nbr : "); put(nbr,1); put_line(" ...");
-       -- Show_Data(vrblvl);
-        Indexing_Series(vrblvl);
-        Run_Newton_Steps(nbr,c,vrblvl);
       end if;
+     -- Show_Data(vrblvl);
+      Indexing_Series(vrblvl);
+      Run_Newton_Steps(nbr,c,vrblvl);
     end;
     return 0;
   exception
