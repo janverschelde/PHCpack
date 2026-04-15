@@ -173,4 +173,4 @@ from phcpy import sets, cascades, diagonal, factor
 from phcpy import decomposition, binomials
 
 # The version number is defined as a data attribute.
-__version__ = '1.1.6'
+__version__ = '1.1.7'

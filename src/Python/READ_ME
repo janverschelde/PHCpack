@@ -1,4 +1,4 @@
-phcpy 1.1.6 offers a functional Python interface to PHCv2.4.93
+phcpy 1.1.7 offers a functional Python interface to PHCv2.4.94
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -25,6 +25,7 @@ or via the gprbuild of the gnu-ada compiler on the phclib.gpr file in
 the Main folder of the Ada source code.
 
 Release history:
+1.1.7 : 2025-04-16 : newton runs in the laurent module
 1.1.6 : 2025-03-20 : new laurent module; bug fixed calling demics
 1.1.5 : 2025-10-15 : reformulated cyclic n-roots
 1.1.4 : 2024-03-20 : function added for the predicted solution point
