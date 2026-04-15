@@ -17,7 +17,7 @@ def initialize_series_coefficients(dims, vrblvl=0):
     to the value of the first parameter dim.
     """
     if vrblvl > 0:
-        print('in initialize_series_coefficients, dims :', dims)
+        print('in laurent.initialize_series_coefficients, dims :', dims)
     phc = get_phcfun(vrblvl-1)
     alen = pointer(c_int32(len(dims)))
     bval = (c_int32 * len(dims))()
@@ -45,7 +45,7 @@ def set_series_term(adx, vdx, pwr, cff, vrblvl=0):
     The powers in pwr are doubles, whereas cff contains complex numbers.
     """
     if vrblvl > 0:
-        print('in set_series_term, adx :', adx, ', vdx :', vdx)
+        print('in laurent.set_series_term, adx :', adx, ', vdx :', vdx)
         print('pwr : ', pwr)
         print('cff : ', cff)
     phc = get_phcfun(vrblvl-1)
@@ -83,7 +83,7 @@ def power_dimension(vrblvl=0):
     Returns the number of arrays of power vectors.
     """
     if vrblvl > 0:
-        print('in power_dimension ...')
+        print('in laurent.power_dimension ...')
     phc = get_phcfun(vrblvl-1)
     dim = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
@@ -101,10 +101,7 @@ def coefficient_dimension(vrblvl=0):
     Returns the number of arrays of coefficient vectors.
     """
     if vrblvl > 0:
-        print('in coefficient_dimension ...')
-    phc = get_phcfun(vrblvl-1)
-    if vrblvl > 0:
-        print('in power_dimension ...')
+        print('in laurent.coefficient_dimension ...')
     phc = get_phcfun(vrblvl-1)
     dim = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
@@ -122,7 +119,7 @@ def size_power_array(adx, vrblvl=0):
     Returns the size of the power array with index adx.
     """
     if vrblvl > 0:
-        print('in size_power_array, adx :', adx, '...')
+        print('in laurent.size_power_array, adx :', adx, '...')
     phc = get_phcfun(vrblvl-1)
     aidx = pointer(c_int32(adx))
     size = pointer(c_int32(0))
@@ -140,7 +137,7 @@ def size_coefficient_array(adx, vrblvl=0):
     Returns the size of the coefficient array with index adx.
     """
     if vrblvl > 0:
-        print('in size_coefficient_array, adx :', adx, '...')
+        print('in laurent.size_coefficient_array, adx :', adx, '...')
     phc = get_phcfun(vrblvl-1)
     aidx = pointer(c_int32(adx))
     size = pointer(c_int32(0))
@@ -158,7 +155,8 @@ def size_power_vector(adx, vdx, vrblvl=0):
     Returns the size of the power vector at position vdx in array adx.
     """
     if vrblvl > 0:
-        print('in size_power_vector, adx :', adx, ', vdx :', vdx, '...')
+        print('in laurent.size_power_vector, adx :', adx, end='')
+        print(', vdx :', vdx, '...')
     phc = get_phcfun(vrblvl-1)
     aval = (c_int32 * 2)()
     aval[0] = adx
@@ -179,7 +177,8 @@ def size_coefficient_vector(adx, vdx, vrblvl=0):
     Returns the size of the coefficient vector at position vdx in array adx.
     """
     if vrblvl > 0:
-        print('in size_coefficient_vector, adx :', adx, ', vdx :', vdx, '...')
+        print('in laurent.size_coefficient_vector, adx :', adx, end='')
+        print(', vdx :', vdx, '...')
     phc = get_phcfun(vrblvl-1)
     aval = (c_int32 * 2)()
     aval[0] = adx
@@ -201,7 +200,7 @@ def get_series_term(adx, vdx, vrblvl=0):
     in the array and vector with index vdx in the array.
     """
     if vrblvl > 0:
-        print('in get_series_term, adx :', adx, ', vdx :', vdx, '...')
+        print('in laurent.get_series_term, adx :', adx, ', vdx :', vdx, '...')
     phc = get_phcfun(vrblvl-1)
     powsize = size_power_vector(adx, vdx, vrblvl-1)
     size = pointer(c_int32(powsize))
@@ -251,7 +250,7 @@ def solve_linear_system(nbr, vrblvl=0):
     system of Laurent polynomials, in double precision.
     """
     if vrblvl > 0:
-        print('in solve_linear_system, nbr :', nbr)
+        print('in laurent.solve_linear_system, nbr :', nbr)
     phc = get_phcfun(vrblvl-1)
     anbr = pointer(c_int32(nbr))
     bbb = pointer(c_int32(0))
@@ -273,7 +272,7 @@ def split_powers_coefficients(dim, numbers, vrblvl=0):
     returns two lists: real powers and complex coefficients.
     """
     if vrblvl > 0:
-        print('in split_powers_coefficients, dim :', dim)
+        print('in laurent.split_powers_coefficients, dim :', dim)
     pwrs, cffs = [0.0 for _ in range(dim)], []
     recff, imcff = 0.0, 0.0
     for (idx, number) in enumerate(numbers):
@@ -303,7 +302,7 @@ def distribute_powers(dim, powers, vrblvl=0):
     using the values in powers.
     """
     if vrblvl > 0:
-        print('in distribute_powers, dim :', dim)
+        print('in laurent.distribute_powers, dim :', dim)
         if not (len(powers) % dim == 0):
             print('size of powers :', len(powers), end=' ')
             print('is not a multiple of', dim, '!')
@@ -328,7 +327,7 @@ def distribute_coefficients(dim, coefficients, vrblvl=0):
     using the values in coefficients.
     """
     if vrblvl > 0:
-        print('in distribute_coefficients, dim :', dim)
+        print('in laurent.distribute_coefficients, dim :', dim)
         if not (len(coefficients) % (dim) == 0):
             print('size of coefficients :', len(coefficients), end=' ')
             print('is not a multiple of', dim, '!')
@@ -353,7 +352,7 @@ def run_newton_steps(dim, nbr, vrblvl=0):
     system of Laurent polynomials, in double precision.
     """
     if vrblvl > 0:
-        print('in run_newton_steps, nbr :', nbr)
+        print('in laurent.run_newton_steps, nbr :', nbr)
     phc = get_phcfun(vrblvl-1)
     anbr = pointer(c_int32(nbr))
     bbb = pointer(c_int32(0))
@@ -375,12 +374,12 @@ def run_newton_steps(dim, nbr, vrblvl=0):
         numbers.append(float(vals[0][idx]))
     if vrblvl > 0:
         print('returned numbers :', numbers)
-    pwrs, cffs = split_powers_coefficients(dim, numbers, vrblvl)
+    pwrs, cffs = split_powers_coefficients(dim, numbers, vrblvl-1)
     if vrblvl > 0:
         print('coefficients :\n', cffs)
         print('powers :\n', pwrs)
-    powers = distribute_powers(dim, pwrs)
-    coefficients = distribute_coefficients(dim, cffs, vrblvl)
+    powers = distribute_powers(dim, pwrs, vrblvl-1)
+    coefficients = distribute_coefficients(dim, cffs, vrblvl-1)
     if vrblvl > 0:
         print('distributed powers :\n', powers)
         print('distributed coefficients :\n', coefficients)
@@ -392,7 +391,7 @@ def clear_series_terms(vrblvl=0):
     and the complex coefficients.
     """
     if vrblvl > 0:
-        print('in clear_series_terms ...')
+        print('in laurent.clear_series_terms ...')
     phc = get_phcfun(vrblvl-1)
     aaa = pointer(c_int32(0))
     bbb = pointer(c_int32(0))
@@ -415,7 +414,7 @@ def test_initialization(vrblvl=0):
     Tests initializing the series coefficients.
     """
     if vrblvl > 0:
-        print("in test_initialization ...")
+        print("in laurent.test_initialization ...")
     dims = [3, 2, 4]
     fail = initialize_series_coefficients(dims, vrblvl)
     return fail
@@ -425,7 +424,7 @@ def test_dimensions(vrblvl=0):
     Tests retrieving the dimensions.
     """
     if vrblvl > 0:
-        print("in test_dimensions ...")
+        print("in laurent.test_dimensions ...")
     powdim = power_dimension(vrblvl)
     print('the power dimension :', powdim)
     cffdim = coefficient_dimension(vrblvl)
@@ -444,7 +443,7 @@ def random_real_powers(deg, vrblvl=0):
     and all other powers form an increasing sequence.
     """
     if vrblvl > 0:
-        print("in random_real_powers ...")
+        print("in laurent.random_real_powers ...")
     from random import random
     result = [0.0, 1.0 + random()]
     for idx in range(deg-1):
@@ -459,7 +458,7 @@ def random_complex_coefficients(deg, vrblvl=0):
     of random complex numbers on the unit circle.
     """
     if vrblvl > 0:
-        print("in random_complex_coefficients ...")
+        print("in laurent.random_complex_coefficients ...")
     from math import pi, sin, cos
     from random import random
     result = []
@@ -478,7 +477,7 @@ def random_real_powered_series(deg, vrblvl=0):
     the second tuple item are the complex coefficients.
     """
     if vrblvl > 0:
-        print("in random_real_powered_series ...")
+        print("in laurent.random_real_powered_series ...")
     return (random_real_powers(deg, vrblvl-1),
             random_complex_coefficients(deg, vrblvl-1))
 
@@ -490,7 +489,8 @@ def to_rps_string(pwrs, cffs, tsb='t', vrblvl=0):
     The 'j' in the string of a complex number is replaced by '*i'.
     """
     if vrblvl > 0:
-        print('in to_rps_string, pwrs =', pwrs, ', cffs =', cffs, '...')
+        print('in laurent.to_rps_string, pwrs =', pwrs, end='')
+        print(', cffs =', cffs, '...')
     res = ''
     for (pwr, cff) in zip(pwrs, cffs):
         jtrm = str(cff)
@@ -511,7 +511,7 @@ def from_rps_string(strrep, tsb='t', vrblvl=0):
     returns the tuple of two lists, powers and coefficients.
     """
     if vrblvl > 0:
-        print('in from_rps_string, strrep =', strrep, '...')
+        print('in laurent.from_rps_string, strrep =', strrep, '...')
     splitsym = '*' + tsb + '**'
     jstrrep = strrep.replace('*i', 'j')
     data = jstrrep.split(splitsym)
@@ -540,8 +540,8 @@ def random_real_powered_polynomial\
     then the constant coefficient of all series coefficients is zero.
     """
     if vrblvl > 0:
-        print('in random_real_powered_polynomial, nvr :', nvr, end=', ')
-        print('nbt :', nbt, ', lowexp :', lowexp, end=', ')
+        print('in laurent.random_real_powered_polynomial, nvr : ', end='')
+        print(nvr, ', nbt :', nbt, ', lowexp :', lowexp, end=', ')
         print('uppexp :', uppexp)
     pol = ''
     for tix in range(nbt):
@@ -569,7 +569,7 @@ def parse_real_powered_polynomial(pol, vsb='x', vrblvl=0):
     symbol of the variable in vsb is.
     """
     if vrblvl > 0:
-        print('in parse_real_powered_polynomial, pol :', pol)
+        print('in laurent.parse_real_powered_polynomial, pol :', pol)
     cffs, mons = [], []
     idx = pol.find(vsb)
     c0 = pol[1:idx-2]
@@ -619,7 +619,7 @@ def random_real_powered_system\
     at degree deg, and exponents in [lowexp,uppexp].
     """
     if vrblvl > 0:
-        print('in random_real_powered_system, nbq :', nbq, end=', ')
+        print('in laurent.random_real_powered_system, nbq :', nbq, end=', ')
         print('nvr :', nvr, 'nbt :', nbt, ', deg :', deg, end=', ')
         print('zerocst :', zerocst, 'xsb :', xsb, end=', ')
         print('lowexp :', lowexp, ', uppexp :', uppexp)
@@ -640,7 +640,7 @@ def parse_real_powered_system(pols, vsb='x', vrblvl=0):
     symbol of the variable in vsb is.
     """
     if vrblvl > 0:
-        print('in parse_real_powered_system, pols :', pols)
+        print('in laurent.parse_real_powered_system, pols :', pols)
     cffs, mons = [], []
     for pol in pols:
         (cff, mon) = parse_real_powered_polynomial(pol, vsb, vrblvl-1)
@@ -654,7 +654,7 @@ def test_additions(deg, vrblvl=0):
     truncated at degree deg.
     """
     if vrblvl > 0:
-        print("in test_additions ...")
+        print('in laurent.test_additions ...')
     powdim = power_dimension(vrblvl-1)
     powsizes = [size_power_array(i+1,vrblvl-1) for i in range(powdim)]
     print('size power arrays :', powsizes)
@@ -673,7 +673,7 @@ def test_vector_dimensions(vrblvl=0):
     added to the initialized arrays of vectors.
     """
     if vrblvl > 0:
-        print("in test_vector_dimensions ...")
+        print('in laurent.test_vector_dimensions ...')
     powdim = power_dimension(vrblvl-1)
     cffdim = coefficient_dimension(vrblvl-1)
     powsizes = [size_power_array(i+1,vrblvl-1) for i in range(powdim)]
@@ -700,7 +700,7 @@ def test_retrievals(vrblvl=0):
     Retrieves all vectors stored in the arrays.
     """
     if vrblvl > 0:
-        print("in test_retrievals ...")
+        print('in laurent.test_retrievals ...')
     powdim = power_dimension(vrblvl-1)
     powsizes = [size_power_array(i+1,vrblvl-1) for i in range(powdim)]
     print('size power arrays :', powsizes)
@@ -721,7 +721,7 @@ def test_string_representations(vrblvl=0):
     and writes the string representations of the series.
     """
     if vrblvl > 0:
-        print("in test_retrievals ...")
+        print('in laurent.test_retrievals ...')
     powdim = power_dimension(vrblvl-1)
     powsizes = [size_power_array(i+1,vrblvl-1) for i in range(powdim)]
     print('size power arrays :', powsizes)
@@ -744,7 +744,7 @@ def test_random_system(deg, vrblvl=0):
     where the coefficients are series truncated at degree deg.
     """
     if vrblvl > 0:
-        print('in test_random_system ...')
+        print('in laurent.test_random_system ...')
     pols = random_real_powered_system(3, 2, [1, 2, 3], 2) 
     print('a random real powered system :')
     for (idx, pol) in enumerate(pols):
@@ -757,6 +757,8 @@ def test_parse_polynomial(deg, vrblvl=0):
     series are truncated at degree deg and then extracts the series
     coefficients and the monomials.
     """
+    if vrblvl > 0:
+        print('in laurent.test_parse polynomial ...')
     pol = random_real_powered_polynomial(3, 3, deg, vrblvl=vrblvl-1)
     print('a random polynomial :\n', pol)
     (cffs, mons) = parse_real_powered_polynomial(pol, vrblvl=vrblvl)
@@ -770,6 +772,8 @@ def test_parse_system(deg, vrblvl=0):
     series are truncated at degree deg and then extracts the series
     coefficients and the monomials.
     """
+    if vrblvl > 0:
+        print('in laurent.test_parse_system ...')
     pols = random_real_powered_system(3, 3, [2, 2, 2], deg, vrblvl=vrblvl-1)
     print('a random system :\n', pols)
     (cffs, mons) = parse_real_powered_system(pols, vrblvl=vrblvl)
@@ -784,7 +788,7 @@ def linear_laurent_system(dim, vrblvl=0):
     Sets the linear Laurent system of dimension dim.
     """
     if vrblvl > 0:
-        print('in linear_laurent_system, dim :', dim, '...')
+        print('in laurent.linear_laurent_system, dim :', dim, '...')
     clear_double_laurent_system(vrblvl-1)
     variables = ['x' + str(k) for k in range(1, dim+1)]
     poly = ' + '.join(variables) + ' + 1;'
@@ -808,7 +812,8 @@ def random_linear_matrix(dim, deg, vrblvl=0):
     truncated at the term of index deg.
     """
     if vrblvl > 0:
-        print('in random_linear_matrix, dim :', dim, ', deg :', deg, '...')
+        print('in laurent.random_linear_matrix, dim :', dim, end='')
+        print(', deg :', deg, '...')
     res = []
     for idx in range(dim):
         row = [random_real_powered_series(deg, vrblvl-1) for _ in range(dim)]
@@ -821,7 +826,8 @@ def random_series_vector(dim, deg, vrblvl=0):
     of a series truncated at term at index deg.
     """
     if vrblvl > 0:
-        print('in random_linear_matrix, dim :', dim, ', deg :', deg, '...')
+        print('in laurent.random_linear_matrix, dim :', dim, end='')
+        print(', deg :', deg, '...')
     res = [random_real_powered_series(deg, vrblvl-1) for _ in range(dim)]
     return res
 
@@ -834,7 +840,7 @@ def sort_series_powers(pwr, cff, vrblvl=0):
     returning nothing.
     """
     if vrblvl > 0:
-        print('in sort_series_powers ...')
+        print('in laurent.sort_series_powers ...')
     for idx1 in range(len(pwr)):
         minidx = idx1
         for idx2 in range(idx1+1,len(pwr)):
@@ -852,7 +858,7 @@ def normalize_series_powers(pwr, cff, vrblvl=0):
     to be added and the lists need be shortened.
     """
     if vrblvl > 0:
-        print('in normalize_series_powers ...')
+        print('in laurent.normalize_series_powers ...')
     for idx in range(len(pwr)):
         if idx == len(pwr)-1:
             break
@@ -870,7 +876,7 @@ def series_product(mat, vec, vrblvl=0):
     of the matrix with the vector.
     """
     if vrblvl > 0:
-        print('in series_product ...')
+        print('in laurent.series_product ...')
     res = []
     dim = len(mat)
     for rowidx in range(dim):
@@ -910,7 +916,7 @@ def random_linear_system(dim, deg, vrblvl=0):
     and sets the coefficients and the Laurent system.
     """
     if vrblvl > 0:
-        print('in random_linear_system, dim :', dim, '...')
+        print('in laurent.random_linear_system, dim :', dim, '...')
     linear_laurent_system(dim, vrblvl)
     mat = random_linear_matrix(dim, deg, vrblvl)
     if vrblvl > 0:
@@ -942,7 +948,7 @@ def degree_monomial(mon, xsb='x', vrblvl=0):
     as variable name, returns the degree of the monomials.
     """
     if vrblvl > 0:
-        print('in degree_monomials, mon :', mon)
+        print('in laurent.degree_monomials, mon :', mon)
     if not xsb in mon:
         return 0                   # the monomial is a constant
     elif not '*' in mon:
@@ -965,7 +971,7 @@ def sort_monomial_series(mons, cffs, xsb='x', vrblvl=0):
     swapping also the corresponding coefficients in cffs.
     """
     if vrblvl > 0:
-        print('in sort_monomial_series ...')
+        print('in laurent.sort_monomial_series ...')
         print('before the sort :')
         print('monomials :', mons)
         print('coefficients :', cffs)
@@ -993,7 +999,7 @@ def random_binomial_homotopy(dim, nbt, deg, sol, xsb='x', vrblvl=0):
     Returns the coefficients and the monomials.
     """
     if vrblvl > 0:
-        print('in random_binomial_homotopy ...')
+        print('in laurent.random_binomial_homotopy ...')
     ssol = []
     for ksol in sol:
         (pwr, cff) = ksol
@@ -1032,7 +1038,7 @@ def store_laurent_homotopy(cffs, mons, vrblvl=0):
     of a Laurent homotopy.
     """
     if vrblvl > 0:
-        print('in store_binomial_homotopy ...')
+        print('in laurent.store_binomial_homotopy ...')
     clear_series_terms(vrblvl-1)
     dims = [len(cff) for cff in cffs]
     if vrblvl > 0:
@@ -1073,7 +1079,7 @@ def laurent_homotopy_strings(cffs, mons, vrblvl=0):
     given by their string representations.
     """
     if vrblvl > 0:
-        print("in laurent_homotopy_strings ...")
+        print("in laurent.laurent_homotopy_strings ...")
     result = []
     for (idx, (cff, mon)) in enumerate(zip(cffs, mons)):
         if vrblvl > 0:
@@ -1100,7 +1106,7 @@ def evaluate_series(pwr, cff, tval, vrblvl=0):
     coefficients in cff, evaluates the series at t = tval.
     """
     if vrblvl > 0:
-        print('in evaluate_series, tval :', tval)
+        print('in laurent.evaluate_series, tval :', tval)
     value = 0.0
     for (power, coefficient) in zip(pwr, cff):
         value = value + coefficient*tval**power
@@ -1112,10 +1118,10 @@ def evaluate_series_vector(pwrs, cffs, tval, vrblvl=0):
     coefficients in cffs, evaluates the series at t = tval.
     """
     if vrblvl > 0:
-        print('in evaluate_series_vector, tval :', tval)
+        print('in laurent.evaluate_series_vector, tval :', tval)
     values = []
     for (powers, coefficients) in zip(pwrs, cffs):
-        value = evaluate_series(powers, coefficients, tval, vrblvl)
+        value = evaluate_series(powers, coefficients, tval, vrblvl-1)
         values.append(value)
     return values
 
@@ -1127,7 +1133,7 @@ def evaluate_laurent_homotopy(lhom, xsol, tval, xsb='x', vrblvl=0):
     obtained by replacing symbols in hom by values in xsol and tval.
     """
     if vrblvl > 0:
-        print('in evaluate_laurent_homotopy, tval :', tval)
+        print('in laurent.evaluate_laurent_homotopy, tval :', tval)
         print('xsol :\n', xsol)
         print('Laurent homotopy :\n', lhom)
     thom = [pol.replace('t', str(tval)) for pol in lhom]
@@ -1148,7 +1154,7 @@ def test_linear_solver(dim, deg, vrblvl=0):
     with real powered series truncated at index deg.
     """
     if vrblvl > 0:
-        print('in test_linear_system, dim :', dim, '...')
+        print('in laurent.test_linear_system, dim :', dim, '...')
     fail = random_linear_system(dim, deg, vrblvl)
     if fail != 0:
         print(fail, 'failures occurred in defining the linear system!')
@@ -1160,7 +1166,7 @@ def test_newton_steps(vrblvl=0):
     Tests newton's method.
     """
     if vrblvl > 0:
-        print("in test_newton_steps ...")
+        print("in laurent.test_newton_steps ...")
     dim, deg = 2, 2
     sol = random_series_vector(dim, 1, vrblvl-1)
     if vrblvl > 0:
@@ -1171,6 +1177,9 @@ def test_newton_steps(vrblvl=0):
     if fail != 0:
         print(fail, 'failures occurred in storing Laurent homotopy!')
     lauhom = laurent_homotopy_strings(cffs, mons, vrblvl)
+    print('the polynomials in the Laurent homotopy :')
+    for (idx, pol) in enumerate(lauhom):
+        print('polynomial', idx+1, ':\n', pol)
     (pwrs, cffs) = run_newton_steps(dim, 4, vrblvl)
     for (idx, (pwr, cff)) in enumerate(zip(pwrs, cffs)):
         print('series component', idx+1, ':', to_rps_string(pwr, cff))
@@ -1189,7 +1198,7 @@ def test_laurent(deg, vrblvl=0):
     The verbose level is defined by vrblvl.
     """
     if vrblvl > 0:
-        print("in test_laurent ...")
+        print("in laurent.test_laurent ...")
     fail = test_initialization(vrblvl)
     fail = fail + test_dimensions(vrblvl)
     fail = fail + test_additions(deg, vrblvl)
@@ -1208,13 +1217,14 @@ def test_laurent(deg, vrblvl=0):
             print('Number of failed tests on laurent module :', fail)
     return fail
 
-def main():
+def main(vrblvl=0):
     """
     Runs tests on the laurent module.
     """
-    lvl = 3
+    if vrblvl > 0:
+        print("in laurent.main ...")
     deg = 2
-    fail = test_laurent(deg, lvl)
+    fail = test_laurent(deg, vrblvl)
     if fail == 0:
         print('=> All tests passed.')
     else:
