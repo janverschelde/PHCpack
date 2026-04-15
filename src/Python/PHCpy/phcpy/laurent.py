@@ -195,54 +195,6 @@ def size_coefficient_vector(adx, vdx, vrblvl=0):
         print(', return value :', retval)
     return size[0]
 
-def to_rps_string(pwrs, cffs, tsb='t', vrblvl=0):
-    """
-    Given in pwrs the real powers of t and in cffs the corresponding
-    list of complex coefficiens, returns the string representation
-    of the real powered series.  
-    The 'j' in the string of a complex number is replaced by '*i'.
-    """
-    if vrblvl > 0:
-        print('in to_rps_string, pwrs =', pwrs, ', cffs =', cffs, '...')
-    res = ''
-    for (pwr, cff) in zip(pwrs, cffs):
-        jtrm = str(cff)
-        itrm = jtrm.replace('j', '*i')
-        if pwr == 0.0:
-            trm = itrm
-        else:
-            trm = itrm + '*' + tsb + '**' + str(pwr)
-        if res == '':
-            res = trm
-        else:
-            res = res + ' + ' + trm
-    return res
-
-def from_rps_string(strrep, tsb='t', vrblvl=0):
-    """
-    Given in strrep the string representation of a real powered series,
-    returns the tuple of two lists, powers and coefficients.
-    """
-    if vrblvl > 0:
-        print('in from_rps_string, strrep =', strrep, '...')
-    splitsym = '*' + tsb + '**'
-    jstrrep = strrep.replace('*i', 'j')
-    data = jstrrep.split(splitsym)
-    if vrblvl > 0:
-        print('data :', data)
-    if len(data) == 0:
-        return ([0.0], [eval(data[0])])
-    else:
-        cff0 = data[0].split(' + ')
-        cffs = [eval(cff0[0]), eval(cff0[1])]
-        pwrs = [0.0]
-        for item in data[1:-1]:
-            cff = item.split(' + ')
-            pwrs.append(eval(cff[0]))
-            cffs.append(eval(cff[1]))
-        pwrs.append(eval(data[-1]))
-        return (pwrs, cffs)
-
 def get_series_term(adx, vdx, vrblvl=0):
     """
     Gets the powers and coefficients of one term, at the position adx
@@ -529,6 +481,54 @@ def random_real_powered_series(deg, vrblvl=0):
         print("in random_real_powered_series ...")
     return (random_real_powers(deg, vrblvl-1),
             random_complex_coefficients(deg, vrblvl-1))
+
+def to_rps_string(pwrs, cffs, tsb='t', vrblvl=0):
+    """
+    Given in pwrs the real powers of t and in cffs the corresponding
+    list of complex coefficiens, returns the string representation
+    of the real powered series.  
+    The 'j' in the string of a complex number is replaced by '*i'.
+    """
+    if vrblvl > 0:
+        print('in to_rps_string, pwrs =', pwrs, ', cffs =', cffs, '...')
+    res = ''
+    for (pwr, cff) in zip(pwrs, cffs):
+        jtrm = str(cff)
+        itrm = jtrm.replace('j', '*i')
+        if pwr == 0.0:
+            trm = itrm
+        else:
+            trm = itrm + '*' + tsb + '**' + str(pwr)
+        if res == '':
+            res = trm
+        else:
+            res = res + ' + ' + trm
+    return res
+
+def from_rps_string(strrep, tsb='t', vrblvl=0):
+    """
+    Given in strrep the string representation of a real powered series,
+    returns the tuple of two lists, powers and coefficients.
+    """
+    if vrblvl > 0:
+        print('in from_rps_string, strrep =', strrep, '...')
+    splitsym = '*' + tsb + '**'
+    jstrrep = strrep.replace('*i', 'j')
+    data = jstrrep.split(splitsym)
+    if vrblvl > 0:
+        print('data :', data)
+    if len(data) == 0:
+        return ([0.0], [eval(data[0])])
+    else:
+        cff0 = data[0].split(' + ')
+        cffs = [eval(cff0[0]), eval(cff0[1])]
+        pwrs = [0.0]
+        for item in data[1:-1]:
+            cff = item.split(' + ')
+            pwrs.append(eval(cff[0]))
+            cffs.append(eval(cff[1]))
+        pwrs.append(eval(data[-1]))
+        return (pwrs, cffs)
 
 def random_real_powered_polynomial\
     (nvr, nbt, deg, zerocst=False, xsb='x', lowexp=-9, uppexp=9, vrblvl=0):
@@ -1066,6 +1066,82 @@ def store_laurent_homotopy(cffs, mons, vrblvl=0):
             print(pol)
     return fail
 
+def laurent_homotopy_strings(cffs, mons, vrblvl=0):
+    """
+    Returns the list of string representations of the polynomials
+    in the Laurent homotopy, defined by coefficients and monomials,
+    given by their string representations.
+    """
+    if vrblvl > 0:
+        print("in laurent_homotopy_strings ...")
+    result = []
+    for (idx, (cff, mon)) in enumerate(zip(cffs, mons)):
+        if vrblvl > 0:
+            print('polynomial', idx+1, 'has monomials', mon)
+            print('and coefficients :\n', cff)
+        pol = ''
+        for (coefficient, monomial) in zip(cff, mon):
+            newcff = coefficient.replace('*i', 'j')
+            if pol == '':
+                pol = '(' + newcff + ')'
+            else:
+                pol = pol + ' + (' + newcff + ')'
+            if not(monomial == '1'):
+                newmon = monomial.replace('^', '**')
+                pol = pol + '*' + newmon
+        if vrblvl > 0:
+            print('polynomial', idx+1, ' : ', pol)
+        result.append(pol)
+    return result
+
+def evaluate_series(pwr, cff, tval, vrblvl=0):
+    """
+    Given a series with powers in pwr and corresponding
+    coefficients in cff, evaluates the series at t = tval.
+    """
+    if vrblvl > 0:
+        print('in evaluate_series, tval :', tval)
+    value = 0.0
+    for (power, coefficient) in zip(pwr, cff):
+        value = value + coefficient*tval**power
+    return value
+
+def evaluate_series_vector(pwrs, cffs, tval, vrblvl=0):
+    """
+    Given a series vector with powers in pwrs and corresponding
+    coefficients in cffs, evaluates the series at t = tval.
+    """
+    if vrblvl > 0:
+        print('in evaluate_series_vector, tval :', tval)
+    values = []
+    for (powers, coefficients) in zip(pwrs, cffs):
+        value = evaluate_series(powers, coefficients, tval, vrblvl)
+        values.append(value)
+    return values
+
+def evaluate_laurent_homotopy(lhom, xsol, tval, xsb='x', vrblvl=0):
+    """
+    Given in hom are the string representations of a Laurent homotopy,
+    in xsol are the complex values for solution series evaluated at tval,
+    for variables with names starting with xsb, returns the values
+    obtained by replacing symbols in hom by values in xsol and tval.
+    """
+    if vrblvl > 0:
+        print('in evaluate_laurent_homotopy, tval :', tval)
+        print('xsol :\n', xsol)
+        print('Laurent homotopy :\n', lhom)
+    thom = [pol.replace('t', str(tval)) for pol in lhom]
+    pval = []
+    for pol in thom:
+        for (idx, xval) in enumerate(xsol):
+            var = xsb + str(idx+1)
+            pol = pol.replace(var, str(xval))
+        pval.append(pol)
+    if vrblvl > 0:
+        print('evaluating the expressions :\n', pval)
+    result = [eval(value) for value in pval]
+    return result
+
 def test_linear_solver(dim, deg, vrblvl=0):
     """
     Tests the linear solver on a generated system of dimension dim,
@@ -1094,9 +1170,17 @@ def test_newton_steps(vrblvl=0):
     fail = store_laurent_homotopy(cffs, mons, vrblvl)
     if fail != 0:
         print(fail, 'failures occurred in storing Laurent homotopy!')
+    lauhom = laurent_homotopy_strings(cffs, mons, vrblvl)
     (pwrs, cffs) = run_newton_steps(dim, 4, vrblvl)
     for (idx, (pwr, cff)) in enumerate(zip(pwrs, cffs)):
         print('series component', idx+1, ':', to_rps_string(pwr, cff))
+    for tval in [1.0e-4, 1.0e-6, 1.0e-8]:
+        xval = evaluate_series_vector(pwrs, cffs, tval, vrblvl)
+        print('the values at t =', tval, ':\n', xval)
+        residuals = evaluate_laurent_homotopy(lauhom, xval, tval, 'x', vrblvl)
+        print('the residuals :', residuals)
+        backward = sum([abs(nbr) for nbr in residuals])
+        print('backward error :', backward, 'for t =', tval)
     return fail
 
 def test_laurent(deg, vrblvl=0):
