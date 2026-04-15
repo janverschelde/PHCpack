@@ -312,12 +312,16 @@ def solve_linear_system(nbr, vrblvl=0):
         print(', return value :', retval)
     return retval
 
-def group_powers_coefficients(dim, numbers):
+def split_powers_coefficients(dim, numbers, vrblvl=0):
     """
-    Given a sequence of doubles in the list numbers,
-    representing dim series, groups the numbers,
+    Given a sequence of doubles in the list numbers, as
+    [cre0, cim0, cre1, cim1, pwr1, cre2, cim2, pwr2, ...],
+    with real and imaginary parts in cre, cim, powers in pwr,
+    for the dim many components of the series,
     returns two lists: real powers and complex coefficients.
     """
+    if vrblvl > 0:
+        print('in split_powers_coefficients, dim :', dim)
     pwrs, cffs = [0.0 for _ in range(dim)], []
     recff, imcff = 0.0, 0.0
     for (idx, number) in enumerate(numbers):
@@ -338,6 +342,56 @@ def group_powers_coefficients(dim, numbers):
             else:
                 pwrs.append(number)
     return pwrs, cffs
+
+def distribute_powers(dim, powers, vrblvl=0):
+    """
+    Given one list of powers for every component
+    of a dim-dimensional vector of series,
+    returns dim many lists with the powers for each component,
+    using the values in powers.
+    """
+    if vrblvl > 0:
+        print('in distribute_powers, dim :', dim)
+        if not (len(powers) % dim == 0):
+            print('size of powers :', len(powers), end=' ')
+            print('is not a multiple of', dim, '!')
+    result = [[] for _ in range(dim)]
+    pwridx = 0
+    size = len(powers)//dim
+    for column in range(size):
+        for row in range(dim):
+            result[row].append(powers[pwridx])
+            pwridx = pwridx + 1
+            if pwridx > len(powers):
+                if vrblvl > 0:
+                     print('exceeding', len(powers), ', returning ...')
+                return result
+    return result
+
+def distribute_coefficients(dim, coefficients, vrblvl=0):
+    """
+    Given one list of coefficients for every component
+    of a dim-dimensional vector of series,
+    returns dim many lists with coefficients for each component,
+    using the values in coefficients.
+    """
+    if vrblvl > 0:
+        print('in distribute_coefficients, dim :', dim)
+        if not (len(coefficients) % (dim) == 0):
+            print('size of coefficients :', len(coefficients), end=' ')
+            print('is not a multiple of', dim, '!')
+    result = [[] for _ in range(dim)]
+    cffidx = 0
+    size = len(coefficients)//dim
+    for column in range(size):
+        for row in range(dim):
+            result[row].append(coefficients[cffidx])
+            cffidx = cffidx + 1
+            if cffidx > len(coefficients):
+                if vrblvl > 0:
+                     print('exceeding', len(coefficients), ', returning ...')
+                return result
+    return result
 
 def run_newton_steps(dim, nbr, vrblvl=0):
     """
@@ -369,11 +423,16 @@ def run_newton_steps(dim, nbr, vrblvl=0):
         numbers.append(float(vals[0][idx]))
     if vrblvl > 0:
         print('returned numbers :', numbers)
-    pwrs, cffs = group_powers_coefficients(dim, numbers)
+    pwrs, cffs = split_powers_coefficients(dim, numbers, vrblvl)
     if vrblvl > 0:
-        print("coefficients : ", cffs)
-        print("powers : ", pwrs)
-    return retval
+        print('coefficients :\n', cffs)
+        print('powers :\n', pwrs)
+    powers = distribute_powers(dim, pwrs)
+    coefficients = distribute_coefficients(dim, cffs, vrblvl)
+    if vrblvl > 0:
+        print('distributed powers :\n', powers)
+        print('distributed coefficients :\n', coefficients)
+    return (powers, coefficients)
 
 def clear_series_terms(vrblvl=0):
     """
@@ -1035,8 +1094,10 @@ def test_newton_steps(vrblvl=0):
     fail = store_laurent_homotopy(cffs, mons, vrblvl)
     if fail != 0:
         print(fail, 'failures occurred in storing Laurent homotopy!')
-    res = run_newton_steps(dim, 4, vrblvl)
-    return res
+    (pwrs, cffs) = run_newton_steps(dim, 4, vrblvl)
+    for (idx, (pwr, cff)) in enumerate(zip(pwrs, cffs)):
+        print('series component', idx+1, ':', to_rps_string(pwr, cff))
+    return fail
 
 def test_laurent(deg, vrblvl=0):
     """
