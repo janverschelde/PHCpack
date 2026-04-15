@@ -312,25 +312,67 @@ def solve_linear_system(nbr, vrblvl=0):
         print(', return value :', retval)
     return retval
 
-def run_newton_steps(nbr, vrblvl=0):
+def group_powers_coefficients(dim, numbers):
+    """
+    Given a sequence of doubles in the list numbers,
+    representing dim series, groups the numbers,
+    returns two lists: real powers and complex coefficients.
+    """
+    pwrs, cffs = [0.0 for _ in range(dim)], []
+    recff, imcff = 0.0, 0.0
+    for (idx, number) in enumerate(numbers):
+        if idx < 2*dim:
+            if idx % 2 == 0: 
+                recff = number
+            else:
+                imcff = number
+                cff = complex(recff, imcff)
+                cffs.append(cff)
+        else:
+            if (idx - 2*dim) % 3 == 0:
+                recff = number
+            elif (idx - 2*dim) % 3 == 1:
+                imcff = number
+                cff = complex(recff, imcff)
+                cffs.append(cff)
+            else:
+                pwrs.append(number)
+    return pwrs, cffs
+
+def run_newton_steps(dim, nbr, vrblvl=0):
     """
     Runs nbr steps of Newton's method to compute the solution series
-    real powered Laurent homotopy, defined by the vectors of vectors
-    containers and by a corresponding system of Laurent polynomials,
-    in double precision.
+    real powered Laurent homotopy of dimension dim,
+    defined by the vectors of vectors containers and by a corresponding 
+    system of Laurent polynomials, in double precision.
     """
     if vrblvl > 0:
         print('in run_newton_steps, nbr :', nbr)
     phc = get_phcfun(vrblvl-1)
     anbr = pointer(c_int32(nbr))
     bbb = pointer(c_int32(0))
-    ccc = pointer(c_double(0.0))
+    # for every term we have three doubles, except for constant
+    outsize = 2*dim + 3*dim*nbr
+    cval = (c_double * outsize)()
+    for idx in range(outsize):
+        cval[idx] = 0.0
+    result = pointer(cval)
     vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> run_newton_steps calls phc', end='')
-    retval = phc(945, anbr, bbb, ccc, vrb)
+    retval = phc(945, anbr, bbb, result, vrb)
     if vrblvl > 0:
         print(', return value :', retval)
+    vals = result[0:outsize]
+    numbers = []
+    for idx in range(outsize):
+        numbers.append(float(vals[0][idx]))
+    if vrblvl > 0:
+        print('returned numbers :', numbers)
+    pwrs, cffs = group_powers_coefficients(dim, numbers)
+    if vrblvl > 0:
+        print("coefficients : ", cffs)
+        print("powers : ", pwrs)
     return retval
 
 def clear_series_terms(vrblvl=0):
@@ -896,6 +938,8 @@ def random_binomial_homotopy(dim, nbt, deg, sol, xsb='x', vrblvl=0):
     ssol = []
     for ksol in sol:
         (pwr, cff) = ksol
+        cff[1] = complex(0.0, 0.0) # only a constant
+        pwr[1] = 1.0
         flippedsign = [-nbr for nbr in cff]
         ssol.append(to_rps_string(pwr, flippedsign))
     if vrblvl > 0:
@@ -983,7 +1027,7 @@ def test_newton_steps(vrblvl=0):
     if vrblvl > 0:
         print("in test_newton_steps ...")
     dim, deg = 2, 2
-    sol = random_series_vector(dim, deg, vrblvl-1)
+    sol = random_series_vector(dim, 1, vrblvl-1)
     if vrblvl > 0:
         print('the solution series :', sol)
     nbt = [2 for _ in range(dim)]
@@ -991,7 +1035,7 @@ def test_newton_steps(vrblvl=0):
     fail = store_laurent_homotopy(cffs, mons, vrblvl)
     if fail != 0:
         print(fail, 'failures occurred in storing Laurent homotopy!')
-    res = run_newton_steps(3, vrblvl)
+    res = run_newton_steps(dim, 4, vrblvl)
     return res
 
 def test_laurent(deg, vrblvl=0):

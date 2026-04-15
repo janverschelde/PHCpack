@@ -9,6 +9,7 @@ with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Integer_VecVecs_IO;
 with Standard_Floating_Vectors;
+with Standard_Floating_Vectors_IO;
 with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_IO;       use Standard_Complex_Vectors_IO;
@@ -16,6 +17,7 @@ with Standard_Complex_VecVecs;
 with Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with Double_Newton_Puiseux;
+with Assignments_in_Ada_and_C;
 with Standard_LaurSys_Container;
 with Double_VecVecs_Container;
 with DCMPLX_VecVecs_Container;
@@ -194,8 +196,24 @@ package body Double_Puiseux_Interface is
     return res;
   end Extract_Constant_Coefficients;
 
+  function Is_Zero ( v : Standard_Integer_Vectors.Link_to_Vector )
+                   return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if all elements in v are zero.
+
+  begin
+    for i in v'range loop
+      if v(i) /= 0
+       then return false;
+      end if;
+    end loop;
+    return true;
+  end Is_Zero;
+
   function Extract_Leading_Coefficients
              ( cffs : Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
+               hdg : Standard_Integer_VecVecs.Array_of_VecVecs;
                vrblvl : integer32 := 0 )
              return Standard_Complex_VecVecs.VecVec is
 
@@ -204,6 +222,8 @@ package body Double_Puiseux_Interface is
   --   extracts the coefficients at index 1.
   --   Although this is not correct when the monomial is a variable,
   --   it gets fixed when normalizing the binomial homotopy.
+  --   If the corresponding degrees in hdg are zero,
+  --   that is: we have a constant, then the power should be zero.
 
     res : Standard_Complex_VecVecs.VecVec(cffs'range);
 
@@ -216,9 +236,15 @@ package body Double_Puiseux_Interface is
       declare
         moncff : constant Standard_Complex_VecVecs.Link_to_VecVec := cffs(i);
         rescff : Standard_Complex_Vectors.Vector(moncff'range);
+        ideg : constant Standard_Integer_VecVecs.Link_to_VecVec := hdg(i);
+        sup : Standard_Integer_Vectors.Link_to_Vector;
       begin
         for j in moncff'range loop
-          rescff(j) := moncff(j)(1);
+          sup := ideg(j);
+          if not Is_Zero(sup)
+           then rescff(j) := moncff(j)(1);
+           else rescff(j) := moncff(j)(0);
+          end if;
         end loop;
         res(i) := new Standard_Complex_Vectors.Vector'(rescff);
       end;
@@ -228,6 +254,7 @@ package body Double_Puiseux_Interface is
 
   function Extract_Leading_Powers
              ( pwrs : Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
+               hdg : Standard_Integer_VecVecs.Array_of_VecVecs;
                vrblvl : integer32 := 0 )
              return Standard_Floating_VecVecs.VecVec is
 
@@ -236,6 +263,8 @@ package body Double_Puiseux_Interface is
   --   extracts the powers at index 1.
   --   Although this is not correct when the monomial is a variable,
   --   it gets fixed when normalizing the binomial homotopy.
+  --   If the corresponding degrees in hdg are zero,
+  --   that is: we have a constant, then the power should be zero.
 
     res : Standard_Floating_VecVecs.VecVec(pwrs'range);
 
@@ -248,9 +277,15 @@ package body Double_Puiseux_Interface is
       declare
         monpwr : constant Standard_Floating_VecVecs.Link_to_VecVec := pwrs(i);
         respwr : Standard_Floating_Vectors.Vector(monpwr'range);
+        ideg : constant Standard_Integer_VecVecs.Link_to_VecVec := hdg(i);
+        sup : Standard_Integer_Vectors.Link_to_Vector;
       begin
         for j in monpwr'range loop
-          respwr(j) := monpwr(j)(1);
+          sup := ideg(j);
+          if not Is_Zero(sup)
+           then respwr(j) := monpwr(j)(1);
+           else respwr(j) := 0.0;
+          end if;
         end loop;
         res(i) := new Standard_Floating_Vectors.Vector'(respwr);
       end;
@@ -310,7 +345,7 @@ package body Double_Puiseux_Interface is
         end loop;
       end loop;
     end if;
-    for i in hdg'range loop
+    for i in hdg'range loop -- fixing the variable term
       declare
         idg : constant Standard_Integer_VecVecs.Link_to_VecVec := hdg(i);
         sup : Standard_Integer_Vectors.Link_to_Vector;
@@ -352,11 +387,13 @@ package body Double_Puiseux_Interface is
   end Normalize_Binomial_Homotopy;
 
   procedure Run_Newton_Steps
-              ( nbr : in integer32; vrblvl : in integer32 := 0 ) is
+              ( nbr : in integer32; c : C_dblarrs.Pointer;
+                vrblvl : in integer32 := 0 ) is
 
   -- DESCRIPTION :
   --   Extracts the real powered Laurent homotopy data
   --   and then runs as many Newton steps as the value of nbr.
+  --   Assigns the coefficients of the computed series to c.
 
     p : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
     tol : constant double_float := 1.0E-12;
@@ -370,9 +407,9 @@ package body Double_Puiseux_Interface is
       hdg : Standard_Integer_VecVecs.Array_of_VecVecs(p'range)
           := Real_Powered_Homotopy.Supports(p.all,vrblvl-1);
       hcf : Standard_Complex_VecVecs.VecVec(p'range)
-          := Extract_Leading_Coefficients(coeffs,vrblvl-1);
+          := Extract_Leading_Coefficients(coeffs,hdg,vrblvl-1);
       hct : Standard_Floating_VecVecs.VecVec(p'range)
-          := Extract_Leading_Powers(powers,vrblvl-1);
+          := Extract_Leading_Powers(powers,hdg,vrblvl-1);
       zc0 : constant Standard_Complex_Vectors.Vector(p'range)
           := Extract_Constant_Coefficients(coeffs,vrblvl-1);
       zc1,zc2,zc3,zc4 : Standard_Complex_Vectors.Vector(p'range);
@@ -386,6 +423,10 @@ package body Double_Puiseux_Interface is
       Double_Newton_Puiseux.Diagonal_Newton_Steps
         (hcf,hct,hdg,zc0,nbr,zc1,zc2,zc3,zc4,pw1,pw2,pw3,pw4,tol,vrblvl+1);
       if vrblvl > 0 then
+        put_line("constant terms of solution series :");
+        for j in zc0'range loop
+          put(zc0(j)); new_line;
+        end loop;
         put_line("first terms of solution series :");
         for j in zc1'range loop
           put(zc1(j)); put(" t^"); put(pw1(j)); new_line;
@@ -409,7 +450,59 @@ package body Double_Puiseux_Interface is
           end if;
         end if;
       end if;
+      declare
+        dim : constant integer32 := zc0'last;
+        outsize : constant integer32 := 2*dim + 3*dim*nbr;
+        result : Standard_Floating_Vectors.Vector(1..outsize);
+        idx : integer32 := 1;
+      begin
+        if vrblvl > 0 then
+          put("Assignment to vector of size "); put(outsize,1);
+          put_line(" ...");
+        end if;
+        for i in 1..dim loop
+          result(idx) := REAL_PART(zc0(i)); idx := idx + 1;
+          result(idx) := IMAG_PART(zc0(i)); idx := idx + 1;
+        end loop;
+        for i in 1..dim loop
+          result(idx) := REAL_PART(zc1(i)); idx := idx + 1;
+          result(idx) := IMAG_PART(zc1(i)); idx := idx + 1;
+          result(idx) := pw1(i); idx := idx + 1;
+        end loop;
+        if nbr >= 2 then
+          for i in 1..dim loop
+            result(idx) := REAL_PART(zc2(i)); idx := idx + 1;
+            result(idx) := IMAG_PART(zc2(i)); idx := idx + 1;
+            result(idx) := pw2(i); idx := idx + 1;
+          end loop;
+          if nbr >= 3 then
+            for i in 1..dim loop
+              result(idx) := REAL_PART(zc3(i)); idx := idx + 1;
+              result(idx) := IMAG_PART(zc3(i)); idx := idx + 1;
+              result(idx) := pw3(i); idx := idx + 1;
+            end loop;
+            if nbr >= 4 then
+              for i in 1..dim loop
+                result(idx) := REAL_PART(zc4(i)); idx := idx + 1;
+                result(idx) := IMAG_PART(zc4(i)); idx := idx + 1;
+                result(idx) := pw4(i); idx := idx + 1;
+              end loop;
+            end if;   
+          end if;
+        end if;
+        if vrblvl > 0 then
+          put_line("the resulting numbers :");
+          Standard_Floating_Vectors_IO.put_line(result);
+        end if;
+        Assignments_in_Ada_and_C.Assign(result,c);
+      end;
     end; 
+  exception
+    when others =>
+      if vrblvl > 0 then
+        put("Exception raised in double_puiseux_interface.");
+        put_line("Run_Newton_Steps."); raise;
+      end if;
   end Run_Newton_Steps;
 
   function Newton_Steps
@@ -429,7 +522,7 @@ package body Double_Puiseux_Interface is
         put("  nbr : "); put(nbr,1); put_line(" ...");
        -- Show_Data(vrblvl);
         Indexing_Series(vrblvl);
-        Run_Newton_Steps(nbr,vrblvl);
+        Run_Newton_Steps(nbr,c,vrblvl);
       end if;
     end;
     return 0;

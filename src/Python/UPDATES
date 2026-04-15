@@ -1,3 +1,6 @@
+Tue 14 Apr 2026 : adjusted constants in binomial Laurent test homotopy
+  and processed results from running newton steps.
+
 Mon 13 Apr 2026 : added zerocst option to the making of random polynomials in
   laurent.py, to make series coefficients with a zero constant coefficient.
 

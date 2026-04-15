@@ -1,5 +1,7 @@
 Tue 14 Apr 2026 : extended double_puiseux_interface.adb with normalization
   of the data for the binomial homotopy to run the Newton steps.
+  Fixed constants in the binomial homotopy and returns the results
+  from running the Newton steps.
 
 Mon 13 Apr 2026 : extended double_puiseux_interface.adb with extraction
   of the supports of a Laurent polynomial homotopy.
