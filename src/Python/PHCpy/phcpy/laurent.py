@@ -521,7 +521,10 @@ def from_rps_string(strrep, tsb='t', vrblvl=0):
         return ([0.0], [eval(data[0])])
     else:
         cff0 = data[0].split(' + ')
-        cffs = [eval(cff0[0]), eval(cff0[1])]
+        if len(cff0) == 1:
+            cffs = [eval(cff0[0])]
+        else:
+            cffs = [eval(cff0[0]), eval(cff0[1])]
         pwrs = [0.0]
         for item in data[1:-1]:
             cff = item.split(' + ')
@@ -948,7 +951,7 @@ def degree_monomial(mon, xsb='x', vrblvl=0):
     as variable name, returns the degree of the monomials.
     """
     if vrblvl > 0:
-        print('in laurent.degree_monomials, mon :', mon)
+        print('in laurent.degree_monomial, mon :', mon)
     if not xsb in mon:
         return 0                   # the monomial is a constant
     elif not '*' in mon:
@@ -964,6 +967,55 @@ def degree_monomial(mon, xsb='x', vrblvl=0):
             L = factor.split('^')
             result = result + int(L[1])
         return result
+
+def support_monomial(mon, dim, xsb='x', vrblvl=0):
+    """
+    Given the string representation of a monomial using xsb plus index
+    as variable name, in dim many variables,
+    returns the list of degrees of the variables.
+    """
+    if vrblvl > 0:
+        print('in laurent.support_monomial, mon :', mon)
+    if not xsb in mon:
+        return [0 for _ in range(dim)]     # monomial is a constant
+    elif not '*' in mon:
+        result = [0 for _ in range(dim)]   # only one variable
+        idxvar = int(mon[1:])
+        if not '^' in mon:
+            result[idxvar-1] = 1
+            return result          # only one variable without exponent
+        else:
+            L = mon.split('^')     
+            result[idxvar-1] = int(L[1])  # only one exponent
+            return result
+    else:
+        factors = mon.split('*')   # we have at least two factors
+        result = [0 for _ in range(dim)]   # exponent space
+        for factor in factors:     # add exponents of the factors
+            L = factor.split('^')
+            idxvar = int(L[0][1:])
+            result[idxvar-1] = int(L[1])
+        return result
+
+def multiply_monomial(supmon, idxvar, xsb='x', vrblvl=0):
+    """
+    Given in supmon is the support of a monomial and in idxvar
+    the index of a variable, where each varable starts with xsb,
+    followed by the index plus one, return the string representation
+    of the monomial multiplied by the variable.
+    """
+    if vrblvl > 0:
+        print('in laurent.multiply_monomial, supmon :', supmon)
+    result = ''
+    for (idx, degree) in enumerate(supmon):
+        if idx > 0:
+            result = result + '*'
+        result = result + xsb + str(idx+1) + '^'
+        if idx == idxvar:
+            result = result + str(degree+1)
+        else:
+            result = result + str(degree)
+    return result
 
 def sort_monomial_series(mons, cffs, xsb='x', vrblvl=0):
     """
@@ -990,13 +1042,69 @@ def sort_monomial_series(mons, cffs, xsb='x', vrblvl=0):
         print('monomials :', mons)
         print('coefficients :', cffs)
 
+
+def random_product_homotopy(dim, nbt, deg, sol, xsb='x', vrblvl=0):
+    """
+    Returns the coefficients and monomials, in lists of strings,
+    for a Laurent homotopy where the k-th polynomial is the
+    product of x[k] - sol[k] times a random polynomial of nbt[k] terms,
+    with coefficients that are power series truncated at the first index.
+    The index at which the series in sol are truncated equals deg.
+    """
+    if vrblvl > 0:
+        print('in laurent.random_product_homotopy ...')
+    pols = random_real_powered_system\
+              (dim, dim, nbt, 1, True, xsb, vrblvl=vrblvl-1)
+    if vrblvl > 0:
+        print('a random system :\n', pols)
+    (cffs, mons) = parse_real_powered_system(pols, vrblvl=vrblvl)
+    if vrblvl > 0:
+        for (idx, pol) in enumerate(pols):
+            print('polynomial', idx+1, ':\n', pol)
+            print('has coefficients :\n', cffs[idx])
+            print('and monomials :\n', mons[idx])
+            sup = [support_monomial(mon, dim, xsb, vrblvl) for mon in mons[idx]]
+            print('support', idx+1, ':', sup)
+    expmons = [ [] for _ in range(len(pols)) ] 
+    expcffs = [ [] for _ in range(len(pols)) ] 
+    for (idx, pol) in enumerate(pols):
+        (solpwr, solcff) = sol[idx]
+        for (mon, polcff) in zip(mons[idx], cffs[idx]):
+            supmon = support_monomial(mon, dim, xsb, vrblvl)
+            mulmon = multiply_monomial(supmon, idx, xsb, vrblvl)
+            expmons[idx].append(mulmon)
+            expcffs[idx].append(polcff)   # copy coefficient
+            if vrblvl > 0:
+                print('multiplied monomial :', mulmon)
+            (pwrpolcff, cffpolcff) = from_rps_string(polcff)
+            if vrblvl > 0:
+                print('multiplying solution powers', solpwr)
+                print('  with coefficients power :', pwrpolcff[1])
+                print('multiplying solution coefficients', solcff)
+                print('  with coefficient :', cffpolcff[1])
+            prodpwrs = [(pwrpolcff[1] + power) for power in solpwr]
+            prodcffs = [(-cffpolcff[1]*coeff) for coeff in solcff]
+            if vrblvl > 0:
+                print('the product of powers :\n', prodpwrs)
+                print('the corresponding coefficients :\n', prodcffs)
+                print('len check :', (len(prodpwrs) == len(prodcffs)))
+                if not (len(prodpwrs) == len(prodcffs)):
+                    print('lengths do not match!')
+            strcff = to_rps_string(prodpwrs, prodcffs, vrblvl=vrblvl-1)
+            expcffs[idx].append(strcff)
+            expmons[idx].append(mon)
+        if vrblvl > 0:
+            print('expanded monomials :', expmons[idx])
+            print('expanded coefficients :', expcffs[idx])
+    return (expcffs, expmons)
+
 def random_binomial_homotopy(dim, nbt, deg, sol, xsb='x', vrblvl=0):
     """
     Makes a random Laurent homotopy of dimension dim,
     with number of terms in the polynomials given in the list nbt,
     which is a list of length dim, with series truncated at the
     terms with index deg.  The solution is given in sol.
-    Returns the coefficients and the monomials.
+    Returns the coefficients and the monomials, in lists of strings.
     """
     if vrblvl > 0:
         print('in laurent.random_binomial_homotopy ...')
@@ -1161,12 +1269,33 @@ def test_linear_solver(dim, deg, vrblvl=0):
     res = solve_linear_system(3, vrblvl)
     return res
 
-def test_newton_steps(vrblvl=0):
+def test_newton_product(vrblvl=0):
     """
-    Tests newton's method.
+    Tests newton's method on a random product homotopy.
     """
     if vrblvl > 0:
-        print("in laurent.test_newton_steps ...")
+        print("in laurent.test_newton_product ...")
+    dim, deg = 2, 2
+    sol = random_series_vector(dim, deg, vrblvl-1)
+    if vrblvl > 0:
+        print('the solution series :', sol)
+    nbt = [2 for _ in range(dim)]
+    (cffs, mons) = random_product_homotopy(dim, nbt, deg, sol, vrblvl=vrblvl)
+    fail = store_laurent_homotopy(cffs, mons, vrblvl)
+    if fail != 0:
+        print(fail, 'failures occurred in storing Laurent homotopy!')
+    lauhom = laurent_homotopy_strings(cffs, mons, vrblvl)
+    print('the polynomials in the Laurent homotopy :')
+    for (idx, pol) in enumerate(lauhom):
+        print('polynomial', idx+1, ':\n', pol)
+    return 0
+
+def test_newton_binomial(vrblvl=0):
+    """
+    Tests newton's method on a random binomial homotopy.
+    """
+    if vrblvl > 0:
+        print("in laurent.test_newton_binomial ...")
     dim, deg = 2, 2
     sol = random_series_vector(dim, 1, vrblvl-1)
     if vrblvl > 0:
@@ -1191,6 +1320,18 @@ def test_newton_steps(vrblvl=0):
         backward = sum([abs(nbr) for nbr in residuals])
         print('backward error :', backward, 'for t =', tval)
     return fail
+
+def test_newton_steps(product=False, vrblvl=0):
+    """
+    Tests newton's method, either on the product (if True),
+    or on the binomial,
+    """
+    if vrblvl > 0:
+        print("in laurent.test_newton_steps ...")
+    #if not product:
+    #    return test_newton_binomial(vrblvl)
+    #else:
+    return test_newton_product(1)
 
 def test_laurent(deg, vrblvl=0):
     """
