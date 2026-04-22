@@ -196,6 +196,44 @@ package body Double_Puiseux_Interface is
     return res;
   end Extract_Constant_Coefficients;
 
+  function Extract_Solution_Constants
+             ( dim : integer32; c : C_dblarrs.Pointer;
+               vrblvl : integer32 := 0 )
+             return Standard_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   For Newton's method on power series to start properly,
+  --   the constant coefficients of the solution series need
+  --   to be provided in the c parameter of the interface.
+  --   Return a vector of dimension dim, extracted from the
+  --   2*dim double values of c.
+
+    res : Standard_Complex_Vectors.Vector(1..dim)
+        := (1..dim => Standard_Complex_Numbers.create(0.0));
+    ddm : constant Interfaces.C.size_t := Interfaces.C.size_t(2*dim);
+    use Interfaces.C;
+    sol : C_Double_Array(0..ddm-1)
+        := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(ddm));
+    idx : Interfaces.C.size_t := 0;
+    cre,cim : double_float;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in double_puiseux_interface.");
+      put_line("Extract_Constant_Coefficients ...");
+    end if;
+    for i in res'range loop
+      cre := double_float(sol(idx)); idx := idx + 1;
+      cim := double_float(sol(idx)); idx := idx + 1;
+      res(i) := Standard_Complex_Numbers.create(cre,cim);
+    end loop;
+    if vrblvl > 0 then
+      put_line("The extracted constants :");
+      put_line(res);
+    end if;
+    return res;
+  end Extract_Solution_Constants;
+
   function Is_Zero ( v : Standard_Integer_Vectors.Link_to_Vector )
                    return boolean is
 
@@ -210,6 +248,30 @@ package body Double_Puiseux_Interface is
     end loop;
     return true;
   end Is_Zero;
+
+  function Is_Variable ( v : Standard_Integer_Vectors.Link_to_Vector )
+                       return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if all elements in v are zero,
+  --   except for exactly one component which should be one.
+
+    cnt : integer32 := 0;
+
+  begin
+    for i in v'range loop
+      if v(i) /= 0 then
+        if v(i) /= 1
+         then return false;
+         else cnt := cnt + 1;
+        end if;
+        if cnt > 1
+         then return false;
+        end if;
+      end if;
+    end loop;
+    return true;
+  end Is_Variable;
 
   function Extract_Leading_Coefficients
              ( cffs : Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
@@ -318,6 +380,40 @@ package body Double_Puiseux_Interface is
     end if;
   end Is_Variable;
 
+  function Is_Binomial_Homotopy
+              ( hdg : Standard_Integer_VecVecs.Array_of_VecVecs;
+                vrblvl : integer32 := 0 ) return boolean is
+
+  -- DESCRIPTION :
+  --   A binomial contains in its k-th equation the monomials x(k)
+  --   and a constant.  This function runs through the supports
+  --   and checks if this condition is satified.
+
+  begin
+    for k in hdg'range loop
+      declare
+        kdg : constant Standard_Integer_VecVecs.Link_to_VecVec := hdg(k);
+        cnt : integer32 := 0; -- counts zero and variable degrees
+      begin
+        for j in kdg'range loop
+          declare
+            deg : constant Standard_Integer_Vectors.Link_to_Vector := kdg(j);
+          begin
+            if Is_Zero(deg) then
+              cnt := cnt + 1;
+            elsif Is_Variable(deg) then
+              cnt := cnt + 1;
+            end if;
+          end;
+        end loop;
+        if cnt < 2
+         then return false;
+        end if;
+      end;
+    end loop;
+    return true;
+  end Is_Binomial_Homotopy;
+
   procedure Normalize_Binomial_Homotopy 
               ( hdg : in out Standard_Integer_VecVecs.Array_of_VecVecs;
                 hcf : in out Standard_Complex_VecVecs.VecVec;
@@ -411,11 +507,15 @@ package body Double_Puiseux_Interface is
       hct : Standard_Floating_VecVecs.VecVec(p'range)
           := Extract_Leading_Powers(powers,hdg,vrblvl-1);
       zc0 : constant Standard_Complex_Vectors.Vector(p'range)
-          := Extract_Constant_Coefficients(coeffs,vrblvl-1);
+         -- := Extract_Constant_Coefficients(coeffs,vrblvl-1);
+          := Extract_Solution_Constants(p'last,c,vrblvl-1);
       zc1,zc2,zc3,zc4 : Standard_Complex_Vectors.Vector(p'range);
       pw1,pw2,pw3,pw4 : Standard_Floating_Vectors.Vector(p'range);
+      isb : constant boolean := Is_Binomial_Homotopy(hdg,vrblvl);
     begin
-      Normalize_Binomial_Homotopy(hdg,hcf,hct,vrblvl);
+      if isb
+       then Normalize_Binomial_Homotopy(hdg,hcf,hct,vrblvl);
+      end if;
       if vrblvl > 0 then
         put_line("The constants of the solution series :");
         put_line(zc0);
