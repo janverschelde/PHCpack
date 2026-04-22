@@ -1287,6 +1287,21 @@ def test_linear_solver(dim, deg, vrblvl=0):
     res = solve_linear_system(3, vrblvl)
     return res
 
+def check_residuals(lauhom, pwrs, cffs, vrblvl=0):
+    """
+    Evaluates the Laurent homotopy given in lauhom
+    at the series with powers in pwrs can coefficients in cffs
+    for various small values of the parameter t,
+    printing residuals and backward errors.
+    """
+    for tval in [1.0e-4, 1.0e-6, 1.0e-8]:
+        xval = evaluate_series_vector(pwrs, cffs, tval, vrblvl)
+        print('the values at t =', tval, ':\n', xval)
+        residuals = evaluate_laurent_homotopy(lauhom, xval, tval, 'x', vrblvl)
+        print('the residuals :', residuals)
+        backward = sum([abs(nbr) for nbr in residuals])
+        print('backward error :', backward, 'for t =', tval)
+
 def test_newton_product(vrblvl=0):
     """
     Tests newton's method on a random product homotopy.
@@ -1313,6 +1328,7 @@ def test_newton_product(vrblvl=0):
         (pwrs, cffs) = run_newton_steps(dim, solcst, 4, vrblvl)
         for (idx, (pwr, cff)) in enumerate(zip(pwrs, cffs)):
             print('series component', idx+1, ':', to_rps_string(pwr, cff))
+        check_residuals(lauhom, pwrs, cffs, vrblvl)
     return fail
 
 def test_newton_binomial(vrblvl=0):
@@ -1341,14 +1357,7 @@ def test_newton_binomial(vrblvl=0):
         (pwrs, cffs) = run_newton_steps(dim, solcst, 4, vrblvl)
         for (idx, (pwr, cff)) in enumerate(zip(pwrs, cffs)):
             print('series component', idx+1, ':', to_rps_string(pwr, cff))
-        for tval in [1.0e-4, 1.0e-6, 1.0e-8]:
-            xval = evaluate_series_vector(pwrs, cffs, tval, vrblvl)
-            print('the values at t =', tval, ':\n', xval)
-            residuals = evaluate_laurent_homotopy\
-                            (lauhom, xval, tval, 'x', vrblvl)
-            print('the residuals :', residuals)
-            backward = sum([abs(nbr) for nbr in residuals])
-            print('backward error :', backward, 'for t =', tval)
+        check_residuals(lauhom, pwrs, cffs, vrblvl)
     return fail
 
 def test_newton_steps(product=False, vrblvl=0):

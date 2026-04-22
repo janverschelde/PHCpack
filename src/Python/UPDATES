@@ -1,5 +1,6 @@
 Wed 22 Apr 2026 : extracted constants of test solution and passed those
-  to the running of the Newton steps function.
+  to the running of the Newton steps function.  Completed the test on
+  the product Laurent homotopy.
 
 Tue 21 Apr 2026 : extended laurent.py with the definition of a random
   product homotopy.
