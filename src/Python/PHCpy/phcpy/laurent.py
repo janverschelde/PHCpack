@@ -344,12 +344,13 @@ def distribute_coefficients(dim, coefficients, vrblvl=0):
                 return result
     return result
 
-def run_newton_steps(dim, nbr, vrblvl=0):
+def run_newton_steps(dim, solcst, nbr, vrblvl=0):
     """
     Runs nbr steps of Newton's method to compute the solution series
     real powered Laurent homotopy of dimension dim,
     defined by the vectors of vectors containers and by a corresponding 
-    system of Laurent polynomials, in double precision.
+    system of Laurent polynomials, in double precision,
+    starting at the constants of the solution series in solcst.
     """
     if vrblvl > 0:
         print('in laurent.run_newton_steps, nbr :', nbr)
@@ -361,6 +362,11 @@ def run_newton_steps(dim, nbr, vrblvl=0):
     cval = (c_double * outsize)()
     for idx in range(outsize):
         cval[idx] = 0.0
+    # initialize with the solution constants
+    idx = 0
+    for solval in solcst:
+        cval[idx], idx = solval.real, idx+1
+        cval[idx], idx = solval.imag, idx+1
     result = pointer(cval)
     vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
@@ -1140,6 +1146,18 @@ def random_binomial_homotopy(dim, nbt, deg, sol, xsb='x', vrblvl=0):
             print('monomial degrees :', degmon)
     return (cffs, mons)
 
+def extract_solution_constant(sol, vrblvl=0):
+    """
+    Given in sol are the components of a test solution.
+    The constant of those series is extracted
+    and returned as a list of complex numbers.
+    """
+    if vrblvl > 0:
+        print('in laurent.extract_solution_constant, sol :')
+        print(sol)
+    result = [cff[0] for (pwr, cff) in sol]
+    return result 
+
 def store_laurent_homotopy(cffs, mons, vrblvl=0):
     """
     Stores the coefficients and the monomials given as string representations
@@ -1279,20 +1297,27 @@ def test_newton_product(vrblvl=0):
     sol = random_series_vector(dim, deg, vrblvl-1)
     if vrblvl > 0:
         print('the solution series :', sol)
+    solcst = extract_solution_constant(sol, vrblvl)
+    if vrblvl > 0:
+        print('test solution constants :', solcst)
     nbt = [2 for _ in range(dim)]
     (cffs, mons) = random_product_homotopy(dim, nbt, deg, sol, vrblvl=vrblvl)
     fail = store_laurent_homotopy(cffs, mons, vrblvl)
     if fail != 0:
         print(fail, 'failures occurred in storing Laurent homotopy!')
-    lauhom = laurent_homotopy_strings(cffs, mons, vrblvl)
-    print('the polynomials in the Laurent homotopy :')
-    for (idx, pol) in enumerate(lauhom):
-        print('polynomial', idx+1, ':\n', pol)
-    return 0
+    else:
+        lauhom = laurent_homotopy_strings(cffs, mons, vrblvl)
+        print('the polynomials in the Laurent homotopy :')
+        for (idx, pol) in enumerate(lauhom):
+            print('polynomial', idx+1, ':\n', pol)
+        (pwrs, cffs) = run_newton_steps(dim, solcst, 4, vrblvl)
+        for (idx, (pwr, cff)) in enumerate(zip(pwrs, cffs)):
+            print('series component', idx+1, ':', to_rps_string(pwr, cff))
+    return fail
 
 def test_newton_binomial(vrblvl=0):
     """
-    Tests newton's method on a random binomial homotopy.
+    Tests Newton's method on a random binomial homotopy.
     """
     if vrblvl > 0:
         print("in laurent.test_newton_binomial ...")
@@ -1300,25 +1325,30 @@ def test_newton_binomial(vrblvl=0):
     sol = random_series_vector(dim, 1, vrblvl-1)
     if vrblvl > 0:
         print('the solution series :', sol)
+    solcst = extract_solution_constant(sol, vrblvl)
+    if vrblvl > 0:
+        print('test solution constants :', solcst)
     nbt = [2 for _ in range(dim)]
     (cffs, mons) = random_binomial_homotopy(dim, nbt, deg, sol, vrblvl=vrblvl)
     fail = store_laurent_homotopy(cffs, mons, vrblvl)
     if fail != 0:
         print(fail, 'failures occurred in storing Laurent homotopy!')
-    lauhom = laurent_homotopy_strings(cffs, mons, vrblvl)
-    print('the polynomials in the Laurent homotopy :')
-    for (idx, pol) in enumerate(lauhom):
-        print('polynomial', idx+1, ':\n', pol)
-    (pwrs, cffs) = run_newton_steps(dim, 4, vrblvl)
-    for (idx, (pwr, cff)) in enumerate(zip(pwrs, cffs)):
-        print('series component', idx+1, ':', to_rps_string(pwr, cff))
-    for tval in [1.0e-4, 1.0e-6, 1.0e-8]:
-        xval = evaluate_series_vector(pwrs, cffs, tval, vrblvl)
-        print('the values at t =', tval, ':\n', xval)
-        residuals = evaluate_laurent_homotopy(lauhom, xval, tval, 'x', vrblvl)
-        print('the residuals :', residuals)
-        backward = sum([abs(nbr) for nbr in residuals])
-        print('backward error :', backward, 'for t =', tval)
+    else:
+        lauhom = laurent_homotopy_strings(cffs, mons, vrblvl)
+        print('the polynomials in the Laurent homotopy :')
+        for (idx, pol) in enumerate(lauhom):
+            print('polynomial', idx+1, ':\n', pol)
+        (pwrs, cffs) = run_newton_steps(dim, solcst, 4, vrblvl)
+        for (idx, (pwr, cff)) in enumerate(zip(pwrs, cffs)):
+            print('series component', idx+1, ':', to_rps_string(pwr, cff))
+        for tval in [1.0e-4, 1.0e-6, 1.0e-8]:
+            xval = evaluate_series_vector(pwrs, cffs, tval, vrblvl)
+            print('the values at t =', tval, ':\n', xval)
+            residuals = evaluate_laurent_homotopy\
+                            (lauhom, xval, tval, 'x', vrblvl)
+            print('the residuals :', residuals)
+            backward = sum([abs(nbr) for nbr in residuals])
+            print('backward error :', backward, 'for t =', tval)
     return fail
 
 def test_newton_steps(product=False, vrblvl=0):
@@ -1328,10 +1358,14 @@ def test_newton_steps(product=False, vrblvl=0):
     """
     if vrblvl > 0:
         print("in laurent.test_newton_steps ...")
-    #if not product:
-    #    return test_newton_binomial(vrblvl)
-    #else:
-    return test_newton_product(1)
+    if not product:
+        if vrblvl > 0:
+            print('testing binomial Laurent homotopy ...')
+        return test_newton_binomial(vrblvl)
+    else:
+        if vrblvl > 0:
+            print('testing product Laurent homotopy ...')
+        return test_newton_product(vrblvl)
 
 def test_laurent(deg, vrblvl=0):
     """
@@ -1350,7 +1384,8 @@ def test_laurent(deg, vrblvl=0):
     fail = fail + test_parse_polynomial(deg, vrblvl)
     fail = fail + test_parse_system(deg, vrblvl)
     fail = fail + test_linear_solver(deg, deg, vrblvl)
-    fail = fail + test_newton_steps(vrblvl)
+    fail = fail + test_newton_steps(False, vrblvl)
+    fail = fail + test_newton_steps(True, vrblvl)
     if vrblvl > 0:
         if fail == 0:
             print('=> All tests on the laurent module passed.')
