@@ -154,10 +154,10 @@ package body Double_Puiseux_Interface is
       return -1;
   end Linear_Solver;
 
-  function Extract_Constant_Coefficients
-             ( cffs : Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
-               vrblvl : integer32 := 0 )
-             return Standard_Complex_Vectors.Vector is
+  -- function Extract_Constant_Coefficients
+  --            ( cffs : Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
+  --              vrblvl : integer32 := 0 )
+  --            return Standard_Complex_Vectors.Vector is
 
   -- DESCRIPTION :
   --   In a binomial Laurent homotopy, in diagonal test format,
@@ -168,33 +168,33 @@ package body Double_Puiseux_Interface is
   -- REQUIRED :
   --   The coefficients have been properly indexed at zero.
 
-    res : Standard_Complex_Vectors.Vector(cffs'range);
+  --   res : Standard_Complex_Vectors.Vector(cffs'range);
 
-  begin
-    if vrblvl > 0 then
-      put("-> in double_puiseux_interface.");
-      put_line("Extract_Constant_Coefficients ...");
-    end if;
-    for i in cffs'range loop
-      declare
-        moncff : constant Standard_Complex_VecVecs.Link_to_VecVec := cffs(i);
-        cst : Complex_Number;
-        done : boolean := false;
-      begin
-        for j in moncff'range loop
-          cst := moncff(j)(0);
-         -- constant should not be zero and not be equal to one
-          if REAL_PART(cst) /= 0.0 or IMAG_PART(cst) /= 0.0 then
-            if REAL_PART(cst) /= 1.0 and IMAG_PART(cst) /= 0.0
-             then res(i) := -cst; done := true;
-            end if;
-          end if;
-          exit when done;
-        end loop;
-      end;
-    end loop;
-    return res;
-  end Extract_Constant_Coefficients;
+  -- begin
+  --   if vrblvl > 0 then
+  --     put("-> in double_puiseux_interface.");
+  --     put_line("Extract_Constant_Coefficients ...");
+  --   end if;
+  --   for i in cffs'range loop
+  --     declare
+  --       moncff : constant Standard_Complex_VecVecs.Link_to_VecVec := cffs(i);
+  --       cst : Complex_Number;
+  --       done : boolean := false;
+  --     begin
+  --       for j in moncff'range loop
+  --         cst := moncff(j)(0);
+  --        -- constant should not be zero and not be equal to one
+  --         if REAL_PART(cst) /= 0.0 or IMAG_PART(cst) /= 0.0 then
+  --           if REAL_PART(cst) /= 1.0 and IMAG_PART(cst) /= 0.0
+  --            then res(i) := -cst; done := true;
+  --           end if;
+  --         end if;
+  --         exit when done;
+  --       end loop;
+  --     end;
+  --   end loop;
+  --   return res;
+  -- end Extract_Constant_Coefficients;
 
   function Extract_Solution_Constants
              ( dim : integer32; c : C_dblarrs.Pointer;
@@ -212,7 +212,7 @@ package body Double_Puiseux_Interface is
         := (1..dim => Standard_Complex_Numbers.create(0.0));
     ddm : constant Interfaces.C.size_t := Interfaces.C.size_t(2*dim);
     use Interfaces.C;
-    sol : C_Double_Array(0..ddm-1)
+    sol : constant C_Double_Array(0..ddm-1)
         := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(ddm));
     idx : Interfaces.C.size_t := 0;
     cre,cim : double_float;
@@ -390,6 +390,9 @@ package body Double_Puiseux_Interface is
   --   and checks if this condition is satified.
 
   begin
+    if vrblvl > 0
+     then put_line("-> in double_puiseux_interface.Is_Binomial_Homotopy ...");
+    end if;
     for k in hdg'range loop
       declare
         kdg : constant Standard_Integer_VecVecs.Link_to_VecVec := hdg(k);

@@ -1,3 +1,6 @@
+Thu 23 Apr 2026 : minor changes in double_puiseux_interface.adb for
+  compiler warnings.
+
 Wed 22 Apr 2026 : used constant coefficients passed through the C parameter
   and added a function to check if the Laurent homotopy is binomial.
 
