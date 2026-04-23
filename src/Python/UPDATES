@@ -1,3 +1,6 @@
+Thu 23 Apr 2026 : added comparison of given solution with the computed
+  solution in the test on the product Laurent homotopy.
+
 Wed 22 Apr 2026 : extracted constants of test solution and passed those
   to the running of the Newton steps function.  Completed the test on
   the product Laurent homotopy.

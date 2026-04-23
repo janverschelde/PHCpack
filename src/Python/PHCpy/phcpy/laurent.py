@@ -1294,6 +1294,8 @@ def check_residuals(lauhom, pwrs, cffs, vrblvl=0):
     for various small values of the parameter t,
     printing residuals and backward errors.
     """
+    if vrblvl > 0:
+        print('in laurent.check_residuals ...')
     for tval in [1.0e-4, 1.0e-6, 1.0e-8]:
         xval = evaluate_series_vector(pwrs, cffs, tval, vrblvl)
         print('the values at t =', tval, ':\n', xval)
@@ -1302,12 +1304,38 @@ def check_residuals(lauhom, pwrs, cffs, vrblvl=0):
         backward = sum([abs(nbr) for nbr in residuals])
         print('backward error :', backward, 'for t =', tval)
 
+def compare_solutions(sol, pwrs, cffs, vrblvl=0):
+    """
+    The product Laurent homotopy is defined with a solution in sol,
+    whereas pwrs and cffs are the powers and coefficients of the
+    computed solution.  Compares powers and coefficients.
+    Returns the sum of all errors.
+    """
+    if vrblvl > 0:
+        print('in laurent.compare_solutions ...')
+    sumerr = 0.0
+    for (idx, ksol) in enumerate(sol):
+        (spwr, scff) = ksol
+        print('comparing component', idx+1, ':')
+        print('(exact power, computed power) : error')
+        for power in zip(spwr, pwrs[idx]):
+            err = abs(power[0] - power[1])
+            print(power, 'error :', err)
+            sumerr = sumerr + err;
+        print('(exact coefficient, computed coefficient) : error')
+        for coeff in zip(scff, cffs[idx]):
+            err = abs(power[0] - power[1])
+            print(coeff, 'error :', err)
+            sumerr = sumerr + err
+    print('sum of all errors ', sumerr)
+    return sumerr
+
 def test_newton_product(vrblvl=0):
     """
     Tests newton's method on a random product homotopy.
     """
     if vrblvl > 0:
-        print("in laurent.test_newton_product ...")
+        print('in laurent.test_newton_product ...')
     dim, deg = 2, 2
     sol = random_series_vector(dim, deg, vrblvl-1)
     if vrblvl > 0:
@@ -1328,6 +1356,7 @@ def test_newton_product(vrblvl=0):
         (pwrs, cffs) = run_newton_steps(dim, solcst, 4, vrblvl)
         for (idx, (pwr, cff)) in enumerate(zip(pwrs, cffs)):
             print('series component', idx+1, ':', to_rps_string(pwr, cff))
+        compare_solutions(sol, pwrs, cffs, vrblvl)
         check_residuals(lauhom, pwrs, cffs, vrblvl)
     return fail
 
