@@ -1,3 +1,6 @@
+Fri 24 Apr 2026 : added check on index in test_newton_puiseux.adb to prevent
+  crash when number of iterations is larger than number of terms in series.
+
 Mon 13 Apr 2026 : extended real_powered_homotopy with functions to return
   the supports of Laurent polynomials and Laurent polynomial systems.
 

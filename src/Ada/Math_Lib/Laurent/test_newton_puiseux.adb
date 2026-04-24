@@ -152,6 +152,7 @@ package body Test_Newton_Puiseux is
       (hcf,hct,hdg,cf0,nbr,cf1,cf2,cf3,cf4,pw1,pw2,pw3,pw4,tol,vrb);
     sumerr := 0.0;
     for i in 1..nbr loop
+      exit when (i > cff(1)'last);
       put("coefficients and powers at "); put(i,1); put_line(" :");
       for k in 1..dim loop
         put(cff(k)(i)); put("  t^"); put(pwr(k)(i)); new_line;
