@@ -1,3 +1,6 @@
+Tue 28 Apr 2026 : improved double_puiseux_interface.adb for processing
+  product Laurent homotopies.
+
 Thu 23 Apr 2026 : minor changes in double_puiseux_interface.adb for
   compiler warnings.
 

@@ -6,6 +6,7 @@ with Standard_Floating_Numbers_IO;      use Standard_Floating_Numbers_IO;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_IO;       use Standard_Complex_Numbers_IO;
 with Standard_Integer_Vectors;
+with Standard_Integer_Vectors_IO;
 with Standard_Integer_VecVecs;
 with Standard_Integer_VecVecs_IO;
 with Standard_Floating_Vectors;
@@ -14,6 +15,7 @@ with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_IO;       use Standard_Complex_Vectors_IO;
 with Standard_Complex_VecVecs;
+with Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with Double_Newton_Puiseux;
@@ -154,48 +156,6 @@ package body Double_Puiseux_Interface is
       return -1;
   end Linear_Solver;
 
-  -- function Extract_Constant_Coefficients
-  --            ( cffs : Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
-  --              vrblvl : integer32 := 0 )
-  --            return Standard_Complex_Vectors.Vector is
-
-  -- DESCRIPTION :
-  --   In a binomial Laurent homotopy, in diagonal test format,
-  --   the constant coefficients of the solution series are exposed
-  --   in the constant coefficients of the homotopy, given by cffs.
-  --   Returns the constants of the solution series.
-
-  -- REQUIRED :
-  --   The coefficients have been properly indexed at zero.
-
-  --   res : Standard_Complex_Vectors.Vector(cffs'range);
-
-  -- begin
-  --   if vrblvl > 0 then
-  --     put("-> in double_puiseux_interface.");
-  --     put_line("Extract_Constant_Coefficients ...");
-  --   end if;
-  --   for i in cffs'range loop
-  --     declare
-  --       moncff : constant Standard_Complex_VecVecs.Link_to_VecVec := cffs(i);
-  --       cst : Complex_Number;
-  --       done : boolean := false;
-  --     begin
-  --       for j in moncff'range loop
-  --         cst := moncff(j)(0);
-  --        -- constant should not be zero and not be equal to one
-  --         if REAL_PART(cst) /= 0.0 or IMAG_PART(cst) /= 0.0 then
-  --           if REAL_PART(cst) /= 1.0 and IMAG_PART(cst) /= 0.0
-  --            then res(i) := -cst; done := true;
-  --           end if;
-  --         end if;
-  --         exit when done;
-  --       end loop;
-  --     end;
-  --   end loop;
-  --   return res;
-  -- end Extract_Constant_Coefficients;
-
   function Extract_Solution_Constants
              ( dim : integer32; c : C_dblarrs.Pointer;
                vrblvl : integer32 := 0 )
@@ -249,29 +209,80 @@ package body Double_Puiseux_Interface is
     return true;
   end Is_Zero;
 
-  function Is_Variable ( v : Standard_Integer_Vectors.Link_to_Vector )
-                       return boolean is
+  function Is_Variable ( deg : Standard_Integer_Vectors.Link_to_Vector;
+                         var : integer32 ) return boolean is
 
   -- DESCRIPTION :
-  --   Returns true if all elements in v are zero,
-  --   except for exactly one component which should be one.
-
-    cnt : integer32 := 0;
+  --   Returns true if the degrees in deg correspond to the variable
+  --   with index given in var.
 
   begin
-    for i in v'range loop
-      if v(i) /= 0 then
-        if v(i) /= 1
-         then return false;
-         else cnt := cnt + 1;
-        end if;
-        if cnt > 1
+    if deg(var) /= 1 then
+      return false;
+    else
+      for i in deg'first..var-1 loop
+        if deg(i) /= 0
          then return false;
         end if;
+      end loop;
+      for i in var+1..deg'last loop
+        if deg(i) /= 0
+         then return false;
+        end if;
+      end loop;
+      return true;
+    end if;
+  end Is_Variable;
+
+  function Is_Diagonal_Binomial_Homotopy
+              ( p : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                vrblvl : integer32 := 0 ) return boolean is
+
+  -- DESCRIPTION :
+  --   A binomial contains in its k-th equation the monomials x(k)
+  --   and a constant.  This function runs through the monomials of p
+  --   and checks if this condition is satified.
+
+    cnt,idx : integer32;
+
+    procedure Visit_Term ( t : in Standard_Complex_Laurentials.Term;
+                           continue : out boolean ) is
+
+      deg : constant Standard_Integer_Vectors.Link_to_Vector
+          := Standard_Integer_Vectors.Link_to_Vector(t.dg);
+
+    begin
+      if Is_Zero(deg) then
+        cnt := cnt + 1;
+      elsif Is_Variable(deg,idx) then
+        cnt := cnt + 1;
+      end if;
+      continue := true;
+    end Visit_Term;
+
+    procedure Visit_Terms is
+      new Standard_Complex_Laurentials.Visiting_Iterator(Visit_Term);
+
+  begin
+    if vrblvl > 0 then
+      put("-> in double_puiseux_interface.");
+      put_line("Is_Diagonal_Binomial_Homotopy ...");
+    end if;
+    for i in p'range loop
+      idx := i; cnt := 0;
+      Visit_Terms(p(i));
+      if cnt < 2 then
+        if vrblvl > 0
+         then put_line("Returning false.");
+        end if;
+        return false;
       end if;
     end loop;
+    if vrblvl > 0
+     then put_line("Returning true.");
+    end if;
     return true;
-  end Is_Variable;
+  end Is_Diagonal_Binomial_Homotopy;
 
   function Extract_Leading_Coefficients
              ( cffs : Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
@@ -355,68 +366,6 @@ package body Double_Puiseux_Interface is
     return res;
   end Extract_Leading_Powers;
 
-  function Is_Variable ( deg : Standard_Integer_Vectors.Link_to_Vector;
-                         var : integer32 ) return boolean is
-
-  -- DESCRIPTION :
-  --   Returns true if the degrees in deg correspond to the variable
-  --   with index given in var.
-
-  begin
-    if deg(var) /= 1 then
-      return false;
-    else
-      for i in deg'first..var-1 loop
-        if deg(i) /= 0
-         then return false;
-        end if;
-      end loop;
-      for i in var+1..deg'last loop
-        if deg(i) /= 0
-         then return false;
-        end if;
-      end loop;
-      return true;
-    end if;
-  end Is_Variable;
-
-  function Is_Binomial_Homotopy
-              ( hdg : Standard_Integer_VecVecs.Array_of_VecVecs;
-                vrblvl : integer32 := 0 ) return boolean is
-
-  -- DESCRIPTION :
-  --   A binomial contains in its k-th equation the monomials x(k)
-  --   and a constant.  This function runs through the supports
-  --   and checks if this condition is satified.
-
-  begin
-    if vrblvl > 0
-     then put_line("-> in double_puiseux_interface.Is_Binomial_Homotopy ...");
-    end if;
-    for k in hdg'range loop
-      declare
-        kdg : constant Standard_Integer_VecVecs.Link_to_VecVec := hdg(k);
-        cnt : integer32 := 0; -- counts zero and variable degrees
-      begin
-        for j in kdg'range loop
-          declare
-            deg : constant Standard_Integer_Vectors.Link_to_Vector := kdg(j);
-          begin
-            if Is_Zero(deg) then
-              cnt := cnt + 1;
-            elsif Is_Variable(deg) then
-              cnt := cnt + 1;
-            end if;
-          end;
-        end loop;
-        if cnt < 2
-         then return false;
-        end if;
-      end;
-    end loop;
-    return true;
-  end Is_Binomial_Homotopy;
-
   procedure Normalize_Binomial_Homotopy 
               ( hdg : in out Standard_Integer_VecVecs.Array_of_VecVecs;
                 hcf : in out Standard_Complex_VecVecs.VecVec;
@@ -485,6 +434,152 @@ package body Double_Puiseux_Interface is
     end if;
   end Normalize_Binomial_Homotopy;
 
+  function Truncation_Index
+              ( pwrs : Standard_Floating_VecVecs.Link_to_VecVec )
+              return integer32 is
+
+  -- DESCRIPTION :
+  --   Given the powers of the series coefficients,
+  --   returns the index of the last power,
+  --   which corresponds to the truncation index,
+  --   or the equivalent of Taylor series degree.
+
+    pwr : Standard_Floating_Vectors.Link_to_Vector := pwrs(pwrs'first);
+    res : integer32 := pwr'last;
+
+  begin
+    for i in pwrs'first+1..pwrs'last loop
+      pwr := pwrs(i);
+      if pwr'last > res
+       then res := pwr'last;
+      end if;
+    end loop;
+    return res;
+  end Truncation_Index;
+
+  function Is_Zero ( c : Complex_Number ) return boolean is
+  begin
+    return (REAL_PART(c) = 0.0 and IMAG_PART(c) = 0.0);
+  end Is_Zero;
+
+  procedure Product_Monomials
+              ( p : in Standard_Complex_Laurentials.Poly;
+                cffs : in Standard_Complex_VecVecs.Link_to_VecVec;
+                pwrs : in Standard_Floating_VecVecs.Link_to_VecVec;
+                hdg : out Standard_Integer_VecVecs.Link_to_VecVec;
+                hcf : out Standard_Complex_Vectors.Link_to_Vector;
+                hct : out Standard_Floating_Vectors.Link_to_Vector;
+                vrblvl : in integer32 := 0 ) is
+
+  -- DESCRIPTION :
+  --   Given in p are the monomials of a product homotopy,
+  --   where the coefficients of product are series,
+  --   defines in hdg, hcf, hct the degrees, coefficients and powers
+  --   of the expanded monomial version.
+
+    nbr : constant integer32
+        := integer32(Standard_Complex_Laurentials.Number_of_Terms(p));
+    deg : constant integer32 := Truncation_Index(pwrs);
+    nbterms : constant integer32 := nbr*deg;
+    vdg : Standard_Integer_VecVecs.VecVec(1..nbterms);
+    vcf : Standard_Complex_Vectors.Vector(1..nbterms)
+        := (1..nbterms => Standard_Complex_Numbers.create(0.0));
+    vct : Standard_Floating_Vectors.Vector(1..nbterms)
+        := (1..nbterms => 0.0);
+    idxtrm : integer32 := 0; -- index in hdg
+    idxcff : integer32 := cffs'first-1; -- index in cffs and pwrs
+
+    procedure Visit_Term ( t : in Standard_Complex_Laurentials.Term;
+                           continue : out boolean ) is
+
+      deg : constant Standard_Integer_Vectors.Link_to_Vector
+          := Standard_Integer_Vectors.Link_to_Vector(t.dg);
+      cff : Standard_Complex_Vectors.Link_to_Vector;
+      pwr : Standard_Floating_Vectors.Link_to_Vector;
+
+    begin
+      if vrblvl > 0 then
+        put("idxcff : "); put(idxcff,1); 
+        put(", idxtrm : "); put(idxtrm,1); new_line;
+      end if;
+      idxcff := idxcff + 1;
+      cff := cffs(idxcff);
+      pwr := pwrs(idxcff);
+      if vrblvl > 0 then
+        put("coefficient series "); put(idxcff,1); put_line(" :");
+        for i in cff'range loop
+          put(cff(i)); put("  ");
+          if i < pwr'first
+           then put_line("0.0");
+           else put(pwr(i)); new_line;
+          end if;
+        end loop;
+      end if;
+      for i in cff'range loop
+        if not Is_Zero(cff(i)) then
+          idxtrm := idxtrm + 1;
+          vdg(idxtrm) := new Standard_Integer_Vectors.Vector'(deg.all);
+          vcf(idxtrm) := cff(i);
+          if i < pwr'first
+           then vct(idxtrm) := 0.0;
+           else vct(idxtrm) := pwr(i);
+          end if;
+          if vrblvl > 0 then
+            put("at idxterm "); put(idxtrm,1); put_line(" :");
+            put(vcf(idxtrm)); put("  ");
+            put(vct(idxtrm)); put("  ");
+            Standard_Integer_Vectors_IO.put(vdg(idxtrm)); new_line;
+          end if;
+        end if;
+      end loop;
+      continue := true;
+    end Visit_Term;
+
+    procedure Visit_Terms is
+      new Standard_Complex_Laurentials.Visiting_Iterator(Visit_Term);
+
+  begin
+    if vrblvl > 0 then
+      put_line("-> in double_puiseux_interface.Product_Monomials ...");
+      put("number of monomials : "); put(nbr,1);
+      put(", truncation index : "); put(deg,1); new_line;
+      put("number of terms : "); put(nbterms,1); new_line;
+    end if;
+    Visit_Terms(p);
+    if vrblvl > 0
+     then put("idxtrm : "); put(idxtrm,1); new_line;
+    end if;
+    hdg := new Standard_Integer_VecVecs.VecVec'(vdg(1..idxtrm));
+    hcf := new Standard_Complex_Vectors.Vector'(vcf(1..idxtrm));
+    hct := new Standard_Floating_Vectors.Vector'(vct(1..idxtrm));
+  end Product_Monomials;
+
+  procedure Product_Coefficients_Powers
+              ( p : in Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                cffs : in Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
+                pwrs : in Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
+                hdg : out Standard_Integer_VecVecs.Array_of_VecVecs;
+                hcf : out Standard_Complex_VecVecs.VecVec;
+                hct : out Standard_Floating_VecVecs.VecVec;
+                vrblvl : in integer32 := 0 ) is
+
+  -- DESCRIPTION :
+  --   Extracts the degrees, coefficients and powers of t
+  --   of a product Laurent homotopy with monomials given in p,
+  --   coefficients of the series in cffs and powers in pwrs.
+  --   The products of the polynomials are expanded,
+  --   but the coefficients are still power series.
+
+  begin
+    if vrblvl > 0 then
+      put("-> in double_puiseux_interface.");
+      put_line("Product_Coefficients_Powers ...");
+    end if;
+    for i in p'range loop
+      Product_Monomials(p(i),cffs(i),pwrs(i),hdg(i),hcf(i),hct(i),vrblvl);
+    end loop;
+  end Product_Coefficients_Powers;
+
   procedure Run_Newton_Steps
               ( nbr : in integer32; c : C_dblarrs.Pointer;
                 vrblvl : in integer32 := 0 ) is
@@ -496,30 +591,41 @@ package body Double_Puiseux_Interface is
 
     p : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
     tol : constant double_float := 1.0E-12;
+    isbinhom : boolean;
 
   begin
     if vrblvl > 0
      then put_line("-> in double_puiseux_interface.Run_Newton_Steps ...");
     end if;
     p := Standard_LaurSys_Container.Retrieve;
+    isbinhom := Is_Diagonal_Binomial_Homotopy(p,vrblvl);
     declare
-      hdg : Standard_Integer_VecVecs.Array_of_VecVecs(p'range)
-          := Real_Powered_Homotopy.Supports(p.all,vrblvl-1);
-      hcf : Standard_Complex_VecVecs.VecVec(p'range)
-          := Extract_Leading_Coefficients(coeffs,hdg,vrblvl-1);
-      hct : Standard_Floating_VecVecs.VecVec(p'range)
-          := Extract_Leading_Powers(powers,hdg,vrblvl-1);
+      hdg : Standard_Integer_VecVecs.Array_of_VecVecs(p'range);
+      hcf : Standard_Complex_VecVecs.VecVec(p'range);
+      hct : Standard_Floating_VecVecs.VecVec(p'range);
       zc0 : constant Standard_Complex_Vectors.Vector(p'range)
-         -- := Extract_Constant_Coefficients(coeffs,vrblvl-1);
           := Extract_Solution_Constants(p'last,c,vrblvl-1);
       zc1,zc2,zc3,zc4 : Standard_Complex_Vectors.Vector(p'range);
       pw1,pw2,pw3,pw4 : Standard_Floating_Vectors.Vector(p'range);
-      isb : constant boolean := Is_Binomial_Homotopy(hdg,vrblvl);
     begin
-      if isb
-       then Normalize_Binomial_Homotopy(hdg,hcf,hct,vrblvl);
+      if isbinhom then
+        hdg := Real_Powered_Homotopy.Supports(p.all,vrblvl-1);
+        hcf := Extract_Leading_Coefficients(coeffs,hdg,vrblvl-1);
+        hct := Extract_Leading_Powers(powers,hdg,vrblvl-1);
+        Normalize_Binomial_Homotopy(hdg,hcf,hct,vrblvl);
+      else
+        Product_Coefficients_Powers(p,coeffs,powers,hdg,hcf,hct,vrblvl);
       end if;
       if vrblvl > 0 then
+        put_line("coefficients, powers, supports :");
+        for i in hcf'range loop
+          put("polynomial "); put(i,1); put_line(" :");
+          for j in hcf(i)'range loop
+            put(hcf(i)(j)); put("  ");
+            put(hct(i)(j)); put("  ");
+            Standard_Integer_Vectors_IO.put(hdg(i)(j)); new_line;
+          end loop;
+        end loop;
         put_line("The constants of the solution series :");
         put_line(zc0);
       end if;
