@@ -1049,6 +1049,82 @@ def sort_monomial_series(mons, cffs, xsb='x', vrblvl=0):
         print('coefficients :', cffs)
 
 
+def scale_power(pwr, cff, minpwr, vrblvl):
+    """
+    Scales the powers and normalizes the series representation.
+    Returns the string representation of the scaled series.
+    The series coefficient is c*t**gamma, represented by
+    pwr = [0.0, gamma] and cff = [0.0, cff].
+    If gamma > minpwr, then the powers are [0.0, gamma-minpwr],
+    with the same coefficients in cff, but if gamma = minpwr,
+    then the powers and coefficient should be [0.0] and [cff].
+    """
+    if vrblvl > 0:
+        print('in laurent.scale_power, minpwr =', minpwr)
+        print('pwr :', pwr)
+        print('cff :', cff)
+    if minpwr < pwr[1]:
+        result = to_rps_string([0.0, pwr[1]-minpwr], cff)
+    else:
+        result = to_rps_string([0.0, 1.0], [cff[1], complex(0.0,0.0)])
+    if vrblvl > 0:
+        print('scaled result :', result)
+    return result
+
+def multiply_series_factor(dim, idx, mons, polcffs, solpwr, solcff, \
+    xsb='x', vrblvl=0):
+    """
+    Multiplies a polynomial with a series factor.
+    The polynomial is given by its monomials in mons and coefficients
+    in polcffs, in dim many variables and variable names starting with xsb.
+    The factor is (x[idx] - sol), where the series sol is given by
+    its list of powers in solpwr and its lists of coefficients in solcff.
+    Returns the product of the polynomial with the series factor in
+    two lists: the list of monomials and the list of series coefficients.
+    """
+    if vrblvl > 0:
+        print('in laurent.multiply_series_factor ...')
+    resmons, rescffs = [], [] # results
+    minpwr = -1.0  # smallest nonzero power in the series coefficients
+    for (mon, polcff) in zip(mons, polcffs):
+        (pwrpolcff, cffpolcff) = from_rps_string(polcff)
+        if minpwr == -1.0:
+            minpwr = pwrpolcff[1]
+        else:
+            minpwr = min(minpwr, pwrpolcff[1])
+    if vrblvl > 0:
+        print('minpwr :', minpwr)
+    for (mon, polcff) in zip(mons, polcffs):
+        (pwrpolcff, cffpolcff) = from_rps_string(polcff)
+        # (1) every monomial is first multiplied with x[idx]
+        supmon = support_monomial(mon, dim, xsb, vrblvl)
+        mulmon = multiply_monomial(supmon, idx, xsb, vrblvl)
+        resmons.append(mulmon)
+        newpolcff = scale_power(pwrpolcff, cffpolcff, minpwr, vrblvl)
+        rescffs.append(newpolcff)
+        if vrblvl > 0:
+            print('multiplied monomial :', mulmon)
+        # (2) every monomial is multiplied with minus the solution series
+        if vrblvl > 0:
+            print('multiplying solution powers', solpwr)
+            print('  with coefficients power :', pwrpolcff[1])
+            print('multiplying solution coefficients', solcff)
+            print('  with coefficient :', cffpolcff[1])
+        # do the scaling of the powers
+        prodpwrs = [(pwrpolcff[1] + power - minpwr) for power in solpwr]
+        prodcffs = [(-cffpolcff[1]*coeff) for coeff in solcff]
+        if vrblvl > 0:
+            print('the product of powers :\n', prodpwrs)
+            print('  smallest power :', min(prodpwrs))
+            print('the corresponding coefficients :\n', prodcffs)
+            print('len check :', (len(prodpwrs) == len(prodcffs)))
+            if not (len(prodpwrs) == len(prodcffs)):
+                print('lengths do not match!')
+        strcff = to_rps_string(prodpwrs, prodcffs, vrblvl=vrblvl-1)
+        rescffs.append(strcff)
+        resmons.append(mon)
+    return (resmons, rescffs)
+
 def random_product_homotopy(dim, nbt, deg, sol, xsb='x', vrblvl=0):
     """
     Returns the coefficients and monomials, in lists of strings,
@@ -1060,7 +1136,7 @@ def random_product_homotopy(dim, nbt, deg, sol, xsb='x', vrblvl=0):
     if vrblvl > 0:
         print('in laurent.random_product_homotopy ...')
     pols = random_real_powered_system\
-              (dim, dim, nbt, 1, True, xsb, vrblvl=vrblvl-1)
+               (dim, dim, nbt, 1, True, xsb, vrblvl=vrblvl-1)
     if vrblvl > 0:
         print('a random system :\n', pols)
     (cffs, mons) = parse_real_powered_system(pols, vrblvl=vrblvl)
@@ -1075,33 +1151,15 @@ def random_product_homotopy(dim, nbt, deg, sol, xsb='x', vrblvl=0):
     expcffs = [ [] for _ in range(len(pols)) ] 
     for (idx, pol) in enumerate(pols):
         (solpwr, solcff) = sol[idx]
-        for (mon, polcff) in zip(mons[idx], cffs[idx]):
-            supmon = support_monomial(mon, dim, xsb, vrblvl)
-            mulmon = multiply_monomial(supmon, idx, xsb, vrblvl)
-            expmons[idx].append(mulmon)
-            expcffs[idx].append(polcff)   # copy coefficient
-            if vrblvl > 0:
-                print('multiplied monomial :', mulmon)
-            (pwrpolcff, cffpolcff) = from_rps_string(polcff)
-            if vrblvl > 0:
-                print('multiplying solution powers', solpwr)
-                print('  with coefficients power :', pwrpolcff[1])
-                print('multiplying solution coefficients', solcff)
-                print('  with coefficient :', cffpolcff[1])
-            prodpwrs = [(pwrpolcff[1] + power) for power in solpwr]
-            prodcffs = [(-cffpolcff[1]*coeff) for coeff in solcff]
-            if vrblvl > 0:
-                print('the product of powers :\n', prodpwrs)
-                print('the corresponding coefficients :\n', prodcffs)
-                print('len check :', (len(prodpwrs) == len(prodcffs)))
-                if not (len(prodpwrs) == len(prodcffs)):
-                    print('lengths do not match!')
-            strcff = to_rps_string(prodpwrs, prodcffs, vrblvl=vrblvl-1)
-            expcffs[idx].append(strcff)
+        rmn, rcf = multiply_series_factor\
+            (dim, idx, mons[idx], cffs[idx], solpwr, solcff, xsb, vrblvl)
+        for (mon, cff) in zip(rmn, rcf):
             expmons[idx].append(mon)
-        if vrblvl > 0:
-            print('expanded monomials :', expmons[idx])
-            print('expanded coefficients :', expcffs[idx])
+            expcffs[idx].append(cff)
+            if vrblvl > 0:
+                print('idx :', idx)
+                print('expanded monomials :', expmons[idx])
+                print('expanded coefficients :', expcffs[idx])
     return (expcffs, expmons)
 
 def random_binomial_homotopy(dim, nbt, deg, sol, xsb='x', vrblvl=0):
@@ -1294,8 +1352,6 @@ def check_residuals(lauhom, pwrs, cffs, vrblvl=0):
     for various small values of the parameter t,
     printing residuals and backward errors.
     """
-    if vrblvl > 0:
-        print('in laurent.check_residuals ...')
     for tval in [1.0e-4, 1.0e-6, 1.0e-8]:
         xval = evaluate_series_vector(pwrs, cffs, tval, vrblvl)
         print('the values at t =', tval, ':\n', xval)
@@ -1304,38 +1360,12 @@ def check_residuals(lauhom, pwrs, cffs, vrblvl=0):
         backward = sum([abs(nbr) for nbr in residuals])
         print('backward error :', backward, 'for t =', tval)
 
-def compare_solutions(sol, pwrs, cffs, vrblvl=0):
-    """
-    The product Laurent homotopy is defined with a solution in sol,
-    whereas pwrs and cffs are the powers and coefficients of the
-    computed solution.  Compares powers and coefficients.
-    Returns the sum of all errors.
-    """
-    if vrblvl > 0:
-        print('in laurent.compare_solutions ...')
-    sumerr = 0.0
-    for (idx, ksol) in enumerate(sol):
-        (spwr, scff) = ksol
-        print('comparing component', idx+1, ':')
-        print('(exact power, computed power) : error')
-        for power in zip(spwr, pwrs[idx]):
-            err = abs(power[0] - power[1])
-            print(power, 'error :', err)
-            sumerr = sumerr + err;
-        print('(exact coefficient, computed coefficient) : error')
-        for coeff in zip(scff, cffs[idx]):
-            err = abs(power[0] - power[1])
-            print(coeff, 'error :', err)
-            sumerr = sumerr + err
-    print('sum of all errors ', sumerr)
-    return sumerr
-
 def test_newton_product(vrblvl=0):
     """
     Tests newton's method on a random product homotopy.
     """
     if vrblvl > 0:
-        print('in laurent.test_newton_product ...')
+        print("in laurent.test_newton_product ...")
     dim, deg = 2, 2
     sol = random_series_vector(dim, deg, vrblvl-1)
     if vrblvl > 0:
@@ -1356,7 +1386,6 @@ def test_newton_product(vrblvl=0):
         (pwrs, cffs) = run_newton_steps(dim, solcst, 4, vrblvl)
         for (idx, (pwr, cff)) in enumerate(zip(pwrs, cffs)):
             print('series component', idx+1, ':', to_rps_string(pwr, cff))
-        compare_solutions(sol, pwrs, cffs, vrblvl)
         check_residuals(lauhom, pwrs, cffs, vrblvl)
     return fail
 
@@ -1392,7 +1421,7 @@ def test_newton_binomial(vrblvl=0):
 def test_newton_steps(product=False, vrblvl=0):
     """
     Tests newton's method, either on the product (if True),
-    or on the binomial,
+    or on the binomial homotopy (if False).
     """
     if vrblvl > 0:
         print("in laurent.test_newton_steps ...")
@@ -1445,4 +1474,4 @@ def main(vrblvl=0):
         print('Number of failed tests :', fail)
 
 if __name__== '__main__':
-    main()
+    main(4)
