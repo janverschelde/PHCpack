@@ -1,4 +1,4 @@
-Calling PHCpack from C as a state machine in PHCv2.4.94
+Calling PHCpack from C as a state machine in PHCv2.4.95
 
 This directory was created in release 2.3 as subdirectory to CtoPHC.
 The idea for using PHCpack as a state machine originated from the need
@@ -152,6 +152,7 @@ use_witsols                      : gateway to blackbox solver
 -----------------------------------------------------------------------------
 double_vecvecs_interface         : double vectors of vectors
 dcmplx_vecvecs_interface         : complx vectors of vectors
+double_puiseux_structures        : format conversions and normalizations
 double_puiseux_interface         : linear solver and Newton steps
 ts_use_dvvcon                    : tests interface to double vecvecs
 ts_use_cvvcon                    : tests interface to complex vecvecs
