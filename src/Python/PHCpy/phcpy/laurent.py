@@ -1120,6 +1120,9 @@ def multiply_series_factor(dim, idx, mons, polcffs, solpwr, solcff, \
             print('len check :', (len(prodpwrs) == len(prodcffs)))
             if not (len(prodpwrs) == len(prodcffs)):
                 print('lengths do not match!')
+        if not (prodpwrs[0] == 0.0):
+            prodpwrs.insert(0, 0.0)
+            prodcffs.insert(0, complex(0.0, 0.0))
         strcff = to_rps_string(prodpwrs, prodcffs, vrblvl=vrblvl-1)
         rescffs.append(strcff)
         resmons.append(mon)
@@ -1367,7 +1370,7 @@ def test_newton_product(vrblvl=0):
     if vrblvl > 0:
         print("in laurent.test_newton_product ...")
     dim, deg = 2, 2
-    sol = random_series_vector(dim, deg, vrblvl-1)
+    sol = random_series_vector(dim, 4, vrblvl-1)
     if vrblvl > 0:
         print('the solution series :', sol)
     solcst = extract_solution_constant(sol, vrblvl)
@@ -1385,7 +1388,8 @@ def test_newton_product(vrblvl=0):
             print('polynomial', idx+1, ':\n', pol)
         (pwrs, cffs) = run_newton_steps(dim, solcst, 4, vrblvl)
         for (idx, (pwr, cff)) in enumerate(zip(pwrs, cffs)):
-            print('series component', idx+1, ':', to_rps_string(pwr, cff))
+            print('series component', idx+1, ':', (pwr, cff))
+            print('solution series ', idx+1, ':', sol[idx])
         check_residuals(lauhom, pwrs, cffs, vrblvl)
     return fail
 
