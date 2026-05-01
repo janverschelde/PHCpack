@@ -127,7 +127,7 @@ package body Double_Puiseux_Interface is
         hct := Extract_Leading_Powers(powers,hdg,vrblvl-1);
         Normalize_Binomial_Homotopy(hdg,hcf,hct,vrblvl);
       else
-        Product_Coefficients_Powers(p,coeffs,powers,hdg,hcf,hct,vrblvl);
+        Normalize_Product_Homotopy(p,coeffs,powers,hdg,hcf,hct,vrblvl);
       end if;
       if vrblvl > 0 then
         put_line("coefficients, powers, supports :");

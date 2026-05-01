@@ -368,23 +368,30 @@ package body Double_Puiseux_Structures is
       pwr := pwrs(idxcff);
       if vrblvl > 0 then
         put("coefficient series "); put(idxcff,1); put_line(" :");
-        for i in cff'range loop
+        put(cff(0)); new_line;
+        for i in pwr'range loop
           put(cff(i)); put("  ");
-          if i < pwr'first
-           then put_line("0.0");
-           else put(pwr(i)); new_line;
-          end if;
+          put(pwr(i)); new_line;
         end loop;
       end if;
-      for i in cff'range loop
+      if not Is_Zero(cff(0)) then -- separate treatment for constant
+        idxtrm := idxtrm + 1;
+        vdg(idxtrm) := new Standard_Integer_Vectors.Vector'(deg.all);
+        vcf(idxtrm) := cff(0);
+        vct(idxtrm) := 0.0;
+        if vrblvl > 0 then
+          put("at idxterm "); put(idxtrm,1); put_line(" :");
+          put(vcf(idxtrm)); put("  ");
+          put(vct(idxtrm)); put("  ");
+          Standard_Integer_Vectors_IO.put(vdg(idxtrm)); new_line;
+        end if;
+      end if;
+      for i in pwr'range loop
         if not Is_Zero(cff(i)) then
           idxtrm := idxtrm + 1;
           vdg(idxtrm) := new Standard_Integer_Vectors.Vector'(deg.all);
           vcf(idxtrm) := cff(i);
-          if i < pwr'first
-           then vct(idxtrm) := 0.0;
-           else vct(idxtrm) := pwr(i);
-          end if;
+          vct(idxtrm) := pwr(i);
           if vrblvl > 0 then
             put("at idxterm "); put(idxtrm,1); put_line(" :");
             put(vcf(idxtrm)); put("  ");
@@ -415,7 +422,7 @@ package body Double_Puiseux_Structures is
     hct := new Standard_Floating_Vectors.Vector'(vct(1..idxtrm));
   end Product_Monomials;
 
-  procedure Product_Coefficients_Powers
+  procedure Normalize_Product_Homotopy
               ( p : in Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
                 cffs : in Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
                 pwrs : in Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
@@ -431,6 +438,6 @@ package body Double_Puiseux_Structures is
     for i in p'range loop
       Product_Monomials(p(i),cffs(i),pwrs(i),hdg(i),hcf(i),hct(i),vrblvl);
     end loop;
-  end Product_Coefficients_Powers;
+  end Normalize_Product_Homotopy;
 
 end Double_Puiseux_Structures;

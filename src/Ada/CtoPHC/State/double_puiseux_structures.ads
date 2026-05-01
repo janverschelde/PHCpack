@@ -127,7 +127,7 @@ package Double_Puiseux_Structures is
   --   defines in hdg, hcf, hct the degrees, coefficients and powers
   --   of the expanded monomial version.
 
-  procedure Product_Coefficients_Powers
+  procedure Normalize_Product_Homotopy
               ( p : in Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
                 cffs : in Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
                 pwrs : in Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
