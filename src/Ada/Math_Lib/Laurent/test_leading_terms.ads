@@ -24,7 +24,8 @@ package Test_Leading_Terms is
                 A,B : out Standard_Floating_Matrices.Matrix;
                 x : out Standard_Floating_Vectors.Vector;
                 cA,cB : out Standard_Complex_Matrices.Matrix;
-                cx : out Standard_Complex_Vectors.Vector );
+                cx : out Standard_Complex_Vectors.Vector;
+                tosort : in boolean := false );
 
   -- DESCRIPTION :
   --   Generates a random matrix A of positive numbers in [0, 1],
@@ -32,6 +33,8 @@ package Test_Leading_Terms is
   --   The right hand side vectors in B are then computed.
   --   Random complex coefficients are generated in cA and cx,
   --   where cB is the result of a computation using cA and cx.
+  --   If tosort, then the right hand side B is sorted in
+  --   increasing order of the exponents.
 
   procedure Random_Series
               ( dim,nbr : in integer32;
@@ -55,7 +58,8 @@ package Test_Leading_Terms is
   procedure Random_Series_System
               ( dim,nbr : in integer32;
                 A,X,B : out Standard_Floating_Matrices.Matrix;
-                cA,cX,cB : out Standard_Complex_Matrices.Matrix );
+                cA,cX,cB : out Standard_Complex_Matrices.Matrix;
+                tosort : in boolean := false );
 
   -- DESCRIPTION :
   --   Generates a linear system of series with real powers 
@@ -69,7 +73,9 @@ package Test_Leading_Terms is
   --   X        space for dim-by-nbr real matrix;
   --   cX       space for dim-by-nbr complex matrix;
   --   B        space for dim-by-(nbr*dim) real matrix;
-  --   cB       space for dim-by-(nbr*dim) complex matrix.
+  --   cB       space for dim-by-(nbr*dim) complex matrix;
+  --   tosort   if true, then the right hand side (B, cB) 
+  --            is sorted in increasing order of the exponents.
 
   -- ON RETURN :
   --   A        real powers of the leading terms of series,

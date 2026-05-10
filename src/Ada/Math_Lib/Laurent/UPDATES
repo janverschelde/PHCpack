@@ -1,3 +1,6 @@
+Sun 10 May 2026 : more refactoring from test_leading terms code into
+  double_puiseux_operations for the lead solution term of a linear system.
+
 Sat 9 May 2026 : extended double_puiseux_operations with code extracted from
   test_leading_terms.
 

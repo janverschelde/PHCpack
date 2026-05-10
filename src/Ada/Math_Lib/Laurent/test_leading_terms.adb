@@ -20,7 +20,8 @@ package body Test_Leading_Terms is
                 A,B : out Standard_Floating_Matrices.Matrix;
                 x : out Standard_Floating_Vectors.Vector;
                 cA,cB : out Standard_Complex_Matrices.Matrix;
-                cx : out Standard_Complex_Vectors.Vector ) is
+                cx : out Standard_Complex_Vectors.Vector;
+                tosort : in boolean := false ) is
 
     n : constant natural32 := natural32(dim);
 
@@ -39,7 +40,7 @@ package body Test_Leading_Terms is
     put_line("-dimensional power matrix :"); put(A,3);
     put("A random "); put(dim,1);
     put_line("-dimensional power vector :"); put(x,3); new_line;
-    Double_Puiseux_Operations.series_product(A,x,cA,cx,B,cB);
+    Double_Puiseux_Operations.series_product(A,x,cA,cx,B,cB,tosort);
     put_line("Power matrix after product :"); put(B,3);
   end Random_Vector;
 
@@ -67,7 +68,8 @@ package body Test_Leading_Terms is
   procedure Random_Series_System
               ( dim,nbr : in integer32;
                 A,X,B : out Standard_Floating_Matrices.Matrix;
-                cA,cX,cB : out Standard_Complex_Matrices.Matrix ) is
+                cA,cX,cB : out Standard_Complex_Matrices.Matrix;
+                tosort : in boolean := false ) is
 
     n : constant natural32 := natural32(dim);
 
@@ -84,7 +86,7 @@ package body Test_Leading_Terms is
     Random_Series(dim,nbr,X,cX);
     put("A random "); put(dim,1);
     put_line("-dimensional series exponents :"); put(X,3);
-    Double_Puiseux_Operations.series_product(A,X,cA,cX,B,cB);
+    Double_Puiseux_Operations.series_product(A,X,cA,cX,B,cB,tosort);
     put_line("Right hand side exponents :"); put(B,3);
   end Random_Series_System;
 
@@ -303,8 +305,10 @@ package body Test_Leading_Terms is
 
   begin
     put_line("-> generating random data ...");
+   -- Random_Vector(dim,rA,rB,rx,cA,cB,cx,true);
+   -- Test_Leading_Solver(dim,tol,rA,rB,cA,cB,rx,cx,ry,cy);
     Random_Vector(dim,rA,rB,rx,cA,cB,cx);
-    Test_Leading_Solver(dim,tol,rA,rB,cA,cB,rx,cx,ry,cy);
+    Double_Puiseux_Operations.leading_solver(dim,tol,rA,rB,cA,cB,ry,cy,2);
     put_line("-> checking computed powers :");
     Power_Check(tol,rx,ry);
     put_line("-> checking computed coefficients :");
@@ -331,7 +335,7 @@ package body Test_Leading_Terms is
 
   begin
     put_line("-> generating random data ...");
-    Random_Series_System(dim,nbr,eA,eX,eB,cA,cX,cB);
+    Random_Series_System(dim,nbr,eA,eX,eB,cA,cX,cB,true);
     for i in m'range loop
       m(i) := new Standard_Integer_Vectors.Vector'(1..dim => 0);
     end loop;

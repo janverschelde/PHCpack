@@ -1,5 +1,6 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Boolean_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
@@ -25,7 +26,8 @@ package Double_Puiseux_Operations is
                 cA : in Standard_Complex_Matrices.Matrix;
                 cx : in Standard_Complex_Vectors.Vector;
                 B : out Standard_Floating_Matrices.Matrix;
-                cB : out Standard_Complex_Matrices.Matrix );
+                cB : out Standard_Complex_Matrices.Matrix;
+                tosort : in boolean := false );
 
   -- DESCRIPTION :
   --   Makes the product of the series in the power matrix A,
@@ -42,7 +44,9 @@ package Double_Puiseux_Operations is
   --   A        a power matrix in a linear system t^A;
   --   x        powers of the column vector t^x;
   --   cA       coefficients of t^A;
-  --   cx       coefficients of t^x.
+  --   cx       coefficients of t^x;
+  --   tosort   if true, then the right hand side B is sorted
+  --            according in increasing order of the powers.
 
   -- ON RETURN :
   --   B        power matrix of [t^A]*[t^x], sorted columnwise;
@@ -67,7 +71,8 @@ package Double_Puiseux_Operations is
               ( A,X : in Standard_Floating_Matrices.Matrix;
                 cA,cX : in Standard_Complex_Matrices.Matrix;
                 B : out Standard_Floating_Matrices.Matrix;
-                cB : out Standard_Complex_Matrices.Matrix );
+                cB : out Standard_Complex_Matrices.Matrix;
+                tosort : in boolean := false );
 
   -- DESCRIPTION :
   --   Makes the product of the series cA*[t^A] with cX*[t^X]
@@ -78,6 +83,8 @@ package Double_Puiseux_Operations is
   --   then B is a dim-by-(dim*nbr) matrix.
   --   The coefficient matrices cA, cX, and cB have the same ranges
   --   as the exponent matrices A, X, and B.
+  --   If tosort, then the right hand side (B, cB) is sorted
+  --   in increasing order of the exponents.
 
   procedure Series_Product
               ( A,X : in Standard_Floating_Matrices.Matrix;
@@ -183,7 +190,8 @@ package Double_Puiseux_Operations is
 
   procedure Next_Coefficients
               ( cy : in out Standard_Complex_Vectors.Vector;
-                cA,cB : in Standard_Complex_Matrices.Matrix;
+                cA : in Standard_Complex_Matrices.Matrix;
+                cb : in Standard_Complex_Vectors.Vector;
                 idx1 : in Standard_Integer_Vectors.Vector;
                 prev,next : in Boolean_Vectors.Vector;
                 vrblvl : in integer32 := 0 );
@@ -194,7 +202,8 @@ package Double_Puiseux_Operations is
   -- ON ENTRY :
   --   cy       current values of the leading coefficients;
   --   cA       coefficients of the matrix of the linear system;
-  --   cB       coefficients of the right hand side of the system;
+  --   cb       selected coefficients of the right hand side of the system,
+  --            selected corresponding to the next minimal powers;
   --   idx1     first set of indices of the tropical Cramer vector;
   --   prev     previously correct indices;
   --   next     current set of correct indices;
@@ -202,6 +211,51 @@ package Double_Puiseux_Operations is
 
   -- ON RETURN :
   --   cy       updated vector of coefficients.
+
+  function Leading_Right_Power
+             ( rB : Standard_Floating_Matrices.Matrix; rowidx : integer32;
+               skipcols : Boolean_Vectors.Vector;
+               vrblvl : integer32 := 0 ) return double_float;
+
+  -- DESCRIPTION :
+  --   Returns the smallest number on the row of rB, with index rowidx,
+  --   skipping the columns k for which skipcols(k) is true.
+
+  procedure Leading_Right_Term
+             ( rB : in Standard_Floating_Matrices.Matrix;
+               cB : in Standard_Complex_Matrices.Matrix;
+               rowidx : in integer32;
+               skipcols : in Boolean_Vectors.Vector;
+               minpow : out double_float; mincff : out Complex_Number;
+               vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Returns in minpow the smallest number on the row of rB,
+  --   with index rowidx, skipping the columns k for which skipcols(k)
+  --   is true, and returns in mincff the corresponding coefficients
+  --   on the row of cB with index rowidx.
+
+  function Leading_Right_Powers
+             ( rB : Standard_Floating_Matrices.Matrix;
+               skipcols : Boolean_Vectors.Vector; vrblvl : integer32 := 0 )
+             return Standard_Floating_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the vector of smallest numbers on the rows of rB,
+  --   skipping the columns in skipcols.
+
+  procedure Leading_Right_Terms
+             ( rB : in Standard_Floating_Matrices.Matrix;
+               cB : in Standard_Complex_Matrices.Matrix;
+               skipcols : in Boolean_Vectors.Vector;
+               minpow : out Standard_Floating_Vectors.Vector;
+               mincff : out Standard_Complex_Vectors.Vector;
+               vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Returns in minpow the smallest number on the row of rB,
+  --   skipping the columns k for which skipcols(k)is true, and
+  --   returns in mincff the corresponding coefficients of cB.
 
   procedure Leading_Solver
               ( dim : in integer32; tol : in double_float;

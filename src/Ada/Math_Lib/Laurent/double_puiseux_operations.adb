@@ -1,7 +1,6 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
 with Standard_Floating_Numbers_IO;      use Standard_Floating_Numbers_IO;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_IO;       use Standard_Complex_Numbers_IO;
 with Standard_Integer_Vectors_IO;       use Standard_Integer_Vectors_IO;
 with Standard_Floating_Vectors_IO;      use Standard_Floating_Vectors_IO;
@@ -46,7 +45,8 @@ package body Double_Puiseux_Operations is
                 cA : in Standard_Complex_Matrices.Matrix;
                 cx : in Standard_Complex_Vectors.Vector;
                 B : out Standard_Floating_Matrices.Matrix;
-                cB : out Standard_Complex_Matrices.Matrix ) is
+                cB : out Standard_Complex_Matrices.Matrix;
+                tosort : in boolean := false ) is
   begin
     for i in A'range(1) loop
       for j in A'range(2) loop
@@ -54,7 +54,9 @@ package body Double_Puiseux_Operations is
         cB(i,j) := cA(i,j)*cx(j);
       end loop;
     end loop;
-    Sort(B,cB,B'last(2));
+    if tosort
+     then Sort(B,cB,B'last(2));
+    end if;
   end Series_Product;
 
   procedure Series_Product
@@ -87,7 +89,8 @@ package body Double_Puiseux_Operations is
               ( A,X : in Standard_Floating_Matrices.Matrix;
                 cA,cX : in Standard_Complex_Matrices.Matrix;
                 B : out Standard_Floating_Matrices.Matrix;
-                cB : out Standard_Complex_Matrices.Matrix ) is
+                cB : out Standard_Complex_Matrices.Matrix;
+                tosort : in boolean := false ) is
 
     offset : integer32 := 0; -- column offset for B
 
@@ -101,7 +104,9 @@ package body Double_Puiseux_Operations is
       end loop;
       offset := offset + A'last(1);
     end loop;
-    Sort(B,cB,B'last(2));
+    if tosort
+     then Sort(B,cB,B'last(2));
+    end if;
   end Series_Product;
 
   procedure Series_Product
@@ -282,7 +287,8 @@ package body Double_Puiseux_Operations is
 
   procedure Next_Coefficients
               ( cy : in out Standard_Complex_Vectors.Vector;
-                cA,cB : in Standard_Complex_Matrices.Matrix;
+                cA : in Standard_Complex_Matrices.Matrix;
+                cb : in Standard_Complex_Vectors.Vector;
                 idx1 : in Standard_Integer_Vectors.Vector;
                 prev,next : in Boolean_Vectors.Vector;
                 vrblvl : in integer32 := 0 ) is
@@ -301,13 +307,108 @@ package body Double_Puiseux_Operations is
            then rowidx := j; exit;
           end if;
         end loop;
-        cy(i) := cB(rowidx,cB'first(2))/cA(rowidx,i);
+        cy(i) := cb(rowidx)/cA(rowidx,i);
         if vrblvl > 0
          then put("cy("); put(i,1); put(") : "); put(cy(i)); new_line;
         end if;
       end if;
     end loop;
   end Next_Coefficients;
+
+  function Leading_Right_Power
+             ( rB : Standard_Floating_Matrices.Matrix; rowidx : integer32;
+               skipcols : Boolean_Vectors.Vector; vrblvl : integer32 := 0 )
+             return double_float is
+
+    res : double_float := -1.0;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Puiseux_Operations.");
+      put_line("leading_right_power ...");
+    end if;
+    for k in rB'range(2) loop           -- run over all columns
+      if not skipcols(k) then           -- do we skip column k?
+        if res = -1.0 then
+          res := rB(rowidx,k);          -- first valid column
+        elsif rB(rowidx,k) < res then
+          res := rB(rowidx,k);          -- new minimal value
+        end if;
+      end if;
+    end loop;
+    return res;
+  end Leading_Right_Power;
+
+  procedure Leading_Right_Term
+             ( rB : in Standard_Floating_Matrices.Matrix;
+               cB : in Standard_Complex_Matrices.Matrix;
+               rowidx : in integer32;
+               skipcols : in Boolean_Vectors.Vector;
+               minpow : out double_float; mincff : out Complex_Number;
+               vrblvl : in integer32 := 0 ) is
+
+    minidx : integer32 := -1;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Puiseux_Operations.");
+      put_line("leading_right_term ...");
+    end if;
+    minpow := -1.0;
+    for k in rB'range(2) loop           -- run over all columns
+      if not skipcols(k) then           -- do we skip column k?
+        if minidx = -1 then
+          minidx := k;                  -- first valid column
+          minpow := rB(rowidx,minidx);
+        elsif rB(rowidx,k) < minpow then
+          minidx := k;                  -- new minimal value
+          minpow := rB(rowidx,minidx);
+        end if;
+      end if;
+    end loop;
+    if minidx = -1 then
+      if vrblvl > 0
+       then put_line("No leading power found in the right hand side!");
+      end if;
+    else
+      mincff := cB(rowidx,minidx);
+    end if;
+  end Leading_Right_Term;
+
+  function Leading_Right_Powers
+             ( rB : Standard_Floating_Matrices.Matrix;
+               skipcols : Boolean_Vectors.Vector; vrblvl : integer32 := 0 )
+             return Standard_Floating_Vectors.Vector is
+
+    res : Standard_Floating_Vectors.Vector(rB'range(1));
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Puiseux_Operations.");
+      put_line("leading_right_powers ...");
+    end if;
+    for i in rB'range(1) loop
+      res(i) := Leading_Right_Power(rB,i,skipcols,vrblvl-1);
+    end loop;
+    return res;
+  end Leading_Right_Powers;
+
+  procedure Leading_Right_Terms
+             ( rB : in Standard_Floating_Matrices.Matrix;
+               cB : in Standard_Complex_Matrices.Matrix;
+               skipcols : in Boolean_Vectors.Vector;
+               minpow : out Standard_Floating_Vectors.Vector;
+               mincff : out Standard_Complex_Vectors.Vector;
+               vrblvl : in integer32 := 0 ) is
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Puiseux_Operations.");
+      put_line("leading_right_terms ...");
+    end if;
+    for i in rB'range(1) loop
+      Leading_Right_Term(rB,cB,i,skipcols,minpow(i),mincff(i),vrblvl-1);
+    end loop;
+  end Leading_Right_Terms;
 
   procedure Leading_Solver
               ( dim : in integer32; tol : in double_float;
@@ -317,14 +418,12 @@ package body Double_Puiseux_Operations is
                 cy : out Standard_Complex_Vectors.Vector;
                 vrblvl : in integer32 := 0 ) is
 
-    wrkrB : Standard_Floating_Matrices.Matrix(1..dim,1..dim) := rB;
-    wrkcB : Standard_Complex_Matrices.Matrix(1..dim,1..dim) := cB;
-    vb,rz : Standard_Floating_Vectors.Vector(1..dim);
+    mrb,dy : Standard_Floating_Vectors.Vector(1..dim);
+    mcb : Standard_Complex_Vectors.Vector(1..dim);
     wrkcrm : Standard_Integer_VecVecs.VecVec(0..dim);
     idx1,idx2 : Standard_Integer_Vectors.Vector(1..dim);
     fail,done : boolean;
     prev,next : Boolean_Vectors.Vector(1..dim) := (1..dim => false);
-    nbrcols : integer32;
 
   begin
     if vrblvl > 0
@@ -339,16 +438,13 @@ package body Double_Puiseux_Operations is
       if vrblvl > 0
        then put("*** running step "); put(step,1); put_line(" ***");
       end if;
-      for i in vb'range loop
-        vb(i) := wrkrB(i,wrkrB'first(2));
-      end loop;
+      Leading_Right_Terms(rB,cB,next,mrb,mcb,vrblvl-1);
       if vrblvl > 0
        then put_line("-> computing the tropical Cramer vector ...");
       end if;
-      Leading_Powers(dim,tol,rA,vb,wrkcrm,ry,idx1,idx2,fail,vrblvl-1);
-      Assign_Correctness(dim,ry,idx1,idx2,next,rz,vrblvl-1);
-      ry := rz;
-      Next_Coefficients(cy,cA,wrkcB,idx1,prev,next,vrblvl-1);
+      Leading_Powers(dim,tol,rA,mrb,wrkcrm,dy,idx1,idx2,fail,vrblvl-1);
+      Assign_Correctness(dim,dy,idx1,idx2,next,ry,vrblvl-1);
+      Next_Coefficients(cy,cA,mcb,idx1,prev,next,vrblvl-1);
       done := true;
       for i in next'range loop
         done := done and next(i);
@@ -360,7 +456,6 @@ package body Double_Puiseux_Operations is
         end if;
       end if;
       prev := next; -- for the next round
-      Series_Product(rA,ry,cA,cy,next,wrkrB,wrkcB,nbrcols);
     end loop;
   end Leading_Solver;
 
