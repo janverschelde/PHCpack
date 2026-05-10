@@ -1,12 +1,134 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
-with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
-with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
-with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
-with Standard_Floating_Matrices_io;     use Standard_Floating_Matrices_io;
+with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
+with Standard_Floating_Numbers_IO;      use Standard_Floating_Numbers_IO;
+with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Standard_Complex_Numbers_IO;       use Standard_Complex_Numbers_IO;
+with Standard_Integer_Vectors_IO;       use Standard_Integer_Vectors_IO;
+with Standard_Floating_Vectors_IO;      use Standard_Floating_Vectors_IO;
+with Standard_Floating_Matrices_IO;     use Standard_Floating_Matrices_IO;
 with Double_Weighted_Assignment;
 
 package body Double_Puiseux_Operations is
+
+  procedure Sort ( B : in out Standard_Floating_Matrices.Matrix;
+                   cB : in out Standard_Complex_Matrices.Matrix;
+                   nbrcols : in integer32 ) is
+
+    minval : double_float;
+    minidx : integer32;
+    nbr : Complex_Number;
+
+  begin
+    for i in B'range(1) loop              -- sort i-th row
+      for j in B'first(2)..nbrcols-1 loop -- select minimum
+        minval := B(i,j);
+        minidx := j;
+        for k in j+1..nbrcols loop
+          if B(i,k) < minval then
+            minval := B(i,k);
+            minidx := k;
+          end if;
+        end loop;
+        if minidx /= j then -- swap if minimum not at position j
+          B(i,minidx) := B(i,j);
+          B(i,j) := minval;
+          nbr := cB(i,minidx);  
+          cB(i,minidx) := cB(i,j);
+          cB(i,j) := nbr;
+        end if;
+      end loop;
+    end loop;
+  end Sort;
+
+  procedure Series_Product
+              ( A : in Standard_Floating_Matrices.Matrix;
+                x : in Standard_Floating_Vectors.Vector;
+                cA : in Standard_Complex_Matrices.Matrix;
+                cx : in Standard_Complex_Vectors.Vector;
+                B : out Standard_Floating_Matrices.Matrix;
+                cB : out Standard_Complex_Matrices.Matrix ) is
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        B(i,j) := A(i,j) + x(j);
+        cB(i,j) := cA(i,j)*cx(j);
+      end loop;
+    end loop;
+    Sort(B,cB,B'last(2));
+  end Series_Product;
+
+  procedure Series_Product
+              ( A : in Standard_Floating_Matrices.Matrix;
+                x : in Standard_Floating_Vectors.Vector;
+                cA : in Standard_Complex_Matrices.Matrix;
+                cx : in Standard_Complex_Vectors.Vector;
+                skip : in Boolean_Vectors.Vector;
+                B : out Standard_Floating_Matrices.Matrix;
+                cB : out Standard_Complex_Matrices.Matrix;
+                nbrcols : out integer32 ) is
+
+    colidx : integer32 := 0;
+
+  begin
+    for j in A'range(2) loop
+      if not skip(j) then
+        colidx := colidx + 1;
+        for i in A'range(1) loop
+          B(i,colidx) := A(i,j) + x(j);
+          cB(i,colidx) := cA(i,j)*cx(j);
+        end loop;
+      end if;
+    end loop;
+    nbrcols := colidx;
+    Sort(B,cB,nbrcols);
+  end Series_Product;
+
+  procedure Series_Product
+              ( A,X : in Standard_Floating_Matrices.Matrix;
+                cA,cX : in Standard_Complex_Matrices.Matrix;
+                B : out Standard_Floating_Matrices.Matrix;
+                cB : out Standard_Complex_Matrices.Matrix ) is
+
+    offset : integer32 := 0; -- column offset for B
+
+  begin
+    for k in cX'range(2) loop -- run over the columns of X
+      for i in A'range(1) loop
+        for j in A'range(2) loop
+          B(i,j+offset) := A(i,j) + X(j,k);
+          cB(i,j+offset) := cA(i,j)*cX(j,k);
+        end loop;
+      end loop;
+      offset := offset + A'last(1);
+    end loop;
+    Sort(B,cB,B'last(2));
+  end Series_Product;
+
+  procedure Series_Product
+              ( A,X : in Standard_Floating_Matrices.Matrix;
+                cA,cX : in Standard_Complex_Matrices.Matrix;
+                skip : in Standard_Integer_Vectors.Vector;
+                B : out Standard_Floating_Matrices.Matrix;
+                cB : out Standard_Complex_Matrices.Matrix;
+                nbrcols : out integer32 ) is
+
+    colidx : integer32 := 0;
+    xidx : integer32;
+
+  begin
+    for j in X'range(1) loop -- run over the rows of X
+      xidx := skip(j) + 1;
+      if xidx <= X'last(2) then -- otherwise skip element
+        colidx := colidx + 1;
+        for i in A'range(1) loop
+          B(i,colidx) := A(i,j) + X(j,xidx);
+          cB(i,colidx) := cA(i,j)*cX(j,xidx);
+        end loop;
+      end if;
+    end loop;
+    nbrcols := colidx;
+    Sort(B,cB,nbrcols);
+  end Series_Product;
 
   procedure Leading_Powers
               ( dim : in integer32; tol : in double_float;
@@ -130,5 +252,116 @@ package body Double_Puiseux_Operations is
       end loop;
     end if;
   end Check_Correctness;
+
+  procedure Assign_Correctness
+              ( dim : in integer32;
+                d : in Standard_Floating_Vectors.Vector;
+                idx1,idx2 : in Standard_Integer_Vectors.Vector;
+                correct : out Boolean_Vectors.Vector;
+                cd : in out Standard_Floating_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    index1 : integer32 := 0;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Double_Puiseux_Operations.assign_correctness ...");
+    end if;
+    for i in idx2'range loop
+      if idx2(i) = dim+1 then
+        index1 := idx1(i);
+        correct(index1) := true;
+        cd(index1) := d(index1);
+        if vrblvl > 0 then
+          put("-> value "); put(index1,1); put_line(" is correct :");
+          put("d("); put(index1,1); put(") :"); put(cd(index1)); new_line;
+        end if;
+      end if;
+    end loop;
+  end Assign_Correctness;
+
+  procedure Next_Coefficients
+              ( cy : in out Standard_Complex_Vectors.Vector;
+                cA,cB : in Standard_Complex_Matrices.Matrix;
+                idx1 : in Standard_Integer_Vectors.Vector;
+                prev,next : in Boolean_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    rowidx : integer32;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Double_Puiseux_Operations.next_coefficients ...");
+    end if;
+    for i in next'range loop
+      if not prev(i) and next(i) then -- found new correct power
+        rowidx := 0;
+        for j in idx1'range loop -- look for row index
+          if idx1(j) = i
+           then rowidx := j; exit;
+          end if;
+        end loop;
+        cy(i) := cB(rowidx,cB'first(2))/cA(rowidx,i);
+        if vrblvl > 0
+         then put("cy("); put(i,1); put(") : "); put(cy(i)); new_line;
+        end if;
+      end if;
+    end loop;
+  end Next_Coefficients;
+
+  procedure Leading_Solver
+              ( dim : in integer32; tol : in double_float;
+                rA,rB : in Standard_Floating_Matrices.Matrix;
+                cA,cB : in Standard_Complex_Matrices.Matrix;
+                ry : out Standard_Floating_Vectors.Vector;
+                cy : out Standard_Complex_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    wrkrB : Standard_Floating_Matrices.Matrix(1..dim,1..dim) := rB;
+    wrkcB : Standard_Complex_Matrices.Matrix(1..dim,1..dim) := cB;
+    vb,rz : Standard_Floating_Vectors.Vector(1..dim);
+    wrkcrm : Standard_Integer_VecVecs.VecVec(0..dim);
+    idx1,idx2 : Standard_Integer_Vectors.Vector(1..dim);
+    fail,done : boolean;
+    prev,next : Boolean_Vectors.Vector(1..dim) := (1..dim => false);
+    nbrcols : integer32;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Double_Puiseux_Operations.leading_solver ...");
+    end if;
+    ry := (1..dim => 0.0);
+    cy := (1..dim => Standard_Complex_Numbers.create(0.0));
+    for i in wrkcrm'range loop
+      wrkcrm(i) := new Standard_Integer_Vectors.Vector'(1..dim => 0);
+    end loop;
+    for step in 1..dim loop
+      if vrblvl > 0
+       then put("*** running step "); put(step,1); put_line(" ***");
+      end if;
+      for i in vb'range loop
+        vb(i) := wrkrB(i,wrkrB'first(2));
+      end loop;
+      if vrblvl > 0
+       then put_line("-> computing the tropical Cramer vector ...");
+      end if;
+      Leading_Powers(dim,tol,rA,vb,wrkcrm,ry,idx1,idx2,fail,vrblvl-1);
+      Assign_Correctness(dim,ry,idx1,idx2,next,rz,vrblvl-1);
+      ry := rz;
+      Next_Coefficients(cy,cA,wrkcB,idx1,prev,next,vrblvl-1);
+      done := true;
+      for i in next'range loop
+        done := done and next(i);
+      end loop;
+      if done then
+        if vrblvl > 0 then
+          put("At step "); put(step,1);
+          put_line(", all values are correct, done!"); exit;
+        end if;
+      end if;
+      prev := next; -- for the next round
+      Series_Product(rA,ry,cA,cy,next,wrkrB,wrkcB,nbrcols);
+    end loop;
+  end Leading_Solver;
 
 end Double_Puiseux_Operations;

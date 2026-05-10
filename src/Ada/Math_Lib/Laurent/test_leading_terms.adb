@@ -15,126 +15,6 @@ with Double_Puiseux_Operations;
 
 package body Test_Leading_Terms is
 
-  procedure Sort ( B : in out Standard_Floating_Matrices.Matrix;
-                   cB : in out Standard_Complex_Matrices.Matrix;
-                   nbrcols : in integer32 ) is
-
-    minval : double_float;
-    minidx : integer32;
-    nbr : Complex_Number;
-
-  begin
-    for i in B'range(1) loop              -- sort i-th row
-      for j in B'first(2)..nbrcols-1 loop -- select minimum
-        minval := B(i,j);
-        minidx := j;
-        for k in j+1..nbrcols loop
-          if B(i,k) < minval then
-            minval := B(i,k);
-            minidx := k;
-          end if;
-        end loop;
-        if minidx /= j then -- swap if minimum not at position j
-          B(i,minidx) := B(i,j);
-          B(i,j) := minval;
-          nbr := cB(i,minidx);  
-          cB(i,minidx) := cB(i,j);
-          cB(i,j) := nbr;
-        end if;
-      end loop;
-    end loop;
-  end Sort;
-
-  procedure Series_Product
-              ( A : in Standard_Floating_Matrices.Matrix;
-                x : in Standard_Floating_Vectors.Vector;
-                cA : in Standard_Complex_Matrices.Matrix;
-                cx : in Standard_Complex_Vectors.Vector;
-                B : out Standard_Floating_Matrices.Matrix;
-                cB : out Standard_Complex_Matrices.Matrix ) is
-  begin
-    for i in A'range(1) loop
-      for j in A'range(2) loop
-        B(i,j) := A(i,j) + x(j);
-        cB(i,j) := cA(i,j)*cx(j);
-      end loop;
-    end loop;
-    Sort(B,cB,B'last(2));
-  end Series_Product;
-
-  procedure Series_Product
-              ( A : in Standard_Floating_Matrices.Matrix;
-                x : in Standard_Floating_Vectors.Vector;
-                cA : in Standard_Complex_Matrices.Matrix;
-                cx : in Standard_Complex_Vectors.Vector;
-                skip : in Boolean_Vectors.Vector;
-                B : out Standard_Floating_Matrices.Matrix;
-                cB : out Standard_Complex_Matrices.Matrix;
-                nbrcols : out integer32 ) is
-
-    colidx : integer32 := 0;
-
-  begin
-    for j in A'range(2) loop
-      if not skip(j) then
-        colidx := colidx + 1;
-        for i in A'range(1) loop
-          B(i,colidx) := A(i,j) + x(j);
-          cB(i,colidx) := cA(i,j)*cx(j);
-        end loop;
-      end if;
-    end loop;
-    nbrcols := colidx;
-    Sort(B,cB,nbrcols);
-  end Series_Product;
-
-  procedure Series_Product
-              ( A,X : in Standard_Floating_Matrices.Matrix;
-                cA,cX : in Standard_Complex_Matrices.Matrix;
-                B : out Standard_Floating_Matrices.Matrix;
-                cB : out Standard_Complex_Matrices.Matrix ) is
-
-    offset : integer32 := 0; -- column offset for B
-
-  begin
-    for k in cX'range(2) loop -- run over the columns of X
-      for i in A'range(1) loop
-        for j in A'range(2) loop
-          B(i,j+offset) := A(i,j) + X(j,k);
-          cB(i,j+offset) := cA(i,j)*cX(j,k);
-        end loop;
-      end loop;
-      offset := offset + A'last(1);
-    end loop;
-    Sort(B,cB,B'last(2));
-  end Series_Product;
-
-  procedure Series_Product
-              ( A,X : in Standard_Floating_Matrices.Matrix;
-                cA,cX : in Standard_Complex_Matrices.Matrix;
-                skip : in Standard_Integer_Vectors.Vector;
-                B : out Standard_Floating_Matrices.Matrix;
-                cB : out Standard_Complex_Matrices.Matrix;
-                nbrcols : out integer32 ) is
-
-    colidx : integer32 := 0;
-    xidx : integer32;
-
-  begin
-    for j in X'range(1) loop -- run over the rows of X
-      xidx := skip(j) + 1;
-      if xidx <= X'last(2) then -- otherwise skip element
-        colidx := colidx + 1;
-        for i in A'range(1) loop
-          B(i,colidx) := A(i,j) + X(j,xidx);
-          cB(i,colidx) := cA(i,j)*cX(j,xidx);
-        end loop;
-      end if;
-    end loop;
-    nbrcols := colidx;
-    Sort(B,cB,nbrcols);
-  end Series_Product;
-
   procedure Random_Vector
               ( dim : in integer32;
                 A,B : out Standard_Floating_Matrices.Matrix;
@@ -159,7 +39,7 @@ package body Test_Leading_Terms is
     put_line("-dimensional power matrix :"); put(A,3);
     put("A random "); put(dim,1);
     put_line("-dimensional power vector :"); put(x,3); new_line;
-    Series_Product(A,x,cA,cx,B,cB);
+    Double_Puiseux_Operations.series_product(A,x,cA,cx,B,cB);
     put_line("Power matrix after product :"); put(B,3);
   end Random_Vector;
 
@@ -204,11 +84,11 @@ package body Test_Leading_Terms is
     Random_Series(dim,nbr,X,cX);
     put("A random "); put(dim,1);
     put_line("-dimensional series exponents :"); put(X,3);
-    Series_Product(A,X,cA,cX,B,cB);
+    Double_Puiseux_Operations.series_product(A,X,cA,cX,B,cB);
     put_line("Right hand side exponents :"); put(B,3);
   end Random_Series_System;
 
-  procedure Next_Coefficients
+  procedure Next_Coefficients_Check
               ( cy : in out Standard_Complex_Vectors.Vector;
                 cA,cB : in Standard_Complex_Matrices.Matrix;
                 idx1 : in Standard_Integer_Vectors.Vector;
@@ -234,7 +114,7 @@ package body Test_Leading_Terms is
         put(", err :"); put(err,3); new_line;
       end if;
     end loop;
-  end Next_Coefficients;
+  end Next_Coefficients_Check;
 
   procedure Next_Series_Coefficients
               ( cy : in out Standard_Complex_Vectors.Vector;
@@ -318,6 +198,28 @@ package body Test_Leading_Terms is
 
   procedure Power_Check
               ( tol : in double_float;
+                eX,eY : in Standard_Floating_Vectors.Vector ) is
+
+    err : double_float;
+    sumerr : double_float := 0.0;
+
+  begin
+    for i in eY'range loop
+      put("eY("); put(i,1); put(") : "); put(ey(i)); new_line;
+      put("eX("); put(i,1); put(") : "); put(ex(i));
+      err := AbsVal(eY(i) - eX(i));
+      put(", err :"); put(err,3); new_line;
+      sumerr := sumerr + err;
+    end loop;
+    put("Sum of errors :"); put(sumerr,3);
+    if sumerr < tol
+     then put_line(", okay.");
+     else put_line(", failure!");
+    end if;
+  end Power_Check;
+
+  procedure Power_Check
+              ( tol : in double_float;
                 eX,eY : in Standard_Floating_Matrices.matrix ) is
 
     err : double_float;
@@ -341,36 +243,42 @@ package body Test_Leading_Terms is
     end if;
   end Power_Check;
 
-  procedure Test_Random_Vector ( dim : in integer32 ) is
+  procedure Test_Leading_Solver
+              ( dim : in integer32; tol : in double_float;
+                rA,rB : in Standard_Floating_Matrices.Matrix;
+                cA,cB : in Standard_Complex_Matrices.Matrix;
+                rx : in Standard_Floating_Vectors.Vector;
+                cx : in Standard_Complex_Vectors.Vector;
+                ry : out Standard_Floating_Vectors.Vector;
+                cy : out Standard_Complex_Vectors.Vector ) is
 
-    rA,rB : Standard_Floating_Matrices.Matrix(1..dim,1..dim);
-    cA,cB : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
-    rx,vb,ry,rz : Standard_Floating_Vectors.Vector(1..dim);
-    cx,cy : Standard_Complex_Vectors.Vector(1..dim);
-    m : Standard_Integer_VecVecs.VecVec(0..dim);
+    wrkrB : Standard_Floating_Matrices.Matrix(1..dim,1..dim) := rB;
+    wrkcB : Standard_Complex_Matrices.Matrix(1..dim,1..dim) := cB;
+    vb,rz : Standard_Floating_Vectors.Vector(1..dim);
+    wrkcrm : Standard_Integer_VecVecs.VecVec(0..dim);
     idx1,idx2 : Standard_Integer_Vectors.Vector(1..dim);
     fail,done : boolean;
     prev,next : Boolean_Vectors.Vector(1..dim) := (1..dim => false);
     nbrcols : integer32;
-    tol : constant double_float := 1.0E-12;
 
   begin
-    put_line("-> generating random data ...");
-    Random_Vector(dim,rA,rB,rx,cA,cB,cx);
-    for i in m'range loop
-      m(i) := new Standard_Integer_Vectors.Vector'(1..dim => 0);
+    ry := (1..dim => 0.0);
+    cy := (1..dim => Standard_Complex_Numbers.create(0.0));
+    for i in wrkcrm'range loop
+      wrkcrm(i) := new Standard_Integer_Vectors.Vector'(1..dim => 0);
     end loop;
     for step in 1..dim loop
       put("*** running step "); put(step,1); put_line(" ***");
       for i in vb'range loop
-        vb(i) := rB(i,rB'first(2));
+        vb(i) := wrkrB(i,wrkrB'first(2));
       end loop;
       put_line("-> computing the tropical Cramer vector ...");
       Double_Puiseux_Operations.Leading_Powers
-        (dim,tol,rA,vb,m,ry,idx1,idx2,fail,2);
+        (dim,tol,rA,vb,wrkcrm,ry,idx1,idx2,fail,2);
       Double_Puiseux_Operations.Check_Correctness
         (dim,tol,rx,ry,idx1,idx2,next,rz,1);
-      Next_Coefficients(cy,cA,cB,idx1,prev,next,cx);
+      ry := rz;
+      Next_Coefficients_Check(cy,cA,wrkcB,idx1,prev,next,cx);
       done := true;
       for i in next'range loop
         done := done and next(i);
@@ -380,9 +288,26 @@ package body Test_Leading_Terms is
         put_line(", all values are correct, done!"); exit;
       end if;
       prev := next; -- for the next round
-      Series_Product(rA,rx,cA,cx,next,rB,cB,nbrcols);
+      Double_Puiseux_Operations.series_product
+        (rA,rx,cA,cx,next,wrkrB,wrkcB,nbrcols);
     end loop;
-    put_line("-> checking final coefficients :");
+  end Test_Leading_Solver;
+
+  procedure Test_Random_Vector ( dim : in integer32 ) is
+
+    rA,rB : Standard_Floating_Matrices.Matrix(1..dim,1..dim);
+    cA,cB : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    rx,ry : Standard_Floating_Vectors.Vector(1..dim);
+    cx,cy : Standard_Complex_Vectors.Vector(1..dim);
+    tol : constant double_float := 1.0E-12;
+
+  begin
+    put_line("-> generating random data ...");
+    Random_Vector(dim,rA,rB,rx,cA,cB,cx);
+    Test_Leading_Solver(dim,tol,rA,rB,cA,cB,rx,cx,ry,cy);
+    put_line("-> checking computed powers :");
+    Power_Check(tol,rx,ry);
+    put_line("-> checking computed coefficients :");
     Coefficient_Check(tol,cx,cy);
   end Test_Random_Vector;
 
@@ -443,7 +368,8 @@ package body Test_Leading_Terms is
         put_line(", all values are correct, done!"); exit;
       end if;
       next := (1..dim => false);
-      Series_Product(eA,eX,cA,cX,correct,eB,cB,nbrcols);
+      Double_Puiseux_Operations.series_product
+        (eA,eX,cA,cX,correct,eB,cB,nbrcols);
     end loop;
     put_line("-> checking final powers :");
     Power_Check(tol,eX,eZ);

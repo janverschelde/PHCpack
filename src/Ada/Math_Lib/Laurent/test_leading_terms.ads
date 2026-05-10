@@ -19,88 +19,6 @@ package Test_Leading_Terms is
 --   where A and B are matrices of floating-point numbers,
 --   and C(A) and C(B) are complex matrices.
 
-  procedure Sort ( B : in out Standard_Floating_Matrices.Matrix;
-                   cB : in out Standard_Complex_Matrices.Matrix;
-                   nbrcols : in integer32 );
-
-  -- DESCRIPTION :
-  --   Sorts the rows in B in increasing order,
-  --   also swapping the corresponding coefficients in cB.
-  --   The number of valid columns in B is nbrcols.
-
-  procedure Series_Product
-              ( A : in Standard_Floating_Matrices.Matrix;
-                x : in Standard_Floating_Vectors.Vector;
-                cA : in Standard_Complex_Matrices.Matrix;
-                cx : in Standard_Complex_Vectors.Vector;
-                B : out Standard_Floating_Matrices.Matrix;
-                cB : out Standard_Complex_Matrices.Matrix );
-
-  -- DESCRIPTION :
-  --   Makes the product of the series in the power matrix A,
-  --   coefficients in cA, with the series in the power vector x, 
-  --   coefficients in cx, to return the power matrix B and cB
-  --   as the corresponding coefficients.
-  --   The columns in the power matrix B are sorted in increasing order.
-
-  -- REQUIRED :
-  --    All ranges of matrices and vectors are identical.
-  --    Powers and coefficients are sufficiently generic.
-
-  -- ON ENTRY:
-  --   A        a power matrix in a linear system t^A;
-  --   x        powers of the column vector t^x;
-  --   cA       coefficients of t^A;
-  --   cx       coefficients of t^x.
-
-  -- ON RETURN :
-  --   B        power matrix of [t^A]*[t^x], sorted columnwise;
-  --   cB       corresponding coefficients of B.
-
-  procedure Series_Product
-              ( A : in Standard_Floating_Matrices.Matrix;
-                x : in Standard_Floating_Vectors.Vector;
-                cA : in Standard_Complex_Matrices.Matrix;
-                cx : in Standard_Complex_Vectors.Vector;
-                skip : in Boolean_Vectors.Vector;
-                B : out Standard_Floating_Matrices.Matrix;
-                cB : out Standard_Complex_Matrices.Matrix;
-                nbrcols : out integer32 );
-
-  -- DESCRIPTION :
-  --   Similar as Series_Product(A,x,cA,cx,B,cB), columns k for which
-  --   skip(k) is true are skipped.  The number of columns nbrcols in
-  --   B and cB that count may be less than B'last(2).
-
-  procedure Series_Product
-              ( A,X : in Standard_Floating_Matrices.Matrix;
-                cA,cX : in Standard_Complex_Matrices.Matrix;
-                B : out Standard_Floating_Matrices.Matrix;
-                cB : out Standard_Complex_Matrices.Matrix );
-
-  -- DESCRIPTION :
-  --   Makes the product of the series cA*[t^A] with cX*[t^X]
-  --   and stores the result in cB*[t^B].
- 
-  -- REQUIRED :
-  --   If A is a dim-by-dim matrix and X is a dim-by-nbr matrix,
-  --   then B is a dim-by-(dim*nbr) matrix.
-  --   The coefficient matrices cA, cX, and cB have the same ranges
-  --   as the exponent matrices A, X, and B.
-
-  procedure Series_Product
-              ( A,X : in Standard_Floating_Matrices.Matrix;
-                cA,cX : in Standard_Complex_Matrices.Matrix;
-                skip : in Standard_Integer_Vectors.Vector;
-                B : out Standard_Floating_Matrices.Matrix;
-                cB : out Standard_Complex_Matrices.Matrix;
-                nbrcols : out integer32 );
-
-  -- DESCRIPTION :
-  --   Similar to Series_Product(A,X,cA,cX,B,cB),
-  --   skipping the columns according to the indices in skip.
-  --   The number of valid columns in B and cB is in nbrcols.
-
   procedure Random_Vector
               ( dim : in integer32;
                 A,B : out Standard_Floating_Matrices.Matrix;
@@ -164,7 +82,7 @@ package Test_Leading_Terms is
   --            computed so that cX*[t^X] is a solution;
   --   cB       corresponding coefficients of the right hand sides.
 
-  procedure Next_Coefficients
+  procedure Next_Coefficients_Check
               ( cy : in out Standard_Complex_Vectors.Vector;
                 cA,cB : in Standard_Complex_Matrices.Matrix;
                 idx1 : in Standard_Integer_Vectors.Vector;
@@ -172,7 +90,8 @@ package Test_Leading_Terms is
                 cx : in Standard_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
-  --   Computes the next coefficients of the leading power series.
+  --   Computes the next coefficients of the leading power series,
+  --   with a comparison to the correct values.
 
   -- ON ENTRY :
   --   cy       current values of the leading coefficients;
@@ -221,7 +140,7 @@ package Test_Leading_Terms is
                 cX,cY : in Standard_Complex_Vectors.Vector );
   procedure Coefficient_Check
               ( tol : in double_float;
-                cX,cY : in Standard_Complex_Matrices.matrix );
+                cX,cY : in Standard_Complex_Matrices.Matrix );
 
   -- DESCRIPTION :
   --   Compares the computed coefficients cY to the original cX,
@@ -229,11 +148,41 @@ package Test_Leading_Terms is
 
   procedure Power_Check
               ( tol : in double_float;
-                eX,eY : in Standard_Floating_Matrices.matrix );
+                eX,eY : in Standard_Floating_Vectors.Vector );
+  procedure Power_Check
+              ( tol : in double_float;
+                eX,eY : in Standard_Floating_Matrices.Matrix );
 
   -- DESCRIPTION :
   --   Compares the computed powers eY to the original eX,
   --   using tol to decide whether a number is small enough.
+
+  procedure Test_Leading_Solver
+              ( dim : in integer32; tol : in double_float;
+                rA,rB : in Standard_Floating_Matrices.Matrix;
+                cA,cB : in Standard_Complex_Matrices.Matrix;
+                rx : in Standard_Floating_Vectors.Vector;
+                cx : in Standard_Complex_Vectors.Vector;
+                ry : out Standard_Floating_Vectors.Vector;
+                cy : out Standard_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Tests the solver to compute one vector of leading terms
+  --   step-by-step, comparing with the generated solution.
+
+  -- ON ENTRY :
+  --   dim      dimension of the linear system;
+  --   tol      tolerance to decide if zero or not;
+  --   rA       leading exponents of the coefficient matrix;
+  --   rB       exponents of the right-hand side;
+  --   cA       leading coefficients of the coefficient matrix;
+  --   cB       coefficients of the right-hand side;
+  --   rx       exponents of the solution, for comparison;
+  --   cx       coefficients of the solution, for comparison.
+
+  -- ON RETURN :
+  --   ry       computed exponents of the solution vector.
+  --   cy       computed coefficients of the solution vector.
 
   procedure Test_Random_Vector ( dim : in integer32 );
 
