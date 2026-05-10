@@ -1,4 +1,5 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
+with Communications_with_User;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
@@ -302,13 +303,22 @@ package body Test_Leading_Terms is
     rx,ry : Standard_Floating_Vectors.Vector(1..dim);
     cx,cy : Standard_Complex_Vectors.Vector(1..dim);
     tol : constant double_float := 1.0E-12;
+    ans : character;
+    vrb : integer32 := 0;
 
   begin
+    new_line;
+    put("Extra comparisons during all steps ? (y/n) ");
+    Communications_with_User.Ask_Yes_or_No(ans);
     put_line("-> generating random data ...");
-   -- Random_Vector(dim,rA,rB,rx,cA,cB,cx,true);
-   -- Test_Leading_Solver(dim,tol,rA,rB,cA,cB,rx,cx,ry,cy);
-    Random_Vector(dim,rA,rB,rx,cA,cB,cx);
-    Double_Puiseux_Operations.leading_solver(dim,tol,rA,rB,cA,cB,ry,cy,2);
+    if ans = 'y' then
+      Random_Vector(dim,rA,rB,rx,cA,cB,cx,true);
+      Test_Leading_Solver(dim,tol,rA,rB,cA,cB,rx,cx,ry,cy);
+    else
+      Random_Vector(dim,rA,rB,rx,cA,cB,cx);
+      put("Verbose level ? (0 is silent) : "); get(vrb);
+      Double_Puiseux_Operations.leading_solver(dim,tol,rA,rB,cA,cB,ry,cy,vrb);
+    end if;
     put_line("-> checking computed powers :");
     Power_Check(tol,rx,ry);
     put_line("-> checking computed coefficients :");

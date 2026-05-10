@@ -222,12 +222,12 @@ package Double_Puiseux_Operations is
   --   skipping the columns k for which skipcols(k) is true.
 
   procedure Leading_Right_Term
-             ( rB : in Standard_Floating_Matrices.Matrix;
-               cB : in Standard_Complex_Matrices.Matrix;
-               rowidx : in integer32;
-               skipcols : in Boolean_Vectors.Vector;
-               minpow : out double_float; mincff : out Complex_Number;
-               vrblvl : in integer32 := 0 );
+              ( rB : in Standard_Floating_Matrices.Matrix;
+                cB : in Standard_Complex_Matrices.Matrix;
+                rowidx : in integer32;
+                skipcols : in Boolean_Vectors.Vector;
+                minpow : out double_float; mincff : out Complex_Number;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Returns in minpow the smallest number on the row of rB,
@@ -245,12 +245,12 @@ package Double_Puiseux_Operations is
   --   skipping the columns in skipcols.
 
   procedure Leading_Right_Terms
-             ( rB : in Standard_Floating_Matrices.Matrix;
-               cB : in Standard_Complex_Matrices.Matrix;
-               skipcols : in Boolean_Vectors.Vector;
-               minpow : out Standard_Floating_Vectors.Vector;
-               mincff : out Standard_Complex_Vectors.Vector;
-               vrblvl : in integer32 := 0 );
+              ( rB : in Standard_Floating_Matrices.Matrix;
+                cB : in Standard_Complex_Matrices.Matrix;
+                skipcols : in Boolean_Vectors.Vector;
+                minpow : out Standard_Floating_Vectors.Vector;
+                mincff : out Standard_Complex_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Returns in minpow the smallest number on the row of rB,
@@ -268,6 +268,11 @@ package Double_Puiseux_Operations is
   -- DESCRIPTION :
   --   Returns the leading powers and coefficients of the solution
   --   to a linear system with real-powered series coefficients.
+
+  -- REQUIRED :
+  --   The exponents of the right hand side vector must not be sorted.
+  --   They must correspond to the order in which the coefficients of A
+  --   are multiplied with the solution vector.
 
   -- ON ENTRY :
   --   dim      dimension, number of rows and columns of A;

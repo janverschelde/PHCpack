@@ -452,9 +452,10 @@ package body Double_Puiseux_Operations is
       if done then
         if vrblvl > 0 then
           put("At step "); put(step,1);
-          put_line(", all values are correct, done!"); exit;
+          put_line(", all values are correct, done!");
         end if;
       end if;
+      exit when done;
       prev := next; -- for the next round
     end loop;
   end Leading_Solver;
