@@ -190,6 +190,39 @@ package Test_Leading_Terms is
   --   ry       computed exponents of the solution vector.
   --   cy       computed coefficients of the solution vector.
 
+  procedure Test_Series_Solver
+              ( dim,nbr : in integer32; tol : in double_float;
+                rA,rB : in Standard_Floating_Matrices.Matrix;
+                cA,cB : in Standard_Complex_Matrices.Matrix;
+                rX : in Standard_Floating_Matrices.Matrix;
+                cX : in Standard_Complex_Matrices.Matrix;
+                rY : out Standard_Floating_Matrices.Matrix;
+                cY : out Standard_Complex_Matrices.Matrix );
+
+  -- DESCRIPTION :
+  --   Tests the solver to compute the first nbr terms of
+  --   a dim-dimensional series vector step-by-step,
+  --   comparing with the generated solution.
+
+  -- REQUIRED : rB'range = 1..dim*nbr = cB'range, and
+  --   (rB, cB) stors the product of the coefficient matrix (rA, cA)
+  --   with the solution series (rX, cX).
+
+  -- ON ENTRY :
+  --   dim      dimension of the linear system;
+  --   nbr      number of terms in each component of the solution;
+  --   tol      tolerance to decide if zero or not;
+  --   rA       leading exponents of the coefficient matrix;
+  --   rB       exponents of the right-hand side;
+  --   cA       leading coefficients of the coefficient matrix;
+  --   cB       coefficients of the right-hand side;
+  --   rX       exponents of the solution, for comparison;
+  --   cX       coefficients of the solution, for comparison.
+
+  -- ON RETURN :
+  --   rY       computed exponents of the solution vector.
+  --   cY       computed coefficients of the solution vector.
+
   procedure Test_Random_Vector ( dim : in integer32 );
 
   -- DESCRIPTION :

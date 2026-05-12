@@ -296,6 +296,72 @@ package body Test_Leading_Terms is
     end loop;
   end Test_Leading_Solver;
 
+  procedure Test_Series_Solver
+              ( dim,nbr : in integer32; tol : in double_float;
+                rA,rB : in Standard_Floating_Matrices.Matrix;
+                cA,cB : in Standard_Complex_Matrices.Matrix;
+                rX : in Standard_Floating_Matrices.Matrix;
+                cX : in Standard_Complex_Matrices.Matrix;
+                rY : out Standard_Floating_Matrices.Matrix;
+                cY : out Standard_Complex_Matrices.Matrix ) is
+
+    prd : constant integer32 := dim*nbr;
+    wrkeB : Standard_Floating_Matrices.Matrix(1..dim,1..prd) := rB;
+    wrkcB : Standard_Complex_Matrices.Matrix(1..dim,1..prd) := cB;
+    eZ : Standard_Floating_Matrices.Matrix(1..dim,1..nbr);
+    cZ : Standard_Complex_Matrices.Matrix(1..dim,1..nbr);
+    vB,wrkry,wrkrX,rz : Standard_Floating_Vectors.Vector(1..dim);
+    wrkcy,vX : Standard_Complex_Vectors.Vector(1..dim);
+    wrkcrm : Standard_Integer_VecVecs.VecVec(0..dim);
+    idx1,idx2,correct : Standard_Integer_Vectors.Vector(1..dim);
+    next : Boolean_Vectors.Vector(1..dim) := (1..dim => false);
+    fail,done : boolean;
+    nbrcols : integer32;
+
+  begin
+    for i in wrkcrm'range loop
+      wrkcrm(i) := new Standard_Integer_Vectors.Vector'(1..dim => 0);
+    end loop;
+    correct := (1..dim => 0); -- indices in X that are correct
+    for step in 1..prd loop
+      put("*** running step "); put(step,1); put_line(" ***");
+      for i in 1..dim loop
+        vB(i) := wrkeB(i,wrkeB'first(2));
+        if correct(i) < rX'last(2) then
+          wrkrX(i) := rX(i,correct(i)+1);
+          vX(i) := cX(i,correct(i)+1);
+        else
+          wrkrX(i) := 1.0E+99;
+        end if;
+      end loop;
+      put_line("-> computing the tropical Cramer vector ...");
+      Double_Puiseux_Operations.Leading_Powers
+        (dim,tol,rA,vB,wrkcrm,wrkrY,idx1,idx2,fail,2);
+      Double_Puiseux_Operations.Check_Correctness
+        (dim,tol,wrkrX,wrkrY,idx1,idx2,next,rz,1);
+      Next_Series_Coefficients(wrkcy,cA,wrkcB,idx1,next,correct,vX,cZ);
+      for i in next'range loop
+        if next(i)
+         then eZ(i,correct(i)) := wrkrY(i);
+        end if;
+      end loop;
+      put("correct indices :"); put(correct); new_line;
+      done := true;
+      for i in next'range loop
+        done := done and (correct(i) = rX'last(2));
+      end loop;
+      if done then
+        put("At step "); put(step,1);
+        put_line(", all values are correct, done!"); exit;
+      end if;
+      next := (1..dim => false);
+      Double_Puiseux_Operations.series_product
+        (rA,rX,cA,cX,correct,wrkeB,wrkcB,nbrcols);
+    end loop;
+    rY := eZ;
+    cY := cZ;
+  end Test_Series_Solver;
+
   procedure Test_Random_Vector ( dim : in integer32 ) is
 
     rA,rB : Standard_Floating_Matrices.Matrix(1..dim,1..dim);
@@ -334,57 +400,23 @@ package body Test_Leading_Terms is
     cA : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
     cX,cZ : Standard_Complex_Matrices.Matrix(1..dim,1..nbr);
     cB : Standard_Complex_Matrices.Matrix(1..dim,1..prd);
-    vB,ry,rX,rz : Standard_Floating_Vectors.Vector(1..dim);
-    cy,vX : Standard_Complex_Vectors.Vector(1..dim);
-    m : Standard_Integer_VecVecs.VecVec(0..dim);
-    idx1,idx2,correct : Standard_Integer_Vectors.Vector(1..dim);
-    next : Boolean_Vectors.Vector(1..dim) := (1..dim => false);
-    fail,done : boolean;
     tol : constant double_float := 1.0E-12;
-    nbrcols : integer32;
+    ans : character;
+    vrb : integer32 := 0;
 
   begin
+    new_line;
+    put("Extra comparisons during all steps ? (y/n) ");
+    Communications_with_User.Ask_Yes_or_No(ans);
     put_line("-> generating random data ...");
     Random_Series_System(dim,nbr,eA,eX,eB,cA,cX,cB,true);
-    for i in m'range loop
-      m(i) := new Standard_Integer_Vectors.Vector'(1..dim => 0);
-    end loop;
-    correct := (1..dim => 0); -- indices in X that are correct
-    for step in 1..prd loop
-      put("*** running step "); put(step,1); put_line(" ***");
-      for i in 1..dim loop
-        vB(i) := eB(i,eB'first(2));
-        if correct(i) < eX'last(2) then
-          rX(i) := eX(i,correct(i)+1);
-          vX(i) := cX(i,correct(i)+1);
-        else
-          rX(i) := 1.0E+99;
-        end if;
-      end loop;
-      put_line("-> computing the tropical Cramer vector ...");
-      Double_Puiseux_Operations.Leading_Powers
-        (dim,tol,eA,vB,m,rY,idx1,idx2,fail,2);
-      Double_Puiseux_Operations.Check_Correctness
-        (dim,tol,rX,rY,idx1,idx2,next,rz,1);
-      Next_Series_Coefficients(cy,cA,cB,idx1,next,correct,vX,cZ);
-      for i in next'range loop
-        if next(i)
-         then eZ(i,correct(i)) := rY(i);
-        end if;
-      end loop;
-      put("correct indices :"); put(correct); new_line;
-      done := true;
-      for i in next'range loop
-        done := done and (correct(i) = eX'last(2));
-      end loop;
-      if done then
-        put("At step "); put(step,1);
-        put_line(", all values are correct, done!"); exit;
-      end if;
-      next := (1..dim => false);
-      Double_Puiseux_Operations.series_product
-        (eA,eX,cA,cX,correct,eB,cB,nbrcols);
-    end loop;
+    if ans = 'y' then
+      Test_Series_Solver(dim,nbr,tol,eA,eB,cA,cB,eX,cX,eZ,cZ);
+    else
+      put("Verbose level ? (0 is silent) : "); get(vrb);
+      Double_Puiseux_Operations.series_solver
+        (dim,nbr,tol,eA,eB,cA,cB,eZ,cZ,vrb);
+    end if;
     put_line("-> checking final powers :");
     Power_Check(tol,eX,eZ);
     put_line("-> checking final coefficients :");

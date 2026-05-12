@@ -1,3 +1,6 @@
+Mon 11 May 2026 : refactored test_leading_terms for the computation
+  of series solution, extending double_puiseux_operations.
+
 Sun 10 May 2026 : more refactoring from test_leading terms code into
   double_puiseux_operations for the lead solution term of a linear system.
   Bug fixed in double_puiseux_operations when verbose level is zero,

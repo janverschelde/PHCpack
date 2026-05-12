@@ -212,6 +212,33 @@ package Double_Puiseux_Operations is
   -- ON RETURN :
   --   cy       updated vector of coefficients.
 
+  procedure Next_Series_Coefficients
+              ( cy : in out Standard_Complex_Vectors.Vector;
+                cA,cB : in Standard_Complex_Matrices.Matrix;
+                idx1,Bidx : in Standard_Integer_Vectors.Vector;
+                next : in Boolean_Vectors.Vector;
+                correct : in out Standard_Integer_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Computes the next coefficients of the power series.
+
+  -- ON ENTRY :
+  --   cy       current values of the leading coefficients;
+  --   cA       coefficients of the matrix of the linear system;
+  --   cB       coefficients of the right hand side of the system;
+  --   idx1     first set of indices of the tropical Cramer vector;
+  --   Bidx     Bidx(i) is the column index in the right hand size
+  --            for the i-th row;
+  --   next     current set of correct indices;
+  --   correct  correct(i) indicates the number of correct values
+  --            in the series cX*[t^X];
+  --   vrblvl   is the verbose level, silent if zero.
+
+  -- ON RETURN :
+  --   correct  updated indices of correct values;
+  --   cy       updated vector of coefficients.
+
   function Leading_Right_Power
              ( rB : Standard_Floating_Matrices.Matrix; rowidx : integer32;
                skipcols : Boolean_Vectors.Vector;
@@ -286,5 +313,36 @@ package Double_Puiseux_Operations is
   -- ON RETURN :
   --   ry       leading powers of the solution vector;
   --   cy       leading coefficients of the solution vector.
+
+  procedure Series_Solver
+              ( dim,nbr : in integer32; tol : in double_float;
+                rA,rB : in Standard_Floating_Matrices.Matrix;
+                cA,cB : in Standard_Complex_Matrices.Matrix;
+                rY : out Standard_Floating_Matrices.Matrix;
+                cY : out Standard_Complex_Matrices.Matrix;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Compute the first nbr terms of a dim-dimensional series vector,
+  --   solving a linear system with real-powered series coefficients.
+
+  -- REQUIRED : rB'range = 1..dim*nbr = cB'range,
+  --   (rB, cB) stores the product of the coefficient matrix (rA, cA)
+  --   with the solution series (rX, cX), and moreover: the rows
+  --   of rB (with their corresponding cB) are in increasing order.
+
+  -- ON ENTRY :
+  --   dim      dimension of the linear system;
+  --   nbr      number of terms in each component of the solution;
+  --   tol      tolerance to decide if zero or not;
+  --   rA       leading exponents of the coefficient matrix;
+  --   rB       exponents of the right-hand side;
+  --   cA       leading coefficients of the coefficient matrix;
+  --   cB       coefficients of the right-hand side;
+  --   vrblvl   is the verbose level, silent if zero.
+
+  -- ON RETURN :
+  --   rY       computed exponents of the solution vector.
+  --   cY       computed coefficients of the solution vector.
 
 end Double_Puiseux_Operations;

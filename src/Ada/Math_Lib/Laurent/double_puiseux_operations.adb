@@ -315,6 +315,38 @@ package body Double_Puiseux_Operations is
     end loop;
   end Next_Coefficients;
 
+  procedure Next_Series_Coefficients
+              ( cy : in out Standard_Complex_Vectors.Vector;
+                cA,cB : in Standard_Complex_Matrices.Matrix;
+                idx1,Bidx : in Standard_Integer_Vectors.Vector;
+                next : in Boolean_Vectors.Vector;
+                correct : in out Standard_Integer_Vectors.Vector;
+                vrblvl : in integer32 := 0 ) is
+
+    rowidx : integer32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Puiseux_Operations.");
+      put_line("next_series_coefficients ...");
+    end if;
+    for i in next'range loop
+      if next(i) then -- found new correct power
+        rowidx := 0;
+        for j in idx1'range loop -- look for row index
+          if idx1(j) = i
+           then rowidx := j; exit;
+          end if;
+        end loop;
+        cy(i) := cB(rowidx,Bidx(i))/cA(rowidx,i);
+        if vrblvl > 0 
+         then put("cy("); put(i,1); put(") : "); put(cy(i)); new_line;
+        end if;
+        correct(i) := correct(i) + 1;
+      end if;
+    end loop;
+  end Next_Series_Coefficients;
+
   function Leading_Right_Power
              ( rB : Standard_Floating_Matrices.Matrix; rowidx : integer32;
                skipcols : Boolean_Vectors.Vector; vrblvl : integer32 := 0 )
@@ -458,6 +490,98 @@ package body Double_Puiseux_Operations is
       exit when done;
       prev := next; -- for the next round
     end loop;
+    Standard_Integer_VecVecs.clear(wrkcrm);
   end Leading_Solver;
+
+  procedure Series_Solver
+              ( dim,nbr : in integer32; tol : in double_float;
+                rA,rB : in Standard_Floating_Matrices.Matrix;
+                cA,cB : in Standard_Complex_Matrices.Matrix;
+                rY : out Standard_Floating_Matrices.Matrix;
+                cY : out Standard_Complex_Matrices.Matrix;
+                vrblvl : in integer32 := 0 ) is
+
+    prd : constant integer32 := dim*nbr;
+    wrkcrm : Standard_Integer_VecVecs.VecVec(0..dim);
+    vB,dY,vY : Standard_Floating_Vectors.Vector(1..dim);
+    wY : Standard_Complex_Vectors.Vector(1..dim);
+    idx1,idx2,correct,rightidx : Standard_Integer_Vectors.Vector(1..dim);
+    next : Boolean_Vectors.Vector(1..dim) := (1..dim => false);
+    fail,done : boolean;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in Double_Puiseux_Operations.series_solver ...");
+    end if;
+    for i in rY'range(1) loop
+      for j in rY'range(2) loop
+        rY(i,j) := 0.0;
+        cY(i,j) := create(0.0);
+      end loop;
+    end loop;
+    for i in wrkcrm'range loop
+      wrkcrm(i) := new Standard_Integer_Vectors.Vector'(1..dim => 0);
+    end loop;
+    correct := (1..dim => 0); -- indices in X that are correct
+    rightidx := (1..dim => 1); -- indices in right hand side
+    for step in 1..prd loop
+      if vrblvl > 0
+       then put("*** running step "); put(step,1); put_line(" ***");
+      end if;
+      for i in 1..dim loop
+        vB(i) := rB(i,rightidx(i));
+      end loop;
+      if vrblvl > 0
+       then put_line("-> computing the tropical Cramer vector ...");
+      end if;
+      Leading_Powers(dim,tol,rA,vB,wrkcrm,dY,idx1,idx2,fail,vrblvl-1);
+      Assign_Correctness(dim,dY,idx1,idx2,next,vY,vrblvl-1);
+      Next_Series_Coefficients(wY,cA,cB,idx1,rightidx,next,correct,vrblvl-1);
+      for i in next'range loop
+        if next(i) then
+          if correct(i) <= nbr then
+            rY(i,correct(i)) := vY(i);
+            cY(i,correct(i)) := wY(i);
+          end if;
+        end if;
+      end loop;
+      if vrblvl > 0
+       then put("correct indices :"); put(correct); new_line;
+      end if;
+      done := true;
+      for i in next'range loop
+        done := done and (correct(i) >= nbr);
+        exit when not done;
+      end loop;
+      if done then
+        if vrblvl > 0 then
+          put("At step "); put(step,1);
+          put_line(", all values are correct, done!");
+        end if;
+      end if;
+      exit when done;
+      for k in next'range loop
+        if next(k) then
+          for i in vB'range loop -- find which rows in B satisfied
+            declare
+              minsum : constant double_float := vY(k) + rA(i,k);
+            begin
+              if abs(minsum - vB(i)) < tol then
+                if vrblvl > 0
+                 then put("minsum at index "); put(i,1); new_line;
+                end if;
+                rightidx(i) := rightidx(i) + 1;
+              end if;
+            end;
+          end loop;
+        end if;
+      end loop;
+      if vrblvl > 0
+       then put("right indices :"); put(rightidx); new_line;
+      end if;
+      next := (1..dim => false);
+    end loop;
+    Standard_Integer_VecVecs.clear(wrkcrm);
+  end Series_Solver;
 
 end Double_Puiseux_Operations;
