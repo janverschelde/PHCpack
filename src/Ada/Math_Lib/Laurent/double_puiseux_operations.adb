@@ -493,6 +493,83 @@ package body Double_Puiseux_Operations is
     Standard_Integer_VecVecs.clear(wrkcrm);
   end Leading_Solver;
 
+  function Locate_Right_Power
+              ( B : Standard_Floating_Matrices.Matrix; x : double_float;
+                row,startcol : integer32; tol : double_float )
+              return integer32 is
+  begin
+    for col in startcol..B'last(2) loop
+      if abs(B(row,col) - x) < tol
+       then return col;
+      end if;
+    end loop;
+    return -1;
+  end Locate_Right_Power;
+
+  procedure Right_Index_Terms
+              ( rBidx : in out Standard_Integer_Vectors.Vector;
+                rA : in Standard_Floating_Matrices.Matrix;
+                rB : in out Standard_Floating_Matrices.Matrix;
+                cB : in out Standard_Complex_Matrices.Matrix;
+                vY : in Standard_Floating_Vectors.Vector;
+                next : in Boolean_Vectors.Vector; tol : in double_float;
+                vrblvl : in integer32 := 0 ) is
+
+    minsum,powtmp : double_float;
+    cfftmp : Complex_Number;
+    cnt,col : integer32 := 0;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in Double_Puiseux_Operations.");
+      put_line("right_index_terms ...");
+      put("right indices on entry :"); put(rBidx); new_line;
+    end if;
+    for k in next'range loop
+      if next(k)
+       then cnt := cnt + 1;
+      end if;
+    end loop;
+    if vrblvl > 0
+     then put("number of newly computed powers : "); put(cnt,1); new_line;
+    end if;
+    if cnt > 0 then
+      for k in next'range loop
+        if next(k) then
+          for i in rB'range(1) loop -- find which rows in B satisfied
+            minsum := rA(i,k) + vY(k);
+            col := Locate_Right_Power(rB,minsum,i,rBidx(i),tol);
+            if vrblvl > 0 then
+              put("minsum at row "); put(i,1);
+              put(" and column "); put(col,1);
+              if col = -1 then
+                put_line(" value not found!");
+              elsif col = rBidx(i) then
+                put_line(" no swap, okay");
+              else
+                put_line(" swap needed");
+              end if;
+            end if;
+            if col /= -1 then
+              if col /= rBidx(i) then -- swap          
+                powtmp := rB(i,rBidx(i));
+                rB(i,rBidx(i)) := rB(i,col); rB(i,col) := powtmp;
+                cfftmp := cB(i,rBidx(i));
+                cB(i,rBidx(i)) := cB(i,col); cB(i,col) := cfftmp;
+              end if;
+            end if;
+            if col /= -1 
+             then rBidx(i) := rBidx(i) + 1;
+            end if;
+          end loop;
+        end if;
+      end loop;
+    end if;
+    if vrblvl > 0
+     then put("right indices on return :"); put(rBidx); new_line;
+    end if;
+  end Right_Index_Terms;
+
   procedure Series_Solver
               ( dim,nbr : in integer32; tol : in double_float;
                 rA,rB : in Standard_Floating_Matrices.Matrix;
@@ -501,7 +578,8 @@ package body Double_Puiseux_Operations is
                 cY : out Standard_Complex_Matrices.Matrix;
                 vrblvl : in integer32 := 0 ) is
 
-    prd : constant integer32 := dim*nbr;
+    wrkrB : Standard_Floating_Matrices.Matrix(rB'range(1),rB'range(2)) := rB;
+    wrkcB : Standard_Complex_Matrices.Matrix(cB'range(1),cB'range(2)) := cB;
     wrkcrm : Standard_Integer_VecVecs.VecVec(0..dim);
     vB,dY,vY : Standard_Floating_Vectors.Vector(1..dim);
     wY : Standard_Complex_Vectors.Vector(1..dim);
@@ -522,21 +600,22 @@ package body Double_Puiseux_Operations is
     for i in wrkcrm'range loop
       wrkcrm(i) := new Standard_Integer_Vectors.Vector'(1..dim => 0);
     end loop;
-    correct := (1..dim => 0); -- indices in X that are correct
+    correct := (1..dim => 0);  -- indices in X that are correct
     rightidx := (1..dim => 1); -- indices in right hand side
-    for step in 1..prd loop
+    for step in 1..dim*nbr loop
       if vrblvl > 0
        then put("*** running step "); put(step,1); put_line(" ***");
       end if;
       for i in 1..dim loop
-        vB(i) := rB(i,rightidx(i));
+        vB(i) := wrkrB(i,rightidx(i));
       end loop;
       if vrblvl > 0
        then put_line("-> computing the tropical Cramer vector ...");
       end if;
       Leading_Powers(dim,tol,rA,vB,wrkcrm,dY,idx1,idx2,fail,vrblvl-1);
       Assign_Correctness(dim,dY,idx1,idx2,next,vY,vrblvl-1);
-      Next_Series_Coefficients(wY,cA,cB,idx1,rightidx,next,correct,vrblvl-1);
+      Next_Series_Coefficients
+        (wY,cA,wrkcB,idx1,rightidx,next,correct,vrblvl-1);
       for i in next'range loop
         if next(i) then
           if correct(i) <= nbr then
@@ -560,25 +639,7 @@ package body Double_Puiseux_Operations is
         end if;
       end if;
       exit when done;
-      for k in next'range loop
-        if next(k) then
-          for i in vB'range loop -- find which rows in B satisfied
-            declare
-              minsum : constant double_float := vY(k) + rA(i,k);
-            begin
-              if abs(minsum - vB(i)) < tol then
-                if vrblvl > 0
-                 then put("minsum at index "); put(i,1); new_line;
-                end if;
-                rightidx(i) := rightidx(i) + 1;
-              end if;
-            end;
-          end loop;
-        end if;
-      end loop;
-      if vrblvl > 0
-       then put("right indices :"); put(rightidx); new_line;
-      end if;
+      Right_Index_Terms(rightidx,rA,wrkrB,wrkcB,vY,next,tol,vrblvl-1);
       next := (1..dim => false);
     end loop;
     Standard_Integer_VecVecs.clear(wrkcrm);

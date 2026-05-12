@@ -1,3 +1,6 @@
+Tue 12 May 2026 : updates in double_puiseux_operations to set the
+  indices to the right hand side terms right.
+
 Mon 11 May 2026 : refactored test_leading_terms for the computation
   of series solution, extending double_puiseux_operations.
 

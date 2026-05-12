@@ -314,6 +314,30 @@ package Double_Puiseux_Operations is
   --   ry       leading powers of the solution vector;
   --   cy       leading coefficients of the solution vector.
 
+  procedure Right_Index_Terms
+              ( rBidx : in out Standard_Integer_Vectors.Vector;
+                rA : in Standard_Floating_Matrices.Matrix;
+                rB : in out Standard_Floating_Matrices.Matrix;
+                cB : in out Standard_Complex_Matrices.Matrix;
+                vY : in Standard_Floating_Vectors.Vector;
+                next : in Boolean_Vectors.Vector; tol : in double_float;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Updates the indices in the exponents of the right hand side,
+  --   based on new computed exponents of the solution.
+  --   Swaps the elements in rB and cB if the minima are not at
+  --   the proper positions.
+
+  function Locate_Right_Power
+              ( B : Standard_Floating_Matrices.Matrix; x : double_float;
+                row,startcol : integer32; tol : double_float )
+              return integer32;
+ 
+  -- DESCRIPTION :
+  --   Returns the index of the element x on the given row of B,
+  --   starting the search at the column startcol.
+
   procedure Series_Solver
               ( dim,nbr : in integer32; tol : in double_float;
                 rA,rB : in Standard_Floating_Matrices.Matrix;
