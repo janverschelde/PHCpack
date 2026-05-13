@@ -544,18 +544,26 @@ package body Double_Puiseux_Operations is
               put(" and column "); put(col,1);
               if col = -1 then
                 put_line(" value not found!");
+                put_line("the matrix rB :"); put(rB);
+                put("minsum :"); put(minsum); new_line;
               elsif col = rBidx(i) then
-                put_line(" no swap, okay");
+                put_line(" no shift, okay");
               else
-                put_line(" swap needed");
+                put_line(" shift needed");
               end if;
             end if;
             if col /= -1 then
-              if col /= rBidx(i) then -- swap          
-                powtmp := rB(i,rBidx(i));
-                rB(i,rBidx(i)) := rB(i,col); rB(i,col) := powtmp;
-                cfftmp := cB(i,rBidx(i));
-                cB(i,rBidx(i)) := cB(i,col); cB(i,col) := cfftmp;
+              if col /= rBidx(i) then -- shift
+                powtmp := rB(i,col);
+                for j in reverse rBidx(i)..col-1 loop -- shift
+                  rB(i,j+1) := rB(i,j);
+                end loop;
+                rB(i,rBidx(i)) := powtmp;
+                cfftmp := cB(i,col);
+                for j in reverse rBidx(i)..col-1 loop -- shift
+                  cB(i,j+1) := cB(i,j);
+                end loop;
+                cB(i,rBidx(i)) := cfftmp;
               end if;
             end if;
             if col /= -1 
