@@ -1,3 +1,6 @@
+Thu 14 May 2026 : extended double_puiseux_{structures, interface) with
+  operations to interface to the linear series system solver.
+
 Thu 30 Apr 2026 : new package double_puiseux_structures with code taken
   from double_puiseux_interface.adb.  Updated double_puiseux_interface.adb
   and double_puiseux_structures.ads for a name change, and fixed errors 

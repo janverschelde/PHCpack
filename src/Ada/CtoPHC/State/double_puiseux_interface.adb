@@ -10,20 +10,80 @@ with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
 with Standard_Floating_Vectors_IO;
 with Standard_Floating_VecVecs;
+with Standard_Floating_Matrices;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_IO;       use Standard_Complex_Vectors_IO;
 with Standard_Complex_VecVecs;
+with Standard_Complex_Matrices;
 with Standard_Complex_Laur_Systems;
 with Double_Newton_Puiseux;
 with Assignments_in_Ada_and_C;
 with Standard_LaurSys_Container;
 with Real_Powered_Homotopy;
 with Double_Puiseux_Structures;
+with Double_Puiseux_Operations;
 
 package body Double_Puiseux_Interface is
 
   powers : Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
   coeffs : Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
+
+  procedure Run_Linear_Solver
+              ( dim,nbr : in integer32; c : in C_dblarrs.Pointer;
+                vrblvl : in integer32 := 0 ) is
+
+    prd : constant integer32 := dim*nbr;
+    outsize : constant integer32 := 2*dim + 3*prd;
+    result : Standard_Floating_Vectors.Vector(1..outsize)
+           := (1..outsize => 0.0);
+    A,cA : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    b,x : Standard_Complex_Vectors.Vector(1..dim);
+    rA : Standard_Floating_Matrices.Matrix(1..dim,1..dim);
+    rB : Standard_Floating_Matrices.Matrix(1..dim,1..prd);
+    cB : Standard_Complex_Matrices.Matrix(1..dim,1..prd);
+    rX : Standard_Floating_Matrices.Matrix(1..dim,1..nbr);
+    cX : Standard_Complex_Matrices.Matrix(1..dim,1..nbr);
+    rcond : double_float;
+    tol : constant double_float := 1.0E-12;
+    idx : integer32 := 0;
+
+  begin
+    if vrblvl > 0 then
+      put_line("-> in double_puiseux_interface.Run_Linear_Solver ...");
+      put("dimension : "); put(dim,1);
+      put(", number of terms : "); put(nbr,1); new_line;
+    end if;
+    double_puiseux_structures.Extract_Linear_Data
+      (powers,coeffs,A,b,rA,rB,cA,cB,vrblvl-1);
+    double_puiseux_operations.Solve_Constant_Linear_System
+      (A,b,x,rcond,vrblvl-1);
+    double_puiseux_operations.Series_Solver
+      (dim,nbr,tol,rA,rB,cA,cB,rX,cX,vrblvl-1);
+    if vrblvl > 0
+     then put_line("Run_Linear_Solver serializes the solution series ...");
+    end if;
+    for i in 1..dim loop
+      idx := idx + 1; result(idx) := REAL_PART(x(i));
+      idx := idx + 1; result(idx) := IMAG_PART(x(i));
+      for j in 1..nbr loop
+        idx := idx + 1; result(idx) := REAL_PART(cX(i,j));
+        idx := idx + 1; result(idx) := IMAG_PART(cX(i,j));
+        idx := idx + 1; result(idx) := rX(i,j);
+      end loop;
+    end loop;
+    if vrblvl > 0 then
+      put("outsize : "); put(outsize,1);
+      put(", idx : "); put(idx,1); put_line(" assigning data vector ...");
+    end if;
+    Assignments_in_Ada_and_C.Assign(result,c);
+  exception
+    when others =>
+      if vrblvl > 0 then
+        put("Exception raised in double_puiseux_interface.");
+        put_line("Run_Linear_Solver.");
+      end if;
+      raise;
+  end Run_Linear_Solver;
 
   function Linear_Solver
              ( a : C_intarrs.Pointer;
@@ -40,8 +100,11 @@ package body Double_Puiseux_Interface is
     begin
       if vrblvl > 0 then
         put("  nbr : "); put(nbr,1); put_line(" ...");
-        Double_Puiseux_Structures.Show_Data(vrblvl);
+       -- Double_Puiseux_Structures.Show_Data(vrblvl);
+       -- commented out, output done by indexing_series if vrblvl > 0
       end if;
+      Double_Puiseux_Structures.Indexing_Series(powers,coeffs,vrblvl);
+      Run_Linear_Solver(powers'last,nbr,c,vrblvl);
     end;
     return 0;
   exception
@@ -50,7 +113,7 @@ package body Double_Puiseux_Interface is
         put("Exception raised in double_puiseux_interface.");
         put_line("Linear_Solver.");
       end if;
-      return -1;
+      return 944;
   end Linear_Solver;
 
   function Extract_Solution_Constants
@@ -223,8 +286,9 @@ package body Double_Puiseux_Interface is
     when others =>
       if vrblvl > 0 then
         put("Exception raised in double_puiseux_interface.");
-        put_line("Run_Newton_Steps."); raise;
+        put_line("Run_Newton_Steps.");
       end if;
+      raise;
   end Run_Newton_Steps;
 
   function Newton_Steps
@@ -254,7 +318,7 @@ package body Double_Puiseux_Interface is
         put("Exception raised in double_puiseux_interface.");
         put_line("Newton_Steps.");
       end if;
-      return -1;
+      return 945;
   end Newton_Steps;
 
 end Double_Puiseux_Interface;

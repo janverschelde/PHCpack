@@ -5,6 +5,9 @@ with Standard_Floating_Numbers_IO;      use Standard_Floating_Numbers_IO;
 with Standard_Complex_Numbers_IO;       use Standard_Complex_Numbers_IO;
 with Standard_Integer_Vectors_IO;
 with Standard_Integer_VecVecs_IO;
+with Standard_Complex_Vectors_IO;       use Standard_Complex_Vectors_IO;
+with Standard_Floating_Matrices_IO;     use Standard_Floating_Matrices_IO;
+with Standard_Complex_Matrices_IO;      use Standard_Complex_Matrices_IO;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with Standard_LaurSys_Container;
 with Double_VecVecs_Container;
@@ -14,8 +17,8 @@ with Real_Powered_Homotopy_IO;
 package body Double_Puiseux_Structures is
 
   procedure Indexing_Series 
-              ( powers : out Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
-                coeffs : out Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
+              ( pwrs : out Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
+                cffs : out Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
                 vrblvl : in integer32 := 0) is
 
     p : constant Standard_Complex_Laur_Systems.Link_to_Laur_Sys
@@ -64,8 +67,8 @@ package body Double_Puiseux_Structures is
           acv(i) := new Standard_Complex_VecVecs.VecVec'(acvi);
         end;
       end loop;
-      powers := new Standard_Floating_VecVecs.Array_of_VecVecs'(afv);
-      coeffs := new Standard_Complex_VecVecs.Array_of_VecVecs'(acv);
+      pwrs := new Standard_Floating_VecVecs.Array_of_VecVecs'(afv);
+      cffs := new Standard_Complex_VecVecs.Array_of_VecVecs'(acv);
     end;
     if p = null then
       put_line("The Laurent system is not defined!");
@@ -74,7 +77,7 @@ package body Double_Puiseux_Structures is
     end if;
     if vrblvl > 0 then
       Real_Powered_Homotopy_IO.put_line
-        (p'last,p'last,pwr(pwr'first)'last,p.all,coeffs.all,powers.all,
+        (p'last,p'last,pwr(pwr'first)'last,p.all,cffs.all,pwrs.all,
          vrblvl=>vrblvl-1);
     end if;
   end Indexing_Series;
@@ -102,6 +105,48 @@ package body Double_Puiseux_Structures is
       (p'last,p'last,pwr(pwr'first)'last,p.all,cff.all,pwr.all,
        vrblvl=>vrblvl-1);
   end Show_Data;
+
+  procedure Extract_Linear_Data
+              ( pwrs : in Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
+                cffs : in Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
+                A : out Standard_Complex_Matrices.Matrix;
+                b : out Standard_Complex_Vectors.Vector;
+                rA,rB : out Standard_Floating_Matrices.Matrix;
+                cA,cB : out Standard_Complex_Matrices.Matrix;
+                vrblvl : in integer32 := 0 ) is
+
+    dim : constant integer32 := b'last;
+    kpwrs : Standard_Floating_VecVecs.Link_to_VecVec;
+    kcffs : Standard_Complex_VecVecs.Link_to_VecVec;
+    ikpwrs : Standard_Floating_Vectors.Link_to_Vector;
+    ikcffs : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in double_puiseux_structures.Extract_Linear_Data ...");
+    end if;
+    for k in pwrs'range loop
+      kpwrs := pwrs(k); kcffs := cffs(k);
+      for i in 1..dim loop
+        ikcffs := kcffs(i); A(k,i) := ikcffs(0);
+        ikpwrs := kpwrs(i); rA(k,i) := ikpwrs(1); cA(k,i) := ikcffs(1);
+      end loop;
+      ikcffs := kcffs(dim+1); -- constants are last in a polynomial
+      b(k) := ikcffs(0);
+      ikpwrs := kpwrs(dim+1);
+      for i in rB'range loop
+        rB(k,i) := ikpwrs(i); cB(k,i) := ikcffs(i);
+      end loop;
+    end loop;
+    if vrblvl > 0 then
+      put_line("constant coefficient matrix :"); put(A);
+      put_line("constant right hand side :"); put_line(b);
+      put_line("leading powers of the matrix :"); put(rA);
+      put_line("leading coefficients of the matrix :"); put(cA);
+      put_line("powers of the right hand side :"); put(rB);
+      put_line("coefficients of the right hand side :"); put(cB);
+    end if;
+  end Extract_Linear_Data;
 
   function Is_Zero ( v : Standard_Integer_Vectors.Link_to_Vector )
                    return boolean is

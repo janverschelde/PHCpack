@@ -4,8 +4,10 @@ with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
+with Standard_Floating_Matrices;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
+with Standard_Complex_Matrices;
 with Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems;
 
@@ -20,14 +22,15 @@ package Double_Puiseux_Structures is
 --   used by the Newton steps procedures.
 
   procedure Indexing_Series 
-              ( powers : out Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
-                coeffs : out Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
+              ( pwrs : out Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
+                cffs : out Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
                 vrblvl : in integer32 := 0);
 
   -- DESCRIPTION :
   --   Copies the arrays of vectors of vectors stored in the containers
-  --   into powers and coefficients, adjusting the start of the indices
-  --   of the coefficient vectors and shifting the powers.
+  --   into powers pwrs and coefficients cffs, adjusting the start of the
+  --   indices of the coefficient vectors (to start at the index zero)
+  --   and shifting the powers accordingly.
 
   procedure Show_Data ( vrblvl : in integer32 := 0);
 
@@ -35,6 +38,40 @@ package Double_Puiseux_Structures is
   --   Retrieves the Laurent polynomial system and the corresponding
   --   coefficients of the series coefficients and the arrays of vectors.
   --   Writes the series system to screen as a test.
+
+  procedure Extract_Linear_Data
+              ( pwrs : in Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
+                cffs : in Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
+                A : out Standard_Complex_Matrices.Matrix;
+                b : out Standard_Complex_Vectors.Vector;
+                rA,rB : out Standard_Floating_Matrices.Matrix;
+                cA,cB : out Standard_Complex_Matrices.Matrix;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Given the indexed powers and coefficients of a lineary system,
+  --   extracts the leading constants, the leading terms of the matrix,
+  --   and the terms of the right hand side.
+
+  -- REQUIRED :
+  --   The corresponding k-th polynomial has the form x1 + x2 + .. + xn + 1,
+  --   that is: the i-th series coefficients of the i-th monomial in the
+  --   k-th polynomial is stored in (pwrs(k)(i), cffs(k)(i)).
+
+  -- ON ENTRY :
+  --   pwrs     pwrs(k) contains the powers of the series coefficients
+  --            of the monomials of the k-th polynomial;
+  --   cffs     cffs(k) contains the coefficients of the series coefficients
+  --            of the monomials of the k-th polynomial;
+  --   vrblvl   is the verbose level, silent if equal to zero.
+
+  -- ON RETURN :
+  --   A        constant coefficients of the linear system;
+  --   b        constant right hand side coefficients of linear system;
+  --   rA       leading powers of the coefficient matrix;
+  --   cA       leading coefficients of the coefficient matrix;
+  --   rB       powers of the right hand side of the linear system;
+  --   cB       coefficients of the right hand side of the linear system.
 
   function Is_Zero ( v : Standard_Integer_Vectors.Link_to_Vector )
                    return boolean;

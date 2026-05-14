@@ -12,6 +12,16 @@ package Double_Puiseux_Interface is
 --   and that there is a corresponding Laurent system in the container for
 --   Laurent systems in double precision.
 
+  procedure Run_Linear_Solver
+              ( dim,nbr : in integer32; c : in C_dblarrs.Pointer;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Computes the first nbr terms of the solution of a linear system
+  --   of real powered series, of dimension dim, after the powers and
+  --   the coefficients of the input system are extracted.
+  --   The coefficients of the solution series are returned in c.
+
   function Linear_Solver
              ( a : C_intarrs.Pointer;
                c : C_dblarrs.Pointer;
