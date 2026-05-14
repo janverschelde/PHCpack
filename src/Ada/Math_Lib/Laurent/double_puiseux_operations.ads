@@ -11,6 +11,21 @@ with Standard_Complex_Matrices;
 
 package Double_Puiseux_Operations is
 
+-- DESCRIPTION :
+--   Given a generic linear system A(t)*x(t) = B(t),
+--   where A(t) and B(t) are matrices of real powered series,
+--   the operations in this package compute the series solution x(t).
+
+  procedure Solve_Constant_Linear_System
+              ( A : in Standard_Complex_Matrices.Matrix;
+                b : in Standard_Complex_Vectors.Vector;
+                x : out Standard_Complex_Vectors.Vector;
+                rcond : out double_float; vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Applies the lufco and lusolve on the linear system of constants
+  --   defined by A*x = b.  If vrblvl > 0, the rcond is written.
+
   procedure Sort ( B : in out Standard_Floating_Matrices.Matrix;
                    cB : in out Standard_Complex_Matrices.Matrix;
                    nbrcols : in integer32 );

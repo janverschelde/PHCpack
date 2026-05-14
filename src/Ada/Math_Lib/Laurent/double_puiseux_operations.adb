@@ -5,9 +5,32 @@ with Standard_Complex_Numbers_IO;       use Standard_Complex_Numbers_IO;
 with Standard_Integer_Vectors_IO;       use Standard_Integer_Vectors_IO;
 with Standard_Floating_Vectors_IO;      use Standard_Floating_Vectors_IO;
 with Standard_Floating_Matrices_IO;     use Standard_Floating_Matrices_IO;
+with Standard_Complex_Linear_Solvers;
 with Double_Weighted_Assignment;
 
 package body Double_Puiseux_Operations is
+
+  procedure Solve_Constant_Linear_System
+              ( A : in Standard_Complex_Matrices.Matrix;
+                b : in Standard_Complex_Vectors.Vector;
+                x : out Standard_Complex_Vectors.Vector;
+                rcond : out double_float; vrblvl : in integer32 := 0 ) is
+
+    n : constant integer32 := b'last;
+    ipvt : Standard_Integer_Vectors.Vector(1..n);
+    wrkA : Standard_Complex_Matrices.Matrix(A'range(1),A'range(2)) := A;
+
+  begin
+    if vrblvl > 0 then
+      put_line("-> in double_puiseux_interface.Constant_Linear_Solver ...");
+    end if;
+    Standard_Complex_Linear_Solvers.lufco(wrkA,n,ipvt,rcond);
+    if vrblvl > 0
+     then put("rcond :"); put(rcond,3); new_line;
+    end if;
+    x := b;
+    Standard_Complex_Linear_Solvers.lusolve(wrkA,n,ipvt,x);
+  end Solve_Constant_Linear_System;
 
   procedure Sort ( B : in out Standard_Floating_Matrices.Matrix;
                    cB : in out Standard_Complex_Matrices.Matrix;
