@@ -22,7 +22,7 @@ package body Double_Puiseux_Operations is
 
   begin
     if vrblvl > 0 then
-      put_line("-> in double_puiseux_interface.Constant_Linear_Solver ...");
+      put_line("-> in double_puiseux_operations.Constant_Linear_Solver ...");
     end if;
     Standard_Complex_Linear_Solvers.lufco(wrkA,n,ipvt,rcond);
     if vrblvl > 0
