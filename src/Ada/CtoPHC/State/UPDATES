@@ -1,3 +1,6 @@
+Fri 15 May 2026 : updated double_puiseux_structures.adb, skipping those
+  powers in the right hand side which occur on the rows of the matrix.
+
 Thu 14 May 2026 : extended double_puiseux_{structures, interface) with
   operations to interface to the linear series system solver.
 

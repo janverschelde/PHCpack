@@ -106,6 +106,23 @@ package body Double_Puiseux_Structures is
        vrblvl=>vrblvl-1);
   end Show_Data;
 
+  function Is_In_Row ( A : Standard_Floating_Matrices.Matrix;
+                       rowidx : integer32; x : double_float;
+                       tol : double_float := 1.0E-12 ) return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if x is on the row with index rowidx of A,
+  --   within the given tolerance.
+
+  begin
+    for k in A'range(2) loop
+      if abs(A(rowidx,k) - x) < tol
+       then return true;
+      end if;
+    end loop;
+    return false;
+  end Is_In_Row;
+
   procedure Extract_Linear_Data
               ( pwrs : in Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
                 cffs : in Standard_Complex_VecVecs.Link_to_Array_of_VecVecs;
@@ -120,6 +137,8 @@ package body Double_Puiseux_Structures is
     kcffs : Standard_Complex_VecVecs.Link_to_VecVec;
     ikpwrs : Standard_Floating_Vectors.Link_to_Vector;
     ikcffs : Standard_Complex_Vectors.Link_to_Vector;
+    idx : integer32;
+    power : double_float;
 
   begin
     if vrblvl > 0
@@ -134,9 +153,22 @@ package body Double_Puiseux_Structures is
       ikcffs := kcffs(dim+1); -- constants are last in a polynomial
       b(k) := ikcffs(0);
       ikpwrs := kpwrs(dim+1);
-      for i in rB'range loop
-        rB(k,i) := ikpwrs(i); cB(k,i) := ikcffs(i);
+      idx := 0;
+      for i in ikpwrs'range loop
+        power := ikpwrs(i);
+        if not Is_In_Row(rA,k,power) then -- skip powers in rA
+          idx := idx + 1;
+          rB(k,idx) := power;
+          cB(k,idx) := ikcffs(i);
+        end if;
+        exit when (idx >= rB'last(2));
       end loop;
+      if idx < rB'last(2) then
+        for j in idx+1..rB'last(2) loop -- fill up rB with huge powers
+          rB(k,j) := 1.0E+99;
+          cB(k,j) := create(0.0);
+        end loop;
+      end if;
     end loop;
     if vrblvl > 0 then
       put_line("constant coefficient matrix :"); put(A);

@@ -242,7 +242,7 @@ def get_series_term(adx, vdx, vrblvl=0):
         cffs.append(cff)
     return (pwrs, cffs)
 
-def solve_linear_system(nbr, vrblvl=0):
+def solve_linear_system(dim, nbr, vrblvl=0):
     """
     Computes the first nbr terms of the solution series of
     a linear system defined by real powered series set in
@@ -250,17 +250,22 @@ def solve_linear_system(nbr, vrblvl=0):
     system of Laurent polynomials, in double precision.
     """
     if vrblvl > 0:
-        print('in laurent.solve_linear_system, nbr :', nbr)
+        print('in laurent.solve_linear_system, dim :', dim, ', nbr :', nbr)
     phc = get_phcfun(vrblvl-1)
     anbr = pointer(c_int32(nbr))
     bbb = pointer(c_int32(0))
-    ccc = pointer(c_double(0.0))
+    outsize = 2*dim + 3*dim*nbr
+    outval = (c_double * outsize)()
+    result = pointer(outval)
     vrb = c_int32(vrblvl-1)
     if vrblvl > 0:
         print('-> solve_linear_system calls phc', end='')
-    retval = phc(944, anbr, bbb, ccc, vrb)
+    retval = phc(944, anbr, bbb, result, vrb)
+    resvals = result[:outsize]
+    resnbrs = [float(val[0]) for val in resvals]
     if vrblvl > 0:
         print(', return value :', retval)
+        print('the result :\n', resnbrs)
     return retval
 
 def split_powers_coefficients(dim, numbers, vrblvl=0):
@@ -1341,11 +1346,12 @@ def test_linear_solver(dim, deg, vrblvl=0):
     with real powered series truncated at index deg.
     """
     if vrblvl > 0:
-        print('in laurent.test_linear_system, dim :', dim, '...')
+        print('in laurent.test_linear_solver, dim :', end=', ')
+        print('deg :', deg, '...')
     fail = random_linear_system(dim, deg, vrblvl)
     if fail != 0:
         print(fail, 'failures occurred in defining the linear system!')
-    res = solve_linear_system(3, vrblvl)
+    res = solve_linear_system(dim, deg, vrblvl)
     return res
 
 def check_residuals(lauhom, pwrs, cffs, vrblvl=0):
