@@ -262,7 +262,7 @@ def solve_linear_system(dim, nbr, vrblvl=0):
         print('-> solve_linear_system calls phc', end='')
     retval = phc(944, anbr, bbb, result, vrb)
     resvals = result[:outsize]
-    resnbrs = [float(val[0]) for val in resvals]
+    resnbrs = [float(resvals[0][i]) for i in range(outsize)]
     if vrblvl > 0:
         print(', return value :', retval)
         print('the result :\n', resnbrs)
@@ -463,10 +463,11 @@ def random_real_powers(deg, vrblvl=0):
         result.append(lst + inc)
     return result
 
-def random_complex_coefficients(deg, vrblvl=0):
+def random_complex_coefficients(deg, zerocst=False, vrblvl=0):
     """
     Returns a list of range 0..deg,
     of random complex numbers on the unit circle.
+    If zerocst, then the first coefficient is zero.
     """
     if vrblvl > 0:
         print("in laurent.random_complex_coefficients ...")
@@ -477,20 +478,23 @@ def random_complex_coefficients(deg, vrblvl=0):
         angle = 2*pi*random()
         nbr = complex(sin(angle), cos(angle))
         result.append(nbr)
+    if zerocst:
+        result[0] = complex(0.0, 0.0)
     return result
 
-def random_real_powered_series(deg, vrblvl=0):
+def random_real_powered_series(deg, zerocst=False, vrblvl=0):
     """
     Returns a tuple of two random vectors
     to represent a real powered series with complex coefficients, 
     truncated at degree deg.
     The first tuple item is the vector of real exponents,
     the second tuple item are the complex coefficients.
+    If zerocst, then the first coefficient is zero.
     """
     if vrblvl > 0:
         print("in laurent.random_real_powered_series ...")
     return (random_real_powers(deg, vrblvl-1),
-            random_complex_coefficients(deg, vrblvl-1))
+            random_complex_coefficients(deg, zerocst, vrblvl-1))
 
 def to_rps_string(pwrs, cffs, tsb='t', vrblvl=0):
     """
@@ -559,7 +563,7 @@ def random_real_powered_polynomial\
         print('uppexp :', uppexp)
     pol = ''
     for tix in range(nbt):
-        (pwr, cff) = random_real_powered_series(deg, vrblvl-1)
+        (pwr, cff) = random_real_powered_series(deg, zerocst, vrblvl-1)
         if zerocst:
             cff[0] = complex(0.0, 0.0)
         strrep = to_rps_string(pwr, cff, vrblvl=vrblvl-1)
@@ -677,7 +681,7 @@ def test_additions(deg, vrblvl=0):
         for vdx in range(dim):
             if vrblvl > 0:
                 print('adding series', vdx+1, 'to array', adx+1, '...')
-            (pwr, cff) = random_real_powered_series(deg, vrblvl-1)
+            (pwr, cff) = random_real_powered_series(deg, vrblvl=vrblvl-1)
             fail = fail + set_series_term(adx+1, vdx+1, pwr, cff, vrblvl)
     return fail
 
@@ -818,31 +822,35 @@ def linear_laurent_system(dim, vrblvl=0):
         for pol in gpol:
             print(pol)
 
-def random_linear_matrix(dim, deg, vrblvl=0):
+def random_linear_matrix(dim, deg, zerocst=False, vrblvl=0):
     """
     Generates a dim-by-dim matrix of random real powered series,
     returned as a list of rows, where each element on the row
     is a tuple of two lists: the powers and coefficients,
     truncated at the term of index deg.
+    If zerocst, then the first coefficient is zero.
     """
     if vrblvl > 0:
         print('in laurent.random_linear_matrix, dim :', dim, end='')
         print(', deg :', deg, '...')
     res = []
     for idx in range(dim):
-        row = [random_real_powered_series(deg, vrblvl-1) for _ in range(dim)]
+        row = [random_real_powered_series(deg, zerocst, vrblvl-1) \
+           for _ in range(dim)]
         res.append(row)
     return res
 
-def random_series_vector(dim, deg, vrblvl=0):
+def random_series_vector(dim, deg, zerocst=False, vrblvl=0):
     """
     Generates a vector of size dim with powers and coefficients
     of a series truncated at term at index deg.
+    If zerocst, then the first coefficient is zero.
     """
     if vrblvl > 0:
         print('in laurent.random_linear_matrix, dim :', dim, end='')
         print(', deg :', deg, '...')
-    res = [random_real_powered_series(deg, vrblvl-1) for _ in range(dim)]
+    res = [random_real_powered_series(deg, zerocst, vrblvl-1) \
+        for _ in range(dim)]
     return res
 
 def sort_series_powers(pwr, cff, vrblvl=0):
@@ -881,13 +889,26 @@ def normalize_series_powers(pwr, cff, vrblvl=0):
             del cff[idx+1]
             del pwr[idx+1]
 
-def series_product(mat, vec, vrblvl=0):
+def is_zero(nbr, tol=1.0e-12):
+    """
+    Returns True if both the real and imaginary part of nbr
+    are less than tol in absolute value.
+    """
+    if abs(nbr.real) > tol:
+        return False
+    elif abs(nbr.imag) > tol:
+        return False;
+    else:
+        return True
+
+def series_product(mat, vec, tol=1.0e-12, vrblvl=0):
     """
     Given in mat a square matrix of real powered series
     and in vec a real powered series vector of compatible dimension,
     all series given as tuples of powers and coefficients,
     returns the vector of real powered series which is the product
     of the matrix with the vector.
+    Coefficients less than tol in absolute value are skipped.
     """
     if vrblvl > 0:
         print('in laurent.series_product ...')
@@ -901,9 +922,12 @@ def series_product(mat, vec, vrblvl=0):
             (vpwr, vcff) = vec[colidx]
             for adx in range(len(apwr)):
                 for vdx in range(len(vpwr)):
-                    respwr.append(apwr[adx] + vpwr[vdx])
-                    rescff.append(acff[adx] * vcff[vdx])
+                    if(not is_zero(acff[adx], tol) and \
+                       not is_zero(vcff[vdx], tol)):
+                        respwr.append(apwr[adx] + vpwr[vdx])
+                        rescff.append(acff[adx] * vcff[vdx])
         res.append((respwr, rescff))
+    sortedres = []
     for (pwr, cff) in res:
         if vrblvl > 0:
             print('-> before the sort ...')
@@ -915,13 +939,14 @@ def series_product(mat, vec, vrblvl=0):
             print('powers :', pwr)
             print('coeffs :', cff)
         normalize_series_powers(pwr, cff, vrblvl-1)
+        sortedres.append((pwr, cff))
         if vrblvl > 0:
             print('-> after normalizing ...')
             print('powers :', pwr)
             print('coeffs :', cff)
             print('len(pwr) =', len(pwr), '==', len(cff), end=' = ')
             print('len(cff) ?', len(pwr)==len(cff))
-    return res
+    return sortedres
 
 def random_linear_system(dim, deg, vrblvl=0):
     """
@@ -932,7 +957,7 @@ def random_linear_system(dim, deg, vrblvl=0):
     if vrblvl > 0:
         print('in laurent.random_linear_system, dim :', dim, '...')
     linear_laurent_system(dim, vrblvl)
-    mat = random_linear_matrix(dim, deg, vrblvl)
+    mat = random_linear_matrix(dim, deg, zerocst=True, vrblvl=vrblvl-1)
     if vrblvl > 0:
         print('the matrix :')
         for (idx, row) in enumerate(mat):
@@ -949,8 +974,12 @@ def random_linear_system(dim, deg, vrblvl=0):
         for (pwr, cff) in row:
             fail = fail + set_series_term(adx+1, vdx+1, pwr, cff, vrblvl-1)
             vdx = vdx + 1
-    sol = random_series_vector(dim, deg, vrblvl)
-    rhs = series_product(mat, sol, vrblvl)
+    sol = random_series_vector(dim, deg, zerocst=True, vrblvl=vrblvl-1)
+    if vrblvl > 0:
+        print('the solution series :', sol)
+    rhs = series_product(mat, sol, vrblvl=vrblvl-1)
+    if vrblvl > 0:
+        print('the right hand side :', rhs)
     for adx in range(len(mat)): 
         (pwr, cff) = rhs[adx]
         fail = fail + set_series_term(adx+1, dim+1, pwr, cff, vrblvl-1)
@@ -1376,7 +1405,7 @@ def test_newton_product(vrblvl=0):
     if vrblvl > 0:
         print("in laurent.test_newton_product ...")
     dim, deg = 2, 2
-    sol = random_series_vector(dim, 4, vrblvl-1)
+    sol = random_series_vector(dim, 4, vrblvl=vrblvl-1)
     if vrblvl > 0:
         print('the solution series :', sol)
     solcst = extract_solution_constant(sol, vrblvl)
@@ -1406,7 +1435,7 @@ def test_newton_binomial(vrblvl=0):
     if vrblvl > 0:
         print("in laurent.test_newton_binomial ...")
     dim, deg = 2, 2
-    sol = random_series_vector(dim, 1, vrblvl-1)
+    sol = random_series_vector(dim, 1, vrblvl=vrblvl-1)
     if vrblvl > 0:
         print('the solution series :', sol)
     solcst = extract_solution_constant(sol, vrblvl)
