@@ -55,8 +55,14 @@ package body Double_Puiseux_Interface is
     end if;
     double_puiseux_structures.Extract_Linear_Data
       (powers,coeffs,A,b,rA,rB,cA,cB,vrblvl-1);
-    double_puiseux_operations.Solve_Constant_Linear_System
-      (A,b,x,rcond,vrblvl-1);
+    if double_puiseux_structures.Is_Zero(A,tol) then
+      if vrblvl > 0
+       then put_line("The constant coefficient matrix is zero.");
+      end if;
+    else
+      double_puiseux_operations.Solve_Constant_Linear_System
+        (A,b,x,rcond,vrblvl-1);
+    end if;
     double_puiseux_operations.Series_Solver
       (dim,nbr,tol,rA,rB,cA,cB,rX,cX,vrblvl-1);
     if vrblvl > 0

@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
@@ -38,6 +39,13 @@ package Double_Puiseux_Structures is
   --   Retrieves the Laurent polynomial system and the corresponding
   --   coefficients of the series coefficients and the arrays of vectors.
   --   Writes the series system to screen as a test.
+
+  function Is_Zero ( A : Standard_Complex_Matrices.Matrix;
+                     tol : double_float ) return boolean;
+
+  -- DESCRIPTION :
+  --   Returns true if every element in A is less than tol
+  --   in absolute value, returns false otherwise.
 
   procedure Extract_Linear_Data
               ( pwrs : in Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;

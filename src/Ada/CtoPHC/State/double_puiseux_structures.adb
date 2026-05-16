@@ -1,6 +1,5 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_IO;      use Standard_Floating_Numbers_IO;
 with Standard_Complex_Numbers_IO;       use Standard_Complex_Numbers_IO;
 with Standard_Integer_Vectors_IO;
@@ -122,6 +121,19 @@ package body Double_Puiseux_Structures is
     end loop;
     return false;
   end Is_In_Row;
+
+  function Is_Zero ( A : Standard_Complex_Matrices.Matrix;
+                     tol : double_float ) return boolean is
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        if AbsVal(A(i,j)) > tol
+         then return false;
+        end if;
+      end loop;
+    end loop;
+    return true;
+  end Is_Zero;  
 
   procedure Extract_Linear_Data
               ( pwrs : in Standard_Floating_VecVecs.Link_to_Array_of_VecVecs;
