@@ -1,3 +1,6 @@
+Sun 17 May 2026 : inserted zero power and coefficients if absent in the
+  test on solving a linear system in laurent.py.
+
 Fri 15 May 2026 : updated solve_linear_system of the laurent module.
   Improved test on linear system series solver in laurent.py.
 

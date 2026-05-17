@@ -262,11 +262,20 @@ def solve_linear_system(dim, nbr, vrblvl=0):
         print('-> solve_linear_system calls phc', end='')
     retval = phc(944, anbr, bbb, result, vrb)
     resvals = result[:outsize]
-    resnbrs = [float(resvals[0][i]) for i in range(outsize)]
+    numbers = [float(resvals[0][i]) for i in range(outsize)]
     if vrblvl > 0:
         print(', return value :', retval)
-        print('the result :\n', resnbrs)
-    return retval
+        print('the result :\n', numbers)
+    pwrs, cffs = split_powers_coefficients(dim, numbers, vrblvl-1)
+    if vrblvl > 0:
+        print('coefficients :\n', cffs)
+        print('powers :\n', pwrs)
+    powers = distribute_powers(dim, pwrs, vrblvl-1)
+    coefficients = distribute_coefficients(dim, cffs, vrblvl-1)
+    if vrblvl > 0:
+        print('distributed powers :\n', powers)
+        print('distributed coefficients :\n', coefficients)
+    return retval, powers, coefficients
 
 def split_powers_coefficients(dim, numbers, vrblvl=0):
     """
@@ -929,6 +938,9 @@ def series_product(mat, vec, tol=1.0e-12, vrblvl=0):
         res.append((respwr, rescff))
     sortedres = []
     for (pwr, cff) in res:
+        if not pwr[0] == 0.0:
+            pwr.insert(0, 0.0)
+            cff.insert(0, complex(0.0,0.0))
         if vrblvl > 0:
             print('-> before the sort ...')
             print('powers :', pwr)
@@ -953,6 +965,7 @@ def random_linear_system(dim, deg, vrblvl=0):
     Makes a random linear system of dimension dim,
     of real powered series truncated at index deg,
     and sets the coefficients and the Laurent system.
+    Returns the failure code and the generated solution.
     """
     if vrblvl > 0:
         print('in laurent.random_linear_system, dim :', dim, '...')
@@ -983,7 +996,7 @@ def random_linear_system(dim, deg, vrblvl=0):
     for adx in range(len(mat)): 
         (pwr, cff) = rhs[adx]
         fail = fail + set_series_term(adx+1, dim+1, pwr, cff, vrblvl-1)
-    return fail
+    return fail, sol
 
 def degree_monomial(mon, xsb='x', vrblvl=0):
     """
@@ -1377,11 +1390,16 @@ def test_linear_solver(dim, deg, vrblvl=0):
     if vrblvl > 0:
         print('in laurent.test_linear_solver, dim :', end=', ')
         print('deg :', deg, '...')
-    fail = random_linear_system(dim, deg, vrblvl)
+    fail, sol = random_linear_system(dim, deg, vrblvl)
     if fail != 0:
         print(fail, 'failures occurred in defining the linear system!')
-    res = solve_linear_system(dim, deg, vrblvl)
-    return res
+    res, solpwrs, solcffs = solve_linear_system(dim, deg, vrblvl)
+    print('the generated solution :')
+    print(sol)
+    print('the computed solution :')
+    print('  powers :', solpwrs)
+    print('  coefficients :', solcffs)
+    return fail + res
 
 def check_residuals(lauhom, pwrs, cffs, vrblvl=0):
     """
