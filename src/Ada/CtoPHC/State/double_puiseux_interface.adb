@@ -59,6 +59,7 @@ package body Double_Puiseux_Interface is
       if vrblvl > 0
        then put_line("The constant coefficient matrix is zero.");
       end if;
+      x := (1..dim => create(0.0)); -- a zero constant in solution
     else
       double_puiseux_operations.Solve_Constant_Linear_System
         (A,b,x,rcond,vrblvl-1);
