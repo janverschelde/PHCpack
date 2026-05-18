@@ -69,10 +69,12 @@ package body Double_Puiseux_Interface is
     if vrblvl > 0
      then put_line("Run_Linear_Solver serializes the solution series ...");
     end if;
-    for i in 1..dim loop
+    for i in 1..dim loop -- first all constants of the solution series
       idx := idx + 1; result(idx) := REAL_PART(x(i));
       idx := idx + 1; result(idx) := IMAG_PART(x(i));
-      for j in 1..nbr loop
+    end loop;
+    for j in 1..nbr loop -- writing term after term
+      for i in 1..dim loop
         idx := idx + 1; result(idx) := REAL_PART(cX(i,j));
         idx := idx + 1; result(idx) := IMAG_PART(cX(i,j));
         idx := idx + 1; result(idx) := rX(i,j);

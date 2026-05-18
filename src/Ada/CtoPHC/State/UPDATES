@@ -1,3 +1,6 @@
+Mon 18 May 2026 : fixed serialization of series solution of a linear system
+  in double_puiseux_interface.adb.
+
 Sun 17 May 2026 : set constant of the solution series to zero if there are
   no constant coefficients in the matrix.
 
