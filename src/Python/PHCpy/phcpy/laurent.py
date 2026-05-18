@@ -242,41 +242,6 @@ def get_series_term(adx, vdx, vrblvl=0):
         cffs.append(cff)
     return (pwrs, cffs)
 
-def solve_linear_system(dim, nbr, vrblvl=0):
-    """
-    Computes the first nbr terms of the solution series of
-    a linear system defined by real powered series set in
-    the vectors of vectors containers and by a corresponding
-    system of Laurent polynomials, in double precision.
-    """
-    if vrblvl > 0:
-        print('in laurent.solve_linear_system, dim :', dim, ', nbr :', nbr)
-    phc = get_phcfun(vrblvl-1)
-    anbr = pointer(c_int32(nbr))
-    bbb = pointer(c_int32(0))
-    outsize = 2*dim + 3*dim*nbr
-    outval = (c_double * outsize)()
-    result = pointer(outval)
-    vrb = c_int32(vrblvl-1)
-    if vrblvl > 0:
-        print('-> solve_linear_system calls phc', end='')
-    retval = phc(944, anbr, bbb, result, vrb)
-    resvals = result[:outsize]
-    numbers = [float(resvals[0][i]) for i in range(outsize)]
-    if vrblvl > 0:
-        print(', return value :', retval)
-        print('the result :\n', numbers)
-    pwrs, cffs = split_powers_coefficients(dim, numbers, vrblvl-1)
-    if vrblvl > 0:
-        print('coefficients :\n', cffs)
-        print('powers :\n', pwrs)
-    powers = distribute_powers(dim, pwrs, vrblvl-1)
-    coefficients = distribute_coefficients(dim, cffs, vrblvl-1)
-    if vrblvl > 0:
-        print('distributed powers :\n', powers)
-        print('distributed coefficients :\n', coefficients)
-    return retval, powers, coefficients
-
 def split_powers_coefficients(dim, numbers, vrblvl=0):
     """
     Given a sequence of doubles in the list numbers, as
@@ -357,6 +322,41 @@ def distribute_coefficients(dim, coefficients, vrblvl=0):
                      print('exceeding', len(coefficients), ', returning ...')
                 return result
     return result
+
+def solve_linear_system(dim, nbr, vrblvl=0):
+    """
+    Computes the first nbr terms of the solution series of
+    a linear system defined by real powered series set in
+    the vectors of vectors containers and by a corresponding
+    system of Laurent polynomials, in double precision.
+    """
+    if vrblvl > 0:
+        print('in laurent.solve_linear_system, dim :', dim, ', nbr :', nbr)
+    phc = get_phcfun(vrblvl-1)
+    anbr = pointer(c_int32(nbr))
+    bbb = pointer(c_int32(0))
+    outsize = 2*dim + 3*dim*nbr
+    outval = (c_double * outsize)()
+    result = pointer(outval)
+    vrb = c_int32(vrblvl-1)
+    if vrblvl > 0:
+        print('-> solve_linear_system calls phc', end='')
+    retval = phc(944, anbr, bbb, result, vrb)
+    resvals = result[:outsize]
+    numbers = [float(resvals[0][i]) for i in range(outsize)]
+    if vrblvl > 0:
+        print(', return value :', retval)
+    print('the result :\n', numbers)
+    pwrs, cffs = split_powers_coefficients(dim, numbers, vrblvl-1)
+    if vrblvl > 0:
+        print('coefficients :\n', cffs)
+        print('powers :\n', pwrs)
+    powers = distribute_powers(dim, pwrs, vrblvl-1)
+    coefficients = distribute_coefficients(dim, cffs, vrblvl-1)
+    if vrblvl > 0:
+        print('distributed powers :\n', powers)
+        print('distributed coefficients :\n', coefficients)
+    return retval, powers, coefficients
 
 def run_newton_steps(dim, solcst, nbr, vrblvl=0):
     """
@@ -963,14 +963,15 @@ def series_product(mat, vec, tol=1.0e-12, vrblvl=0):
 def random_linear_system(dim, deg, vrblvl=0):
     """
     Makes a random linear system of dimension dim,
-    of real powered series truncated at index deg,
+    of real powered series truncated after the first index,
     and sets the coefficients and the Laurent system.
-    Returns the failure code and the generated solution.
+    Returns the failure code and the generated solution,
+    which is truncated after the index deg.
     """
     if vrblvl > 0:
         print('in laurent.random_linear_system, dim :', dim, '...')
     linear_laurent_system(dim, vrblvl)
-    mat = random_linear_matrix(dim, deg, zerocst=True, vrblvl=vrblvl-1)
+    mat = random_linear_matrix(dim, 1, zerocst=True, vrblvl=vrblvl-1)
     if vrblvl > 0:
         print('the matrix :')
         for (idx, row) in enumerate(mat):
@@ -1382,6 +1383,20 @@ def evaluate_laurent_homotopy(lhom, xsol, tval, xsb='x', vrblvl=0):
     result = [eval(value) for value in pval]
     return result
 
+def compare_solutions(sol1, sol2):
+    """
+    Returns the sum of the differences between sol1 and sol2.
+    """
+    sumerr = 0.0
+    for (c1, c2) in zip(sol1, sol2):
+        pwr1, cff1 = c1
+        pwr2, cff2 = c2
+        for (pw1, pw2) in zip(pwr1, pwr2):
+            sumerr = sumerr + abs(pw1 - pw2)
+        for (cf1, cf2) in zip(cff1, cff2):
+            sumerr = sumerr + abs(cf1 - cf2)
+    return sumerr
+
 def test_linear_solver(dim, deg, vrblvl=0):
     """
     Tests the linear solver on a generated system of dimension dim,
@@ -1396,9 +1411,13 @@ def test_linear_solver(dim, deg, vrblvl=0):
     res, solpwrs, solcffs = solve_linear_system(dim, deg, vrblvl)
     print('the generated solution :')
     print(sol)
+    compsol = []
+    for (pwr, cff) in zip(solpwrs, solcffs):
+        compsol.append((pwr, cff))
     print('the computed solution :')
-    print('  powers :', solpwrs)
-    print('  coefficients :', solcffs)
+    print(compsol)
+    sumerr = compare_solutions(sol, compsol)
+    print('sum of differences :', sumerr)
     return fail + res
 
 def check_residuals(lauhom, pwrs, cffs, vrblvl=0):
