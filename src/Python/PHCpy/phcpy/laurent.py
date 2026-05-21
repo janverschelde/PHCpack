@@ -346,7 +346,7 @@ def solve_linear_system(dim, nbr, vrblvl=0):
     numbers = [float(resvals[0][i]) for i in range(outsize)]
     if vrblvl > 0:
         print(', return value :', retval)
-    print('the result :\n', numbers)
+        print('the result :\n', numbers)
     pwrs, cffs = split_powers_coefficients(dim, numbers, vrblvl-1)
     if vrblvl > 0:
         print('coefficients :\n', cffs)
@@ -1190,20 +1190,21 @@ def random_product_homotopy(dim, nbt, deg, sol, xsb='x', vrblvl=0):
                (dim, dim, nbt, 1, True, xsb, vrblvl=vrblvl-1)
     if vrblvl > 0:
         print('a random system :\n', pols)
-    (cffs, mons) = parse_real_powered_system(pols, vrblvl=vrblvl)
+    (cffs, mons) = parse_real_powered_system(pols, vrblvl=vrblvl-1)
     if vrblvl > 0:
         for (idx, pol) in enumerate(pols):
             print('polynomial', idx+1, ':\n', pol)
             print('has coefficients :\n', cffs[idx])
             print('and monomials :\n', mons[idx])
-            sup = [support_monomial(mon, dim, xsb, vrblvl) for mon in mons[idx]]
+            sup = [support_monomial(mon, dim, xsb, vrblvl-1) \
+                for mon in mons[idx]]
             print('support', idx+1, ':', sup)
     expmons = [ [] for _ in range(len(pols)) ] 
     expcffs = [ [] for _ in range(len(pols)) ] 
     for (idx, pol) in enumerate(pols):
         (solpwr, solcff) = sol[idx]
         rmn, rcf = multiply_series_factor\
-            (dim, idx, mons[idx], cffs[idx], solpwr, solcff, xsb, vrblvl)
+            (dim, idx, mons[idx], cffs[idx], solpwr, solcff, xsb, vrblvl-1)
         for (mon, cff) in zip(rmn, rcf):
             expmons[idx].append(mon)
             expcffs[idx].append(cff)
@@ -1236,7 +1237,7 @@ def random_binomial_homotopy(dim, nbt, deg, sol, xsb='x', vrblvl=0):
               (dim, dim, nbt, deg, True, xsb, vrblvl=vrblvl-1)
     if vrblvl > 0:
         print('a random system :\n', pols)
-    (cffs, mons) = parse_real_powered_system(pols, vrblvl=vrblvl)
+    (cffs, mons) = parse_real_powered_system(pols, vrblvl=vrblvl-1)
     for idx in range(len(pols)):
         mons[idx].append(xsb + str(idx+1))
         cffs[idx].append('(1.0+0.0*i) + (0.0+0.0*i)*t**1.0')
@@ -1245,13 +1246,13 @@ def random_binomial_homotopy(dim, nbt, deg, sol, xsb='x', vrblvl=0):
             print('appending', ssol[idx])
         cffs[idx].append(ssol[idx])
     for idx in range(len(pols)):
-        sort_monomial_series(mons[idx], cffs[idx], xsb, vrblvl)
+        sort_monomial_series(mons[idx], cffs[idx], xsb, vrblvl-1)
     if vrblvl > 0:
         for (idx, pol) in enumerate(pols):
             print('polynomial', idx+1, ':\n', pol)
             print('has coefficients :\n', cffs[idx])
             print('and monomials :\n', mons[idx])
-            degmon = [degree_monomial(mon, xsb, vrblvl) for mon in mons[idx]]
+            degmon = [degree_monomial(mon, xsb, vrblvl-1) for mon in mons[idx]]
             print('monomial degrees :', degmon)
     return (cffs, mons)
 
@@ -1403,22 +1404,26 @@ def test_linear_solver(dim, deg, vrblvl=0):
     with real powered series truncated at index deg.
     """
     if vrblvl > 0:
-        print('in laurent.test_linear_solver, dim :', end=', ')
+        print('in laurent.test_linear_solver, dim :', dim, end=', ')
         print('deg :', deg, '...')
-    fail, sol = random_linear_system(dim, deg, vrblvl)
+    fail, sol = random_linear_system(dim, deg, vrblvl-1)
     if fail != 0:
         print(fail, 'failures occurred in defining the linear system!')
-    res, solpwrs, solcffs = solve_linear_system(dim, deg, vrblvl)
-    print('the generated solution :')
-    print(sol)
+    res, solpwrs, solcffs = solve_linear_system(dim, deg, vrblvl-1)
+    if vrblvl > 0:
+        print('the generated solution :')
+        print(sol)
     compsol = []
     for (pwr, cff) in zip(solpwrs, solcffs):
         compsol.append((pwr, cff))
-    print('the computed solution :')
-    print(compsol)
     sumerr = compare_solutions(sol, compsol)
-    print('sum of differences :', sumerr)
-    return fail + res
+    if vrblvl > 0:
+        print('the computed solution :')
+        print(compsol)
+        print('sum of differences :', sumerr)
+    if sumerr > 1.0e-12:
+        print('sum of differences :', sumerr, '> 1.0e-12')
+    return fail + res + int(sumerr > 1.0e-12)
 
 def check_residuals(lauhom, pwrs, cffs, vrblvl=0):
     """
@@ -1437,32 +1442,35 @@ def check_residuals(lauhom, pwrs, cffs, vrblvl=0):
 
 def test_newton_product(vrblvl=0):
     """
-    Tests newton's method on a random product homotopy.
+    Tests Newton's method on a random product homotopy.
     """
     if vrblvl > 0:
-        print("in laurent.test_newton_product ...")
+        print('in laurent.test_newton_product ...')
+        print('... computing 4 terms of a solution series ...')
     dim, deg = 2, 2
     sol = random_series_vector(dim, 4, vrblvl=vrblvl-1)
     if vrblvl > 0:
         print('the solution series :', sol)
-    solcst = extract_solution_constant(sol, vrblvl)
+    solcst = extract_solution_constant(sol, vrblvl-1)
     if vrblvl > 0:
         print('test solution constants :', solcst)
     nbt = [2 for _ in range(dim)]
-    (cffs, mons) = random_product_homotopy(dim, nbt, deg, sol, vrblvl=vrblvl)
-    fail = store_laurent_homotopy(cffs, mons, vrblvl)
+    (cffs, mons) = random_product_homotopy(dim, nbt, deg, sol, vrblvl=vrblvl-1)
+    fail = store_laurent_homotopy(cffs, mons, vrblvl-1)
     if fail != 0:
         print(fail, 'failures occurred in storing Laurent homotopy!')
     else:
-        lauhom = laurent_homotopy_strings(cffs, mons, vrblvl)
-        print('the polynomials in the Laurent homotopy :')
-        for (idx, pol) in enumerate(lauhom):
-            print('polynomial', idx+1, ':\n', pol)
-        (pwrs, cffs) = run_newton_steps(dim, solcst, 4, vrblvl)
-        for (idx, (pwr, cff)) in enumerate(zip(pwrs, cffs)):
-            print('series component', idx+1, ':', (pwr, cff))
-            print('solution series ', idx+1, ':', sol[idx])
-        check_residuals(lauhom, pwrs, cffs, vrblvl)
+        lauhom = laurent_homotopy_strings(cffs, mons, vrblvl-1)
+        if vrblvl > 0:
+            print('the polynomials in the Laurent homotopy :')
+            for (idx, pol) in enumerate(lauhom):
+                print('polynomial', idx+1, ':\n', pol)
+        (pwrs, cffs) = run_newton_steps(dim, solcst, 4, vrblvl-1)
+        if vrblvl > 0:
+            for (idx, (pwr, cff)) in enumerate(zip(pwrs, cffs)):
+                print('series component', idx+1, ':', (pwr, cff))
+                print('solution series ', idx+1, ':', sol[idx])
+            check_residuals(lauhom, pwrs, cffs, vrblvl)
     return fail
 
 def test_newton_binomial(vrblvl=0):
@@ -1475,23 +1483,25 @@ def test_newton_binomial(vrblvl=0):
     sol = random_series_vector(dim, 1, vrblvl=vrblvl-1)
     if vrblvl > 0:
         print('the solution series :', sol)
-    solcst = extract_solution_constant(sol, vrblvl)
+    solcst = extract_solution_constant(sol, vrblvl-1)
     if vrblvl > 0:
         print('test solution constants :', solcst)
     nbt = [2 for _ in range(dim)]
-    (cffs, mons) = random_binomial_homotopy(dim, nbt, deg, sol, vrblvl=vrblvl)
-    fail = store_laurent_homotopy(cffs, mons, vrblvl)
+    (cffs, mons) = random_binomial_homotopy(dim, nbt, deg, sol, vrblvl=vrblvl-1)
+    fail = store_laurent_homotopy(cffs, mons, vrblvl-1)
     if fail != 0:
         print(fail, 'failures occurred in storing Laurent homotopy!')
     else:
-        lauhom = laurent_homotopy_strings(cffs, mons, vrblvl)
-        print('the polynomials in the Laurent homotopy :')
-        for (idx, pol) in enumerate(lauhom):
-            print('polynomial', idx+1, ':\n', pol)
-        (pwrs, cffs) = run_newton_steps(dim, solcst, 4, vrblvl)
-        for (idx, (pwr, cff)) in enumerate(zip(pwrs, cffs)):
-            print('series component', idx+1, ':', to_rps_string(pwr, cff))
-        check_residuals(lauhom, pwrs, cffs, vrblvl)
+        lauhom = laurent_homotopy_strings(cffs, mons, vrblvl-1)
+        if vrblvl > 0:
+            print('the polynomials in the Laurent homotopy :')
+            for (idx, pol) in enumerate(lauhom):
+                print('polynomial', idx+1, ':\n', pol)
+        (pwrs, cffs) = run_newton_steps(dim, solcst, 4, vrblvl-1)
+        if vrblvl > 0:
+            for (idx, (pwr, cff)) in enumerate(zip(pwrs, cffs)):
+                print('series component', idx+1, ':', to_rps_string(pwr, cff))
+            check_residuals(lauhom, pwrs, cffs, vrblvl)
     return fail
 
 def test_newton_steps(product=False, vrblvl=0):

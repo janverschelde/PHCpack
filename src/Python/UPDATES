@@ -1,3 +1,5 @@
+Thu 21 May 2026 : improved verbose level in tests of laurent.py.
+
 Mon 18 May 2026 : in laurent.py fixed setup of test linear system solver,
   added function to compare the generated with the computed solution series.
 
