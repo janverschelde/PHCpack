@@ -41,21 +41,52 @@ package body Double_Real_Powered_Series is
     end loop;
   end Sort;
 
-  procedure Normalize ( cf : in out Standard_Complex_Vectors.Vector;
-                        dg : in Standard_Floating_Vectors.Vector;
+  procedure Shift_Zeros ( cff : in out Standard_Complex_Vectors.Vector;
+                          pwt : in out Standard_Floating_Vectors.Vector;
+                          tol : in double_float := 1.0E-12 ) is 
+
+    idx : integer32 := pwt'first;
+    nzidx : integer32;
+
+  begin
+    while idx <= pwt'last loop
+      if AbsVal(cff(idx)) > tol then
+         nzidx := idx + 1;
+      else -- if AbsVal(cff(idx)) < tol then
+        if idx < pwt'last then
+          nzidx := idx + 1; -- index of next nonzero coefficient
+          while AbsVal(cff(nzidx)) < tol loop 
+            nzidx := nzidx + 1;
+            exit when (nzidx > pwt'last);
+          end loop;
+          if nzidx <= pwt'last then
+            cff(idx) := cff(nzidx);
+            pwt(idx) := pwt(nzidx);
+            cff(nzidx) := create(0.0);
+          end if;
+        end if;
+      end if;
+      exit when (nzidx > pwt'last); -- no more nonzero coefficients
+      idx := idx + 1;
+    end loop;
+  end Shift_Zeros;
+
+  procedure Normalize ( cff : in out Standard_Complex_Vectors.Vector;
+                        pwt : in out Standard_Floating_Vectors.Vector;
                         tol : in double_float := 1.0E-12 ) is 
 
     dif : double_float;
 
   begin
-    for i in cf'first..cf'last-1 loop
-      for j in i+1..cf'last loop
-        dif := abs(dg(i) - dg(j));
+    for i in pwt'first..pwt'last-1 loop
+      for j in i+1..pwt'last loop
+        dif := abs(pwt(i) - pwt(j));
         exit when (dif > tol);
-        cf(i) := cf(i) + cf(j);
-        cf(j) := create(0.0);
+        cff(i) := cff(i) + cff(j);
+        cff(j) := create(0.0);
       end loop;
     end loop;
+    Shift_Zeros(cff,pwt,tol);
   end Normalize;
 
   procedure Normalize ( cf : in Standard_Complex_VecVecs.VecVec;

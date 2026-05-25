@@ -7,6 +7,14 @@ package Test_Real_Powered_Series is
 -- DESCRIPTION :
 --   Tests the input and output procedures for real powered series.
 
+  procedure Write ( cff : in Standard_Complex_Vectors.Vector;
+                    pwt : in Standard_Floating_Vectors.Vector;
+                    t : in character := 't' );
+
+  -- DESCRIPTION :
+  --   Writes the series with coefficients in cff and the powers in pwt,
+  --   using the character t as the symbol for the parameter.
+
   procedure Random_Series
               ( size : in integer32;
                 cff : out Standard_Complex_Vectors.Vector;

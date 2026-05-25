@@ -27,13 +27,22 @@ package Double_Real_Powered_Series is
   --   Sorts the numbers in x in increasing order
   --   and swaps the corresponding numbers in y accordingly.
 
-  procedure Normalize ( cf : in out Standard_Complex_Vectors.Vector;
-                        dg : in Standard_Floating_Vectors.Vector;
+  procedure Shift_Zeros ( cff : in out Standard_Complex_Vectors.Vector;
+                          pwt : in out Standard_Floating_Vectors.Vector;
+                          tol : in double_float := 1.0E-12 );
+
+  -- DESCRIPTION :
+  --   Coefficients which are smaller than the tolerance tol
+  --   are shifted towards the end and their corresponding power
+  --   is set to zero.
+
+  procedure Normalize ( cff : in out Standard_Complex_Vectors.Vector;
+                        pwt : in out Standard_Floating_Vectors.Vector;
                         tol : in double_float := 1.0E-12 );
 
   -- DESCRIPTION :
-  --   Given a sorted sequence of powers in dg,
-  --   adds the coefficients in cf which correspond to equal powers. 
+  --   Given a sorted sequence of real powers in pwt,
+  --   adds the coefficients in cff which correspond to equal powers. 
   --   The tolerance is used to decide on the equality of coefficients.
 
   procedure Normalize ( cf : in Standard_Complex_VecVecs.VecVec;
