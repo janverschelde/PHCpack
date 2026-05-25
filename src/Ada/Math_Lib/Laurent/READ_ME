@@ -43,6 +43,7 @@ double_real_powered_series       : series with real powers, double precision
 real_powered_series_io           : i/o of series with real powers
 test_real_powered_series         : tests i/o of real powered series
 ts_realpows                      : calls the main test on series i/o
+ts_hunroots                      : tests arithmetic with real powered series
 ------------------------------------------------------------------------------
 real_powered_homotopy            : defines a real powered Laurent homotopy
 real_powered_homotopy_io         : i/o for Laurent homotopy polynomials

@@ -1,5 +1,7 @@
 Mon 25 May 2026 : exported write procedure of test_real_powered_series.ads;
   fixed bug and extended normalize of double_real_powered_series.
+  New ts_hunroots.adb to test arithmetic of real powered series.
+  Updated laurent.gpr.
 
 Fri 15 May 2026 : fixed printed package name when calling constant_linear_
   solver in double_puiseux_operations.adb.
