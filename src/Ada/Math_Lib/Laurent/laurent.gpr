@@ -21,7 +21,7 @@ project Laurent is
         "ts_hunsys.adb",   -- tests computation of leading powers
         "ts_hunval.adb",   -- tests evaluation at series of real powers
         "ts_hunnew.adb",   -- tests Newton-Puiseux for real power series
-        "ts_hunroots.adb", -- tests square roots of real power series
+        "ts_rpsarith.adb", -- tests real power series arithmetic
         "ts_rpownew.adb"   -- calls main access to real Newton-Puiseux
     );
 

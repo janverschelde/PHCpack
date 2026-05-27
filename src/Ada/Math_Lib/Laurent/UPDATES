@@ -1,3 +1,6 @@
+Wed 27 May 2026 : renamed ts_hunroots.adb into ts_rpsarith.adb, updated
+  laurent.gpr; moved code into {double, test}_real_powered_series packages.
+
 Tue 26 May 2026 : added inv and div procedures with tests to ts_hunroots.adb.
 
 Mon 25 May 2026 : exported write procedure of test_real_powered_series.ads;

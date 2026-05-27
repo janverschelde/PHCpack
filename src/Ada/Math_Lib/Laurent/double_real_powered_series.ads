@@ -14,6 +14,9 @@ package Double_Real_Powered_Series is
 --   vector of the same size as the support, plus one for the constant.
 --   The support is an increasing sequence of floating-point numbers
 --   and the coefficients are complex numbers.
+--   The coefficient vectors start at index zero, at the constant term,
+--   whereas the positive powers are stored starting at index one,
+--   stored in increasing order.
 
   procedure Sort ( x : in out Standard_Floating_Vectors.Vector );
 
@@ -51,6 +54,74 @@ package Double_Real_Powered_Series is
 
   -- DESCRIPTION :
   --   Applies the normalization to all vectors in (cf, dg).
+
+  function Equal ( acf,bcf : Standard_Complex_Vectors.Vector;
+                   apw,bpw : Standard_Floating_Vectors.Vector;
+                   tol : double_float := 1.0E-12 ) return boolean;
+
+  -- DESCRIPTION :
+  --   Returns true if the sum of the componentwise errors of
+  --   the coefficients and the powers is less than the tolerance.
+  --   Both series are expected to have the same size.
+
+-- BASIC ARITHMETIC :
+
+  procedure Add ( acf,bcf : in Standard_Complex_Vectors.Vector;
+                  apw,bpw : in Standard_Floating_Vectors.Vector;
+                  cff : out Standard_Complex_Vectors.Vector;
+                  pwt : out Standard_Floating_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Returns in (cff, pwt) the sum of (acf, apw) and (bcf, bpw).
+  --   The addition of two random series is defined by the
+  --   sum of their constants and the merge sort of the terms.
+  --   For the result to be correct, the size of (cff, pwt)
+  --   must be the sum of the sizes of (acf, apw) and (bcf, bpw).
+
+  procedure Sub ( acf,bcf : in Standard_Complex_Vectors.Vector;
+                  apw,bpw : in Standard_Floating_Vectors.Vector;
+                  cff : out Standard_Complex_Vectors.Vector;
+                  pwt : out Standard_Floating_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Returns in (cff, pwt) the result of (acf, apw) - (bcf, bpw).
+  --   For the result to be correct, the size of (cff, pwt)
+  --   must be the sum of the sizes of (acf, apw) and (bcf, bpw).
+
+  procedure Mul ( acf,bcf : in Standard_Complex_Vectors.Vector;
+                  apw,bpw : in Standard_Floating_Vectors.Vector;
+                  cff : out Standard_Complex_Vectors.Vector;
+                  pwt : out Standard_Floating_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Returns in (cff, pwt) the product of (acf, apw) and (bcf, bpw).
+  --   For the result to be correct, the size of (cff, pwt)
+  --   must be the product of the one plus the sizes of (acf, apw)
+  --   and (bcf, bpw) minus one (for the constant).
+
+  procedure Inv ( acf : in Standard_Complex_Vectors.Vector;
+                  apw : in Standard_Floating_Vectors.Vector;
+                  cff : out Standard_Complex_Vectors.Vector;
+                  pwt : out Standard_Floating_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Returns in (cff, pwt) the multiplicative inverse of the
+  --   series given in (acf, apw).
+
+  -- REQUIRED : acf(0) /= 0.
+
+  procedure Div ( acf,bcf : in Standard_Complex_Vectors.Vector;
+                  apw,bpw : in Standard_Floating_Vectors.Vector;
+                  cff : out Standard_Complex_Vectors.Vector;
+                  pwt : out Standard_Floating_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Returns in (cff, pwt) the series (acf, apw) divided by (bcf, bpw),
+  --   via multiplication of the inverse of (bcf, bpw).
+
+  -- REQUIRED : bcf(0) /= 0.
+
+-- USEFUL FUNCTIONS :
 
   function Positive_Minimum_Index
              ( c : Standard_Complex_Vectors.Vector;

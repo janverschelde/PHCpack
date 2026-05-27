@@ -98,6 +98,199 @@ package body Double_Real_Powered_Series is
     end loop;
   end Normalize;
 
+  function Equal ( acf,bcf : Standard_Complex_Vectors.Vector;
+                   apw,bpw : Standard_Floating_Vectors.Vector;
+                   tol : double_float := 1.0E-12 ) return boolean is
+
+    sumerr : double_float := AbsVal(acf(0) - bcf(0));
+
+  begin
+    if sumerr > tol then
+      return false;
+    else
+      for i in apw'range loop
+        sumerr := sumerr + AbsVal(acf(i) - bcf(i));
+        if sumerr > tol
+         then return false;
+        end if;
+        sumerr := sumerr + abs(apw(i) - bpw(i));
+        if sumerr > tol
+         then return false;
+        end if;
+      end loop;
+    end if;
+    return true;
+  end Equal;
+
+-- BASIC ARITHMETIC :
+
+  procedure Add ( acf,bcf : in Standard_Complex_Vectors.Vector;
+                  apw,bpw : in Standard_Floating_Vectors.Vector;
+                  cff : out Standard_Complex_Vectors.Vector;
+                  pwt : out Standard_Floating_Vectors.Vector ) is
+
+    idx : integer32 := pwt'first;
+    adx : integer32 := apw'first;
+    bdx : integer32 := bpw'first;
+
+  begin
+    cff(0) := acf(0) + bcf(0);
+    while (adx <= apw'last) and (bdx <= bpw'last) loop
+      exit when (idx > pwt'last);
+      if apw(adx) < bpw(bdx) then
+        pwt(idx) := apw(adx);
+        cff(idx) := acf(adx);
+        adx := adx + 1;
+      else
+        pwt(idx) := bpw(bdx);
+        cff(idx) := bcf(bdx);
+        bdx := bdx + 1;
+      end if;
+      idx := idx + 1;
+    end loop;
+    for i in adx..apw'last loop
+      exit when (idx > pwt'last);
+      pwt(idx) := apw(i);
+      cff(idx) := acf(i);
+      idx := idx + 1;
+    end loop;
+    for i in bdx..bpw'last loop
+      exit when (idx > pwt'last);
+      pwt(idx) := bpw(i);
+      cff(idx) := bcf(i);
+      idx := idx + 1;
+    end loop;
+    Double_Real_Powered_Series.normalize(cff,pwt);
+  end Add;
+
+  procedure Sub ( acf,bcf : in Standard_Complex_Vectors.Vector;
+                  apw,bpw : in Standard_Floating_Vectors.Vector;
+                  cff : out Standard_Complex_Vectors.Vector;
+                  pwt : out Standard_Floating_Vectors.Vector ) is
+
+    minbcf : Standard_Complex_Vectors.Vector(bcf'range);
+
+  begin
+    for i in bcf'range loop
+      minbcf(i) := -bcf(i);
+    end loop;
+    Add(acf,minbcf,apw,bpw,cff,pwt);
+  end Sub;
+
+  procedure Mul ( acf,bcf : in Standard_Complex_Vectors.Vector;
+                  apw,bpw : in Standard_Floating_Vectors.Vector;
+                  cff : out Standard_Complex_Vectors.Vector;
+                  pwt : out Standard_Floating_Vectors.Vector ) is
+
+    idx : integer32 := 0;
+
+  begin
+    cff(0) := acf(0)*bcf(0);  -- multiply with constant of first series
+    for j in bpw'range loop
+      exit when (j > cff'last);
+      cff(j) := acf(0)*bcf(j);
+      pwt(j) := bpw(j);
+    end loop;
+    idx := bpw'last;
+    for i in apw'range loop  -- multiply with i-th term of first series
+      idx := idx + 1;
+      exit when (idx > cff'last);
+      cff(idx) := acf(i)*bcf(0);
+      pwt(idx) := apw(i);
+      for j in bpw'range loop
+        idx := idx + 1;
+        exit when (idx > cff'last);
+        cff(idx) := acf(i)*bcf(j);
+        pwt(idx) := apw(i)+bpw(j);
+      end loop;
+    end loop;
+    Double_Real_Powered_Series.sort(pwt,cff);
+    Double_Real_Powered_Series.normalize(cff,pwt);
+  end Mul;
+
+  procedure Inv ( acf : in Standard_Complex_Vectors.Vector;
+                  apw : in Standard_Floating_Vectors.Vector;
+                  cff : out Standard_Complex_Vectors.Vector;
+                  pwt : out Standard_Floating_Vectors.Vector ) is
+
+    sqrdiv : Complex_Number;
+    minidx : Standard_Integer_Vectors.Vector(apw'range) := (apw'range => 1);
+    apwidx : integer32 := 1;
+    sumpwr : double_float;
+    cnvsum : Complex_Number;
+
+  begin
+    cff(0) := 1.0/acf(0);               -- constant term
+    sqrdiv := cff(0)/acf(0);
+    pwt(1) := apw(1);                   -- first order term
+    cff(1) := -acf(1)*sqrdiv;
+    apwidx := 2;                        -- apw(1) term canceled
+    if pwt'last > 1 then
+      if apw(2) < 2.0*apw(1) then       -- second order term
+        pwt(2) := apw(2);
+        cff(2) := -acf(2)*sqrdiv;
+        apwidx := 3;                    -- apw(2) term canceled
+      else
+        pwt(2) := 2.0*apw(1);
+        minidx(1) := 2;                 -- apw(1) + pwt(1) canceled
+        if apw(2) > 2.0*apw(1) then
+          cff(2) := -acf(1)*cff(1)/acf(0);
+        else -- apw(2) = 2.0*apw(1)
+          cff(2) := -(acf(1)*cff(1) + acf(2)*cff(0))/acf(0);
+          apwidx := 3;                  -- apw(2) term canceled
+        end if;
+      end if;
+      for k in 3..apw'last loop
+        exit when ((k > pwt'last) or (k > cff'last));
+        pwt(k) := apw(k);
+        for i in 1..k-1 loop
+          sumpwr := apw(i) + pwt(minidx(i));
+          if sumpwr < pwt(k)
+           then pwt(k) := sumpwr;
+          end if;
+        end loop;
+        if pwt(k) = apw(k) then
+          apwidx := apwidx + 1;
+          cnvsum := cff(0)*acf(k);
+        else
+          cnvsum := create(0.0);
+        end if;
+        for i in 1..k-1 loop
+          sumpwr := apw(i) + pwt(minidx(i));
+          if sumpwr = pwt(k) then
+            cnvsum := cnvsum + acf(i)*cff(minidx(i));
+            minidx(i) := minidx(i) + 1;
+          end if;
+        end loop;
+        cff(k) := -cnvsum/acf(0);
+      end loop;
+    end if;
+  end Inv;
+
+  procedure Div ( acf,bcf : in Standard_Complex_Vectors.Vector;
+                  apw,bpw : in Standard_Floating_Vectors.Vector;
+                  cff : out Standard_Complex_Vectors.Vector;
+                  pwt : out Standard_Floating_Vectors.Vector ) is
+
+    size : constant integer32 := bcf'last;
+    invbcf : Standard_Complex_Vectors.Vector(0..size);
+    invbpw : Standard_Floating_Vectors.Vector(1..size);
+    prdsize : constant integer32 := (size+1)*(size+1) - 1;
+    prdcf : Standard_Complex_Vectors.Vector(0..prdsize);
+    prdpw : Standard_Floating_Vectors.Vector(1..prdsize);
+
+  begin
+    Inv(bcf,bpw,invbcf,invbpw);
+    Mul(acf,invbcf,apw,invbpw,prdcf,prdpw);
+    cff(0) := prdcf(0);
+    for i in pwt'range loop
+      cff(i) := prdcf(i);
+      pwt(i) := prdpw(i);
+    end loop;
+  end Div;
+
+-- USEFUL FUNCTIONS :
+
   function Positive_Minimum_Index
              ( c : Standard_Complex_Vectors.Vector;
                v : Standard_Floating_Vectors.Vector;
