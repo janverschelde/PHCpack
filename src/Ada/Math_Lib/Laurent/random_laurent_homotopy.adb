@@ -8,7 +8,7 @@ with Standard_Random_Numbers;
 with Standard_Random_Vectors;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
-with Double_Real_Powered_Series;
+with Double_rpSeries_Operations;
 with Test_Real_Powered_Series;
 
 package body Random_Laurent_Homotopy is
@@ -59,7 +59,7 @@ package body Random_Laurent_Homotopy is
         cfi : constant Standard_Complex_Vectors.Vector(1..nbm(i))
             := Standard_Random_Vectors.Random_Vector(1,nbm(i));
         cti : Standard_Floating_Vectors.Vector(1..nbm(i))
-            := Double_Real_Powered_Series.Random_Leading_Powers(nbm(i));
+            := Double_rpSeries_Operations.Random_Leading_Powers(nbm(i));
         pwt : integer32;
       begin
         deg(i) := new Standard_Integer_VecVecs.VecVec'(dpi);
@@ -361,7 +361,7 @@ package body Random_Laurent_Homotopy is
 
     tpt : constant double_float := abs(Standard_Random_Numbers.Random);
     zpt : constant Standard_Complex_Vectors.Vector(scf'range)
-        := Double_Real_Powered_Series.Evaluate_Series(scf,spw,tpt);
+        := Double_rpSeries_Operations.Evaluate_Series(scf,spw,tpt);
     hpt : constant Standard_Complex_Vectors.Vector(hcf'range)
         := Evaluate_Homotopy(hdg,hcf,htp,zpt,tpt);
 

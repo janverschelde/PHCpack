@@ -10,7 +10,7 @@ with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Double_Leading_Evaluations;
 with Double_Ordered_Evaluations;
-with Double_Real_Powered_Series;
+with Double_rpSeries_Operations;
 with Laurent_Homotopy_Derivatives;
 
 package body Double_Newton_Puiseux is
@@ -139,7 +139,7 @@ package body Double_Newton_Puiseux is
         end loop;
       end loop;
     end if;
-    Double_Real_Powered_Series.Normalize(cfy,dgy);
+    Double_rpSeries_Operations.Normalize(cfy,dgy);
     if vrblvl > 0 then
       put_line("After adding coefficients with same monomial :");
       for i in cfy'range loop
@@ -149,8 +149,8 @@ package body Double_Newton_Puiseux is
         end loop;
       end loop;
     end if;
-    psm := Double_Real_Powered_Series.Positive_Minima(cfy,dgy);       
-    cfp := Double_Real_Powered_Series.Coefficients(cfy,dgy,psm);
+    psm := Double_rpSeries_Operations.Positive_Minima(cfy,dgy);       
+    cfp := Double_rpSeries_Operations.Coefficients(cfy,dgy,psm);
     for i in cfy'range loop
       Standard_Complex_Vectors.Clear(cfy(i));
       Standard_Floating_Vectors.Clear(dgy(i));

@@ -3,7 +3,7 @@ with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
 with Standard_Floating_Numbers_IO;      use Standard_Floating_Numbers_IO;
 with Standard_Integer_Vectors_IO;       use Standard_Integer_Vectors_IO;
 with Standard_Floating_Vectors_IO;      use Standard_Floating_Vectors_IO;
-with Double_Real_Powered_Series;
+with Double_rpSeries_Operations;
 
 package body Double_Leading_Evaluations is
 
@@ -86,7 +86,7 @@ package body Double_Leading_Evaluations is
        then idx := i;
       end if;
     end loop;
-    Double_Real_Powered_Series.Sort(val);
+    Double_rpSeries_Operations.Sort(val);
   end Evaluate_Powers;
 
   function Leading_Coefficient
@@ -521,7 +521,7 @@ package body Double_Leading_Evaluations is
        then idx := i;
       end if;
     end loop;
-    Double_Real_Powered_Series.Sort(ydg,ycf);
+    Double_rpSeries_Operations.Sort(ydg,ycf);
   end Evaluate_Polynomial;
 
   procedure Evaluate_System

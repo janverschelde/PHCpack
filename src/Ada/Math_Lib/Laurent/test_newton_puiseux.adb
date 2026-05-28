@@ -9,7 +9,7 @@ with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
-with Double_Real_Powered_Series;
+with Double_rpSeries_Operations;
 with Random_Laurent_Homotopy;
 with Double_Newton_Puiseux;
 
@@ -43,7 +43,7 @@ package body Test_Newton_Puiseux is
         end loop;
       end loop;
     end if;
-    Double_Real_Powered_Series.Random_Power_Series(dim,nbt,cff,pwr);
+    Double_rpSeries_Operations.Random_Power_Series(dim,nbt,cff,pwr);
     if vrblvl > 0 then
       for i in 1..dim loop
         put("-> a random power series "); put(i,1); put_line(" : ");
@@ -255,7 +255,7 @@ package body Test_Newton_Puiseux is
   --   to evaluate the homotopy in (hdg, hcf, hct);
 
     zpt : constant Standard_Complex_Vectors.Vector(cff'range)
-        := Double_Real_Powered_Series.Evaluate_Series(cff,pwr,tpt);
+        := Double_rpSeries_Operations.Evaluate_Series(cff,pwr,tpt);
     hpt : constant Standard_Complex_Vectors.Vector(hcf'range)
         := Random_Laurent_Homotopy.Evaluate_Homotopy(hdg,hcf,hct,zpt,tpt);
 

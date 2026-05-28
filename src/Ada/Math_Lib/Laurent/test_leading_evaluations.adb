@@ -15,7 +15,7 @@ with Standard_Integer_VecVecs;
 with Standard_Floating_VecVecs;
 with Standard_Complex_VecVecs;
 with Double_Leading_Evaluations;
-with Double_Real_Powered_Series;
+with Double_rpSeries_Operations;
 with Random_Laurent_Homotopy;
 
 package body Test_Leading_Evaluations is
@@ -236,7 +236,7 @@ package body Test_Leading_Evaluations is
     deg : constant Standard_Integer_Vectors.Vector(1..dim)
         := Random_Laurent_Homotopy.Random_Monomial_Support(dim,-9,9);
     pwr : constant Standard_Floating_Vectors.Vector(1..dim)
-        := Double_Real_Powered_Series.Random_Leading_Powers(dim);
+        := Double_rpSeries_Operations.Random_Leading_Powers(dim);
     cff : constant Standard_Complex_Vectors.Vector(1..dim)
         := Standard_Random_Vectors.Random_Vector(1,dim);
     lpr : constant double_float
@@ -302,7 +302,7 @@ package body Test_Leading_Evaluations is
     deg : constant Standard_Integer_VecVecs.VecVec(1..nbr)
         := Random_Laurent_Homotopy.Random_Polynomial_Support(nbr,dim,-9,9);
     pwr : constant Standard_Floating_Vectors.Vector(1..dim)
-        := Double_Real_Powered_Series.Random_Leading_Powers(dim);
+        := Double_rpSeries_Operations.Random_Leading_Powers(dim);
     val : Standard_Floating_Vectors.Vector(1..nbr);
    -- lpr : double_float;
     diflpr,df2 : double_float;
@@ -346,7 +346,7 @@ package body Test_Leading_Evaluations is
     pcf : Standard_Complex_VecVecs.VecVec(1..nbp);
     pct : Standard_Floating_VecVecs.VecVec(1..nbp);
     pwr : constant Standard_Floating_Vectors.Vector(1..dim)
-        := Double_Real_Powered_Series.Random_Leading_Powers(dim);
+        := Double_rpSeries_Operations.Random_Leading_Powers(dim);
     cff : constant Standard_Complex_Vectors.Vector(1..dim)
         := Standard_Random_Vectors.Random_Vector(1,dim);
 
@@ -423,7 +423,7 @@ package body Test_Leading_Evaluations is
         put("  "); put(pdg(i)(j)); new_line;
       end loop;
     end loop;
-    Double_Real_Powered_Series.Random_Power_Series(dim,nbt,cff,pwr);
+    Double_rpSeries_Operations.Random_Power_Series(dim,nbt,cff,pwr);
     for i in 1..dim loop
       put("-> a random power series "); put(i,1); put_line(" : ");
       put(cff(i)(0)); new_line;

@@ -7,7 +7,7 @@ with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 
-package Double_Real_Powered_Series is
+package Double_rpSeries_Operations is
 
 -- DESCRIPTION :
 --   A real powered series is defined by a support and a coefficient
@@ -214,4 +214,4 @@ package Double_Real_Powered_Series is
   --   Given in cff and pwr are the coefficients and real powers of a series,
   --   and in tpt a value for t.  Returns the value of the series.
 
-end Double_Real_Powered_Series;
+end Double_rpSeries_Operations;

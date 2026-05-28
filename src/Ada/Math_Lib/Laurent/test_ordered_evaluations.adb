@@ -14,7 +14,7 @@ with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Random_Vectors;
 with Random_Laurent_Homotopy;
-with Double_Real_Powered_Series;
+with Double_rpSeries_Operations;
 with Double_Ordered_Evaluations;
 
 package body Test_Ordered_Evaluations is
@@ -585,10 +585,10 @@ package body Test_Ordered_Evaluations is
     pcf : constant Standard_Complex_Vectors.Vector(1..nbr)
         := Standard_Random_Vectors.Random_Vector(1,nbr);
     pct : constant Standard_Floating_Vectors.Vector(1..nbr)
-        := Double_Real_Powered_Series.Random_Leading_Powers(nbr);
+        := Double_rpSeries_Operations.Random_Leading_Powers(nbr);
 
   begin
-    Double_Real_Powered_Series.Random_Power_Series(dim,nbt,cff,pwr);
+    Double_rpSeries_Operations.Random_Power_Series(dim,nbt,cff,pwr);
     for i in cff'range loop
       put("-> a random power series "); put(i,1); put_line(" : ");
       put(cff(i)(0)); new_line;

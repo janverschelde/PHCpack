@@ -2,7 +2,7 @@ with Standard_Mathematical_Functions;   use Standard_Mathematical_Functions;
 with Standard_Random_Numbers;
 with Standard_Random_Vectors;
 
-package body Double_Real_Powered_Series is
+package body Double_rpSeries_Operations is
 
   procedure Sort ( x : in out Standard_Floating_Vectors.Vector ) is
 
@@ -160,7 +160,7 @@ package body Double_Real_Powered_Series is
       cff(idx) := bcf(i);
       idx := idx + 1;
     end loop;
-    Double_Real_Powered_Series.normalize(cff,pwt);
+    Normalize(cff,pwt);
   end Add;
 
   procedure Sub ( acf,bcf : in Standard_Complex_Vectors.Vector;
@@ -204,8 +204,8 @@ package body Double_Real_Powered_Series is
         pwt(idx) := apw(i)+bpw(j);
       end loop;
     end loop;
-    Double_Real_Powered_Series.sort(pwt,cff);
-    Double_Real_Powered_Series.normalize(cff,pwt);
+    Sort(pwt,cff);
+    Normalize(cff,pwt);
   end Mul;
 
   procedure Inv ( acf : in Standard_Complex_Vectors.Vector;
@@ -482,4 +482,4 @@ package body Double_Real_Powered_Series is
     return res;
   end Evaluate_Series;
 
-end Double_Real_Powered_Series;
+end Double_rpSeries_Operations;

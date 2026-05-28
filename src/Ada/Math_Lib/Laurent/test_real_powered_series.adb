@@ -6,7 +6,7 @@ with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
 with Standard_Random_Vectors;
-with Double_Real_Powered_Series;
+with Double_rpSeries_Operations;
 with Real_Powered_Series_IO;
 
 package body Test_Real_Powered_Series is
@@ -32,7 +32,7 @@ package body Test_Real_Powered_Series is
     for i in pwt'range loop
       pwt(i) := abs(pwt(i));
     end loop;
-    Double_Real_Powered_Series.sort(pwt,cff);
+    Double_rpSeries_Operations.sort(pwt,cff);
   end Random_Series;
 
   procedure Test_String_Series ( size : in integer32 ) is
@@ -205,14 +205,14 @@ package body Test_Real_Powered_Series is
     put_line("The sum of "); Write(acf,apw);
     put_line("and"); Write(bcf,bpw);
     put_line("is");
-    Double_Real_Powered_Series.Add(acf,bcf,apw,bpw,sumcf,sumpw);
+    Double_rpSeries_Operations.Add(acf,bcf,apw,bpw,sumcf,sumpw);
     Write(sumcf,sumpw);
-    Double_Real_Powered_Series.Sub(sumcf,bcf,sumpw,bpw,difcf,difpw);
+    Double_rpSeries_Operations.Sub(sumcf,bcf,sumpw,bpw,difcf,difpw);
     put_line("After subtracting the second series from the sum :");
     Write(difcf(0..size),difpw(1..size));
     put_line("the first series :");
     Write(acf,apw);
-    equ := Double_Real_Powered_Series.Equal
+    equ := Double_rpSeries_Operations.Equal
              (difcf(0..size),acf,difpw(1..size),apw);
     put("Component wise equal ? ");
     if equ
@@ -236,7 +236,7 @@ package body Test_Real_Powered_Series is
     put_line("The product of "); Write(acf,apw);
     put_line("and"); Write(bcf,bpw);
     put_line("is");
-    Double_Real_Powered_Series.Mul(acf,bcf,apw,bpw,prdcf,prdpw);
+    Double_rpSeries_Operations.Mul(acf,bcf,apw,bpw,prdcf,prdpw);
     Write(prdcf,prdpw);
   end Test_Multiplication;
 
@@ -256,10 +256,10 @@ package body Test_Real_Powered_Series is
     put("-> the inverse of a random series of size "); put(size,1);
     put_line(" :"); Write(acf,apw);
     put_line("is");
-    Double_Real_Powered_Series.Inv(acf,apw,bcf,bpw);
+    Double_rpSeries_Operations.Inv(acf,apw,bcf,bpw);
     Write(bcf,bpw);
     put_line("the product of a random series with its inverse :");
-    Double_Real_Powered_Series.Mul(acf,bcf,apw,bpw,prdcf,prdpw);
+    Double_rpSeries_Operations.Mul(acf,bcf,apw,bpw,prdcf,prdpw);
     Write(prdcf(0..size),prdpw(1..size));
   end Test_Inverse;
 
@@ -290,14 +290,14 @@ package body Test_Real_Powered_Series is
     put_line("The division of "); Write(acf,apw);
     put_line("by"); Write(bcf,bpw);
     put_line("is");
-    Double_Real_Powered_Series.Div(acf,bcf,apw,bpw,qcf,qpw);
+    Double_rpSeries_Operations.Div(acf,bcf,apw,bpw,qcf,qpw);
     Write(qcf(0..size),qpw(1..size));
     put_line("multiplying the quotient with the second series ...");
-    Double_Real_Powered_Series.Mul(bcf,qcf,bpw,qpw,pcf,ppw);
+    Double_rpSeries_Operations.Mul(bcf,qcf,bpw,qpw,pcf,ppw);
     Write(pcf(0..size),ppw(1..size));
     put_line("The first series :");
     Write(acf,apw);
-    equ := Double_Real_Powered_Series.Equal(pcf(0..size),acf,ppw(1..size),apw);
+    equ := Double_rpSeries_Operations.Equal(pcf(0..size),acf,ppw(1..size),apw);
     put("Component wise equal ? ");
     if equ
      then put_line("Yes.");

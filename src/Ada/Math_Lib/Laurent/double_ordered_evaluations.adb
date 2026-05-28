@@ -6,7 +6,7 @@ with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_IO;       use Standard_Complex_Numbers_IO;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_IO;       use Standard_Integer_Vectors_IO;
-with Double_Real_Powered_Series;
+with Double_rpSeries_Operations;
 with Double_Leading_Evaluations;
 
 package body Double_Ordered_Evaluations is
@@ -181,8 +181,8 @@ package body Double_Ordered_Evaluations is
         ycf(idx) := ycf(idx)*cf1(j);
       end loop;
     end loop;
-    Double_Real_Powered_Series.Sort(ydg,ycf); 
-    Double_Real_Powered_Series.Normalize(ycf,ydg);
+    Double_rpSeries_Operations.Sort(ydg,ycf); 
+    Double_rpSeries_Operations.Normalize(ycf,ydg);
   end First_Derivative_First_Order;
 
   procedure First_Derivative_First_Order
@@ -251,8 +251,8 @@ package body Double_Ordered_Evaluations is
       put("idx : "); put(idx,1); new_line;
       put("ycf'last : "); put(ycf'last,1); new_line;
     end if;
-    Double_Real_Powered_Series.Sort(ydg,ycf); 
-    Double_Real_Powered_Series.Normalize(ycf,ydg);
+    Double_rpSeries_Operations.Sort(ydg,ycf); 
+    Double_rpSeries_Operations.Normalize(ycf,ydg);
   end First_Derivative_Second_Order;
 
   procedure First_Derivative_Second_Order
@@ -328,8 +328,8 @@ package body Double_Ordered_Evaluations is
       put("idx : "); put(idx,1); new_line;
       put("ycf'last : "); put(ycf'last,1); new_line;
     end if;
-    Double_Real_Powered_Series.Sort(ydg,ycf); 
-    Double_Real_Powered_Series.Normalize(ycf,ydg);
+    Double_rpSeries_Operations.Sort(ydg,ycf); 
+    Double_rpSeries_Operations.Normalize(ycf,ydg);
   end First_Derivative_Third_Order;
 
   procedure First_Derivative_Third_Order
@@ -416,8 +416,8 @@ package body Double_Ordered_Evaluations is
       put("idx : "); put(idx,1);
       put(", ycf'last : "); put(ycf'last,1); new_line;
     end if;
-    Double_Real_Powered_Series.Sort(ydg,ycf); 
-    Double_Real_Powered_Series.Normalize(ycf,ydg);
+    Double_rpSeries_Operations.Sort(ydg,ycf); 
+    Double_rpSeries_Operations.Normalize(ycf,ydg);
   end Second_Derivative_First_Order;
 
   procedure Second_Derivative_First_Order
@@ -523,8 +523,8 @@ package body Double_Ordered_Evaluations is
       put("idx : "); put(idx,1);
       put(", ycf'last : "); put(ycf'last,1); new_line;
     end if;
-    Double_Real_Powered_Series.Sort(ydg,ycf); 
-    Double_Real_Powered_Series.Normalize(ycf,ydg);
+    Double_rpSeries_Operations.Sort(ydg,ycf); 
+    Double_rpSeries_Operations.Normalize(ycf,ydg);
   end Second_Derivative_Second_Order;
 
   procedure Second_Derivative_Second_Order
@@ -669,8 +669,8 @@ package body Double_Ordered_Evaluations is
       put("idx : "); put(idx,1);
       put(", ycf'last : "); put(ycf'last,1); new_line;
     end if;
-    Double_Real_Powered_Series.Sort(ydg,ycf); 
-    Double_Real_Powered_Series.Normalize(ycf,ydg);
+    Double_rpSeries_Operations.Sort(ydg,ycf); 
+    Double_rpSeries_Operations.Normalize(ycf,ydg);
   end Second_Derivative_Third_Order;
 
   procedure Second_Derivative_Third_Order
@@ -788,8 +788,8 @@ package body Double_Ordered_Evaluations is
       put("idx : "); put(idx,1);
       put(", ycf'last : "); put(ycf'last,1); new_line;
     end if;
-    Double_Real_Powered_Series.Sort(ydg,ycf); 
-    Double_Real_Powered_Series.Normalize(ycf,ydg);
+    Double_rpSeries_Operations.Sort(ydg,ycf); 
+    Double_rpSeries_Operations.Normalize(ycf,ydg);
   end Third_Derivative_First_Order;
 
   procedure Third_Derivative_First_Order
@@ -1012,8 +1012,8 @@ package body Double_Ordered_Evaluations is
       put("idx : "); put(idx,1);
       put(", ycf'last : "); put(ycf'last,1); new_line;
     end if;
-    Double_Real_Powered_Series.Sort(ydg,ycf); 
-    Double_Real_Powered_Series.Normalize(ycf,ydg);
+    Double_rpSeries_Operations.Sort(ydg,ycf); 
+    Double_rpSeries_Operations.Normalize(ycf,ydg);
   end Third_Derivative_Second_Order;
 
   procedure Third_Derivative_Second_Order
@@ -1471,8 +1471,8 @@ package body Double_Ordered_Evaluations is
       put("idx : "); put(idx,1);
       put(", ycf'last : "); put(ycf'last,1); new_line;
     end if;
-    Double_Real_Powered_Series.Sort(ydg,ycf); 
-    Double_Real_Powered_Series.Normalize(ycf,ydg);
+    Double_rpSeries_Operations.Sort(ydg,ycf); 
+    Double_rpSeries_Operations.Normalize(ycf,ydg);
   end Third_Derivative_Third_Order;
 
   procedure Third_Derivative_Third_Order
@@ -1574,9 +1574,9 @@ package body Double_Ordered_Evaluations is
      then put("idxnxt : "); put(idxnxt,1); new_line;
     end if;
     lstidx := idxnxt-1;
-    Double_Real_Powered_Series.Sort(ydg(ydg'first..lstidx),
+    Double_rpSeries_Operations.Sort(ydg(ydg'first..lstidx),
                                     ycf(ycf'first..lstidx)); 
-    Double_Real_Powered_Series.Normalize(ycf(ycf'first..lstidx),
+    Double_rpSeries_Operations.Normalize(ycf(ycf'first..lstidx),
                                          ydg(ydg'first..lstidx));
   end Fixed_Derivative_First_Order;
 
@@ -1767,9 +1767,9 @@ package body Double_Ordered_Evaluations is
      then put("idxnxt : "); put(idxnxt,1); new_line;
     end if;
     lstidx := idxnxt-1;
-    Double_Real_Powered_Series.Sort(ydg(ydg'first..lstidx),
+    Double_rpSeries_Operations.Sort(ydg(ydg'first..lstidx),
                                     ycf(ycf'first..lstidx)); 
-    Double_Real_Powered_Series.Normalize(ycf(ycf'first..lstidx),
+    Double_rpSeries_Operations.Normalize(ycf(ycf'first..lstidx),
                                          ydg(ydg'first..lstidx));
   end Fixed_Derivative_Second_Order;
 
@@ -1921,9 +1921,9 @@ package body Double_Ordered_Evaluations is
      then put("idxnxt : "); put(idxnxt,1); new_line;
     end if;
     lstidx := idxnxt-1;
-    Double_Real_Powered_Series.Sort(ydg(ydg'first..lstidx),
+    Double_rpSeries_Operations.Sort(ydg(ydg'first..lstidx),
                                     ycf(ycf'first..lstidx)); 
-    Double_Real_Powered_Series.Normalize(ycf(ycf'first..lstidx),
+    Double_rpSeries_Operations.Normalize(ycf(ycf'first..lstidx),
                                          ydg(ydg'first..lstidx));
   end Fixed_Derivative_Third_Order;
 
@@ -1953,9 +1953,9 @@ package body Double_Ordered_Evaluations is
       ydg(idx) := pct(i);
       ycf(idx) := pcf(i)*Leading_Coefficient(pdg(i).all,cf0,0,vrblvl-1);
     end loop;
-    Double_Real_Powered_Series.Sort(ydg(ydg'first..idx),
+    Double_rpSeries_Operations.Sort(ydg(ydg'first..idx),
                                     ycf(ycf'first..idx)); 
-    Double_Real_Powered_Series.Normalize(ycf(ycf'first..idx),
+    Double_rpSeries_Operations.Normalize(ycf(ycf'first..idx),
                                          ydg(ydg'first..idx));
     idx := idx + 1;
     for difsum in 1..difmax loop
@@ -1994,9 +1994,9 @@ package body Double_Ordered_Evaluations is
       ydg(idx) := pct(i);
       ycf(idx) := pcf(i)*Leading_Coefficient(pdg(i).all,cf0,0,vrblvl-1);
     end loop;
-    Double_Real_Powered_Series.Sort(ydg(ydg'first..idx),
+    Double_rpSeries_Operations.Sort(ydg(ydg'first..idx),
                                     ycf(ycf'first..idx)); 
-    Double_Real_Powered_Series.Normalize(ycf(ycf'first..idx),
+    Double_rpSeries_Operations.Normalize(ycf(ycf'first..idx),
                                          ydg(ydg'first..idx));
     idx := idx + 1;
     for difsum in 1..difmax loop
@@ -2035,9 +2035,9 @@ package body Double_Ordered_Evaluations is
       ydg(idx) := pct(i);
       ycf(idx) := pcf(i)*Leading_Coefficient(pdg(i).all,cf0,0,vrblvl-1);
     end loop;
-    Double_Real_Powered_Series.Sort(ydg(ydg'first..idx),
+    Double_rpSeries_Operations.Sort(ydg(ydg'first..idx),
                                     ycf(ycf'first..idx)); 
-    Double_Real_Powered_Series.Normalize(ycf(ycf'first..idx),
+    Double_rpSeries_Operations.Normalize(ycf(ycf'first..idx),
                                          ydg(ydg'first..idx));
     idx := idx + 1;
     for difsum in 1..difmax loop
@@ -2087,7 +2087,7 @@ package body Double_Ordered_Evaluations is
              put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
           end loop;
         end if;
-        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        idx := Double_rpSeries_Operations.Positive_Minimum_Index(ycf,ydg);
         pw2(i) := ydg(idx);
         cf2(i) := ycf(idx);
       end;
@@ -2128,7 +2128,7 @@ package body Double_Ordered_Evaluations is
              put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
           end loop;
         end if;
-        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        idx := Double_rpSeries_Operations.Positive_Minimum_Index(ycf,ydg);
         psm(i) := ydg(idx);
         csm(i) := ycf(idx);
       end;
@@ -2170,7 +2170,7 @@ package body Double_Ordered_Evaluations is
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
           end loop;
         end if;
-        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        idx := Double_rpSeries_Operations.Positive_Minimum_Index(ycf,ydg);
         pw3(i) := ydg(idx);
         cf3(i) := ycf(idx);
       end;
@@ -2211,7 +2211,7 @@ package body Double_Ordered_Evaluations is
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
           end loop;
         end if;
-        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        idx := Double_rpSeries_Operations.Positive_Minimum_Index(ycf,ydg);
         psm(i) := ydg(idx);
         csm(i) := ycf(idx);
       end;
@@ -2253,7 +2253,7 @@ package body Double_Ordered_Evaluations is
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
           end loop;
         end if;
-        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        idx := Double_rpSeries_Operations.Positive_Minimum_Index(ycf,ydg);
         pw4(i) := ydg(idx);
         cf4(i) := ycf(idx);
       end;
@@ -2294,7 +2294,7 @@ package body Double_Ordered_Evaluations is
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
           end loop;
         end if;
-        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        idx := Double_rpSeries_Operations.Positive_Minimum_Index(ycf,ydg);
         pw2(i) := ydg(idx);
         cf2(i) := ycf(idx);
       end;
@@ -2335,7 +2335,7 @@ package body Double_Ordered_Evaluations is
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
           end loop;
         end if;
-        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        idx := Double_rpSeries_Operations.Positive_Minimum_Index(ycf,ydg);
         psm(i) := ydg(idx);
         csm(i) := ycf(idx);
       end;
@@ -2377,7 +2377,7 @@ package body Double_Ordered_Evaluations is
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
           end loop;
         end if;
-        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        idx := Double_rpSeries_Operations.Positive_Minimum_Index(ycf,ydg);
         pw3(i) := ydg(idx);
         cf3(i) := ycf(idx);
       end;
@@ -2418,7 +2418,7 @@ package body Double_Ordered_Evaluations is
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
           end loop;
         end if;
-        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        idx := Double_rpSeries_Operations.Positive_Minimum_Index(ycf,ydg);
         psm(i) := ydg(idx);
         csm(i) := ycf(idx);
       end;
@@ -2460,7 +2460,7 @@ package body Double_Ordered_Evaluations is
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
           end loop;
         end if;
-        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        idx := Double_rpSeries_Operations.Positive_Minimum_Index(ycf,ydg);
         pw4(i) := ydg(idx);
         cf4(i) := ycf(idx);
       end;
@@ -2501,7 +2501,7 @@ package body Double_Ordered_Evaluations is
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
           end loop;
         end if;
-        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        idx := Double_rpSeries_Operations.Positive_Minimum_Index(ycf,ydg);
         cf2(i) := ycf(idx);
         pw2(i) := ydg(idx);
       end;
@@ -2542,7 +2542,7 @@ package body Double_Ordered_Evaluations is
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
           end loop;
         end if;
-        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        idx := Double_rpSeries_Operations.Positive_Minimum_Index(ycf,ydg);
         psm(i) := ydg(idx);
         csm(i) := ycf(idx);
       end;
@@ -2584,7 +2584,7 @@ package body Double_Ordered_Evaluations is
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
           end loop;
         end if;
-        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        idx := Double_rpSeries_Operations.Positive_Minimum_Index(ycf,ydg);
         pw3(i) := ydg(idx);
         cf3(i) := ycf(idx);
       end;
@@ -2626,7 +2626,7 @@ package body Double_Ordered_Evaluations is
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
           end loop;
         end if;
-        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        idx := Double_rpSeries_Operations.Positive_Minimum_Index(ycf,ydg);
         pw4(i) := ydg(idx);
         cf4(i) := ycf(idx);
       end;
@@ -2672,7 +2672,7 @@ package body Double_Ordered_Evaluations is
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
           end loop;
         end if;
-        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        idx := Double_rpSeries_Operations.Positive_Minimum_Index(ycf,ydg);
         pw2(i) := ydg(idx);
         cf2(i) := ycf(idx);
       end;
@@ -2716,7 +2716,7 @@ package body Double_Ordered_Evaluations is
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
           end loop;
         end if;
-        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        idx := Double_rpSeries_Operations.Positive_Minimum_Index(ycf,ydg);
         pw3(i) := ydg(idx);
         cf3(i) := ycf(idx);
       end;
@@ -2760,7 +2760,7 @@ package body Double_Ordered_Evaluations is
             put(ycf(i)); put("  t^"); put(ydg(i)); new_line;
           end loop;
         end if;
-        idx := Double_Real_Powered_Series.Positive_Minimum_Index(ycf,ydg);
+        idx := Double_rpSeries_Operations.Positive_Minimum_Index(ycf,ydg);
         pw4(i) := ydg(idx);
         cf4(i) := ycf(idx);
       end;
