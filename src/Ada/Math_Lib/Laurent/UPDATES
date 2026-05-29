@@ -1,3 +1,7 @@
+Fri 29 May 2026 : new double_real_power_series with encapsulated arithmetic
+  on real power series, tested by ts_sqrtrps.adb.  Updated laurent.gpr.
+  New test_linear_series_solver, tested by ts_hunsys.adb.
+
 Wed 27 May 2026 : renamed ts_hunroots.adb into ts_rpsarith.adb, updated
   laurent.gpr; moved code into {double, test}_real_powered_series packages.
 
