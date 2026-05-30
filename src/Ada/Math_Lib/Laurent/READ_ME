@@ -34,19 +34,22 @@ double_weighted_assignment       : solves the weighted assignment problem
 test_weighted_assignment         : test on weighted assignment solutions
 ts_hunwas                        : test Hungarian algorithm
 ------------------------------------------------------------------------------
-double_puiseux_operations        : procedures to compute leading terms
-test_leading_powers              : tests leading powers computation
-test_leading_terms               : tests leading terms computation
-test_linear_series_solver        : tests linear series solver
-ts_hunsys                        : calls main test on leading powers/terms
-------------------------------------------------------------------------------
 double_rpseries_operations       : series with real powers, double precision
 double_real_power_series         : encapsulation of real power series
+double_rpseries_ring             : ring of real power series
+double_rpseries_vectors          : vectors of real power series
+double_rpseries_matrices         : matrices of real power series
 real_powered_series_io           : i/o of series with real powers
 test_real_powered_series         : tests i/o of real powered series
 ts_realpows                      : calls the main test on series i/o
 ts_rpsarith                      : tests real power series arithmetic
 ts_sqrtrps                       : tests square root of real power series
+------------------------------------------------------------------------------
+double_puiseux_operations        : procedures to compute leading terms
+test_leading_powers              : tests leading powers computation
+test_leading_terms               : tests leading terms computation
+test_linear_series_solver        : tests linear series solver
+ts_hunsys                        : calls main test on leading powers/terms
 ------------------------------------------------------------------------------
 real_powered_homotopy            : defines a real powered Laurent homotopy
 real_powered_homotopy_io         : i/o for Laurent homotopy polynomials

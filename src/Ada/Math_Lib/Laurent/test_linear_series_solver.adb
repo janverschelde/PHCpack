@@ -1,19 +1,103 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
-with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
-with Standard_Floating_Matrices;
-with Standard_Complex_Matrices;
-with Test_Leading_Terms;
+with Test_Real_Powered_Series;
 
 package body Test_Linear_Series_Solver is
 
-  procedure Test ( dim,nbr : in integer32 ) is
+  function Random_Series
+             ( size : integer32 )
+             return Double_Real_Power_Series.Link_to_Series is
 
-    X : Standard_Floating_Matrices.Matrix(1..dim,1..nbr);
-    cX : Standard_Complex_Matrices.Matrix(1..dim,1..nbr);
+    rep : Double_Real_Power_Series.Series(size);
+    res : Double_Real_Power_Series.Link_to_Series;
 
   begin
-    Test_Leading_Terms.random_series(dim,nbr,X,cX);
+    Test_Real_Powered_Series.Random_Series(size,rep.cff,rep.pwt);
+    res := new Double_Real_Power_Series.Series'(rep);
+    return res;
+  end Random_Series;
+
+  function Random_Series_Vector
+             ( dim,size : integer32 )
+             return Double_rpSeries_Vectors.Vector is
+
+    res : Double_rpSeries_Vectors.Vector(1..dim);
+
+  begin
+    for i in res'range loop
+      res(i) := Random_Series(size);
+    end loop;
+    return res;
+  end Random_Series_Vector;
+
+  function Random_Series_Matrix
+             ( dim,size : integer32 )
+             return Double_rpSeries_Matrices.Matrix is
+
+    res : Double_rpSeries_Matrices.Matrix(1..dim,1..dim);
+
+  begin
+    for i in res'range(1) loop
+      for j in res'range(2) loop
+        res(i,j) := Random_Series(size);
+      end loop;
+    end loop;
+    return res;
+  end Random_Series_Matrix;
+
+  procedure Write ( x : in Double_rpSeries_Vectors.Vector ) is
+  begin
+    for i in x'range loop
+      Test_Real_Powered_Series.Write(x(i).cff,x(i).pwt);
+    end loop;
+  end Write;
+
+  procedure Write ( A : in Double_rpSeries_Matrices.Matrix ) is
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        Test_Real_Powered_Series.Write(A(i,j).cff,A(i,j).pwt);
+      end loop;
+    end loop;
+  end Write;
+
+  function Right_Hand_Side
+             ( A : Double_rpSeries_Matrices.Matrix;
+               x : in Double_rpSeries_Vectors.Vector ) 
+             return Double_rpSeries_Vectors.Vector is
+
+    res : Double_rpSeries_Vectors.Vector(A'range);
+
+    use Double_Real_Power_Series;
+
+  begin
+    for i in A'range(1) loop
+      res(i) := A(i,A'first(2))*x(x'first);
+      for j in A'first(2)+1..A'last(2) loop
+        declare
+          prd : Link_to_Series := A(i,j)*x(j);
+          sum : Link_to_Series := res(i) + prd;
+        begin
+          Copy(sum,res(i)); Clear(prd); clear(sum);
+        end;
+      end loop;
+    end loop;
+    return res;
+  end Right_Hand_Side;
+
+  procedure Test ( dim,nbr : in integer32 ) is
+
+    x : constant Double_rpSeries_Vectors.Vector(1..dim)
+      := Random_Series_Vector(dim,nbr);
+    A : constant Double_rpSeries_Matrices.Matrix(1..dim,1..dim)
+      := Random_Series_Matrix(dim,nbr);
+    b : constant Double_rpSeries_Vectors.Vector(1..dim)
+      := Right_Hand_Side(A,x);
+
+  begin
+    put_line("a random vector x :"); Write(x);
+    put_line("a random matrix A :"); Write(A);
+    put_line("the right hand side vector b :"); Write(b);
   end Test;
 
   procedure Main is

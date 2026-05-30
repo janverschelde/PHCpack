@@ -24,6 +24,7 @@ package Double_Real_Power_Series is
 
 -- CONSTRUCTORS :
 
+  function Make ( x : integer ) return Series;
   function Make ( x : integer32; tdx : integer32 ) return Series;
   function Make ( x : integer64; tdx : integer32 ) return Series;
   function Make ( x : double_float; tdx : integer32 ) return Series;
@@ -33,6 +34,7 @@ package Double_Real_Power_Series is
   --   Given a number x and the truncation index tdx,
   --   returns a series s where s.cff(0) and all else is zero.
 
+  function Make ( x : integer ) return Link_to_Series;
   function Make ( x : integer32; tdx : integer32 ) return Link_to_Series;
   function Make ( x : integer64; tdx : integer32 ) return Link_to_Series;
   function Make ( x : double_float; tdx : integer32 ) return Link_to_Series;
@@ -67,6 +69,7 @@ package Double_Real_Power_Series is
 
   function Equal ( a,b : Link_to_Series;
                    tol : double_float := 1.0E-12 ) return boolean;
+  function Is_Equal ( a,b : Link_to_Series ) return boolean;
 
   -- DESCRIPTION :
   --   Wraps the test on equality for the content of a and b.

@@ -1,5 +1,9 @@
 Sat 30 May 2026 : bug fixed in double_real_power_series.adb, square root
-  computation tested in ts_sqrtrps.adb.
+  computation tested in ts_sqrtrps.adb.  Defined double_rpseries_ring.ads
+  after extending double_real_power_series, used to instantiate vectors 
+  and matrices: double_rpseries_vectors.ads and double_rpseries_matrices.ads.
+  In test_linear_series_solver, define the setup for a random test.
+  Modified ts_hunsys.adb.
 
 Fri 29 May 2026 : new double_real_power_series with encapsulated arithmetic
   on real power series, tested by ts_sqrtrps.adb.  Updated laurent.gpr.

@@ -5,6 +5,11 @@ package body Double_Real_Power_Series is
 
 -- CONSTRUCTORS :
 
+  function Make ( x : integer ) return Series is
+  begin
+    return Make(double_float(x),0);
+  end Make;
+
   function Make ( x : integer32; tdx : integer32 ) return Series is
 
     res : Series(tdx);
@@ -55,6 +60,11 @@ package body Double_Real_Power_Series is
       res.pwt(i) := 0.0;
     end loop;
     return res;
+  end Make;
+
+  function Make ( x : integer ) return Link_to_Series is
+  begin
+    return Make(double_float(x),0);
   end Make;
 
   function Make ( x : integer32; tdx : integer32 ) return Link_to_Series is
@@ -163,6 +173,11 @@ package body Double_Real_Power_Series is
       return Equal(a.all,b.all,tol);
     end if;
   end Equal;
+
+  function Is_Equal ( a,b : Link_to_Series ) return boolean is
+  begin
+    return Equal(a,b);
+  end Is_Equal;
 
   procedure Copy ( a : in Series; b : in out Series ) is
   begin

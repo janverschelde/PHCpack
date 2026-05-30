@@ -16,9 +16,9 @@ procedure ts_hunsys is
   begin
     new_line;
     put_line("MENU to test linear system of real power series :");
-    put_line(" 0. test only leading powers");
-    put_line(" 1. test system with leading terms in coefficient matrix");
-    put_line(" 2. test general linear systems of real power series");
+    put_line("  0. test only leading powers");
+    put_line("  1. test system with leading terms in coefficient matrix");
+    put_line("  2. test general linear systems of real power series");
     put("Type 0, 1, or 2 to select a test : ");
     Communications_with_User.Ask_Alternative(ans,"012");
     case ans is
