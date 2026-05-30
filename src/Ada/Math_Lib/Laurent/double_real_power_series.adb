@@ -177,7 +177,7 @@ package body Double_Real_Power_Series is
   procedure Copy ( a : in Link_to_Series; b : in out Link_to_Series ) is
   begin
     Clear(b);
-    b := Make(a.cff,b.pwt);
+    b := Make(a.cff,a.pwt);
   end Copy;
 
 -- ARITHMETICAL OPERATORS :

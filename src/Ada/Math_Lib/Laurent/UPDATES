@@ -1,3 +1,6 @@
+Sat 30 May 2026 : bug fixed in double_real_power_series.adb, square root
+  computation tested in ts_sqrtrps.adb.
+
 Fri 29 May 2026 : new double_real_power_series with encapsulated arithmetic
   on real power series, tested by ts_sqrtrps.adb.  Updated laurent.gpr.
   New test_linear_series_solver, tested by ts_hunsys.adb.
