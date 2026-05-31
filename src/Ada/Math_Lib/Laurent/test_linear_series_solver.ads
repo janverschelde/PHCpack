@@ -1,4 +1,6 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Complex_Vectors;
+with Standard_Complex_Matrices;
 with Double_Real_Power_Series;
 with Double_rpSeries_Vectors;
 with Double_rpSeries_Matrices;
@@ -48,6 +50,35 @@ package Test_Linear_Series_Solver is
 
   -- DESCRIPTION :
   --   Returns the product of A with x.
+
+  function Extract_Constants
+             ( A : Double_rpSeries_Matrices.Matrix )
+             return Standard_Complex_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns the constant coefficients of the matrix A.
+
+  function Extract_Constants 
+             ( v : Double_rpSeries_Vectors.Vector )
+             return Standard_Complex_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the constant coefficients of the vector v.
+
+  procedure Test_Series_Solver 
+              ( A : in Double_rpSeries_Matrices.Matrix;
+                x,b : in Double_rpSeries_Vectors.Vector;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Solves the system A*x = b.
+
+  procedure Test ( dim,nbr : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a dim-by-dim matrix A of series of size nbr,
+  --   a dim-dimensional solution vector x of series of nbr size,
+  --   and then computes the right hand side vector b.
 
   procedure Main;
 

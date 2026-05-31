@@ -1,3 +1,6 @@
+Sun 31 May 2026 : to test_linear_series_solver, added the computation
+  of the constant coefficients of the solution.
+
 Sat 30 May 2026 : bug fixed in double_real_power_series.adb, square root
   computation tested in ts_sqrtrps.adb.  Defined double_rpseries_ring.ads
   after extending double_real_power_series, used to instantiate vectors 
