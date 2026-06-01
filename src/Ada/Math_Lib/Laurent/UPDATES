@@ -1,3 +1,6 @@
+Mon 1 Jun 2026 : extended test_linear_series_solver with the computation
+  of the first term of the solution series.
+
 Sun 31 May 2026 : to test_linear_series_solver, added the computation
   of the constant coefficients of the solution.
 
