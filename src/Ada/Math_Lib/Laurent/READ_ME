@@ -36,6 +36,7 @@ ts_hunwas                        : test Hungarian algorithm
 ------------------------------------------------------------------------------
 double_rpseries_operations       : series with real powers, double precision
 double_real_power_series         : encapsulation of real power series
+double_real_power_series_io      : basic output of real power series
 double_rpseries_ring             : ring of real power series
 double_rpseries_vectors          : vectors of real power series
 double_rpseries_matrices         : matrices of real power series
@@ -46,6 +47,7 @@ ts_rpsarith                      : tests real power series arithmetic
 ts_sqrtrps                       : tests square root of real power series
 ------------------------------------------------------------------------------
 double_puiseux_operations        : procedures to compute leading terms
+double_linear_rpseries_solver    : solves linear system of real power series
 test_leading_powers              : tests leading powers computation
 test_leading_terms               : tests leading terms computation
 test_linear_series_solver        : tests linear series solver

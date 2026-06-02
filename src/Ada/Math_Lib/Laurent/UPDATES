@@ -1,3 +1,6 @@
+Tue 2 Jun 2026 : new packages double_real_power_series_io and
+  double_linear_rpseries_solver with code from test_linear_series_solver.
+
 Mon 1 Jun 2026 : extended test_linear_series_solver with the computation
   of the first term of the solution series.
 
