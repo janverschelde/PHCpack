@@ -1,1 +1,5 @@
+Sat 27 Jun 2026 : added .cpp versions of double_double, quad_double,
+  octo_double, and hexa_double.  Updated quad_double.c for error
+  reported by the Microsoft Visual Studio Compiler.
+
 Sat 18 Mar 2023 : in qdc.gpr, fixed (relative) location of Objects and bin.
