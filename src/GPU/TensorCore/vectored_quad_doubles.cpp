@@ -34,8 +34,8 @@ bool is_qd_quarter_balanced
    bool b14 = is_quarter_balanced(xlolo1, xlolo2, vrblvl-1);
    bool b15 = is_quarter_balanced(xlolo2, xlolo3, vrblvl-1);
 
-   bool result = b01 && b02 && b03 && b04 && b05 && b06 && b07 & b08
-               & b09 && b10 && b11 && b12 && b13 && b14 && b15;
+   bool result = b01 && b02 && b03 && b04 && b05 && b06 && b07 && b08
+              && b09 && b10 && b11 && b12 && b13 && b14 && b15;
    if(vrblvl > 0)
    {
       if(result)
