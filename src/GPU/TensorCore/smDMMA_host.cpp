@@ -6,7 +6,9 @@
 #include <iostream>
 #include "double_matrix_multiplications.h"
 #include "random2_matrices.h"
+#include "random4_matrices.h"
 #include "vectored_double_doubles.h"
+#include "vectored_quad_doubles.h"
 
 void init_host_matrices ( double *a, double *b, double *c, int nbrange )
 {
@@ -276,6 +278,278 @@ void random_double_double_matrices
    for(int k=0; k<numCrows*numCcols; k++) C[k] = 0.0;
 }
 
+void random_quad_double_matrices
+ ( double *A, double *B, double *C,
+   int numArows, int numAcols, int numBrows, int numBcols,
+   int numCrows, int numCcols, int vrblvl )
+{
+   using namespace std;
+
+   if(vrblvl > 0)
+   {
+      cout << "-> in smDMMA_host.random_quad_double_matrices ..." << endl;
+      cout << "#rows in A : " << numArows
+           << ", #columns in A : " << numAcols << endl;
+      cout << "#rows in B : " << numBrows
+           << ", #columns in B : " << numBcols << endl;
+      cout << "#rows in C : " << numCrows
+           << ", #columns in C : " << numCcols << endl;
+   }
+   const int nqdArows = numArows/16;
+   const int nqdAcols = numAcols/16;
+   const int nqdBrows = numBrows/16;
+   const int nqdBcols = numBcols;
+   const int nqdCrows = numCrows/16;
+   const int nqdCcols = numCcols;
+
+   if(vrblvl > 0)
+   {
+      cout << "#rows in qd A : " << nqdArows
+           << ", #columns in qd A : " << nqdAcols << endl;
+      cout << "#rows in qd B : " << nqdBrows
+           << ", #columns in qd B : " << nqdBcols << endl;
+      cout << "#rows in qd C : " << nqdCrows
+           << ", #columns in qd C : " << nqdCcols << endl;
+   }
+
+   double **Ahihi = new double*[nqdArows];
+   double **Alohi = new double*[nqdArows];
+   double **Ahilo = new double*[nqdArows];
+   double **Alolo = new double*[nqdArows];
+   double **Bhihi = new double*[nqdBrows];
+   double **Blohi = new double*[nqdBrows];
+   double **Bhilo = new double*[nqdBrows];
+   double **Blolo = new double*[nqdBrows];
+
+   if(vrblvl > 0)
+      cout << "-> generating a random " << nqdArows
+           << "-by-" << nqdAcols << " quad double matrix A ..." << endl;
+
+   for(int i=0; i<nqdArows; i++)
+   {
+      Ahihi[i] = new double[nqdAcols];
+      Alohi[i] = new double[nqdAcols];
+      Ahilo[i] = new double[nqdAcols];
+      Alolo[i] = new double[nqdAcols];
+   }
+   random_dbl4_matrix(nqdArows, nqdAcols, Ahihi, Alohi, Ahilo, Alolo);
+
+   for(int i=0; i<nqdArows; i++)
+      for(int j=0; j<nqdAcols; j++)
+      {
+         if(Ahihi[i][j] < 0.0) Ahihi[i][j] = -Ahihi[i][j];
+         if(Alohi[i][j] < 0.0) Alohi[i][j] = -Alohi[i][j];
+         if(Ahilo[i][j] < 0.0) Ahilo[i][j] = -Ahilo[i][j];
+         if(Alolo[i][j] < 0.0) Alolo[i][j] = -Alolo[i][j];
+         make_qd_exponent_zero
+            (&Ahihi[i][j], &Alohi[i][j], &Ahilo[i][j], &Alolo[i][j]);
+      }
+
+   if(vrblvl > 0)
+      cout << "-> generating a random " << nqdBrows
+           << "-by-" << nqdBcols << " quad double matrix B ..." << endl;
+
+   for(int i=0; i<nqdBrows; i++)
+   {
+      Bhihi[i] = new double[nqdBcols];
+      Blohi[i] = new double[nqdBcols];
+      Bhilo[i] = new double[nqdBcols];
+      Blolo[i] = new double[nqdBcols];
+   }
+   random_dbl4_matrix(nqdBrows, nqdBcols, Bhihi, Blohi, Bhilo, Blolo);
+
+   for(int i=0; i<nqdBrows; i++)
+      for(int j=0; j<nqdBcols; j++)
+      {
+         if(Bhihi[i][j] < 0.0) Bhihi[i][j] = -Bhihi[i][j];
+         if(Blohi[i][j] < 0.0) Blohi[i][j] = -Blohi[i][j];
+         if(Bhilo[i][j] < 0.0) Bhilo[i][j] = -Bhilo[i][j];
+         if(Blolo[i][j] < 0.0) Blolo[i][j] = -Blolo[i][j];
+         make_qd_exponent_zero
+            (&Bhihi[i][j], &Blohi[i][j], &Bhilo[i][j], &Blolo[i][j]);
+      }
+
+   double **Ahihi0 = new double*[nqdArows];
+   double **Ahihi1 = new double*[nqdArows];
+   double **Ahihi2 = new double*[nqdArows];
+   double **Ahihi3 = new double*[nqdArows];
+   double **Alohi0 = new double*[nqdArows];
+   double **Alohi1 = new double*[nqdArows];
+   double **Alohi2 = new double*[nqdArows];
+   double **Alohi3 = new double*[nqdArows];
+   double **Ahilo0 = new double*[nqdArows];
+   double **Ahilo1 = new double*[nqdArows];
+   double **Ahilo2 = new double*[nqdArows];
+   double **Ahilo3 = new double*[nqdArows];
+   double **Alolo0 = new double*[nqdArows];
+   double **Alolo1 = new double*[nqdArows];
+   double **Alolo2 = new double*[nqdArows];
+   double **Alolo3 = new double*[nqdArows];
+
+   for(int i=0; i<nqdArows; i++)
+   {
+      Ahihi0[i] = new double[nqdAcols];
+      Ahihi1[i] = new double[nqdAcols];
+      Ahihi2[i] = new double[nqdAcols];
+      Ahihi3[i] = new double[nqdAcols];
+      Alohi0[i] = new double[nqdAcols];
+      Alohi1[i] = new double[nqdAcols];
+      Alohi2[i] = new double[nqdAcols];
+      Alohi3[i] = new double[nqdAcols];
+      Ahilo0[i] = new double[nqdAcols];
+      Ahilo1[i] = new double[nqdAcols];
+      Ahilo2[i] = new double[nqdAcols];
+      Ahilo3[i] = new double[nqdAcols];
+      Alolo0[i] = new double[nqdAcols];
+      Alolo1[i] = new double[nqdAcols];
+      Alolo2[i] = new double[nqdAcols];
+      Alolo3[i] = new double[nqdAcols];
+   }
+   if(vrblvl > 0)
+      cout << "-> 16-splitting a " << nqdArows
+           << "-by-" << nqdAcols << " quad double matrix A ..." << endl;
+
+   quarter_qd_matrix
+      (nqdArows, nqdAcols, Ahihi, Alohi, Ahilo, Alolo,
+       Ahihi0, Ahihi1, Ahihi2, Ahihi3, Alohi0, Alohi1, Alohi2, Alohi3,
+       Ahilo0, Ahilo1, Ahilo2, Ahilo3, Alolo0, Alolo1, Alolo2, Alolo3);
+
+   double **Bhihi0 = new double*[nqdBrows];
+   double **Bhihi1 = new double*[nqdBrows];
+   double **Bhihi2 = new double*[nqdBrows];
+   double **Bhihi3 = new double*[nqdBrows];
+   double **Blohi0 = new double*[nqdBrows];
+   double **Blohi1 = new double*[nqdBrows];
+   double **Blohi2 = new double*[nqdBrows];
+   double **Blohi3 = new double*[nqdBrows];
+   double **Bhilo0 = new double*[nqdBrows];
+   double **Bhilo1 = new double*[nqdBrows];
+   double **Bhilo2 = new double*[nqdBrows];
+   double **Bhilo3 = new double*[nqdBrows];
+   double **Blolo0 = new double*[nqdBrows];
+   double **Blolo1 = new double*[nqdBrows];
+   double **Blolo2 = new double*[nqdBrows];
+   double **Blolo3 = new double*[nqdBrows];
+
+   for(int i=0; i<nqdBrows; i++)
+   {
+      Bhihi0[i] = new double[nqdBcols];
+      Bhihi1[i] = new double[nqdBcols];
+      Bhihi2[i] = new double[nqdBcols];
+      Bhihi3[i] = new double[nqdBcols];
+      Blohi0[i] = new double[nqdBcols];
+      Blohi1[i] = new double[nqdBcols];
+      Blohi2[i] = new double[nqdBcols];
+      Blohi3[i] = new double[nqdBcols];
+      Bhilo0[i] = new double[nqdBcols];
+      Bhilo1[i] = new double[nqdBcols];
+      Bhilo2[i] = new double[nqdBcols];
+      Bhilo3[i] = new double[nqdBcols];
+      Blolo0[i] = new double[nqdBcols];
+      Blolo1[i] = new double[nqdBcols];
+      Blolo2[i] = new double[nqdBcols];
+      Blolo3[i] = new double[nqdBcols];
+   }
+   if(vrblvl > 0)
+      cout << "-> 16-splitting a " << nqdBrows
+           << "-by-" << nqdBcols << " quad double matrix B ..." << endl;
+
+   quarter_qd_matrix
+      (nqdBrows, nqdBcols, Bhihi, Blohi, Bhilo, Blolo,
+       Bhihi0, Bhihi1, Bhihi2, Bhihi3, Blohi0, Blohi1, Blohi2, Blohi3,
+       Bhilo0, Bhilo1, Bhilo2, Bhilo3, Blolo0, Blolo1, Blolo2, Blolo3);
+
+   if(vrblvl > 0)
+      cout << "-> convoluting the 16-splitted matrix A ..." << endl;
+
+   double **cA = new double*[16*nqdArows];
+   for(int i=0; i<16*nqdArows; i++) cA[i] = new double[16*nqdAcols];
+
+   qd_convolute_quarters
+      (nqdArows, nqdAcols,
+       Ahihi0, Ahihi1, Ahihi2, Ahihi3, Alohi0, Alohi1, Alohi2, Alohi3,
+       Ahilo0, Ahilo1, Ahilo2, Ahilo3, Alolo0, Alolo1, Alolo2, Alolo3, cA);
+
+   if(vrblvl > 0)
+      cout << "-> stacking the 16-splitted matrix B ..." << endl;
+
+   double **sB = new double*[16*nqdBrows];
+   for(int i=0; i<16*nqdBrows; i++) sB[i] = new double[nqdBcols];
+
+   qd_stack_quarters
+      (nqdBrows, nqdBcols,
+       Bhihi0, Bhihi1, Bhihi2, Bhihi3, Blohi0, Blohi1, Blohi2, Blohi3, 
+       Bhilo0, Bhilo1, Bhilo2, Bhilo3, Blolo0, Blolo1, Blolo2, Blolo3, sB);
+
+   const int padArows = numArows - 16*nqdArows;
+   const int padAcols = numAcols - 16*nqdAcols;
+   
+   if(vrblvl > 0)
+   {
+      cout << "  #rows A : " << numArows
+           << ",   16 x #rows qd A : " << 16*nqdArows
+           << " => pad rows A : " << padArows << endl;
+      cout << "#colums A : " << numAcols
+           << ", 16 x #colums qd A : " << 16*nqdAcols
+           << " => pad columns A : " << padAcols << endl;
+      cout << "-> padding the convoluted 16-splitted matrix A ..." << endl;
+   }
+   double **pcA = new double*[numArows];
+   for(int i=0; i<numArows; i++)
+   {
+      pcA[i] = new double[numAcols];
+      for(int j=0; j<numAcols; j++) pcA[i][j] = 0.0;
+   }
+   for(int i=0; i<12*nqdArows; i++)
+      for(int j=0; j<12*nqdAcols; j++) pcA[i][j] = cA[i][j];
+
+   if(vrblvl > 0)
+      cout << "-> single indexing the convoluted 16-splitted matrix A ..."
+           << endl;
+
+   double2single_row_major(numArows, numAcols, pcA, A);
+
+   const int padBrows = numBrows - 16*nqdBrows;
+   const int padBcols = numBcols - nqdBcols;
+
+   if(vrblvl > 0)
+   {
+      cout << "  #rows B : " << numBrows
+           << ",   16 x #rows qd B : " << 16*nqdBrows
+           << " => pad rows B : " << padBrows << endl;
+      cout << "#colums B : " << numBcols
+           << ", 16 x #colums qd B : " << 16*nqdBcols
+           << " => pad columns B : " << padBcols << endl;
+      cout << "-> padding the stacked 16-splitted matrix B ..." << endl;
+   }
+   double **psB = new double*[numBrows];
+   for(int i=0; i<numBrows; i++)
+   {
+      psB[i] = new double[numBcols];
+      for(int j=0; j<numBcols; j++) psB[i][j] = 0.0;
+   }
+   for(int i=0; i<16*nqdBrows; i++)
+      for(int j=0; j<nqdBcols; j++) psB[i][j] = sB[i][j];
+
+   if(vrblvl > 0)
+      cout << "-> transposing the padded stacked 16-splitted matrix"
+           << " B ..." << endl; 
+
+   double **sBT = new double*[numBcols];
+   for(int i=0; i<numBcols; i++) sBT[i] = new double[numBrows];
+   transpose_rows_columns(numBrows, numBcols, psB, sBT);
+
+   if(vrblvl > 0)
+      cout << "-> single indexing the transposed padded stacked 16-splitted"
+           << " matrix B ..." << endl;
+  
+   double2single_column_major(numBrows, numBcols, sBT, B);
+
+   if(vrblvl > 0)
+      cout << "-> initializing the matrix C ..." << endl;
+
+   for(int k=0; k<numCrows*numCcols; k++) C[k] = 0.0;
+}
 
 void matMultiplyOnHost
  ( double *A, double *B, double *C, float alpha, float beta,

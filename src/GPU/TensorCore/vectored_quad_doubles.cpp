@@ -1,21 +1,158 @@
 /* Collection of functions for vectored quad double arithmetic. */
 
-#include <stdio.h>
+#include <iostream>
 #include "quad_double.h"
 #include "quad_double_functions.h"
 #include "splitting_doubles.h"
+
+using namespace std;
+
+bool is_qd_quarter_balanced
+ ( double xhihi0, double xhihi1, double xhihi2, double xhihi3,
+   double xlohi0, double xlohi1, double xlohi2, double xlohi3,
+   double xhilo0, double xhilo1, double xhilo2, double xhilo3, 
+   double xlolo0, double xlolo1, double xlolo2, double xlolo3,
+   int vrblvl )
+{
+   if(vrblvl > 0)
+      cout << "-> in vectored_quad_doubles.is_qd_quarter_balanced ..."
+           << endl;
+
+   bool b01 = is_quarter_balanced(xhihi0, xhihi1, vrblvl-1);
+   bool b02 = is_quarter_balanced(xhihi1, xhihi2, vrblvl-1);
+   bool b03 = is_quarter_balanced(xhihi2, xhihi3, vrblvl-1);
+   bool b04 = is_quarter_balanced(xhihi3, xlohi0, vrblvl-1);
+   bool b05 = is_quarter_balanced(xlohi0, xlohi1, vrblvl-1);
+   bool b06 = is_quarter_balanced(xlohi1, xlohi2, vrblvl-1);
+   bool b07 = is_quarter_balanced(xlohi2, xlohi3, vrblvl-1);
+   bool b08 = is_quarter_balanced(xlohi3, xhilo0, vrblvl-1);
+   bool b09 = is_quarter_balanced(xhilo0, xhilo1, vrblvl-1);
+   bool b10 = is_quarter_balanced(xhilo1, xhilo2, vrblvl-1);
+   bool b11 = is_quarter_balanced(xhilo2, xhilo3, vrblvl-1);
+   bool b12 = is_quarter_balanced(xhilo3, xlolo0, vrblvl-1);
+   bool b13 = is_quarter_balanced(xlolo0, xlolo1, vrblvl-1);
+   bool b14 = is_quarter_balanced(xlolo1, xlolo2, vrblvl-1);
+   bool b15 = is_quarter_balanced(xlolo2, xlolo3, vrblvl-1);
+
+   bool result = b01 && b02 && b03 && b04 && b05 && b06 && b07 & b08
+               & b09 && b10 && b11 && b12 && b13 && b14 && b15;
+   if(vrblvl > 0)
+   {
+      if(result)
+         cout << "All 16 quarters of the quad double are balanced."
+              << endl;
+      else
+         cout << "Not all 16 quarters of the quad double are balanced."
+              << endl;
+   }
+   return result;
+}
+
+void qd_balance_quarters
+ ( double *xhihi0, double *xhihi1, double *xhihi2, double *xhihi3,
+   double *xlohi0, double *xlohi1, double *xlohi2, double *xlohi3,
+   double *xhilo0, double *xhilo1, double *xhilo2, double *xhilo3,
+   double *xlolo0, double *xlolo1, double *xlolo2, double *xlolo3,
+   int vrblvl )
+{
+   if(vrblvl > 0)
+      cout << "-> in vectored_quad_doubles.qd_balance_quarters ..." << endl;
+
+   if(!is_quarter_balanced(*xhihi0, *xhihi1, vrblvl-1))
+      quarter_balance(xhihi0, xhihi1, vrblvl-1);
+   if(!is_quarter_balanced(*xhihi1, *xhihi2, vrblvl-1))
+      quarter_balance(xhihi1, xhihi2, vrblvl-1);
+   if(!is_quarter_balanced(*xhihi2, *xhihi3, vrblvl-1))
+      quarter_balance(xhihi2, xhihi3, vrblvl-1);
+   if(!is_quarter_balanced(*xhihi3, *xlohi0, vrblvl-1))
+      quarter_balance(xhihi3, xlohi0, vrblvl-1);
+   if(!is_quarter_balanced(*xlohi0, *xlohi1, vrblvl-1))
+      quarter_balance(xlohi0, xlohi1, vrblvl-1);
+   if(!is_quarter_balanced(*xlohi1, *xlohi2, vrblvl-1))
+      quarter_balance(xlohi1, xlohi2, vrblvl-1);
+   if(!is_quarter_balanced(*xlohi2, *xlohi3, vrblvl-1))
+      quarter_balance(xlohi2, xlohi3, vrblvl-1);
+   if(!is_quarter_balanced(*xlohi3, *xhilo0, vrblvl-1))
+      quarter_balance(xlohi3, xhilo0, vrblvl-1);
+   if(!is_quarter_balanced(*xhilo0, *xhilo1, vrblvl-1))
+      quarter_balance(xhilo0, xhilo1, vrblvl-1);
+   if(!is_quarter_balanced(*xhilo1, *xhilo2, vrblvl-1))
+      quarter_balance(xhilo1, xhilo2, vrblvl-1);
+   if(!is_quarter_balanced(*xhilo2, *xhilo3, vrblvl-1))
+      quarter_balance(xhilo2, xhilo3, vrblvl-1);
+   if(!is_quarter_balanced(*xhilo3, *xlolo0, vrblvl-1))
+      quarter_balance(xhilo3, xlolo0, vrblvl-1);
+   if(!is_quarter_balanced(*xlolo0, *xlolo1, vrblvl-1))
+      quarter_balance(xlolo0, xlolo1, vrblvl-1);
+   if(!is_quarter_balanced(*xlolo1, *xlolo2, vrblvl-1))
+      quarter_balance(xlolo1, xlolo2, vrblvl-1);
+   if(!is_quarter_balanced(*xlolo2, *xlolo3, vrblvl-1))
+      quarter_balance(xlolo2, xlolo3, vrblvl-1);
+}
+
+void make_qd_exponent_zero
+ ( double *xhihi, double *xlohi, double *xhilo, double *xlolo, int vrblvl )
+{
+   if(vrblvl > 0)
+      cout << "-> in vectored_quad_doubles.make_qd_exponent_zero ..."
+           << endl;
+
+   double factor;
+
+   make_exponent_zero(xhihi, &factor, vrblvl-1);
+   *xlohi = (*xlohi)*factor;
+   *xhilo = (*xhilo)*factor;
+   *xlolo = (*xlolo)*factor;
+}
 
 void quarter_quad_double
  ( double xhihi, double xlohi, double xhilo, double xlolo,
    double *xhihi0, double *xhihi1, double *xhihi2, double *xhihi3,
    double *xlohi0, double *xlohi1, double *xlohi2, double *xlohi3,
    double *xhilo0, double *xhilo1, double *xhilo2, double *xhilo3,
-   double *xlolo0, double *xlolo1, double *xlolo2, double *xlolo3 )
+   double *xlolo0, double *xlolo1, double *xlolo2, double *xlolo3,
+   int vrblvl )
 {
+   if(vrblvl > 0)
+      cout << "-> in vectored_quad_doubles.quarter_quad_double ..."
+           << endl;
+
    quarter_split(xhihi, xhihi0, xhihi1, xhihi2, xhihi3);
+   if(vrblvl > 0)
+   {
+      if(*xhihi0 == 0.0) cout << "xhihi0 is zero!" << endl;
+      if(*xhihi1 == 0.0) cout << "xhihi1 is zero!" << endl;
+      if(*xhihi2 == 0.0) cout << "xhihi2 is zero!" << endl;
+      if(*xhihi3 == 0.0) cout << "xhihi3 is zero!" << endl;
+   }
    quarter_split(xlohi, xlohi0, xlohi1, xlohi2, xlohi3);
+   if(vrblvl > 0)
+   {
+      if(*xlohi0 == 0.0) cout << "xlohi0 is zero!" << endl;
+      if(*xlohi1 == 0.0) cout << "xlohi1 is zero!" << endl;
+      if(*xlohi2 == 0.0) cout << "xlohi2 is zero!" << endl;
+      if(*xlohi3 == 0.0) cout << "xlohi3 is zero!" << endl;
+   }
    quarter_split(xhilo, xhilo0, xhilo1, xhilo2, xhilo3);
+   if(vrblvl > 0)
+   {
+      if(*xhilo0 == 0.0) cout << "xhilo0 is zero!" << endl;
+      if(*xhilo1 == 0.0) cout << "xhilo1 is zero!" << endl;
+      if(*xhilo2 == 0.0) cout << "xhilo2 is zero!" << endl;
+      if(*xhilo3 == 0.0) cout << "xhilo3 is zero!" << endl;
+   }
    quarter_split(xlolo, xlolo0, xlolo1, xlolo2, xlolo3);
+   if(vrblvl > 0)
+   {
+      if(*xlolo0 == 0.0) cout << "xlolo0 is zero!" << endl;
+      if(*xlolo1 == 0.0) cout << "xlolo1 is zero!" << endl;
+      if(*xlolo2 == 0.0) cout << "xlolo2 is zero!" << endl;
+      if(*xlolo3 == 0.0) cout << "xlolo3 is zero!" << endl;
+   }
+   qd_balance_quarters
+      (xhihi0, xhihi1, xhihi2, xhihi3, xlohi0, xlohi1, xlohi2, xlohi3,
+       xhilo0, xhilo1, xhilo2, xhilo3, xlolo0, xlolo1, xlolo2, xlolo3,
+       vrblvl-1);
 }
 
 void quarter_qd_vector
@@ -23,8 +160,13 @@ void quarter_qd_vector
    double *xhihi0, double *xhihi1, double *xhihi2, double *xhihi3,
    double *xlohi0, double *xlohi1, double *xlohi2, double *xlohi3,
    double *xhilo0, double *xhilo1, double *xhilo2, double *xhilo3,
-   double *xlolo0, double *xlolo1, double *xlolo2, double *xlolo3 )
+   double *xlolo0, double *xlolo1, double *xlolo2, double *xlolo3,
+   int vrblvl )
 {
+   if(vrblvl > 0)
+      cout << "-> in vectored_quad_doubles.quarter_qd_vector ..."
+           << endl;
+
    for(int i=0; i<dim; i++)
    {
       quarter_quad_double
@@ -32,7 +174,7 @@ void quarter_qd_vector
           &xhihi0[i], &xhihi1[i], &xhihi2[i], &xhihi3[i],
           &xlohi0[i], &xlohi1[i], &xlohi2[i], &xlohi3[i],
           &xhilo0[i], &xhilo1[i], &xhilo2[i], &xhilo3[i],
-          &xlolo0[i], &xlolo1[i], &xlolo2[i], &xlolo3[i]);
+          &xlolo0[i], &xlolo1[i], &xlolo2[i], &xlolo3[i],vrblvl-1);
    }
 }
 
@@ -42,8 +184,13 @@ void quarter_qd_matrix
    double **Ahihi0, double **Ahihi1, double **Ahihi2, double **Ahihi3,
    double **Alohi0, double **Alohi1, double **Alohi2, double **Alohi3,
    double **Ahilo0, double **Ahilo1, double **Ahilo2, double **Ahilo3,
-   double **Alolo0, double **Alolo1, double **Alolo2, double **Alolo3 )
+   double **Alolo0, double **Alolo1, double **Alolo2, double **Alolo3,
+   int vrblvl )
 {
+   if(vrblvl > 0)
+      cout << "-> in vectored_quad_doubles.quarter_qd_matrix ..."
+           << endl;
+
    for(int i=0; i<nrows; i++)
       for(int j=0; j<ncols; j++)
       {
@@ -52,7 +199,8 @@ void quarter_qd_matrix
              &Ahihi0[i][j], &Ahihi1[i][j], &Ahihi2[i][j], &Ahihi3[i][j],
              &Alohi0[i][j], &Alohi1[i][j], &Alohi2[i][j], &Alohi3[i][j],
              &Ahilo0[i][j], &Ahilo1[i][j], &Ahilo2[i][j], &Ahilo3[i][j],
-             &Alolo0[i][j], &Alolo1[i][j], &Alolo2[i][j], &Alolo3[i][j]);
+             &Alolo0[i][j], &Alolo1[i][j], &Alolo2[i][j], &Alolo3[i][j],
+             vrblvl-1);
       }
 }
 
@@ -114,7 +262,7 @@ void qd_write_vector
    {
       x[0] = xhihi[i]; x[1] = xlohi[i];
       x[2] = xhilo[i]; x[3] = xlolo[i];
-      qd_write(x, 64); printf("\n");
+      qd_write(x, 64); cout << endl;
    }
 }
 

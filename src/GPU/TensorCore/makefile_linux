@@ -237,14 +237,20 @@ test_dd_setup.o:
 test_dd_setup: smDMMA_host.o test_dd_setup.o \
         double_matrix_multiplications.o \
         random_numbers.o random2_vectors.o random2_matrices.o \
+        random4_vectors.o random4_matrices.o \
         double_double.o double_double_functions.o \
-        splitting_doubles.o vectored_double_doubles.o 
+        quad_double.o quad_double_functions.o \
+        splitting_doubles.o vectored_double_doubles.o \
+        vectored_quad_doubles.o 
 	@-echo ">>> linking ..."
 	$(gpp) -o test_dds test_dd_setup.o smDMMA_host.o \
                   double_matrix_multiplications.o \
                   random_numbers.o random2_vectors.o random2_matrices.o \
+                  random4_vectors.o random4_matrices.o \
                   double_double.o double_double_functions.o \
-                  splitting_doubles.o vectored_double_doubles.o
+                  quad_double.o quad_double_functions.o \
+                  splitting_doubles.o vectored_double_doubles.o \
+                  vectored_quad_doubles.o
 
 test_smDMMA.o:
 	@-echo ">>> compiling test_smDMMA ..."
@@ -253,14 +259,20 @@ test_smDMMA.o:
 test_smDMMA: smDMMA_host.o smDMMA_kernels.o test_smDMMA.o \
         double_matrix_multiplications.o \
         random_numbers.o random2_vectors.o random2_matrices.o \
+        random4_vectors.o random4_matrices.o \
         double_double.o double_double_functions.o \
-        splitting_doubles.o vectored_double_doubles.o 
+        quad_double.o quad_double_functions.o \
+        splitting_doubles.o vectored_double_doubles.o \
+        vectored_quad_doubles.o 
 	@-echo ">>> linking ..."
 	$(gpp) -o test_smDMMA smDMMA_host.o smDMMA_kernels.o test_smDMMA.o \
                   double_matrix_multiplications.o \
                   random_numbers.o random2_vectors.o random2_matrices.o \
+                  random4_vectors.o random4_matrices.o \
                   double_double.o double_double_functions.o \
+                  quad_double.o quad_double_functions.o \
                   splitting_doubles.o vectored_double_doubles.o \
+                  vectored_quad_doubles.o \
                -lcudart -L$(CUDALIB)
 
 clean:

@@ -83,7 +83,9 @@ int main ( int argc, char **argv )
 
    cout << "Initializing matrices on host ..." << endl;
    // init_host_matrices(A_h, B_h, C_h, number_range);
-   random_double_double_matrices
+   // random_double_double_matrices
+   //   (A_h,B_h,C_h,M_GLOBAL,K_GLOBAL,K_GLOBAL,N_GLOBAL,M_GLOBAL,N_GLOBAL,1);
+   random_quad_double_matrices
       (A_h,B_h,C_h,M_GLOBAL,K_GLOBAL,K_GLOBAL,N_GLOBAL,M_GLOBAL,N_GLOBAL,1);
 
    cout << "Preparing data for GPU ..." << endl;

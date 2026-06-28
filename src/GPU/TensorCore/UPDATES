@@ -1,3 +1,8 @@
+Sat 27 Jun 2026 : extended vectored_quad_doubles with balancing of quarters
+  on the 16 parts of splitted quad doubles.  Extended smDMMA_host with code
+  to multiply random quad double matrices rewritten into double matrices,
+  call in test_smDMMA.cpp.  Updated makefile_linux and makefile_windows.
+
 Thu 26 Feb 2026 : moved double_double_matmatmul from vectored_double_doubles
   into the new ddmm_host, tested by test_ddmm.  Updated makefiles.
   Also moved the transpose_dd_matrix function into ddmm_host.

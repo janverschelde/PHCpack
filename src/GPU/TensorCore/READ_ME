@@ -1,4 +1,4 @@
-Tensor cores for vectored multiple double arithmetic in PHCv2.4.93.
+Tensor cores for vectored multiple double arithmetic in PHCv2.4.95.
 
 The simpleTensorCoreGemm.cu is a simpification of the dmmaTensorCoreGemm.cu
 of the CUDA samples collections, leaving only the simple_wmma_gemm_kernel,

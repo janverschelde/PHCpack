@@ -35,6 +35,27 @@ void random_double_double_matrices
  *            padded with some zero rows;
  *   C        initialized all numCrows x numCcols to zero. */
 
+void random_quad_double_matrices
+ ( double *A, double *B, double *C,
+   int numArows, int numAcols, int numBrows, int numBcols,
+   int numCrows, int numCcols, int vrblvl=0 );
+/*
+ * Defines single indexed matrices which represent rewritten
+ * quad double matrices.
+ *
+ * ON ENTRY :
+ *   A        memory allocated for numArows rows and numAcols columns;
+ *   B        memory allocated for numBrows rows and numBcols columns;
+ *   C        memory allocated for numCrows rows and numCcols columns;
+ *   vrblvl   is the verbose level.
+ *
+ * ON RETURN :
+ *   A        rewritten (numArows/16)-by-(numAcols/16) matrix,
+ *            padded with some zero rows and columns;
+ *   B        rewritten (numBrows/16)-by-numBcols matrix,
+ *            padded with some zero rows;
+ *   C        initialized all numCrows x numCcols to zero. */
+
 void matMultiplyOnHost
  ( double *A, double *B, double *C, float alpha, float beta,
    int numARows, int numAColumns, int numBRows, int numBColumns,

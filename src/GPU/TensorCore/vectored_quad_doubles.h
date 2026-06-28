@@ -3,12 +3,40 @@
 #ifndef __VECTORED_QUAD_DOUBLES_H__
 #define __VECTORED_QUAD_DOUBLES_H__
 
+bool is_qd_quarter_balanced
+ ( double xhihi0, double xhihi1, double xhihi2, double xhihi3,
+   double xlohi0, double xlohi1, double xlohi2, double xlohi3,
+   double xhilo0, double xhilo1, double xhilo2, double xhilo3, 
+   double xlolo0, double xlolo1, double xlolo2, double xlolo3,
+   int vrblvl=0 );
+/*
+ * Given the 16 quarters of a quad double,
+ * returns true if they balanced, false otherwise.
+ * If vrblvl > 0, then extra output is written. */
+
+void qd_balance_quarters
+ ( double *xhihi0, double *xhihi1, double *xhihi2, double *xhihi3,
+   double *xlohi0, double *xlohi1, double *xlohi2, double *xlohi3,
+   double *xhilo0, double *xhilo1, double *xhilo2, double *xhilo3,
+   double *xlolo0, double *xlolo1, double *xlolo2, double *xlolo3,
+   int vrblvl=0 );
+/*
+ * If unbalanced, balances the 16 quarters of a quad double.
+ * If vrblvl > 0, then extra output is written. */
+
+void make_qd_exponent_zero
+ ( double *xhihi, double *xlohi, double *xhilo, double *xlolo, int vrblvl=0 );
+/*
+ * Multiplies the quad double so that the leading double has
+ * exponent zero.  Writes extra output if vrblvl > 0. */
+
 void quarter_quad_double
  ( double xhihi, double xlohi, double xhilo, double xlolo,
    double *xhihi0, double *xhihi1, double *xhihi2, double *xhihi3,
    double *xlohi0, double *xlohi1, double *xlohi2, double *xlohi3,
    double *xhilo0, double *xhilo1, double *xhilo2, double *xhilo3,
-   double *xlolo0, double *xlolo1, double *xlolo2, double *xlolo3 );
+   double *xlolo0, double *xlolo1, double *xlolo2, double *xlolo3,
+   int vrblvl=0 );
 /*
  * Quarters the parts of a quad double (xhihi, xlohi, xhilo, xlolo)
  * resulting in (xhihi0, xhihi1, xhihi2, xhihi3),
@@ -20,7 +48,8 @@ void quarter_qd_vector
    double *xhihi0, double *xhihi1, double *xhihi2, double *xhihi3,
    double *xlohi0, double *xlohi1, double *xlohi2, double *xlohi3,
    double *xhilo0, double *xhilo1, double *xhilo2, double *xhilo3,
-   double *xlolo0, double *xlolo1, double *xlolo2, double *xlolo3 );
+   double *xlolo0, double *xlolo1, double *xlolo2, double *xlolo3,
+   int vrblvl=0 );
 /*
  * Given a vector of size dim in (xhihi, xlohi, xhilo, xloxlo), quarters
  * the parts of a quad double, resulting in 16 vectors of size dim. */
@@ -31,7 +60,8 @@ void quarter_qd_matrix
    double **Ahihi0, double **Ahihi1, double **Ahihi2, double **Ahihi3,
    double **Alohi0, double **Alohi1, double **Alohi2, double **Alohi3,
    double **Ahilo0, double **Ahilo1, double **Ahilo2, double **Ahilo3,
-   double **Alolo0, double **Alolo1, double **Alolo2, double **Alolo3 );
+   double **Alolo0, double **Alolo1, double **Alolo2, double **Alolo3,
+   int vrblvl=0 );
 /*
  * Given a matrix of nrows rows and ncols columns 
  * in (Ahihi, Alohi, Ahilo, Alolo),
