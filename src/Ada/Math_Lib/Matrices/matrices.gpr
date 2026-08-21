@@ -24,6 +24,7 @@ project matrices is
         "ts_intmat.adb",  -- tests integer matrices
         "ts_fltmat.adb",  -- tests floating-point matrices
         "ts_cmpmat.adb",  -- tests complex matrices
+        "ts_matvec.adb",  -- tests matrices of complex vectors
         "ts_ddmat.adb",   -- tests double double matrices
         "ts_qdmat.adb",   -- tests quad double matrices
         "ts_tdmat.adb",   -- tests triple double matrices

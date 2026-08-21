@@ -1,4 +1,4 @@
-Matrix types in PHCv2.4.91
+Matrix types in PHCv2.4.95
 
 Below are some milestones in the development of this library.
 New in the second release is the availability of multiprecision numbers,
@@ -36,6 +36,8 @@ generic_matrices                   : matrices with coefficients in any ring
 generic_matrices_io                : input/output for generic matrices
 generic_vecmats                    : vectors of matrices over any ring
 generic_vecmats_io                 : input/output for vectors of matrices
+generic_matvecs                    : matrices of vectors over any ring
+ts_matvec                          : tests instantiations of matvecs
 ------------------------------------------------------------------------------
 boolean_matrices                   : defines matrices of Boolean numbers
 boolean_matrices_io                : input/output for Boolean matrices

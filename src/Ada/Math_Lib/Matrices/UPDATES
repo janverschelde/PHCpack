@@ -1,3 +1,7 @@
+Thu 20 Aug 2026 : defined matrices of vectors in generic_matvecs,
+  with instantiations for real and complex numbers in double_real_matvecs
+  and double_complex_matvecs, tested by ts_matvec.adb.  Updated matrices.gpr.
+
 Wed 23 Oct 2024 : fixed matrices.gpr by adding missing comma.
 
 Sun 3 Dec 2023 : new hexadobl_complex_vecmats and hexadobl_complex_vecmats_io.
