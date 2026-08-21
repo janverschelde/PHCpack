@@ -23,6 +23,7 @@ project Laurent is
         "ts_hunnew.adb",   -- tests Newton-Puiseux for real power series
         "ts_rpsarith.adb", -- tests real power series arithmetic
         "ts_sqrtrps.adb",  -- tests Newton for square root of series
+        "ts_rpslu.adb",    -- tests LU for real powered series systems
         "ts_rpownew.adb"   -- calls main access to real Newton-Puiseux
     );
 
