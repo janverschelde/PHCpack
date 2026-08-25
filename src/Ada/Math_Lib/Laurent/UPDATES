@@ -1,4 +1,5 @@
 Tue 25 Aug 2026 : extended ts_rpslu with the setup for a test for LU.
+  New package test_rpseries_lu_solver with code from ts_rpslu.
 
 Thu 20 Aug 2026 : new ts_rpslu to prepare for LU factorization of matrices
   of real powered series.  Updated laurent.gpr.

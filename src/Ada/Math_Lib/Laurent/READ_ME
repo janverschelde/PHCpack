@@ -45,9 +45,10 @@ test_real_powered_series         : tests i/o of real powered series
 ts_realpows                      : calls the main test on series i/o
 ts_rpsarith                      : tests real power series arithmetic
 ts_sqrtrps                       : tests square root of real power series
-ts_rpslu                         : tests LU of real powered series matrices
 ------------------------------------------------------------------------------
 double_puiseux_operations        : procedures to compute leading terms
+test_rpseries_lu_solver          : solves random rps linear system
+ts_rpslu                         : tests LU of real powered series matrices
 double_linear_rpseries_solver    : solves linear system of real power series
 test_leading_powers              : tests leading powers computation
 test_leading_terms               : tests leading terms computation
