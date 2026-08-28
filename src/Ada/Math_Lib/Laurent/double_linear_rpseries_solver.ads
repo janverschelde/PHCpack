@@ -2,7 +2,9 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Floating_Vectors;
+with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
+with Standard_Complex_VecVecs;
 with Standard_Floating_Matrices;
 with Standard_Complex_Matrices;
 with Double_rpSeries_Vectors;
@@ -41,6 +43,15 @@ package Double_Linear_rpSeries_Solver is
 
   -- DESCRIPTION :
   --   Returns the constant coefficients of the vector v.
+
+  procedure Coefficients_and_Powers
+               ( v : in Double_rpSeries_Vectors.Vector;
+                 cff : out Standard_Complex_VecVecs.VecVec; 
+                 pwt : out Standard_Floating_VecVecs.VecVec ); 
+
+  -- DESCRIPTION :
+  --   Returns in (cff, pwt) the coefficients and powers
+  --   of the series in v.
 
   function Inverse ( A : Standard_Complex_Matrices.Matrix )
                    return Standard_Complex_Matrices.Matrix;

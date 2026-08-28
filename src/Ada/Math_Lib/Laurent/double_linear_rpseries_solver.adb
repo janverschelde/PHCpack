@@ -78,6 +78,22 @@ package body Double_Linear_rpSeries_Solver is
     return res;
   end Extract_Constants;
 
+  procedure Coefficients_and_Powers
+               ( v : in Double_rpSeries_Vectors.Vector;
+                 cff : out Standard_Complex_VecVecs.VecVec; 
+                 pwt : out Standard_Floating_VecVecs.VecVec ) is
+  begin
+    for i in v'range loop
+      declare
+        c : constant Standard_Complex_Vectors.Vector := v(i).cff;
+        p : constant Standard_Floating_Vectors.Vector := v(i).pwt;
+      begin
+        cff(i) := new Standard_Complex_Vectors.Vector'(c);
+        pwt(i) := new Standard_Floating_Vectors.Vector'(p);
+      end;
+    end loop;
+  end Coefficients_and_Powers;
+
   function Inverse ( A : Standard_Complex_Matrices.Matrix )
                    return Standard_Complex_Matrices.Matrix is
 
@@ -233,6 +249,8 @@ package body Double_Linear_rpSeries_Solver is
     leadidx : integer32;
     leadcff : complex_number;
     leadpow : double_float;
+    Bcff : Standard_Complex_VecVecs.VecVec(b'range);
+    Bpwt : Standard_Floating_VecVecs.VecVec(b'range);
 
   begin
     Double_Puiseux_Operations.Solve_Constant_Linear_System
@@ -249,6 +267,7 @@ package body Double_Linear_rpSeries_Solver is
       Double_Real_Power_Series_IO.Write(invAb);
       put_line("leading powers of the coefficient matrix :"); put(rA);
     end if;
+    Coefficients_and_Powers(b,Bcff,Bpwt);
     Leading_Term(invAb,rA,leadidx,leadpow,leadcff);
     z1p := (z1p'range => -1.0);
     z1p(leadidx) := leadpow;
