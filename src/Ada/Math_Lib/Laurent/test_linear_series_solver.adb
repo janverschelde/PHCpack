@@ -1,9 +1,11 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_IO;      use Standard_Floating_Numbers_IO;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_IO;       use Standard_Complex_Numbers_IO;
+with Standard_Random_Numbers;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Double_Real_Power_Series_IO;
@@ -58,7 +60,8 @@ package body Test_Linear_Series_Solver is
     x : constant Double_rpSeries_Vectors.Vector(1..dim)
       := Random_Series_Vector(dim,nbr);
     A : constant Double_rpSeries_Matrices.Matrix(1..dim,1..dim)
-      := Random_Series_Matrix(dim,nbr);
+      := Random_Series_Matrix(dim,1);
+     -- := Random_Series_Matrix(dim,nbr);
     b : constant Double_rpSeries_Vectors.Vector(1..dim)
       := Right_Hand_Side(A,x);
     z0,z1c : Standard_Complex_Vectors.Vector(1..dim);
@@ -86,13 +89,19 @@ package body Test_Linear_Series_Solver is
 
   procedure Main is
 
-    dim,nbr : integer32 := 0;
+    dim,nbr,seed : integer32 := 0;
  
   begin
     new_line;
+    put("Give the seed (0 for any seed) : "); get(seed);
+    if seed = 0
+     then seed := Standard_Random_Numbers.get_Seed;
+     else Standard_Random_Numbers.Set_Seed(natural32(seed));
+    end if;
     put("Give the dimension : "); get(dim);
     put("Give the number of terms : "); get(nbr);
     Test(dim,nbr);
+    put("Seed used : "); put(seed,1); new_line;
   end Main;
 
 end Test_Linear_Series_Solver;

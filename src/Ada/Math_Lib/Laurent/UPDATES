@@ -1,5 +1,7 @@
 Sat 26 Sep 2026 : in double_linear_rpseries_solver, removed "in" before
   the type in a function declaration.  Improved documentation.
+  Fixed nbr=1 to generate test coefficient matrix A(t),
+  added seed in test_linear_series_solver.adb.
 
 Thu 27 Aug 2026 : to double_linear_rpseries_solver, added function to
   flatten the right hand side series.
