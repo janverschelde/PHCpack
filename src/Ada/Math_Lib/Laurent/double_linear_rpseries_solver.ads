@@ -17,7 +17,7 @@ package Double_Linear_rpSeries_Solver is
 
   function Right_Hand_Side
              ( A : Double_rpSeries_Matrices.Matrix;
-               x : in Double_rpSeries_Vectors.Vector ) 
+               x : Double_rpSeries_Vectors.Vector ) 
              return Double_rpSeries_Vectors.Vector;
 
   -- DESCRIPTION :
@@ -88,6 +88,16 @@ package Double_Linear_rpSeries_Solver is
   --   smallest power not in the matrix rA and returns in leadpow
   --   the value of this smallest power and the corresponding coefficient.
 
+  -- ON ENTRY :
+  --   invAb    the product of the inverse of A(0) and the right hand side;
+  --   rA       leading powers of the coefficient matrix;
+  --   tol      tolerance to decide if a number is zero or not.
+
+  -- ON RETURN :
+  --   leadidx  index of row in invAb;
+  --   leadpow  value of smallest power;
+  --   leadcff  corresponding coefficient with leadpow.
+
   procedure Next_Term
               ( invAb : in Double_rpSeries_Vectors.Vector;
                 rA : in Standard_Floating_Matrices.Matrix;
@@ -101,6 +111,17 @@ package Double_Linear_rpSeries_Solver is
   --   smallest power not in the matrix rA, not among the already
   --   computed powers, and returns in leadpow the value of this 
   --   smallest power and the corresponding coefficient.
+
+  -- ON ENTRY :
+  --   invAb    the product of the inverse of A(0) and the right hand side;
+  --   rA       leading powers of the coefficient matrix;
+  --   powers   already computed powers;
+  --   tol      tolerance to decide if a number is zero or not.
+
+  -- ON RETURN :
+  --   leadidx  index of row in invAb;
+  --   leadpow  value of smallest power;
+  --   leadcff  corresponding coefficient with leadpow.
 
   procedure Real_Power_Series_Solver 
               ( A : in Double_rpSeries_Matrices.Matrix;

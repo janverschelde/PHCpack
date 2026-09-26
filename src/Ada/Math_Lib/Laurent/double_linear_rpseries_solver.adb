@@ -13,7 +13,7 @@ package body Double_Linear_rpSeries_Solver is
 
   function Right_Hand_Side
              ( A : Double_rpSeries_Matrices.Matrix;
-               x : in Double_rpSeries_Vectors.Vector ) 
+               x : Double_rpSeries_Vectors.Vector ) 
              return Double_rpSeries_Vectors.Vector is
 
     res : Double_rpSeries_Vectors.Vector(A'range);
