@@ -66,7 +66,15 @@ package Double_Linear_rpSeries_Solver is
              return Double_rpSeries_Vectors.Vector;
 
   -- DESCRIPTION :
-  --   Returns the value of A times x.
+  --   Returns the series vector obtained after multiplying A by x.
+
+  function Matrix_Multiply
+             ( A : Standard_Complex_Matrices.Matrix;
+               B : Double_rpSeries_Matrices.Matrix )
+             return Double_rpSeries_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns the series vector obtained after multiplying A by B.
 
   function Is_In ( A : Standard_Floating_Matrices.Matrix;
                    nbr : double_float; tol : double_float := 1.0E-12 )

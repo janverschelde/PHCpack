@@ -139,6 +139,32 @@ package body Double_Linear_rpSeries_Solver is
     return res;
   end Matrix_Multiply;
 
+  function Matrix_Multiply
+             ( A : Standard_Complex_Matrices.Matrix;
+               B : Double_rpSeries_Matrices.Matrix )
+             return Double_rpSeries_Matrices.Matrix is
+
+    res : Double_rpSeries_Matrices.Matrix(A'range(1),B'range(2));
+
+    use Double_Real_Power_Series;
+
+  begin
+    for i in A'range(1) loop
+      for j in B'range(2) loop
+        res(i,j) := A(i,A'first(2))*B(B'first(1),i);
+        for k in A'first(2)+1..A'last(2) loop
+          declare
+            prd : Link_to_Series := A(i,k)*B(k,j);
+            sum : Link_to_Series := res(i,j) + prd;
+          begin
+            Copy(sum,res(i,j)); Clear(prd); clear(sum);
+          end;
+        end loop;
+      end loop;
+    end loop;
+    return res;
+  end Matrix_Multiply;
+
   function Is_In ( A : Standard_Floating_Matrices.Matrix;
                    nbr : double_float; tol : double_float := 1.0E-12 )
                  return boolean is
