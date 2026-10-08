@@ -89,7 +89,8 @@ package Double_Linear_rpSeries_Solver is
                 rA : in Standard_Floating_Matrices.Matrix;
                 leadidx : out integer32; 
                 leadpow : out double_float; leadcff : out complex_number;
-                tol : in double_float := 1.0E-12 );
+                tol : in double_float := 1.0E-12;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Returns in leadidx the index of the row in invAb where the
@@ -99,7 +100,8 @@ package Double_Linear_rpSeries_Solver is
   -- ON ENTRY :
   --   invAb    the product of the inverse of A(0) and the right hand side;
   --   rA       leading powers of the coefficient matrix;
-  --   tol      tolerance to decide if a number is zero or not.
+  --   tol      tolerance to decide if a number is zero or not;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   leadidx  index of row in invAb;
@@ -112,7 +114,8 @@ package Double_Linear_rpSeries_Solver is
                 powers : in Standard_Floating_Vectors.Vector;
                 leadidx : out integer32; 
                 leadpow : out double_float; leadcff : out complex_number;
-                tol : in double_float := 1.0E-12 );
+                tol : in double_float := 1.0E-12;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Returns in leadidx the index of the row in invAb where the
@@ -124,7 +127,8 @@ package Double_Linear_rpSeries_Solver is
   --   invAb    the product of the inverse of A(0) and the right hand side;
   --   rA       leading powers of the coefficient matrix;
   --   powers   already computed powers;
-  --   tol      tolerance to decide if a number is zero or not.
+  --   tol      tolerance to decide if a number is zero or not;
+  --   vrblvl   is the verbose level.
 
   -- ON RETURN :
   --   leadidx  index of row in invAb;

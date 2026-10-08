@@ -1,3 +1,6 @@
+Thu 8 Oct 2026 : added verbose level in double_linear_rpseries_solver to
+  functions to compute the lead term and the next terms.
+
 Sat 3 Oct 2026 : to double_linear_rpseries_solver, added a function to
   multiply matrices of series with a constant matrix.
 
