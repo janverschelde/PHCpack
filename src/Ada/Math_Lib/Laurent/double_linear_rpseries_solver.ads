@@ -123,6 +123,45 @@ package Double_Linear_rpSeries_Solver is
   --   computed powers, and returns in leadpow the value of this 
   --   smallest power and the corresponding coefficient.
 
+  -- REQUIRED :
+  --   Works only if the solution has only one term with positive power
+  --   and also the coefficient matrix of the linear system has only one
+  --   positive power term.
+
+  -- ON ENTRY :
+  --   invAb    the product of the inverse of A(0) and the right hand side;
+  --   rA       leading powers of the coefficient matrix;
+  --   powers   already computed powers;
+  --   tol      tolerance to decide if a number is zero or not;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   leadidx  index of row in invAb;
+  --   leadpow  value of smallest power;
+  --   leadcff  corresponding coefficient with leadpow.
+
+  procedure Eliminate_Terms
+              ( invAb : in Double_rpSeries_Vectors.Vector;
+                rA : in Standard_Floating_Matrices.Matrix;
+                tol : in double_float := 1.0E-12 );
+
+  -- DESCRIPTION :
+  --   Sets the powers in invAb that appear in rA to -1.
+
+  procedure Next_Term
+              ( invAb : in Double_rpSeries_Vectors.Vector;
+                rA : in Standard_Floating_Matrices.Matrix;
+                powers : in Standard_Floating_Matrices.Matrix;
+                leadidx : out integer32; 
+                leadpow : out double_float; leadcff : out complex_number;
+                tol : in double_float := 1.0E-12;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Computers the next term for the generic case,
+  --   where the solution has multiple terms with positive powers,
+  --   but where the coefficient matrix has only one positive power.
+
   -- ON ENTRY :
   --   invAb    the product of the inverse of A(0) and the right hand side;
   --   rA       leading powers of the coefficient matrix;

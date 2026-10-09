@@ -234,7 +234,7 @@ package body Double_Linear_rpSeries_Solver is
 
   begin
     if vrblvl > 0
-     then put_line("-> in double_linear_rpseries_solver.Next_Term ...");
+     then put_line("-> in double_linear_rpseries_solver.Next_Term 1 ...");
     end if;
     leadidx := -1;
     for i in invAb'range loop
@@ -273,6 +273,70 @@ package body Double_Linear_rpSeries_Solver is
       put("leadcff : "); put(leadcff); new_line;
     end if;
   end Next_Term;
+
+  procedure Eliminate_Terms
+              ( invAb : in Double_rpSeries_Vectors.Vector;
+                rA : in Standard_Floating_Matrices.Matrix;
+                tol : in double_float := 1.0E-12 ) is
+
+    sb : Double_Real_Power_Series.Link_to_Series;
+
+  begin
+    for i in invAb'range loop
+      sb := invAb(i);
+      for j in sb.pwt'range loop
+        if Is_In(rA,sb.pwt(j),tol)
+         then sb.pwt(j) := -1.0;
+        end if;
+      end loop;
+    end loop;
+  end Eliminate_Terms;
+
+  procedure Next_Term
+              ( invAb : in Double_rpSeries_Vectors.Vector;
+                rA : in Standard_Floating_Matrices.Matrix;
+                powers : in Standard_Floating_Matrices.Matrix;
+                leadidx : out integer32; 
+                leadpow : out double_float; leadcff : out complex_number;
+                tol : in double_float := 1.0E-12;
+                vrblvl : in integer32 := 0 ) is
+
+    sb : Double_Real_Power_Series.Link_to_Series;
+    foundfirst : boolean;
+    tmpmin,minexp : double_float;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in double_linear_rpseries_solver.Next_Term 2 ...");
+    end if;
+    for i in invAb'range loop
+      sb := invAb(i);
+      for j in sb.pwt'range loop
+        foundfirst := false; -- look for first positive exponent
+        if sb.pwt(j) > 0.0 then
+          foundfirst := true;
+          tmpmin := sb.pwt(j);
+          exit when foundfirst;
+        end if;
+        if j = sb.pwt'first then
+          minexp := tmpmin;
+          leadidx := j;
+          leadpow := sb.pwt(j);
+          leadcff := sb.cff(j);
+        elsif tmpmin < minexp then
+          minexp := tmpmin;
+          leadidx := j;
+          leadpow := sb.pwt(j);
+          leadcff := sb.cff(j);
+        end if;
+      end loop;
+    end loop;
+    if vrblvl > 0 then
+      put("leadidx : "); put(leadidx,1);
+      put(", leadpow : "); put(leadpow); new_line;
+      put("leadcff : "); put(leadcff); new_line;
+    end if;
+  end Next_term;
 
   procedure Real_Power_Series_Solver 
               ( A : in Double_rpSeries_Matrices.Matrix;
