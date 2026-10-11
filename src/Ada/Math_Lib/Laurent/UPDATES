@@ -1,3 +1,6 @@
+Sun 11 Oct 2026 : extended double_linear_rpseries_solver and 
+  test_linear_series_solver.adb for 2 terms in the solution.
+
 Thu 8 Oct 2026 : added verbose level in double_linear_rpseries_solver to
   functions to compute the lead term and the next terms.
   In double_linear_rpseries_solver, started development for generic case.

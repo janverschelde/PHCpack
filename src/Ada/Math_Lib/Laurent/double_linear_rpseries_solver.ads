@@ -174,7 +174,7 @@ package Double_Linear_rpSeries_Solver is
   --   leadpow  value of smallest power;
   --   leadcff  corresponding coefficient with leadpow.
 
-  procedure Real_Power_Series_Solver 
+  procedure Real_Power_Series_Solver1
               ( A : in Double_rpSeries_Matrices.Matrix;
                 b : in Double_rpSeries_Vectors.Vector;
                 z0,z1c : out Standard_Complex_Vectors.Vector;
@@ -183,6 +183,20 @@ package Double_Linear_rpSeries_Solver is
 
   -- DESCRIPTION :
   --   Solves the system A*x = b, for the special case when A has
-  --   only one real power term in every element.
+  --   only one real power term in every element and b is computed
+  --   for only one term with a positive power in x.
+
+  procedure Real_Power_Series_Solver
+              ( A : in Double_rpSeries_Matrices.Matrix;
+                b : in Double_rpSeries_Vectors.Vector;
+                nbt : in integer32;
+                cffs : out Standard_Complex_Matrices.Matrix;
+                pwrs : out Standard_Floating_Matrices.Matrix;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Solves the system A*x = b, for the case when A has
+  --   only one real power term in every element and b is
+  --   computed for nbt terms with a positive power in x.
 
 end Double_Linear_rpSeries_Solver;

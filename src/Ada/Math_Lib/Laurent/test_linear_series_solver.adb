@@ -6,8 +6,10 @@ with Standard_Floating_Numbers_IO;      use Standard_Floating_Numbers_IO;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_IO;       use Standard_Complex_Numbers_IO;
 with Standard_Random_Numbers;
-with Standard_Floating_Vectors;
-with Standard_Complex_Vectors;
+-- with Standard_Floating_Vectors;
+with Standard_Floating_Matrices;
+-- with Standard_Complex_Vectors;
+with Standard_Complex_Matrices;
 with Double_Real_Power_Series_IO;
 with Test_Real_Powered_Series;
 with Double_Linear_rpSeries_Solver;     use Double_Linear_rpSeries_Solver;
@@ -64,8 +66,10 @@ package body Test_Linear_Series_Solver is
      -- := Random_Series_Matrix(dim,nbr);
     b : constant Double_rpSeries_Vectors.Vector(1..dim)
       := Right_Hand_Side(A,x);
-    z0,z1c : Standard_Complex_Vectors.Vector(1..dim);
-    z1p : Standard_Floating_Vectors.Vector(1..dim);
+    powers : Standard_Floating_Matrices.Matrix(1..dim,1..nbr);
+    coeffs : Standard_Complex_Matrices.Matrix(1..dim,0..nbr);
+   -- z0,z1c : Standard_Complex_Vectors.Vector(1..dim);
+   -- z1p : Standard_Floating_Vectors.Vector(1..dim);
     sumerr : double_float := 0.0;
 
   begin
@@ -73,16 +77,27 @@ package body Test_Linear_Series_Solver is
     put_line("a random matrix A :"); Double_Real_Power_Series_IO.Write(A);
     put_line("the right hand side vector b :");
     Double_Real_Power_Series_IO.Write(b);
-    Real_Power_Series_Solver(A,b,z0,z1c,z1p,2);
+   -- Real_Power_Series_Solver1(A,b,z0,z1c,z1p,2);
+    Real_Power_Series_Solver(A,b,nbr,coeffs,powers,2);
     new_line;
     put_line("the solution series x :"); Double_Real_Power_Series_IO.Write(x);
     put_line("the computed series :");
-    for i in z0'range loop
-      put(z0(i)); new_line;
-      sumerr := sumerr + AbsVal(z0(i) - x(i).cff(0));
-      put(z1c(i)); put(" * t**"); put(z1p(i),1,14,3); new_line;
-      sumerr := sumerr + AbsVal(z1c(i) - x(i).cff(1));
-      sumerr := sumerr + abs(z1p(i) - x(i).pwt(1));
+   -- for i in z0'range loop
+   --   put(z0(i)); new_line;
+   --   sumerr := sumerr + AbsVal(z0(i) - x(i).cff(0));
+   --   put(z1c(i)); put(" * t**"); put(z1p(i),1,14,3); new_line;
+   --   sumerr := sumerr + AbsVal(z1c(i) - x(i).cff(1));
+   --   sumerr := sumerr + abs(z1p(i) - x(i).pwt(1));
+   -- end loop;
+    for i in 1..dim loop
+      put(coeffs(i,0)); new_line;
+      sumerr := sumerr + AbsVal(coeffs(i,0) - x(i).cff(0));
+      for j in 1..nbr loop
+        put(coeffs(i,j)); put(" * t**");
+        sumerr := sumerr + AbsVal(coeffs(i,j) - x(i).cff(j));
+        put(powers(i,j),1,14,3); new_line;
+        sumerr := sumerr + abs(powers(i,j) - x(i).pwt(j));
+      end loop;
     end loop;
     put("sum of errors :"); put(sumerr,3); new_line;
   end Test;

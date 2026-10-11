@@ -302,8 +302,8 @@ package body Double_Linear_rpSeries_Solver is
                 vrblvl : in integer32 := 0 ) is
 
     sb : Double_Real_Power_Series.Link_to_Series;
-    foundfirst : boolean;
-    tmpmin,minexp : double_float;
+    minexp : double_float := -1.0;
+    found : boolean;
 
   begin
     if vrblvl > 0
@@ -312,22 +312,34 @@ package body Double_Linear_rpSeries_Solver is
     for i in invAb'range loop
       sb := invAb(i);
       for j in sb.pwt'range loop
-        foundfirst := false; -- look for first positive exponent
         if sb.pwt(j) > 0.0 then
-          foundfirst := true;
-          tmpmin := sb.pwt(j);
-          exit when foundfirst;
-        end if;
-        if j = sb.pwt'first then
-          minexp := tmpmin;
-          leadidx := j;
-          leadpow := sb.pwt(j);
-          leadcff := sb.cff(j);
-        elsif tmpmin < minexp then
-          minexp := tmpmin;
-          leadidx := j;
-          leadpow := sb.pwt(j);
-          leadcff := sb.cff(j);
+          found := false;
+          for k1 in powers'range(1) loop
+            for k2 in powers'range(2) loop
+              if powers(k1,k2) > 0.0
+               then found := (abs(sb.pwt(j) - powers(k1,k2)) < tol);
+              end if;
+              exit when found;
+              if powers(k1,k2) > 0.0
+               then found := Is_In(rA,sb.pwt(j)-powers(k1,k2),tol);
+              end if;
+              exit when found;
+            end loop;
+            exit when found;
+          end loop;
+          if not found then
+            if minexp < 0.0 then
+              minexp := sb.pwt(j);
+              leadidx := i;
+              leadpow := sb.pwt(j);
+              leadcff := sb.cff(j);
+            elsif sb.pwt(j) < minexp then
+              minexp := sb.pwt(j);
+              leadidx := i;
+              leadpow := sb.pwt(j);
+              leadcff := sb.cff(j);
+            end if;
+          end if;
         end if;
       end loop;
     end loop;
@@ -338,7 +350,7 @@ package body Double_Linear_rpSeries_Solver is
     end if;
   end Next_term;
 
-  procedure Real_Power_Series_Solver 
+  procedure Real_Power_Series_Solver1
               ( A : in Double_rpSeries_Matrices.Matrix;
                 b : in Double_rpSeries_Vectors.Vector;
                 z0,z1c : out Standard_Complex_Vectors.Vector;
@@ -363,7 +375,7 @@ package body Double_Linear_rpSeries_Solver is
   begin
     if vrblvl > 0 then
       put("-> in double_linear_rpseries_solver.");
-      put_line("Real_Power_Series_Solver ...");
+      put_line("Real_Power_Series_Solver 1 ...");
     end if;
     Double_Puiseux_Operations.Solve_Constant_Linear_System
       (A0,b0,z0,rcond,vrblvl-1);
@@ -399,6 +411,94 @@ package body Double_Linear_rpSeries_Solver is
         z1p(leadidx) := leadpow;
         z1c(leadidx) := leadcff;
       end if;
+    end loop;
+  end Real_Power_Series_Solver1;
+
+  procedure Real_Power_Series_Solver 
+              ( A : in Double_rpSeries_Matrices.Matrix;
+                b : in Double_rpSeries_Vectors.Vector;
+                nbt : in integer32;
+                cffs : out Standard_Complex_Matrices.Matrix;
+                pwrs : out Standard_Floating_Matrices.Matrix;
+                vrblvl : in integer32 := 0 ) is
+
+    dim : constant integer32 := b'last;
+    A0 : constant Standard_Complex_Matrices.Matrix(A'range(1),A'range(2))
+       := Extract_Constants(A);
+    rA : constant Standard_Floating_Matrices.Matrix(A'range(1),A'range(2))
+       := Extract_Leading_Powers(A);
+    b0 : constant Standard_Complex_Vectors.Vector(b'range)
+       := Extract_Constants(b);
+    rcond : double_float;
+    invA0 : Standard_Complex_Matrices.Matrix(A'range(1),A'range(2));
+    invAb : Double_rpSeries_Vectors.Vector(b'range);
+    leadidx : integer32;
+    leadcff : complex_number;
+    leadpow : double_float;
+    Bcff : Standard_Complex_VecVecs.VecVec(b'range);
+    Bpwt : Standard_Floating_VecVecs.VecVec(b'range);
+    z0 : Standard_Complex_Vectors.Vector(b'range);
+    col : integer32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in double_linear_rpseries_solver.");
+      put_line("Real_Power_Series_Solver ...");
+    end if;
+    for i in pwrs'range(1) loop
+      for j in pwrs'range(2) loop
+        pwrs(i,j) := -1.0;
+      end loop;
+    end loop;
+    Double_Puiseux_Operations.Solve_Constant_Linear_System
+      (A0,b0,z0,rcond,vrblvl-1);
+    if vrblvl > 0 then
+      put_line("the computed constant coefficients :");
+      put_line(z0);
+      put("rcond :"); put(rcond,3); new_line;
+    end if;
+    for i in z0'range loop
+      cffs(i,0) := z0(i);
+    end loop;
+    invA0 := Inverse(A0);
+    invAb := Matrix_Multiply(invA0,b);
+    if vrblvl > 0 then
+      put_line("multiplied right hand side vector :"); 
+      Double_Real_Power_Series_IO.Write(invAb);
+      put_line("leading powers of the coefficient matrix :"); put(rA);
+    end if;
+    Coefficients_and_Powers(b,Bcff,Bpwt);
+    Leading_Term(invAb,rA,leadidx,leadpow,leadcff,vrblvl=>vrblvl-1);
+    Eliminate_Terms(invAb,rA);
+    if vrblvl > 0 then
+      put_line("after eliminating rA terms from right hand side :"); 
+      Double_Real_Power_Series_IO.Write(invAb);
+    end if;
+    cffs(leadidx,1) := leadcff;
+    pwrs(leadidx,1) := leadpow;
+    if vrblvl > 0 then
+      put("leading index : "); put(leadidx,1); new_line;
+      put(leadcff); put(" * t**"); put(leadpow,1,14,3); new_line;
+    end if;
+    for k in 2..dim*nbt loop
+      if vrblvl > 0
+       then put("computing term "); put(k,1); put_line(" ...");
+      end if;
+      Next_Term(invAb,rA,pwrs,leadidx,leadpow,leadcff,vrblvl=>vrblvl-1);
+      if vrblvl > 0 then
+        put("next index : "); put(leadidx,1); new_line;
+        put(leadcff); put(" * t**"); put(leadpow,1,14,3); new_line;
+      end if;
+      col := 1;
+      while pwrs(leadidx,col) > 0.0 loop
+        col := col + 1;
+        exit when (col = nbt);
+      end loop;
+      if vrblvl > 0 then
+        put("assigning to column "); put(col,1); new_line;
+      end if;
+      pwrs(leadidx,col) := leadpow;
+      cffs(leadidx,col) := leadcff;
     end loop;
   end Real_Power_Series_Solver;
 
