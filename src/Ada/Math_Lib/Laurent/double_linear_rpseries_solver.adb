@@ -312,7 +312,7 @@ package body Double_Linear_rpSeries_Solver is
     for i in invAb'range loop
       sb := invAb(i);
       for j in sb.pwt'range loop
-        if sb.pwt(j) > 0.0 then
+        if sb.pwt(j) > 0.0 and (AbsVal(sb.cff(j)) > tol) then
           found := false;
           for k1 in powers'range(1) loop
             for k2 in powers'range(2) loop
