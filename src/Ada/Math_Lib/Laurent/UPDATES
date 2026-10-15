@@ -1,5 +1,7 @@
 Thu 15 Oct 2026 : fixed bug in double_linear_rpseries_solver.adb,
   by adding a test to exclude terms with zero coefficient.
+  Extended double_linear_rpseries_solver to work for any number of terms,
+  extended setup of the test in test_linear_series_solver.adb.
 
 Sun 11 Oct 2026 : extended double_linear_rpseries_solver and 
   test_linear_series_solver.adb for 2 terms in the solution.

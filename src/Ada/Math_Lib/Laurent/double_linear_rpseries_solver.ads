@@ -6,6 +6,7 @@ with Standard_Floating_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Floating_Matrices;
+with Standard_Floating_VecMats;
 with Standard_Complex_Matrices;
 with Double_rpSeries_Vectors;
 with Double_rpSeries_Matrices;
@@ -36,6 +37,15 @@ package Double_Linear_rpSeries_Solver is
 
   -- DESCRIPION :
   --   Returns the matrix of leading powers of A.
+
+  function Extract_All_Powers
+             ( A : Double_rpSeries_Matrices.Matrix )
+             return Standard_Floating_VecMats.VecMat;
+
+  -- DESCRIPTION :
+  --   Returns the vector with all powers of the series in A.
+
+  -- REQUIRED : all series in the matrix A have the same size.
 
   function Extract_Constants 
              ( v : Double_rpSeries_Vectors.Vector )
@@ -79,6 +89,9 @@ package Double_Linear_rpSeries_Solver is
   function Is_In ( A : Standard_Floating_Matrices.Matrix;
                    nbr : double_float; tol : double_float := 1.0E-12 )
                  return boolean;
+  function Is_In ( A : Standard_Floating_VecMats.VecMat;
+                   nbr : double_float; tol : double_float := 1.0E-12 )
+                 return boolean;
 
   -- DESCRIPTION :
   --   Returns true if the number nbr occurs in A,
@@ -91,6 +104,13 @@ package Double_Linear_rpSeries_Solver is
                 leadpow : out double_float; leadcff : out complex_number;
                 tol : in double_float := 1.0E-12;
                 vrblvl : in integer32 := 0 );
+  procedure Leading_Term
+              ( invAb : in Double_rpSeries_Vectors.Vector;
+                rA : in Standard_Floating_VecMats.VecMat;
+                leadidx : out integer32; 
+                leadpow : out double_float; leadcff : out complex_number;
+                tol : in double_float := 1.0E-12;
+                vrblvl : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Returns in leadidx the index of the row in invAb where the
@@ -99,7 +119,7 @@ package Double_Linear_rpSeries_Solver is
 
   -- ON ENTRY :
   --   invAb    the product of the inverse of A(0) and the right hand side;
-  --   rA       leading powers of the coefficient matrix;
+  --   rA       (leading) powers of the coefficient matrix;
   --   tol      tolerance to decide if a number is zero or not;
   --   vrblvl   is the verbose level.
 
@@ -174,6 +194,32 @@ package Double_Linear_rpSeries_Solver is
   --   leadpow  value of smallest power;
   --   leadcff  corresponding coefficient with leadpow.
 
+  procedure Next_Term
+              ( invAb : in Double_rpSeries_Vectors.Vector;
+                rA : in Standard_Floating_VecMats.VecMat;
+                powers : in Standard_Floating_Matrices.Matrix;
+                leadidx : out integer32; 
+                leadpow : out double_float; leadcff : out complex_number;
+                tol : in double_float := 1.0E-12;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Computers the next term for the generic case,
+  --   where the solution has multiple terms with positive powers,
+  --   for a regular coefficient matrix with unique powers.
+
+  -- ON ENTRY :
+  --   invAb    the product of the inverse of A(0) and the right hand side;
+  --   rA       all powers of the coefficient matrix;
+  --   powers   already computed powers;
+  --   tol      tolerance to decide if a number is zero or not;
+  --   vrblvl   is the verbose level.
+
+  -- ON RETURN :
+  --   leadidx  index of row in invAb;
+  --   leadpow  value of smallest power;
+  --   leadcff  corresponding coefficient with leadpow.
+
   procedure Real_Power_Series_Solver1
               ( A : in Double_rpSeries_Matrices.Matrix;
                 b : in Double_rpSeries_Vectors.Vector;
@@ -186,7 +232,7 @@ package Double_Linear_rpSeries_Solver is
   --   only one real power term in every element and b is computed
   --   for only one term with a positive power in x.
 
-  procedure Real_Power_Series_Solver
+  procedure Real_Power_Series_Solver2
               ( A : in Double_rpSeries_Matrices.Matrix;
                 b : in Double_rpSeries_Vectors.Vector;
                 nbt : in integer32;
@@ -198,5 +244,18 @@ package Double_Linear_rpSeries_Solver is
   --   Solves the system A*x = b, for the case when A has
   --   only one real power term in every element and b is
   --   computed for nbt terms with a positive power in x.
+
+  procedure Real_Power_Series_Solver
+              ( A : in Double_rpSeries_Matrices.Matrix;
+                b : in Double_rpSeries_Vectors.Vector;
+                nbt : in integer32;
+                cffs : out Standard_Complex_Matrices.Matrix;
+                pwrs : out Standard_Floating_Matrices.Matrix;
+                vrblvl : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Solves the system A*x = b in the generic case,
+  --   when the constants of the coefficient matrix define
+  --   an invertible matrix and when all powers are unique.
 
 end Double_Linear_rpSeries_Solver;

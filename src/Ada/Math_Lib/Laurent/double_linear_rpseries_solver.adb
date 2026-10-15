@@ -65,6 +65,29 @@ package body Double_Linear_rpSeries_Solver is
     return res;
   end Extract_Leading_Powers;
 
+  function Extract_All_Powers
+             ( A : Double_rpSeries_Matrices.Matrix )
+             return Standard_Floating_VecMats.VecMat is
+
+    dim : constant integer32 := A(A'first(1),A'first(2)).pwt'last;
+    res : Standard_Floating_VecMats.VecMat(1..dim);
+
+  begin
+    for k in res'range loop
+      declare
+        pwr : Standard_Floating_Matrices.Matrix(A'range(1),A'range(2));
+      begin
+        for i in pwr'range(1) loop
+          for j in pwr'range(2) loop
+            pwr(i,j) := A(i,j).pwt(k);
+          end loop;
+        end loop;
+        res(k) := new Standard_Floating_Matrices.Matrix'(pwr);
+      end;
+    end loop;
+    return res;
+  end Extract_All_Powers;
+
   function Extract_Constants 
              ( v : Double_rpSeries_Vectors.Vector )
              return Standard_Complex_Vectors.Vector is
@@ -179,6 +202,18 @@ package body Double_Linear_rpSeries_Solver is
     return false;
   end Is_In;
 
+  function Is_In ( A : Standard_Floating_VecMats.VecMat;
+                   nbr : double_float; tol : double_float := 1.0E-12 )
+                 return boolean is
+  begin
+    for k in A'range loop
+      if Is_In(A(k).all,nbr,tol)
+       then return true;
+      end if;
+    end loop;
+    return false;
+  end Is_In;
+
   procedure Leading_Term
               ( invAb : in Double_rpSeries_Vectors.Vector;
                 rA : in Standard_Floating_Matrices.Matrix;
@@ -192,7 +227,48 @@ package body Double_Linear_rpSeries_Solver is
 
   begin
     if vrblvl > 0
-     then put_line("-> in double_linear_rpseries_solver.Leading_Term ...");
+     then put_line("-> in double_linear_rpseries_solver.Leading_Term 1 ...");
+    end if;
+    for i in invAb'range loop
+      sb := invAb(i);
+      foundfirst := false;
+      for j in sb.pwt'range loop
+        if not Is_In(rA,sb.pwt(j),tol) then
+          foundfirst := true;
+          if i = invAb'first then
+            leadidx := 1;
+            leadpow := sb.pwt(j);
+            leadcff := sb.cff(j);
+          elsif sb.pwt(j) < leadpow then
+            leadidx := i;
+            leadpow := sb.pwt(j);
+            leadcff := sb.cff(j);
+          end if;
+        end if;
+        exit when foundfirst;
+      end loop;
+    end loop;
+    if vrblvl > 0 then
+      put("leadidx : "); put(leadidx,1);
+      put(", leadpow : "); put(leadpow); new_line;
+      put("leadcff : "); put(leadcff); new_line;
+    end if;
+  end Leading_Term;
+
+  procedure Leading_Term
+              ( invAb : in Double_rpSeries_Vectors.Vector;
+                rA : in Standard_Floating_VecMats.VecMat;
+                leadidx : out integer32; 
+                leadpow : out double_float; leadcff : out complex_number;
+                tol : in double_float := 1.0E-12;
+                vrblvl : in integer32 := 0 ) is
+
+    sb : Double_Real_Power_Series.Link_to_Series;
+    foundfirst : boolean;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in double_linear_rpseries_solver.Leading_Term 2 ...");
     end if;
     for i in invAb'range loop
       sb := invAb(i);
@@ -350,6 +426,64 @@ package body Double_Linear_rpSeries_Solver is
     end if;
   end Next_term;
 
+  procedure Next_Term
+              ( invAb : in Double_rpSeries_Vectors.Vector;
+                rA : in Standard_Floating_VecMats.VecMat;
+                powers : in Standard_Floating_Matrices.Matrix;
+                leadidx : out integer32; 
+                leadpow : out double_float; leadcff : out complex_number;
+                tol : in double_float := 1.0E-12;
+                vrblvl : in integer32 := 0 ) is
+
+    sb : Double_Real_Power_Series.Link_to_Series;
+    minexp : double_float := -1.0;
+    found : boolean;
+
+  begin
+    if vrblvl > 0
+     then put_line("-> in double_linear_rpseries_solver.Next_Term 3 ...");
+    end if;
+    for i in invAb'range loop
+      sb := invAb(i);
+      for j in sb.pwt'range loop
+        if sb.pwt(j) > 0.0 and (AbsVal(sb.cff(j)) > tol) then
+          found := false;
+          for k1 in powers'range(1) loop
+            for k2 in powers'range(2) loop
+              if powers(k1,k2) > 0.0
+               then found := (abs(sb.pwt(j) - powers(k1,k2)) < tol);
+              end if;
+              exit when found;
+              if powers(k1,k2) > 0.0
+               then found := Is_In(rA,sb.pwt(j)-powers(k1,k2),tol);
+              end if;
+              exit when found;
+            end loop;
+            exit when found;
+          end loop;
+          if not found then
+            if minexp < 0.0 then
+              minexp := sb.pwt(j);
+              leadidx := i;
+              leadpow := sb.pwt(j);
+              leadcff := sb.cff(j);
+            elsif sb.pwt(j) < minexp then
+              minexp := sb.pwt(j);
+              leadidx := i;
+              leadpow := sb.pwt(j);
+              leadcff := sb.cff(j);
+            end if;
+          end if;
+        end if;
+      end loop;
+    end loop;
+    if vrblvl > 0 then
+      put("leadidx : "); put(leadidx,1);
+      put(", leadpow : "); put(leadpow); new_line;
+      put("leadcff : "); put(leadcff); new_line;
+    end if;
+  end Next_term;
+
   procedure Real_Power_Series_Solver1
               ( A : in Double_rpSeries_Matrices.Matrix;
                 b : in Double_rpSeries_Vectors.Vector;
@@ -414,7 +548,7 @@ package body Double_Linear_rpSeries_Solver is
     end loop;
   end Real_Power_Series_Solver1;
 
-  procedure Real_Power_Series_Solver 
+  procedure Real_Power_Series_Solver2
               ( A : in Double_rpSeries_Matrices.Matrix;
                 b : in Double_rpSeries_Vectors.Vector;
                 nbt : in integer32;
@@ -427,6 +561,93 @@ package body Double_Linear_rpSeries_Solver is
        := Extract_Constants(A);
     rA : constant Standard_Floating_Matrices.Matrix(A'range(1),A'range(2))
        := Extract_Leading_Powers(A);
+    b0 : constant Standard_Complex_Vectors.Vector(b'range)
+       := Extract_Constants(b);
+    rcond : double_float;
+    invA0 : Standard_Complex_Matrices.Matrix(A'range(1),A'range(2));
+    invAb : Double_rpSeries_Vectors.Vector(b'range);
+    leadidx : integer32;
+    leadcff : complex_number;
+    leadpow : double_float;
+    Bcff : Standard_Complex_VecVecs.VecVec(b'range);
+    Bpwt : Standard_Floating_VecVecs.VecVec(b'range);
+    z0 : Standard_Complex_Vectors.Vector(b'range);
+    col : integer32;
+
+  begin
+    if vrblvl > 0 then
+      put("-> in double_linear_rpseries_solver.");
+      put_line("Real_Power_Series_Solver 2 ...");
+    end if;
+    for i in pwrs'range(1) loop
+      for j in pwrs'range(2) loop
+        pwrs(i,j) := -1.0;
+      end loop;
+    end loop;
+    Double_Puiseux_Operations.Solve_Constant_Linear_System
+      (A0,b0,z0,rcond,vrblvl-1);
+    if vrblvl > 0 then
+      put_line("the computed constant coefficients :");
+      put_line(z0);
+      put("rcond :"); put(rcond,3); new_line;
+    end if;
+    for i in z0'range loop
+      cffs(i,0) := z0(i);
+    end loop;
+    invA0 := Inverse(A0);
+    invAb := Matrix_Multiply(invA0,b);
+    if vrblvl > 0 then
+      put_line("multiplied right hand side vector :"); 
+      Double_Real_Power_Series_IO.Write(invAb);
+      put_line("leading powers of the coefficient matrix :"); put(rA);
+    end if;
+    Coefficients_and_Powers(b,Bcff,Bpwt);
+    Leading_Term(invAb,rA,leadidx,leadpow,leadcff,vrblvl=>vrblvl-1);
+    Eliminate_Terms(invAb,rA);
+    if vrblvl > 0 then
+      put_line("after eliminating rA terms from right hand side :"); 
+      Double_Real_Power_Series_IO.Write(invAb);
+    end if;
+    cffs(leadidx,1) := leadcff;
+    pwrs(leadidx,1) := leadpow;
+    if vrblvl > 0 then
+      put("leading index : "); put(leadidx,1); new_line;
+      put(leadcff); put(" * t**"); put(leadpow,1,14,3); new_line;
+    end if;
+    for k in 2..dim*nbt loop
+      if vrblvl > 0
+       then put("computing term "); put(k,1); put_line(" ...");
+      end if;
+      Next_Term(invAb,rA,pwrs,leadidx,leadpow,leadcff,vrblvl=>vrblvl-1);
+      if vrblvl > 0 then
+        put("next index : "); put(leadidx,1); new_line;
+        put(leadcff); put(" * t**"); put(leadpow,1,14,3); new_line;
+      end if;
+      col := 1;
+      while pwrs(leadidx,col) > 0.0 loop
+        col := col + 1;
+        exit when (col = nbt);
+      end loop;
+      if vrblvl > 0 then
+        put("assigning to column "); put(col,1); new_line;
+      end if;
+      pwrs(leadidx,col) := leadpow;
+      cffs(leadidx,col) := leadcff;
+    end loop;
+  end Real_Power_Series_Solver2;
+
+  procedure Real_Power_Series_Solver 
+              ( A : in Double_rpSeries_Matrices.Matrix;
+                b : in Double_rpSeries_Vectors.Vector;
+                nbt : in integer32;
+                cffs : out Standard_Complex_Matrices.Matrix;
+                pwrs : out Standard_Floating_Matrices.Matrix;
+                vrblvl : in integer32 := 0 ) is
+
+    dim : constant integer32 := b'last;
+    A0 : constant Standard_Complex_Matrices.Matrix(A'range(1),A'range(2))
+       := Extract_Constants(A);
+    rA : constant Standard_Floating_VecMats.VecMat := Extract_All_Powers(A);
     b0 : constant Standard_Complex_Vectors.Vector(b'range)
        := Extract_Constants(b);
     rcond : double_float;
@@ -465,11 +686,14 @@ package body Double_Linear_rpSeries_Solver is
     if vrblvl > 0 then
       put_line("multiplied right hand side vector :"); 
       Double_Real_Power_Series_IO.Write(invAb);
-      put_line("leading powers of the coefficient matrix :"); put(rA);
+      put_line("leading powers of the coefficient matrix :");
+      put(rA(1).all);
     end if;
     Coefficients_and_Powers(b,Bcff,Bpwt);
     Leading_Term(invAb,rA,leadidx,leadpow,leadcff,vrblvl=>vrblvl-1);
-    Eliminate_Terms(invAb,rA);
+    for k in rA'range loop
+      Eliminate_Terms(invAb,rA(k).all);
+    end loop;
     if vrblvl > 0 then
       put_line("after eliminating rA terms from right hand side :"); 
       Double_Real_Power_Series_IO.Write(invAb);

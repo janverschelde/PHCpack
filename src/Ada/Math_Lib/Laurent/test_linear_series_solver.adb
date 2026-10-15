@@ -62,8 +62,8 @@ package body Test_Linear_Series_Solver is
     x : constant Double_rpSeries_Vectors.Vector(1..dim)
       := Random_Series_Vector(dim,nbr);
     A : constant Double_rpSeries_Matrices.Matrix(1..dim,1..dim)
-      := Random_Series_Matrix(dim,1);
-     -- := Random_Series_Matrix(dim,nbr);
+      := Random_Series_Matrix(dim,nbr);
+     -- := Random_Series_Matrix(dim,1);
     b : constant Double_rpSeries_Vectors.Vector(1..dim)
       := Right_Hand_Side(A,x);
     powers : Standard_Floating_Matrices.Matrix(1..dim,1..nbr);
