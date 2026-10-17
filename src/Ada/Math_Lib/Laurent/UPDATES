@@ -1,3 +1,6 @@
+Sat 17 Oct 2026 : new package test_double_rpseries_arithmetic, with the
+  code taken from ts_sqrtrps.
+
 Thu 15 Oct 2026 : fixed bug in double_linear_rpseries_solver.adb,
   by adding a test to exclude terms with zero coefficient.
   Extended double_linear_rpseries_solver to work for any number of terms,
