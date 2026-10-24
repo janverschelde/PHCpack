@@ -9,11 +9,15 @@ package Test_Double_rpSeries_Arithmetic is
 
   function Random_Series
              ( size : integer32; vrblvl : integer32 := 0 )
+             return Double_Real_Power_Series.Series;
+  function Random_Series
+             ( size : integer32; vrblvl : integer32 := 0 )
              return Double_Real_Power_Series.Link_to_Series;
 
    -- DESCRIPTION :
    --   Returns a random series of the given size.
 
+  procedure Write ( s : in Double_Real_Power_Series.Series );
   procedure Write ( s : in Double_Real_Power_Series.Link_to_Series );
 
   -- DESCRIPTION :

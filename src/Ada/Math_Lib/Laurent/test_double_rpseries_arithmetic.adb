@@ -12,9 +12,8 @@ package body Test_Double_rpSeries_Arithmetic is
 
   function Random_Series
              ( size : integer32; vrblvl : integer32 := 0 )
-             return Double_Real_Power_Series.Link_to_Series is
+             return Double_Real_Power_Series.Series is
 
-    res : Double_Real_Power_Series.Link_to_Series;
     cff : Standard_Complex_Vectors.Vector(0..size);
     pwt : Standard_Floating_Vectors.Vector(1..size);
 
@@ -26,9 +25,26 @@ package body Test_Double_rpSeries_Arithmetic is
     if vrblvl > 0
      then Test_Real_Powered_Series.Write(cff,pwt);
     end if;
-    res := Double_Real_Power_Series.make(cff,pwt);
+    return Double_Real_Power_Series.make(cff,pwt);
+  end Random_Series;
+
+  function Random_Series
+             ( size : integer32; vrblvl : integer32 := 0 )
+             return Double_Real_Power_Series.Link_to_Series is
+
+    res_rep : constant Double_Real_Power_Series.Series(size)
+            := Random_Series(size,vrblvl);
+    res : constant Double_Real_Power_Series.Link_to_Series
+        := new Double_Real_Power_Series.Series'(res_rep);
+
+  begin
     return res;
   end Random_Series;
+
+  procedure Write ( s : in Double_Real_Power_Series.Series ) is
+  begin
+    Test_Real_Powered_Series.Write(s.cff,s.pwt);
+  end Write;
 
   procedure Write ( s : in Double_Real_Power_Series.Link_to_Series ) is
   begin

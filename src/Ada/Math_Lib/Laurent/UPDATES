@@ -1,3 +1,7 @@
+Sat 24 Oct 2026 : to test_double_rpseries_arithmetic added functions to
+  directly work on series.  New double_rpseries_monomials, ts_rpsmon,
+  and test_double_rpseries_monomials.  Updated laurent.gpr.
+
 Sat 17 Oct 2026 : new package test_double_rpseries_arithmetic, with the
   code taken from ts_sqrtrps.
 
