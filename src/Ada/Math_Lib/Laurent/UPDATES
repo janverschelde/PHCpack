@@ -1,3 +1,5 @@
+Tue 27 Oct 2026 : to double_real_power_series, added the "**" operation.
+
 Sat 24 Oct 2026 : to test_double_rpseries_arithmetic added functions to
   directly work on series.  New double_rpseries_monomials, ts_rpsmon,
   and test_double_rpseries_monomials.  Updated laurent.gpr.

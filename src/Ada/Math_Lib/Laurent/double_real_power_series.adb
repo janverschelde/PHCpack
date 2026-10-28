@@ -309,7 +309,7 @@ package body Double_Real_Power_Series is
     end loop;
   end Add;
 
-  procedure Add ( a : in out Link_to_Series; b : in Link_to_Series ) is
+  procedure Add ( a : in Link_to_Series; b : in Link_to_Series ) is
   begin
     if a /= null and b /= null then
       declare
@@ -418,7 +418,7 @@ package body Double_Real_Power_Series is
     end loop;
   end Min;
 
-  procedure Min ( s : in out Link_to_Series ) is
+  procedure Min ( s : in Link_to_Series ) is
   begin
     if s /= null then
       for i in s.cff'range loop
@@ -458,7 +458,7 @@ package body Double_Real_Power_Series is
     end loop;
   end Sub;
 
-  procedure Sub ( a : in out Link_to_Series; b : in Link_to_Series ) is
+  procedure Sub ( a : in Link_to_Series; b : in Link_to_Series ) is
 
 
   begin
@@ -536,7 +536,7 @@ package body Double_Real_Power_Series is
     end loop;
   end Mul;
 
-  procedure Mul ( s : in out Link_to_Series; c : in complex_number ) is
+  procedure Mul ( s : in Link_to_Series; c : in complex_number ) is
   begin
     if s /= null then
       for i in s.cff'range loop
@@ -695,7 +695,7 @@ package body Double_Real_Power_Series is
     end loop;
   end Div;
 
-  procedure Div ( s : in out Link_to_Series; c : in complex_number ) is
+  procedure Div ( s : in Link_to_Series; c : in complex_number ) is
   begin
     if s /= null then
       for i in s.cff'range loop
@@ -744,7 +744,7 @@ package body Double_Real_Power_Series is
     end loop;
   end Div;
 
-  procedure Div ( a : in out Link_to_Series; b : in Link_to_Series ) is
+  procedure Div ( a : in Link_to_Series; b : in Link_to_Series ) is
   begin
     if a /= null and b /= null then
       declare
@@ -759,6 +759,29 @@ package body Double_Real_Power_Series is
       end;
     end if;
   end Div;
+
+  function "**" ( a : Link_to_Series; b : integer32 ) return Link_to_Series is
+
+    res : Link_to_Series;
+
+  begin
+    if a /= null then
+      if b = 0 then
+        res := Make(integer32(1),a.tdx);
+      elsif b > 0 then
+        Copy(a,res);
+        for i in 2..b loop
+          Mul(res,a);
+        end loop;
+      elsif b = -1 then
+        res := Inverse(a);
+        for i in 2..(-b) loop
+          Div(res,a);
+        end loop;
+      end if;
+    end if;
+    return res;
+  end "**";
 
 -- DESTRUCTORS :
 
