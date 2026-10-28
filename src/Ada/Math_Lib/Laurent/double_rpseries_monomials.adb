@@ -27,6 +27,27 @@ package body Double_rpSeries_Monomials is
     return res;
   end Make;
 
+  function Make ( x : complex_number; dim,tdx : integer32 )
+                return Monomial is
+
+    res : Monomial(dim,tdx);
+
+  begin
+    res.cff := Double_Real_Power_Series.make(x,tdx);
+    res.deg := (1..dim => 0);
+    return res;
+  end Make;
+
+  function Make ( x : complex_number; dim,tdx : integer32 )
+                return Link_to_Monomial is
+
+    res_rep : constant Monomial(dim,tdx) := Make(x,dim,tdx);
+    res : constant Link_to_Monomial := new Monomial'(res_rep);
+
+  begin
+    return res;
+  end Make;
+
 -- SELECTORS :
 
   function Eval ( mon : Monomial; x : Double_rpSeries_Vectors.Vector )
@@ -47,6 +68,19 @@ package body Double_rpSeries_Monomials is
         end;
       end if;
     end loop;
+    return res;
+  end Eval;
+
+  function Eval ( mon : Link_to_Monomial; x : Double_rpSeries_Vectors.Vector )
+                return Double_Real_Power_Series.Link_to_Series is
+
+    res : Double_Real_Power_Series.Link_to_Series;
+
+  begin
+    if mon = null
+     then res := Double_Real_Power_Series.Make(integer32(0),x(x'first).tdx);
+     else res := Eval(mon.all,x);
+    end if;
     return res;
   end Eval;
 

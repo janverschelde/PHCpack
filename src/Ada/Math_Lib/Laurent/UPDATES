@@ -1,3 +1,6 @@
+Wed 28 Oct 2026 : to double_rpseries_monomials, added more constructors
+  and a wrapper to evaluate a pointer to a monomial.
+
 Tue 27 Oct 2026 : to double_real_power_series, added the "**" operation.
   In double_real_power_series, reverted "in" to "in out" of procedures
   used to instantiate the double_rpseries_ring.

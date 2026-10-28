@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Double_Real_Power_Series;
 with Double_rpSeries_Vectors;
@@ -32,9 +33,21 @@ package Double_rpSeries_Monomials is
   --   Given a coefficient series and an exponent vector,
   --   returns the monomial with this coefficient and exponents.
 
+  function Make ( x : complex_number; dim,tdx : integer32 )
+                return Monomial;
+  function Make ( x : complex_number; dim,tdx : integer32 )
+                return Link_to_Monomial;
+
+  -- DESCRIPTION :
+  --   Returns the representation of the number x as the
+  --   leading coefficient of a series truncated at index tdx,
+  --   and of a monomial of dim variables, all with exponent zero.
+
 -- SELECTORS :
 
   function Eval ( mon : Monomial; x : Double_rpSeries_Vectors.Vector )
+                return Double_Real_Power_Series.Link_to_Series;
+  function Eval ( mon : Link_to_Monomial; x : Double_rpSeries_Vectors.Vector )
                 return Double_Real_Power_Series.Link_to_Series;
 
   -- DESCRIPTION :
