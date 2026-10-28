@@ -309,7 +309,7 @@ package body Double_Real_Power_Series is
     end loop;
   end Add;
 
-  procedure Add ( a : in Link_to_Series; b : in Link_to_Series ) is
+  procedure Add ( a : in out Link_to_Series; b : in Link_to_Series ) is
   begin
     if a /= null and b /= null then
       declare
@@ -418,7 +418,7 @@ package body Double_Real_Power_Series is
     end loop;
   end Min;
 
-  procedure Min ( s : in Link_to_Series ) is
+  procedure Min ( s : in out Link_to_Series ) is
   begin
     if s /= null then
       for i in s.cff'range loop
@@ -458,9 +458,7 @@ package body Double_Real_Power_Series is
     end loop;
   end Sub;
 
-  procedure Sub ( a : in Link_to_Series; b : in Link_to_Series ) is
-
-
+  procedure Sub ( a : in out Link_to_Series; b : in Link_to_Series ) is
   begin
     if a /= null and b /= null then
       declare

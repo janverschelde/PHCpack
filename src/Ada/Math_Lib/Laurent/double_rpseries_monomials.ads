@@ -1,6 +1,7 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;
 with Double_Real_Power_Series;
+with Double_rpSeries_Vectors;
 
 package Double_rpSeries_Monomials is
 
@@ -30,6 +31,14 @@ package Double_rpSeries_Monomials is
   -- DESCRIPTION :
   --   Given a coefficient series and an exponent vector,
   --   returns the monomial with this coefficient and exponents.
+
+-- SELECTORS :
+
+  function Eval ( mon : Monomial; x : Double_rpSeries_Vectors.Vector )
+                return Double_Real_Power_Series.Link_to_Series;
+
+  -- DESCRIPTION :
+  --   Returns the value of the monomial evaluated at x.
 
 -- DESTRUCTOR :
 

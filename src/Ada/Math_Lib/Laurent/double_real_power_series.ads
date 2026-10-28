@@ -150,7 +150,7 @@ package Double_Real_Power_Series is
   -- DESCRIPTION :
   --   Adds the series b to a, keeping a.tdx invariant.
   --
-  procedure Add ( a : in Link_to_Series; b : in Link_to_Series );
+  procedure Add ( a : in out Link_to_Series; b : in Link_to_Series );
 
   -- DESCRIPTION :
   --   Adds the series b to a, keeping the truncation degree of a.
@@ -207,7 +207,7 @@ package Double_Real_Power_Series is
   -- DESCRIPTION :
   --   This is equivalent to s := -s.
 
-  procedure Min ( s : in Link_to_Series );
+  procedure Min ( s : in out Link_to_Series );
 
   -- DESCRIPTION :
   --   Flips the signs of the coefficients of s.
@@ -233,7 +233,7 @@ package Double_Real_Power_Series is
   --   does not change, which may lead to a loss of accuracy,
   --   but which could also prevent expression swell.
 
-  procedure Sub ( a : in Link_to_Series; b : in Link_to_Series );
+  procedure Sub ( a : in out Link_to_Series; b : in Link_to_Series );
 
   -- DESCRIPTION :
   --   Subtracts b from a.

@@ -27,6 +27,29 @@ package body Double_rpSeries_Monomials is
     return res;
   end Make;
 
+-- SELECTORS :
+
+  function Eval ( mon : Monomial; x : Double_rpSeries_Vectors.Vector )
+                return Double_Real_Power_Series.Link_to_Series is
+
+    res : Double_Real_Power_Series.Link_to_Series;
+
+  begin
+    res := Double_Real_Power_Series.make(mon.cff.cff,mon.cff.pwt);
+    for i in mon.deg'range loop
+      if mon.deg(i) /= 0 then
+        declare
+          use Double_Real_Power_Series;
+          pwr : Link_to_Series := x(i)**mon.deg(i);
+        begin
+          Double_Real_Power_Series.mul(res,pwr);
+          Double_Real_Power_Series.clear(pwr);
+        end;
+      end if;
+    end loop;
+    return res;
+  end Eval;
+
 -- DESTRUCTOR :
 
   procedure Clear ( mon : in out Link_to_Monomial ) is
