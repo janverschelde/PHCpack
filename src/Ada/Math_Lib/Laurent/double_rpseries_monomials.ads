@@ -43,6 +43,15 @@ package Double_rpSeries_Monomials is
   --   leading coefficient of a series truncated at index tdx,
   --   and of a monomial of dim variables, all with exponent zero.
 
+  function Diff ( mon : Monomial; idx : integer32 ) return Monomial;
+  function Diff ( mon : Link_to_Monomial;
+                  idx : integer32 ) return Link_to_Monomial;
+
+  -- DESCRIPTION :
+  --   Returns the derivative of the monomial with respect to the index idx.
+
+  -- REQUIRED : idx is in the range of mon.deg.
+
 -- SELECTORS :
 
   function Eval ( mon : Monomial; x : Double_rpSeries_Vectors.Vector )

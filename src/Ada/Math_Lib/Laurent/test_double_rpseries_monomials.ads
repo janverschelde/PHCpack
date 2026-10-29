@@ -13,6 +13,16 @@ package Test_Double_rpSeries_Monomials is
   --   with exponents ranging between low and upp,
   --   and a coefficient series truncated at index tdx.
 
+  procedure Write ( mon : in Link_to_Monomial );
+
+  -- DESCRIPTION :
+  --   Writes the coefficient series and the exponents of the monomial.
+
+  procedure Test_Gradient ( mon : in Link_to_Monomial );
+
+  -- DESCRIPTION :
+  --   Shows the components of the gradient of the monomial mon.
+
   procedure Test_Random_Make ( dim,tdx : in integer32 );
 
   -- DESCRIPTION :

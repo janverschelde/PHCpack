@@ -48,6 +48,42 @@ package body Double_rpSeries_Monomials is
     return res;
   end Make;
 
+  function Diff ( mon : Monomial; idx : integer32 ) return Monomial is
+
+    res : Monomial(mon.dim,mon.tdx);
+
+    use Double_Real_Power_Series;
+
+  begin
+    if idx < mon.deg'first or idx > mon.deg'last then
+      res := Make(create(0.0),mon.dim,mon.tdx);
+    elsif mon.deg(idx) = 0 then
+      res := Make(create(0.0),mon.dim,mon.tdx);
+    else
+      res.cff := create(mon.deg(idx))*mon.cff;
+      res.deg := mon.deg;
+      res.deg(idx) := res.deg(idx) - 1;
+    end if;
+    return res;
+  end Diff;
+
+  function Diff ( mon : Link_to_Monomial;
+                  idx : integer32 ) return Link_to_Monomial is
+
+    res : Link_to_Monomial;
+
+  begin
+    if mon /= null then
+      declare
+        res_rep : constant Monomial(mon.dim,mon.tdx) := Diff(mon.all,idx);
+      begin
+        res := new Monomial'(res_rep);
+        return res;
+      end;
+    end if;
+    return res;
+  end Diff;
+
 -- SELECTORS :
 
   function Eval ( mon : Monomial; x : Double_rpSeries_Vectors.Vector )

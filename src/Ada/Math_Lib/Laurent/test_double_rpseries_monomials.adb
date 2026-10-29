@@ -27,6 +27,24 @@ package body Test_Double_rpSeries_Monomials is
     return res;
   end Random_Monomial;
 
+  procedure Write ( mon : in Link_to_Monomial ) is
+  begin
+    Test_Double_rpSeries_Arithmetic.Write(mon.cff);
+    Standard_Integer_Vectors_IO.put(mon.deg); new_line;
+  end Write;
+
+  procedure Test_Gradient ( mon : in Link_to_Monomial ) is
+  begin
+    for i in mon.deg'range loop
+      put("-> component "); put(i,1); put_line(" of the gradient :");
+      declare
+        difmon : Link_to_Monomial := Diff(mon,i);
+      begin
+        Write(difmon); Clear(difmon);
+      end;
+    end loop;
+  end Test_Gradient;
+
   procedure Test_Random_Make ( dim,tdx : in integer32 ) is
 
     mon : constant Link_to_Monomial := Random_Monomial(dim,tdx,0,5);
@@ -36,6 +54,7 @@ package body Test_Double_rpSeries_Monomials is
     Test_Double_rpSeries_Arithmetic.Write(mon.cff);
     put("-> random exponents :");
     Standard_Integer_Vectors_IO.put(mon.deg); new_line;
+    Test_Gradient(mon);
   end Test_Random_Make;
 
   procedure Main is

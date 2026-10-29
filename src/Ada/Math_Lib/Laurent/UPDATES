@@ -1,3 +1,6 @@
+Thu 29 Oct 2026 : added diff function to double_rpseries_monomials and
+  tested gradient in test_double_rpseries_monomials.
+
 Wed 28 Oct 2026 : to double_rpseries_monomials, added more constructors
   and a wrapper to evaluate a pointer to a monomial.
 
