@@ -20,6 +20,9 @@ package Double_rpSeries_Monomials is
   end record;
   type Link_to_Monomial is access Monomial;
 
+  type Monomial_Array is array ( integer32 range <> ) of Link_to_Monomial;
+  type Link_to_Monomial_Array is access Monomial_Array;
+
 -- CONSTRUCTORS :
 
   function Make ( cff : Double_Real_Power_Series.Series;
@@ -62,11 +65,17 @@ package Double_rpSeries_Monomials is
   -- DESCRIPTION :
   --   Returns the value of the monomial evaluated at x.
 
--- DESTRUCTOR :
+-- DESTRUCTORS :
 
   procedure Clear ( mon : in out Link_to_Monomial );
 
   -- DESCRIPTION :
   --   Deallocates the space occupied by the monomial mon.
+
+  procedure Clear ( mons : in out Monomial_Array );
+  procedure Clear ( mons : in out Link_to_Monomial_Array );
+
+  -- DESCRIPTION :
+  --   Deallocates the space occupied by the array of monomials mons.
 
 end Double_rpSeries_Monomials;

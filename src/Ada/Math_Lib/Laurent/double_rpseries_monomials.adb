@@ -120,7 +120,7 @@ package body Double_rpSeries_Monomials is
     return res;
   end Eval;
 
--- DESTRUCTOR :
+-- DESTRUCTORS :
 
   procedure Clear ( mon : in out Link_to_Monomial ) is
 
@@ -129,6 +129,25 @@ package body Double_rpSeries_Monomials is
   begin
     if mon /= null
      then free(mon);
+    end if;
+  end Clear;
+
+  procedure Clear ( mons : in out Monomial_Array ) is
+  begin
+    for i in mons'range loop
+      Clear(mons(i));
+    end loop;
+  end Clear;
+
+  procedure Clear ( mons : in out Link_to_Monomial_Array ) is
+
+    procedure free is
+      new unchecked_deallocation(Monomial_Array,Link_to_Monomial_Array);
+
+  begin
+    if mons /= null then
+      Clear(mons.all);
+      free(mons);
     end if;
   end Clear;
 

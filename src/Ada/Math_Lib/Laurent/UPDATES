@@ -1,3 +1,7 @@
+Fri 30 Oct 2026 : in double_rpseries_monomials, defined the monomial_array.
+  Instantiated the generic_laurent_polynomials package with the ring
+  of double real power series.
+
 Thu 29 Oct 2026 : added diff function to double_rpseries_monomials and
   tested gradient in test_double_rpseries_monomials.
 

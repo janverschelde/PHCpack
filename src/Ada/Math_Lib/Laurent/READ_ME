@@ -47,6 +47,7 @@ ts_rpsarith                     : tests real powered series arithmetic
 test_double_rpseries_arithmetic : square root of a real powered series
 ts_sqrtrps                      : tests square root of real power series
 double_rpseries_monomials       : monomials with real power series coefficient
+double_rpseries_polynomials     : Laurent polynomials with series coefficients
 test_double_rpseries_monomials  : test real power series coefficient monomials
 ts_rpsmon                       : calls the main test
 ------------------------------------------------------------------------------

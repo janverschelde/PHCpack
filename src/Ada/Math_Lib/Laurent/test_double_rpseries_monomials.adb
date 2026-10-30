@@ -3,6 +3,7 @@ with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
 with Standard_Integer_Vectors_IO;
 with Standard_Random_Vectors;
 with Test_Double_rpSeries_Arithmetic;
+with Double_rpSeries_Polynomials;
 
 package body Test_Double_rpSeries_Monomials is
 
