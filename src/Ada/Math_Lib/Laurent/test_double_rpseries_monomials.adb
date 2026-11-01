@@ -3,7 +3,6 @@ with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
 with Standard_Integer_Vectors_IO;
 with Standard_Random_Vectors;
 with Test_Double_rpSeries_Arithmetic;
-with Double_rpSeries_Polynomials;
 
 package body Test_Double_rpSeries_Monomials is
 
@@ -28,10 +27,36 @@ package body Test_Double_rpSeries_Monomials is
     return res;
   end Random_Monomial;
 
-  procedure Write ( mon : in Link_to_Monomial ) is
+  function Random_Monomials
+             ( nbr,dim,tdx,low,upp : integer32 ) return Monomial_Array is
+
+    res : Monomial_Array(1..nbr);
+
+  begin
+    for i in 1..nbr loop
+      res(i) := Random_Monomial(dim,tdx,low,upp);
+    end loop;
+    return res;
+  end Random_Monomials;
+
+  procedure Write ( mon : in Monomial ) is
   begin
     Test_Double_rpSeries_Arithmetic.Write(mon.cff);
     Standard_Integer_Vectors_IO.put(mon.deg); new_line;
+  end Write;
+
+  procedure Write ( mon : in Link_to_Monomial ) is
+  begin
+    if mon /= null
+     then Write(mon.all);
+    end if;
+  end Write;
+
+  procedure Write ( mons : in Monomial_Array ) is
+  begin
+    for i in mons'range loop
+      Write(mons(i));
+    end loop;
   end Write;
 
   procedure Test_Gradient ( mon : in Link_to_Monomial ) is

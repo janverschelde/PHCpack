@@ -1,3 +1,6 @@
+Sun 1 Nov 2026 : extended test_double_rpseries_monomials and made tests in
+  test_double_rpseries_polynomials, called by ts_rpspol; updated laurent.gpr.
+
 Fri 30 Oct 2026 : in double_rpseries_monomials, defined the monomial_array.
   Instantiated the generic_laurent_polynomials package with the ring
   of double real power series.
