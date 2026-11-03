@@ -77,15 +77,25 @@ package body Test_Double_rpSeries_Polynomials is
     Write_Terms(p);
   end Write;
 
+  function Random_Polynomial ( dim,tdx,nbr,low,upp : integer32 ) return Poly is
+
+    use Test_Double_rpSeries_Monomials;
+
+    mons : Monomial_Array(1..nbr) := Random_Monomials(nbr,dim,tdx,low,upp);
+    res : constant Poly := Make(mons);
+  
+  begin
+    Clear(mons);
+    return res;
+  end Random_Polynomial;
+
   procedure Test_Random_Make ( dim,tdx,nbr : in integer32 ) is
 
-    mons : Monomial_Array(1..nbr)
-         := Test_Double_rpSeries_Monomials.Random_Monomials(nbr,dim,tdx,0,9);
-    p : Poly := Make(mons);
+    p : Poly := Random_Polynomial(nbr,dim,tdx,0,9);
   
   begin
     put_line("a random polynomial :"); Write(p);
-    Clear(p); Clear(mons);
+    Clear(p);
   end Test_Random_Make;
 
   procedure Main is

@@ -1,3 +1,7 @@
+Tue 3 Nov 2026 : instantiated double_rpseries_polysystems, updated
+  test_double_rpseries_polynomials, new test_double_rpseries_polysystems,
+  called by ts_rpssys.adb.  Extended laurent.gpr.
+
 Sun 1 Nov 2026 : extended test_double_rpseries_monomials and made tests in
   test_double_rpseries_polynomials, called by ts_rpspol; updated laurent.gpr.
 

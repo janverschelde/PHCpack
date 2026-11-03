@@ -48,10 +48,13 @@ test_double_rpseries_arithmetic  : square root of a real powered series
 ts_sqrtrps                       : tests square root of real power series
 double_rpseries_monomials        : monomials with real power series coefficient
 double_rpseries_polynomials      : Laurent polynomials with series coefficients
+double_rpseries_polysystems      : Laurent poly systems with series coeffs
 test_double_rpseries_monomials   : test real power series coeff monomials
 test_double_rpseries_polynomials : test real power series coeff polynomials
+test_double_rpseries_polysystems : test real power series coeff poly systems
 ts_rpsmon                        : calls the main test on monomials
 ts_rpspol                        : calls the main test on polynomials
+ts_rpssys                        : calls the main test on poly systems
 ------------------------------------------------------------------------------
 double_puiseux_operations        : procedures to compute leading terms
 test_rpseries_lu_solver          : solves random rps linear system

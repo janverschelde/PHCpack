@@ -29,6 +29,13 @@ package Test_Double_rpSeries_Polynomials is
   -- DESCRIPTION :
   --   Writes the monomials in p.
 
+  function Random_Polynomial ( dim,tdx,nbr,low,upp : integer32 ) return Poly;
+
+  -- DESCRIPTION :
+  --   Returns a random polynomial with dim variables,
+  --   coefficient series truncated at index tdx,
+  --   with nbr monomials and exponents ranging from low to upp.
+
   procedure Test_Random_Make ( dim,tdx,nbr : in integer32 );
 
   -- DESCRIPTION :
@@ -38,7 +45,7 @@ package Test_Double_rpSeries_Polynomials is
   procedure Main;
 
   -- DESCRIPTION :
-  --   Prompts for the two parameters of a monomial
+  --   Prompts for the parameters of a polynomial
   --   and then runs the tests.
 
 end Test_Double_rpSeries_Polynomials;
