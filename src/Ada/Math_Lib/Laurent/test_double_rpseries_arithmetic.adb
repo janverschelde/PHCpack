@@ -41,6 +41,32 @@ package body Test_Double_rpSeries_Arithmetic is
     return res;
   end Random_Series;
 
+  function Random_Series_Vector
+             ( firstidx,lastidx,size : integer32; vrblvl : integer32 := 0 )
+             return Double_rpSeries_Vectors.Vector is
+
+    res : Double_rpSeries_Vectors.Vector(firstidx..lastidx);
+
+  begin
+    for i in res'range loop
+      res(i) := Random_Series(size,vrblvl-1);
+    end loop;
+    return res;
+  end Random_Series_Vector;
+
+  function Random_Series_Vector
+             ( firstidx,lastidx,size : integer32; vrblvl : integer32 := 0 )
+             return Double_rpSeries_Vectors.Link_to_Vector is
+
+    res_rep : constant Double_rpSeries_Vectors.Vector(firstidx..lastidx)
+            := Random_Series_Vector(firstidx,lastidx,size,vrblvl-1);
+    res : constant Double_rpSeries_Vectors.Link_to_Vector
+        := new Double_rpSeries_Vectors.Vector'(res_rep);
+
+  begin
+    return res;
+  end Random_Series_Vector;
+
   procedure Write ( s : in Double_Real_Power_Series.Series ) is
   begin
     Test_Real_Powered_Series.Write(s.cff,s.pwt);
@@ -49,6 +75,23 @@ package body Test_Double_rpSeries_Arithmetic is
   procedure Write ( s : in Double_Real_Power_Series.Link_to_Series ) is
   begin
     Test_Real_Powered_Series.Write(s.cff,s.pwt);
+  end Write;
+
+  procedure Write ( v : in Double_rpSeries_Vectors.Vector ) is
+  begin
+    for i in v'range loop
+      Write(v(i));
+    end loop;
+  end Write;
+
+  procedure Write ( v : in Double_rpSeries_Vectors.Link_to_Vector ) is
+
+    use Double_rpSeries_Vectors;
+
+  begin
+    if v /= null
+     then Write(v.all);
+    end if;
   end Write;
 
   procedure SQRT_Newton_Step

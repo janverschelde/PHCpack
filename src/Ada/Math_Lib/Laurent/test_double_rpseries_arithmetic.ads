@@ -1,5 +1,6 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Double_Real_Power_Series;
+with Double_rpSeries_Vectors;
 
 package Test_Double_rpSeries_Arithmetic is
 
@@ -15,13 +16,31 @@ package Test_Double_rpSeries_Arithmetic is
              return Double_Real_Power_Series.Link_to_Series;
 
    -- DESCRIPTION :
-   --   Returns a random series of the given size.
+   --   Returns a random series of the given size,
+   --   which equals the index of truncation.
+
+  function Random_Series_Vector
+             ( firstidx,lastidx,size : integer32; vrblvl : integer32 := 0 )
+             return Double_rpSeries_Vectors.Vector;
+  function Random_Series_Vector
+             ( firstidx,lastidx,size : integer32; vrblvl : integer32 := 0 )
+             return Double_rpSeries_Vectors.Link_to_Vector;
+
+  -- DESCRIPTION :
+  --   Returns a vector of range firstidx..lastidx,
+  --   of random series of the given size.
 
   procedure Write ( s : in Double_Real_Power_Series.Series );
   procedure Write ( s : in Double_Real_Power_Series.Link_to_Series );
 
   -- DESCRIPTION :
   --   Writes coefficients and powers of the series s.
+
+  procedure Write ( v : in Double_rpSeries_Vectors.Vector );
+  procedure Write ( v : in Double_rpSeries_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Writes all series in v.
 
   procedure SQRT_Newton_Step
               ( x,A : in Double_Real_Power_Series.Link_to_Series;
