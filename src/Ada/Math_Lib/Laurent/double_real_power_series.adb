@@ -195,6 +195,94 @@ package body Double_Real_Power_Series is
     b := Make(a.cff,a.pwt);
   end Copy;
 
+-- NORMS and COMPARISONS :
+
+  function AbsVal ( s : Series ) return double_float is
+
+    res : double_float := AbsVal(s.cff(0));
+
+  begin
+    for i in s.pwt'range loop
+      res := res + abs(s.pwt(i))*AbsVal(s.cff(i));
+    end loop;
+    return res;
+  end AbsVal;
+
+  function AbsVal ( s : Link_to_Series ) return double_float is
+  begin
+    if s = null
+     then return 0.0;
+     else return AbsVal(s.all);
+    end if;
+  end AbsVal;
+
+  function AbsVal ( s : Series ) return Series is
+
+    res : Series(s.tdx);
+
+  begin
+    res.cff(0) := Standard_Complex_Numbers.create(AbsVal(s.cff(0)));
+    for i in res.pwt'range loop
+      res.cff(i) := Standard_Complex_Numbers.create(AbsVal(s.cff(i)));
+      res.pwt(i) := abs(s.pwt(i));
+    end loop;
+    return res;
+  end AbsVal;
+
+  function AbsVal ( s : Link_to_Series ) return Link_to_Series is
+  begin
+    if s = null then
+      return null;
+    else
+      declare
+        res_rep : constant Series(s.tdx) := AbsVal(s.all);
+        res : constant Link_to_Series := new Series'(res_rep);
+      begin
+        return res;
+      end;
+    end if;
+  end AbsVal;
+
+  function "<" ( x,y : Series ) return boolean is
+
+    avx : constant double_float := AbsVal(x);
+    avy : constant double_float := AbsVal(y);
+    res : constant boolean := (avx < avy);
+
+  begin
+    return res;
+  end "<";
+
+  function "<" ( x,y : Link_to_Series ) return boolean is
+
+    avx : constant double_float := AbsVal(x);
+    avy : constant double_float := AbsVal(y);
+    res : constant boolean := (avx < avy);
+
+  begin
+    return res;
+  end "<";
+
+  function ">" ( x,y : Series ) return boolean is
+
+    avx : constant double_float := AbsVal(x);
+    avy : constant double_float := AbsVal(y);
+    res : constant boolean := (avx > avy);
+
+  begin
+    return res;
+  end ">";
+
+  function ">" ( x,y : Link_to_Series ) return boolean is
+
+    avx : constant double_float := AbsVal(x);
+    avy : constant double_float := AbsVal(y);
+    res : constant boolean := (avx > avy);
+
+  begin
+    return res;
+  end ">";
+
 -- ARITHMETICAL OPERATORS :
 
   function "+" ( s : Series; c : complex_number ) return Series is
@@ -311,18 +399,36 @@ package body Double_Real_Power_Series is
 
   procedure Add ( a : in out Link_to_Series; b : in Link_to_Series ) is
   begin
-    if a /= null and b /= null then
-      declare
-        res : Series(a.tdx + b.tdx);
-      begin
-        Double_rpSeries_Operations.Add
-          (a.cff,b.cff,a.pwt,b.pwt,res.cff,res.pwt);
-        a.cff(0) := res.cff(0);
-        for i in 1..a.tdx loop
-          a.cff(i) := res.cff(i);
-          a.pwt(i) := res.pwt(i);
-        end loop;
-      end;
+    if b /= null then
+      if a = null then
+        Copy(a=>b,b=>a);
+      else -- a /= null and b /= null
+        declare
+          res : Series(a.tdx + b.tdx);
+        begin
+          Double_rpSeries_Operations.Add
+            (a.cff,b.cff,a.pwt,b.pwt,res.cff,res.pwt);
+         -- if a.tdx >= b.tdx then
+         --   a.cff(0) := res.cff(0);
+         --   for i in 1..a.tdx loop
+         --     a.cff(i) := res.cff(i);
+         --     a.pwt(i) := res.pwt(i);
+         --   end loop;
+         -- else
+         --   declare
+         --     a_rep : Series(b.tdx);
+         --   begin
+         --     a_rep.cff(0) := res.cff(0);
+         --     for i in 1..b.tdx loop
+         --       a_rep.cff(i) := res.cff(i);
+         --       a_rep.pwt(i) := res.pwt(i);
+         --     end loop;
+              Clear(a);
+              a := new Series'(res);
+         --   end;
+         -- end if;
+        end;
+      end if;
     end if;
   end Add;
 
@@ -460,18 +566,37 @@ package body Double_Real_Power_Series is
 
   procedure Sub ( a : in out Link_to_Series; b : in Link_to_Series ) is
   begin
-    if a /= null and b /= null then
-      declare
-        res : Series(a.tdx + b.tdx);
-      begin
-        Double_rpSeries_Operations.Sub
-          (a.cff,b.cff,a.pwt,b.pwt,res.cff,res.pwt);
-        a.cff(0) := res.cff(0);
-        for i in 1..a.tdx loop
-          a.cff(i) := res.cff(i);
-          a.pwt(i) := res.pwt(i);
-        end loop;
-      end;
+    if b /= null then
+      if a = null then
+        Copy(a=>b,b=>a);
+        Min(a);
+      else -- if a /= null and b /= null
+        declare
+          res : Series(a.tdx + b.tdx);
+        begin
+          Double_rpSeries_Operations.Sub
+            (a.cff,b.cff,a.pwt,b.pwt,res.cff,res.pwt);
+         -- if a.tdx >= b.tdx then
+         --   a.cff(0) := res.cff(0);
+         --   for i in 1..a.tdx loop
+         --     a.cff(i) := res.cff(i);
+         --     a.pwt(i) := res.pwt(i);
+         --   end loop;
+         -- else
+         --   declare
+         --     a_rep : Series(b.tdx);
+         --   begin
+         --     a_rep.cff(0) := res.cff(0);
+         --     for i in 1..b.tdx loop
+         --       a_rep.cff(i) := res.cff(i);
+         --       a_rep.pwt(i) := res.pwt(i);
+         --     end loop;
+              Clear(a);
+              a := new Series'(res);
+         --   end;
+         -- end if;
+        end;
+      end if;
     end if;
   end Sub;
 
@@ -693,7 +818,7 @@ package body Double_Real_Power_Series is
     end loop;
   end Div;
 
-  procedure Div ( s : in Link_to_Series; c : in complex_number ) is
+  procedure Div ( s : in out Link_to_Series; c : in complex_number ) is
   begin
     if s /= null then
       for i in s.cff'range loop
@@ -742,7 +867,7 @@ package body Double_Real_Power_Series is
     end loop;
   end Div;
 
-  procedure Div ( a : in Link_to_Series; b : in Link_to_Series ) is
+  procedure Div ( a : in out Link_to_Series; b : in Link_to_Series ) is
   begin
     if a /= null and b /= null then
       declare

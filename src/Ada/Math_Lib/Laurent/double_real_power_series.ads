@@ -89,6 +89,31 @@ package Double_Real_Power_Series is
   --   Clears b and assign to b a series with the same truncation index 
   --   and the same coefficients and powers as a, thus: a deep copy.
 
+-- NORMS and COMPARISONS :
+
+  function AbsVal ( s : Series ) return double_float;
+  function AbsVal ( s : Link_to_Series ) return double_float;
+
+  -- DESCRIPTION :
+  --   The norm of a series is the sum of the absolute values
+  --   of the exponents multiplied by the absolute values
+  --   of the coefficients.  The norm of the empty series is 0.
+
+  function AbsVal ( s : Series ) return Series;
+  function AbsVal ( s : Link_to_Series ) return Link_to_Series;
+
+  -- DESCRIPTION :
+  --   Returns the series where the coefficients are replaced by
+  --   their absolute values and the exponents by their absolute values.
+
+  function "<" ( x,y : Series ) return boolean;
+  function "<" ( x,y : Link_to_Series ) return boolean;
+  function ">" ( x,y : Series ) return boolean;
+  function ">" ( x,y : Link_to_Series ) return boolean;
+
+  -- DESCRIPTION :
+  --   Returns the outcome of comparing the norms of the series.
+
 -- ARITHMETICAL OPERATORS :
 
   function "+" ( s : Series; c : complex_number ) return Series;
@@ -359,7 +384,7 @@ package Double_Real_Power_Series is
 
   -- REQUIRED : c /= 0.
 
-  procedure Div ( s : in Link_to_Series; c : in complex_number );
+  procedure Div ( s : in out Link_to_Series; c : in complex_number );
 
   -- DESCRIPTION :
   --   This is equivalent to s := s/c, but for memory management,
@@ -390,7 +415,7 @@ package Double_Real_Power_Series is
 
   -- REQUIRED : b.cff(0) /= 0.
 
-  procedure Div ( a : in Link_to_Series; b : in Link_to_Series );
+  procedure Div ( a : in out Link_to_Series; b : in Link_to_Series );
 
   -- DESCRIPTION :
   --   Divides the series a by b.

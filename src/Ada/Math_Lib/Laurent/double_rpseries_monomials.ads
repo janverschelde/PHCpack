@@ -65,6 +65,12 @@ package Double_rpSeries_Monomials is
   -- DESCRIPTION :
   --   Returns the value of the monomial evaluated at x.
 
+  function Eval ( mons : Monomial_Array; x : Double_rpSeries_Vectors.Vector )
+                return Double_Real_Power_Series.Link_to_Series;
+
+  -- DESCRIPTION :
+  --   Returns the sum of the values of x at the monomials in mons.
+
 -- DESTRUCTORS :
 
   procedure Clear ( mon : in out Link_to_Monomial );

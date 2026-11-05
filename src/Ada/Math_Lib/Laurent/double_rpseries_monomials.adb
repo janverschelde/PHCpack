@@ -120,6 +120,23 @@ package body Double_rpSeries_Monomials is
     return res;
   end Eval;
 
+  function Eval ( mons : Monomial_Array; x : Double_rpSeries_Vectors.Vector )
+                return Double_Real_Power_Series.Link_to_Series is
+
+    res : Double_Real_Power_Series.Link_to_Series := Eval(mons(mons'first),x);
+
+  begin
+    for i in mons'first+1..mons'last loop
+      declare
+        eva : Double_Real_Power_Series.Link_to_Series := Eval(mons(i),x);
+      begin
+        Double_Real_Power_Series.add(res,eva);
+        Double_Real_Power_Series.clear(eva);
+      end;
+    end loop;
+    return res;
+  end Eval;
+
 -- DESTRUCTORS :
 
   procedure Clear ( mon : in out Link_to_Monomial ) is

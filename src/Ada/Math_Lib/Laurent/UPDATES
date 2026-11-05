@@ -1,3 +1,8 @@
+Thu 5 Nov 2026 : to double_rpseries_monomials, added eval for a monomial array
+  and made the Add procedures in double_real_power_series more accurate.
+  new double_rpseries_ring-ffield to make double_rpseries_polyfunctions
+  with a test on evaluation in test_double_rpseries_polynomials.
+
 Wed 4 Nov 2026 : extended test_double_rpseries_arithmetic with functions
   to generate random vectors of series with real exponents.
 

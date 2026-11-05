@@ -38,6 +38,7 @@ double_rpseries_operations       : series with real powers, double precision
 double_real_power_series         : encapsulation of real power series
 double_real_power_series_io      : basic output of real power series
 double_rpseries_ring             : ring of real power series
+double_rpseries_ring-ffield      : field of real power series
 double_rpseries_vectors          : vectors of real power series
 double_rpseries_matrices         : matrices of real power series
 real_powered_series_io           : i/o of series with real powers
@@ -48,6 +49,7 @@ test_double_rpseries_arithmetic  : square root of a real powered series
 ts_sqrtrps                       : tests square root of real power series
 double_rpseries_monomials        : monomials with real power series coefficient
 double_rpseries_polynomials      : Laurent polynomials with series coefficients
+double_rpseries_polyfunctions    : Laurent poly functions with series coeffs
 double_rpseries_polysystems      : Laurent poly systems with series coeffs
 test_double_rpseries_monomials   : test real power series coeff monomials
 test_double_rpseries_polynomials : test real power series coeff polynomials

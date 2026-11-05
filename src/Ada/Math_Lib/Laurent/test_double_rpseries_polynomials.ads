@@ -42,6 +42,14 @@ package Test_Double_rpSeries_Polynomials is
   --   Tests the making of a nbr random monomials of dimension dim
   --   and coefficient series truncated at index tdx.
 
+  procedure Test_Random_Eval ( dim,tdx,nbr : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random polynomial of dim variables,
+  --   with nbr monomials and coefficients truncated at index tdx.
+  --   Evaluates this polynomial at a random vector of series twice:
+  --   once as a monomial array and once as a polynomial.
+
   procedure Main;
 
   -- DESCRIPTION :
