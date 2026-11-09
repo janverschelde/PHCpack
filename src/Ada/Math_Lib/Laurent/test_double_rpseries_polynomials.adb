@@ -1,6 +1,8 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Communications_with_User;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
+with Standard_Random_Numbers;
 with Standard_Integer_Vectors;
 with Double_Real_Power_Series;
 with Double_rpSeries_Vectors;
@@ -128,10 +130,16 @@ package body Test_Double_rpSeries_Polynomials is
 
   procedure Main is
 
-    dim,tdx,nbr : integer32 := 0;
+    dim,tdx,nbr,seed : integer32 := 0;
     ans : character;
 
   begin
+    new_line;
+    put("Give the seed (0 for any seed) : "); get(seed);
+    if seed = 0
+     then seed := Standard_Random_Numbers.get_Seed;
+     else Standard_Random_Numbers.Set_Seed(natural32(seed));
+    end if;
     new_line;
     put("Give the dimension : "); get(dim);
     put("Give the truncation index : "); get(tdx);
@@ -148,6 +156,8 @@ package body Test_Double_rpSeries_Polynomials is
       when '2' => Test_Random_Eval(dim,tdx,nbr);
       when others => null;
     end case;
+    new_line;
+    put("seed used : "); put(seed,1); new_line;
   end Main;
 
 end Test_Double_rpSeries_Polynomials;

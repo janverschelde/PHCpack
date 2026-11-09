@@ -1,3 +1,6 @@
+Mon 9 Nov 2026 : to test_double_rpseries_{monomials, polynomials}.adb,
+  added possibility of fixing the seed for the random number generators.
+
 Thu 5 Nov 2026 : to double_rpseries_monomials, added eval for a monomial array
   and made the Add procedures in double_real_power_series more accurate.
   new double_rpseries_ring-ffield to make double_rpseries_polyfunctions

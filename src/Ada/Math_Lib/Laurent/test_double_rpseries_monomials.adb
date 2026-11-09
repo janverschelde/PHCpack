@@ -1,6 +1,8 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
 with Standard_Integer_Vectors_IO;
+with Standard_Random_Numbers;
 with Standard_Random_Vectors;
 with Test_Double_rpSeries_Arithmetic;
 
@@ -85,12 +87,20 @@ package body Test_Double_rpSeries_Monomials is
 
   procedure Main is
 
-    dim,tdx : integer32 := 0;
+    dim,tdx,seed : integer32 := 0;
 
   begin
+    new_line;
+    put("Give the seed (0 for any seed) : "); get(seed);
+    if seed = 0
+     then seed := Standard_Random_Numbers.get_Seed;
+     else Standard_Random_Numbers.Set_Seed(natural32(seed));
+    end if;
     put("Give the dimension : "); get(dim);
     put("Give the truncation index : "); get(tdx);
     Test_Random_Make(dim,tdx);
+    new_line;
+    put("seed used : "); put(seed,1); new_line;
   end Main;
 
 end Test_Double_rpSeries_Monomials;
