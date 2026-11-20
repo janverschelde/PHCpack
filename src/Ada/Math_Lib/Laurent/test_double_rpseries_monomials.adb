@@ -1,9 +1,12 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
+with Communications_with_User;
 with Standard_Integer_Vectors_IO;
 with Standard_Random_Numbers;
 with Standard_Random_Vectors;
+with Double_Real_Power_Series;
+with Double_rpSeries_Vectors;
 with Test_Double_rpSeries_Arithmetic;
 
 package body Test_Double_rpSeries_Monomials is
@@ -85,9 +88,31 @@ package body Test_Double_rpSeries_Monomials is
     Test_Gradient(mon);
   end Test_Random_Make;
 
+  procedure Test_Random_Eval ( dim,tdx : in integer32 ) is
+
+    use Test_Double_rpSeries_Arithmetic;
+
+    mon : Link_to_Monomial := Random_Monomial(dim,tdx,0,5);
+    x : Double_rpSeries_Vectors.Vector(1..dim)
+      := Random_Series_Vector(1,dim,tdx);
+    y : Double_Real_Power_Series.Link_to_Series := Eval(mon,x);
+
+  begin
+    put_line("-> a random coefficient :");
+    Test_Double_rpSeries_Arithmetic.Write(mon.cff);
+    put("-> random exponents :");
+    Standard_Integer_Vectors_IO.put(mon.deg); new_line;
+    put_line("a random vector :"); Write(x);
+    put_line("evaluated at the monomial :"); Write(y);
+    clear(mon);
+    Double_rpSeries_Vectors.clear(x);
+    Double_Real_Power_Series.clear(y);
+  end Test_Random_Eval;
+
   procedure Main is
 
     dim,tdx,seed : integer32 := 0;
+    ans : character;
 
   begin
     new_line;
@@ -98,7 +123,18 @@ package body Test_Double_rpSeries_Monomials is
     end if;
     put("Give the dimension : "); get(dim);
     put("Give the truncation index : "); get(tdx);
-    Test_Random_Make(dim,tdx);
+    new_line;
+    put_line("MENU to test monomials with series coefficients :");
+    put_line("  1. make a random monomial");
+    put_line("  2. evaluate a random monomial");
+    put("Type 1 or 2 to select a test : ");
+    Communications_with_User.Ask_Alternative(ans,"12");
+    new_line;
+    case ans is
+      when '1' => Test_Random_Make(dim,tdx);
+      when '2' => Test_Random_Eval(dim,tdx);
+      when others => null;
+    end case;
     new_line;
     put("seed used : "); put(seed,1); new_line;
   end Main;

@@ -46,6 +46,13 @@ package Test_Double_rpSeries_Monomials is
   --   Tests the making of a random monomial of dimension dim
   --   and coefficient series truncated at index tdx.
 
+  procedure Test_Random_Eval ( dim,tdx : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random monomial of dim variables, 
+  --   with as coefficients series truncated at index tdx.
+  --   Evaluates this monomial at a random vector of series.
+
   procedure Main;
 
   -- DESCRIPTION :

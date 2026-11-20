@@ -1,3 +1,6 @@
+Fri 20 Nov 2026 : extended test_double_rpseries_monomials with test
+  on the evaluation at a series vector.
+
 Mon 9 Nov 2026 : to test_double_rpseries_{monomials, polynomials}.adb,
   added possibility of fixing the seed for the random number generators.
 
