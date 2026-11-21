@@ -1,3 +1,7 @@
+Sat 21 Nov 2026 : in double_real_power_series, defined the Order function
+  and fixed the multiplication procedure for a correct exponentiation **
+  taking the order and the normalization into account.
+
 Fri 20 Nov 2026 : extended test_double_rpseries_monomials with test
   on the evaluation at a series vector.
 

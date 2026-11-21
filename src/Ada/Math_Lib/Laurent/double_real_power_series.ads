@@ -56,6 +56,15 @@ package Double_Real_Power_Series is
 
   -- REQUIRED : cff'last = pwt'last, cff'first = 0 and pwt'first = 1.
 
+-- ORDER OF A SERIES :
+
+  function Order ( x : Series ) return double_float;
+  function Order ( x : Link_to_Series ) return double_float;
+
+  -- DESCRIPTION :
+  --   The order of a series x is the last exponent of x.
+  --   The order of an empty series is -1.
+
 -- EQUALITY AND COPY :
 
   function Equal ( a,b : Series;
@@ -319,7 +328,7 @@ package Double_Real_Power_Series is
   -- DESCRIPTION :
   --   Multiplies the series a with b.
   --   The truncation index of a remains invariant,
-  --   which may therefore be less accurate,
+  --   which may therefore be more accurate,
   --   but also less prone to expression swell.
 
   procedure Mul ( a : in out Link_to_Series; b : in Link_to_Series );
@@ -327,6 +336,8 @@ package Double_Real_Power_Series is
   -- DESCRIPTION :
   --   Multiplies a with b, with preservation of a.tdx,
   --   except when b = null, then a is cleared.
+  --   The truncation index of the first argument a
+  --   is adjusted to match the maximum of Order(a) and Order(b).
 
   function Inverse ( s : Series ) return Series;
 

@@ -129,6 +129,21 @@ package body Double_Real_Power_Series is
     return res;
   end Make;
 
+-- ORDER OF A SERIES :
+
+  function Order ( x : Series ) return double_float is
+  begin
+    return x.pwt(x.tdx);
+  end Order;
+
+  function Order ( x : Link_to_Series ) return double_float is
+  begin
+    if x = null
+     then return 0.0;
+     else return x.pwt(x.tdx);
+    end if;
+  end Order;
+
 -- EQUALITY AND COPY :
 
   function Equal ( a,b : Series;
@@ -717,12 +732,37 @@ package body Double_Real_Power_Series is
       declare
         size : constant integer32 := (a.tdx+1)*(b.tdx+1) - 1;
         res : constant Series(size) := a.all*b.all;
+        orda : constant double_float := Order(a);
+        ordb : constant double_float := Order(b);
+        ordres : double_float;
+        tdxres : integer32; 
       begin
-        a.cff(0) := res.cff(0);
-        for i in 1..a.tdx loop
-          a.cff(i) := res.cff(i);
-          a.pwt(i) := res.pwt(i);
+        Clear(a);
+        if orda > ordb
+         then ordres := orda;
+         else ordres := ordb;
+        end if;
+        tdxres := res.tdx;
+        for i in res.pwt'range loop
+          if ((REAL_PART(res.cff(i)) = 0.0) and
+              (IMAG_PART(res.cff(i)) = 0.0)) or (res.pwt(i) > ordres)
+          then
+            tdxres := i-1; exit;
+          end if;
         end loop;
+        if tdxres < 1
+         then tdxres := 1;
+        end if;
+        declare
+          newres : Series(tdxres);
+        begin
+          newres.cff(0) := res.cff(0);
+          for i in newres.pwt'range loop
+            newres.cff(i) := res.cff(i);
+            newres.pwt(i) := res.pwt(i);
+          end loop;
+          a := new Series'(newres);
+        end;
       end;
     end if;
   end Mul;
