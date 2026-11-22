@@ -1,3 +1,7 @@
+Sun 22 Nov 2026 : fixed "<" for triple doubles and ">" for triple double and
+  double in triple_double_numbers.adb, as pointed out by issue #87,
+  as a result of running AdaLang Analyzer by Maurizio Martignano.
+
 Sat 31 May 2025 : added geometric sums and geometric inner producs,
   for doubles, double doubles, quad doubles, octo doubles and hexa doubles.
 
