@@ -1,7 +1,6 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Communications_with_User;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
@@ -25,12 +24,13 @@ package body Test_Real_Powered_Series is
   procedure Random_Series
               ( size : in integer32;
                 cff : out Standard_Complex_Vectors.Vector;
-                pwt : out Standard_Floating_Vectors.Vector ) is
+                pwt : out Standard_Floating_Vectors.Vector;
+                incpwr : in double_float := 0.0 ) is
   begin
     cff := Standard_Random_Vectors.Random_Vector(0,size);
     pwt := Standard_Random_Vectors.Random_Vector(1,size);
     for i in pwt'range loop
-      pwt(i) := abs(pwt(i));
+      pwt(i) := abs(pwt(i)) + incpwr;
     end loop;
     Double_rpSeries_Operations.sort(pwt,cff);
   end Random_Series;

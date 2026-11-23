@@ -1,3 +1,8 @@
+Mon 23 Nov 2026 : added incpwr to the generation of random series in
+  test_double_rpseries_arithmetic, test_real_powered_series, and
+  test_double_rpseries_monomials to obtain a more regular results
+  when evaluating random monomials at random series.
+
 Sat 21 Nov 2026 : in double_real_power_series, defined the Order function
   and fixed the multiplication procedure for a correct exponentiation **
   taking the order and the normalization into account.

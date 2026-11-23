@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Double_Real_Power_Series;
 with Double_rpSeries_Vectors;
 
@@ -9,26 +10,32 @@ package Test_Double_rpSeries_Arithmetic is
 --   via a square root computation.
 
   function Random_Series
-             ( size : integer32; vrblvl : integer32 := 0 )
+             ( size : integer32; incpwr : double_float := 0.0;
+               vrblvl : integer32 := 0 )
              return Double_Real_Power_Series.Series;
   function Random_Series
-             ( size : integer32; vrblvl : integer32 := 0 )
+             ( size : integer32; incpwr : double_float := 0.0;
+               vrblvl : integer32 := 0 )
              return Double_Real_Power_Series.Link_to_Series;
 
-   -- DESCRIPTION :
-   --   Returns a random series of the given size,
-   --   which equals the index of truncation.
+  -- DESCRIPTION :
+  --   Returns a random series of the given size,
+  --   which equals the index of truncation.
+  --   The value of incpwr is increment for every power in the series.
 
   function Random_Series_Vector
-             ( firstidx,lastidx,size : integer32; vrblvl : integer32 := 0 )
+             ( firstidx,lastidx,size : integer32;
+               incpwr : double_float := 0.0; vrblvl : integer32 := 0 )
              return Double_rpSeries_Vectors.Vector;
   function Random_Series_Vector
-             ( firstidx,lastidx,size : integer32; vrblvl : integer32 := 0 )
+             ( firstidx,lastidx,size : integer32;
+               incpwr : double_float := 0.0; vrblvl : integer32 := 0 )
              return Double_rpSeries_Vectors.Link_to_Vector;
 
   -- DESCRIPTION :
   --   Returns a vector of range firstidx..lastidx,
   --   of random series of the given size.
+  --   The value of incpwr is increment for every power in the series.
 
   procedure Write ( s : in Double_Real_Power_Series.Series );
   procedure Write ( s : in Double_Real_Power_Series.Link_to_Series );

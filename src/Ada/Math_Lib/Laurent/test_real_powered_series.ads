@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 
@@ -19,11 +20,13 @@ package Test_Real_Powered_Series is
   procedure Random_Series
               ( size : in integer32;
                 cff : out Standard_Complex_Vectors.Vector;
-                pwt : out Standard_Floating_Vectors.Vector );
+                pwt : out Standard_Floating_Vectors.Vector;
+                incpwr : in double_float := 0.0 );
 
   -- DESCRIPTION :
   --   Generates a random series with positive powers of the
   --   given size and sorts the powers.
+  --   The incpwr is the increment for every power.
 
   procedure Test_String_Series ( size : in integer32 );
 

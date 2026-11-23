@@ -12,20 +12,23 @@ with Test_Double_rpSeries_Arithmetic;
 package body Test_Double_rpSeries_Monomials is
 
   function Random_Monomial
-             ( dim,tdx,low,upp : integer32 ) return Monomial is
+             ( dim,tdx,low,upp : integer32;
+               incpwr : double_float := 0.0 ) return Monomial is
 
     res : Monomial(dim,tdx);
 
   begin
-    res.cff := Test_Double_rpSeries_Arithmetic.Random_Series(tdx);
+    res.cff := Test_Double_rpSeries_Arithmetic.Random_Series(tdx,incpwr);
     res.deg := Standard_Random_Vectors.Random_Vector(1,dim,low,upp);
     return res;
   end Random_Monomial;
 
   function Random_Monomial
-             ( dim,tdx,low,upp : integer32 ) return Link_to_Monomial is
+             ( dim,tdx,low,upp : integer32;
+               incpwr : double_float := 0.0 ) return Link_to_Monomial is
 
-    res_rep : constant Monomial(dim,tdx) := Random_Monomial(dim,tdx,low,upp);
+    res_rep : constant Monomial(dim,tdx)
+            := Random_Monomial(dim,tdx,low,upp,incpwr);
     res : constant Link_to_Monomial := new Monomial'(res_rep);
 
   begin
@@ -33,13 +36,14 @@ package body Test_Double_rpSeries_Monomials is
   end Random_Monomial;
 
   function Random_Monomials
-             ( nbr,dim,tdx,low,upp : integer32 ) return Monomial_Array is
+             ( nbr,dim,tdx,low,upp : integer32;
+               incpwr : double_float := 0.0 ) return Monomial_Array is
 
     res : Monomial_Array(1..nbr);
 
   begin
     for i in 1..nbr loop
-      res(i) := Random_Monomial(dim,tdx,low,upp);
+      res(i) := Random_Monomial(dim,tdx,low,upp,incpwr);
     end loop;
     return res;
   end Random_Monomials;
@@ -92,9 +96,9 @@ package body Test_Double_rpSeries_Monomials is
 
     use Test_Double_rpSeries_Arithmetic;
 
-    mon : Link_to_Monomial := Random_Monomial(dim,tdx,0,5);
+    mon : Link_to_Monomial := Random_Monomial(dim,tdx,0,5,1.0);
     x : Double_rpSeries_Vectors.Vector(1..dim)
-      := Random_Series_Vector(1,dim,tdx);
+      := Random_Series_Vector(1,dim,tdx,1.0);
     y : Double_Real_Power_Series.Link_to_Series := Eval(mon,x);
 
   begin

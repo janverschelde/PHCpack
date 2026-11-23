@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Double_rpSeries_Monomials;         use Double_rpSeries_Monomials;
 
 package Test_Double_rpSeries_Monomials is
@@ -7,22 +8,27 @@ package Test_Double_rpSeries_Monomials is
 --   Tests operations on monomials with real power series as coefficients.
 
   function Random_Monomial
-             ( dim,tdx,low,upp : integer32 ) return Monomial;
+             ( dim,tdx,low,upp : integer32;
+               incpwr : double_float := 0.0 ) return Monomial;
   function Random_Monomial
-             ( dim,tdx,low,upp : integer32 ) return Link_to_Monomial;
+             ( dim,tdx,low,upp : integer32;
+               incpwr : double_float := 0.0 ) return Link_to_Monomial;
 
   -- DESCRIPTION :
   --   Returns a random monomial in dim variables,
   --   with exponents ranging between low and upp,
   --   and a coefficient series truncated at index tdx.
+  --   The value of incpwr is the increment for every power in the series.
 
   function Random_Monomials
-             ( nbr,dim,tdx,low,upp : integer32 ) return Monomial_Array;
+             ( nbr,dim,tdx,low,upp : integer32;
+               incpwr : double_float := 0.0 ) return Monomial_Array;
 
   -- DESCRIPTION :
   --   Returns an array of nbr monomials in dim variables,
   --   with coefficient series truncated at index tdx,
   --   and exponents ranging between low and upp.
+  --   The value of incpwr is the increment for every power in the series.
 
   procedure Write ( mon : in Monomial );
   procedure Write ( mon : in Link_to_Monomial );

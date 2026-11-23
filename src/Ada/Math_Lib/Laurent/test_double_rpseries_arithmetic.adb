@@ -1,6 +1,5 @@
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Standard_Integer_Numbers_IO;       use Standard_Integer_Numbers_IO;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_IO;      use Standard_Floating_Numbers_IO;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_Polar;
@@ -11,7 +10,8 @@ with Test_Real_Powered_Series;
 package body Test_Double_rpSeries_Arithmetic is
 
   function Random_Series
-             ( size : integer32; vrblvl : integer32 := 0 )
+             ( size : integer32; incpwr : double_float := 0.0;
+               vrblvl : integer32 := 0 )
              return Double_Real_Power_Series.Series is
 
     cff : Standard_Complex_Vectors.Vector(0..size);
@@ -21,7 +21,7 @@ package body Test_Double_rpSeries_Arithmetic is
     if vrblvl > 0 then
       put("-> generating a series of size "); put(size,1); put_line(" ...");
     end if;
-    Test_Real_Powered_Series.Random_Series(size,cff,pwt);
+    Test_Real_Powered_Series.Random_Series(size,cff,pwt,incpwr);
     if vrblvl > 0
      then Test_Real_Powered_Series.Write(cff,pwt);
     end if;
@@ -29,11 +29,12 @@ package body Test_Double_rpSeries_Arithmetic is
   end Random_Series;
 
   function Random_Series
-             ( size : integer32; vrblvl : integer32 := 0 )
+             ( size : integer32; incpwr : double_float := 0.0;
+               vrblvl : integer32 := 0 )
              return Double_Real_Power_Series.Link_to_Series is
 
     res_rep : constant Double_Real_Power_Series.Series(size)
-            := Random_Series(size,vrblvl);
+            := Random_Series(size,incpwr,vrblvl);
     res : constant Double_Real_Power_Series.Link_to_Series
         := new Double_Real_Power_Series.Series'(res_rep);
 
@@ -42,24 +43,26 @@ package body Test_Double_rpSeries_Arithmetic is
   end Random_Series;
 
   function Random_Series_Vector
-             ( firstidx,lastidx,size : integer32; vrblvl : integer32 := 0 )
+             ( firstidx,lastidx,size : integer32;
+               incpwr : double_float := 0.0; vrblvl : integer32 := 0 )
              return Double_rpSeries_Vectors.Vector is
 
     res : Double_rpSeries_Vectors.Vector(firstidx..lastidx);
 
   begin
     for i in res'range loop
-      res(i) := Random_Series(size,vrblvl-1);
+      res(i) := Random_Series(size,incpwr,vrblvl-1);
     end loop;
     return res;
   end Random_Series_Vector;
 
   function Random_Series_Vector
-             ( firstidx,lastidx,size : integer32; vrblvl : integer32 := 0 )
+             ( firstidx,lastidx,size : integer32;
+               incpwr : double_float := 0.0; vrblvl : integer32 := 0 )
              return Double_rpSeries_Vectors.Link_to_Vector is
 
     res_rep : constant Double_rpSeries_Vectors.Vector(firstidx..lastidx)
-            := Random_Series_Vector(firstidx,lastidx,size,vrblvl-1);
+            := Random_Series_Vector(firstidx,lastidx,size,incpwr,vrblvl-1);
     res : constant Double_rpSeries_Vectors.Link_to_Vector
         := new Double_rpSeries_Vectors.Vector'(res_rep);
 
