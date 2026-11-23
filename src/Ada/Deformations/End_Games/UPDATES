@@ -1,3 +1,6 @@
+Mon 23 Nov 2026 : fixed error in test_rho_algorithm, reported in issue #87,
+  as a result of running AdaLang Analyzer by Maurizio Martignano.
+
 Sun 27 Aug 2023 : new {double, dobdobl}_complex_rho_algorithm,
   modified double_rho_algorithm.adb, extended test_rho_algorithm.adb.
 

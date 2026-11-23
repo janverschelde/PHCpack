@@ -81,7 +81,7 @@ package body Test_Rho_Algorithm is
       nbr(5) := c5/c6;
     end if;
     if nbr'last >= 6 then
-      nbr(6) := c6/c6;
+      nbr(6) := c6/c7;
     end if;
     if nbr'last >= 7 then
       nbr(7) := c7/c8;
