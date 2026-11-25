@@ -356,7 +356,7 @@ package body Multprec_Correctors is
       Clear(normv);
       nit := nit + 1;
       stop := (((ncora > s.cora) and then (nresa > s.resa))
-               or else ((ncorr > s.corr) and then (ncorr > s.corr)));
+               or else ((ncorr > s.corr) and then (nresr > s.resr)));
                                                  -- STOP WHEN DIVERGENCE
       Copy(ncora,s.cora); Clear(ncora);
       Copy(nresa,s.resa); Clear(nresa);
@@ -415,7 +415,7 @@ package body Multprec_Correctors is
       cWrite(file,ncora,ncorr,nresa,nresr);           -- WRITE STATISTICS
       nit := nit + 1;
       stop := (((ncora > s.cora) and then (nresa > s.resa))
-              or else ((ncorr > s.corr) and then (ncorr > s.corr)));
+              or else ((ncorr > s.corr) and then (nresr > s.resr)));
                                                   -- STOP WHEN DIVERGENCE
       Copy(ncora,s.cora); Clear(ncora);
       Copy(nresa,s.resa); Clear(nresa);
@@ -471,7 +471,7 @@ package body Multprec_Correctors is
       Clear(normv);
       nit := nit + 1;
       stop := (((ncora > s.cora) and then (nresa > s.resa))
-            or else ((ncorr > s.corr) and then (ncorr > s.corr)));
+            or else ((ncorr > s.corr) and then (nresr > s.resr)));
                                                     -- STOP WHEN DIVERGENCE
       Copy(ncora,s.cora); Clear(ncora);
       Copy(nresa,s.resa); Clear(nresa);
@@ -530,7 +530,7 @@ package body Multprec_Correctors is
       cWrite(file,s.rcond,natural32(s.sol.m));
       nit := nit + 1;
       stop := (((ncora > s.cora) and then (nresa > s.resa))
-            or else ((ncorr > s.corr) and then (ncorr > s.corr)));
+            or else ((ncorr > s.corr) and then (nresr > s.resr)));
                                                   -- STOP WHEN DIVERGENCE
       Copy(ncora,s.cora); Clear(ncora);
       Copy(nresa,s.resa); Clear(nresa);
@@ -926,7 +926,7 @@ package body Multprec_Correctors is
       Clear(normv);
       nit := nit + 1;
       stop := (((ncora > s.cora) and then (nresa > s.resa))
-             or else ((ncorr > s.corr) and then (ncorr > s.corr)));
+             or else ((ncorr > s.corr) and then (nresr > s.resr)));
                                                     -- STOP WHEN DIVERGENCE
       Copy(ncora,s.cora); Clear(ncora);
       Copy(nresa,s.resa); Clear(nresa);
@@ -993,7 +993,7 @@ package body Multprec_Correctors is
       cWrite(file,ncora,ncorr,nresa,nresr);            -- WRITE STATISTICS
       nit := nit + 1;
       stop := (((ncora > s.cora) and then (nresa > s.resa))
-            or else ((ncorr > s.corr) and then (ncorr > s.corr)));
+            or else ((ncorr > s.corr) and then (nresr > s.resr)));
                                                    -- STOP WHEN DIVERGENCE
       Copy(ncora,s.cora); Clear(ncora);
       Copy(nresa,s.resa); Clear(nresa);
@@ -1057,7 +1057,7 @@ package body Multprec_Correctors is
       Clear(normv);
       nit := nit + 1;
       stop := (((ncora > s.cora) and then (nresa > s.resa))
-             or else ((ncorr > s.corr) and then (ncorr > s.corr)));
+             or else ((ncorr > s.corr) and then (nresr > s.resr)));
                                                     -- STOP WHEN DIVERGENCE
       Copy(ncora,s.cora); Clear(ncora);
       Copy(nresa,s.resa); Clear(nresa);
@@ -1124,7 +1124,7 @@ package body Multprec_Correctors is
       cWrite(file,s.rcond,natural32(s.sol.m));
       nit := nit + 1;
       stop := (((ncora > s.cora) and then (nresa > s.resa))
-              or else ((ncorr > s.corr) and then (ncorr > s.corr)));
+              or else ((ncorr > s.corr) and then (nresr > s.resr)));
                                                       -- STOP WHEN DIVERGENCE
       Copy(ncora,s.cora); Clear(ncora);
       Copy(nresa,s.resa); Clear(nresa);

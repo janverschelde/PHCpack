@@ -1,3 +1,7 @@
+Wed 25 Nov 2026 : in {standard,dobldobl,quaddobl,multprec}_correctors.adb,
+  fixed test on the relative residuals, reported in issue #87,
+  as a result of running AdaLang Analyzer by Maurizio Martignano.
+
 Thu 10 Jun 2021 : added the exec_dir attribut to trackers.gpr.
 
 Wed 9 Jun 2021 : defined trackers.gpr to build the test procedures.

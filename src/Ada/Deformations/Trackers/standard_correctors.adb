@@ -301,7 +301,7 @@ package body Standard_Correctors is
       nit := nit + 1;
       if nit > 1 then
         stop := (((ncora > s.cora) and then (nresa > s.resa))
-          or else ((ncorr > s.corr) and then (ncorr > s.corr)));
+          or else ((ncorr > s.corr) and then (nresr > s.resr)));
                                                      -- STOP WHEN DIVERGENCE
         exit when stop;
       end if;
@@ -345,7 +345,7 @@ package body Standard_Correctors is
       nit := nit + 1;
       if nit > 1 then
         stop := (((ncora > s.cora) and then (nresa > s.resa))
-          or else ((ncorr > s.corr) and then (ncorr > s.corr)));
+          or else ((ncorr > s.corr) and then (nresr > s.resr)));
                                                       -- STOP WHEN DIVERGENCE
         exit when stop;
       end if;
@@ -388,7 +388,7 @@ package body Standard_Correctors is
       nit := nit + 1;
       if nit > 1 then
         stop := (((ncora > s.cora) and then (nresa > s.resa))
-          or else ((ncorr > s.corr) and then (ncorr > s.corr)));
+          or else ((ncorr > s.corr) and then (nresr > s.resr)));
                                                       -- STOP WHEN DIVERGENCE
         exit when stop;
       end if;
@@ -439,7 +439,7 @@ package body Standard_Correctors is
       nit := nit + 1;
       if nit > 1 then
         stop := (((ncora > s.cora) and then (nresa > s.resa))
-          or else ((ncorr > s.corr) and then (ncorr > s.corr)));
+          or else ((ncorr > s.corr) and then (nresr > s.resr)));
                                                       -- STOP WHEN DIVERGENCE
         exit when stop;
       end if;
@@ -785,7 +785,7 @@ package body Standard_Correctors is
       nit := nit + 1;
       if nit > 1 then
         stop := (((ncora > s.cora) and then (nresa > s.resa))
-          or else ((ncorr > s.corr) and then (ncorr > s.corr)));
+          or else ((ncorr > s.corr) and then (nresr > s.resr)));
                                                      -- STOP WHEN DIVERGENCE
         exit when stop;
       end if;
@@ -837,7 +837,7 @@ package body Standard_Correctors is
       nit := nit + 1;
       if nit > 1 then
         stop := (((ncora > s.cora) and then (nresa > s.resa))
-          or else ((ncorr > s.corr) and then (ncorr > s.corr)));
+          or else ((ncorr > s.corr) and then (nresr > s.resr)));
                                                       -- STOP WHEN DIVERGENCE
         exit when stop;
       end if;
@@ -887,7 +887,7 @@ package body Standard_Correctors is
       nit := nit + 1;
       if nit > 1 then
         stop := (((ncora > s.cora) and then (nresa > s.resa))
-          or else ((ncorr > s.corr) and then (ncorr > s.corr)));
+          or else ((ncorr > s.corr) and then (nresr > s.resr)));
                                                       -- STOP WHEN DIVERGENCE
         exit when stop;
       end if;
@@ -946,7 +946,7 @@ package body Standard_Correctors is
       nit := nit + 1;
       if nit > 1 then
         stop := (((ncora > s.cora) and then (nresa > s.resa))
-          or else ((ncorr > s.corr) and then (ncorr > s.corr)));
+          or else ((ncorr > s.corr) and then (nresr > s.resr)));
                                                       -- STOP WHEN DIVERGENCE
         exit when stop;
       end if;
