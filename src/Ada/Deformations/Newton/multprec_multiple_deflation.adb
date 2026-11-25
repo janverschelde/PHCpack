@@ -347,14 +347,14 @@ package body Multprec_Multiple_Deflation is
       Predict_Order(standard_output,wp.all,wz.all,size,tol,corank,d);
       put("Do you want to deflate ? (y/n) ");
       Ask_Yes_or_No(ans);
-      if ans = 'y' then
-        put("Give the order of the deflation : "); get(d);
-        Numeric_Deflate(standard_output,wp.all,wz.all,size,d,tol,rank,dp);
-        Clear(wp); wp := new Poly_Sys(dp'range);
-        wp.all := dp.all;
-        nm := Number_of_Unknowns(wp(wp'first)) - n;
-        Add_Multipliers(wz,wp.all,nm);
-      end if;
+      exit when (ans /= 'y');
+      new_line;
+      put("Give the order of the deflation : "); get(d);
+      Numeric_Deflate(standard_output,wp.all,wz.all,size,d,tol,rank,dp);
+      Clear(wp); wp := new Poly_Sys(dp'range);
+      wp.all := dp.all;
+      nm := Number_of_Unknowns(wp(wp'first)) - n;
+      Add_Multipliers(wz,wp.all,nm);
     end loop;
   end Interactive_Symbolic_Deflation;
 

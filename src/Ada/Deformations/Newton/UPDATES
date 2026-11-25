@@ -1,3 +1,7 @@
+Wed 25 Nov 2026 : fixed error in multprec_multiple_deflation.adb, 
+  reported in issue #87, as a result of running AdaLang Analyzer 
+  by Maurizio Martignano.
+
 Tue 16 Feb 2026 : moved all *numerical_rank* packages to the
   ../../Math_Lib/Reduction folder.
 
