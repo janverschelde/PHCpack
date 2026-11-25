@@ -1,3 +1,7 @@
+Wed 25 Nov 2026 : fixed test on residual in homotopy_newton_steps.adb,
+  reported in issue #87, as a result of running AdaLang Analyzer 
+  by Maurizio Martignano.
+
 Sun 5 Oct 2025 : removed excluded_source_files from curves.gpr.
 
 Wed 19 Jun 2024 : added two procedures to power_series_methods to return

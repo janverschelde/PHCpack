@@ -453,7 +453,7 @@ package body Homotopy_Newton_Steps is
       end if;
      -- if res <= tolres then -- convergence
      -- left := err/(nrm+1.0);
-      if err <= tolres and err <= tolres then
+      if err <= tolres and res <= tolres then
         if extra = 0 or (err = 0.0) or (res = 0.0) or (cntextra = extra)
          then nbrit := k; fail := false; exit;
         end if;
