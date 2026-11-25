@@ -109,10 +109,10 @@ package body Test_Double_rpSeries_Polynomials is
     use Test_Double_rpSeries_Arithmetic;
     use Test_Double_rpSeries_Monomials;
 
-    mons : Monomial_Array(1..nbr) := Random_Monomials(nbr,dim,tdx,1,9);
+    mons : Monomial_Array(1..nbr) := Random_Monomials(nbr,dim,tdx,1,9,1.0);
     p : Poly := Make(mons);
-    x : Double_rpSeries_Vectors.Vector(1..nbr)
-      := Random_Series_Vector(1,nbr,tdx);
+    x : Double_rpSeries_Vectors.Vector(1..dim)
+      := Random_Series_Vector(1,dim,tdx,1.0);
     y : Double_Real_Power_Series.Link_to_Series
       := Double_rpSeries_PolyFunctions.Eval(p,x);
     z : Double_Real_Power_Series.Link_to_Series := Eval(mons,x);

@@ -133,14 +133,20 @@ package body Double_Real_Power_Series is
 
   function Order ( x : Series ) return double_float is
   begin
-    return x.pwt(x.tdx);
+    if x.tdx = 0
+     then return 0.0;
+     else return x.pwt(x.tdx);
+    end if;
   end Order;
 
   function Order ( x : Link_to_Series ) return double_float is
   begin
-    if x = null
-     then return 0.0;
-     else return x.pwt(x.tdx);
+    if x = null then
+      return 0.0;
+    elsif x.tdx = 0 then
+      return 0.0;
+    else
+      return x.pwt(x.tdx);
     end if;
   end Order;
 
@@ -298,6 +304,62 @@ package body Double_Real_Power_Series is
     return res;
   end ">";
 
+-- REORDER A SERIES :
+
+  function max ( x,y : double_float ) return double_float is
+
+  -- DESCRIPTION :
+  --   Returns the maximum of x and y to compute the maximum order.
+
+  begin
+    if x > y
+     then return x;
+     else return y;
+    end if;
+  end max;
+
+  procedure Reorder_Series
+              ( op1a : in out Link_to_Series; result : in Series;
+                ordres : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Cuts the terms of the result of an operation to the given order.
+ 
+  -- ON ENTRY :
+  --   op1a     first operand of the operation with result as outcome;
+  --   result   the outcome of an arithmetical operation;
+  --   ordres   maximum order of op1a and the second operand.
+ 
+  -- ON RETURN :
+  --   op1a     terms with zero coefficients and exponents
+  --            higher than ordres are removed from the result.
+
+    tdxres : integer32 := result.tdx; 
+
+  begin
+    for i in result.pwt'range loop
+      if ((REAL_PART(result.cff(i)) = 0.0) and
+          (IMAG_PART(result.cff(i)) = 0.0)) or (result.pwt(i) > ordres)
+       then
+         tdxres := i-1; exit;
+      end if;
+    end loop;
+    if tdxres < 1
+     then tdxres := 1;
+    end if;
+    declare
+      newres : Series(tdxres);
+    begin
+      newres.cff(0) := result.cff(0);
+      for i in newres.pwt'range loop
+        newres.cff(i) := result.cff(i);
+        newres.pwt(i) := result.pwt(i);
+      end loop;
+      Clear(op1a);
+      op1a := new Series'(newres);
+    end;
+  end Reorder_Series;
+
 -- ARITHMETICAL OPERATORS :
 
   function "+" ( s : Series; c : complex_number ) return Series is
@@ -420,28 +482,11 @@ package body Double_Real_Power_Series is
       else -- a /= null and b /= null
         declare
           res : Series(a.tdx + b.tdx);
+          ordres : constant double_float := max(Order(a),Order(b));
         begin
           Double_rpSeries_Operations.Add
             (a.cff,b.cff,a.pwt,b.pwt,res.cff,res.pwt);
-         -- if a.tdx >= b.tdx then
-         --   a.cff(0) := res.cff(0);
-         --   for i in 1..a.tdx loop
-         --     a.cff(i) := res.cff(i);
-         --     a.pwt(i) := res.pwt(i);
-         --   end loop;
-         -- else
-         --   declare
-         --     a_rep : Series(b.tdx);
-         --   begin
-         --     a_rep.cff(0) := res.cff(0);
-         --     for i in 1..b.tdx loop
-         --       a_rep.cff(i) := res.cff(i);
-         --       a_rep.pwt(i) := res.pwt(i);
-         --     end loop;
-              Clear(a);
-              a := new Series'(res);
-         --   end;
-         -- end if;
+          Reorder_Series(a,res,ordres);
         end;
       end if;
     end if;
@@ -588,28 +633,11 @@ package body Double_Real_Power_Series is
       else -- if a /= null and b /= null
         declare
           res : Series(a.tdx + b.tdx);
+          ordres : constant double_float := max(Order(a),Order(b));
         begin
           Double_rpSeries_Operations.Sub
             (a.cff,b.cff,a.pwt,b.pwt,res.cff,res.pwt);
-         -- if a.tdx >= b.tdx then
-         --   a.cff(0) := res.cff(0);
-         --   for i in 1..a.tdx loop
-         --     a.cff(i) := res.cff(i);
-         --     a.pwt(i) := res.pwt(i);
-         --   end loop;
-         -- else
-         --   declare
-         --     a_rep : Series(b.tdx);
-         --   begin
-         --     a_rep.cff(0) := res.cff(0);
-         --     for i in 1..b.tdx loop
-         --       a_rep.cff(i) := res.cff(i);
-         --       a_rep.pwt(i) := res.pwt(i);
-         --     end loop;
-              Clear(a);
-              a := new Series'(res);
-         --   end;
-         -- end if;
+          Reorder_Series(a,res,ordres);
         end;
       end if;
     end if;
@@ -732,37 +760,9 @@ package body Double_Real_Power_Series is
       declare
         size : constant integer32 := (a.tdx+1)*(b.tdx+1) - 1;
         res : constant Series(size) := a.all*b.all;
-        orda : constant double_float := Order(a);
-        ordb : constant double_float := Order(b);
-        ordres : double_float;
-        tdxres : integer32; 
+        ordres : constant double_float := max(Order(a),Order(b));
       begin
-        Clear(a);
-        if orda > ordb
-         then ordres := orda;
-         else ordres := ordb;
-        end if;
-        tdxres := res.tdx;
-        for i in res.pwt'range loop
-          if ((REAL_PART(res.cff(i)) = 0.0) and
-              (IMAG_PART(res.cff(i)) = 0.0)) or (res.pwt(i) > ordres)
-          then
-            tdxres := i-1; exit;
-          end if;
-        end loop;
-        if tdxres < 1
-         then tdxres := 1;
-        end if;
-        declare
-          newres : Series(tdxres);
-        begin
-          newres.cff(0) := res.cff(0);
-          for i in newres.pwt'range loop
-            newres.cff(i) := res.cff(i);
-            newres.pwt(i) := res.pwt(i);
-          end loop;
-          a := new Series'(newres);
-        end;
+        Reorder_Series(a,res,ordres);
       end;
     end if;
   end Mul;
