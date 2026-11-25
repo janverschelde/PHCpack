@@ -289,7 +289,7 @@ package body Multprec_Polynomial_Interpolators is
       if k > n then
         if cff = 1 then
           accu.cf := Create(integer(1));
-        elsif cff = 1 then
+        elsif cff = 2 then
           ranflt := Random;
           rancmp := Standard_Complex_Numbers.Create(ranflt);
           accu.cf := Create(rancmp);

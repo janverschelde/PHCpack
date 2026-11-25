@@ -1,3 +1,7 @@
+Wed 25 Nov 2026 : fixed error in multprec_polynomial_interpolators.adb,
+  reported in issue #87, as a result of running AdaLang Analyzer 
+  by Maurizio Martignano.
+
 Wed 22 Mar 2023 : fixed ts_elim.adb, removed ts_rewrite.adb, ts_reorder.adb;
   updated interpolators.gpr, adding ts_elim.adb among the target tests.
 
