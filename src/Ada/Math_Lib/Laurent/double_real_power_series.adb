@@ -335,14 +335,22 @@ package body Double_Real_Power_Series is
   --            higher than ordres are removed from the result.
 
     tdxres : integer32 := result.tdx; 
+    iszero : boolean;
 
   begin
     for i in result.pwt'range loop
-      if ((REAL_PART(result.cff(i)) = 0.0) and
-          (IMAG_PART(result.cff(i)) = 0.0)) or (result.pwt(i) > ordres)
+      if -- ((REAL_PART(result.cff(i)) = 0.0) and
+         --  (IMAG_PART(result.cff(i)) = 0.0)) or
+         (result.pwt(i) > ordres)
        then
          tdxres := i-1; exit;
       end if;
+    end loop;
+    while tdxres > 0 loop -- remove trailing zero coefficients
+      iszero := ((REAL_PART(result.cff(tdxres)) = 0.0) and
+                 (IMAG_PART(result.cff(tdxres)) = 0.0));
+      exit when not iszero;
+      tdxres := tdxres - 1;
     end loop;
     if tdxres < 1
      then tdxres := 1;

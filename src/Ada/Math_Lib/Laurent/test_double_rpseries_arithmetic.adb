@@ -121,6 +121,8 @@ package body Test_Double_rpSeries_Arithmetic is
     nbrit : integer32 := maxit;
     pwtwrk,pwtfx : double_float;
     done : boolean := false;
+    idxfx : integer32;
+    tol : constant double_float := 1.0e-12;
 
   begin
     put_line("a random power series :");
@@ -134,9 +136,22 @@ package body Test_Double_rpSeries_Arithmetic is
       put("At step "); put(i,1); put_line(" fx :"); Write(fx);
       put("At step "); put(i,1); put_line(" x :"); Write(wrk);
       pwtwrk := wrk.pwt(wrk.pwt'last);
-      pwtfx := fx.pwt(1);
+      idxfx := 1;
+      pwtfx := fx.pwt(idxfx);
+      while ((abs(REAL_PART(fx.cff(idxfx))) < tol)
+         and (abs(IMAG_PART(fx.cff(idxfx))) < tol)) loop
+        exit when (idxfx = fx.pwt'last);
+        idxfx := idxfx + 1;
+        pwtfx := fx.pwt(idxfx);
+      end loop;
       put(" last exponent x : "); put(pwtwrk); new_line;
       put("first exponent fx :"); put(pwtfx);
+      done := ((abs(REAL_PART(fx.cff(idxfx))) < tol)
+           and (abs(IMAG_PART(fx.cff(idxfx))) < tol));
+      if done
+       then put_line("  converged, done!"); nbrit := i;
+      end if;
+      exit when done;
       if pwtwrk < pwtfx
        then put_line("  converged, done!"); nbrit := i; done := true;
        else put_line("  more steps needed ...");
