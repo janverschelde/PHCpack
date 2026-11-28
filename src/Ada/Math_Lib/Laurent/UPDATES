@@ -1,6 +1,8 @@
 Sat 28 Nov 2026 : adjusted order in double_real_power_series.adb so that
   in case of a zero series, the order is correctly set.
   To test_double_rpseries_polynomials, added a test on a Newton homotopy.
+  In test_double_rpseries_{monomials, polynomials, polysystems}.adb,
+  printed seed before the computations to be of use when a crash happens.
 
 Fri 27 Nov 2026 : in double_real_power_series.adb removed trailing zero
   coefficients in the reordering of the series.

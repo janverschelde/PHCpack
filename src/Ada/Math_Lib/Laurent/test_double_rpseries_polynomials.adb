@@ -169,6 +169,7 @@ package body Test_Double_rpSeries_Polynomials is
      then seed := Standard_Random_Numbers.get_Seed;
      else Standard_Random_Numbers.Set_Seed(natural32(seed));
     end if;
+    put("-> seed used : "); put(seed,1); new_line;
     new_line;
     put("Give the dimension : "); get(dim);
     put("Give the truncation index : "); get(tdx);
