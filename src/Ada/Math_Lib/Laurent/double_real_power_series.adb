@@ -352,8 +352,11 @@ package body Double_Real_Power_Series is
       exit when not iszero;
       tdxres := tdxres - 1;
     end loop;
-    if tdxres < 1
-     then tdxres := 1;
+    if tdxres < 1 then
+      tdxres := 1;
+      iszero := true;
+    else
+      iszero := false;
     end if;
     declare
       newres : Series(tdxres);
@@ -363,6 +366,9 @@ package body Double_Real_Power_Series is
         newres.cff(i) := result.cff(i);
         newres.pwt(i) := result.pwt(i);
       end loop;
+      if iszero -- in case of zero, set the correct order
+       then newres.pwt(tdxres) := ordres;
+      end if;
       Clear(op1a);
       op1a := new Series'(newres);
     end;

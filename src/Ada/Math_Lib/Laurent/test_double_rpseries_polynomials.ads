@@ -50,6 +50,13 @@ package Test_Double_rpSeries_Polynomials is
   --   Evaluates this polynomial at a random vector of series twice:
   --   once as a monomial array and once as a polynomial.
 
+  procedure Test_Newton_Homotopy ( dim,tdx,nbr : in integer32 );
+
+  -- DESCRIPTION :
+  --   Generates a random polynomial p, random series s, and then makes
+  --   the Newton homotopy polynomial h(x,1) = p(x) - 1*p(s).
+  --   Then tests whether h(s,1) = 0.
+
   procedure Main;
 
   -- DESCRIPTION :

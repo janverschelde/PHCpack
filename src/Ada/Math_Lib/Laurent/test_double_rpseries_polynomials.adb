@@ -128,6 +128,35 @@ package body Test_Double_rpSeries_Polynomials is
     Double_Real_Power_Series.clear(z);
   end Test_Random_Eval;
 
+  procedure Test_Newton_Homotopy ( dim,tdx,nbr : in integer32 ) is
+
+    use Test_Double_rpSeries_Arithmetic;
+    use Test_Double_rpSeries_Monomials;
+
+    mons : Monomial_Array(1..nbr) := Random_Monomials(nbr,dim,tdx,1,9,1.0);
+    p : Poly := Make(mons);
+    x : Double_rpSeries_Vectors.Vector(1..dim)
+      := Random_Series_Vector(1,dim,tdx,1.0);
+    y : Double_Real_Power_Series.Link_to_Series
+      := Double_rpSeries_PolyFunctions.Eval(p,x);
+    q : Poly;
+    t : Term;
+    z : Double_Real_Power_Series.Link_to_Series;
+
+  begin
+    t.cf := y;
+    t.dg := new Standard_Integer_Vectors.Vector'(1..dim => 0);
+    q := p - t;
+    put_line("The Newton homotopy polynomial :"); Write(q);
+    put_line("a random series vector :"); Write(x);
+    z := Double_rpSeries_PolyFunctions.Eval(q,x);
+    put_line("Value at the Newton homotopy polynomial :"); Write(z);
+    clear(mons); clear(p);
+    Double_rpSeries_Vectors.clear(x);
+    Double_Real_Power_Series.clear(y);
+    Double_Real_Power_Series.clear(z);
+  end Test_Newton_Homotopy;
+
   procedure Main is
 
     dim,tdx,nbr,seed : integer32 := 0;
@@ -148,12 +177,14 @@ package body Test_Double_rpSeries_Polynomials is
     put_line("MENU to test polynomials with series coefficients :");
     put_line("  1. make a random polynomial");
     put_line("  2. evaluate a random polynomial");
-    put("Type 1 or 2 to select a test : ");
-    Communications_with_User.Ask_Alternative(ans,"12");
+    put_line("  3. test a random Newton polynomial");
+    put("Type 1, 2, or 3 to select a test : ");
+    Communications_with_User.Ask_Alternative(ans,"123");
     new_line;
     case ans is
       when '1' => Test_Random_Make(dim,tdx,nbr);
       when '2' => Test_Random_Eval(dim,tdx,nbr);
+      when '3' => Test_Newton_Homotopy(dim,tdx,nbr);
       when others => null;
     end case;
     new_line;
